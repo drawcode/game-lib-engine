@@ -28,7 +28,7 @@ namespace Engine.Game.Actor {
                 Vector3 bottomPoint = objectParent.transform.position - Vector3.up * 1;
                 Vector3 collisionVector = bottomPoint - topPoint;
 
-                int terrainMask = 1 << LayerMask.NameToLayer("Terrain");
+                int terrainMask = 1 << LayerMask.NameToLayer("GameGround");
                 if (Physics.Raycast(topPoint, collisionVector, out hit, 100.0f, terrainMask)) {
                     surfaceNormal = hit.normal;
 
