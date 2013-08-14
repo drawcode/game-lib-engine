@@ -1,7 +1,7 @@
 using UnityEngine;
 using System.Collections;
 
-public class GameCameraSmoothFollow : MonoBehaviour {
+public class GameBaseCameraSmoothFollow : MonoBehaviour {
 	public Transform target;
 	public float smoothTime= 0.3f;
 	private Transform thisTransform;
@@ -19,21 +19,21 @@ public class GameCameraSmoothFollow : MonoBehaviour {
 	void LateUpdate (){
 
 		if(thisTransform != null && target != null) {
-			Vector3 temp = Vector3.zero;
+			Vector3 temp = target.position;
 			
 			if(followX) {
-				temp.x = Mathf.SmoothDamp(thisTransform.position.x + offset.x, 
-					target.position.x, ref velocity.x, smoothTime);
+				temp.x = Mathf.SmoothDamp(thisTransform.position.x, 
+					target.position.x + offset.x, ref velocity.x, smoothTime);
 			}
 			
 			if(followY) {
-				temp.y = Mathf.SmoothDamp( thisTransform.position.y + offset.y, 
-					target.position.y, ref velocity.y, smoothTime);
+				temp.y = Mathf.SmoothDamp( thisTransform.position.y, 
+					target.position.y + offset.y, ref velocity.y, smoothTime);
 			}
 			
 			if(followZ) {
-				temp.z = Mathf.SmoothDamp( thisTransform.position.z + offset.z, 
-					target.position.z, ref velocity.z, smoothTime);
+				temp.z = Mathf.SmoothDamp( thisTransform.position.z, 
+					target.position.z + offset.z, ref velocity.z, smoothTime);
 			}
 				
 			thisTransform.position = temp;
