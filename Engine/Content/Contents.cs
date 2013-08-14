@@ -1,0 +1,3294 @@
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Text;
+using System.Text.RegularExpressions;
+#if !UNITY_WEBPLAYER
+using System.IO;
+#endif
+using UnityEngine;
+
+using Engine.Events;
+using Engine.Data.Json;
+using Engine.Networking;
+
+public class ContentConfig {
+	
+	public static string contentCacheAssetBundles = "bundles";
+	public static string contentCacheVersion = "version";
+	public static string contentCacheData = "data";
+	public static string contentCacheUserData = "userdata";
+	public static string contentCacheShared = "shared";
+	public static string contentCacheAll = "all";
+	public static string contentCacheTrackers = "trackers";
+	public static string contentCacheScenes = "scenes";
+	public static string contentCachePacks = "packs";
+	public static string currentContentPackCode = "default";
+	public static string currentContentContent = "content";
+	
+}
+
+public class ContentProgressItemStatus {
+	
+	public Dictionary<string, List<string>> contentItems = new Dictionary<string, List<string>>();
+	public string contentMessage = "";
+}
+
+public class ContentItemStatus {
+	public double itemSize = 0;
+	public double itemProgress = 0;
+	public string url = "";
+	
+	public bool downloaded = false;
+	
+	public double percentageCompleted {
+		get{ 
+			return itemProgress;
+		}
+	}
+	
+	public bool completed {
+		get {
+			return percentageCompleted == 1 ? true : false;
+		}
+	}	
+}
+
+public class ContentItemAccess : DataObject {
+	public bool globalItem = true;
+	public string code = "";
+	public string profileId = "";
+	public string receipt = "";
+	public string platform = "ios-storekit";
+	public int quantity = 1;
+	public string productCode = "";
+}
+
+public class ContentItemAccessDictionary : DataObject {
+	public Dictionary<string, ContentItemAccess> accessItems = new Dictionary<string, ContentItemAccess>();
+		
+	public void CheckDictionary() {
+		if(accessItems == null)
+			accessItems = new Dictionary<string, ContentItemAccess>();
+	}
+	
+	public bool CheckAccess(string key) {
+		CheckDictionary();
+		bool hasAccess = accessItems.ContainsKey(key);
+		if(key.ToLower() == "default" ) {
+			//|| !GameProducts.enableProductLocks) {
+			hasAccess = true;
+		}
+		LogUtil.LogAccess("CheckAccess:: key: " + key + " hasAccess: " + hasAccess);
+		return hasAccess;
+	}
+	
+	public ContentItemAccess GetContentAccess(string key) {
+		CheckDictionary();
+		if(CheckAccess(key)) {
+			if(accessItems != null) {
+				if(accessItems.ContainsKey(key)) {
+					return accessItems[key];
+				}
+			}
+		}
+		return null;
+	}
+	
+	public void SetContentAccess(string key) {		
+		CheckDictionary();
+		ContentItemAccess itemAccess;
+		
+		if(CheckAccess(key) && accessItems.ContainsKey(key)) {
+			itemAccess = GetContentAccess(key);
+			itemAccess.code = key;
+			itemAccess.globalItem = true;
+			itemAccess.platform = "";//GamePacks.currentPacksPlatform;
+			itemAccess.productCode = key;
+			itemAccess.profileId = "";//GameProfiles.Current.username;
+			itemAccess.quantity = 1;
+			itemAccess.receipt = "";		
+			SetContentAccess(itemAccess);
+		}
+		else {
+			itemAccess = new ContentItemAccess();
+			itemAccess.code = key;
+			itemAccess.globalItem = true;
+			itemAccess.platform = "";//GamePacks.currentPacksPlatform;
+			itemAccess.productCode = key;
+			itemAccess.profileId = "";//GameProfiles.Current.username;
+			itemAccess.quantity = 1;
+			itemAccess.receipt = "";
+			SetContentAccess(itemAccess);
+		}
+	}
+	
+	public void SetContentAccess(ContentItemAccess itemAccess) {
+				
+		CheckDictionary();
+		
+		if(CheckAccess(itemAccess.code)) {
+			accessItems[itemAccess.code] = itemAccess;
+		}
+		else {
+			accessItems.Add(itemAccess.code, itemAccess);
+		}
+	}
+	
+	public void SetContentAccessTransaction(string key, string productId, string receipt, int quantity, bool save) {
+		ContentItemAccess itemAccess = GetContentAccess(key);
+		if(itemAccess != null) {
+			itemAccess.receipt = receipt;
+			itemAccess.productCode = productId;
+			itemAccess.quantity = quantity;
+			SetContentAccess(itemAccess);
+			if(save) {
+				Save();
+			}
+		}
+	}
+	
+	public void Save() {
+		CheckDictionary();
+		string contentItemAccessString = "";
+		string settingKey = "ssg-cal";
+		contentItemAccessString = JsonMapper.ToJson(accessItems);
+		LogUtil.LogAccess("Save: access:" + contentItemAccessString);
+		SystemPrefUtil.SetLocalSettingString(settingKey, contentItemAccessString);
+		SystemPrefUtil.Save();
+	}
+	
+	public void Load() {
+		string settingKey = "ssg-cal";
+		if(SystemPrefUtil.HasLocalSetting(settingKey)) {
+			// Load from persistence
+			string keyValue = SystemPrefUtil.GetLocalSettingString(settingKey);
+			LogUtil.LogAccess("Load: access:" + keyValue);
+			accessItems = JsonMapper.ToObject<Dictionary<string, ContentItemAccess>>(keyValue);
+			CheckDictionary();
+		}
+	}
+					
+}
+
+// RESPONSES
+
+//{"info": "", "status": "", "error": 0, "action": "sx-2012-pack-1", "message": "Success!", "data": 
+// {"download_urls": ["https://s3.amazonaws.com/game-supasupacross/1.1/ios/sx-2012-pack-1.unity3d?Signature=rJ%2Fe863up9wgAutleNY%2F%2B7OSy%2BU%3D&Expires=1332496714&AWSAccessKeyId=0YAPDVPCN85QV96YR382"], "access_allowed": true, "date_modified": "2012-03-21T10:58:34.919000", "udid": "[udid]", "tags": ["test", "fun"], "content": "this is \"real\"...", "url": "ffff", "version": "1.1", "increment": 1, "active": true, "date_created": "2012-03-21T10:58:34.919000", "type": "application/octet-stream"}}
+
+public class DownloadableContentItem {
+	public List<string> download_urls = new List<string>();
+	//public DateTime date_modified = DateTime.Now;
+	//public string udid = "";
+	//public List<string> tags = new List<string>();
+	//public string content = "";
+	//public string url = "";
+	//public string code = "";
+	//public string version = "1.1";
+	//public double increment = 3;
+	//public bool active = true;
+	//public DateTime date_created = DateTime.Now;
+	//public string type = "application/octet-stream";	
+	//public bool access_allowed = true;
+}
+
+public class DownloadableContentItemList {
+	public Dictionary<string, DownloadableContentUrlObject> url_objs 
+		= new Dictionary<string, DownloadableContentUrlObject>();
+}
+
+public class DownloadableContentUrlObject {
+	public string file_key = ""; // hashed url part
+	public string url = ""; // amazon url
+	public string path = ""; // path for lookup in local content list
+}
+
+
+public class DownloadableContentItemResponse : BaseObjectResponse {
+	public DownloadableContentItem data = new DownloadableContentItem();
+	
+	public DownloadableContentItemResponse() {
+		Reset();
+	}
+		
+	public override void Reset() {
+		base.Reset();
+		data = new DownloadableContentItem();
+	}
+}
+
+public class DownloadableContentItemListResponse : BaseObjectResponse {
+	public DownloadableContentItemList data 
+		= new DownloadableContentItemList();
+	
+	public DownloadableContentItemListResponse() {
+		Reset();
+	}
+		
+	public override void Reset() {
+		base.Reset();
+		data 
+			= new DownloadableContentItemList();
+	}
+}
+
+public class BaseObjectResponse {
+	public string info = "";
+	public string status = "";
+	public string code = "0";
+	public string action = "";
+	public string message = "Success";
+	
+	public BaseObjectResponse() {
+		Reset();
+	}
+	
+	public virtual void Reset() {
+		info = "";
+		status = "";
+		code = "0";
+		action = "";
+		message = "Success";
+	}
+}
+
+// CONTENT SYSTEM
+
+//"info": "ssg_ssc_1_1", "status": "", "code": "0", "action": "sx-2012-pack-1", "message": "Success!", "data": {"download_urls": ["http://s3.amazonaws.com/game-supasupacross/1.1/ios/sx-2012-pack-1.unity3d?Signature=9VJYzvaLZjeVcakz4DBDDg51Fwo%3D&Expires=1332704684&AWSAccessKeyId=0YAPDVPCN85QV96YR382"]}
+
+public class ContentMessages {
+	public static string ContentFileDownloadSuccess = "content-file-download-success";
+	public static string ContentFileDownloadError = "content-file-download-error";
+	public static string ContentFileDownloadStarted = "content-file-download-started";
+	
+	
+	
+	public static string ContentSetSuccess = "content-set-success";
+	public static string ContentSetError = "content-set-error";
+	public static string ContentSetStarted = "content-set-started";	
+	
+	public static string ContentSetDownloadSuccess = "content-set-download-success";
+	public static string ContentSetDownloadError = "content-set-download-error";
+	public static string ContentSetDownloadStarted = "content-set-download-started";
+	
+	public static string ContentItemDownloadSuccess = "content-item-download-success";
+	public static string ContentItemDownloadError = "content-item-download-error";
+	public static string ContentItemDownloadStarted = "content-item-download-started";
+	
+	public static string ContentItemVerifySuccess = "content-item-verify-success";
+	public static string ContentItemVerifyError = "content-item-verify-error";
+	public static string ContentItemVerifyStarted = "content-item-verify-started";	
+	
+	public static string ContentItemPrepareSuccess = "content-item-prepare-success";
+	public static string ContentItemPrepareError = "content-item-prepare-error";
+	public static string ContentItemPrepareStarted = "content-item-prepare-started";
+	
+	public static string ContentItemLoadSuccess = "content-item-load-success";
+	public static string ContentItemLoadError = "content-item-load-error";
+	public static string ContentItemLoadStarted = "content-item-load-started";
+	
+	public static string ContentItemProgress = "content-item-progress";
+	public static string ContentProgressStatus = "content-progress-status";
+	public static string ContentProgressMessage = "content-progress-message";
+
+	public static string ContentSyncShipContentSuccess = "content-sync-ship-content-success";
+	public static string ContentSyncShipContentError = "content-sync-ship-content-error";
+	public static string ContentSyncShipContentStarted = "content-sync-ship-content-started";
+	
+	public static string ContentSyncInitialSuccess = "content-sync-initial-success";
+	public static string ContentSyncInitialError = "content-sync-initial-error";
+	public static string ContentSyncInitialStarted = "content-sync-initial-started";
+	
+	public static string ContentSyncPackSuccess = "content-sync-pack-success";
+	public static string ContentSyncPackError = "content-sync-pack-error";
+	public static string ContentSyncPackStarted = "content-sync-pack-started";
+	
+	public static string ContentSyncFullSuccess = "content-sync-full-success";
+	public static string ContentSyncFullError = "content-sync-full-error";
+	public static string ContentSyncFullStarted = "content-sync-full-started";
+	public static string ContentSyncFullPrepare = "content-sync-full-prepare";	
+	
+	// download of initial app-content-list-item files for gatherning new files.
+	public static string ContentAppContentListSyncSuccess = "content-app-content-list-sync-success";
+	public static string ContentAppContentListSyncError = "content-app-content-list-sync-error";
+	public static string ContentAppContentListSyncStarted = "content-app-content-list-sync-started";
+				
+	// download of content list ofr verified files from passed in app-content-list-item paths (replacing /version/ with correct version).
+	public static string ContentAppContentListFileDownloadSuccess = "content-app-content-list-file-download-success";
+	public static string ContentAppContentListFileDownloadError = "content-app-content-list-file-download-error";
+	public static string ContentAppContentListFileDownloadStarted = "content-app-content-list-file-download-started";
+		
+	// download of content list ofr verified files from passed in app-content-list-item paths (replacing /version/ with correct version).
+	public static string ContentAppContentListFilesSuccess = "content-app-content-list-files-success";
+	public static string ContentAppContentListFilesError = "content-app-content-list-files-error";
+	public static string ContentAppContentListFilesStarted = "content-app-content-list-files-started";
+	
+	// download of actual files from download list completed.
+	public static string ContentAppContentListFilesDownloadSuccess = "content-app-content-list-files-download-success";
+	public static string ContentAppContentListFilesDownloadError = "content-app-content-list-files-download-error";
+	public static string ContentAppContentListFilesDownloadStarted = "content-app-content-list-files-download-started";
+	
+}
+
+
+public class ContentEndpoints {
+	public static string contentVerification = ContentsConfig.contentEndpoint + "api/v1/en/file/{0}/{1}/{2}/{3}"; // 0 = game, version, platform, pack
+	
+	public static string contentDownloadPrimary = "http://s3.amazonaws.com/static/{0}/{1}/{2}/{3}";
+	public static string contentDownloadAmazon = "http://s3.amazonaws.com/{0}/{1}/{2}/{3}";
+	public static string contentDownloadFileAsset = ContentsConfig.contentEndpoint + "api/v1/en/file/{0}/{1}/{2}/{3}"; // 0 = game, version, platform, pack;
+	public static string contentSyncContentSet = ContentsConfig.contentEndpoint + "api/v1/sync/en/content-list/{0}/{1}/{2}/{3}"; // 0 = game, version, platform, pack;
+	public static string contentDownloadAppContentListFiles = ContentsConfig.contentEndpoint + "api/v1/en/app-content-list/file/{0}/{1}/{2}/"; // 0 = game, version, platform, pack;
+	//http://content1.vidari.com/api/v1/en/app-content-list/file/app-vidari-viewer/1.0/ios/?paths=1.0/data/app-content-list-item-data-1-0-5.json&app_id=85366ecb7429c19839e6900a1cfcedc18342f775
+	
+}
+
+public class ContentItem {
+	public string uid = "";
+	public string name = "";
+	public int version = 0;
+	public AssetBundle bundle;
+}
+
+public class ContentItemError {
+	public string uid = "";
+	public string name = "";
+	public string message = "";
+	public ContentItem contentItem;
+}
+
+public enum ContentSyncState {
+	SyncNotStarted,
+	SyncStarted,
+	SyncCompleted,
+	SyncPrepare,
+	SyncError,
+	SyncProcessShipFiles,
+	SyncProcessContentList,
+	SyncProcessDownloadFiles,
+	SyncProcessVerify,
+	SyncDefaultStarted,
+	SyncDefaultCompleted,
+	SyncPackStarted,
+	SyncPackCompleted
+}
+
+public enum ContentSyncDisplayState {
+	SyncNotStarted = 0,
+	SyncPreparing = 1,
+	SyncShip = 2,
+	SyncContentListsDefault = 3,
+	SyncContentListsDefaultDownload = 4,
+	SyncContentListsPack = 5,
+	SyncContentListsPackDownload = 6,
+	SyncContentListsValidation = 7,
+	SynContentListsCompleted = 8,
+	StateCount = 9
+}
+
+public enum ContentVersionSyncEnum {
+	NonVersioned, // plain file
+	Versioned, // just version and increment
+	VersionedSync // hashed with checksum
+}
+
+public class Contents {
+	
+	private static volatile Contents instance;
+	private static System.Object syncRoot = new System.Object();
+	
+	public static Contents Instance {
+		get {
+			if (instance == null) { 
+				lock (syncRoot) {
+					if (instance == null) 
+						instance = new Contents();
+	        	}
+	     	}	
+	     return instance;
+	  }
+	}
+	
+	public bool isReady {
+		get {
+			if(!string.IsNullOrEmpty(Contents.Instance.appCachePath)
+				&& !string.IsNullOrEmpty(Contents.Instance.appShipCachePath)) {
+				return true;
+			}
+			return false;
+		}
+	}
+	
+	DownloadableContentUrlObject currentUrlObject = null;	
+	
+	float incrementDownload = 0;
+	float countsDownload = 0;
+	
+	public bool runtimeUpdate = false;
+	
+	public ContentSyncState syncState = ContentSyncState.SyncNotStarted;
+	
+	public ContentSyncDisplayState displayState = ContentSyncDisplayState.SyncNotStarted;
+	public int displayStateCount = (int)ContentSyncDisplayState.StateCount;
+		
+	public string contentUrlRoot = ContentsConfig.contentEndpoint;
+	public string contentUrlCDN = "http://s3.amazonaws.com/";
+	
+	public List<ContentItem> contentItemList = new List<ContentItem>();
+	public ContentItem currentContentItem = new ContentItem();
+	
+	public Queue<DownloadableContentUrlObject> downloadUrlObjects = new Queue<DownloadableContentUrlObject>();
+	public Queue<DownloadableContentUrlObject> processUrlObjects = new Queue<DownloadableContentUrlObject>();
+		
+	public AssetBundle bundle;
+	
+	public WWW downloader;
+	public WWW verifier;
+	
+	public DownloadableContentItem dlcItem;
+	public ContentItemStatus contentItemStatus;
+	public bool downloadInProgress = false;
+	
+	public ContentItemAccessDictionary contentItemAccess;
+    public string persistenceFolder = "";
+    public string streamingAssetsFolder = "";
+    
+	public string appCachePath = "";
+	public string appCachePathAssetBundles = "";
+	public string appCachePathTrackers = "";
+	public string appCachePathPacks = "";
+	public string appCachePathShared = "";
+	public string appCachePathAll = "";
+	public string appCachePathAllShared = "";
+	public string appCachePathAllSharedUserData = "";
+	public string appCachePathSharedPacks = "";
+	public string appCachePathSharedTrackers = "";
+	public string appCachePathAllSharedTrackers = "";
+	public string appCachePathAllPlatform = "";
+	public string appCachePathAllPlatformPacks = "";
+	public string appCachePathAllPlatformData = "";
+	public string appCachePathData = "";
+	public string appCacheVersionPath = "";
+	public string appCachePlatformPath = "";
+	
+	public string appShipCachePath = "";
+	public string appShipCachePathAssetBundles = "";
+	public string appShipCachePathTrackers = "";
+	public string appShipCachePathPacks = "";
+	public string appShipCachePathShared = "";
+	public string appShipCachePathAll = "";
+	public string appShipCachePathData = "";
+	public string appShipCacheVersionPath = "";
+	public string appShipCachePlatformPath = "";
+	public string appShipCachePathPlatformPath = "";
+	
+	public string currentPlatformCode = "ios";
+	
+	public List<string> packPaths;
+	public List<string> packPathsVersionedShared;
+	public List<string> packPathsVersioned;
+	
+	public Dictionary<string,string> fileHashLookup = null;
+	
+	public bool initialSyncCompleted = false;
+	public bool initialDownload = false;
+	public string currentPackCodeSync = "default";
+	
+	public Contents() {
+		
+		currentPlatformCode = GetCurrentPlatformCode();
+				
+		contentItemAccess = new ContentItemAccessDictionary();		
+		contentItemAccess.Load();
+		
+		//InitCache();
+		
+		packPaths = new List<string>();
+		packPathsVersioned = new List<string>();
+		packPathsVersionedShared = new List<string>();
+		
+		fileHashLookup = new Dictionary<string, string>();
+		
+		// Content Sync Full
+		
+		Messenger<object>.AddListener(
+			ContentMessages.ContentSyncFullStarted,
+			OnContentSyncFullStarted);
+		
+		Messenger<object>.AddListener(
+			ContentMessages.ContentSyncFullError,
+			OnContentSyncFullError);
+		
+		Messenger<object>.AddListener(
+			ContentMessages.ContentSyncFullSuccess,
+			OnContentSyncFullSuccess);
+		
+		Messenger<object>.AddListener(
+			ContentMessages.ContentSyncFullPrepare,
+			OnContentSyncFullPrepare);
+				
+		
+		// Content Sync Initial
+		
+		Messenger<object>.AddListener(
+			ContentMessages.ContentSyncInitialStarted,
+			OnContentSyncInitialStarted);
+		
+		Messenger<object>.AddListener(
+			ContentMessages.ContentSyncInitialError,
+			OnContentSyncInitialError);
+		
+		Messenger<object>.AddListener(
+			ContentMessages.ContentSyncInitialSuccess,
+			OnContentSyncInitialSuccess);
+		
+		// Content Sync Pack
+		
+		Messenger<object>.AddListener(
+			ContentMessages.ContentSyncPackStarted,
+			OnContentSyncPackStarted);
+		
+		Messenger<object>.AddListener(
+			ContentMessages.ContentSyncPackError,
+			OnContentSyncPackError);
+		
+		Messenger<object>.AddListener(
+			ContentMessages.ContentSyncPackSuccess,
+			OnContentSyncPackSuccess);
+		
+		
+		
+		//Messenger<object>.AddListener(
+		//	ContentMessages.ContentAppContentListFileDownloadError, 
+		//	OnContentAppContentListFileSuccess);
+		
+		//Messenger<object>.AddListener(
+		//	ContentMessages.ContentAppContentListFileStarted, 
+		//	OnContentAppContentListFileStarted);
+		
+		//Messenger<object>.AddListener(
+		//	ContentMessages.ContentAppContentListFileError, 
+		//	OnContentAppContentListFileError);
+		
+		
+		
+		// Content List Sync Pack
+		
+		Messenger<object>.AddListener(
+			ContentMessages.ContentAppContentListSyncStarted,
+			OnContentAppContentListSyncStarted);
+		
+		Messenger<object>.AddListener(
+			ContentMessages.ContentAppContentListSyncError,
+			OnContentAppContentListSyncError);
+		
+		Messenger<object>.AddListener(
+			ContentMessages.ContentAppContentListSyncSuccess,
+			OnContentAppContentListSyncSuccess);
+				
+		
+		// Has content list
+		
+		Messenger<object>.AddListener(
+			ContentMessages.ContentAppContentListFilesSuccess, 
+			OnContentAppContentListFilesSuccess);
+		
+		Messenger<object>.AddListener(
+			ContentMessages.ContentAppContentListFilesStarted, 
+			OnContentAppContentListFilesStarted);
+		
+		Messenger<object>.AddListener(
+			ContentMessages.ContentAppContentListFilesError, 
+			OnContentAppContentListFilesError);
+		
+	
+		
+		
+			
+		
+		// Has content list
+		
+		Messenger<object>.AddListener(
+			ContentMessages.ContentAppContentListFileDownloadSuccess, 
+			OnContentAppContentListFileDownloadSuccess);
+		
+		Messenger<object>.AddListener(
+			ContentMessages.ContentAppContentListFileDownloadStarted, 
+			OnContentAppContentListFileDownloadStarted);
+		
+		Messenger<object>.AddListener(
+			ContentMessages.ContentAppContentListFileDownloadError, 
+			OnContentAppContentListFileDownloadError);
+		
+		
+	}
+	
+	// EVENTS SYNC
+	
+	// FULL
+	
+	public void OnContentSyncFullStarted(object obj) {
+		
+		LogUtil.Log("OnContentSyncFullStarted:", obj);
+		
+		ChangeSyncState(ContentSyncState.SyncProcessContentList);
+		displayState = ContentSyncDisplayState.SyncPreparing;
+	}
+	
+	public void OnContentSyncFullPrepare(object obj) {
+		
+		LogUtil.Log("OnContentSyncFullPrepare:", obj);
+		
+		//AppContentListItems.Instance.LoadData();
+		displayState = ContentSyncDisplayState.SyncContentListsValidation;	
+		
+		ChangeSyncState(ContentSyncState.SyncCompleted);	
+	}
+	
+	public void OnContentSyncFullSuccess(object obj) {
+		
+		LogUtil.Log("OnContentSyncFullSuccess:", obj);
+		
+		displayState = ContentSyncDisplayState.SynContentListsCompleted;	
+	}
+	
+	public void OnContentSyncFullError(object obj) {
+		
+		LogUtil.Log("OnContentSyncFullError:", obj);
+		displayState = ContentSyncDisplayState.SynContentListsCompleted;	
+	}
+	
+	// INITIAL
+	
+	public void OnContentSyncInitialStarted(object obj) {
+		
+		LogUtil.Log("OnContentSyncInitialStarted:", obj);
+		
+		displayState = ContentSyncDisplayState.SyncContentListsDefault;	
+		
+		ChangeSyncState(ContentSyncState.SyncProcessShipFiles);
+	}
+	
+	public void OnContentSyncInitialSuccess(object obj) {
+		
+		LogUtil.Log("OnContentSyncInitialSuccess:", obj);
+		
+		ChangeSyncState(ContentSyncState.SyncPrepare);
+	}
+	
+	public void OnContentSyncInitialError(object obj) {
+		
+		LogUtil.Log("OnContentSyncInitialError:", obj);
+		
+		ChangeSyncState(ContentSyncState.SyncError);
+	}
+	
+	// PACK
+	
+	public void OnContentSyncPackStarted(object obj) {
+		
+		LogUtil.Log("OnContentSyncPackStarted:", obj);
+		
+		ChangeSyncState(ContentSyncState.SyncPackStarted);
+		
+		displayState = ContentSyncDisplayState.SyncContentListsPack;	
+	}
+	
+	public void OnContentSyncPackSuccess(object obj) {
+		
+		LogUtil.Log("OnContentSyncPackSuccess:", obj);
+		
+		ChangeSyncState(ContentSyncState.SyncPackCompleted);
+	}
+	
+	public void OnContentSyncPackError(object obj) {
+		
+		LogUtil.Log("OnContentSyncPackError:", obj);
+		
+		ChangeSyncState(ContentSyncState.SyncError);
+	}	
+	
+	// EVENTS CONTENT LIST
+	
+	public void OnContentAppContentListSyncStarted(object obj) {
+		
+		LogUtil.Log("OnContentAppContentListSyncStarted:", obj);
+		
+	}
+	
+	public void OnContentAppContentListSyncError(object obj) {
+		
+		LogUtil.Log("OnContentAppContentListSyncError:", obj);
+		
+		ChangeSyncState(ContentSyncState.SyncError);
+	}
+	
+	public void OnContentAppContentListSyncSuccess(object obj) {
+		
+		LogUtil.Log("OnContentAppContentListSyncSuccess:", obj);
+		
+		ChangeSyncState(ContentSyncState.SyncProcessDownloadFiles);
+		
+		if(displayState == ContentSyncDisplayState.SyncContentListsPack) {
+			displayState = ContentSyncDisplayState.SyncContentListsPackDownload;
+		}
+		else if(displayState == ContentSyncDisplayState.SyncContentListsDefault) {
+			displayState = ContentSyncDisplayState.SyncContentListsDefaultDownload;
+		}
+		
+		ProcessDownloadableContentUrlQueue();
+	}	
+	
+	// SYNC ACTUAL FILES OR PACK DOWNLAOD
+	
+	public void OnContentAppContentListFilesStarted(object obj) {
+		
+		LogUtil.Log("OnContentAppContentListFilesStarted:", obj);
+		
+		//ChangeSyncState(ContentSyncState.SyncProcessDownloadFiles);
+	}
+	
+	public void OnContentAppContentListFilesError(object obj) {
+		
+		LogUtil.Log("OnContentAppContentListFilesError:", obj);
+		
+		ChangeSyncState(ContentSyncState.SyncError);
+	}
+	
+	public void OnContentAppContentListFilesSuccess(object obj) {
+		
+		LogUtil.Log("OnContentAppContentListFilesSuccess:", obj);
+		
+		// Start downloading the new files
+		
+		ProcessDownloadableContentUrlQueue();	
+	}	
+	
+	public void OnContentAppContentListFileStarted(object obj) {
+		
+		LogUtil.Log("OnContentAppContentListFileStarted:", obj);
+		
+		ChangeSyncState(ContentSyncState.SyncProcessDownloadFiles);
+	}
+	
+	public void OnContentAppContentListFileError(object obj) {
+		
+		LogUtil.Log("OnContentAppContentListFileError:", obj);
+		
+		ChangeSyncState(ContentSyncState.SyncError);
+	}
+	
+	public void OnContentAppContentListFileSuccess(object obj) {
+		
+		LogUtil.Log("OnContentAppContentListFileSuccess:", obj);
+		
+		// Start downloading the new files
+		
+		if(displayState == ContentSyncDisplayState.SyncContentListsPack) {
+			displayState = ContentSyncDisplayState.SyncContentListsPackDownload;
+		}
+		else if(displayState == ContentSyncDisplayState.SyncContentListsDefault) {
+			displayState = ContentSyncDisplayState.SyncContentListsDefaultDownload;
+		}
+		
+		ProcessDownloadableContentUrlQueue();
+		
+	}
+	
+	public void OnContentAppContentListFileDownloadStarted(object obj) {
+		
+		ChangeSyncState(ContentSyncState.SyncProcessDownloadFiles);
+	}	
+	
+	public void OnContentAppContentListFileDownloadError(object obj) {
+		
+		ChangeSyncState(ContentSyncState.SyncError);
+	}
+	
+	public void OnContentAppContentListFileDownloadSuccess(object obj) {
+		
+		LogUtil.Log("OnContentAppContentListFileDownloadSuccess:", obj);
+		
+		// Start downloading the new files
+		
+		if(displayState == ContentSyncDisplayState.SyncContentListsPack) {
+			displayState = ContentSyncDisplayState.SyncContentListsPackDownload;
+		}
+		else if(displayState == ContentSyncDisplayState.SyncContentListsDefault) {
+			displayState = ContentSyncDisplayState.SyncContentListsDefaultDownload;
+		}
+		
+		ProcessDownloadableContentUrlQueue();
+		
+	}
+	
+	public void ChangeSyncState(ContentSyncState syncStateTo) {
+		if(syncState != syncStateTo) {
+			syncState = syncStateTo;
+			if(syncState == ContentSyncState.SyncNotStarted) {
+				
+			}
+			else if(syncState == ContentSyncState.SyncStarted) {
+				
+				incrementDownload = 0;
+				countsDownload = downloadUrlObjects.Count;
+				Messenger<object>.Broadcast(
+					ContentMessages.ContentSyncFullStarted,
+					"Content Sync Started");
+			}
+			else if(syncState == ContentSyncState.SyncCompleted) {
+				
+				Messenger<object>.Broadcast(
+					ContentMessages.ContentSyncFullSuccess,
+					"Content Sync Completed Successfully");
+			}
+			else if(syncState == ContentSyncState.SyncPrepare) {
+				
+				Messenger<object>.Broadcast(
+					ContentMessages.ContentSyncFullPrepare,
+					"Content Sync Preparing");
+			}
+			else if(syncState == ContentSyncState.SyncError) {
+				
+				Messenger<object>.Broadcast(
+					ContentMessages.ContentSyncFullError,
+					"Content Sync Completed with Errors");
+			}
+			else if(syncState == ContentSyncState.SyncProcessContentList) {
+				
+				Messenger<object>.Broadcast(
+					ContentMessages.ContentAppContentListSyncStarted
+					,"Content Sync Started");
+			}
+			else if(syncState == ContentSyncState.SyncProcessDownloadFiles) {
+				
+				//Messenger<object>.Broadcast(
+				//	ContentMessages.ContentAppContentListSyncStarted
+				//	,"Content Sync Started");
+			}
+		}
+	}
+	
+	public void ProcessDownloadableContentUrlQueue() {
+		CoroutineUtil.Start(ProcessDownloadableContentUrlQueueCo());
+	}
+		
+	public IEnumerator ProcessDownloadableContentUrlQueueCo() {
+		if(downloadUrlObjects != null) {
+			if(downloadUrlObjects.Count > 0) {
+				currentUrlObject = downloadUrlObjects.Dequeue();
+				if(currentUrlObject != null) {
+					// download file...
+					
+					if(countsDownload > 0) {
+						
+						BroadcastProgressMessage("Downloading Content", 
+							GetUnversionedDisplayFile(currentUrlObject.path), incrementDownload++/countsDownload);
+						
+						LogUtil.Log("Downloading Content:"
+							, " incrementDownload:" + incrementDownload
+							+ " countsDownload:" + countsDownload);
+					}
+					
+					yield return CoroutineUtil.WaitForEndOfFrame();
+					
+					RequestDownloadBytes(currentUrlObject.url);
+				}
+			}
+			else {
+								
+				yield return CoroutineUtil.Start(ProcessSyncUpdateCo());				
+				
+				if(!initialSyncCompleted) {
+					// Kick off actual file process
+					ProcessAppContentList(currentPackCodeSync);
+				}
+				else {				
+					// Kick off prepare and load initial content state
+					ChangeSyncState(ContentSyncState.SyncPrepare);
+				}
+			}
+		}
+	}
+	        
+	public string GetCurrentPlatformCode() {
+#if UNITY_IPHONE
+		return "ios";
+#elif UNITY_ANDROID
+		return "android";
+#else 
+		return "desktop";
+#endif		
+	}
+	
+	public void ChangePackAndLoadMainScene(string pack) {		
+		GamePacks.Instance.ChangeCurrentGamePack(pack);
+		//GameLevels.Instance.ChangeCurrentGameLevel(pack + "-main");
+		// scene bundle based with unity caching
+		Contents.Instance.LoadSceneOrDownloadScenePackAndLoad(GamePacks.Current.code);
+	}
+
+	public bool CheckGlobalContentAccess(string pack) {
+		if(contentItemAccess.CheckAccess(pack)) {
+			return true;	
+		}
+		return false;
+	}
+	
+	public void SaveGlobalContentAccess() {
+		contentItemAccess.Save();
+	}
+	
+	public void SetGlobalContentAccess(string pack) {
+		pack = pack.Replace(GamePacks.currentGameBundle + ".", "");
+		contentItemAccess.SetContentAccess(pack);
+		contentItemAccess.SetContentAccess(pack.Replace("-", "_"));
+		contentItemAccess.SetContentAccess(pack.Replace("_", "-"));
+		
+		LogUtil.LogAccess("GameStore::SetContentAccessPermissions pack :" + pack);
+		LogUtil.LogAccess("GameStore::SetContentAccessPermissions pack _ :" + pack.Replace("-", "_"));
+		LogUtil.LogAccess("GameStore::SetContentAccessPermissions pack - :" + pack.Replace("_", "-"));
+		LogUtil.LogAccess("GameStore::SetContentAccessPermissions pack - :" + pack.Replace("_", "-"));
+		contentItemAccess.Save();
+	}	
+	
+	public void SetContentAccessTransaction(string key, string productId, string receipt, int quantity, bool save) {
+		contentItemAccess.SetContentAccessTransaction(key, productId, receipt, quantity, save);
+	}
+	
+	public void ProcessLoad(bool runtime) {
+		runtimeUpdate = runtime;
+		//AppViewerUIController.Instance.ShowUI();
+		if(runtimeUpdate) {
+			//UINotificationDisplayContent.Instance.HideDialog();
+		}
+		CoroutineUtil.Start(ProcessLoadCo());
+	}
+	
+	public IEnumerator ProcessLoadCo() {
+				
+		currentPackCodeSync = "default";
+		
+		ChangeSyncState(ContentSyncState.SyncStarted);
+				
+		ChangeSyncState(ContentSyncState.SyncProcessShipFiles);
+		
+		displayState = ContentSyncDisplayState.SyncPreparing;
+						
+		// On initial load handle cache
+		
+        yield return CoroutineUtil.Start(Contents.Instance.InitCacheCo());		
+		
+		displayState = ContentSyncDisplayState.SyncContentListsDefault;
+		
+		ChangeSyncState(ContentSyncState.SyncProcessContentList);
+		
+		// Download content list from root for ui and initial load
+		ProcessAppContentListSync(currentPackCodeSync);		
+	}
+	
+	public void ProcessPackLoad(string packCode, bool runtime) {
+		runtimeUpdate = true;
+		ProcessPackLoad(packCode);
+	}
+	
+	public void ProcessPackLoad(string packCode) {
+		runtimeUpdate = false;
+		CoroutineUtil.Start(ProcessPackLoadCo(packCode));
+	}
+		
+	public IEnumerator ProcessPackLoadCo(string packCode) {
+		// Process pack initial startup, sync and download any new files
+		
+		currentPackCodeSync = packCode;
+				
+		ChangeSyncState(ContentSyncState.SyncStarted);
+
+		ChangeSyncState(ContentSyncState.SyncProcessContentList);
+		
+		displayState = ContentSyncDisplayState.SyncContentListsPack;		
+		
+		yield return CoroutineUtil.WaitForEndOfFrame();
+		
+		ProcessAppContentList(packCode);
+		
+	}
+		
+	public void ProcessAppContentListSync(string packCode) {
+		
+		initialSyncCompleted = false;
+		
+		ResetQueues();
+		
+		List<string> paths = CollectAppContentListSync(packCode);
+		if(paths.Count > 0) {
+			RequestDownloadableAppContentListSync(paths);
+		}
+		else {
+						
+			Messenger<object>.Broadcast(
+				ContentMessages.ContentAppContentListSyncSuccess,
+					"Success, no files to sync");						
+		}
+	}
+		
+	/*
+	public void ProcessSyncUpdate() {
+		if(processUrlObjects != null) {
+			ProcessSyncedFiles();
+		}
+	}
+	*/
+	
+	public IEnumerator ProcessSyncUpdateCo() {
+		if(processUrlObjects != null) {
+			yield return CoroutineUtil.Start(ProcessSyncedFilesCo());
+		}
+	}
+		
+	public void ProcessAppContentList(string packCode) {
+		
+		initialSyncCompleted = true;
+		
+		ChangeSyncState(ContentSyncState.SyncProcessDownloadFiles);
+		
+		ResetQueues();
+		
+		List<string> paths = CollectAppContentListFiles(packCode);
+		if(paths.Count > 0) {
+			RequestDownloadableAppContentListFiles(paths);
+		}
+		else {
+						
+			Messenger<object>.Broadcast(
+				ContentMessages.ContentAppContentListFilesSuccess,
+					"Success, no files to sync");			
+		}
+	}
+	
+	public bool IsDefault(string code) {
+		if(!string.IsNullOrEmpty(code)) {			
+			if(code.ToLower() == "default"
+					&& code.ToLower() == "*"
+					&& code.ToLower() == "all") {
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	public bool CheckHashVerified(string pathVersioned, string hashData) {
+		string currentHash = ChecksumHash(pathVersioned);
+		string dataHash = hashData;
+		bool hashVerified = currentHash.ToLower() == dataHash.ToLower() ? true : false;
+		return hashVerified;
+	}
+	
+	public List<string> CollectAppContentListFiles(string packCode) {
+		
+		AppContentListItems.Instance.LoadData(); // load latest
+		
+		List<AppContentListItem> appContentListItems 
+			= AppContentListItems.Instance.GetAll();//packCode);
+		
+		List<string> paths = new List<string>();
+		
+		foreach(AppContentListItem item in appContentListItems) {
+			string path = Path.Combine(item.data.directoryFull, item.data.fileName);
+			string pathVersioned = GetFullPathVersioned(path);
+			string pathHashed = GetFileVersioned(path, item.data.hash);
+			bool fileExists = FileSystemUtil.CheckFileExists(pathVersioned);
+			
+			// TODO DEV CONTENT
+			bool shouldBeUpdated = false;
+			bool hashVerified = false;
+			
+			if(!fileExists) {
+				pathVersioned = Path.Combine(Contents.Instance.appCachePath, pathVersioned);
+				pathVersioned = GetPathUpdatedVersion(pathVersioned);
+				fileExists = FileSystemUtil.CheckFileExists(pathVersioned);
+			}
+						
+			if(pathVersioned.Contains("/icon")
+				|| pathVersioned.Contains("/featured-item")
+				|| pathVersioned.Contains("/featured")
+				|| pathVersioned.Contains("/" + AppContentStates.DATA_KEY)
+				|| pathVersioned.Contains("/" + AppContentActions.DATA_KEY)
+				|| pathVersioned.Contains("/" + AppContentAssets.DATA_KEY)
+				|| pathVersioned.Contains("/" + AppStates.DATA_KEY)
+				//|| pathVersioned.Contains("/" + BaseGameStatistics.DATA_KEY)
+				//|| pathVersioned.Contains("/" + BaseGameAchievements.DATA_KEY)
+				|| pathVersioned.Contains("/" + ARDataSets.DATA_KEY)
+				|| pathVersioned.Contains("/" + ARDataSetTrackers.DATA_KEY)) {
+				
+				hashVerified = CheckHashVerified(pathVersioned, item.data.hash);
+				
+				if(hashVerified) {					
+					shouldBeUpdated = false;
+				}
+				else {
+					shouldBeUpdated = true;
+				}
+			}
+			
+			if(fileExists 
+				&& (packCode.ToLower() == item.pack_code.ToLower() 
+				|| IsDefault(packCode))
+				) {
+				
+				hashVerified = CheckHashVerified(pathVersioned, item.data.hash);
+				
+				if(hashVerified) {					
+					shouldBeUpdated = false;
+				}
+				else {
+					shouldBeUpdated = true;
+				}
+			}
+			else if(!fileExists  
+				&& (packCode.ToLower() == item.pack_code.ToLower() 
+				|| IsDefault(packCode))
+				) {
+				shouldBeUpdated = true;
+			}
+			
+			if(shouldBeUpdated) {
+				pathHashed = GetPathUpdatedVersion(pathHashed);
+				paths.Add(pathHashed);
+			}
+			
+		}		
+		
+		return paths;
+	}	
+	
+	public string CollectAppContentListSharedPacksPathData(string packCode, string key, string ext, bool versioned, bool synced) {		
+		
+		string pathPack = "";
+		
+		// app content list data
+		pathPack = ContentsConfig.contentVersion +
+			"/shared/packs/" +
+				packCode +
+				"/data/" + 
+				key +
+				"." + ext;
+		
+		
+		if(synced) {
+			pathPack = GetFullPathVersionedSync(pathPack);	
+		}
+		else if(versioned && !synced) {
+			pathPack = GetFileVersioned(pathPack); 	
+		}
+		
+		return pathPack;		
+	}
+	
+	
+	public string CollectAppContentListPlatformPacksPathData(string packCode, string key, string ext, bool versioned, bool synced) {		
+		
+		string pathPack = "";
+		
+		// app content list data
+		pathPack = ContentsConfig.contentVersion +
+			"/" + GetCurrentPlatformCode() + "/packs/" +
+				packCode +
+				"/data/" + 
+				key +
+				"." + ext;
+		
+		
+		if(synced) {
+			pathPack = GetFullPathVersionedSync(pathPack);	
+		}
+		else if(versioned && !synced) {
+			pathPack = GetFileVersioned(pathPack); 	
+		}
+		
+		return pathPack;		
+	}
+	
+	public string CollectAppContentListSharedPacksPathContent(string packCode, string key, string ext, bool versioned, bool synced) {		
+		
+		string pathPack = "";
+		
+		// app content list data
+		pathPack = ContentsConfig.contentVersion +
+			"/shared/packs/" +
+				packCode +
+				"/content/" + 
+				key +
+				"." + ext;
+		
+		if(synced) {
+			pathPack = GetFullPathVersionedSync(pathPack);	
+		}
+		else if(versioned && !synced) {
+			pathPack = GetFileVersioned(pathPack); 	
+		}
+		
+		return pathPack;		
+	}
+	
+	public string CollectAppContentListSharedPacksPath(string packCode, string key, string ext, bool versioned, bool synced) {		
+		
+		string pathPack = "";
+		
+		// app content list data
+		pathPack = ContentsConfig.contentVersion +
+			"/shared/packs/" +
+				packCode +
+				"/" + 
+				key +
+				"." + ext;
+		
+		if(synced) {
+			pathPack = GetFullPathVersionedSync(pathPack);	
+		}
+		else if(versioned && !synced) {
+			pathPack = GetFileVersioned(pathPack); 	
+		}
+		
+		return pathPack;		
+	}
+	
+	public List<string> CollectAppContentListSync(string packCode) {
+		
+		AppContentListItems.Instance.LoadData(); // load latest
+		
+		List<string> paths = new List<string>();
+		
+		string pathRoot = ContentsConfig.contentVersion + "/data/" + AppContentListItems.DATA_KEY + ".json";
+		string pathRootVersioned = GetFileVersioned(pathRoot); 
+		//string pathRootSync = GetFullPathVersionedSync(pathRoot); 
+		
+		paths.Add(pathRootVersioned);
+					
+		foreach(GamePack pack in GamePacks.Instance.GetAll()) {
+			
+			// content list items
+			
+			paths.Add(
+				CollectAppContentListSharedPacksPathData(
+				pack.code, 
+				AppContentListItems.DATA_KEY, 
+				"json", 
+				true,
+				false));
+			
+			paths.Add(
+				CollectAppContentListPlatformPacksPathData(
+				pack.code, 
+				AppContentListItems.DATA_KEY, 
+				"json", 
+				true,
+				false));
+		}
+				
+		return paths;
+	}
+		
+	public void ResetQueues(){
+		
+		if(downloadUrlObjects == null) {
+			downloadUrlObjects = new Queue<DownloadableContentUrlObject>();
+		}
+		
+		downloadUrlObjects.Clear();
+		
+		if(processUrlObjects == null) {
+			processUrlObjects = new Queue<DownloadableContentUrlObject>();
+		}
+		processUrlObjects.Clear();
+	}	
+	
+	public string GetPathUpdatedVersion(string url) {
+		if(url.Contains("version/")) {
+			url = url.Replace("version/",ContentsConfig.contentVersion + "/");
+		}
+		return url;
+	}	
+	
+	
+	// ----------------------------------------------------------------------------------
+	// HANDLERS
+	
+	
+	void HandleDownloadableAppContentListFilesCallback(Engine.Networking.WebRequest.ResponseObject response) {
+		
+		response = HandleResponseObject(response);
+		
+		bool serverError = false;
+				
+		if(response.validResponse) {
+			
+			LogUtil.LogAccess("Successful HandleDownloadableAppContentListFilesCallback verfication download...");						
+			
+			string dataToParse = response.data;
+						
+			LogUtil.LogAccess("dataToParse:" + dataToParse);
+						
+			if(!string.IsNullOrEmpty(dataToParse)) {	
+				
+				try {
+					DownloadableContentItemListResponse responseData 
+						= JsonMapper.ToObject<DownloadableContentItemListResponse>(dataToParse);
+					
+					foreach(KeyValuePair<string, DownloadableContentUrlObject> item 
+						in responseData.data.url_objs) {
+						DownloadableContentUrlObject urlData = item.Value;
+						downloadUrlObjects.Enqueue(urlData);						
+					}
+					
+					countsDownload = downloadUrlObjects.Count;
+					incrementDownload = 0;
+					
+					Messenger<object>.Broadcast(
+						ContentMessages.ContentAppContentListFilesSuccess, 
+						"Content verified, downloading and loading pack." );
+				}
+				catch(Exception e) {							
+					serverError = true;
+					LogUtil.LogAccess("Parsing error:" 
+						+ e.Message + e.StackTrace + e.Source);
+				}				
+			}
+			else {			
+				serverError = true;
+			}
+		}
+		else {
+			// There was a problem with the response.
+			LogUtil.LogAccess("HandleDownloadableAppContentListFilesCallback NON-SUCCESSFUL DOWNLOAD");			
+			serverError = true;
+		}
+		
+		if(serverError) {
+			Reset();
+			Messenger<object>.Broadcast(
+				ContentMessages.ContentAppContentListFilesError, 
+				"Error on server, please try again.");
+		}
+	}
+		
+	void HandleDownloadableAppContentListSyncCallback(Engine.Networking.WebRequest.ResponseObject response) {
+		
+		response = HandleResponseObject(response);
+		
+		bool serverError = false;
+				
+		if(response.validResponse) {
+			
+			LogUtil.LogAccess("Successful HandleDownloadableAppContentListSyncCallback verfication download...");						
+			
+			string dataToParse = response.data;
+						
+			LogUtil.LogAccess("dataToParse:" + dataToParse);
+						
+			if(!string.IsNullOrEmpty(dataToParse)) {	
+				
+				try {
+					DownloadableContentItemListResponse responseData 
+						= JsonMapper.ToObject<DownloadableContentItemListResponse>(dataToParse);
+					
+					foreach(KeyValuePair<string, DownloadableContentUrlObject> item 
+						in responseData.data.url_objs) {
+						DownloadableContentUrlObject urlData = item.Value;
+						downloadUrlObjects.Enqueue(urlData);						
+					}
+					
+					countsDownload = downloadUrlObjects.Count;
+					incrementDownload = 0;
+					
+					Messenger<object>.Broadcast(
+						ContentMessages.ContentAppContentListSyncSuccess, 
+						"Content list verfication success." );
+				}
+				catch(Exception e) {							
+					serverError = true;
+					LogUtil.LogAccess("Parsing error:" 
+						+ e.Message + e.StackTrace + e.Source);
+				}				
+			}
+			else {			
+				serverError = true;
+			}
+		}
+		else {
+			// There was a problem with the response.
+			LogUtil.LogAccess("HandleDownloadableAppContentListSyncCallback NON-SUCCESSFUL DOWNLOAD");			
+			serverError = true;
+		}
+		
+		if(serverError) {
+			Reset();
+			Messenger<object>.Broadcast(
+				ContentMessages.ContentAppContentListSyncError, 
+				"Error on server, please try again.");
+		}
+	}
+	
+	// ----------------------------------------------------------------------------------
+	// HANDLERS - DEFAULT
+	
+	void HandleDownloadAssetBundleCallback(Engine.Networking.WebRequest.ResponseObject response) {
+		
+		/*
+		 * 
+		response = HandleResponseObject(response);
+		
+		if(response.validResponse) {
+			
+			LogUtil.LogAccess("SUCCESSFUL DOWNLOAD");						
+			
+			
+			
+			
+			string dataToParse = response.data;
+						
+			LogUtil.LogAccess("dataToParse:" + dataToParse);
+						
+			if(!string.IsNullOrEmpty(dataToParse)) {	
+				
+				try {
+					DownloadableContentItemResponse responseData 
+					= JsonMapper.ToObject<DownloadableContentItemResponse>(dataToParse);
+					
+					dlcItem = responseData.data;
+				}
+				catch(Exception e) {							
+					serverError = true;
+					LogUtil.LogAccess("Parsing error:" 
+					+ e.Message + e.StackTrace + e.Source);
+				}				
+				
+				if(dlcItem != null) {
+					
+					List<string> downloadUrls = dlcItem.download_urls;
+					
+					foreach(string url in downloadUrls) {
+						Messenger<string>.Broadcast(
+							ContentMessages.ContentItemVerifySuccess, 
+							"Content verified, downloading and loading pack." );
+						
+						CoroutineUtil.Start(
+							Contents.Instance.SceneLoadFromCacheOrDownloadCo(url));
+						break;
+					}					
+				}
+				else {			
+					serverError = true;
+				}
+			}
+			else {			
+				serverError = true;
+			}
+		}
+		else {
+			// There was a problem with the response.
+			LogUtil.LogAccess("NON-SUCCESSFUL DOWNLOAD");			
+			serverError = true;
+		}
+		
+		if(serverError) {
+			Reset();
+			Messenger<string>.Broadcast(
+			ContentMessages.ContentItemVerifyError, 
+			"Error on server, please try again.");
+		}
+		*/
+	}
+		
+	void HandleDownloadableContentInfoCallback(Engine.Networking.WebRequest.ResponseObject response) {
+		
+		response = HandleResponseObject(response);
+		
+		bool serverError = false;
+		
+		if(response.validResponse) {
+			
+			LogUtil.LogAccess("SUCCESSFUL DOWNLOAD");						
+			
+			string dataToParse = response.data;
+						
+			LogUtil.LogAccess("dataToParse:" + dataToParse);
+						
+			if(!string.IsNullOrEmpty(dataToParse)) {	
+				
+				try {
+					DownloadableContentItemResponse responseData 
+						= JsonMapper.ToObject<DownloadableContentItemResponse>(dataToParse);
+					dlcItem = responseData.data;
+				}
+				catch(Exception e) {							
+					serverError = true;
+					LogUtil.LogAccess("Parsing error:" 
+						+ e.Message + e.StackTrace + e.Source);
+				}				
+				
+				if(dlcItem != null) {
+					
+					List<string> downloadUrls = dlcItem.download_urls;
+					
+					foreach(string url in downloadUrls) {
+						Messenger<string>.Broadcast(
+							ContentMessages.ContentItemVerifySuccess, 
+							"Content verified, downloading and loading pack." );
+						
+						CoroutineUtil.Start(
+							Contents.Instance.SceneLoadFromCacheOrDownloadCo(url));
+						break;
+					}					
+				}
+				else {			
+					serverError = true;
+				}
+			}
+			else {			
+				serverError = true;
+			}
+		}
+		else {
+			// There was a problem with the response.
+			LogUtil.LogAccess("NON-SUCCESSFUL DOWNLOAD");			
+			serverError = true;
+		}
+		
+		if(serverError) {
+			Reset();
+			Messenger<string>.Broadcast(
+				ContentMessages.ContentItemVerifyError, 
+				"Error on server, please try again.");
+		}
+	}
+	
+	//HandleDownloadableContentSetSyncCallback
+	
+	void HandleDownloadableContentSetSyncCallback(
+		Engine.Networking.WebRequest.ResponseObject response) {
+		
+		response = HandleResponseObject(response);
+		
+		bool serverError = false;
+		
+		if(response.validResponse) {
+			
+			LogUtil.LogAccess("HandleDownloadableContentSetSyncCallback valid");						
+			
+			string dataToParse = response.data;
+						
+			LogUtil.LogAccess("dataToParse:" + dataToParse);
+						
+			if(!string.IsNullOrEmpty(dataToParse)) {	
+				
+				try {
+					DownloadableContentItemResponse responseData 
+						= JsonMapper.ToObject<DownloadableContentItemResponse>(dataToParse);
+					
+					dlcItem = responseData.data;
+				}
+				catch(Exception e) {							
+					serverError = true;
+					LogUtil.LogAccess("Parsing error:" 
+						+ e.Message + e.StackTrace + e.Source);
+				}				
+				
+				if(dlcItem != null) {
+					
+					List<string> downloadUrls = dlcItem.download_urls;
+					
+					foreach(string url in downloadUrls) {
+						Messenger<string>.Broadcast(
+							ContentMessages.ContentItemVerifySuccess, 
+							"Content verified, downloading and loading pack." );
+						
+						CoroutineUtil.Start(
+							Contents.Instance.SceneLoadFromCacheOrDownloadCo(url));
+						break;
+					}					
+				}
+				else {			
+					serverError = true;
+				}
+			}
+			else {			
+				serverError = true;
+			}
+		}
+		else {
+			// There was a problem with the response.
+			LogUtil.LogAccess("NON-SUCCESSFUL DOWNLOAD");			
+			serverError = true;
+		}
+		
+		if(serverError) {
+			Reset();
+			Messenger<string>.Broadcast(
+				ContentMessages.ContentItemVerifyError, 
+				"Error on server, please try again.");
+		}
+	}
+	
+	void HandleDownloadableFileCallback(Engine.Networking.WebRequest.ResponseObject response) {
+		
+		response = HandleResponseObject(response);
+		
+		bool serverError = false;
+		
+		if(response.validResponse) {
+			
+			LogUtil.LogAccess("Successful verfication download...");						
+			
+			string dataToParse = response.data;
+						
+			LogUtil.LogAccess("dataToParse:" + dataToParse);
+						
+			if(!string.IsNullOrEmpty(dataToParse)) {	
+				
+				try {
+					DownloadableContentItemResponse responseData 
+						= JsonMapper.ToObject<DownloadableContentItemResponse>(dataToParse);
+					
+					dlcItem = responseData.data;
+				}
+				catch(Exception e) {							
+					serverError = true;
+					LogUtil.LogAccess("Parsing error:" 
+						+ e.Message + e.StackTrace + e.Source);
+				}				
+				
+				if(dlcItem != null) {
+					
+					List<string> downloadUrls = dlcItem.download_urls;
+					
+					if(downloadUrls.Count > 0) {
+						Messenger<string>.Broadcast(
+							ContentMessages.ContentItemVerifySuccess, 
+							"Content verified, downloading and loading pack." );
+						//LogUtil.Log("url:" + url);
+						//CoroutineUtil.Start(Contents.Instance.SceneLoadFromCacheOrDownloadCo(url));
+						//WebRequest.Instance.Request(
+					}
+				}
+				else {			
+					serverError = true;
+				}
+			}
+			else {			
+				serverError = true;
+			}
+		}
+		else {
+			// There was a problem with the response.
+			LogUtil.LogAccess("NON-SUCCESSFUL DOWNLOAD");			
+			serverError = true;
+		}
+		
+		if(serverError) {
+			Reset();
+			Messenger<string>.Broadcast(
+				ContentMessages.ContentItemVerifyError, 
+				"Error on server, please try again.");
+		}
+	}
+			
+	//public WebRequest.ResponseObject HandleResponseObjectAssetBundle(WebRequest.ResponseObject responseObject) {		
+		
+	//}
+	
+	public Engine.Networking.WebRequest.ResponseObject HandleResponseObject(
+		Engine.Networking.WebRequest.ResponseObject responseObject) {
+		
+		bool serverError = false;
+		
+		// Manages common response object parsing to get to object
+		if(responseObject.dataValueText != null) {
+			
+			JsonData data = JsonMapper.ToObject(responseObject.dataValueText);
+						
+			if(data.IsObject) {
+				
+				string code = "9999";
+				
+				try{
+					if(data["code"] != null) {
+						code = (string)data["code"];
+					}
+				}
+				catch(Exception e) {
+					responseObject.error = 1;
+					LogUtil.Log("ERROR: " + e.Message + e.StackTrace + e.Source);
+				}
+				
+				string message = "Failure to parse response.";
+				
+				try{
+					if(data["message"] != null) {
+						message = (string)data["message"];
+					}
+				}
+				catch(Exception e) {
+					responseObject.error = 1;
+					LogUtil.Log("ERROR: " + e.Message + e.StackTrace + e.Source);
+				}
+				
+				/*
+				
+				JsonData dataValue = null;
+				
+				try {
+					if(data["data"] != null) {
+						if(data["data"].IsObject) {
+							dataValue = data["data"];
+						}
+					}				
+				}
+				catch(Exception e) {
+					responseObject.error = 1;
+					LogUtil.Log("ERROR: " + e.Message + e.StackTrace + e.Source);
+				}
+				
+				try{
+					responseObject.error = Convert.ToInt32(code);
+				}
+				catch(Exception e) {
+					responseObject.error = 1;
+					LogUtil.Log("ERROR: " + e.Message + e.StackTrace + e.Source);
+				}
+				*/
+				responseObject.message = message;
+				responseObject.code = code;
+
+				LogUtil.LogAccess("STATUS/CODE:" + code);
+				LogUtil.LogAccess("STATUS/CODE MESSAGE:" + message);
+
+				if(code == "0") {
+					LogUtil.LogAccess("STATUS/DATA NODE:" + data);
+					
+					LogUtil.LogAccess("dataValue:" + data["data"]);
+					LogUtil.LogAccess("responseObject.dataValueText:" 
+						+ responseObject.dataValueText);
+					
+					responseObject.data = responseObject.dataValueText;
+					responseObject.dataValue = data["data"]; 
+					responseObject.validResponse = true;
+				}
+				else {
+					LogUtil.Log("ERROR - Good response but problem with data, see message.");
+					serverError = true;
+				}
+			}
+		}
+		else {
+			LogUtil.LogAccess("ERROR - NO DATA");
+			serverError = true;
+		}
+		
+		if(serverError) {
+			responseObject.validResponse = false;
+			Reset();			
+			Messenger<string>.Broadcast(
+				ContentMessages.ContentItemVerifyError, 
+				"Error receiving a server response, please try again." );		
+		}
+
+		return responseObject;
+	}
+	
+	// ----------------------------------------------------------------------------------
+	// REQUESTS		
+	
+	public void RequestDownloadableContent(string pack) {
+		RequestDownloadableContent(
+			GamePacks.currentPacksGame,
+			GamePacks.currentPacksVersion, 
+			GamePacks.currentPacksPlatform,
+			pack);
+	}
+	
+	public void RequestDownloadableContent(
+		string game, string version, string platform, string pack) {
+		//glob.ShowLoadingIndicator();
+		
+		Dictionary<string, object> data = new Dictionary<string, object>();
+		string udid = UniqueUtil.Instance.currentUniqueId;
+		
+		data.Add("device_id", udid);
+		data.Add("app_id", ContentsConfig.contentApiKey);
+		
+		downloadInProgress = true;
+		
+		string url = GetDownloadContentItemUrl(
+			game, version, platform, pack);
+		
+		WebRequest.Instance.Request(
+			WebRequest.RequestType.HTTP_POST, url, data, 
+			HandleDownloadableContentInfoCallback);
+		
+		contentItemStatus = new ContentItemStatus();
+		
+		Messenger<string>.Broadcast(
+			ContentMessages.ContentItemVerifyStarted, 
+			"Verifying content access..." );
+	}
+	
+	public void RequestDownloadableContentSetSync(
+		string game, string version, string platform) {
+		
+		downloadInProgress = true;
+		
+		string url = GetContentSetUrl(game, version, platform);
+		WebRequest.Instance.Request(
+			WebRequest.RequestType.HTTP_GET, url, 
+			HandleDownloadableContentSetSyncCallback);
+		
+		Messenger<string>.Broadcast(
+			ContentMessages.ContentSetDownloadStarted, 
+			"Getting downloadable content access..." );
+	}
+	
+	public void RequestDownloadableFile(string url) {
+		
+		downloadInProgress = true;
+		
+		WebRequest.Instance.Request(
+			WebRequest.RequestType.HTTP_GET, url, 
+			HandleDownloadableFileCallback);
+		
+		Messenger<string>.Broadcast(
+			ContentMessages.ContentFileDownloadStarted, 
+			"Started downloading..." + url);
+	}
+	
+	public Dictionary<string, object> GetDefaultPostParams() {	
+		Dictionary<string, object> data = new Dictionary<string, object>();
+		string udid = UniqueUtil.Instance.currentUniqueId;		
+		data.Add("device_id", udid);
+		data.Add("app_id", ContentsConfig.contentApiKey);
+		return data;
+	}
+		
+	public void RequestDownloadableAppContentListSync(List<string> paths) {
+		
+		downloadInProgress = true;
+		
+		string game = ContentsConfig.contentAppFolder;
+		string platform = GetCurrentPlatformCode();
+		string version = ContentsConfig.contentVersion;
+		
+		string url = GetDownloadAppContentListFilesUrl(game, version, platform);
+		
+		Dictionary<string, object> data = GetDefaultPostParams();
+		
+		string stringPaths = string.Join(",", paths.ToArray());
+		
+		data.Add("paths", stringPaths);
+		
+		downloadUrlObjects.Clear();
+		
+		WebRequest.Instance.Request(
+			WebRequest.RequestType.HTTP_POST, url, data,   
+			HandleDownloadableAppContentListSyncCallback);
+		
+		ChangeSyncState(ContentSyncState.SyncProcessContentList);
+	}
+	
+	public void RequestDownloadableAppContentListFiles(List<string> paths) {
+		
+		downloadInProgress = true;
+		
+		string game = ContentsConfig.contentAppFolder;
+		string platform = GetCurrentPlatformCode();
+		string version = ContentsConfig.contentVersion;
+		
+		string url = GetDownloadAppContentListFilesUrl(game, version, platform);
+		
+		Dictionary<string, object> data = GetDefaultPostParams();
+		
+		string stringPaths = string.Join(",", paths.ToArray());
+		
+		data.Add("paths", stringPaths);
+		
+		downloadUrlObjects.Clear();
+		
+		WebRequest.Instance.Request(
+			WebRequest.RequestType.HTTP_POST, url, data,   
+			HandleDownloadableAppContentListFilesCallback);
+		
+		Messenger<object>.Broadcast(
+			ContentMessages.ContentAppContentListFilesStarted, 
+			"Started downloading..." + url);
+	}
+		
+	
+	// ----------------------------------------------------------------------------------
+	// HELPERS		
+	
+	public string GetDownloadContentItemUrl(
+		string game, string buildVersion, string platform, string pack) {
+		// add increment to the pack name
+		pack = pack + "-" + Convert.ToString(GamePacks.currentPacksIncrement);
+		return String.Format(
+			ContentEndpoints.contentDownloadFileAsset, 
+			game, buildVersion, platform, pack);
+	}
+	
+	//contentDownloadAppContentListFiles
+	public string GetDownloadAppContentListFilesUrl(
+		string game, string buildVersion, string platform) {
+		return String.Format(
+			ContentEndpoints.contentDownloadAppContentListFiles, 
+			game, buildVersion, platform);
+	}
+	
+	public string GetContentSetUrl(
+		string game, string buildVersion, string platform) {
+		// add increment to the pack name
+		//pack = pack + "-" + Convert.ToString(GamePacks.currentPacksIncrement);
+		return String.Format(
+			ContentEndpoints.contentSyncContentSet, 
+			game, buildVersion, platform);
+	}
+	
+	public void LoadSceneOrDownloadScenePackAndLoad(string pack) {
+		LoadSceneOrDownloadScenePackAndLoad(
+			GamePacks.currentPacksGame,
+			GamePacks.currentPacksVersion, 
+			GamePacks.currentPacksPlatform,
+			pack);
+	}
+	
+	public void LoadSceneOrDownloadScenePackAndLoad(
+		string game, string buildVersion, string platform, string pack) {
+		
+		bool isDownloadableContent = IsDownloadableContent(pack);
+		LogUtil.LogAccess("isDownloadableContent:" + isDownloadableContent);
+		int version = GamePacks.currentPacksIncrement;
+		
+		//string url = GetDownloadContentItemUrl(game, buildVersion, platform, pack);
+	
+		string lastPackUrlValue = GetLastPackState(pack);
+		
+		if(Caching.IsVersionCached(lastPackUrlValue, version)
+			&& !string.IsNullOrEmpty(lastPackUrlValue)) {
+			// Just load from the saved url
+			CoroutineUtil.Start(
+				SceneLoadFromCacheOrDownloadCo(lastPackUrlValue));			
+		}
+		else {
+			// Do download verification and download
+			RequestDownloadableContent(game, buildVersion, platform, pack);
+		}
+	}
+	
+	public bool IsDownloadableContent(string pack) {
+		//if(pack.ToLower() == GamePacks.PACK_BOOK_DEFAULT.ToLower()) {
+		//	return true;
+		//}
+		return false;
+	}	
+	
+	public void SetLastPackState(string packName, string url) {
+		
+		if(IsDownloadableContent(packName)) {
+			string lastPackUrlKey = "last-pack-" + packName;
+			string lastPackUrlValue = url;
+			
+			if(!string.IsNullOrEmpty(lastPackUrlValue)) {
+				SystemPrefUtil.SetLocalSettingString(lastPackUrlKey, lastPackUrlValue);
+				SystemPrefUtil.Save();
+			}
+		}
+	}		
+	
+	public string GetLastPackState(string packName) {
+		if(IsDownloadableContent(packName)) {
+			string lastPackUrlKey = "last-pack-" + packName;
+			if(SystemPrefUtil.HasLocalSetting(lastPackUrlKey)) {
+				return SystemPrefUtil.GetLocalSettingString(lastPackUrlKey);
+			}
+		}
+		return "";
+	}
+
+	
+	// ----------------------------------------------------------------------------------
+	// FILE LOADING
+		
+	// Individual file downloading
+
+	public string GetHashCodeFromFile(string url) {
+		string hash = "";
+		if(!url.Contains(appCachePath)) {
+			url = Path.Combine(appCachePath, url);
+		}
+		hash = ChecksumHash(url);
+		return hash;
+	}
+	
+	public string GetHashCodeFromFilePath(string url) {
+		string hash = "";
+		
+		string text = url;
+		string pat = @"([^-]*)\.*$";
+		
+		Regex r = new Regex(pat, RegexOptions.IgnoreCase);
+		
+		Match m = r.Match(text);
+		
+		//int matchCount = 0;
+		
+		if(m.Success) {
+			hash = m.Value;
+			hash = hash.Split('.')[0];
+		}
+		
+		return hash;
+		/*
+		while (m.Success) {
+			LogUtil.Log("Match", (++matchCount));
+			for (int i = 1; i <= 2; i++) {
+				Group g = m.Groups[i];
+				LogUtil.Log("Group"+i+"='" + g + "'","");
+				CaptureCollection cc = g.Captures;
+				for (int j = 0; j < cc.Count; j++) {
+					Capture c = cc[j];
+					LogUtil.Log("Capture"+j+"='" + c + "', Position="+c.Index);
+				}
+			}
+			m = m.NextMatch();
+		}
+		*/
+	}
+	
+	// BINARY SAVING	
+	
+	public void HandleSyncedFileBinary(byte[] bytes, DownloadableContentUrlObject urlObject) {
+		if(bytes != null) {
+			
+			string path = urlObject.path;
+			string pathSave = path;
+			string pathCache = Contents.Instance.appCachePath;
+			
+			if(!pathSave.Contains(pathCache)) {
+				pathSave = Path.Combine(pathCache, path);
+			}
+			
+			string pathBase = ContentsConfig.contentRootFolder + "/";
+			pathBase += ContentsConfig.contentAppFolder + "/";
+			
+			if(pathSave.Contains(pathBase + pathBase)) {
+				pathSave = pathSave.Replace(pathBase + pathBase, pathBase);
+			}
+			
+			if(pathSave.Contains("/" + AppContentListItems.DATA_KEY)) {
+				// If this is a content list, hash it before saving
+				
+				
+				string pathSaveHashedTemp = pathSave + processMarker;
+				FileSystemUtil.WriteAllBytes(pathSaveHashedTemp, bytes);
+				
+				//string hash = ChecksumHash(pathSaveHashedTemp);
+				//string pathUnversioned = GetFileUnversioned(pathSaveHashedTemp);
+				//string pathSaveHashed = GetFileVersioned(pathUnversioned, hash);
+				//pathSaveHashed = pathSaveHashed.Replace("-process","");
+			}
+			else {
+					
+				// Save file to check against before copying over			
+				FileSystemUtil.WriteAllBytes(pathSave, bytes);
+			
+			}		
+			
+			processUrlObjects.Enqueue(urlObject);
+		}
+	}
+	
+	public IEnumerator ProcessSyncedFilesCo() {		
+		
+		AppContentListItems.Instance.LoadData();
+		
+		if(processUrlObjects != null) {		
+			
+			validatingTotal = processUrlObjects.Count;
+			validatingInc = 0;
+			
+			yield return CoroutineUtil.Start(ProcessSyncedFilesRecursiveCo());
+		} 
+		
+		AppContentListItems.Instance.LoadData();
+	}
+	
+	/*
+	public void ProcessSyncedFilesRecursive() {
+		if(processUrlObjects != null) {		
+			if(processUrlObjects.Count > 0) {
+				DownloadableContentUrlObject urlObject = processUrlObjects.Dequeue();
+				ProcessSyncedFile(urlObject);
+				ProcessSyncedFilesRecursive();
+			}
+		} 
+	}
+	*/
+	
+	public string GetUnversionedDisplayFile(string val) {
+		
+		val = Path.GetFileName(val);
+		val = GetDisplayFileUnversioned(val);
+		
+		/*
+		AppContentListItem item = AppContentListItems.Instance.GetAll();
+		if(item.data.fileName.Contains(val)) {
+		
+		}
+		*/
+		
+		if(val.Contains(AppContentListItems.DATA_KEY)) {
+			val = "Checking For Awesome New Content";
+		}
+		//else if(val.Contains(BaseGameStatistics.DATA_KEY)) {
+		//	val = "Challenging Statistics";
+		//}
+		//else if(val.Contains(BaseGameAchievements.DATA_KEY)) {
+		//	val = "Achievements To Earn";
+		//}
+		else if(val.Contains(AppContentStates.DATA_KEY)) {
+			val = "Fun 3D Content";
+		}
+		else if(val.Contains(AppStates.DATA_KEY)) {
+			val = "Virtual Aisles + Categories";
+		}
+		else if(val.Contains(AppContentAssets.DATA_KEY)) {
+			val = "3D Objects, Audio + Video";
+		}
+		else if(val.Contains(".m4v") || val.Contains(".mp4")) {
+			val = "Videos to See";
+		}
+		else if(val.Contains(".mp3") || val.Contains(".mp3")) {
+			val = "Audio + Effects";
+		}
+		else if(val.Contains("icon") || val.Contains("feature")) {
+			val = "Icons + Feature Images";
+		}
+		else if(val.Contains(".png") || val.Contains(".png")) {
+			val = "Images";
+		}
+				
+		return val;
+	}
+	
+	float validatingTotal = 0;
+	float validatingInc = 0;
+	
+	public IEnumerator ProcessSyncedFilesRecursiveCo() {
+		if(processUrlObjects != null) {	
+			if(validatingTotal > 0) {
+				DownloadableContentUrlObject urlObject = processUrlObjects.Dequeue();
+				BroadcastProgressMessage("Validating Files", GetUnversionedDisplayFile(urlObject.path), validatingInc++/validatingTotal);
+				ProcessSyncedFile(urlObject);				
+				
+				yield return CoroutineUtil.WaitForEndOfFrame();
+				yield return CoroutineUtil.Start(ProcessSyncedFilesRecursiveCo());
+			}
+		} 
+	}
+	
+	
+	public static string processMarker = "____process";
+	
+	public void ProcessSyncedFile(DownloadableContentUrlObject urlObject) {
+				
+		string path = urlObject.path;
+		string pathSave = path;
+		string pathCache = Contents.Instance.appCachePath;		
+		
+		if(!pathSave.Contains(pathCache)) {
+			pathSave = Path.Combine(pathCache, path);
+		}		
+		
+		bool isContentList = pathSave.Contains(
+			"/" + AppContentListItems.DATA_KEY);
+	
+		if(isContentList) {
+			pathSave = pathSave + processMarker;
+		}
+		
+		// Parse out hash and test hash
+		
+		// Check filename hash
+		string hashNewFile = GetHashCodeFromFile(pathSave);
+		
+		// Check actual file contents hash
+		string hashNew = GetHashCodeFromFilePath(pathSave);
+		
+		if(isContentList) {
+			hashNew = hashNewFile;
+		}
+		
+		// Make sure file is valid checksum in filename matches file contents
+		// to verify it is a complete and valid downloaded file.
+		bool isFileValid = hashNew.ToLower() == hashNewFile.ToLower() ? true : false;
+		
+		string pathNoHashNew = path.Replace("-" + hashNew, "");
+		
+		string pathNoHashCurrent = pathSave.Replace("-" + hashNew, "");
+		string hashCurrent = GetHashCodeFromFile(pathNoHashCurrent);
+		
+		string pathVersionedSync = ContentsConfig.contentRootFolder + "/";
+		pathVersionedSync += ContentsConfig.contentAppFolder + "/";
+		pathVersionedSync = Path.Combine(pathVersionedSync, path);
+		
+		string pathVersioned = ContentsConfig.contentRootFolder + "/";
+		pathVersioned += ContentsConfig.contentAppFolder + "/";
+		pathVersioned = Path.Combine(pathVersioned, pathNoHashNew);
+		
+		bool updateFile = false;
+		//List<AppContentListItem> appContentListItems = null;
+		bool isAllType = pathVersionedSync.Contains(
+			ContentsConfig.contentAppFolder + "/all/");		
+			
+		if(isFileValid) {
+			// Hash matches from content list and downloaded file
+			
+			// If download matches hash in data and from file then update
+			// if has new doesn't match hash current then update
+			
+			//if(Application.isEditor) {
+			//	updateFile = true;
+			//}
+			//else {
+			updateFile = false;
+			//}
+			
+			if(hashNew != hashCurrent) {
+				updateFile = true;	
+			}			
+			
+			if(updateFile || isContentList) {
+				
+				if(isContentList) {
+					
+					pathNoHashCurrent = pathNoHashCurrent.Replace(processMarker, "");
+					
+					FileSystemUtil.CopyFile(
+						pathSave, 
+						pathNoHashCurrent, true);
+					FileSystemUtil.RemoveFile(pathSave);
+				}
+				else{		
+					if(updateFile) {
+						
+						if(isAllType) {
+							//string pathSaveTo = 
+							//	appContentListItem.data.GetFilePaths().
+							//	pathNonVersionedSystem;
+							FileSystemUtil.CopyFile(
+								pathSave, 
+								GetFileUnversioned(pathNoHashCurrent)
+								, true);
+						}
+						else {
+							//string pathSaveTo = 
+							//	appContentListItem.data.GetFilePaths().
+							//	pathVersionedSystem;
+							FileSystemUtil.CopyFile(
+								pathSave, 
+								pathNoHashCurrent, true);									
+						}
+						
+						FileSystemUtil.RemoveFile(pathSave);
+					}										
+					
+					
+					/*
+					if(isAllType) {
+						appContentListItems
+							 = AppContentListItems.Instance.GetListByPackCodeAndPathVersioned(
+									GamePacks.Current.code, 
+									pathVersioned);	
+					}
+					else {
+						
+						appContentListItems
+							 = AppContentListItems.Instance.GetListByPackCodeAndPathVersioned(
+									GamePacks.Current.code, 
+									pathVersioned);	
+					}
+						
+					foreach(AppContentListItem appContentListItem in appContentListItems) {
+						
+						// Check if file should be overwritten
+						// Check if file has for new matches file
+						// If so copy over current
+										
+						string hashCurrentContentList = appContentListItem.data.hash;
+						if(hashCurrentContentList.ToLower() == hashNew.ToLower()
+							&& isFileValid) {
+						
+							// Hash matches from content list and downloaded file
+							
+							// If download matches hash in data and from file then update
+							// if has new doesn't match hash current then update
+							// TODO DEV trigger
+							
+					if(updateFile) {
+						
+						if(isAllType) {
+							string pathSaveTo = 
+								appContentListItem.data.GetFilePaths().
+								pathNonVersionedSystem;
+							FileSystemUtil.CopyFile(
+								pathSave, 
+								pathSaveTo, true);
+						}
+						else {
+							string pathSaveTo = 
+								appContentListItem.data.GetFilePaths().
+								pathVersionedSystem;
+							FileSystemUtil.CopyFile(
+								pathSave, 
+								pathSaveTo, true);									
+						}
+						
+						FileSystemUtil.RemoveFile(pathSave);
+					}										
+						//}
+					//}		
+					*/				
+				}
+			}								
+		}
+		else {
+			FileSystemUtil.RemoveFile(pathSave);
+		}
+	}
+	
+	void HandleRequestDownloadBytesCallback(
+		byte[] responseBytes) {
+		
+		//bool serverError = false;
+		
+		if(responseBytes != null) {
+			
+			HandleSyncedFileBinary(responseBytes, currentUrlObject);			
+			
+			Messenger<object>.Broadcast(
+				ContentMessages.ContentAppContentListFileDownloadSuccess,
+					"Download Success " + currentUrlObject.file_key);
+			
+		}
+		else {
+			//serverError = true;			
+			
+			Messenger<object>.Broadcast(
+				ContentMessages.ContentAppContentListFileDownloadError,
+					"Download Error");
+		}		
+	}
+	
+	public void RequestDownloadBytes(string url) {
+		
+			Messenger<object>.Broadcast(
+				ContentMessages.ContentAppContentListFileDownloadStarted,
+					"Download Started");
+		WebRequest.Instance.RequestBytes(url, HandleRequestDownloadBytesCallback);
+	}
+	
+	// ----------------------------------------------------------------------------------
+	// FILE SETS
+		
+
+   // public void StartContentSystem() {
+    	//
+   // }
+    
+    //public void LoadContentSet() {
+        //LogUtil.Log("Contents::LoadContentSet");
+    //}       
+    // INIT and PREPARE
+            
+    //public void InitCache() {
+	//    SyncFolders();
+    //}
+	
+	
+	public void BroadcastProgressMessage(string title, string description, float progress) {
+		Messenger<string,string,float>.Broadcast(ContentMessages.ContentProgressMessage, 
+			title,
+			description,
+			progress);
+		
+		LogUtil.Log("BroadcastProgressMessage:"
+			, " progress:" + progress.ToString("P0")
+			+ " title:" + title
+			+ " description:" + description);
+		
+		//AppViewerUIPanelLoading.ShowProgress(title, description, progress);
+	}
+
+	public void InitCache() {
+		CoroutineUtil.Start(InitCacheCo());
+	}
+	
+	public IEnumerator InitCacheCo() {
+			
+		BroadcastProgressMessage( 
+			"Loading Content",
+			"Syncing initial content...",
+			1f);
+		
+	    // Initial cache
+		yield return CoroutineUtil.Wait(SyncFoldersCo());
+		
+		// Get latest main content list from server
+				
+		// Sync any files missing from latest
+		
+		// Check that all content states have icons downloaded
+		
+		//yield break;
+    }
+	
+	public IEnumerator DownloadLatestContentList() {
+	
+		// Get and check the md5 hash of main content list		
+		
+		yield break;
+	}    
+	
+	public List<string> GetPackPathsNonVersioned() {
+		LoadPackPaths();
+		return packPaths;
+	}
+	
+	public List<string> GetPackPathsVersioned() {
+		LoadPackPaths();
+		return packPathsVersioned;
+	}
+	
+	public List<string> GetPackPathsVersionedShared() {
+		LoadPackPaths();
+		return packPathsVersionedShared;
+	}
+	
+	public void LoadPackPaths() {
+
+		////LogUtil.Log("LoadPackPaths:appCachePathPacks:" + appCachePathPacks);
+		////LogUtil.Log("LoadPackPaths:appCachePathAllPlatformPacks:" + appCachePathAllPlatformPacks);
+				
+		if(packPaths.Count == 0) {
+			//LogUtil.Log("Loading packPathsNONVersioned: " + appCachePathPacks);
+			
+			if(!string.IsNullOrEmpty(appCachePathPacks)) {
+				foreach(string path in Directory.GetDirectories(appCachePathPacks)) {
+					string pathToAdd = Path.Combine(appCachePathPacks, path);
+					if(!string.IsNullOrEmpty(pathToAdd)) {
+						if(!packPaths.Contains(pathToAdd)) {
+							packPaths.Add(pathToAdd);
+							//LogUtil.Log("Adding packPathsNONVersioned: pathToAdd:" + pathToAdd);
+						}
+					}
+				}
+			}
+		}
+		
+		if(packPathsVersionedShared.Count == 0) {
+			//LogUtil.Log("Loading packPathsVersionedShared: " + appCachePathSharedPacks);
+			
+			if(!string.IsNullOrEmpty(appCachePathSharedPacks)) {
+				foreach(string path in Directory.GetDirectories(appCachePathSharedPacks)) {
+					string pathToAdd = Path.Combine(appCachePathSharedPacks, path);
+					if(!string.IsNullOrEmpty(pathToAdd)) {
+						if(!packPathsVersionedShared.Contains(pathToAdd)) {
+							packPathsVersionedShared.Add(pathToAdd);
+							//LogUtil.Log("Adding packPathsVersionedShared: pathToAdd:" + pathToAdd);
+						}
+					}
+				}
+			}
+		}
+		
+		if(packPathsVersioned.Count == 0) {
+			//LogUtil.Log("Loading packPathsVersioned: " + appCachePathAllPlatformPacks);
+			if(!string.IsNullOrEmpty(appCachePathAllPlatformPacks)) {
+				foreach(string path in Directory.GetDirectories(appCachePathAllPlatformPacks)) {
+					string pathToAdd = Path.Combine(appCachePathAllPlatformPacks, path);
+					if(!string.IsNullOrEmpty(pathToAdd)) {
+						if(!packPathsVersioned.Contains(pathToAdd)) {
+							packPathsVersioned.Add(pathToAdd);
+							//LogUtil.Log("Adding packPathsVersioned: pathToAdd:" + pathToAdd);
+						}
+					}
+				}
+			}
+		}
+	}
+	
+	public string GetFileDataFromPersistentCache(
+		string path, bool versioned, bool absolute) {		
+		
+		string fileData = "";
+		string pathPart = path;
+		
+		string pathToCopy = "";
+		pathToCopy = Path.Combine(
+			Contents.Instance.appShipCacheVersionPath, pathPart);
+		
+		if(!absolute) {
+			path = Path.Combine(
+				Contents.Instance.appCacheVersionPath, path);
+			//shipPath = Path.Combine(Contents.Instance.appShipCacheVersionPath, path);
+		}
+		string pathVersioned = path;
+		
+		if(versioned) {
+			pathVersioned = Contents.Instance.GetFullPathVersioned(pathVersioned);
+		}
+
+		LogUtil.Log("GetFileDataFromPersistentCache:path:" + path);
+		LogUtil.Log("GetFileDataFromPersistentCache:pathVersioned:" + pathVersioned );
+		LogUtil.Log("GetFileDataFromPersistentCache:pathToCopy:" + pathToCopy );
+		LogUtil.Log("GetFileDataFromPersistentCache:Contents.Instance.appShipCacheVersionPath:" + Contents.Instance.appShipCacheVersionPath );
+
+		LogUtil.Log("GetFileDataFromPersistentCache:Contents.Instance.appCacheVersionPath:" + Contents.Instance.appCacheVersionPath );
+
+		bool versionedExists = FileSystemUtil.CheckFileExists(pathVersioned);
+				
+		LogUtil.Log("GetFileDataFromPersistentCache:versionedExists:" + versionedExists.ToString());
+		LogUtil.Log("GetFileDataFromPersistentCache:absolute:" + absolute);
+		
+		if(!versionedExists && !absolute) {		        		    
+		    // copy from streaming assets	
+			bool shipExists = FileSystemUtil.CheckFileExists(pathToCopy);
+		    if(shipExists) {
+		       FileSystemUtil.CopyFile(pathToCopy, pathVersioned);
+		    }
+		    else {
+		        return "";
+		    }
+		}
+		fileData = FileSystemUtil.ReadString(pathVersioned);
+		return fileData;        
+	}
+	
+	public enum ContentStorageLocation {
+		RESOURCES,
+		STREAMING_ASSETS,
+		PERSISTENT,
+		WEB_SERVICE
+	}
+	
+	public IEnumerator SyncContentListItemDataCo(
+		ContentStorageLocation locationFrom, 
+		ContentStorageLocation locationTo) {
+		// Syncs content list item data from streaming assets to persistent
+		
+		LogUtil.Log("SyncContentListItemData: locationFrom" + 
+			locationFrom.ToString() + " locationTo:" + locationTo.ToString());
+		
+		List<AppContentListItem> contentListItems = AppContentListItems.Instance.GetAll();
+		int totalItems = contentListItems.Count;
+		float inc = 0f;
+		
+		yield return CoroutineUtil.WaitForEndOfFrame();
+		
+		foreach(AppContentListItem contentItem in contentListItems) {
+			
+			string fileFrom = Path.Combine(
+				Application.streamingAssetsPath, 
+				contentItem.data.filePathNonVersioned);
+							
+			LogUtil.Log("SyncContentListItemData: " +
+				"\r\n  fileFrom:" + fileFrom);	
+			
+			float progressCount = inc++/totalItems;
+			
+			BroadcastProgressMessage( 
+				"Preparing Content",
+				"Syncing file:" + GetUnversionedDisplayFile(contentItem.data.fileNoExtension),
+				progressCount);
+			
+			yield return CoroutineUtil.WaitForEndOfFrame();
+			
+			if(FileSystemUtil.CheckFileExists(fileFrom)) {
+				string fileTo = Path.Combine(
+					Application.persistentDataPath, 
+					contentItem.data.filePathVersioned);
+				
+				//if(contentItem.data.versioned) {
+				//	fileTo = Contents.Instance.GetFileVersioned(fileTo);
+				//}
+				
+				LogUtil.Log("SyncContentListItemData: " +
+					"\r\n  fileFrom:" + fileFrom + 
+					"\r\n  fileTo:" + fileTo);	
+				
+				BroadcastProgressMessage( 
+					"Preparing Content",
+					"Syncing file:" + GetUnversionedDisplayFile(contentItem.data.fileNoExtension),
+					progressCount);
+					
+				yield return CoroutineUtil.WaitForEndOfFrame();
+				
+				if(!FileSystemUtil.CheckFileExists(fileTo)) {
+					LogUtil.Log("SyncContentListItemData: Copying File: fileTo:" + fileTo);
+					
+					BroadcastProgressMessage( 
+						"Preparing Content",
+						"Copying file:" + GetUnversionedDisplayFile(contentItem.data.fileNoExtension),
+						progressCount);
+					
+					yield return CoroutineUtil.WaitForEndOfFrame();
+					
+					FileSystemUtil.CopyFile(fileFrom, fileTo);
+				}
+			}
+			
+		}
+		
+		BroadcastProgressMessage( 
+			"Preparing Content",
+			"Sync Complete",
+			1f);
+		
+		yield return CoroutineUtil.WaitForEndOfFrame();
+	}
+	
+	public IEnumerator DirectoryCopyCo(
+		string sourceDirName, string destDirName, 
+		bool copySubDirs, bool versioned) {
+		
+		//LogUtil.Log("DirectoryCopy:" + 
+		//	" sourceDirName:" + sourceDirName + 
+		//	" destDirName:" + destDirName + 
+		//	" copySubDirs:" + copySubDirs + 
+		//	" versioned:" + versioned);
+		
+		FileSystemUtil.EnsureDirectory(sourceDirName, false);
+		FileSystemUtil.EnsureDirectory(destDirName, false);
+		
+		FileSystemUtil.CreateDirectoryIfNeededAndAllowed(sourceDirName);
+		
+		bool sourceDirExists = Directory.Exists(sourceDirName);		
+		//bool sourceDirExists2 = Directory.Exists(sourceDirName.Replace("jar:",""));
+		//bool sourceDirExists3 = Directory.Exists(sourceDirName.Replace("jar:file://",""));
+		
+		//LogUtil.Log("DirectoryCopy:" + 
+		//	" sourceDirExists:" + sourceDirExists.ToString() + 
+		//	" sourceDirExists2:" + sourceDirExists2.ToString() + 
+		//	" sourceDirExists3:" + sourceDirExists3.ToString());
+		
+		if(sourceDirExists) {
+		
+	        DirectoryInfo dir = new DirectoryInfo(sourceDirName);
+	        DirectoryInfo[] dirs = dir.GetDirectories();
+	
+	        if (!dir.Exists) {
+	            throw new DirectoryNotFoundException(
+	                "Source directory does not exist or could not be found: "
+	                + sourceDirName);
+	        }
+	
+	        FileSystemUtil.CreateDirectoryIfNeededAndAllowed(destDirName);
+			
+			BroadcastProgressMessage( 
+				"Preparing Content",
+				"Syncing directory: " + GetUnversionedDisplayFile(destDirName),
+				1f);
+	
+	        FileInfo[] files = dir.GetFiles();
+			
+			BroadcastProgressMessage( 
+				"Preparing Content",
+				"Syncing files in: " + GetUnversionedDisplayFile(destDirName),
+				0f);
+			
+			
+			//LogUtil.Log(">>>> Directory Files: directory: " + destDirName);
+			//LogUtil.Log(">>>> files.Count:", files.Length);
+			
+			int curr = 0;
+			
+	        foreach (FileInfo file in files) {
+				if(file.Extension != ".meta"
+			        && file.Extension != ".DS_Store") {
+					
+					string temppath = Path.Combine(destDirName, file.Name);
+					
+					if(versioned) {
+						temppath = GetFullPathVersioned(temppath);
+					}
+					
+					if(!FileSystemUtil.CheckFileExists(temppath) || Application.isEditor) {
+						
+						//LogUtil.Log("--copying ship file: " + file.FullName);
+						//LogUtil.Log("--copying ship file to cache: " + temppath);
+						
+						FileSystemUtil.CopyFile(file.FullName, temppath);
+			        }
+					
+					yield return new WaitForEndOfFrame();
+					
+					BroadcastProgressMessage( 
+						"Preparing Content",
+						"Syncing files - " + GetUnversionedDisplayFile(file.Name),
+						curr++/files.Length);
+				}
+				
+	        }
+	
+	        if (copySubDirs)  {
+				
+	            foreach (DirectoryInfo subdir in dirs) {
+	                string temppath = Path.Combine(destDirName, subdir.Name);
+	                //LogUtil.Log("Copying Directory: " + temppath);
+	                yield return CoroutineUtil.Start(DirectoryCopyCo(subdir.FullName, temppath, copySubDirs, versioned));
+	            }
+	        }
+		}
+    }
+	    
+    public IEnumerator SyncFoldersCo() {
+		
+		yield return new WaitForEndOfFrame();
+
+		Messenger<object>.Broadcast(ContentMessages.ContentSyncShipContentStarted, "started");
+		
+        LogUtil.Log("Contents::SyncFolders");
+        
+        persistenceFolder = PathUtil.AppPersistencePath;
+        streamingAssetsFolder = Application.streamingAssetsPath;
+        
+       	LogUtil.Log("persistenceFolder: " + persistenceFolder);
+       	LogUtil.Log("streamingAssetsFolder: " + streamingAssetsFolder);
+        
+        string pathRoot = Path.Combine(persistenceFolder, ContentsConfig.contentRootFolder);
+        string pathShipRoot = Path.Combine(streamingAssetsFolder, ContentsConfig.contentRootFolder);
+		
+		FileSystemUtil.EnsureDirectory(pathRoot, false);
+		FileSystemUtil.EnsureDirectory(pathShipRoot, false);
+        
+        string pathRootAppend = Path.Combine(pathRoot, ContentsConfig.contentAppFolder);
+        string pathShipRootAppend = Path.Combine(pathShipRoot, ContentsConfig.contentAppFolder);
+
+		FileSystemUtil.EnsureDirectory(pathRootAppend, false);
+		FileSystemUtil.EnsureDirectory(pathShipRootAppend, false);
+        
+        appCachePath = pathRootAppend;
+        appShipCachePath = pathShipRootAppend;  
+		
+		FileSystemUtil.EnsureDirectory(appCachePath, false);
+		FileSystemUtil.EnsureDirectory(appShipCachePath, false);
+
+        appCacheVersionPath = Path.Combine(appCachePath, ContentsConfig.contentVersion);
+        appShipCacheVersionPath = Path.Combine(appShipCachePath, ContentConfig.contentCacheVersion);
+		
+		FileSystemUtil.EnsureDirectory(appCacheVersionPath, false);
+		FileSystemUtil.EnsureDirectory(appShipCacheVersionPath, false);
+		
+        appCachePathAll = Path.Combine(appCachePath, ContentConfig.contentCacheAll);
+        appShipCachePathAll = Path.Combine(appShipCachePath, ContentConfig.contentCacheAll);		
+        appCachePathAllShared = Path.Combine(appCachePathAll, ContentConfig.contentCacheShared);
+        appCachePathAllSharedTrackers = Path.Combine(appCachePathAllShared, ContentConfig.contentCacheTrackers);
+        appCachePathAllSharedUserData = Path.Combine(appCachePathAllShared, ContentConfig.contentCacheUserData);
+		
+		FileSystemUtil.EnsureDirectory(appCachePathAll, false);
+		FileSystemUtil.EnsureDirectory(appShipCachePathAll, false);
+		FileSystemUtil.EnsureDirectory(appCachePathAllShared, false);
+		FileSystemUtil.EnsureDirectory(appCachePathAllSharedTrackers, false);
+		FileSystemUtil.EnsureDirectory(appCachePathAllSharedUserData, false);
+		
+        appCachePathAllPlatform = Path.Combine(appCachePathAll, GetCurrentPlatformCode());
+        appCachePathAllPlatformPacks = Path.Combine(appCachePathAllPlatform, ContentConfig.contentCachePacks);
+        appCachePathAllPlatformData = Path.Combine(appCachePathAllPlatform, ContentConfig.contentCacheData);
+		
+		FileSystemUtil.EnsureDirectory(appCachePathAllPlatform, false);
+		FileSystemUtil.EnsureDirectory(appCachePathAllPlatformPacks, false);
+		FileSystemUtil.EnsureDirectory(appCachePathAllPlatformData, false);
+		
+        appCachePlatformPath = Path.Combine(appCacheVersionPath, GetCurrentPlatformCode());
+        appShipCachePlatformPath = Path.Combine(appShipCacheVersionPath, GetCurrentPlatformCode());		
+		
+		FileSystemUtil.EnsureDirectory(appCachePlatformPath, false);
+		FileSystemUtil.EnsureDirectory(appShipCachePlatformPath, false);
+        
+        appCachePathData = Path.Combine(
+			appCacheVersionPath, ContentConfig.contentCacheData);
+        
+		appCachePathShared = Path.Combine(
+			appCacheVersionPath, ContentConfig.contentCacheShared);
+        
+		appCachePathSharedPacks = Path.Combine(
+			appCachePathShared, ContentConfig.contentCachePacks);
+        
+		appCachePathSharedTrackers = Path.Combine(
+			appCachePathShared, ContentConfig.contentCacheTrackers);
+        
+		appCachePathPacks = Path.Combine(
+			appCachePlatformPath, ContentConfig.contentCachePacks);
+		
+		FileSystemUtil.EnsureDirectory(appCachePathData, false);
+		FileSystemUtil.EnsureDirectory(appCachePathShared, false);
+		FileSystemUtil.EnsureDirectory(appCachePathSharedPacks, false);
+		FileSystemUtil.EnsureDirectory(appCachePathSharedTrackers, false);
+		FileSystemUtil.EnsureDirectory(appCachePathPacks, false);
+		
+		appShipCachePathData = Path.Combine(
+			appShipCacheVersionPath, ContentConfig.contentCacheData);
+		
+		appShipCachePathShared = Path.Combine(
+			appShipCacheVersionPath, ContentConfig.contentCacheShared);
+		
+		FileSystemUtil.EnsureDirectory(appShipCachePathData, false);
+		FileSystemUtil.EnsureDirectory(appShipCachePathShared, false);
+		
+		yield return CoroutineUtil.Start(DirectoryCopyCo(appShipCachePlatformPath, appCachePlatformPath, true, true));
+		//DirectoryCopy(appShipCachePathPacks, appCachePathPacks, true);
+		yield return CoroutineUtil.Start(DirectoryCopyCo(appShipCachePathData, appCachePathData, true, true));
+		yield return CoroutineUtil.Start(DirectoryCopyCo(appShipCachePathShared, appCachePathShared, true, true));
+		yield return CoroutineUtil.Start(DirectoryCopyCo(appShipCachePathAll, appCachePathAll, true, false));  // files in all/shared are not versioned...
+		
+		yield return CoroutineUtil.Start(SyncContentListItemDataCo(
+			ContentStorageLocation.STREAMING_ASSETS, 
+			ContentStorageLocation.PERSISTENT));
+			
+		BroadcastProgressMessage( 
+			"Preparing Content",
+			"Ship files sync complete",
+			1f);
+
+		Messenger<object>.Broadcast(ContentMessages.ContentSyncShipContentSuccess, "success");
+		
+		////
+    }
+    	
+    public string GetFullPathVersioned(string fullPath) {
+		//string fileHash = ChecksumHash(fullPath);
+		//return GetFileVersioned(fullPath, fileHash);
+		return GetFileVersioned(fullPath, null);
+	}
+	
+	//public string GetFullPathVersioned(string hashPath, string pathToVersion) {
+		//if(FileSystemUtil.CheckFileExists(hashPath)) {
+		//	string fileHash = ChecksumHash(hashPath);
+		//	return GetFileVersioned(pathToVersion, fileHash);
+		//}
+		//else {
+		//	return hashPath;
+		//}
+		//return GetFileVersioned(pathToVersion, null);
+	//}
+	
+	
+	public string GetFullPathVersionedSync(string fullPath) {
+		string fileHash = ChecksumHash(fullPath);
+		return GetFileVersioned(fullPath, fileHash);
+	}
+	
+	public string ChecksumHash(string fullPath) {	
+		return CryptoUtil.CalculateMD5HashFromFile(fullPath);
+	}
+	
+	public string GetFullPathVersionedSync(string hashPath, string pathToVersion) {
+		if(FileSystemUtil.CheckFileExists(hashPath)) {
+			string fileHash = ChecksumHash(hashPath);
+			return GetFileVersioned(pathToVersion, fileHash);
+		}
+		else {
+			return hashPath;
+		}
+	}
+	
+	public string GetFileVersioned(string path) {
+		return GetFileVersioned(path, null);
+	}
+	
+	public string GetFileVersioned(string path, string hash) {
+        string fileVersioned = "";
+        if(!string.IsNullOrEmpty(path)) {
+	        string[] arrpath = path.Split('/');
+	        
+	        fileVersioned = path;
+	        
+	        if(arrpath != null) {
+	            string filepart = arrpath[arrpath.Length - 1];
+	            string arttpathrest = path.Replace(filepart, "");
+	            string[] arrfilepart = filepart.Split('.');
+	            string ext = arrfilepart[arrfilepart.Length - 1];
+	            string filepartbare = filepart.Replace("." + ext, "");
+	            
+	            string appVersion = ContentsConfig.contentVersion.Replace(".", "-");
+	            string appIncrement = ContentsConfig.contentIncrement.ToString();
+	            
+				if(!string.IsNullOrEmpty(hash)) {
+	            	fileVersioned = Path.Combine(arttpathrest, filepartbare 
+						+ "-" + appVersion 
+						+ "-" 
+						+ appIncrement 
+						+ "-" + hash 
+						+ "." + ext);
+				}
+				else {
+	            	fileVersioned = Path.Combine(arttpathrest, filepartbare 
+						+ "-" + appVersion 
+						+ "-" 
+						+ appIncrement 
+						+ "." + ext);
+				}
+	        }
+	    }
+        
+		return fileVersioned;
+    }	
+	
+	public string GetDisplayFileUnversioned(string path) {
+        string fileVersioned = path;
+        if(!string.IsNullOrEmpty(path)) {
+	        string[] arrpath = path.Split('/');
+	        
+	        fileVersioned = path;
+	        
+	        if(arrpath != null) {
+	            
+	            string appVersion = ContentsConfig.contentVersion.Replace(".", "-");
+	            string appIncrement = ContentsConfig.contentIncrement.ToString();
+				string versionAppend = "-" + appVersion 
+						+ "-" 
+						+ appIncrement;
+	            if(fileVersioned.Contains(versionAppend)) {
+					fileVersioned = fileVersioned.Substring(0, fileVersioned.IndexOf(versionAppend));
+				}
+	        }
+	    }
+        
+		return fileVersioned;
+    }   
+	
+	public string GetFileUnversioned(string path) {
+		return GetFileUnversioned(path, null);
+	}
+	
+	public string GetFileUnversioned(string path, string hash) {
+        string fileVersioned = path;
+        if(!string.IsNullOrEmpty(path)) {
+	        string[] arrpath = path.Split('/');
+	        
+	        fileVersioned = path;
+	        
+	        if(arrpath != null) {
+	            
+	            string appVersion = ContentsConfig.contentVersion.Replace(".", "-");
+	            string appIncrement = ContentsConfig.contentIncrement.ToString();
+	            
+				if(!string.IsNullOrEmpty(hash)) {
+					
+					fileVersioned = fileVersioned.Replace(
+						"-" + appVersion 
+						+ "-" 
+						+ appIncrement
+						+ "-" + hash ,"");
+				}
+				else {
+					fileVersioned = fileVersioned.Replace(
+						"-" + appVersion 
+						+ "-" 
+						+ appIncrement,"");
+				}
+	        }
+	    }
+        
+		return fileVersioned;
+    }    
+	
+	// SCENE / CONTENT SET FILES
+    
+    public void CheckContentSetFiles() {
+        //LogUtil.Log("Contents::CheckContentSetFiles");            
+
+        //SyncFolders();
+    }	
+			
+	public IEnumerator SceneLoadFromCacheOrDownloadCo(string url) {
+				
+		UnloadLevelBundle();
+		
+		int version = GamePacks.currentPacksIncrement;
+		string packName = "";//GamePacks.PACK_BOOK_DEFAULT;
+		string sceneName = "";//GameLevels.Current.name;
+			
+		LogUtil.Log("SceneLoadFromCacheOrDownloadCo: packName:" + packName);
+		LogUtil.Log("SceneLoadFromCacheOrDownloadCo: sceneName:" + sceneName);
+		LogUtil.Log("SceneLoadFromCacheOrDownloadCo: version:" + version);
+		
+		ContentItem contentItem = new ContentItem();
+		
+		contentItem.uid = sceneName; // hash this
+		contentItem.name = sceneName;
+		contentItem.version = version;
+		
+		//bool isDlc = false;
+		bool ready = true;
+		
+		if(IsDownloadableContent(packName)) {
+			
+			LogUtil.Log("SceneLoadFromCacheOrDownloadCo: " + packName);
+					    
+			LogUtil.Log("SceneLoadFromCacheOrDownloadCo: " + url);
+			
+			Messenger<string>.Broadcast(
+				ContentMessages.ContentItemDownloadStarted, url);
+			
+			downloadInProgress = true;
+
+			downloader = WWW.LoadFromCacheOrDownload(url, version);
+			
+			LogUtil.Log("downloader.progress: " + downloader.progress);
+				    
+			yield return downloader;
+			
+			LogUtil.Log("downloader.progress2: " + downloader.progress);
+		    
+		    // Handle error
+		    if (downloader.error != null) {			
+				LogUtil.LogError("Error downloading");
+				LogUtil.LogError(downloader.error);
+				LogUtil.LogError(url);
+				ready = false;
+				Reset();
+				Messenger<string>.Broadcast(
+					ContentMessages.ContentItemDownloadError, 
+					downloader.error);
+		    }
+			else {
+		    
+			    // In order to make the scene available from LoadLevel, we have to load the asset bundle.
+			    // The AssetBundle class also lets you force unload all assets and file storage once it 
+				// is no longer needed.
+				
+				Messenger<string>.Broadcast(
+					ContentMessages.ContentItemPrepareStarted, 
+					"Content preparing..." );
+				
+				UnloadLevelBundle();
+				
+			    bundle = downloader.assetBundle;
+				
+				LogUtil.Log("LoadLevel" + sceneName);
+				
+				SetLastPackState(packName, url);
+				
+				Messenger<string>.Broadcast(
+					ContentMessages.ContentItemPrepareSuccess, 
+					"Content prepared..." );
+			    // Load the level we have just downloaded
+			}
+		}
+		
+		if(ready) {
+			//GameLoadingObject.Instance.LoadLevelHandler();
+			Reset();
+		}
+		else {
+			// Show download error...
+			Messenger<string>.Broadcast(
+				ContentMessages.ContentItemDownloadError, 
+				"Error unloading pack, please try again.");
+			Reset();
+		}
+	}
+	
+	public void LoadLevelBundle(string pack, int increment) {
+		string pathPack = Path.Combine(appCachePathAllPlatformPacks, pack);
+		pathPack = Path.Combine(pathPack, ContentConfig.contentCacheScenes);
+		
+		GamePacks.Instance.ChangeCurrentGamePack(pack);
+		
+		if(Directory.Exists(pathPack)) {
+			string pathUrl = Path.Combine(
+				pathPack, pack + "-" + increment.ToString() + ".unity3d");
+			
+			if(FileSystemUtil.CheckFileExists(pathUrl)) {
+				LoadLevelBundle("file://" + pathUrl);
+			}
+			else {
+				//LogUtil.Log("Pack file does not exist: " + pathUrl);
+			}
+		}
+		else {
+			//LogUtil.Log("Pack does not exist:" + pathPack);
+		}
+	}
+	
+	public void LoadLevelBundle(string sceneUrl) {
+		CoroutineUtil.Start(LoadLevelBundleCo(sceneUrl));
+	}
+	
+	public IEnumerator LoadLevelBundleCo(string sceneUrl) {
+				
+		bool ready = true;
+				
+		downloader = new WWW(sceneUrl);
+		
+		downloadInProgress = true;
+			
+		LogUtil.Log("downloader.progress: " + downloader.progress);
+				    
+		yield return downloader;
+			
+		LogUtil.Log("downloader.progress2: " + downloader.progress);
+		    
+	    // Handle error
+	    if (downloader.error != null) {			
+			LogUtil.LogError("Error downloading");
+			LogUtil.LogError(downloader.error);
+			LogUtil.LogError(sceneUrl);
+			ready = false;
+			Reset();
+			Messenger<string>.Broadcast(
+				ContentMessages.ContentItemDownloadError, 
+				downloader.error);
+	    }
+		else {
+	    
+		    // In order to make the scene available from LoadLevel, we have to load the asset bundle.
+		    // The AssetBundle class also lets you force unload all assets and file storage once it 
+			// is no longer needed.
+			
+			Messenger<string>.Broadcast(
+				ContentMessages.ContentItemPrepareStarted, 
+				"Content preparing..." );
+			
+			UnloadLevelBundle();
+			    
+			bundle = downloader.assetBundle;
+				
+			//LogUtil.Log("LoadLevel" + sceneName);
+				
+			SetLastPackState(GamePacks.Current.code, sceneUrl);
+				
+			downloadInProgress = false;
+			string sceneName = GamePacks.Current.code + "-main";
+						
+			//AsyncOperation asyncLoad = Application.LoadLevelAsync(sceneName);
+			Application.LoadLevel(sceneName);
+				
+			Messenger<string>.Broadcast(
+				ContentMessages.ContentItemPrepareSuccess, 
+				"Content prepared..." );			
+		}
+		
+		LogUtil.Log("ready:" + ready);
+	}
+	
+	public void UnloadLevelBundle(bool unloadAll) {		
+		if(bundle != null) {
+			bundle.Unload(unloadAll);
+		}
+	}
+	
+	public void UnloadLevelBundle() {		
+		UnloadLevelBundle(false);
+	}
+	
+	public void Reset() {
+		downloader = null;
+		contentItemStatus = new ContentItemStatus();
+		downloadInProgress = false;
+	}
+	
+	public ContentItemStatus ProgressStatus() {
+					
+		if(downloader != null && downloadInProgress) {
+			if(downloader.isDone) {
+				contentItemStatus.downloaded = true;
+			}		
+			
+			LogUtil.Log("progress:" + downloader.progress);
+			
+			contentItemStatus.itemProgress = downloader.progress;
+			contentItemStatus.url = downloader.url;
+		}
+		
+		return contentItemStatus;
+	}
+    
+	
+/*
+	public static IEnumerator SceneLoadFromCacheOrDownloadCo(
+	string packName, string sceneName) {
+		
+		int version = GamePacks.currentPacksIncrement;
+		string url = "https://s3.amazonaws.com/game-supasupacross/1.1/ios/" + packName + ".unity3d";
+	    
+		LogUtil.Log("SceneLoadFromCacheOrDownloadCo: " + url);
+		
+		var downloadProgress = WWW.LoadFromCacheOrDownload(url, version);
+		
+	    
+		yield return downloadProgress;
+	    
+	    // Handle error
+	    if (downloadProgress.error != null)
+	    {
+			//Messenger<ContentItemError>.Broadcast(ContentMessages.ContentItemDownloadError, 
+			                                      //contentItemError);
+			
+			LogUtil.LogError("Error downloading");
+	    }
+		else {
+	    
+		    // In order to make the scene available from LoadLevel, we have to load the asset bundle.
+		    // The AssetBundle class also lets you force unload all assets and file storage once it 
+			// is no longer needed.
+		    Contents.lastBundle = downloadProgress.assetBundle;
+			//contentItem.bundle = bundle;
+			
+			//contentItemList.Add(contentItem);
+		    
+		    // Load the level we have just downloaded
+		    Application.LoadLevel (sceneName);
+			
+		}
+	}
+		
+	public IEnumerator PrepareSceneLoadFromCacheOrDownloadCoroutine(string sceneName, int version) {
+		
+		ContentItem contentItem = new ContentItem();
+		
+		contentItem.uid = sceneName; // hash this
+		contentItem.name = sceneName;
+		contentItem.version = version;
+
+	    var downloadProgress = WWW.LoadFromCacheOrDownload("Streamed-" + sceneName + ".unity3d", version);
+	    
+		yield return downloadProgress;
+	    
+	    // Handle error
+	    if (downloadProgress.error != null)
+	    {
+			ContentItemError contentItemError = new ContentItemError();
+			contentItemError.contentItem = contentItem;
+			contentItemError.name = sceneName;
+			contentItemError.message = downloadProgress.error;
+			Messenger<ContentItemError>.Broadcast(ContentMessages.ContentItemDownloadError, 
+			                                      contentItemError);
+	    }
+		else {
+	    
+		    // In order to make the scene available from LoadLevel, we have to load the asset bundle.
+		    // The AssetBundle class also lets you force unload all assets and file storage once it 
+			// is no longer needed.
+		    AssetBundle bundle = downloadProgress.assetBundle;
+			contentItem.bundle = bundle;
+			
+			contentItemList.Add(contentItem);
+		    
+		    // Load the level we have just downloaded
+		    //Application.LoadLevel ("Level1");
+		}
+	}
+	
+*/
+}
+

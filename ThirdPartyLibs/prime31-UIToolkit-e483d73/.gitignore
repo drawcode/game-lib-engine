@@ -1,0 +1,33 @@
+# Xcode and system files
+.DS_Store
+build
+Build
+Products
+*.pbxuser
+*.perspectivev3
+
+# Unity junk files
+Xcode/
+Temp/*
+Library/*
+!Library/*.asset
+
+
+/UIToolkit.csproj
+/UIToolkit.sln
+/UIToolkit.pidb
+/UIToolkit.userprefs
+Library/ScriptAssemblies/*
+/Library/ScriptAssemblies
+/Library/cache
+/Assembly-CSharp-firstpass.csproj
+/Assembly-CSharp-firstpass.pidb
+/Assembly-CSharp.csproj
+/UIToolkit-CSharp.sln
+/Assembly-CSharp.pidb
+/Assembly-CSharp-vs.csproj
+/obj
+
+Assembly-CSharp-*
+UIToolkit-csharp.sln
+*.suo
