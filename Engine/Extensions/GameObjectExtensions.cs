@@ -85,7 +85,7 @@ public static class GameObjectExtensions {
     }
 
     public static GameObject FindTypeAboveObject<T>(this GameObject inst)
-        where T : class {
+        where T : Component {
         if (inst == null) {
             return null;
         }
@@ -94,13 +94,14 @@ public static class GameObjectExtensions {
     }
 
     public static GameObject FindTypeAboveObjectRecursive<T>(this GameObject inst)
-        where T : class {
+        where T : Component {
         if (inst == null) {
             return null;
         }
 
         if (inst != null) {
-            if (inst.GetComponent<T>() != null) {
+			var instItem = inst.GetComponent<T>();
+            if (instItem != null) {
                 return inst;
             }
 
