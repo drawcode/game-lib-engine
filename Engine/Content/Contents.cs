@@ -2433,13 +2433,14 @@ public class Contents {
 	
 	public IEnumerator InitCacheCo() {
 			
+		
 		BroadcastProgressMessage( 
 			"Loading Content",
 			"Syncing initial content...",
 			1f);
 		
 	    // Initial cache
-		yield return CoroutineUtil.Wait(SyncFoldersCo());
+		yield return CoroutineUtil.Start(SyncFoldersCo());
 		
 		// Get latest main content list from server
 				
@@ -2728,7 +2729,7 @@ public class Contents {
 						FileSystemUtil.CopyFile(file.FullName, temppath);
 			        }
 					
-					yield return new WaitForEndOfFrame();
+					//yield return CoroutineUtil.WaitForEndOfFrame();
 					
 					BroadcastProgressMessage( 
 						"Preparing Content",
@@ -2751,7 +2752,9 @@ public class Contents {
 	    
     public IEnumerator SyncFoldersCo() {
 		
-		yield return new WaitForEndOfFrame();
+        LogUtil.Log("Contents::SyncFolders");
+		
+		//yield return CoroutineUtil.WaitForEndOfFrame();
 
 		Messenger<object>.Broadcast(ContentMessages.ContentSyncShipContentStarted, "started");
 		
