@@ -429,11 +429,17 @@ public class Contents : MonoBehaviour {
 	
 	public bool isReady {
 		get {
-			if(!string.IsNullOrEmpty(Contents.Instance.appCachePath)
-				&& !string.IsNullOrEmpty(Contents.Instance.appShipCachePath)) {
+			if(!string.IsNullOrEmpty(Contents.appCachePath)
+				&& !string.IsNullOrEmpty(Contents.appShipCachePath)) {
 				return true;
 			}
 			return false;
+		}
+	}
+	
+	public static bool isInst {
+		get {
+			return Instance != null ? true : false;
 		}
 	}
 	
@@ -458,59 +464,59 @@ public class Contents : MonoBehaviour {
 	public Queue<DownloadableContentUrlObject> downloadUrlObjects = new Queue<DownloadableContentUrlObject>();
 	public Queue<DownloadableContentUrlObject> processUrlObjects = new Queue<DownloadableContentUrlObject>();
 		
-	public AssetBundle bundle;
+	public static AssetBundle bundle;
 	
-	public WWW downloader;
-	public WWW verifier;
+	public static WWW downloader;
+	public static WWW verifier;
 	
-	public DownloadableContentItem dlcItem;
-	public ContentItemStatus contentItemStatus;
-	public bool downloadInProgress = false;
+	public static DownloadableContentItem dlcItem;
+	public static ContentItemStatus contentItemStatus;
+	public static bool downloadInProgress = false;
 	
-	public ContentItemAccessDictionary contentItemAccess;
-    public string persistenceFolder = "";
-    public string streamingAssetsFolder = "";
+	public static ContentItemAccessDictionary contentItemAccess;
+    public static string persistenceFolder = "";
+    public static string streamingAssetsFolder = "";
     
-	public string appCachePath = "";
-	public string appCachePathAssetBundles = "";
-	public string appCachePathTrackers = "";
-	public string appCachePathPacks = "";
-	public string appCachePathShared = "";
-	public string appCachePathAll = "";
-	public string appCachePathAllShared = "";
-	public string appCachePathAllSharedUserData = "";
-	public string appCachePathSharedPacks = "";
-	public string appCachePathSharedTrackers = "";
-	public string appCachePathAllSharedTrackers = "";
-	public string appCachePathAllPlatform = "";
-	public string appCachePathAllPlatformPacks = "";
-	public string appCachePathAllPlatformData = "";
-	public string appCachePathData = "";
-	public string appCacheVersionPath = "";
-	public string appCachePlatformPath = "";
+	public static string appCachePath = "";
+	public static string appCachePathAssetBundles = "";
+	public static string appCachePathTrackers = "";
+	public static string appCachePathPacks = "";
+	public static string appCachePathShared = "";
+	public static string appCachePathAll = "";
+	public static string appCachePathAllShared = "";
+	public static string appCachePathAllSharedUserData = "";
+	public static string appCachePathSharedPacks = "";
+	public static string appCachePathSharedTrackers = "";
+	public static string appCachePathAllSharedTrackers = "";
+	public static string appCachePathAllPlatform = "";
+	public static string appCachePathAllPlatformPacks = "";
+	public static string appCachePathAllPlatformData = "";
+	public static string appCachePathData = "";
+	public static string appCacheVersionPath = "";
+	public static string appCachePlatformPath = "";
 	
-	public string appShipCachePath = "";
-	public string appShipCachePathAssetBundles = "";
-	public string appShipCachePathTrackers = "";
-	public string appShipCachePathPacks = "";
-	public string appShipCachePathShared = "";
-	public string appShipCachePathAll = "";
-	public string appShipCachePathData = "";
-	public string appShipCacheVersionPath = "";
-	public string appShipCachePlatformPath = "";
-	public string appShipCachePathPlatformPath = "";
+	public static string appShipCachePath = "";
+	public static string appShipCachePathAssetBundles = "";
+	public static string appShipCachePathTrackers = "";
+	public static string appShipCachePathPacks = "";
+	public static string appShipCachePathShared = "";
+	public static string appShipCachePathAll = "";
+	public static string appShipCachePathData = "";
+	public static string appShipCacheVersionPath = "";
+	public static string appShipCachePlatformPath = "";
+	public static string appShipCachePathPlatformPath = "";
 	
-	public string currentPlatformCode = "ios";
+	public static string currentPlatformCode = "ios";
 	
-	public List<string> packPaths;
-	public List<string> packPathsVersionedShared;
-	public List<string> packPathsVersioned;
+	public static List<string> packPaths;
+	public static List<string> packPathsVersionedShared;
+	public static List<string> packPathsVersioned;
 	
-	public Dictionary<string,string> fileHashLookup = null;
+	public static Dictionary<string,string> fileHashLookup = null;
 	
-	public bool initialSyncCompleted = false;
-	public bool initialDownload = false;
-	public string currentPackCodeSync = "default";
+	public static bool initialSyncCompleted = false;
+	public static bool initialDownload = false;
+	public static string currentPackCodeSync = "default";
 	
 	void Start() {
 		
@@ -840,7 +846,15 @@ public class Contents : MonoBehaviour {
 		
 	}
 	
-	public void ChangeSyncState(ContentSyncState syncStateTo) {
+	// -----------------------------------------------------------------------
+	
+	public static void ChangeSyncState(ContentSyncState syncStateTo) {
+		if(isInst) {
+			Instance.changeSyncState(syncStateTo);
+		}
+	}
+	
+	public void changeSyncState(ContentSyncState syncStateTo) {
 		if(syncState != syncStateTo) {
 			syncState = syncStateTo;
 			if(syncState == ContentSyncState.SyncNotStarted) {
@@ -887,11 +901,19 @@ public class Contents : MonoBehaviour {
 		}
 	}
 	
-	public void ProcessDownloadableContentUrlQueue() {
-		StartCoroutine(ProcessDownloadableContentUrlQueueCo());
+	// -----------------------------------------------------------------------
+	
+	public static void ProcessDownloadableContentUrlQueue() {
+		if(isInst) {
+			Instance.processDownloadableContentUrlQueue();
+		}
+	}
+	
+	public void processDownloadableContentUrlQueue() {
+		StartCoroutine(processDownloadableContentUrlQueueCo());
 	}
 		
-	public IEnumerator ProcessDownloadableContentUrlQueueCo() {
+	public IEnumerator processDownloadableContentUrlQueueCo() {
 		if(downloadUrlObjects != null) {
 			if(downloadUrlObjects.Count > 0) {
 				currentUrlObject = downloadUrlObjects.Dequeue();
@@ -900,8 +922,8 @@ public class Contents : MonoBehaviour {
 					
 					if(countsDownload > 0) {
 						
-						BroadcastProgressMessage("Downloading Content", 
-							GetUnversionedDisplayFile(currentUrlObject.path), incrementDownload++/countsDownload);
+						broadcastProgressMessage("Downloading Content", 
+							getUnversionedDisplayFile(currentUrlObject.path), incrementDownload++/countsDownload);
 						
 						LogUtil.Log("Downloading Content:"
 							, " incrementDownload:" + incrementDownload
@@ -910,26 +932,41 @@ public class Contents : MonoBehaviour {
 					
 					yield return new WaitForEndOfFrame();
 					
-					RequestDownloadBytes(currentUrlObject.url);
+					requestDownloadBytes(currentUrlObject.url);
 				}
 			}
 			else {
 								
-				yield return StartCoroutine(ProcessSyncUpdateCo());				
+				yield return StartCoroutine(processSyncUpdateCo());				
 				
 				if(!initialSyncCompleted) {
 					// Kick off actual file process
-					ProcessAppContentList(currentPackCodeSync);
+					processAppContentList(currentPackCodeSync);
 				}
 				else {				
 					// Kick off prepare and load initial content state
-					ChangeSyncState(ContentSyncState.SyncPrepare);
+					changeSyncState(ContentSyncState.SyncPrepare);
 				}
 			}
 		}
 	}
+	
+	// -----------------------------------------------------------------------
+	
+	public static string GetCurrentPlatformCode() {
+		if(isInst) {
+			Instance.getCurrentPlatformCode();
+		}
+#if UNITY_IPHONE
+		return "ios";
+#elif UNITY_ANDROID
+		return "android";
+#else 
+		return "desktop";
+#endif	
+	}
 	        
-	public string GetCurrentPlatformCode() {
+	public string getCurrentPlatformCode() {
 #if UNITY_IPHONE
 		return "ios";
 #elif UNITY_ANDROID
@@ -939,25 +976,54 @@ public class Contents : MonoBehaviour {
 #endif		
 	}
 	
-	public void ChangePackAndLoadMainScene(string pack) {		
+	// -----------------------------------------------------------------------
+	
+	public static void ChangePackAndLoadMainScene(string pack) {	
+		if(isInst) {
+			Instance.changePackAndLoadMainScene(pack);	
+		}
+	}
+	
+	public void changePackAndLoadMainScene(string pack) {		
 		GamePacks.Instance.ChangeCurrentGamePack(pack);
 		//GameLevels.Instance.ChangeCurrentGameLevel(pack + "-main");
 		// scene bundle based with unity caching
-		Contents.Instance.LoadSceneOrDownloadScenePackAndLoad(GamePacks.Current.code);
+		Contents.LoadSceneOrDownloadScenePackAndLoad(GamePacks.Current.code);
+	}
+	// -----------------------------------------------------------------------
+	
+	
+	public static bool CheckGlobalContentAccess(string pack) {
+		if(isInst != null) {
+			return Instance.checkGlobalContentAccess(pack);
+		}
+		return false;
 	}
 
-	public bool CheckGlobalContentAccess(string pack) {
+	public bool checkGlobalContentAccess(string pack) {
 		if(contentItemAccess.CheckAccess(pack)) {
 			return true;	
 		}
 		return false;
 	}
 	
-	public void SaveGlobalContentAccess() {
+	public static void SaveGlobalContentAccess() {
+		if(isInst) {
+			Instance.saveGlobalContentAccess();
+		}
+	}
+	
+	public void saveGlobalContentAccess() {
 		contentItemAccess.Save();
 	}
 	
-	public void SetGlobalContentAccess(string pack) {
+	public static void SetGlobalContentAccess(string pack) {
+		if(isInst) {
+			Instance.setGlobalContentAccess(pack);
+		}
+	}
+	
+	public void setGlobalContentAccess(string pack) {
 		pack = pack.Replace(GamePacks.currentGameBundle + ".", "");
 		contentItemAccess.SetContentAccess(pack);
 		contentItemAccess.SetContentAccess(pack.Replace("-", "_"));
@@ -970,20 +1036,34 @@ public class Contents : MonoBehaviour {
 		contentItemAccess.Save();
 	}	
 	
-	public void SetContentAccessTransaction(string key, string productId, string receipt, int quantity, bool save) {
+	public static void SetContentAccessTransaction(string key, string productId, string receipt, int quantity, bool save) {
+		if(isInst) {
+			Instance.setContentAccessTransaction(key, productId, receipt, quantity, save);
+		}
+	}
+	
+	public void setContentAccessTransaction(string key, string productId, string receipt, int quantity, bool save) {
 		contentItemAccess.SetContentAccessTransaction(key, productId, receipt, quantity, save);
 	}
 	
-	public void ProcessLoad(bool runtime) {
+	// -----------------------------------------------------------------------
+	
+	public static void ProcessLoad(bool runtime) {
+		if(isInst) {
+			Instance.processLoad(runtime);
+		}
+	}
+	
+	public void processLoad(bool runtime) {
 		runtimeUpdate = runtime;
 		//AppViewerUIController.Instance.ShowUI();
 		if(runtimeUpdate) {
 			//UINotificationDisplayContent.Instance.HideDialog();
 		}
-		StartCoroutine(ProcessLoadCo());
+		StartCoroutine(processLoadCo());
 	}
 	
-	public IEnumerator ProcessLoadCo() {
+	IEnumerator processLoadCo() {
 				
 		currentPackCodeSync = "default";
 		
@@ -995,7 +1075,7 @@ public class Contents : MonoBehaviour {
 						
 		// On initial load handle cache
 		
-        yield return StartCoroutine(Contents.Instance.InitCacheCo(true, true));		
+        yield return StartCoroutine(Contents.InitCacheCo(true, true));		
 		
 		displayState = ContentSyncDisplayState.SyncContentListsDefault;
 		
@@ -1005,17 +1085,29 @@ public class Contents : MonoBehaviour {
 		ProcessAppContentListSync(currentPackCodeSync);		
 	}
 	
-	public void ProcessPackLoad(string packCode, bool runtime) {
-		runtimeUpdate = true;
-		ProcessPackLoad(packCode);
+	public static void ProcessPackLoad(string packCode, bool runtime) {
+		if(isInst) {
+			Instance.processPackLoad(packCode, runtime);
+		}
 	}
 	
-	public void ProcessPackLoad(string packCode) {
+	public void processPackLoad(string packCode, bool runtime) {
+		runtimeUpdate = true;
+		processPackLoad(packCode);
+	}
+	
+	public static void ProcessPackLoad(string packCode) {
+		if(isInst) {
+			Instance.processPackLoad(packCode);
+		}
+	}
+	
+	public void processPackLoad(string packCode) {
 		runtimeUpdate = false;
-		StartCoroutine(ProcessPackLoadCo(packCode));
+		StartCoroutine(processPackLoadCo(packCode));
 	}
 		
-	public IEnumerator ProcessPackLoadCo(string packCode) {
+	IEnumerator processPackLoadCo(string packCode) {
 		// Process pack initial startup, sync and download any new files
 		
 		currentPackCodeSync = packCode;
@@ -1031,16 +1123,22 @@ public class Contents : MonoBehaviour {
 		ProcessAppContentList(packCode);
 		
 	}
+	
+	public static void ProcessAppContentListSync(string packCode) {
+		if(isInst) {
+			Instance.processAppContentList(packCode);
+		}
+	}
 		
-	public void ProcessAppContentListSync(string packCode) {
+	public void processAppContentListSync(string packCode) {
 		
 		initialSyncCompleted = false;
 		
-		ResetQueues();
+		resetQueues();
 		
-		List<string> paths = CollectAppContentListSync(packCode);
+		List<string> paths = collectAppContentListSync(packCode);
 		if(paths.Count > 0) {
-			RequestDownloadableAppContentListSync(paths);
+			requestDownloadableAppContentListSync(paths);
 		}
 		else {
 						
@@ -1058,23 +1156,29 @@ public class Contents : MonoBehaviour {
 	}
 	*/
 	
-	public IEnumerator ProcessSyncUpdateCo() {
+	IEnumerator processSyncUpdateCo() {
 		if(processUrlObjects != null) {
-			yield return StartCoroutine(ProcessSyncedFilesCo());
+			yield return StartCoroutine(processSyncedFilesCo());
 		}
 	}
 		
-	public void ProcessAppContentList(string packCode) {
+	public static void ProcessAppContentList(string packCode) {
+		if(isInst) {
+			Instance.processAppContentList(packCode);
+		}
+	}
+	
+	public void processAppContentList(string packCode) {
 		
 		initialSyncCompleted = true;
 		
 		ChangeSyncState(ContentSyncState.SyncProcessDownloadFiles);
 		
-		ResetQueues();
+		resetQueues();
 		
-		List<string> paths = CollectAppContentListFiles(packCode);
+		List<string> paths = collectAppContentListFiles(packCode);
 		if(paths.Count > 0) {
-			RequestDownloadableAppContentListFiles(paths);
+			requestDownloadableAppContentListFiles(paths);
 		}
 		else {
 						
@@ -1084,7 +1188,14 @@ public class Contents : MonoBehaviour {
 		}
 	}
 	
-	public bool IsDefault(string code) {
+	public static bool IsDefault(string code) {
+		if(isInst) {
+			return Instance.isDefault(code);
+		}
+		return true;
+	}
+	
+	public bool isDefault(string code) {
 		if(!string.IsNullOrEmpty(code)) {			
 			if(code.ToLower() == "default"
 					&& code.ToLower() == "*"
@@ -1095,14 +1206,28 @@ public class Contents : MonoBehaviour {
 		return false;
 	}
 	
-	public bool CheckHashVerified(string pathVersioned, string hashData) {
+	public static bool CheckHashVerified(string pathVersioned, string hashData) {
+		if(isInst) {
+			return Instance.checkHashVerified(pathVersioned, hashData);
+		}
+		return false;
+	}
+	
+	public bool checkHashVerified(string pathVersioned, string hashData) {
 		string currentHash = ChecksumHash(pathVersioned);
 		string dataHash = hashData;
 		bool hashVerified = currentHash.ToLower() == dataHash.ToLower() ? true : false;
 		return hashVerified;
 	}
 	
-	public List<string> CollectAppContentListFiles(string packCode) {
+	public static List<string> CollectAppContentListFiles(string packCode) {
+		if(isInst) {
+			return Instance.collectAppContentListFiles(packCode);
+		}
+		return new System.Collections.Generic.List<string>();
+	}
+	
+	public List<string> collectAppContentListFiles(string packCode) {
 		
 		AppContentListItems.Instance.LoadData(); // load latest
 		
@@ -1113,8 +1238,8 @@ public class Contents : MonoBehaviour {
 		
 		foreach(AppContentListItem item in appContentListItems) {
 			string path = Path.Combine(item.data.directoryFull, item.data.fileName);
-			string pathVersioned = GetFullPathVersioned(path);
-			string pathHashed = GetFileVersioned(path, item.data.hash);
+			string pathVersioned = getFullPathVersioned(path);
+			string pathHashed = getFileVersioned(path, item.data.hash);
 			bool fileExists = FileSystemUtil.CheckFileExists(pathVersioned);
 			
 			// TODO DEV CONTENT
@@ -1122,7 +1247,7 @@ public class Contents : MonoBehaviour {
 			bool hashVerified = false;
 			
 			if(!fileExists) {
-				pathVersioned = Path.Combine(Contents.Instance.appCachePath, pathVersioned);
+				pathVersioned = Path.Combine(Contents.appCachePath, pathVersioned);
 				pathVersioned = GetPathUpdatedVersion(pathVersioned);
 				fileExists = FileSystemUtil.CheckFileExists(pathVersioned);
 			}
@@ -1151,10 +1276,10 @@ public class Contents : MonoBehaviour {
 			
 			if(fileExists 
 				&& (packCode.ToLower() == item.pack_code.ToLower() 
-				|| IsDefault(packCode))
+				|| isDefault(packCode))
 				) {
 				
-				hashVerified = CheckHashVerified(pathVersioned, item.data.hash);
+				hashVerified = checkHashVerified(pathVersioned, item.data.hash);
 				
 				if(hashVerified) {					
 					shouldBeUpdated = false;
@@ -1165,13 +1290,13 @@ public class Contents : MonoBehaviour {
 			}
 			else if(!fileExists  
 				&& (packCode.ToLower() == item.pack_code.ToLower() 
-				|| IsDefault(packCode))
+				|| isDefault(packCode))
 				) {
 				shouldBeUpdated = true;
 			}
 			
 			if(shouldBeUpdated) {
-				pathHashed = GetPathUpdatedVersion(pathHashed);
+				pathHashed = getPathUpdatedVersion(pathHashed);
 				paths.Add(pathHashed);
 			}
 			
@@ -1180,7 +1305,14 @@ public class Contents : MonoBehaviour {
 		return paths;
 	}	
 	
-	public string CollectAppContentListSharedPacksPathData(string packCode, string key, string ext, bool versioned, bool synced) {		
+	public static string CollectAppContentListSharedPacksPathData(string packCode, string key, string ext, bool versioned, bool synced) {
+		if(isInst) {
+			return Instance.collectAppContentListPlatformPacksPathData(packCode, key, ext, versioned, synced);
+		}
+		return "";
+	}
+	
+	public string collectAppContentListSharedPacksPathData(string packCode, string key, string ext, bool versioned, bool synced) {		
 		
 		string pathPack = "";
 		
@@ -1194,17 +1326,23 @@ public class Contents : MonoBehaviour {
 		
 		
 		if(synced) {
-			pathPack = GetFullPathVersionedSync(pathPack);	
+			pathPack = getFullPathVersionedSync(pathPack);	
 		}
 		else if(versioned && !synced) {
-			pathPack = GetFileVersioned(pathPack); 	
+			pathPack = getFileVersioned(pathPack); 	
 		}
 		
 		return pathPack;		
 	}
 	
+	public static string CollectAppContentListPlatformPacksPathData(string packCode, string key, string ext, bool versioned, bool synced) {		
+		if(isInst) {
+			return Instance.collectAppContentListPlatformPacksPathData(packCode, key, ext, versioned, synced);
+		}
+		return "";
+	}
 	
-	public string CollectAppContentListPlatformPacksPathData(string packCode, string key, string ext, bool versioned, bool synced) {		
+	public string collectAppContentListPlatformPacksPathData(string packCode, string key, string ext, bool versioned, bool synced) {		
 		
 		string pathPack = "";
 		
@@ -1226,8 +1364,14 @@ public class Contents : MonoBehaviour {
 		
 		return pathPack;		
 	}
+	public static string CollectAppContentListSharedPacksPathContent(string packCode, string key, string ext, bool versioned, bool synced) {		
+		if(isInst) {
+			return Instance.collectAppContentListSharedPacksPathContent(packCode, key, ext, versioned, synced);
+		}
+		return "";
+	}
 	
-	public string CollectAppContentListSharedPacksPathContent(string packCode, string key, string ext, bool versioned, bool synced) {		
+	public string collectAppContentListSharedPacksPathContent(string packCode, string key, string ext, bool versioned, bool synced) {		
 		
 		string pathPack = "";
 		
@@ -1249,7 +1393,14 @@ public class Contents : MonoBehaviour {
 		return pathPack;		
 	}
 	
-	public string CollectAppContentListSharedPacksPath(string packCode, string key, string ext, bool versioned, bool synced) {		
+	public static string CollectAppContentListSharedPacksPath(string packCode, string key, string ext, bool versioned, bool synced) {
+		if(isInst) {
+			return Instance.collectAppContentListSharedPacksPath(packCode, key, ext, versioned, synced);
+		}
+		return "";
+	}
+	
+	public string collectAppContentListSharedPacksPath(string packCode, string key, string ext, bool versioned, bool synced) {		
 		
 		string pathPack = "";
 		
@@ -1271,7 +1422,14 @@ public class Contents : MonoBehaviour {
 		return pathPack;		
 	}
 	
-	public List<string> CollectAppContentListSync(string packCode) {
+	public static List<string> CollectAppContentListSync(string packCode) {
+		if(isInst) {
+			return Instance.collectAppContentListSync(packCode);
+		}
+		return new List<string>();
+	}
+	
+	public List<string> collectAppContentListSync(string packCode) {
 		
 		AppContentListItems.Instance.LoadData(); // load latest
 		
@@ -1306,8 +1464,16 @@ public class Contents : MonoBehaviour {
 				
 		return paths;
 	}
+	
+	// -----------------------------------------------------------------------
 		
-	public void ResetQueues(){
+	public static void ResetQueues(){
+		if(isInst) {
+			Instance.resetQueues();
+		}
+	}
+	
+	public void resetQueues(){
 		
 		if(downloadUrlObjects == null) {
 			downloadUrlObjects = new Queue<DownloadableContentUrlObject>();
@@ -1321,21 +1487,26 @@ public class Contents : MonoBehaviour {
 		processUrlObjects.Clear();
 	}	
 	
-	public string GetPathUpdatedVersion(string url) {
+	public static string GetPathUpdatedVersion(string url) {		
+		if(isInst) {
+			return Instance.getPathUpdatedVersion(url);
+		}
+		return url;
+	}
+	
+	public string getPathUpdatedVersion(string url) {
 		if(url.Contains("version/")) {
 			url = url.Replace("version/",ContentsConfig.contentVersion + "/");
 		}
 		return url;
 	}	
 	
-	
 	// ----------------------------------------------------------------------------------
-	// HANDLERS
+	// HANDLERS	
 	
-	
-	void HandleDownloadableAppContentListFilesCallback(Engine.Networking.WebRequest.ResponseObject response) {
+	void handleDownloadableAppContentListFilesCallback(Engine.Networking.WebRequest.ResponseObject response) {
 		
-		response = HandleResponseObject(response);
+		response = handleResponseObject(response);
 		
 		bool serverError = false;
 				
@@ -1383,16 +1554,16 @@ public class Contents : MonoBehaviour {
 		}
 		
 		if(serverError) {
-			Reset();
+			reset();
 			Messenger<object>.Broadcast(
 				ContentMessages.ContentAppContentListFilesError, 
 				"Error on server, please try again.");
 		}
 	}
 		
-	void HandleDownloadableAppContentListSyncCallback(Engine.Networking.WebRequest.ResponseObject response) {
+	void handleDownloadableAppContentListSyncCallback(Engine.Networking.WebRequest.ResponseObject response) {
 		
-		response = HandleResponseObject(response);
+		response = handleResponseObject(response);
 		
 		bool serverError = false;
 				
@@ -1440,7 +1611,7 @@ public class Contents : MonoBehaviour {
 		}
 		
 		if(serverError) {
-			Reset();
+			reset();
 			Messenger<object>.Broadcast(
 				ContentMessages.ContentAppContentListSyncError, 
 				"Error on server, please try again.");
@@ -1450,11 +1621,11 @@ public class Contents : MonoBehaviour {
 	// ----------------------------------------------------------------------------------
 	// HANDLERS - DEFAULT
 	
-	void HandleDownloadAssetBundleCallback(Engine.Networking.WebRequest.ResponseObject response) {
+	void handleDownloadAssetBundleCallback(Engine.Networking.WebRequest.ResponseObject response) {
 		
 		/*
 		 * 
-		response = HandleResponseObject(response);
+		response = handleResponseObject(response);
 		
 		if(response.validResponse) {
 			
@@ -1491,7 +1662,7 @@ public class Contents : MonoBehaviour {
 							"Content verified, downloading and loading pack." );
 						
 						StartCoroutine(
-							Contents.Instance.SceneLoadFromCacheOrDownloadCo(url));
+							Contents.SceneLoadFromCacheOrDownloadCo(url));
 						break;
 					}					
 				}
@@ -1510,7 +1681,7 @@ public class Contents : MonoBehaviour {
 		}
 		
 		if(serverError) {
-			Reset();
+			reset();
 			Messenger<string>.Broadcast(
 			ContentMessages.ContentItemVerifyError, 
 			"Error on server, please try again.");
@@ -1518,9 +1689,9 @@ public class Contents : MonoBehaviour {
 		*/
 	}
 		
-	void HandleDownloadableContentInfoCallback(Engine.Networking.WebRequest.ResponseObject response) {
+	void handleDownloadableContentInfoCallback(Engine.Networking.WebRequest.ResponseObject response) {
 		
-		response = HandleResponseObject(response);
+		response = handleResponseObject(response);
 		
 		bool serverError = false;
 		
@@ -1555,7 +1726,7 @@ public class Contents : MonoBehaviour {
 							"Content verified, downloading and loading pack." );
 						
 						StartCoroutine(
-							Contents.Instance.SceneLoadFromCacheOrDownloadCo(url));
+							Contents.SceneLoadFromCacheOrDownloadCo(url));
 						break;
 					}					
 				}
@@ -1574,7 +1745,7 @@ public class Contents : MonoBehaviour {
 		}
 		
 		if(serverError) {
-			Reset();
+			reset();
 			Messenger<string>.Broadcast(
 				ContentMessages.ContentItemVerifyError, 
 				"Error on server, please try again.");
@@ -1583,10 +1754,10 @@ public class Contents : MonoBehaviour {
 	
 	//HandleDownloadableContentSetSyncCallback
 	
-	void HandleDownloadableContentSetSyncCallback(
+	void handleDownloadableContentSetSyncCallback(
 		Engine.Networking.WebRequest.ResponseObject response) {
 		
-		response = HandleResponseObject(response);
+		response = handleResponseObject(response);
 		
 		bool serverError = false;
 		
@@ -1622,7 +1793,7 @@ public class Contents : MonoBehaviour {
 							"Content verified, downloading and loading pack." );
 						
 						StartCoroutine(
-							Contents.Instance.SceneLoadFromCacheOrDownloadCo(url));
+							Contents.SceneLoadFromCacheOrDownloadCo(url));
 						break;
 					}					
 				}
@@ -1641,16 +1812,16 @@ public class Contents : MonoBehaviour {
 		}
 		
 		if(serverError) {
-			Reset();
+			reset();
 			Messenger<string>.Broadcast(
 				ContentMessages.ContentItemVerifyError, 
 				"Error on server, please try again.");
 		}
 	}
 	
-	void HandleDownloadableFileCallback(Engine.Networking.WebRequest.ResponseObject response) {
+	void handleDownloadableFileCallback(Engine.Networking.WebRequest.ResponseObject response) {
 		
-		response = HandleResponseObject(response);
+		response = handleResponseObject(response);
 		
 		bool serverError = false;
 		
@@ -1685,7 +1856,7 @@ public class Contents : MonoBehaviour {
 							ContentMessages.ContentItemVerifySuccess, 
 							"Content verified, downloading and loading pack." );
 						//LogUtil.Log("url:" + url);
-						//StartCoroutine(Contents.Instance.SceneLoadFromCacheOrDownloadCo(url));
+						//StartCoroutine(Contents.SceneLoadFromCacheOrDownloadCo(url));
 						//WebRequest.Instance.Request(
 					}
 				}
@@ -1704,7 +1875,7 @@ public class Contents : MonoBehaviour {
 		}
 		
 		if(serverError) {
-			Reset();
+			reset();
 			Messenger<string>.Broadcast(
 				ContentMessages.ContentItemVerifyError, 
 				"Error on server, please try again.");
@@ -1715,7 +1886,15 @@ public class Contents : MonoBehaviour {
 		
 	//}
 	
-	public Engine.Networking.WebRequest.ResponseObject HandleResponseObject(
+	public static Engine.Networking.WebRequest.ResponseObject HandleResponseObject(
+		Engine.Networking.WebRequest.ResponseObject responseObject) {
+		if(isInst) {
+			return Instance.handleResponseObject(responseObject);
+		}
+		return null;
+	}
+	
+	public Engine.Networking.WebRequest.ResponseObject handleResponseObject(
 		Engine.Networking.WebRequest.ResponseObject responseObject) {
 		
 		bool serverError = false;
@@ -1805,7 +1984,7 @@ public class Contents : MonoBehaviour {
 		
 		if(serverError) {
 			responseObject.validResponse = false;
-			Reset();			
+			reset();			
 			Messenger<string>.Broadcast(
 				ContentMessages.ContentItemVerifyError, 
 				"Error receiving a server response, please try again." );		
@@ -1817,7 +1996,13 @@ public class Contents : MonoBehaviour {
 	// ----------------------------------------------------------------------------------
 	// REQUESTS		
 	
-	public void RequestDownloadableContent(string pack) {
+	public static void RequestDownloadableContent(string pack) {
+		if(isInst) {
+			Instance.requestDownloadableContent(pack);
+		}
+	}
+	
+	public void requestDownloadableContent(string pack) {
 		RequestDownloadableContent(
 			GamePacks.currentPacksGame,
 			GamePacks.currentPacksVersion, 
@@ -1825,7 +2010,15 @@ public class Contents : MonoBehaviour {
 			pack);
 	}
 	
-	public void RequestDownloadableContent(
+	public static void RequestDownloadableContent(
+		string game, string version, string platform, string pack) {
+		
+		if(isInst) {
+			Instance.requestDownloadableContent(game, version, platform, pack);
+		}
+	}
+	
+	public void requestDownloadableContent(
 		string game, string version, string platform, string pack) {
 		//glob.ShowLoadingIndicator();
 		
@@ -1837,12 +2030,12 @@ public class Contents : MonoBehaviour {
 		
 		downloadInProgress = true;
 		
-		string url = GetDownloadContentItemUrl(
+		string url = getDownloadContentItemUrl(
 			game, version, platform, pack);
 		
 		WebRequest.Instance.Request(
 			WebRequest.RequestType.HTTP_POST, url, data, 
-			HandleDownloadableContentInfoCallback);
+			handleDownloadableContentInfoCallback);
 		
 		contentItemStatus = new ContentItemStatus();
 		
@@ -1851,35 +2044,55 @@ public class Contents : MonoBehaviour {
 			"Verifying content access..." );
 	}
 	
-	public void RequestDownloadableContentSetSync(
+	public static void RequestDownloadableContentSetSync(
+		string game, string version, string platform) {
+		if(isInst) {
+			Instance.requestDownloadableContentSetSync(game, version, platform);
+		}
+	}
+	
+	public void requestDownloadableContentSetSync(
 		string game, string version, string platform) {
 		
 		downloadInProgress = true;
 		
-		string url = GetContentSetUrl(game, version, platform);
+		string url = getContentSetUrl(game, version, platform);
 		WebRequest.Instance.Request(
 			WebRequest.RequestType.HTTP_GET, url, 
-			HandleDownloadableContentSetSyncCallback);
+			handleDownloadableContentSetSyncCallback);
 		
 		Messenger<string>.Broadcast(
 			ContentMessages.ContentSetDownloadStarted, 
 			"Getting downloadable content access..." );
 	}
 	
-	public void RequestDownloadableFile(string url) {
+	public static void RequestDownloadableFile(string url) {
+		if(isInst) {
+			Instance.requestDownloadableFile(url);
+		}
+	}
+	
+	public void requestDownloadableFile(string url) {
 		
 		downloadInProgress = true;
 		
 		WebRequest.Instance.Request(
 			WebRequest.RequestType.HTTP_GET, url, 
-			HandleDownloadableFileCallback);
+			handleDownloadableFileCallback);
 		
 		Messenger<string>.Broadcast(
 			ContentMessages.ContentFileDownloadStarted, 
 			"Started downloading..." + url);
 	}
 	
-	public Dictionary<string, object> GetDefaultPostParams() {	
+	public static Dictionary<string, object> GetDefaultPostParams() {	
+		if(isInst) {
+			return Instance.getDefaultPostParams();
+		}
+		return null;
+	}
+	
+	public Dictionary<string, object> getDefaultPostParams() {	
 		Dictionary<string, object> data = new Dictionary<string, object>();
 		string udid = UniqueUtil.Instance.currentUniqueId;		
 		data.Add("device_id", udid);
@@ -1887,7 +2100,13 @@ public class Contents : MonoBehaviour {
 		return data;
 	}
 		
-	public void RequestDownloadableAppContentListSync(List<string> paths) {
+	public static void RequestDownloadableAppContentListSync(List<string> paths) {
+		if(isInst) {
+			Instance.requestDownloadableAppContentListSync(paths);
+		}
+	}
+	
+	public void requestDownloadableAppContentListSync(List<string> paths) {
 		
 		downloadInProgress = true;
 		
@@ -1907,12 +2126,18 @@ public class Contents : MonoBehaviour {
 		
 		WebRequest.Instance.Request(
 			WebRequest.RequestType.HTTP_POST, url, data,   
-			HandleDownloadableAppContentListSyncCallback);
+			handleDownloadableAppContentListSyncCallback);
 		
 		ChangeSyncState(ContentSyncState.SyncProcessContentList);
 	}
 	
-	public void RequestDownloadableAppContentListFiles(List<string> paths) {
+	public static void RequestDownloadableAppContentListFiles(List<string> paths) {
+		if(isInst) {
+			Instance.requestDownloadableAppContentListFiles(paths);
+		}
+	}
+	
+	public void requestDownloadableAppContentListFiles(List<string> paths) {
 		
 		downloadInProgress = true;
 		
@@ -1932,7 +2157,7 @@ public class Contents : MonoBehaviour {
 		
 		WebRequest.Instance.Request(
 			WebRequest.RequestType.HTTP_POST, url, data,   
-			HandleDownloadableAppContentListFilesCallback);
+			handleDownloadableAppContentListFilesCallback);
 		
 		Messenger<object>.Broadcast(
 			ContentMessages.ContentAppContentListFilesStarted, 
@@ -1943,7 +2168,15 @@ public class Contents : MonoBehaviour {
 	// ----------------------------------------------------------------------------------
 	// HELPERS		
 	
-	public string GetDownloadContentItemUrl(
+	public static string GetDownloadContentItemUrl(
+		string game, string buildVersion, string platform, string pack) {
+		if(isInst) {
+			return Instance.getDownloadContentItemUrl(game, buildVersion, platform, pack);
+		}
+		return "";
+	}
+	
+	public string getDownloadContentItemUrl(
 		string game, string buildVersion, string platform, string pack) {
 		// add increment to the pack name
 		pack = pack + "-" + Convert.ToString(GamePacks.currentPacksIncrement);
@@ -1952,15 +2185,31 @@ public class Contents : MonoBehaviour {
 			game, buildVersion, platform, pack);
 	}
 	
+	public static string GetDownloadAppContentListFilesUrl(
+		string game, string buildVersion, string platform) {
+		if(isInst) {
+			return Instance.getDownloadAppContentListFilesUrl(game, buildVersion, platform);
+		}
+		return "";
+	}
+	
 	//contentDownloadAppContentListFiles
-	public string GetDownloadAppContentListFilesUrl(
+	public string getDownloadAppContentListFilesUrl(
 		string game, string buildVersion, string platform) {
 		return String.Format(
 			ContentEndpoints.contentDownloadAppContentListFiles, 
 			game, buildVersion, platform);
 	}
 	
-	public string GetContentSetUrl(
+	public static string GetContentSetUrl(
+		string game, string buildVersion, string platform) {
+		if(isInst) {
+			return Instance.getContentSetUrl(game, buildVersion, platform);
+		}
+		return "";
+	}
+	
+	public string getContentSetUrl(
 		string game, string buildVersion, string platform) {
 		// add increment to the pack name
 		//pack = pack + "-" + Convert.ToString(GamePacks.currentPacksIncrement);
@@ -1969,15 +2218,28 @@ public class Contents : MonoBehaviour {
 			game, buildVersion, platform);
 	}
 	
-	public void LoadSceneOrDownloadScenePackAndLoad(string pack) {
-		LoadSceneOrDownloadScenePackAndLoad(
+	public static void LoadSceneOrDownloadScenePackAndLoad(string pack) {
+		if(isInst) {
+			Instance.loadSceneOrDownloadScenePackAndLoad(pack);
+		}
+	}
+	
+	public void loadSceneOrDownloadScenePackAndLoad(string pack) {
+		loadSceneOrDownloadScenePackAndLoad(
 			GamePacks.currentPacksGame,
 			GamePacks.currentPacksVersion, 
 			GamePacks.currentPacksPlatform,
 			pack);
 	}
 	
-	public void LoadSceneOrDownloadScenePackAndLoad(
+	public static void LoadSceneOrDownloadScenePackAndLoad(
+		string game, string buildVersion, string platform, string pack) {
+		if(isInst) {
+			Instance.loadSceneOrDownloadScenePackAndLoad(game, buildVersion, platform, pack);
+		}
+	}
+	
+	public void loadSceneOrDownloadScenePackAndLoad(
 		string game, string buildVersion, string platform, string pack) {
 		
 		bool isDownloadableContent = IsDownloadableContent(pack);
@@ -1992,22 +2254,35 @@ public class Contents : MonoBehaviour {
 			&& !string.IsNullOrEmpty(lastPackUrlValue)) {
 			// Just load from the saved url
 			StartCoroutine(
-				SceneLoadFromCacheOrDownloadCo(lastPackUrlValue));			
+				sceneLoadFromCacheOrDownloadCo(lastPackUrlValue));			
 		}
 		else {
 			// Do download verification and download
-			RequestDownloadableContent(game, buildVersion, platform, pack);
+			requestDownloadableContent(game, buildVersion, platform, pack);
 		}
 	}
 	
-	public bool IsDownloadableContent(string pack) {
+	public static bool IsDownloadableContent(string pack) {
+		if(isInst) {
+			return Instance.isDownloadableContent(pack);
+		}
+		return false;
+	}
+	
+	public bool isDownloadableContent(string pack) {
 		//if(pack.ToLower() == GamePacks.PACK_BOOK_DEFAULT.ToLower()) {
 		//	return true;
 		//}
 		return false;
 	}	
 	
-	public void SetLastPackState(string packName, string url) {
+	public static void SetLastPackState(string packName, string url) {
+		if(isInst) {
+			Instance.setLastPackState(packName, url);
+		}
+	}
+	
+	public void setLastPackState(string packName, string url) {
 		
 		if(IsDownloadableContent(packName)) {
 			string lastPackUrlKey = "last-pack-" + packName;
@@ -2020,7 +2295,14 @@ public class Contents : MonoBehaviour {
 		}
 	}		
 	
-	public string GetLastPackState(string packName) {
+	public static string GetLastPackState(string packName) {
+		if(isInst) {
+			return Instance.getLastPackState(packName);
+		}
+		return "";
+	}
+	
+	public string getLastPackState(string packName) {
 		if(IsDownloadableContent(packName)) {
 			string lastPackUrlKey = "last-pack-" + packName;
 			if(SystemPrefUtil.HasLocalSetting(lastPackUrlKey)) {
@@ -2035,8 +2317,15 @@ public class Contents : MonoBehaviour {
 	// FILE LOADING
 		
 	// Individual file downloading
+	
+	public static string GetHashCodeFromFile(string url) {
+		if(isInst) {
+			return Instance.getHashCodeFromFile(url);
+		}
+		return "";
+	}
 
-	public string GetHashCodeFromFile(string url) {
+	public string getHashCodeFromFile(string url) {
 		string hash = "";
 		if(!url.Contains(appCachePath)) {
 			url = Path.Combine(appCachePath, url);
@@ -2045,7 +2334,14 @@ public class Contents : MonoBehaviour {
 		return hash;
 	}
 	
-	public string GetHashCodeFromFilePath(string url) {
+	public static string GetHashCodeFromFilePath(string url) {
+		if(isInst) {
+			return Instance.getHashCodeFromFilePath(url);
+		}
+		return url;
+	}
+	
+	public string getHashCodeFromFilePath(string url) {
 		string hash = "";
 		
 		string text = url;
@@ -2082,12 +2378,18 @@ public class Contents : MonoBehaviour {
 	
 	// BINARY SAVING	
 	
-	public void HandleSyncedFileBinary(byte[] bytes, DownloadableContentUrlObject urlObject) {
+	public static void HandleSyncedFileBinary(byte[] bytes, DownloadableContentUrlObject urlObject) {
+		if(isInst) {
+			Instance.handleSyncedFileBinary(bytes, urlObject);
+		}
+	}
+	
+	public void handleSyncedFileBinary(byte[] bytes, DownloadableContentUrlObject urlObject) {
 		if(bytes != null) {
 			
 			string path = urlObject.path;
 			string pathSave = path;
-			string pathCache = Contents.Instance.appCachePath;
+			string pathCache = Contents.appCachePath;
 			
 			if(!pathSave.Contains(pathCache)) {
 				pathSave = Path.Combine(pathCache, path);
@@ -2123,7 +2425,7 @@ public class Contents : MonoBehaviour {
 		}
 	}
 	
-	public IEnumerator ProcessSyncedFilesCo() {		
+	IEnumerator processSyncedFilesCo() {		
 		
 		AppContentListItems.Instance.LoadData();
 		
@@ -2132,7 +2434,7 @@ public class Contents : MonoBehaviour {
 			validatingTotal = processUrlObjects.Count;
 			validatingInc = 0;
 			
-			yield return StartCoroutine(ProcessSyncedFilesRecursiveCo());
+			yield return StartCoroutine(processSyncedFilesRecursiveCo());
 		} 
 		
 		AppContentListItems.Instance.LoadData();
@@ -2150,7 +2452,14 @@ public class Contents : MonoBehaviour {
 	}
 	*/
 	
-	public string GetUnversionedDisplayFile(string val) {
+	public static string GetUnversionedDisplayFile(string val) {
+		if(isInst) {
+			return Instance.getUnversionedDisplayFile(val);
+		}
+		return "";
+	}
+	
+	public string getUnversionedDisplayFile(string val) {
 		
 		val = Path.GetFileName(val);
 		val = GetDisplayFileUnversioned(val);
@@ -2199,15 +2508,15 @@ public class Contents : MonoBehaviour {
 	float validatingTotal = 0;
 	float validatingInc = 0;
 	
-	public IEnumerator ProcessSyncedFilesRecursiveCo() {
+	IEnumerator processSyncedFilesRecursiveCo() {
 		if(processUrlObjects != null) {	
 			if(validatingTotal > 0) {
 				DownloadableContentUrlObject urlObject = processUrlObjects.Dequeue();
-				BroadcastProgressMessage("Validating Files", GetUnversionedDisplayFile(urlObject.path), validatingInc++/validatingTotal);
-				ProcessSyncedFile(urlObject);				
+				broadcastProgressMessage("Validating Files", GetUnversionedDisplayFile(urlObject.path), validatingInc++/validatingTotal);
+				processSyncedFile(urlObject);				
 				
 				yield return new WaitForEndOfFrame();
-				yield return StartCoroutine(ProcessSyncedFilesRecursiveCo());
+				yield return StartCoroutine(processSyncedFilesRecursiveCo());
 			}
 		} 
 	}
@@ -2215,11 +2524,17 @@ public class Contents : MonoBehaviour {
 	
 	public static string processMarker = "____process";
 	
-	public void ProcessSyncedFile(DownloadableContentUrlObject urlObject) {
+	public static void ProcessSyncedFile(DownloadableContentUrlObject urlObject) {
+		if(isInst) {
+			Instance.processSyncedFile(urlObject);
+		}
+	}
+	
+	public void processSyncedFile(DownloadableContentUrlObject urlObject) {
 				
 		string path = urlObject.path;
 		string pathSave = path;
-		string pathCache = Contents.Instance.appCachePath;		
+		string pathCache = Contents.appCachePath;		
 		
 		if(!pathSave.Contains(pathCache)) {
 			pathSave = Path.Combine(pathCache, path);
@@ -2382,14 +2697,14 @@ public class Contents : MonoBehaviour {
 		}
 	}
 	
-	void HandleRequestDownloadBytesCallback(
+	void handleRequestDownloadBytesCallback(
 		byte[] responseBytes) {
 		
 		//bool serverError = false;
 		
 		if(responseBytes != null) {
 			
-			HandleSyncedFileBinary(responseBytes, currentUrlObject);			
+			handleSyncedFileBinary(responseBytes, currentUrlObject);			
 			
 			Messenger<object>.Broadcast(
 				ContentMessages.ContentAppContentListFileDownloadSuccess,
@@ -2405,12 +2720,18 @@ public class Contents : MonoBehaviour {
 		}		
 	}
 	
-	public void RequestDownloadBytes(string url) {
+	public static void RequestDownloadBytes(string url) {
+		if(isInst) {
+			Instance.requestDownloadBytes(url);
+		}
+	}
+	
+	public void requestDownloadBytes(string url) {
 		
 			Messenger<object>.Broadcast(
 				ContentMessages.ContentAppContentListFileDownloadStarted,
 					"Download Started");
-		WebRequest.Instance.RequestBytes(url, HandleRequestDownloadBytesCallback);
+		WebRequest.Instance.RequestBytes(url, handleRequestDownloadBytesCallback);
 	}
 	
 	// ----------------------------------------------------------------------------------
@@ -2430,8 +2751,13 @@ public class Contents : MonoBehaviour {
 	//    SyncFolders();
     //}
 	
+	public static void BroadcastProgressMessage(string title, string description, float progress) {
+		if(isInst) {
+			Instance.broadcastProgressMessage(title, description, progress);
+		}
+	}
 	
-	public void BroadcastProgressMessage(string title, string description, float progress) {
+	public void broadcastProgressMessage(string title, string description, float progress) {
 		Messenger<string,string,float>.Broadcast(ContentMessages.ContentProgressMessage, 
 			title,
 			description,
@@ -2444,21 +2770,32 @@ public class Contents : MonoBehaviour {
 		
 		//AppViewerUIPanelLoading.ShowProgress(title, description, progress);
 	}
-
-	public void InitCache(bool syncFolders, bool syncServer) {
-		StartCoroutine(InitCacheCo(syncFolders, syncServer));
+	
+	public static void InitCache(bool syncFolders, bool syncServer) {
+		if(isInst) {
+			Instance.initCache(syncFolders, syncServer);
+		}
+	}
+	public void initCache(bool syncFolders, bool syncServer) {
+		StartCoroutine(initCacheCo(syncFolders, syncServer));
 	}
 	
-	public IEnumerator InitCacheCo(bool syncFolders, bool syncServer) {
+	public static IEnumerator InitCacheCo(bool syncFolders, bool syncServer) {
+		if(isInst) {
+			yield return Instance.initCacheCo(syncFolders, syncServer);
+		}
+	}
+	
+	public IEnumerator initCacheCo(bool syncFolders, bool syncServer) {
 			
 		
-		BroadcastProgressMessage( 
+		broadcastProgressMessage( 
 			"Loading Content",
 			"Syncing initial content...",
 			1f);
 		
 	    // Initial cache
-		yield return StartCoroutine(SyncFoldersCo(syncFolders, syncServer));
+		yield return StartCoroutine(syncFoldersCo(syncFolders, syncServer));
 		
 		// Get latest main content list from server
 				
@@ -2469,29 +2806,56 @@ public class Contents : MonoBehaviour {
 		//yield break;
     }
 	
-	public IEnumerator DownloadLatestContentList() {
+	IEnumerator downloadLatestContentList() {
 	
 		// Get and check the md5 hash of main content list		
 		
 		yield break;
 	}    
 	
-	public List<string> GetPackPathsNonVersioned() {
+	public static List<string> GetPackPathsNonVersioned() {
+		if(isInst) {
+			return Instance.getPackPathsNonVersioned();
+		}
+		return new System.Collections.Generic.List<string>();
+	}
+	
+	public List<string> getPackPathsNonVersioned() {
 		LoadPackPaths();
 		return packPaths;
 	}
 	
-	public List<string> GetPackPathsVersioned() {
+	public static List<string> GetPackPathsVersioned() {
+		if(isInst) {
+			return Instance.getPackPathsVersioned();
+		}
+		return new System.Collections.Generic.List<string>();
+	}
+	
+	public List<string> getPackPathsVersioned() {
 		LoadPackPaths();
 		return packPathsVersioned;
 	}
 	
-	public List<string> GetPackPathsVersionedShared() {
+	public static List<string> GetPackPathsVersionedShared() {
+		if(isInst) {
+			return Instance.getPackPathsVersionedShared();
+		}
+		return new System.Collections.Generic.List<string>();
+	}
+	
+	public List<string> getPackPathsVersionedShared() {
 		LoadPackPaths();
 		return packPathsVersionedShared;
 	}
 	
-	public void LoadPackPaths() {
+	public static void LoadPackPaths() {
+		if(isInst) {
+			Instance.loadPackPaths();
+		}
+	}
+	
+	public void loadPackPaths() {
 
 		////LogUtil.Log("LoadPackPaths:appCachePathPacks:" + appCachePathPacks);
 		////LogUtil.Log("LoadPackPaths:appCachePathAllPlatformPacks:" + appCachePathAllPlatformPacks);
@@ -2544,7 +2908,15 @@ public class Contents : MonoBehaviour {
 		}
 	}
 	
-	public string GetFileDataFromPersistentCache(
+	public static string GetFileDataFromPersistentCache(
+		string path, bool versioned, bool absolute) {		
+		if(isInst) {
+			return Instance.getFileDataFromPersistentCache(path, versioned, absolute);
+		}
+		return "";
+	}
+	
+	public string getFileDataFromPersistentCache(
 		string path, bool versioned, bool absolute) {		
 		
 		string fileData = "";
@@ -2552,25 +2924,25 @@ public class Contents : MonoBehaviour {
 		
 		string pathToCopy = "";
 		pathToCopy = Path.Combine(
-			Contents.Instance.appShipCacheVersionPath, pathPart);
+			Contents.appShipCacheVersionPath, pathPart);
 		
 		if(!absolute) {
 			path = Path.Combine(
-				Contents.Instance.appCacheVersionPath, path);
-			//shipPath = Path.Combine(Contents.Instance.appShipCacheVersionPath, path);
+				Contents.appCacheVersionPath, path);
+			//shipPath = Path.Combine(Contents.appShipCacheVersionPath, path);
 		}
 		string pathVersioned = path;
 		
 		if(versioned) {
-			pathVersioned = Contents.Instance.GetFullPathVersioned(pathVersioned);
+			pathVersioned = Contents.GetFullPathVersioned(pathVersioned);
 		}
 
 		LogUtil.Log("GetFileDataFromPersistentCache:path:" + path);
 		LogUtil.Log("GetFileDataFromPersistentCache:pathVersioned:" + pathVersioned );
 		LogUtil.Log("GetFileDataFromPersistentCache:pathToCopy:" + pathToCopy );
-		LogUtil.Log("GetFileDataFromPersistentCache:Contents.Instance.appShipCacheVersionPath:" + Contents.Instance.appShipCacheVersionPath );
+		LogUtil.Log("GetFileDataFromPersistentCache:Contents.appShipCacheVersionPath:" + Contents.appShipCacheVersionPath );
 
-		LogUtil.Log("GetFileDataFromPersistentCache:Contents.Instance.appCacheVersionPath:" + Contents.Instance.appCacheVersionPath );
+		LogUtil.Log("GetFileDataFromPersistentCache:Contents.appCacheVersionPath:" + Contents.appCacheVersionPath );
 
 		bool versionedExists = FileSystemUtil.CheckFileExists(pathVersioned);
 				
@@ -2598,7 +2970,18 @@ public class Contents : MonoBehaviour {
 		WEB_SERVICE
 	}
 	
-	public IEnumerator SyncContentListItemDataCo(
+	public static IEnumerator SyncContentListItemDataCo(
+		ContentStorageLocation locationFrom, 
+		ContentStorageLocation locationTo) {
+		if(isInst) {
+			yield return Instance.syncContentListItemDataCo(locationFrom, locationTo);
+		}
+		else {
+			yield break;
+		}
+	}
+	
+	public IEnumerator syncContentListItemDataCo(
 		ContentStorageLocation locationFrom, 
 		ContentStorageLocation locationTo) {
 		// Syncs content list item data from streaming assets to persistent
@@ -2623,9 +3006,9 @@ public class Contents : MonoBehaviour {
 			
 			float progressCount = inc++/totalItems;
 			
-			BroadcastProgressMessage( 
+			broadcastProgressMessage( 
 				"Preparing Content",
-				"Syncing file:" + GetUnversionedDisplayFile(contentItem.data.fileNoExtension),
+				"Syncing file:" + getUnversionedDisplayFile(contentItem.data.fileNoExtension),
 				progressCount);
 			
 			yield return new WaitForEndOfFrame();
@@ -2636,16 +3019,16 @@ public class Contents : MonoBehaviour {
 					contentItem.data.filePathVersioned);
 				
 				//if(contentItem.data.versioned) {
-				//	fileTo = Contents.Instance.GetFileVersioned(fileTo);
+				//	fileTo = Contents.GetFileVersioned(fileTo);
 				//}
 				
 				LogUtil.Log("SyncContentListItemData: " +
 					"\r\n  fileFrom:" + fileFrom + 
 					"\r\n  fileTo:" + fileTo);	
 				
-				BroadcastProgressMessage( 
+				broadcastProgressMessage( 
 					"Preparing Content",
-					"Syncing file:" + GetUnversionedDisplayFile(contentItem.data.fileNoExtension),
+					"Syncing file:" + getUnversionedDisplayFile(contentItem.data.fileNoExtension),
 					progressCount);
 					
 				yield return new WaitForEndOfFrame();
@@ -2653,9 +3036,9 @@ public class Contents : MonoBehaviour {
 				if(!FileSystemUtil.CheckFileExists(fileTo)) {
 					LogUtil.Log("SyncContentListItemData: Copying File: fileTo:" + fileTo);
 					
-					BroadcastProgressMessage( 
+					broadcastProgressMessage( 
 						"Preparing Content",
-						"Copying file:" + GetUnversionedDisplayFile(contentItem.data.fileNoExtension),
+						"Copying file:" + getUnversionedDisplayFile(contentItem.data.fileNoExtension),
 						progressCount);
 					
 					yield return new WaitForEndOfFrame();
@@ -2666,7 +3049,7 @@ public class Contents : MonoBehaviour {
 			
 		}
 		
-		BroadcastProgressMessage( 
+		broadcastProgressMessage( 
 			"Preparing Content",
 			"Sync Complete",
 			1f);
@@ -2674,7 +3057,21 @@ public class Contents : MonoBehaviour {
 		yield return new WaitForEndOfFrame();
 	}
 	
-	public IEnumerator DirectoryCopyCo(
+	
+	public static IEnumerator DirectoryCopyCo(
+		string sourceDirName, string destDirName, 
+		bool copySubDirs, bool versioned) {
+		if(isInst) {
+			yield return Instance.directoryCopyCo(
+				sourceDirName, destDirName, copySubDirs, versioned);
+		}
+		else {
+			yield break;
+		}
+		
+	}
+	
+	public IEnumerator directoryCopyCo(
 		string sourceDirName, string destDirName, 
 		bool copySubDirs, bool versioned) {
 		
@@ -2711,16 +3108,16 @@ public class Contents : MonoBehaviour {
 	
 	        FileSystemUtil.CreateDirectoryIfNeededAndAllowed(destDirName);
 			
-			BroadcastProgressMessage( 
+			broadcastProgressMessage( 
 				"Preparing Content",
-				"Syncing directory: " + GetUnversionedDisplayFile(destDirName),
+				"Syncing directory: " + getUnversionedDisplayFile(destDirName),
 				1f);
 	
 	        FileInfo[] files = dir.GetFiles();
 			
-			BroadcastProgressMessage( 
+			broadcastProgressMessage( 
 				"Preparing Content",
-				"Syncing files in: " + GetUnversionedDisplayFile(destDirName),
+				"Syncing files in: " + getUnversionedDisplayFile(destDirName),
 				0f);
 			
 			
@@ -2736,7 +3133,7 @@ public class Contents : MonoBehaviour {
 					string temppath = Path.Combine(destDirName, file.Name);
 					
 					if(versioned) {
-						temppath = GetFullPathVersioned(temppath);
+						temppath = getFullPathVersioned(temppath);
 					}
 					
 					if(!FileSystemUtil.CheckFileExists(temppath) || Application.isEditor) {
@@ -2749,9 +3146,9 @@ public class Contents : MonoBehaviour {
 					
 					yield return new WaitForEndOfFrame();
 					
-					BroadcastProgressMessage( 
+					broadcastProgressMessage( 
 						"Preparing Content",
-						"Syncing files - " + GetUnversionedDisplayFile(file.Name),
+						"Syncing files - " + getUnversionedDisplayFile(file.Name),
 						curr++/files.Length);
 				}
 				
@@ -2762,13 +3159,22 @@ public class Contents : MonoBehaviour {
 	            foreach (DirectoryInfo subdir in dirs) {
 	                string temppath = Path.Combine(destDirName, subdir.Name);
 	                //LogUtil.Log("Copying Directory: " + temppath);
-	                yield return StartCoroutine(DirectoryCopyCo(subdir.FullName, temppath, copySubDirs, versioned));
+	                yield return StartCoroutine(directoryCopyCo(subdir.FullName, temppath, copySubDirs, versioned));
 	            }
 	        }
 		}
     }
 	    
     public IEnumerator SyncFoldersCo(bool syncFolders, bool syncServer) {
+		if(isInst) {
+			Instance.syncFoldersCo(syncFolders, syncServer);
+		}
+		else {
+			yield break;
+		}
+	}
+	
+    public IEnumerator syncFoldersCo(bool syncFolders, bool syncServer) {
 		
         LogUtil.Log("Contents::SyncFolders");
 		
@@ -2865,20 +3271,20 @@ public class Contents : MonoBehaviour {
 		FileSystemUtil.EnsureDirectory(appShipCachePathShared, false);
 		
 		if(syncFolders) {
-			yield return StartCoroutine(DirectoryCopyCo(appShipCachePlatformPath, appCachePlatformPath, true, true));
+			yield return StartCoroutine(directoryCopyCo(appShipCachePlatformPath, appCachePlatformPath, true, true));
 			//DirectoryCopy(appShipCachePathPacks, appCachePathPacks, true);
-			yield return StartCoroutine(DirectoryCopyCo(appShipCachePathData, appCachePathData, true, true));
-			yield return StartCoroutine(DirectoryCopyCo(appShipCachePathShared, appCachePathShared, true, true));
-			yield return StartCoroutine(DirectoryCopyCo(appShipCachePathAll, appCachePathAll, true, false));  // files in all/shared are not versioned...
+			yield return StartCoroutine(directoryCopyCo(appShipCachePathData, appCachePathData, true, true));
+			yield return StartCoroutine(directoryCopyCo(appShipCachePathShared, appCachePathShared, true, true));
+			yield return StartCoroutine(directoryCopyCo(appShipCachePathAll, appCachePathAll, true, false));  // files in all/shared are not versioned...
 		}
 		
 		if(syncServer) {
-		yield return StartCoroutine(SyncContentListItemDataCo(
-			ContentStorageLocation.STREAMING_ASSETS, 
-			ContentStorageLocation.PERSISTENT));
+			yield return StartCoroutine(syncContentListItemDataCo(
+				ContentStorageLocation.STREAMING_ASSETS, 
+				ContentStorageLocation.PERSISTENT));
 		}
 		
-		BroadcastProgressMessage( 
+		broadcastProgressMessage( 
 			"Preparing Content",
 			"Ship files sync complete",
 			1f);
@@ -2887,11 +3293,18 @@ public class Contents : MonoBehaviour {
 		
 		////
     }
+    
+	public static string GetFullPathVersioned(string fullPath) {
+		if(isInst) {
+			return Instance.getFullPathVersioned(fullPath);
+		}
+		return fullPath;
+	}
     	
-    public string GetFullPathVersioned(string fullPath) {
+    public string getFullPathVersioned(string fullPath) {
 		//string fileHash = ChecksumHash(fullPath);
 		//return GetFileVersioned(fullPath, fileHash);
-		return GetFileVersioned(fullPath, null);
+		return getFileVersioned(fullPath, null);
 	}
 	
 	//public string GetFullPathVersioned(string hashPath, string pathToVersion) {
@@ -2905,17 +3318,37 @@ public class Contents : MonoBehaviour {
 		//return GetFileVersioned(pathToVersion, null);
 	//}
 	
+	public static string GetFullPathVersionedSync(string fullPath) {
+		if(isInst) {
+			return Instance.getFullPathVersionedSync(fullPath);
+		}
+		return fullPath;
+	}
 	
-	public string GetFullPathVersionedSync(string fullPath) {
+	public string getFullPathVersionedSync(string fullPath) {
 		string fileHash = ChecksumHash(fullPath);
 		return GetFileVersioned(fullPath, fileHash);
 	}
 	
-	public string ChecksumHash(string fullPath) {	
+	public static string ChecksumHash(string fullPath) {
+		if(isInst) {
+			return Instance.checksumHash(fullPath);
+		}
+		return "";
+	}
+	
+	public string checksumHash(string fullPath) {	
 		return CryptoUtil.CalculateMD5HashFromFile(fullPath);
 	}
 	
-	public string GetFullPathVersionedSync(string hashPath, string pathToVersion) {
+	public static string GetFullPathVersionedSync(string hashPath, string pathToVersion) {
+		if(isInst) {
+			return Instance.getFullPathVersionedSync(hashPath, pathToVersion);
+		}
+		return "";
+	}
+	
+	public string getFullPathVersionedSync(string hashPath, string pathToVersion) {
 		if(FileSystemUtil.CheckFileExists(hashPath)) {
 			string fileHash = ChecksumHash(hashPath);
 			return GetFileVersioned(pathToVersion, fileHash);
@@ -2925,11 +3358,25 @@ public class Contents : MonoBehaviour {
 		}
 	}
 	
-	public string GetFileVersioned(string path) {
+	public static string GetFileVersioned(string path) {
+		if(isInst) {
+			return Instance.getFileVersioned(path);
+		}
+		return path;
+	}
+	
+	public string getFileVersioned(string path) {
 		return GetFileVersioned(path, null);
 	}
 	
-	public string GetFileVersioned(string path, string hash) {
+	public static string GetFileVersioned(string path, string hash) {
+		if(isInst) {
+			return Instance.getFileVersioned(path, hash);
+		}
+		return path;
+	}
+	
+	public string getFileVersioned(string path, string hash) {
         string fileVersioned = "";
         if(!string.IsNullOrEmpty(path)) {
 	        string[] arrpath = path.Split('/');
@@ -2967,7 +3414,14 @@ public class Contents : MonoBehaviour {
 		return fileVersioned;
     }	
 	
-	public string GetDisplayFileUnversioned(string path) {
+	public static string GetDisplayFileUnversioned(string path) {
+		if(isInst) {
+			return Instance.getDisplayFileUnversioned(path);
+		}
+		return path;
+	}
+	
+	public string getDisplayFileUnversioned(string path) {
         string fileVersioned = path;
         if(!string.IsNullOrEmpty(path)) {
 	        string[] arrpath = path.Split('/');
@@ -2990,11 +3444,25 @@ public class Contents : MonoBehaviour {
 		return fileVersioned;
     }   
 	
-	public string GetFileUnversioned(string path) {
+	public static string GetFileUnversioned(string path) {
+		if(isInst) {
+			return Instance.getFileUnversioned(path);
+		}
+		return path;
+	}
+	
+	public string getFileUnversioned(string path) {
 		return GetFileUnversioned(path, null);
 	}
 	
-	public string GetFileUnversioned(string path, string hash) {
+	public static string GetFileUnversioned(string path, string hash) {
+		if(isInst) {
+			return Instance.getFileUnversioned(path, hash);
+		}
+		return path;
+	}
+	
+	public string getFileUnversioned(string path, string hash) {
         string fileVersioned = path;
         if(!string.IsNullOrEmpty(path)) {
 	        string[] arrpath = path.Split('/');
@@ -3028,15 +3496,30 @@ public class Contents : MonoBehaviour {
 	
 	// SCENE / CONTENT SET FILES
     
-    public void CheckContentSetFiles() {
+    public static void CheckContentSetFiles() {
+		if(isInst) {
+			Instance.checkContentSetFiles();
+		}
+	}
+	
+    public void checkContentSetFiles() {
         //LogUtil.Log("Contents::CheckContentSetFiles");            
 
         //SyncFolders();
     }	
 			
-	public IEnumerator SceneLoadFromCacheOrDownloadCo(string url) {
+	public static IEnumerator SceneLoadFromCacheOrDownloadCo(string url) {
+		if(isInst) {
+			Instance.sceneLoadFromCacheOrDownloadCo(url);
+		}
+		else {
+			yield break;
+		}
+	}
+	
+	public IEnumerator sceneLoadFromCacheOrDownloadCo(string url) {
 				
-		UnloadLevelBundle();
+		unloadLevelBundle();
 		
 		int version = GamePacks.currentPacksIncrement;
 		string packName = "";//GamePacks.PACK_BOOK_DEFAULT;
@@ -3080,7 +3563,7 @@ public class Contents : MonoBehaviour {
 				LogUtil.LogError(downloader.error);
 				LogUtil.LogError(url);
 				ready = false;
-				Reset();
+				reset();
 				Messenger<string>.Broadcast(
 					ContentMessages.ContentItemDownloadError, 
 					downloader.error);
@@ -3112,18 +3595,24 @@ public class Contents : MonoBehaviour {
 		
 		if(ready) {
 			//GameLoadingObject.Instance.LoadLevelHandler();
-			Reset();
+			reset();
 		}
 		else {
 			// Show download error...
 			Messenger<string>.Broadcast(
 				ContentMessages.ContentItemDownloadError, 
 				"Error unloading pack, please try again.");
-			Reset();
+			reset();
 		}
 	}
 	
-	public void LoadLevelBundle(string pack, int increment) {
+	public static void LoadLevelBundle(string pack, int increment) {
+		if(isInst) {
+			Instance.loadLevelBundle(pack, increment);
+		}
+	}
+	
+	public void loadLevelBundle(string pack, int increment) {
 		string pathPack = Path.Combine(appCachePathAllPlatformPacks, pack);
 		pathPack = Path.Combine(pathPack, ContentConfig.contentCacheScenes);
 		
@@ -3145,11 +3634,26 @@ public class Contents : MonoBehaviour {
 		}
 	}
 	
-	public void LoadLevelBundle(string sceneUrl) {
-		StartCoroutine(LoadLevelBundleCo(sceneUrl));
+	public static void LoadLevelBundle(string sceneUrl) {
+		if(isInst) {
+			Instance.loadLevelBundle(sceneUrl);
+		}
 	}
 	
-	public IEnumerator LoadLevelBundleCo(string sceneUrl) {
+	public void loadLevelBundle(string sceneUrl) {
+		StartCoroutine(loadLevelBundleCo(sceneUrl));
+	}
+	
+	public static IEnumerator LoadLevelBundleCo(string sceneUrl) {
+		if(isInst) {
+			yield return Instance.loadLevelBundleCo(sceneUrl);
+		}
+		else {
+			yield break;
+		}
+	}
+	
+	public IEnumerator loadLevelBundleCo(string sceneUrl) {
 				
 		bool ready = true;
 				
@@ -3206,23 +3710,48 @@ public class Contents : MonoBehaviour {
 		LogUtil.Log("ready:" + ready);
 	}
 	
-	public void UnloadLevelBundle(bool unloadAll) {		
+	public static void UnloadLevelBundle(bool unloadAll) {		
+		if(isInst) {
+			Instance.unloadLevelBundle(unloadAll);
+		}
+	}
+	
+	public void unloadLevelBundle(bool unloadAll) {		
 		if(bundle != null) {
 			bundle.Unload(unloadAll);
 		}
 	}
 	
-	public void UnloadLevelBundle() {		
-		UnloadLevelBundle(false);
+	public static void UnloadLevelBundle() {
+		if(isInst) {
+			Instance.unloadLevelBundle();
+		}
 	}
 	
-	public void Reset() {
+	public void unloadLevelBundle() {		
+		unloadLevelBundle(false);
+	}
+	
+	public static void Reset() {
+		if(isInst) {
+			Instance.reset();
+		}
+	}
+	
+	public void reset() {
 		downloader = null;
 		contentItemStatus = new ContentItemStatus();
 		downloadInProgress = false;
 	}
 	
-	public ContentItemStatus ProgressStatus() {
+	public static ContentItemStatus ProgressStatus() {
+		if(isInst) {
+			return Instance.progressStatus();
+		}
+		return null;
+	}
+	
+	public ContentItemStatus progressStatus() {
 					
 		if(downloader != null && downloadInProgress) {
 			if(downloader.isDone) {

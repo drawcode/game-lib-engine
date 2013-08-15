@@ -88,7 +88,7 @@ public class BaseGamePacks<T> : DataObjects<T> where T : new() {
 
             //if(pack.code != GameProducts.ITEM_PACK_SX_2012_ALL
             //	&& pack.code != GamePacks.PACK_DEFAULT) {
-                if(!Contents.Instance.CheckGlobalContentAccess(pack.code)) {
+                if(!Contents.CheckGlobalContentAccess(pack.code)) {
                     return false;
                 }
 
@@ -102,7 +102,7 @@ public class BaseGamePacks<T> : DataObjects<T> where T : new() {
 
             //if(pack.code != GameProducts.ITEM_PACK_SX_2012_ALL
             //	&& pack.code != GamePacks.PACK_DEFAULT) {
-                if(Contents.Instance.CheckGlobalContentAccess(pack.code)) {
+                if(Contents.CheckGlobalContentAccess(pack.code)) {
                     return true;
                 }
 

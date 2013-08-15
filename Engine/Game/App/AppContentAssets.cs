@@ -93,7 +93,7 @@ public class AppContentAssets : BaseAppContentAssets<AppContentAsset>
 	
 	public string GetAppContentAssetContentPath(string packCode, string asset, bool versioned) {
 		string packPath = Path.Combine(
-			Contents.Instance.appCachePathSharedPacks,
+			Contents.appCachePathSharedPacks,
 			packCode);
 		string packPathContent = Path.Combine(
 			packPath, 
@@ -109,7 +109,7 @@ public class AppContentAssets : BaseAppContentAssets<AppContentAsset>
 		
 		string fullPath = Path.Combine(packPathContent, file);
 		if(versioned) {
-			fullPath = Contents.Instance.GetFullPathVersioned(fullPath);
+			fullPath = Contents.GetFullPathVersioned(fullPath);
 		}
 		return fullPath;
 	}

@@ -104,7 +104,7 @@ public class DataObjects<T> {
     public string LoadDataFromPersistent(string path, bool versioned) {
         string fileData = "";
                 
-        fileData = Contents.Instance.GetFileDataFromPersistentCache(path, versioned, false);
+        fileData = Contents.GetFileDataFromPersistentCache(path, versioned, false);
 
         LoadDataFromString(fileData);
 
@@ -127,8 +127,8 @@ public class DataObjects<T> {
         string fileData = "";
         string pathPart = path;
 
-        path = Path.Combine(Contents.Instance.appCacheVersionPath, path.TrimStart('/'));
-        string pathVersioned = Contents.Instance.GetFileVersioned(path);
+        path = Path.Combine(Contents.appCacheVersionPath, path.TrimStart('/'));
+        string pathVersioned = Contents.GetFileVersioned(path);
 
         Debug.Log("LoadDataFromPersistent:path:" + path);
         Debug.Log("LoadDataFromPersistent:pathVersioned:" + pathVersioned + " " + pathKey);
@@ -154,8 +154,8 @@ public class DataObjects<T> {
         string fileData = "";
         string pathPart = path;
 
-        path = Path.Combine(Contents.Instance.appCacheVersionPath, path.TrimStart('/'));
-        string pathVersioned = Contents.Instance.GetFileVersioned(path);
+        path = Path.Combine(Contents.appCacheVersionPath, path.TrimStart('/'));
+        string pathVersioned = Contents.GetFileVersioned(path);
 
         Debug.Log("LoadDataFromPersistent:path:" + path);
         Debug.Log("LoadDataFromPersistent:pathVersioned:" + pathVersioned + " " + pathKey);
@@ -185,7 +185,7 @@ public class DataObjects<T> {
             Debug.Log("LoadDataFromPersistent:pathVersioned not exist:" + pathVersioned + " " + pathKey);
 
             // copy from streaming assets
-            string pathToCopy = Path.Combine(Contents.Instance.appCacheVersionPath, pathPart.TrimStart('/'));
+            string pathToCopy = Path.Combine(Contents.appCacheVersionPath, pathPart.TrimStart('/'));
             Debug.Log("LoadDataFromPersistent:pathToCopy:" + pathToCopy + " " + pathKey);
             if (File.Exists(pathToCopy)) {
                 FileSystemUtil.MoveFile(pathToCopy, pathVersioned);
@@ -207,7 +207,7 @@ public class DataObjects<T> {
         List<T> appendList = new List<T>();
         List<T> appendItemList = new List<T>();
 
-        foreach (string packPath in Contents.Instance.GetPackPathsVersioned()) {
+        foreach (string packPath in Contents.GetPackPathsVersioned()) {
             string data = "";
             string pathData = Path.Combine(packPath, path.TrimStart('/'));
                         FileSystemUtil.EnsureDirectory(pathData);
@@ -215,12 +215,12 @@ public class DataObjects<T> {
             string[] packDirs = packPath.TrimEnd(Path.DirectorySeparatorChar).Replace("data", "").TrimEnd(Path.DirectorySeparatorChar).Split(Path.DirectorySeparatorChar);
             string packDirName = packDirs[packDirs.Length - 1];
 
-            string fileVersioned = Contents.Instance.GetFullPathVersioned(pathData);
+            string fileVersioned = Contents.GetFullPathVersioned(pathData);
                         
                         FileSystemUtil.EnsureDirectory(fileVersioned);
 
             if (File.Exists(fileVersioned)) {
-                data = Contents.Instance.GetFileDataFromPersistentCache(pathData, true, true);
+                data = Contents.GetFileDataFromPersistentCache(pathData, true, true);
             }
 
             if (!string.IsNullOrEmpty(data)) {
@@ -247,9 +247,9 @@ public class DataObjects<T> {
             }
         }
 
-        ////Debug.Log("!!!!!! PackPathsVersionShared:" + Contents.Instance.GetPackPathsVersionedShared().Count);
+        ////Debug.Log("!!!!!! PackPathsVersionShared:" + Contents.GetPackPathsVersionedShared().Count);
 
-        foreach (string packPath in Contents.Instance.GetPackPathsVersionedShared()) {
+        foreach (string packPath in Contents.GetPackPathsVersionedShared()) {
             string data = "";
             string pathData = Path.Combine(packPath, path.TrimStart('/'));
                         FileSystemUtil.EnsureDirectory(pathData);
@@ -257,11 +257,11 @@ public class DataObjects<T> {
             string[] packDirs = packPath.TrimEnd(Path.DirectorySeparatorChar).Replace("data", "").TrimEnd(Path.DirectorySeparatorChar).Split(Path.DirectorySeparatorChar);
             string packDirName = packDirs[packDirs.Length - 1];
 
-            string fileVersioned = Contents.Instance.GetFullPathVersioned(pathData);
+            string fileVersioned = Contents.GetFullPathVersioned(pathData);
                         FileSystemUtil.EnsureDirectory(fileVersioned);
 
             if (File.Exists(fileVersioned)) {
-                data = Contents.Instance.GetFileDataFromPersistentCache(pathData, true, true);
+                data = Contents.GetFileDataFromPersistentCache(pathData, true, true);
             }
 
             if (!string.IsNullOrEmpty(data)) {
@@ -288,7 +288,7 @@ public class DataObjects<T> {
             }
         }
 
-        foreach (string packPath in Contents.Instance.GetPackPathsNonVersioned()) {
+        foreach (string packPath in Contents.GetPackPathsNonVersioned()) {
             string data = "";
             string pathData = Path.Combine(packPath, path.TrimStart('/'));
                         FileSystemUtil.EnsureDirectory(pathData);
@@ -300,12 +300,12 @@ public class DataObjects<T> {
                 packDirName = "";
             }
 
-            string fileVersioned = Contents.Instance.GetFullPathVersioned(pathData);
+            string fileVersioned = Contents.GetFullPathVersioned(pathData);
                         FileSystemUtil.EnsureDirectory(fileVersioned);
 
             if (File.Exists(fileVersioned)) {
                 ////Debug.Log(">> PACK FILE EXISTS: " + pathData);
-                data = Contents.Instance.GetFileDataFromPersistentCache(pathData, true, true);
+                data = Contents.GetFileDataFromPersistentCache(pathData, true, true);
                 ////Debug.Log(">> PACK FILE DATA: " + data);
             }
 
@@ -659,7 +659,7 @@ public class DataObjects<T> {
     }   
         
     public string GetPathItem(string key, string code, string folder) {
-        string path = Path.Combine(Contents.Instance.appCachePathData, folder.TrimStart('/'));
+        string path = Path.Combine(Contents.appCachePathData, folder.TrimStart('/'));
         return GetPathItem(key, code, folder, path);
     }
 
@@ -676,7 +676,7 @@ public class DataObjects<T> {
         // Load from file individually not a list
 
         string path = GetPathItem(key, code, "items");
-        path = Contents.Instance.GetFileVersioned(path);
+        path = Contents.GetFileVersioned(path);
 
         DataObject item = new DataObject();
 
@@ -700,7 +700,7 @@ public class DataObjects<T> {
         // Load from file individually not a list
 
         string path = GetPathItem(key, code, "items");
-        path = Contents.Instance.GetFileVersioned(path);
+        path = Contents.GetFileVersioned(path);
 
         string jsonData = JsonMapper.ToJson(obj);
 
