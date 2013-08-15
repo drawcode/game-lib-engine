@@ -392,8 +392,9 @@ public enum ContentVersionSyncEnum {
 	VersionedSync // hashed with checksum
 }
 
-public class Contents {
+public class Contents : MonoBehaviour {
 	
+	/*
 	private static volatile Contents instance;
 	private static System.Object syncRoot = new System.Object();
 	
@@ -407,6 +408,23 @@ public class Contents {
 	     	}	
 	     return instance;
 	  }
+	}
+	*/
+	
+	public static Contents Instance;
+	
+	public void Awake() {
+		
+        if (Instance != null && this != Instance) {
+            //There is already a copy of this script running
+            Destroy(this);
+            return;
+        }
+		
+		Instance = this;
+		
+       // Init();
+		
 	}
 	
 	public bool isReady {
@@ -494,7 +512,7 @@ public class Contents {
 	public bool initialDownload = false;
 	public string currentPackCodeSync = "default";
 	
-	public Contents() {
+	void Start() {
 		
 		currentPlatformCode = GetCurrentPlatformCode();
 				
@@ -870,7 +888,7 @@ public class Contents {
 	}
 	
 	public void ProcessDownloadableContentUrlQueue() {
-		CoroutineUtil.Start(ProcessDownloadableContentUrlQueueCo());
+		StartCoroutine(ProcessDownloadableContentUrlQueueCo());
 	}
 		
 	public IEnumerator ProcessDownloadableContentUrlQueueCo() {
@@ -890,14 +908,14 @@ public class Contents {
 							+ " countsDownload:" + countsDownload);
 					}
 					
-					yield return CoroutineUtil.WaitForEndOfFrame();
+					yield return new WaitForEndOfFrame();
 					
 					RequestDownloadBytes(currentUrlObject.url);
 				}
 			}
 			else {
 								
-				yield return CoroutineUtil.Start(ProcessSyncUpdateCo());				
+				yield return StartCoroutine(ProcessSyncUpdateCo());				
 				
 				if(!initialSyncCompleted) {
 					// Kick off actual file process
@@ -962,7 +980,7 @@ public class Contents {
 		if(runtimeUpdate) {
 			//UINotificationDisplayContent.Instance.HideDialog();
 		}
-		CoroutineUtil.Start(ProcessLoadCo());
+		StartCoroutine(ProcessLoadCo());
 	}
 	
 	public IEnumerator ProcessLoadCo() {
@@ -977,7 +995,7 @@ public class Contents {
 						
 		// On initial load handle cache
 		
-        yield return CoroutineUtil.Start(Contents.Instance.InitCacheCo());		
+        yield return StartCoroutine(Contents.Instance.InitCacheCo(true, true));		
 		
 		displayState = ContentSyncDisplayState.SyncContentListsDefault;
 		
@@ -994,7 +1012,7 @@ public class Contents {
 	
 	public void ProcessPackLoad(string packCode) {
 		runtimeUpdate = false;
-		CoroutineUtil.Start(ProcessPackLoadCo(packCode));
+		StartCoroutine(ProcessPackLoadCo(packCode));
 	}
 		
 	public IEnumerator ProcessPackLoadCo(string packCode) {
@@ -1008,7 +1026,7 @@ public class Contents {
 		
 		displayState = ContentSyncDisplayState.SyncContentListsPack;		
 		
-		yield return CoroutineUtil.WaitForEndOfFrame();
+		yield return new WaitForEndOfFrame();
 		
 		ProcessAppContentList(packCode);
 		
@@ -1042,7 +1060,7 @@ public class Contents {
 	
 	public IEnumerator ProcessSyncUpdateCo() {
 		if(processUrlObjects != null) {
-			yield return CoroutineUtil.Start(ProcessSyncedFilesCo());
+			yield return StartCoroutine(ProcessSyncedFilesCo());
 		}
 	}
 		
@@ -1472,7 +1490,7 @@ public class Contents {
 							ContentMessages.ContentItemVerifySuccess, 
 							"Content verified, downloading and loading pack." );
 						
-						CoroutineUtil.Start(
+						StartCoroutine(
 							Contents.Instance.SceneLoadFromCacheOrDownloadCo(url));
 						break;
 					}					
@@ -1536,7 +1554,7 @@ public class Contents {
 							ContentMessages.ContentItemVerifySuccess, 
 							"Content verified, downloading and loading pack." );
 						
-						CoroutineUtil.Start(
+						StartCoroutine(
 							Contents.Instance.SceneLoadFromCacheOrDownloadCo(url));
 						break;
 					}					
@@ -1603,7 +1621,7 @@ public class Contents {
 							ContentMessages.ContentItemVerifySuccess, 
 							"Content verified, downloading and loading pack." );
 						
-						CoroutineUtil.Start(
+						StartCoroutine(
 							Contents.Instance.SceneLoadFromCacheOrDownloadCo(url));
 						break;
 					}					
@@ -1667,7 +1685,7 @@ public class Contents {
 							ContentMessages.ContentItemVerifySuccess, 
 							"Content verified, downloading and loading pack." );
 						//LogUtil.Log("url:" + url);
-						//CoroutineUtil.Start(Contents.Instance.SceneLoadFromCacheOrDownloadCo(url));
+						//StartCoroutine(Contents.Instance.SceneLoadFromCacheOrDownloadCo(url));
 						//WebRequest.Instance.Request(
 					}
 				}
@@ -1973,7 +1991,7 @@ public class Contents {
 		if(Caching.IsVersionCached(lastPackUrlValue, version)
 			&& !string.IsNullOrEmpty(lastPackUrlValue)) {
 			// Just load from the saved url
-			CoroutineUtil.Start(
+			StartCoroutine(
 				SceneLoadFromCacheOrDownloadCo(lastPackUrlValue));			
 		}
 		else {
@@ -2114,7 +2132,7 @@ public class Contents {
 			validatingTotal = processUrlObjects.Count;
 			validatingInc = 0;
 			
-			yield return CoroutineUtil.Start(ProcessSyncedFilesRecursiveCo());
+			yield return StartCoroutine(ProcessSyncedFilesRecursiveCo());
 		} 
 		
 		AppContentListItems.Instance.LoadData();
@@ -2188,8 +2206,8 @@ public class Contents {
 				BroadcastProgressMessage("Validating Files", GetUnversionedDisplayFile(urlObject.path), validatingInc++/validatingTotal);
 				ProcessSyncedFile(urlObject);				
 				
-				yield return CoroutineUtil.WaitForEndOfFrame();
-				yield return CoroutineUtil.Start(ProcessSyncedFilesRecursiveCo());
+				yield return new WaitForEndOfFrame();
+				yield return StartCoroutine(ProcessSyncedFilesRecursiveCo());
 			}
 		} 
 	}
@@ -2427,11 +2445,11 @@ public class Contents {
 		//AppViewerUIPanelLoading.ShowProgress(title, description, progress);
 	}
 
-	public void InitCache() {
-		CoroutineUtil.Start(InitCacheCo());
+	public void InitCache(bool syncFolders, bool syncServer) {
+		StartCoroutine(InitCacheCo(syncFolders, syncServer));
 	}
 	
-	public IEnumerator InitCacheCo() {
+	public IEnumerator InitCacheCo(bool syncFolders, bool syncServer) {
 			
 		
 		BroadcastProgressMessage( 
@@ -2440,7 +2458,7 @@ public class Contents {
 			1f);
 		
 	    // Initial cache
-		yield return CoroutineUtil.Start(SyncFoldersCo());
+		yield return StartCoroutine(SyncFoldersCo(syncFolders, syncServer));
 		
 		// Get latest main content list from server
 				
@@ -2592,7 +2610,7 @@ public class Contents {
 		int totalItems = contentListItems.Count;
 		float inc = 0f;
 		
-		yield return CoroutineUtil.WaitForEndOfFrame();
+		yield return new WaitForEndOfFrame();
 		
 		foreach(AppContentListItem contentItem in contentListItems) {
 			
@@ -2610,7 +2628,7 @@ public class Contents {
 				"Syncing file:" + GetUnversionedDisplayFile(contentItem.data.fileNoExtension),
 				progressCount);
 			
-			yield return CoroutineUtil.WaitForEndOfFrame();
+			yield return new WaitForEndOfFrame();
 			
 			if(FileSystemUtil.CheckFileExists(fileFrom)) {
 				string fileTo = Path.Combine(
@@ -2630,7 +2648,7 @@ public class Contents {
 					"Syncing file:" + GetUnversionedDisplayFile(contentItem.data.fileNoExtension),
 					progressCount);
 					
-				yield return CoroutineUtil.WaitForEndOfFrame();
+				yield return new WaitForEndOfFrame();
 				
 				if(!FileSystemUtil.CheckFileExists(fileTo)) {
 					LogUtil.Log("SyncContentListItemData: Copying File: fileTo:" + fileTo);
@@ -2640,7 +2658,7 @@ public class Contents {
 						"Copying file:" + GetUnversionedDisplayFile(contentItem.data.fileNoExtension),
 						progressCount);
 					
-					yield return CoroutineUtil.WaitForEndOfFrame();
+					yield return new WaitForEndOfFrame();
 					
 					FileSystemUtil.CopyFile(fileFrom, fileTo);
 				}
@@ -2653,7 +2671,7 @@ public class Contents {
 			"Sync Complete",
 			1f);
 		
-		yield return CoroutineUtil.WaitForEndOfFrame();
+		yield return new WaitForEndOfFrame();
 	}
 	
 	public IEnumerator DirectoryCopyCo(
@@ -2729,7 +2747,7 @@ public class Contents {
 						FileSystemUtil.CopyFile(file.FullName, temppath);
 			        }
 					
-					//yield return CoroutineUtil.WaitForEndOfFrame();
+					yield return new WaitForEndOfFrame();
 					
 					BroadcastProgressMessage( 
 						"Preparing Content",
@@ -2744,17 +2762,17 @@ public class Contents {
 	            foreach (DirectoryInfo subdir in dirs) {
 	                string temppath = Path.Combine(destDirName, subdir.Name);
 	                //LogUtil.Log("Copying Directory: " + temppath);
-	                yield return CoroutineUtil.Start(DirectoryCopyCo(subdir.FullName, temppath, copySubDirs, versioned));
+	                yield return StartCoroutine(DirectoryCopyCo(subdir.FullName, temppath, copySubDirs, versioned));
 	            }
 	        }
 		}
     }
 	    
-    public IEnumerator SyncFoldersCo() {
+    public IEnumerator SyncFoldersCo(bool syncFolders, bool syncServer) {
 		
         LogUtil.Log("Contents::SyncFolders");
 		
-		//yield return CoroutineUtil.WaitForEndOfFrame();
+		yield return new WaitForEndOfFrame();
 
 		Messenger<object>.Broadcast(ContentMessages.ContentSyncShipContentStarted, "started");
 		
@@ -2846,16 +2864,20 @@ public class Contents {
 		FileSystemUtil.EnsureDirectory(appShipCachePathData, false);
 		FileSystemUtil.EnsureDirectory(appShipCachePathShared, false);
 		
-		yield return CoroutineUtil.Start(DirectoryCopyCo(appShipCachePlatformPath, appCachePlatformPath, true, true));
-		//DirectoryCopy(appShipCachePathPacks, appCachePathPacks, true);
-		yield return CoroutineUtil.Start(DirectoryCopyCo(appShipCachePathData, appCachePathData, true, true));
-		yield return CoroutineUtil.Start(DirectoryCopyCo(appShipCachePathShared, appCachePathShared, true, true));
-		yield return CoroutineUtil.Start(DirectoryCopyCo(appShipCachePathAll, appCachePathAll, true, false));  // files in all/shared are not versioned...
+		if(syncFolders) {
+			yield return StartCoroutine(DirectoryCopyCo(appShipCachePlatformPath, appCachePlatformPath, true, true));
+			//DirectoryCopy(appShipCachePathPacks, appCachePathPacks, true);
+			yield return StartCoroutine(DirectoryCopyCo(appShipCachePathData, appCachePathData, true, true));
+			yield return StartCoroutine(DirectoryCopyCo(appShipCachePathShared, appCachePathShared, true, true));
+			yield return StartCoroutine(DirectoryCopyCo(appShipCachePathAll, appCachePathAll, true, false));  // files in all/shared are not versioned...
+		}
 		
-		yield return CoroutineUtil.Start(SyncContentListItemDataCo(
+		if(syncServer) {
+		yield return StartCoroutine(SyncContentListItemDataCo(
 			ContentStorageLocation.STREAMING_ASSETS, 
 			ContentStorageLocation.PERSISTENT));
-			
+		}
+		
 		BroadcastProgressMessage( 
 			"Preparing Content",
 			"Ship files sync complete",
@@ -3124,7 +3146,7 @@ public class Contents {
 	}
 	
 	public void LoadLevelBundle(string sceneUrl) {
-		CoroutineUtil.Start(LoadLevelBundleCo(sceneUrl));
+		StartCoroutine(LoadLevelBundleCo(sceneUrl));
 	}
 	
 	public IEnumerator LoadLevelBundleCo(string sceneUrl) {
