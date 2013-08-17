@@ -514,7 +514,9 @@ public class AudioSystem : MonoBehaviour {
 	        if (currentIntro != null && ambienceActive) {
 		        currentIntro.volume = (float)musicSoundVolume;
 		        currentIntro.Play();
-	            yield return new WaitForSeconds(currentIntro.clip.length - 1f);
+				if(currentIntro.clip != null) { 
+	            	yield return new WaitForSeconds(currentIntro.clip.length - 1f);
+				}
 	            currentIntro.gameObject.AudioTo(0f, 1f, 1f, 0f);
 			}
 	
