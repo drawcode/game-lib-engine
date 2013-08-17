@@ -23,6 +23,7 @@ public class BaseGameProfileAttributes {
 
     // RPG
     public static string ATT_PROGRESS_XP = "progress-xp";
+    public static string ATT_CURRENCY = "currency";
 
     public static string ATT_PROGRESS_HEALTH = "progress-health";
     public static string ATT_PROGRESS_ENERGY = "progress-energy";
@@ -483,6 +484,40 @@ public class BaseGameProfile : Profile {
             permissions.Add(permission);
         }
         SetAccessPermissions(permissions);
+    }
+	
+	// CURRENCY
+		
+    public virtual double AddCurrency(double val) {
+      	double currency = GetCurrency();
+		currency += val;
+		SetCurrency(currency);
+		return currency;		
+    }
+	
+    public virtual double SubtractCurrency(double val) {
+      	double currency = GetCurrency();
+		if(val > 0) {
+			val = -val;
+		}
+		currency += val;
+		SetCurrency(currency);
+		return currency;
+    }
+	
+	public virtual double GetCurrency() {
+        return GetCurrency(10.0);
+    }
+
+    public virtual double GetCurrency(double defaultValue) {
+        double attValue = defaultValue;
+        if (CheckIfAttributeExists(BaseGameProfileAttributes.ATT_CURRENCY))
+            attValue = GetAttributeDoubleValue(BaseGameProfileAttributes.ATT_CURRENCY);
+        return attValue;
+    }
+
+    public virtual void SetCurrency(double attValue) {
+        SetAttributeDoubleValue(BaseGameProfileAttributes.ATT_CURRENCY, attValue);
     }
 
     // RPG

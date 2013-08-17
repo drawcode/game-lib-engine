@@ -9,6 +9,7 @@ using Engine.Utility;
 public class BaseGameProfileRPGAttributes {
 	
 	// RPG	
+	public static string ATT_PROGRESS_CURRENCY = "progress-currency";
 	public static string ATT_PROGRESS_XP = "progress-xp";
 	public static string ATT_PROGRESS_HEALTH = "progress-health";
 	public static string ATT_PROGRESS_ENERGY = "progress-energy";
@@ -84,6 +85,24 @@ public class BaseGameProfileRPG : Profile  {
 	public virtual List<DataAttribute> GetList() {
 		return GetAttributesList("rpg");
 	}
+	
+	
+	// CURRENCY
+		
+    public virtual double GetGamePlayerProgressCurrency() {
+        return GetGamePlayerProgressCurrency(10.0);
+    }
+
+    public virtual double GetGamePlayerProgressCurrency(double defaultValue) {
+        double attValue = defaultValue;
+        if (CheckIfAttributeExists(BaseGameProfileRPGAttributes.ATT_PROGRESS_CURRENCY))
+            attValue = GetAttributeDoubleValue(BaseGameProfileRPGAttributes.ATT_PROGRESS_CURRENCY);
+        return attValue;
+    }
+
+    public virtual void SetGamePlayerProgressCurrency(double attValue) {
+        SetAttributeDoubleValue(BaseGameProfileRPGAttributes.ATT_PROGRESS_CURRENCY, attValue);
+    }
 	
 		// RPG - Player specific
 	
