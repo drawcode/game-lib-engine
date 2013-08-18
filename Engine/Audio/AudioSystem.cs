@@ -30,6 +30,13 @@ public class AudioSystem : MonoBehaviour {
     public bool ambienceActive = false;
 
     public int soundIncrement = 0;
+	
+	public string audioRootPath {
+		get {			
+			return ContentsConfig.contentRootFolder + "/"
+				+ ContentsConfig.contentAppFolder + "/version/shared/audio/"; 
+		}
+	}
 
     public bool isAudiocurrentLoopPlaying {
         get {
@@ -128,18 +135,21 @@ public class AudioSystem : MonoBehaviour {
     }
 
 	public void PlayEffect(Transform parentTransform, string name, bool loop, float volume) {
-		PlayFileFromResources(parentTransform, "Audio/" + name, loop, soundIncrement, volume);
+		PlayFileFromResources(parentTransform, 
+			audioRootPath + name, loop, soundIncrement, volume);
 	}
 
 	public void PlayEffect(Transform parentTransform, string name, float volume) {
-		PlayFileFromResources(parentTransform, "Audio/" + name, false, soundIncrement, volume);
+		PlayFileFromResources(parentTransform, 
+			audioRootPath + name, false, soundIncrement, volume);
 	}
 
     public void PlayEffect(string name, float volume) {
 
         // TODO, lookup filename from sound list...
         soundIncrement++;
-        PlayFileFromResources("Audio/" + name, false, soundIncrement, volume);
+        PlayFileFromResources(
+			audioRootPath + name, false, soundIncrement, volume);
     }
 
     public void PlayEffectIncrement(AudioClip clip, float volume, int increment) {
@@ -157,7 +167,7 @@ public class AudioSystem : MonoBehaviour {
     }
 
     public void PlayEffectSingle() {
-        PlayFileFromResources("Audio/" + name, false);
+        PlayFileFromResources(audioRootPath + name, false);
     }
 
     public void PlayUIMainLoop(string name, float volume) {
@@ -184,8 +194,7 @@ public class AudioSystem : MonoBehaviour {
     }
 
     public void PrepareIntroFileFromResources(string file, bool loop, double volume) { // file name without extension
-        if (file.IndexOf("Audio") == -1)
-            file = "Audio/" + file;
+        file = audioRootPath + file;
         currentIntroClip = LoadClipFromResources(file);
         GameObject goClip = GameObject.Find(file);
         if (goClip != null) {
@@ -225,8 +234,7 @@ public class AudioSystem : MonoBehaviour {
     }
 
     public void PrepareGameLoopFileFromResources(string file, bool loop, double volume) { // file name without extension
-        if (file.IndexOf("Audio") == -1)
-            file = "Audio/" + file;
+        file = audioRootPath + file;
         currentGameLoopClip = LoadClipFromResources(file);
         GameObject goClip = GameObject.Find(file);
         if (goClip != null) {
@@ -245,8 +253,7 @@ public class AudioSystem : MonoBehaviour {
     }
 
     public void PrepareLoopFileFromResources(string file, bool loop, float volume) { // file name without extension
-        if (file.IndexOf("Audio") == -1)
-            file = "Audio/" + file;
+        file = audioRootPath + file;
         currentLoopClip = LoadClipFromResources(file);
         GameObject goClip = GameObject.Find(file);
         if (goClip != null) {
@@ -266,8 +273,7 @@ public class AudioSystem : MonoBehaviour {
     }
 
     public void PrepareGameLapLoopFileFromResources(int index, string file, bool loop, double volume) { // file name without extension
-        if (file.IndexOf("Audio") == -1)
-            file = "Audio/" + file;
+        file = audioRootPath  + file;
         currentGameClipLap[index] = LoadClipFromResources(file);
         GameObject goClip = GameObject.Find(file);
         if (goClip != null) {
@@ -482,7 +488,7 @@ public class AudioSystem : MonoBehaviour {
     }
 
     public AudioClip LoadLoop(string name) {
-        AudioClip clip = LoadClipFromResources("Audio/" + name);
+        AudioClip clip = LoadClipFromResources(audioRootPath + name);
         return clip;
     }
 
@@ -502,8 +508,6 @@ public class AudioSystem : MonoBehaviour {
 
 		if(!ambienceActive) {
 
-			ambienceActive = true;
-
 	        if (currentGameLoop != null) {
 	            if (currentGameLoop.isPlaying) {
 	                currentGameLoop.volume = 0;
@@ -511,21 +515,23 @@ public class AudioSystem : MonoBehaviour {
 	            }
 	        }
 	
-	        if (currentIntro != null && ambienceActive) {
+	        if (currentIntro != null) {
 		        currentIntro.volume = (float)musicSoundVolume;
 		        currentIntro.Play();
-				if(currentIntro.clip != null) { 
+				//if(currentIntro.clip != null) { 
 	            	yield return new WaitForSeconds(currentIntro.clip.length - 1f);
-				}
+				//}
 	            currentIntro.gameObject.AudioTo(0f, 1f, 1f, 0f);
 			}
+			
+			ambienceActive = true;
 	
 	        if (currentLoop != null && ambienceActive) {
 
 	            currentLoop.volume = (float)musicSoundVolume;
 	            currentLoop.Play();
 	            currentLoop.gameObject.AudioTo((float)musicSoundVolume, 1f, 1f, 0f);
-	        }
+	        }			
 		}
 		else {
 			yield break;
