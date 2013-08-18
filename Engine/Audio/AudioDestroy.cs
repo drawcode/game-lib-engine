@@ -13,7 +13,7 @@ public class AudioDestroy : MonoBehaviour {
         if (audio != null) {
             if (audio.clip != null) {
                 clipLength = audio.clip.length;
-                LogUtil.LogAudio("DestroySound audio.clip.length:" + audio.clip.length);
+                //LogUtil.LogAudio("DestroySound audio.clip.length:" + audio.clip.length);
                 if (audio.clip.length > 0) {
                     audioLength = audio.clip.length + 1;
                 }
@@ -23,7 +23,7 @@ public class AudioDestroy : MonoBehaviour {
     }
 
     private IEnumerator DestroySound(float afterTime) {
-        LogUtil.LogAudio("DestroySound afterTime:" + afterTime);
+        //LogUtil.LogAudio("DestroySound afterTime:" + afterTime);
         yield return new WaitForSeconds(afterTime);
         if (gameObject.audio != null) {
             if (gameObject.audio.clip != null) {
