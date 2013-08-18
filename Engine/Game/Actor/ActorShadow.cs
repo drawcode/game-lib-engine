@@ -14,15 +14,19 @@ namespace Engine.Game.Actor {
         private Vector3 surfaceHitPoint;
         private Vector3 surfaceRightVector;
         public Vector3 surfaceForwardVector;
+		
+		float lastUpdate = 0f;
 
         private void Start() {
         }
 
         private void LateUpdate() {
-            if (objectParent != null) {
+            if (objectParent != null && objectShadow != null) {
 
                 // Get location to put shadow at using parent normal and terrain mask
-
+				float distance = Vector3.Distance(
+					objectParent.transform.position, 
+					objectShadow.transform.position);
                 RaycastHit hit;
                 Vector3 topPoint = objectParent.transform.position + Vector3.up * 1;
                 Vector3 bottomPoint = objectParent.transform.position - Vector3.up * 1;
@@ -43,7 +47,16 @@ namespace Engine.Game.Actor {
                         objectShadow.transform.position = shadowPos;
                         objectShadow.transform.up = Vector3.up;//surfaceNormal;
                         objectShadow.transform.LookAt(surfaceHitPoint - transform.right);
-
+						
+						
+						lastUpdate += Time.deltaTime;
+						if(lastUpdate > 10f) {
+							lastUpdate = 0;
+							
+							float alpha = (1 / (distance / 50)) - 1;
+							iTween.FadeTo(objectShadow, alpha, .5f); 
+						}
+						
                         Debug.DrawLine(topPoint, bottomPoint, Color.yellow);
 
                         //Debug.DrawLine(hit.point, surfaceNormal, Color.green);
