@@ -518,6 +518,44 @@ public class Contents : MonoBehaviour {
 	public static bool initialDownload = false;
 	public static string currentPackCodeSync = "default";
 	
+	public static string appCacheVersionSharedAudio {
+		get {
+			return ContentsConfig.contentRootFolder + "/"
+				+ ContentsConfig.contentAppFolder + "/version/shared/audio/";
+		}
+	}
+	
+	public static string appCacheVersionSharedPrefab {
+		get {
+			return ContentsConfig.contentRootFolder + "/"
+				+ ContentsConfig.contentAppFolder + "/version/shared/prefab/";
+		}
+	}
+	
+	public static string appCacheVersionSharedPrefabCharacters {
+		get {
+			return appCacheVersionSharedPrefab + "characters/";
+		}
+	}
+	
+	public static string appCacheVersionSharedPrefabLevelAssets {
+		get {
+			return appCacheVersionSharedPrefab + "levelassets/";
+		}
+	}
+	
+	public static string appCacheVersionSharedPrefabLevelNetwork {
+		get {
+			return appCacheVersionSharedPrefab + "network/";
+		}
+	}
+	
+	public static string appCacheVersionSharedPrefabLevelUI {
+		get {
+			return appCacheVersionSharedPrefab + "ui/";
+		}
+	}
+	
 	void Start() {
 		
 		currentPlatformCode = GetCurrentPlatformCode();

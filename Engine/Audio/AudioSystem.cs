@@ -33,8 +33,7 @@ public class AudioSystem : MonoBehaviour {
 	
 	public string audioRootPath {
 		get {			
-			return ContentsConfig.contentRootFolder + "/"
-				+ ContentsConfig.contentAppFolder + "/version/shared/audio/"; 
+			return Contents.appCacheVersionSharedAudio; 
 		}
 	}
 
