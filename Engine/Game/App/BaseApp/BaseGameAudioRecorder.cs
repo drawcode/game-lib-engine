@@ -1,4 +1,4 @@
-#define ANDROID_AMAZON
+#define ANDROID_AMAZONN
 
 using System;
 using System.Collections;
