@@ -71,12 +71,12 @@ public class ContentBundleLoader : MonoBehaviour
 
 	IEnumerator _Download (ContentBundleDownloadHandle handle) {
 		if (cachePath == null)
-			cachePath = System.IO.Path.Combine (Application.persistentDataPath, "bundlecache");
-		//Path.Combine(Contents.appCachePlatformPath, "packs/popar-pack-book-construction-1/" + assetName + ".unity3d");
+			cachePath = PathUtil.Combine (Application.persistentDataPath, "bundlecache");
+		//PathUtil.Combine(Contents.appCachePlatformPath, "packs/popar-pack-book-construction-1/" + assetName + ".unity3d");
 		var uri = handle.uri;
-		var dir = Path.Combine (Path.Combine (cachePath, uri.Host), Path.GetDirectoryName (uri.AbsolutePath).Substring (1));
+		var dir = PathUtil.Combine (PathUtil.Combine (cachePath, uri.Host), Path.GetDirectoryName (uri.AbsolutePath).Substring (1));
 		var file = Path.GetFileName (uri.AbsolutePath);
-		var path = Path.Combine (dir, file);
+		var path = PathUtil.Combine (dir, file);
 		if (File.Exists (path)) {
 			var www = new WWW ("file://" + path);
 			yield return www;
@@ -90,7 +90,7 @@ public class ContentBundleLoader : MonoBehaviour
 			yield return www;
 			if (HandleDownload (handle, www)) {
 				Directory.CreateDirectory (dir);
-				File.WriteAllBytes (path, www.bytes);
+				FileSystemUtil.WriteAllBytes (path, www.bytes);
 				handle.error = null;
 				handle.state = ContentBundleDownloadState.Success;
 			} else {
@@ -104,12 +104,12 @@ public class ContentBundleLoader : MonoBehaviour
 	 IEnumerator _Download (ContentBundleDownloadHandle handle)
 	{
 		if (cachePath == null)
-			cachePath = System.IO.Path.Combine (Application.persistentDataPath, "bundlecache");
-		//Path.Combine(Contents.appCachePlatformPath, "packs/popar-pack-book-construction-1/" + assetName + ".unity3d");
+			cachePath = PathUtil.Combine (Application.persistentDataPath, "bundlecache");
+		//PathUtil.Combine(Contents.appCachePlatformPath, "packs/popar-pack-book-construction-1/" + assetName + ".unity3d");
 		var uri = handle.uri;
-		var dir = Path.Combine (Path.Combine (cachePath, uri.Host), Path.GetDirectoryName (uri.AbsolutePath).Substring (1));
+		var dir = PathUtil.Combine (PathUtil.Combine (cachePath, uri.Host), Path.GetDirectoryName (uri.AbsolutePath).Substring (1));
 		var file = Path.GetFileName (uri.AbsolutePath);
-		var path = Path.Combine (dir, file);
+		var path = PathUtil.Combine (dir, file);
 		if (File.Exists (path)) {
 			var www = new WWW ("file://" + path);
 			yield return www;

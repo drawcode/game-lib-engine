@@ -1275,7 +1275,7 @@ public class Contents : MonoBehaviour {
 		List<string> paths = new List<string>();
 		
 		foreach(AppContentListItem item in appContentListItems) {
-			string path = Path.Combine(item.data.directoryFull, item.data.fileName);
+			string path = PathUtil.Combine(item.data.directoryFull, item.data.fileName);
 			string pathVersioned = getFullPathVersioned(path);
 			string pathHashed = getFileVersioned(path, item.data.hash);
 			bool fileExists = FileSystemUtil.CheckFileExists(pathVersioned);
@@ -1285,7 +1285,7 @@ public class Contents : MonoBehaviour {
 			bool hashVerified = false;
 			
 			if(!fileExists) {
-				pathVersioned = Path.Combine(Contents.appCachePath, pathVersioned);
+				pathVersioned = PathUtil.Combine(Contents.appCachePath, pathVersioned);
 				pathVersioned = GetPathUpdatedVersion(pathVersioned);
 				fileExists = FileSystemUtil.CheckFileExists(pathVersioned);
 			}
@@ -2366,7 +2366,7 @@ public class Contents : MonoBehaviour {
 	public string getHashCodeFromFile(string url) {
 		string hash = "";
 		if(!url.Contains(appCachePath)) {
-			url = Path.Combine(appCachePath, url);
+			url = PathUtil.Combine(appCachePath, url);
 		}
 		hash = ChecksumHash(url);
 		return hash;
@@ -2430,7 +2430,7 @@ public class Contents : MonoBehaviour {
 			string pathCache = Contents.appCachePath;
 			
 			if(!pathSave.Contains(pathCache)) {
-				pathSave = Path.Combine(pathCache, path);
+				pathSave = PathUtil.Combine(pathCache, path);
 			}
 			
 			string pathBase = ContentsConfig.contentRootFolder + "/";
@@ -2498,8 +2498,9 @@ public class Contents : MonoBehaviour {
 	}
 	
 	public string getUnversionedDisplayFile(string val) {
-		
+#if !UNITY_WEBPLAYER		
 		val = Path.GetFileName(val);
+#endif
 		val = GetDisplayFileUnversioned(val);
 		
 		/*
@@ -2575,7 +2576,7 @@ public class Contents : MonoBehaviour {
 		string pathCache = Contents.appCachePath;		
 		
 		if(!pathSave.Contains(pathCache)) {
-			pathSave = Path.Combine(pathCache, path);
+			pathSave = PathUtil.Combine(pathCache, path);
 		}		
 		
 		bool isContentList = pathSave.Contains(
@@ -2608,11 +2609,11 @@ public class Contents : MonoBehaviour {
 		
 		string pathVersionedSync = ContentsConfig.contentRootFolder + "/";
 		pathVersionedSync += ContentsConfig.contentAppFolder + "/";
-		pathVersionedSync = Path.Combine(pathVersionedSync, path);
+		pathVersionedSync = PathUtil.Combine(pathVersionedSync, path);
 		
 		string pathVersioned = ContentsConfig.contentRootFolder + "/";
 		pathVersioned += ContentsConfig.contentAppFolder + "/";
-		pathVersioned = Path.Combine(pathVersioned, pathNoHashNew);
+		pathVersioned = PathUtil.Combine(pathVersioned, pathNoHashNew);
 		
 		bool updateFile = false;
 		//List<AppContentListItem> appContentListItems = null;
@@ -2902,8 +2903,9 @@ public class Contents : MonoBehaviour {
 			//LogUtil.Log("Loading packPathsNONVersioned: " + appCachePathPacks);
 			
 			if(!string.IsNullOrEmpty(appCachePathPacks)) {
+#if !UNITY_WEBPLAYER
 				foreach(string path in Directory.GetDirectories(appCachePathPacks)) {
-					string pathToAdd = Path.Combine(appCachePathPacks, path);
+					string pathToAdd = PathUtil.Combine(appCachePathPacks, path);
 					if(!string.IsNullOrEmpty(pathToAdd)) {
 						if(!packPaths.Contains(pathToAdd)) {
 							packPaths.Add(pathToAdd);
@@ -2911,6 +2913,7 @@ public class Contents : MonoBehaviour {
 						}
 					}
 				}
+#endif
 			}
 		}
 		
@@ -2918,8 +2921,9 @@ public class Contents : MonoBehaviour {
 			//LogUtil.Log("Loading packPathsVersionedShared: " + appCachePathSharedPacks);
 			
 			if(!string.IsNullOrEmpty(appCachePathSharedPacks)) {
+#if !UNITY_WEBPLAYER
 				foreach(string path in Directory.GetDirectories(appCachePathSharedPacks)) {
-					string pathToAdd = Path.Combine(appCachePathSharedPacks, path);
+					string pathToAdd = PathUtil.Combine(appCachePathSharedPacks, path);
 					if(!string.IsNullOrEmpty(pathToAdd)) {
 						if(!packPathsVersionedShared.Contains(pathToAdd)) {
 							packPathsVersionedShared.Add(pathToAdd);
@@ -2927,14 +2931,16 @@ public class Contents : MonoBehaviour {
 						}
 					}
 				}
+#endif
 			}
 		}
 		
 		if(packPathsVersioned.Count == 0) {
 			//LogUtil.Log("Loading packPathsVersioned: " + appCachePathAllPlatformPacks);
 			if(!string.IsNullOrEmpty(appCachePathAllPlatformPacks)) {
+#if !UNITY_WEBPLAYER
 				foreach(string path in Directory.GetDirectories(appCachePathAllPlatformPacks)) {
-					string pathToAdd = Path.Combine(appCachePathAllPlatformPacks, path);
+					string pathToAdd = PathUtil.Combine(appCachePathAllPlatformPacks, path);
 					if(!string.IsNullOrEmpty(pathToAdd)) {
 						if(!packPathsVersioned.Contains(pathToAdd)) {
 							packPathsVersioned.Add(pathToAdd);
@@ -2942,6 +2948,7 @@ public class Contents : MonoBehaviour {
 						}
 					}
 				}
+#endif
 			}
 		}
 	}
@@ -2961,13 +2968,13 @@ public class Contents : MonoBehaviour {
 		string pathPart = path;
 		
 		string pathToCopy = "";
-		pathToCopy = Path.Combine(
+		pathToCopy = PathUtil.Combine(
 			Contents.appShipCacheVersionPath, pathPart);
 		
 		if(!absolute) {
-			path = Path.Combine(
+			path = PathUtil.Combine(
 				Contents.appCacheVersionPath, path);
-			//shipPath = Path.Combine(Contents.appShipCacheVersionPath, path);
+			//shipPath = PathUtil.Combine(Contents.appShipCacheVersionPath, path);
 		}
 		string pathVersioned = path;
 		
@@ -3035,7 +3042,7 @@ public class Contents : MonoBehaviour {
 		
 		foreach(AppContentListItem contentItem in contentListItems) {
 			
-			string fileFrom = Path.Combine(
+			string fileFrom = PathUtil.Combine(
 				Application.streamingAssetsPath, 
 				contentItem.data.filePathNonVersioned);
 							
@@ -3052,7 +3059,7 @@ public class Contents : MonoBehaviour {
 			yield return new WaitForEndOfFrame();
 			
 			if(FileSystemUtil.CheckFileExists(fileFrom)) {
-				string fileTo = Path.Combine(
+				string fileTo = PathUtil.Combine(
 					Application.persistentDataPath, 
 					contentItem.data.filePathVersioned);
 				
@@ -3113,6 +3120,8 @@ public class Contents : MonoBehaviour {
 		string sourceDirName, string destDirName, 
 		bool copySubDirs, bool versioned) {
 		
+		
+#if !UNITY_WEBPLAYER
 		//LogUtil.Log("DirectoryCopy:" + 
 		//	" sourceDirName:" + sourceDirName + 
 		//	" destDirName:" + destDirName + 
@@ -3168,7 +3177,7 @@ public class Contents : MonoBehaviour {
 				if(file.Extension != ".meta"
 			        && file.Extension != ".DS_Store") {
 					
-					string temppath = Path.Combine(destDirName, file.Name);
+					string temppath = PathUtil.Combine(destDirName, file.Name);
 					
 					if(versioned) {
 						temppath = getFullPathVersioned(temppath);
@@ -3195,12 +3204,15 @@ public class Contents : MonoBehaviour {
 	        if (copySubDirs)  {
 				
 	            foreach (DirectoryInfo subdir in dirs) {
-	                string temppath = Path.Combine(destDirName, subdir.Name);
+	                string temppath = PathUtil.Combine(destDirName, subdir.Name);
 	                //LogUtil.Log("Copying Directory: " + temppath);
 	                yield return StartCoroutine(directoryCopyCo(subdir.FullName, temppath, copySubDirs, versioned));
 	            }
 	        }
 		}
+#else
+		yield break;
+#endif
     }
 	    
     public IEnumerator SyncFoldersCo(bool syncFolders, bool syncServer) {
@@ -3228,14 +3240,14 @@ public class Contents : MonoBehaviour {
        	LogUtil.Log("persistenceFolder: " + persistenceFolder);
        	LogUtil.Log("streamingAssetsFolder: " + streamingAssetsFolder);
         
-        string pathRoot = Path.Combine(persistenceFolder, ContentsConfig.contentRootFolder);
-        string pathShipRoot = Path.Combine(streamingAssetsFolder, ContentsConfig.contentRootFolder);
+        string pathRoot = PathUtil.Combine(persistenceFolder, ContentsConfig.contentRootFolder);
+        string pathShipRoot = PathUtil.Combine(streamingAssetsFolder, ContentsConfig.contentRootFolder);
 		
 		FileSystemUtil.EnsureDirectory(pathRoot, false);
 		FileSystemUtil.EnsureDirectory(pathShipRoot, false);
         
-        string pathRootAppend = Path.Combine(pathRoot, ContentsConfig.contentAppFolder);
-        string pathShipRootAppend = Path.Combine(pathShipRoot, ContentsConfig.contentAppFolder);
+        string pathRootAppend = PathUtil.Combine(pathRoot, ContentsConfig.contentAppFolder);
+        string pathShipRootAppend = PathUtil.Combine(pathShipRoot, ContentsConfig.contentAppFolder);
 
 		FileSystemUtil.EnsureDirectory(pathRootAppend, false);
 		FileSystemUtil.EnsureDirectory(pathShipRootAppend, false);
@@ -3246,17 +3258,17 @@ public class Contents : MonoBehaviour {
 		FileSystemUtil.EnsureDirectory(appCachePath, false);
 		FileSystemUtil.EnsureDirectory(appShipCachePath, false);
 
-        appCacheVersionPath = Path.Combine(appCachePath, ContentsConfig.contentVersion);
-        appShipCacheVersionPath = Path.Combine(appShipCachePath, ContentConfig.contentCacheVersion);
+        appCacheVersionPath = PathUtil.Combine(appCachePath, ContentsConfig.contentVersion);
+        appShipCacheVersionPath = PathUtil.Combine(appShipCachePath, ContentConfig.contentCacheVersion);
 		
 		FileSystemUtil.EnsureDirectory(appCacheVersionPath, false);
 		FileSystemUtil.EnsureDirectory(appShipCacheVersionPath, false);
 		
-        appCachePathAll = Path.Combine(appCachePath, ContentConfig.contentCacheAll);
-        appShipCachePathAll = Path.Combine(appShipCachePath, ContentConfig.contentCacheAll);		
-        appCachePathAllShared = Path.Combine(appCachePathAll, ContentConfig.contentCacheShared);
-        appCachePathAllSharedTrackers = Path.Combine(appCachePathAllShared, ContentConfig.contentCacheTrackers);
-        appCachePathAllSharedUserData = Path.Combine(appCachePathAllShared, ContentConfig.contentCacheUserData);
+        appCachePathAll = PathUtil.Combine(appCachePath, ContentConfig.contentCacheAll);
+        appShipCachePathAll = PathUtil.Combine(appShipCachePath, ContentConfig.contentCacheAll);		
+        appCachePathAllShared = PathUtil.Combine(appCachePathAll, ContentConfig.contentCacheShared);
+        appCachePathAllSharedTrackers = PathUtil.Combine(appCachePathAllShared, ContentConfig.contentCacheTrackers);
+        appCachePathAllSharedUserData = PathUtil.Combine(appCachePathAllShared, ContentConfig.contentCacheUserData);
 		
 		FileSystemUtil.EnsureDirectory(appCachePathAll, false);
 		FileSystemUtil.EnsureDirectory(appShipCachePathAll, false);
@@ -3264,33 +3276,33 @@ public class Contents : MonoBehaviour {
 		FileSystemUtil.EnsureDirectory(appCachePathAllSharedTrackers, false);
 		FileSystemUtil.EnsureDirectory(appCachePathAllSharedUserData, false);
 		
-        appCachePathAllPlatform = Path.Combine(appCachePathAll, GetCurrentPlatformCode());
-        appCachePathAllPlatformPacks = Path.Combine(appCachePathAllPlatform, ContentConfig.contentCachePacks);
-        appCachePathAllPlatformData = Path.Combine(appCachePathAllPlatform, ContentConfig.contentCacheData);
+        appCachePathAllPlatform = PathUtil.Combine(appCachePathAll, GetCurrentPlatformCode());
+        appCachePathAllPlatformPacks = PathUtil.Combine(appCachePathAllPlatform, ContentConfig.contentCachePacks);
+        appCachePathAllPlatformData = PathUtil.Combine(appCachePathAllPlatform, ContentConfig.contentCacheData);
 		
 		FileSystemUtil.EnsureDirectory(appCachePathAllPlatform, false);
 		FileSystemUtil.EnsureDirectory(appCachePathAllPlatformPacks, false);
 		FileSystemUtil.EnsureDirectory(appCachePathAllPlatformData, false);
 		
-        appCachePlatformPath = Path.Combine(appCacheVersionPath, GetCurrentPlatformCode());
-        appShipCachePlatformPath = Path.Combine(appShipCacheVersionPath, GetCurrentPlatformCode());		
+        appCachePlatformPath = PathUtil.Combine(appCacheVersionPath, GetCurrentPlatformCode());
+        appShipCachePlatformPath = PathUtil.Combine(appShipCacheVersionPath, GetCurrentPlatformCode());		
 		
 		FileSystemUtil.EnsureDirectory(appCachePlatformPath, false);
 		FileSystemUtil.EnsureDirectory(appShipCachePlatformPath, false);
         
-        appCachePathData = Path.Combine(
+        appCachePathData = PathUtil.Combine(
 			appCacheVersionPath, ContentConfig.contentCacheData);
         
-		appCachePathShared = Path.Combine(
+		appCachePathShared = PathUtil.Combine(
 			appCacheVersionPath, ContentConfig.contentCacheShared);
         
-		appCachePathSharedPacks = Path.Combine(
+		appCachePathSharedPacks = PathUtil.Combine(
 			appCachePathShared, ContentConfig.contentCachePacks);
         
-		appCachePathSharedTrackers = Path.Combine(
+		appCachePathSharedTrackers = PathUtil.Combine(
 			appCachePathShared, ContentConfig.contentCacheTrackers);
         
-		appCachePathPacks = Path.Combine(
+		appCachePathPacks = PathUtil.Combine(
 			appCachePlatformPath, ContentConfig.contentCachePacks);
 		
 		FileSystemUtil.EnsureDirectory(appCachePathData, false);
@@ -3299,10 +3311,10 @@ public class Contents : MonoBehaviour {
 		FileSystemUtil.EnsureDirectory(appCachePathSharedTrackers, false);
 		FileSystemUtil.EnsureDirectory(appCachePathPacks, false);
 		
-		appShipCachePathData = Path.Combine(
+		appShipCachePathData = PathUtil.Combine(
 			appShipCacheVersionPath, ContentConfig.contentCacheData);
 		
-		appShipCachePathShared = Path.Combine(
+		appShipCachePathShared = PathUtil.Combine(
 			appShipCacheVersionPath, ContentConfig.contentCacheShared);
 		
 		FileSystemUtil.EnsureDirectory(appShipCachePathData, false);
@@ -3432,7 +3444,7 @@ public class Contents : MonoBehaviour {
 	            string appIncrement = ContentsConfig.contentIncrement.ToString();
 	            
 				if(!string.IsNullOrEmpty(hash)) {
-	            	fileVersioned = Path.Combine(arttpathrest, filepartbare 
+	            	fileVersioned = PathUtil.Combine(arttpathrest, filepartbare 
 						+ "-" + appVersion 
 						+ "-" 
 						+ appIncrement 
@@ -3440,7 +3452,7 @@ public class Contents : MonoBehaviour {
 						+ "." + ext);
 				}
 				else {
-	            	fileVersioned = Path.Combine(arttpathrest, filepartbare 
+	            	fileVersioned = PathUtil.Combine(arttpathrest, filepartbare 
 						+ "-" + appVersion 
 						+ "-" 
 						+ appIncrement 
@@ -3651,13 +3663,13 @@ public class Contents : MonoBehaviour {
 	}
 	
 	public void loadLevelBundle(string pack, int increment) {
-		string pathPack = Path.Combine(appCachePathAllPlatformPacks, pack);
-		pathPack = Path.Combine(pathPack, ContentConfig.contentCacheScenes);
+		string pathPack = PathUtil.Combine(appCachePathAllPlatformPacks, pack);
+		pathPack = PathUtil.Combine(pathPack, ContentConfig.contentCacheScenes);
 		
 		GamePacks.Instance.ChangeCurrentGamePack(pack);
-		
+#if !UNITY_WEBPLAYER
 		if(Directory.Exists(pathPack)) {
-			string pathUrl = Path.Combine(
+			string pathUrl = PathUtil.Combine(
 				pathPack, pack + "-" + increment.ToString() + ".unity3d");
 			
 			if(FileSystemUtil.CheckFileExists(pathUrl)) {
@@ -3670,6 +3682,7 @@ public class Contents : MonoBehaviour {
 		else {
 			//LogUtil.Log("Pack does not exist:" + pathPack);
 		}
+#endif
 	}
 	
 	public static void LoadLevelBundle(string sceneUrl) {

@@ -53,7 +53,7 @@ public class DataObject {
 	}
 	
 	public T LoadData<T>(string folderPath, string fileKey) {
-		string path = Path.Combine(folderPath, (fileKey + ".json").TrimStart('/'));
+		string path = PathUtil.Combine(folderPath, (fileKey + ".json").TrimStart('/'));
 		string fileData = "";
 #if !UNITY_WEBPLAYER	
 		if(FileSystemUtil.CheckFileExists(path)) {		
@@ -69,7 +69,7 @@ public class DataObject {
 	
 	public void SaveData(string folderPath, string fileKey, object obj) {
 		string data = JsonMapper.ToJson(obj);
-		string path = Path.Combine(folderPath, (fileKey + ".json").TrimStart('/'));
+		string path = PathUtil.Combine(folderPath, (fileKey + ".json").TrimStart('/'));
 		SaveData(path, data);
 	}
 	

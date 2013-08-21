@@ -18,6 +18,6 @@ public class Config : DataObject {
 
         //fileName = "config.json";
         //filePath = PathUtil.AppPersistencePath;
-        //fileFullPath = Path.Combine(filePath, fileName);
+        //fileFullPath = PathUtil.Combine(filePath, fileName);
     }
 }

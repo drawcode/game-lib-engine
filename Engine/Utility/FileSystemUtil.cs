@@ -6,30 +6,33 @@ using System.Text;
 using UnityEngine;
 
 public class FileSystemUtil {
-#if !UNITY_WEBPLAYER
-	
 	
 	public static void CreateDirectoryIfNeededAndAllowed(string path) {
+#if !UNITY_WEBPLAYER
 		if (!Directory.Exists(path)) {
 			if(DirectoryAllowed(path)) {
 				LogUtil.Log("CreateDirectoryIfNeededAndAllowed:" + path);
 				Directory.CreateDirectory(path);
 			}
         }
+#endif
 	}
 	
 	public static bool DirectoryAllowed(string path) {
 		bool allowCreate = true;
-		
+
+#if !UNITY_WEBPLAYER
 		if(path.IndexOf(Application.persistentDataPath) == -1
 			&& !Application.isEditor) {
 			allowCreate = false;
 		}
+#endif
 		return allowCreate;
 	}
 	    
     public static void DirectoryCopy(string sourceDirName, string destDirName, bool copySubDirs, bool versioned) {
-		
+
+#if !UNITY_WEBPLAYER
 		FileSystemUtil.EnsureDirectory(sourceDirName, false);
 		FileSystemUtil.EnsureDirectory(destDirName, false);
 		
@@ -57,7 +60,7 @@ public class FileSystemUtil {
 			if(file.Extension != ".meta"
 		        && file.Extension != ".DS_Store") {
 				
-				string temppath = Path.Combine(destDirName, file.Name);
+				string temppath = PathUtil.Combine(destDirName, file.Name);
 				
 				
 				if(!CheckFileExists(temppath) || Application.isEditor) {
@@ -74,11 +77,12 @@ public class FileSystemUtil {
         if (copySubDirs)  {
 			
             foreach (DirectoryInfo subdir in dirs) {
-                string temppath = Path.Combine(destDirName, subdir.Name);
+                string temppath = PathUtil.Combine(destDirName, subdir.Name);
                 LogUtil.Log("Copying Directory: " + temppath);
                 DirectoryCopy(subdir.FullName, temppath, copySubDirs, versioned);
             }
         }
+#endif		
     }
 	
 	public static void EnsureDirectory(string filePath) {
@@ -99,9 +103,10 @@ public class FileSystemUtil {
 
     public static bool CheckFileExists(string path) {
 		
-		bool exists = File.Exists(path);
+		bool exists =  false;
 		
-#if UNITY_ANDROID		
+		
+#if UNITY_ANDROID	
 		if(!exists && path.Contains(Application.streamingAssetsPath)) {
 			// android stores streamingassets in a compressed file, 
 			// must use WWW to check if you can access it
@@ -127,7 +132,12 @@ public class FileSystemUtil {
 				exists = true;
 			}
 		}
+#elif UNITY_WEBPLAYER
+		if(SystemPrefUtil.HasLocalSetting(path)) {
+			exists = true;
+		}
 #else
+		File.Exists(path);
 #endif	
 		
 		return exists;
@@ -138,7 +148,8 @@ public class FileSystemUtil {
 	}
 
     public static void CopyFile(string dataFilePath, string persistenceFilePath, bool force) {
-		
+
+#if !UNITY_WEBPLAYER
 		EnsureDirectory(dataFilePath);
 		EnsureDirectory(persistenceFilePath);
         //LogUtil.Log("dataFilePath: " + dataFilePath);
@@ -181,13 +192,15 @@ public class FileSystemUtil {
 #endif	
 			////SystemHelper.SetNoBackupFlag(persistenceFilePath);
         }
+#endif
     }
     public static void MoveFile(string dataFilePath, string persistenceFilePath) {
 		MoveFile(dataFilePath, persistenceFilePath, false);
 	}
 
     public static void MoveFile(string dataFilePath, string persistenceFilePath, bool force) {
-		
+
+#if !UNITY_WEBPLAYER
 		EnsureDirectory(dataFilePath);
 		EnsureDirectory(persistenceFilePath);
         //LogUtil.Log("dataFilePath: " + dataFilePath);
@@ -232,19 +245,33 @@ public class FileSystemUtil {
 
             //SystemHelper.SetNoBackupFlag(persistenceFilePath);
         }
+#endif
     }
 
     public static byte[] ReadAllBytes(string fileName) {
+
+#if !UNITY_WEBPLAYER		
         return File.ReadAllBytes(fileName);
+#else
+		return System.Text.Encoding.UTF8.GetBytes(SystemPrefUtil.GetLocalSettingString(fileName));
+#endif
     }
 
     public static void WriteAllBytes(string fileName, byte[] buffer) {
+
+#if !UNITY_WEBPLAYER				
 		EnsureDirectory(fileName);
         File.WriteAllBytes(fileName, buffer);
 		////SystemHelper.SetNoBackupFlag(fileName);
+#else
+		SystemPrefUtil.SetLocalSettingString(fileName, System.Text.Encoding.UTF8.GetString(buffer));		
+		SystemPrefUtil.Save();
+#endif
     }
 
     public static byte[] ReadStream(string fileName) {
+#if !UNITY_WEBPLAYER	
+        
         byte[] buffer = null;
         if (CheckFileExists(fileName)) {
             FileStream fs = new FileStream(fileName, FileMode.OpenOrCreate, FileAccess.Read);
@@ -255,23 +282,35 @@ public class FileSystemUtil {
             fs.Close();
         }
         return buffer;
+#else
+		return System.Text.Encoding.UTF8.GetBytes(SystemPrefUtil.GetLocalSettingString(fileName));
+#endif		
     }
 
     public static void WriteStream(string fileName, byte[] data) {
+#if !UNITY_WEBPLAYER			
 		EnsureDirectory(fileName);
         StreamWriter sw = new StreamWriter(fileName, false, Encoding.ASCII);
         sw.Write(data);
         sw.Flush();
         sw.Close();
 		////SystemHelper.SetNoBackupFlag(fileName);
+#else
+		SystemPrefUtil.SetLocalSettingString(fileName, System.Text.Encoding.UTF8.GetString(data));
+		SystemPrefUtil.Save();
+#endif
     }
 
     public static string ReadString(string fileName) {
         string contents = "";
         if (CheckFileExists(fileName)) {
-            StreamReader sr = new StreamReader(fileName, true);
-            contents = sr.ReadToEnd();
-            sr.Close();
+#if UNITY_WEBPLAYER
+		contents = SystemPrefUtil.GetLocalSettingString(fileName);
+#else
+        StreamReader sr = new StreamReader(fileName, true);
+        contents = sr.ReadToEnd();
+        sr.Close();
+#endif
         }
         return contents;
     }
@@ -281,21 +320,33 @@ public class FileSystemUtil {
     }
 
     public static void WriteString(string fileName, string data, bool append) {
+#if UNITY_WEBPLAYER
+		SystemPrefUtil.SetLocalSettingString(fileName, data);
+		SystemPrefUtil.Save();
+#else
 		EnsureDirectory(fileName);
         StreamWriter sw = new StreamWriter(fileName, append);
         sw.Write(data);
         sw.Flush();
         sw.Close();		
 		////SystemHelper.SetNoBackupFlag(fileName);
+#endif
     }
 	
 	public static void RemoveFile(string file) {
 		if(CheckFileExists(file)) {
+#if UNITY_WEBPLAYER
+		SystemPrefUtil.SetLocalSettingString(file, "");
+		SystemPrefUtil.Save();
+#else			
 			File.Delete(file);
+#endif
 		}
 	}
 
     public static void RemoveFilesLikeRecursive(DirectoryInfo dirInfo, string fileKey) {
+		
+#if !UNITY_WEBPLAYER
         foreach (FileInfo fileInfo in dirInfo.GetFiles()) {
             if (fileInfo.FullName.Contains(fileKey)) {
                 File.Delete(fileInfo.FullName);
@@ -305,6 +356,7 @@ public class FileSystemUtil {
         foreach (DirectoryInfo dirInfoItem in dirInfo.GetDirectories()) {
             RemoveFilesLikeRecursive(dirInfoItem, fileKey);
         }
+#endif
     }
 
     public static void CopyFilesLikeRecursive(
@@ -313,6 +365,8 @@ public class FileSystemUtil {
         DirectoryInfo dirInfoTo,
         string filter,
         List<string> excludeExts) {
+		
+#if !UNITY_WEBPLAYER
         foreach (FileInfo fileInfo in dirInfoCurrent.GetFiles()) {
             if (fileInfo.FullName.Contains(filter)) {
                 string fileTo = fileInfo.FullName.Replace(dirInfoFrom.FullName, dirInfoTo.FullName);
@@ -331,6 +385,7 @@ public class FileSystemUtil {
         foreach (DirectoryInfo dirInfoItem in dirInfoCurrent.GetDirectories()) {
             CopyFilesLikeRecursive(dirInfoItem, dirInfoFrom, dirInfoTo, filter, excludeExts);
         }
+#endif
     }
 
     public static bool CheckFileExtention(string path, List<string> extensions) {
@@ -348,6 +403,7 @@ public class FileSystemUtil {
         DirectoryInfo dirInfoTo,
         string filter,
         List<string> excludeExts) {
+#if !UNITY_WEBPLAYER
         foreach (FileInfo fileInfo in dirInfoCurrent.GetFiles()) {
             if (fileInfo.FullName.Contains(filter)) {
                 string fileTo = fileInfo.FullName.Replace(dirInfoFrom.FullName, dirInfoTo.FullName);
@@ -372,12 +428,15 @@ public class FileSystemUtil {
         foreach (DirectoryInfo dirInfoItem in dirInfoCurrent.GetDirectories()) {
             MoveFilesLikeRecursive(dirInfoItem, dirInfoFrom, dirInfoTo, filter, excludeExts);
         }
+#endif
     }
 
     public static void RemoveDirectoriesLikeRecursive(
         DirectoryInfo dirInfoCurrent,
         string filterLike,
         string filterNotLike) {
+		
+#if !UNITY_WEBPLAYER
         foreach (DirectoryInfo dirInfoItem in dirInfoCurrent.GetDirectories()) {
             RemoveDirectoriesLikeRecursive(dirInfoItem, filterLike, filterNotLike);
         }
@@ -386,7 +445,7 @@ public class FileSystemUtil {
             && !dirInfoCurrent.FullName.Contains(filterNotLike)) {
             Directory.Delete(dirInfoCurrent.FullName, true);
         }
+#endif
     }
 
-#endif
 }

@@ -84,7 +84,7 @@ public class DataItemObject : DataObject {
 #else
 
         // general profile
-        string persistentPath = Path.Combine(
+        string persistentPath = PathUtil.Combine(
             path,
             key + ".json");
         data = FileSystemUtil.ReadString(persistentPath);

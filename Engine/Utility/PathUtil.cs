@@ -36,7 +36,7 @@ public class PathUtil {
             if (Application.platform == RuntimePlatform.IPhonePlayer) {
                 var uriBuilder = new UriBuilder();
                 uriBuilder.Scheme = "file";
-                uriBuilder.Path = Path.Combine(AppDataPath, "Raw");
+                uriBuilder.Path = PathUtil.Combine(AppDataPath, "Raw");
                 return uriBuilder.Uri;
             }
             else if (Application.platform == RuntimePlatform.Android) {
@@ -45,7 +45,7 @@ public class PathUtil {
             else {
                 var uriBuilder = new UriBuilder();
                 uriBuilder.Scheme = "file";
-                uriBuilder.Path = Path.Combine(AppDataPath, "StreamingAssets");
+                uriBuilder.Path = PathUtil.Combine(AppDataPath, "StreamingAssets");
                 return uriBuilder.Uri;
             }
         }
@@ -138,6 +138,17 @@ public class PathUtil {
     /// </summary>
     ///
     public static string GetAppPersistencePathIPhone() {
-        return Path.Combine(GetAppSandboxPathIPhone(), "Documents");
+        return PathUtil.Combine(GetAppSandboxPathIPhone(), "Documents");
     }
+	
+	public static string Combine(string path1, string path2) {
+		if(path1.EndsWith("/")) {
+			path1 = path1.TrimEnd('/');
+		}
+		if(path2.EndsWith("/")) {
+			path2 = path2.TrimEnd('/');
+		}
+		
+		return path1 + "/" + path2;
+	}
 }

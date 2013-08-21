@@ -61,9 +61,9 @@ public static class Persist {
         string basePath = ( Application.isEditor ) ? Application.dataPath : Environment.GetFolderPath( Environment.SpecialFolder.Personal );
 
         if( Application.isEditor )
-            basePath = Path.Combine( basePath, "Documents" );
+            basePath = PathUtil.Combine( basePath, "Documents" );
 
-        return Path.Combine( basePath, filename );
+        return PathUtil.Combine( basePath, filename );
     }
     */
 }

@@ -17,7 +17,7 @@ public class NPCData : DataObject {
         packName = name;
 
         //fileName = "npc-data-" + System.Uri.EscapeUriString(packName) + ".json";
-        //fileFullPath = Path.Combine(filePath, fileName);
+        //fileFullPath = PathUtil.Combine(filePath, fileName);
     }
 
     public override void Reset() {

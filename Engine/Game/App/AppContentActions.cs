@@ -3,9 +3,9 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using System.Reflection;
 
 #if !UNITY_WEBPLAYER
-using System.Reflection;
 using System.IO;
 #endif
 

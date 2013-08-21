@@ -70,7 +70,7 @@ public class ARDataSets : BaseARDataSets<ARDataSet>
 	public string GetDataSetStoragePath(string setName) {
 		string downloadsStoragePath = PathUtil.AppContentPersistencePath;
 		
-		string pathToCheck = Path.Combine(downloadsStoragePath, setName);
+		string pathToCheck = PathUtil.Combine(downloadsStoragePath, setName);
 		
 		return pathToCheck;
 	}
