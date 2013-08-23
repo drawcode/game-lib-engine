@@ -10,7 +10,7 @@ public class GamePacks : DataObjects<GamePack>
 	private static volatile GamePacks instance;
 	private static System.Object syncRoot = new System.Object();
 		
-	private string DATA_KEY = "pack-data";
+	public static string DATA_KEY = "pack-data";
 	
 #if UNITY_IPHONE	
 	public static string currentPacksPlatform = "ios";

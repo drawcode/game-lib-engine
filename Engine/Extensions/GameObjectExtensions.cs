@@ -138,8 +138,8 @@ public static class GameObjectExtensions {
 
         //LogUtil.Log("Show:" + inst.name);
         if (inst != null) {
-            if (!inst.active) {
-                inst.SetActiveRecursively(true);
+            if (!inst.activeSelf) {
+                inst.SetActive(true);
             }
             if (inst.renderer != null) {
                 if (!inst.renderer.enabled) {
@@ -156,7 +156,7 @@ public static class GameObjectExtensions {
             if (inst.renderer != null) {
                 inst.renderer.enabled = false;
             }
-            inst.SetActiveRecursively(false);
+            inst.SetActive(false);
         }
     }
 

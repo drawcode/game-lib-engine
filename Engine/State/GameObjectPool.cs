@@ -54,12 +54,13 @@ namespace Engine.State {
             int i = 0;
             foreach (GameObjectPoolItemMeta item in objectPrefabs.Values) {
 
-                //pooledObjects[item.name][i] = new Dictionary<string, List<GameObject>>();
+               // pooledObjects[item.name][i] = new Dictionary<string, List<GameObject>>();
 
                 for (int n = 0; n < bufferAmount; n++) {
                     GameObject newObj = Instantiate(Resources.Load(prefabName)) as GameObject;
                     newObj.name = prefabName;
                     PoolObject(newObj);
+					Debug.Log("item:" + item.name);
                 }
 
                 i++;
@@ -109,13 +110,13 @@ namespace Engine.State {
         /// If true, it will only return an object if there is one currently pooled.
         /// </param>
         public GameObject GetObjectForType(string objectType, bool onlyPooled) {
-            if (pooledObjects.ContainsKey(objectType)) {
+            if (pooledObjects.ContainsKey(objectType)) { 
                 foreach (GameObject go in pooledObjects[objectType]) {
                     GameObject pooledObject = go;
 
                     //pooledObjects[i].RemoveAt(0);
                     pooledObject.transform.parent = null;
-                    pooledObject.SetActiveRecursively(true);
+                    pooledObject.SetActive(true);
                     return pooledObject;
                 }
             }
@@ -138,7 +139,7 @@ namespace Engine.State {
             {
                 if(objectPrefabs[i].name == obj.name)
                 {
-                    obj.SetActiveRecursively(false);
+                    obj.SetActive(false);
                     obj.transform.parent = containerObject.transform;
                     pooledObjects[i].Add(obj);
                     return;

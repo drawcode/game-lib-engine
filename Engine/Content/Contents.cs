@@ -1032,7 +1032,7 @@ public class Contents : MonoBehaviour {
 	
 	
 	public static bool CheckGlobalContentAccess(string pack) {
-		if(isInst != null) {
+		if(isInst) {
 			return Instance.checkGlobalContentAccess(pack);
 		}
 		return false;
@@ -1113,7 +1113,7 @@ public class Contents : MonoBehaviour {
 						
 		// On initial load handle cache
 		
-        yield return StartCoroutine(Contents.InitCacheCo(true, true));		
+        yield return StartCoroutine(initCacheCo(true, true));		
 		
 		displayState = ContentSyncDisplayState.SyncContentListsDefault;
 		
@@ -1764,7 +1764,7 @@ public class Contents : MonoBehaviour {
 							"Content verified, downloading and loading pack." );
 						
 						StartCoroutine(
-							Contents.SceneLoadFromCacheOrDownloadCo(url));
+							sceneLoadFromCacheOrDownloadCo(url));
 						break;
 					}					
 				}
@@ -1831,7 +1831,7 @@ public class Contents : MonoBehaviour {
 							"Content verified, downloading and loading pack." );
 						
 						StartCoroutine(
-							Contents.SceneLoadFromCacheOrDownloadCo(url));
+							sceneLoadFromCacheOrDownloadCo(url));
 						break;
 					}					
 				}
@@ -2819,14 +2819,15 @@ public class Contents : MonoBehaviour {
 		StartCoroutine(initCacheCo(syncFolders, syncServer));
 	}
 	
-	public static IEnumerator InitCacheCo(bool syncFolders, bool syncServer) {
-		if(isInst) {
-			yield return Instance.initCacheCo(syncFolders, syncServer);
-		}
-	}
+	//public static IEnumerator InitCacheCo(bool syncFolders, bool syncServer) {
+	//	if(isInst) {
+	//		yield return Instance.StartCoroutine(Instance.initCacheCo(syncFolders, syncServer));
+	//	}
+	//}
 	
 	public IEnumerator initCacheCo(bool syncFolders, bool syncServer) {
 			
+		LogUtil.Log("initCacheCo:", " syncFolders:" + syncFolders + " syncServer:" + syncServer);
 		
 		broadcastProgressMessage( 
 			"Loading Content",
@@ -3019,7 +3020,7 @@ public class Contents : MonoBehaviour {
 		ContentStorageLocation locationFrom, 
 		ContentStorageLocation locationTo) {
 		if(isInst) {
-			yield return Instance.syncContentListItemDataCo(locationFrom, locationTo);
+			yield return Instance.StartCoroutine(Instance.syncContentListItemDataCo(locationFrom, locationTo));
 		}
 		else {
 			yield break;
@@ -3107,8 +3108,8 @@ public class Contents : MonoBehaviour {
 		string sourceDirName, string destDirName, 
 		bool copySubDirs, bool versioned) {
 		if(isInst) {
-			yield return Instance.directoryCopyCo(
-				sourceDirName, destDirName, copySubDirs, versioned);
+			yield return Instance.StartCoroutine(Instance.directoryCopyCo(
+				sourceDirName, destDirName, copySubDirs, versioned));
 		}
 		else {
 			yield break;
@@ -3122,11 +3123,11 @@ public class Contents : MonoBehaviour {
 		
 		
 #if !UNITY_WEBPLAYER
-		//LogUtil.Log("DirectoryCopy:" + 
-		//	" sourceDirName:" + sourceDirName + 
-		//	" destDirName:" + destDirName + 
-		//	" copySubDirs:" + copySubDirs + 
-		//	" versioned:" + versioned);
+		LogUtil.Log("DirectoryCopy:" + 
+			" sourceDirName:" + sourceDirName + 
+			" destDirName:" + destDirName + 
+			" copySubDirs:" + copySubDirs + 
+			" versioned:" + versioned);
 		
 		FileSystemUtil.EnsureDirectory(sourceDirName, false);
 		FileSystemUtil.EnsureDirectory(destDirName, false);
@@ -3185,8 +3186,8 @@ public class Contents : MonoBehaviour {
 					
 					if(!FileSystemUtil.CheckFileExists(temppath) || Application.isEditor) {
 						
-						//LogUtil.Log("--copying ship file: " + file.FullName);
-						//LogUtil.Log("--copying ship file to cache: " + temppath);
+						LogUtil.Log("--copying ship file: " + file.FullName);
+						LogUtil.Log("--copying ship file to cache: " + temppath);
 						
 						FileSystemUtil.CopyFile(file.FullName, temppath);
 			        }
@@ -3205,7 +3206,7 @@ public class Contents : MonoBehaviour {
 				
 	            foreach (DirectoryInfo subdir in dirs) {
 	                string temppath = PathUtil.Combine(destDirName, subdir.Name);
-	                //LogUtil.Log("Copying Directory: " + temppath);
+	                LogUtil.Log("Copying Directory: " + temppath);
 	                yield return StartCoroutine(directoryCopyCo(subdir.FullName, temppath, copySubDirs, versioned));
 	            }
 	        }
@@ -3215,18 +3216,19 @@ public class Contents : MonoBehaviour {
 #endif
     }
 	    
-    public IEnumerator SyncFoldersCo(bool syncFolders, bool syncServer) {
-		if(isInst) {
-			Instance.syncFoldersCo(syncFolders, syncServer);
-		}
-		else {
-			yield break;
-		}
-	}
+    //public static IEnumerator SyncFoldersCo(bool syncFolders, bool syncServer) {
+	//	if(isInst) {
+	//		yield return Instance.StartCoroutine(Instance.syncFoldersCo(syncFolders, syncServer));
+	//	}
+	//	else {
+	//		yield break;
+	//	}
+	//}
 	
     public IEnumerator syncFoldersCo(bool syncFolders, bool syncServer) {
 		
-        LogUtil.Log("Contents::SyncFolders");
+        
+		LogUtil.Log("Contents::syncFoldersCo:", " syncFolders:" + syncFolders + " syncServer:" + syncServer);
 		
 		yield return new WaitForEndOfFrame();
 
@@ -3237,8 +3239,8 @@ public class Contents : MonoBehaviour {
         persistenceFolder = PathUtil.AppPersistencePath;
         streamingAssetsFolder = Application.streamingAssetsPath;
         
-       	LogUtil.Log("persistenceFolder: " + persistenceFolder);
-       	LogUtil.Log("streamingAssetsFolder: " + streamingAssetsFolder);
+       	LogUtil.Log("Contents::persistenceFolder: " + persistenceFolder);
+       	LogUtil.Log("Contents::streamingAssetsFolder: " + streamingAssetsFolder);
         
         string pathRoot = PathUtil.Combine(persistenceFolder, ContentsConfig.contentRootFolder);
         string pathShipRoot = PathUtil.Combine(streamingAssetsFolder, ContentsConfig.contentRootFolder);
@@ -3319,6 +3321,8 @@ public class Contents : MonoBehaviour {
 		
 		FileSystemUtil.EnsureDirectory(appShipCachePathData, false);
 		FileSystemUtil.EnsureDirectory(appShipCachePathShared, false);
+		
+		LogUtil.Log("Contents::syncFoldersCo:Folders Created:", " syncFolders:" + syncFolders + " syncServer:" + syncServer);
 		
 		if(syncFolders) {
 			yield return StartCoroutine(directoryCopyCo(appShipCachePlatformPath, appCachePlatformPath, true, true));
@@ -3558,14 +3562,14 @@ public class Contents : MonoBehaviour {
         //SyncFolders();
     }	
 			
-	public static IEnumerator SceneLoadFromCacheOrDownloadCo(string url) {
-		if(isInst) {
-			Instance.sceneLoadFromCacheOrDownloadCo(url);
-		}
-		else {
-			yield break;
-		}
-	}
+	//public static IEnumerator SceneLoadFromCacheOrDownloadCo(string url) {
+	//	if(isInst) {
+	//		yield return Instance.StartCoroutine(Instance.sceneLoadFromCacheOrDownloadCo(url));
+	//	}
+	//	else {
+	//		yield break;
+	//	}
+	//}
 	
 	public IEnumerator sceneLoadFromCacheOrDownloadCo(string url) {
 				
@@ -3695,14 +3699,14 @@ public class Contents : MonoBehaviour {
 		StartCoroutine(loadLevelBundleCo(sceneUrl));
 	}
 	
-	public static IEnumerator LoadLevelBundleCo(string sceneUrl) {
-		if(isInst) {
-			yield return Instance.loadLevelBundleCo(sceneUrl);
-		}
-		else {
-			yield break;
-		}
-	}
+	//public static IEnumerator LoadLevelBundleCo(string sceneUrl) {
+	//	if(isInst) {
+	//		yield return Instance.StartCoroutine(Instance.loadLevelBundleCo(sceneUrl));
+	//	}
+	//	else {
+	//		yield break;
+	//	}
+	//}
 	
 	public IEnumerator loadLevelBundleCo(string sceneUrl) {
 				

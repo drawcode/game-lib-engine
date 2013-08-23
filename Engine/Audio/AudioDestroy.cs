@@ -35,7 +35,7 @@ public class AudioDestroy : MonoBehaviour {
             }
         }
         gameObject.audio.enabled = false;
-        gameObject.active = false;
+        gameObject.SetActive(false);
         Destroy(gameObject);
     }
 }

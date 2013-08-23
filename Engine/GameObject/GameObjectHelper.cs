@@ -131,7 +131,7 @@ public static class GameObjectHelper {
     }
 
     public static void DumpRootTransforms() {
-        UnityEngine.Object[] objs = UnityEngine.GameObject.FindSceneObjectsOfType(typeof(GameObject));
+        UnityEngine.Object[] objs = UnityEngine.GameObject.FindObjectsOfType(typeof(GameObject));
         foreach (UnityEngine.Object obj in objs) {
             GameObject go = obj as GameObject;
             if (go.transform.parent == null) {
@@ -173,7 +173,7 @@ public static class GameObjectHelper {
 
         sb.Append(string.Format("\r\n{0}+{1} - a:{2} - r:{3} - mid:{4} - loadedObj: {5} - scale: x:{6} y:{7} z:{8} - pos: x:{9} y:{10} z:{11}",
             indent, gameObject.name,
-            gameObject.active, rendererEnabled,
+            gameObject.activeSelf, rendererEnabled,
             markerId, hasLoadedObj,
             gameObject.transform.localScale.x,
             gameObject.transform.localScale.y,

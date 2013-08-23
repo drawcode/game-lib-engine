@@ -12,7 +12,7 @@ public class BaseGameLocalizations<T> : DataObjects<T> where T : new() {
 
     public static string currentLocale = "en"; //
 
-    public string BASE_DATA_KEY = "game-localization-data";
+    public static string BASE_DATA_KEY = "game-localization-data";
 
     public static T BaseCurrent {
         get {

@@ -47,7 +47,7 @@ namespace Engine.Game.Actor {
         }
 
         public virtual bool HitObject(GameObject go, InputTouchInfo inputTouchInfo) {
-            Ray screenRay = Camera.mainCamera.ScreenPointToRay(inputTouchInfo.position3d);
+            Ray screenRay = Camera.main.ScreenPointToRay(inputTouchInfo.position3d);
             RaycastHit hit;
 
             if (Physics.Raycast(screenRay, out hit, Mathf.Infinity) && hit.transform != null) {

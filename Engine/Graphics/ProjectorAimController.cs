@@ -52,7 +52,7 @@ namespace Engine.Graphics {
 
             transform.position = target.position + offset;
             transform.eulerAngles = angles;
-            transform.RotateAround(transform.forward, -target.localEulerAngles.y * Mathf.Deg2Rad);
+            transform.Rotate(transform.forward, -target.localEulerAngles.y * Mathf.Deg2Rad);
         }
     }
 }

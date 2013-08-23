@@ -94,18 +94,7 @@ public class ARDataSetTrackers : BaseARDataSetTrackers<ARDataSetTracker>
 		}
 		return false;
 	}
-	
-	public List<ARDataSetTracker> GetListByPack(string packCode) {
-		List<ARDataSetTracker> filteredList = new List<ARDataSetTracker>();
-		foreach(ARDataSetTracker tracker in GetAll()) {
-			if(packCode.ToLower() == tracker.pack_code.ToLower()) {
-				filteredList.Add(tracker);
-			}
-		}
 		
-		return filteredList;
-	}
-	
 	public List<ARDataSetTracker> GetListByCodeAndPackCode(string trackerCode, string packCode) {
 		List<ARDataSetTracker> filteredList = new List<ARDataSetTracker>();
 		foreach(ARDataSetTracker tracker in GetListByPack(packCode)) {

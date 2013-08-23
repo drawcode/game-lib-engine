@@ -9,7 +9,7 @@ public class BaseGameVehicles<T> : DataObjects<T> where T : new() {
     private static volatile BaseGameVehicles<T> instance;
     private static object syncRoot = new Object();
 
-    public string BASE_DATA_KEY = "game-vehicle-data";
+    public static string BASE_DATA_KEY = "game-vehicle-data";
 
     public static T BaseCurrent {
         get {

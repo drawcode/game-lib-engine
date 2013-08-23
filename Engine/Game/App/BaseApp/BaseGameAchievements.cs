@@ -7,7 +7,7 @@ public class BaseGameAchievements<T> : DataObjects<T> where T : new() {
     private static volatile BaseGameAchievements<T> instance;
     private static object syncRoot = new Object();
 
-    public static string DATA_KEY = "game-achievement-data";
+    public static string BASE_DATA_KEY = "game-achievement-data";
 
     public static T BaseCurrent {
         get {
@@ -114,7 +114,7 @@ public class BaseGameAchievements<T> : DataObjects<T> where T : new() {
     public BaseGameAchievements(bool loadData) {
         Reset();
         path = "data/achievement-data.json";
-        pathKey = DATA_KEY;
+        pathKey = BASE_DATA_KEY;
         LoadData();
     }
 }

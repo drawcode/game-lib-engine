@@ -388,7 +388,7 @@ public class CarController : MonoBehaviour {
 
         //destroy wheels
         foreach (WheelData w in wheels)
-            w.coll.gameObject.active = false;
+            w.coll.gameObject.SetActive(false);
 
         //no more car physics
         enabled = false;

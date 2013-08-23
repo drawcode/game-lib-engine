@@ -205,7 +205,7 @@ public class AudioSystem : MonoBehaviour {
             DontDestroyOnLoad(goClip);
         }
         goClip.transform.parent = FindOrCreateSoundContainer().transform;
-        goClip.transform.position = Camera.mainCamera.transform.position;
+        goClip.transform.position = Camera.main.transform.position;
         goClip.audio.clip = currentIntroClip;
         goClip.audio.loop = loop;
         goClip.audio.volume = (float)volume;
@@ -244,7 +244,7 @@ public class AudioSystem : MonoBehaviour {
             goClip.transform.parent = FindGameGlobal();
         }
         goClip.transform.parent = FindOrCreateDisposableSoundContainer().transform;
-        goClip.transform.position = Camera.mainCamera.transform.position;
+        goClip.transform.position = Camera.main.transform.position;
         goClip.audio.clip = currentGameLoopClip;
         goClip.audio.loop = loop;
         goClip.audio.volume = (float)volume;
@@ -264,7 +264,7 @@ public class AudioSystem : MonoBehaviour {
             DontDestroyOnLoad(gameObject);
         }
         goClip.transform.parent = FindOrCreateSoundContainer().transform;
-        goClip.transform.position = Camera.mainCamera.transform.position;
+        goClip.transform.position = Camera.main.transform.position;
         goClip.audio.clip = currentLoopClip;
         goClip.audio.loop = loop;
         goClip.audio.volume = (float)volume;
@@ -284,7 +284,7 @@ public class AudioSystem : MonoBehaviour {
             DontDestroyOnLoad(gameObject);
         }
         goClip.transform.parent = FindOrCreateSoundContainer().transform;
-        goClip.transform.position = Camera.mainCamera.transform.position;
+        goClip.transform.position = Camera.main.transform.position;
         goClip.audio.clip = currentGameClipLap[index];
         goClip.audio.loop = loop;
         goClip.audio.volume = (float)volume;
@@ -391,7 +391,7 @@ public class AudioSystem : MonoBehaviour {
     }
 
     public void PlayAudioClip(AudioClip clip, bool loop, int increment, float volume) {
-        PlayAudioClip(Camera.mainCamera.transform.position, FindOrCreateDisposableSoundContainer().transform, clip, loop, increment, volume);
+        PlayAudioClip(Camera.main.transform.position, FindOrCreateDisposableSoundContainer().transform, clip, loop, increment, volume);
     }
 
     public void PlayAudioClip(Vector3 pos, Transform parent, AudioClip clip, bool loop, int increment, float volume) {

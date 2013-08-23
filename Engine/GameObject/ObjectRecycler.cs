@@ -45,7 +45,7 @@ public class ObjectRecycler {
 
             // Create a new instance and set ourself as the recycleBin
             GameObject newTransform = Object.Instantiate(go) as GameObject;
-            newTransform.gameObject.active = false;
+            newTransform.gameObject.SetActive(false);
 
             // Add it to our objectStore and set it to available
             objectStore.SetValue(newTransform, i);
@@ -80,7 +80,7 @@ public class ObjectRecycler {
                 nextFreeLoopStart = index;
 
             // Make the object inactive
-            objectToFree.gameObject.active = false;
+            objectToFree.gameObject.SetActive(false);
 
             // Set the object to available
             availableObjects[index] = true;

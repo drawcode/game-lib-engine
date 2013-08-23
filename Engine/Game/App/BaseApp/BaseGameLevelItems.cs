@@ -9,7 +9,7 @@ public class BaseGameLevelItems<T> : DataObjects<T> where T : new() {
     private static volatile BaseGameLevelItems<T> instance;
     private static object syncRoot = new Object();
 
-    public string BASE_DATA_KEY = "game-level-item-data";
+    public static string BASE_DATA_KEY = "game-level-item-data";
 
     public static T BaseCurrent {
         get {
@@ -74,15 +74,15 @@ public class BaseGameLevelItems<T> : DataObjects<T> where T : new() {
     }
 
     public virtual List<T> GetAllUnlocked() {
-        List<T> gameLevels = GetAll();
+       // List<T> gameLevels = GetAll();
         List<T> gameLevelsFiltered = new List<T>();
-        foreach (T gameLevel in gameLevels) {
+        //foreach (T gameLevel in gameLevels) {
 
             //bool hasAccess = GameDatas.Instance.CheckIfHasAccessToLevel(gameLevel.code);
             //if(hasAccess) {
             //	gameLevelsFiltered.Add(gameLevel);
             //}
-        }
+       // }
         return gameLevelsFiltered;
     }
 

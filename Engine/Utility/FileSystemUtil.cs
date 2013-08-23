@@ -137,7 +137,7 @@ public class FileSystemUtil {
 			exists = true;
 		}
 #else
-		File.Exists(path);
+		exists = File.Exists(path);
 #endif	
 		
 		return exists;
@@ -152,8 +152,8 @@ public class FileSystemUtil {
 #if !UNITY_WEBPLAYER
 		EnsureDirectory(dataFilePath);
 		EnsureDirectory(persistenceFilePath);
-        //LogUtil.Log("dataFilePath: " + dataFilePath);
-        //LogUtil.Log("persistenceFilePath: " + persistenceFilePath);
+        LogUtil.Log("dataFilePath: " + dataFilePath);
+        LogUtil.Log("persistenceFilePath: " + persistenceFilePath);
         if (CheckFileExists(dataFilePath) && (!CheckFileExists(persistenceFilePath) || force)) {
 			
 #if UNITY_ANDROID		

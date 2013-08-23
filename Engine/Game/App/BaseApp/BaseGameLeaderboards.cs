@@ -9,7 +9,7 @@ public class BaseGameLeaderboards<T> : DataObjects<T> where T : new() {
     private static volatile BaseGameLeaderboards<T> instance;
     private static object syncRoot = new Object();
 
-    public string BASE_DATA_KEY = "game-leaderboard-data";
+    public static string BASE_DATA_KEY = "game-leaderboard-data";
 
     public static T BaseCurrent {
         get {

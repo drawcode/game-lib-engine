@@ -36,7 +36,7 @@ public class ObjectPool : System.Object {
             obj.transform.parent = null;
             obj.transform.position = position;
             obj.transform.rotation = rotation;
-            obj.SetActiveRecursively(true);
+            obj.SetActive(true);
 
             // Call Start again
             obj.SendMessage("Start", SendMessageOptions.DontRequireReceiver);
@@ -49,7 +49,7 @@ public class ObjectPool : System.Object {
     public void recycle(GameObject obj) {
 
         // deactivate the object
-        obj.SetActiveRecursively(false);
+        obj.SetActive(false);
 
         // put the recycled object in this ObjectPool's bucket
         obj.transform.parent = ObjectPoolManager.instance.gameObject.transform;
