@@ -27,7 +27,7 @@ namespace Engine.Events {
                     Ray screenRay = collisionCamera.ScreenPointToRay(Input.mousePosition);
                     RaycastHit hit;
                     if (Physics.Raycast(screenRay, out hit, Mathf.Infinity) && hit.transform != null) {
-                        if (hit.transform.gameObject.name == gameObject.name) {
+                        if (hit.transform.gameObject == gameObject) {
                             axisInput.x = (hit.textureCoord.x - .5f) * 2;
                             axisInput.y = (hit.textureCoord.y - .5f) * 2;
 
