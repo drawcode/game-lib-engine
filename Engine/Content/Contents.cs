@@ -544,6 +544,12 @@ public class Contents : MonoBehaviour {
 		}
 	}
 	
+	public static string appCacheVersionSharedPrefabLevelItems {
+		get {
+			return appCacheVersionSharedPrefab + "items/";
+		}
+	}
+	
 	public static string appCacheVersionSharedPrefabLevelNetwork {
 		get {
 			return appCacheVersionSharedPrefab + "network/";
@@ -553,6 +559,12 @@ public class Contents : MonoBehaviour {
 	public static string appCacheVersionSharedPrefabLevelUI {
 		get {
 			return appCacheVersionSharedPrefab + "ui/";
+		}
+	}
+	
+	public static string appCacheVersionSharedPrefabWeapons {
+		get {
+			return appCacheVersionSharedPrefab + "weapons/";
 		}
 	}
 	
@@ -2983,17 +2995,17 @@ public class Contents : MonoBehaviour {
 			pathVersioned = Contents.GetFullPathVersioned(pathVersioned);
 		}
 
-		LogUtil.Log("GetFileDataFromPersistentCache:path:" + path);
-		LogUtil.Log("GetFileDataFromPersistentCache:pathVersioned:" + pathVersioned );
-		LogUtil.Log("GetFileDataFromPersistentCache:pathToCopy:" + pathToCopy );
-		LogUtil.Log("GetFileDataFromPersistentCache:Contents.appShipCacheVersionPath:" + Contents.appShipCacheVersionPath );
+		//LogUtil.Log("GetFileDataFromPersistentCache:path:" + path);
+		//LogUtil.Log("GetFileDataFromPersistentCache:pathVersioned:" + pathVersioned );
+		//LogUtil.Log("GetFileDataFromPersistentCache:pathToCopy:" + pathToCopy );
+		//LogUtil.Log("GetFileDataFromPersistentCache:Contents.appShipCacheVersionPath:" + Contents.appShipCacheVersionPath );
 
-		LogUtil.Log("GetFileDataFromPersistentCache:Contents.appCacheVersionPath:" + Contents.appCacheVersionPath );
+		//LogUtil.Log("GetFileDataFromPersistentCache:Contents.appCacheVersionPath:" + Contents.appCacheVersionPath );
 
 		bool versionedExists = FileSystemUtil.CheckFileExists(pathVersioned);
 				
-		LogUtil.Log("GetFileDataFromPersistentCache:versionedExists:" + versionedExists.ToString());
-		LogUtil.Log("GetFileDataFromPersistentCache:absolute:" + absolute);
+		//LogUtil.Log("GetFileDataFromPersistentCache:versionedExists:" + versionedExists.ToString());
+		//LogUtil.Log("GetFileDataFromPersistentCache:absolute:" + absolute);
 		
 		if(!versionedExists && !absolute) {		        		    
 		    // copy from streaming assets	
