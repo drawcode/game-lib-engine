@@ -22,7 +22,15 @@ namespace Engine.Events {
         }
 
         private void Update() {
-            if (Input.GetMouseButton(0)) {
+			
+			bool mousePressed = Input.GetMouseButton(0);
+			
+			bool leftPressed = Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.LeftArrow);
+			bool rightPressed = Input.GetKey(KeyCode.D) || Input.GetKey(KeyCode.RightArrow);
+			bool upPressed = Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.UpArrow);
+			bool downPressed = Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.DownArrow);
+			
+            if (mousePressed) {
                 if (collisionCamera) {
                     Ray screenRay = collisionCamera.ScreenPointToRay(Input.mousePosition);
                     RaycastHit hit;
@@ -43,7 +51,54 @@ namespace Engine.Events {
                         }
                     }
                 }
-            }
+            }	
+				LogUtil.Log("W:", upPressed);
+				LogUtil.Log("A:", rightPressed);
+				LogUtil.Log("S:", downPressed);
+				LogUtil.Log("D:", rightPressed);
+				
+			
+			if(leftPressed
+				|| rightPressed
+				|| upPressed
+				|| downPressed) {
+				
+				LogUtil.Log("W:", upPressed);
+				LogUtil.Log("A:", rightPressed);
+				LogUtil.Log("S:", downPressed);
+				LogUtil.Log("D:", rightPressed);
+				
+				Vector3 axisInput = Vector3.zero;
+				
+				if(upPressed) {
+					axisInput.y = 1;
+				}
+				
+				if(leftPressed) {
+					axisInput.x = -1;
+				}
+				
+				if(downPressed) {
+					axisInput.y = -1;
+				}
+				
+				if(rightPressed) {
+					axisInput.x = 1;
+				}				
+				
+                if (pad != null) {
+                    Vector3 padPos = pad.localPosition;
+                    padPos.x = axisInput.x;
+                    padPos.y = axisInput.y;
+                    padPos.z = 0;
+                    pad.localPosition = padPos;
+                }
+				
+				
+				LogUtil.Log("axisInput:", axisInput);
+				
+				Messenger<string, Vector3>.Broadcast("input-axis", "input-axis-" + axisName, axisInput);
+			}
             else {
                 axisInput = Vector3.zero;
                 

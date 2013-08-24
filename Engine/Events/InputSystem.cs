@@ -30,6 +30,12 @@ namespace Engine.Events {
         public Vector2 lastNormalizedTouch2 = new Vector2(0f, 0f);
         public Vector3 lastTargetDirection = new Vector3(0f, 0f, 0f);
         public Vector3 lastTargetDirection2 = new Vector3(0f, 0f, 0f);
+		
+		public bool mousePressed = false;			
+		public bool leftPressed = false;
+		public bool rightPressed = false;
+		public bool upPressed = false;
+		public bool downPressed = false;
 
         public InputTouchInfo lastTouch;
         public List<InputTouchInfo> touchesList;
@@ -272,6 +278,13 @@ namespace Engine.Events {
             if (inputEnabled) {
                 IsInputTouchUp();
                 IsInputTouchDown();
+				
+				mousePressed = Input.GetMouseButton(0);
+				
+				leftPressed = Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.LeftArrow);
+				rightPressed = Input.GetKey(KeyCode.D) || Input.GetKey(KeyCode.RightArrow);
+				upPressed = Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.UpArrow);
+				downPressed = Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.DownArrow);
 
                 //LogUtil.Log("InputSystem::Update");
             }
