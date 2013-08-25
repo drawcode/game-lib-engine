@@ -320,7 +320,7 @@ public static class GameObjectHelper {
 			return;
 
 		if(inst.animation != null) {
-			if(inst.animation.GetClip(name) != null) {
+			if(inst.animation[name] != null) {
 				if(!inst.animation.isPlaying) {
 					inst.animation.Play(name);
 				}
@@ -328,7 +328,7 @@ public static class GameObjectHelper {
 		}
 		
 		foreach(Animation source in inst.GetComponentsInChildren<Animation>()) {
-			if(source.GetClip(name) != null) {
+			if(source[name] != null) {
 				if(!source.isPlaying) {
 					source.Play(name);
 				}
@@ -341,7 +341,7 @@ public static class GameObjectHelper {
 			return;
 
 		if(inst.animation != null) {
-			if(inst.animation.GetClip(name) != null) {
+			if(inst.animation[name] != null) {
 				if(inst.animation.isPlaying) {
 					inst.animation.Stop(name);
 				}
@@ -349,7 +349,7 @@ public static class GameObjectHelper {
 		}
 		
 		foreach(Animation source in inst.GetComponentsInChildren<Animation>()) {
-			if(source.GetClip(name) != null) {
+			if(source[name] != null) {
 				if(source.isPlaying) {
 					source.Stop(name);
 				}
