@@ -184,6 +184,34 @@ public static class GameObjectExtensions {
 
         GameObjectHelper.PlaySounds(inst);
     }
+	
+	public static void PlayAnimations(this GameObject inst) {
+        if (inst == null)
+            return;
+
+        GameObjectHelper.PlayAnimations(inst);
+    }
+	
+    public static void StopAnimations(this GameObject inst) {
+        if (inst == null)
+            return;
+
+        GameObjectHelper.StopAnimations(inst);
+    }	
+	
+	public static void PlayAnimation(this GameObject inst, string name) {
+        if (inst == null)
+            return;
+
+        GameObjectHelper.PlayAnimation(inst, name);
+    }
+	
+    public static void StopAnimation(this GameObject inst, string name) {
+        if (inst == null)
+            return;
+
+        GameObjectHelper.StopAnimation(inst, name);
+    }
 
     public static bool IsRenderersVisible(this GameObject inst) {
         if (inst == null)

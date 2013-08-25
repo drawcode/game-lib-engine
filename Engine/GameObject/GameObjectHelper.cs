@@ -314,6 +314,48 @@ public static class GameObjectHelper {
 			source.Rewind();
 		}
 	}
+	
+	public static void PlayAnimation(GameObject inst, string name) {
+		if(inst == null)
+			return;
+
+		if(inst.animation != null) {
+			if(inst.animation.GetClip(name) != null) {
+				if(!inst.animation.isPlaying) {
+					inst.animation.Play(name);
+				}
+			}
+		}
+		
+		foreach(Animation source in inst.GetComponentsInChildren<Animation>()) {
+			if(source.GetClip(name) != null) {
+				if(!source.isPlaying) {
+					source.Play(name);
+				}
+			}
+		}
+	}
+	
+	public static void StopAnimation(GameObject inst, string name) {
+		if(inst == null)
+			return;
+
+		if(inst.animation != null) {
+			if(inst.animation.GetClip(name) != null) {
+				if(inst.animation.isPlaying) {
+					inst.animation.Stop(name);
+				}
+			}
+		}
+		
+		foreach(Animation source in inst.GetComponentsInChildren<Animation>()) {
+			if(source.GetClip(name) != null) {
+				if(source.isPlaying) {
+					source.Stop(name);
+				}
+			}
+		}
+	}
 
 	public static void PlayAnimations(GameObject inst) {
 		if(inst == null)
@@ -326,7 +368,9 @@ public static class GameObjectHelper {
 		}
 		
 		foreach(Animation source in inst.GetComponentsInChildren<Animation>()) {
-			source.Play();
+			if(!source.isPlaying) {
+				source.Play();
+			}
 		}
 	}
 	
@@ -341,7 +385,9 @@ public static class GameObjectHelper {
 		}
 		
 		foreach(Animation source in inst.GetComponentsInChildren<Animation>()) {
-			source.Stop();
+			if(source.isPlaying) {
+				source.Stop();
+			}
 		}
 	}
 	
@@ -356,7 +402,9 @@ public static class GameObjectHelper {
 		}
 		
 		foreach(Animation source in inst.GetComponentsInChildren<Animation>()) {
-			source.Stop();
+			if(source.isPlaying) {
+				source.Stop();
+			}
 		}
 	}
 
