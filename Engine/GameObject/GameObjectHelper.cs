@@ -500,4 +500,66 @@ public static class GameObjectHelper {
         }
 	}
 	
+	public static Material GetMaterial(GameObject inst, string name) {
+		
+		MeshRenderer[] renderers = inst.GetComponentsInChildren<MeshRenderer>(true);
+		
+		foreach(MeshRenderer mesh in renderers) {
+			foreach(Material m in mesh.materials) {
+				if(m.name.ToLower().Contains(name.ToLower())) {
+					return m;
+				}
+			}
+		}
+		
+		MeshRenderer[] renderersChildren = inst.GetComponentsInChildren<MeshRenderer>(true);
+		
+		foreach(MeshRenderer mesh in renderersChildren) {
+			foreach(Material m in mesh.materials) {
+				if(m.name.ToLower().Contains(name.ToLower())) {
+					return m;
+				}
+			}
+		}
+		
+		return null;
+	}
+	
+	public static bool SetMaterialColor(GameObject inst, string name, Color color) {
+		
+		LogUtil.Log("SetMaterialColor name:" + name + " color:" + color );
+
+		MeshRenderer[] renderers = inst.GetComponents<MeshRenderer>();
+		LogUtil.Log("SetMaterialColor renderers:" + renderers.Length );
+		
+		foreach(MeshRenderer mesh in renderers) {
+			foreach(Material m in mesh.materials) {
+				LogUtil.Log("SetMaterialColor m:" + m.name);
+				if(m.name.ToLower().Contains(name.ToLower())) {
+					m.color = color;
+					LogUtil.Log("SetMaterialColor color:" + color);
+					return true;
+				}
+			}
+		}
+		
+		MeshRenderer[] renderersChildren = inst.GetComponentsInChildren<MeshRenderer>(true);
+		LogUtil.Log("SetMaterialColor renderersChildren:" + renderersChildren.Length );
+		
+		foreach(MeshRenderer mesh in renderersChildren) {
+			foreach(Material m in mesh.materials) {
+				LogUtil.Log("SetMaterialColor m:" + m.name);
+				if(m.name.ToLower().Contains(name.ToLower())) {
+					m.color = color;
+					LogUtil.Log("SetMaterialColor color:" + color);
+					return true;
+				}
+			}
+		}
+		
+		return false;
+	}
+		
+	
+	
 }

@@ -44,6 +44,7 @@ public class BaseGameProfileAttributes {
 
     public static string ATT_CUSTOM_AUDIO = "custom-audio";
     public static string ATT_CUSTOM_COLORS = "custom-colors";
+    public static string ATT_CUSTOM_COLORS_RUNNER = "custom-colors-runner";
 }
 
 public class BaseGameProfileDataState {
@@ -184,6 +185,42 @@ public class BaseGameProfile : Profile {
     public virtual void SetHelpTipsShownDate(double attValue) {
         SetAttributeDoubleValue(BaseGameProfileAttributes.ATT_HELP_TIPS_SHOWN_DATE, attValue);
     }
+	
+	
+    // CUSTOMIZATION
+    public virtual void SetCustomColorsRunner(CustomPlayerColorsRunner colors) {
+        string colorsText = JsonMapper.ToJson(colors);
+        LogUtil.Log("SetCustomColorsRunner: " + colorsText);
+        SetAttributeStringValue(BaseGameProfileAttributes.ATT_CUSTOM_COLORS_RUNNER, colorsText);
+    }
+
+    public virtual CustomPlayerColorsRunner GetCustomColorsRunner() {
+        CustomPlayerColorsRunner colors = new CustomPlayerColorsRunner();
+
+        string key = BaseGameProfileAttributes.ATT_CUSTOM_COLORS_RUNNER;
+
+        if (!CheckIfAttributeExists(key)) {
+
+            // add default colors
+            SetCustomColorsRunner(new CustomPlayerColorsRunner());
+            Messenger.Broadcast(BaseGameProfileMessages.ProfileShouldBeSaved);
+        }
+
+        string json = GetAttributeStringValue(key);
+        if (!string.IsNullOrEmpty(json)) {
+            try {
+                LogUtil.Log("GetCustomColors: " + json);
+                colors = JsonMapper.ToObject<CustomPlayerColorsRunner>(json);
+            }
+            catch (Exception e) {
+                colors = new CustomPlayerColorsRunner();
+                LogUtil.Log(e);
+            }
+        }
+        return colors;
+    }
+	
+	
 
     // CUSTOMIZATION
     public virtual void SetCustomColors(CustomPlayerColors colors) {

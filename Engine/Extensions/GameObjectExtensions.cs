@@ -354,4 +354,12 @@ public static class GameObjectExtensions {
         GameObjectHelper.RotateObject(go, rotateBy);    
 	}
 	
+	public static Material GetMaterial(this GameObject go, string name) {
+        return GameObjectHelper.GetMaterial(go, name);    
+	}
+	
+	public static void SetMaterialColor(this GameObject go, string name, Color color) {
+        GameObjectHelper.SetMaterialColor(go, name, color);    
+	}
+	
 }
