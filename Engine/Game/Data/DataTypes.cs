@@ -386,11 +386,15 @@ public class CustomPlayerColorsRunner : DataObject {
 
         colorCode = "default";
         colorDisplayName = "Default";
+		//SetMaterialColor name:helmet-facemask color:RGBA(0.838, 1.000, 0.595, 1.000)
+		//SetMaterialColor name:helmet-main color:RGBA(1.000, 0.189, 0.192, 1.000)
+
 
         helmetColor = new CustomColorItem();
-		helmetColor.FromColor(new Color(0, 0, 1, 1));
+		helmetColor.FromColor(new Color(1.000f, 0.189f, 0.192f, 1.000f));
         facemaskColor = new CustomColorItem();
-		facemaskColor.FromColor(new Color(1, 0, 0, 1));
+		facemaskColor.FromColor(new Color(0.838f, 1.000f, 0.595f, 1.000f));
+		
     }
 
     public override string ToString() {
