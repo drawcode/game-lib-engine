@@ -4,6 +4,12 @@ using System.Collections.Generic;
 using Engine.Utility;
 using UnityEngine;
 
+public class AudioSetItem {
+	public AudioSource audioSource;
+	public AudioClip audioClip;
+	public string file = "";
+}
+
 public class AudioSystem : MonoBehaviour {
     public static AudioSystem Instance;
 
@@ -21,8 +27,7 @@ public class AudioSystem : MonoBehaviour {
 
     public AudioClip[] currentGameClipLap;
 
-    public Dictionary<string, AudioSource> effects;
-    public Dictionary<string, AudioClip> clips;
+    public Dictionary<string, AudioSetItem> clips;
 
     public double effectSoundVolume = 1.0;
     public double musicSoundVolume = 0.5;
@@ -190,6 +195,66 @@ public class AudioSystem : MonoBehaviour {
         // TODO, lookup filename from sound list...
         PrepareIntroFileFromResources(name, true, volume);
         currentIntro.Play();
+    }
+	
+	public void PlayAudioFile(string file) {
+		AudioSetItem item = GetAudioFile(file);
+		if(item != null) {
+			item.audioSource.Play();
+		}
+	}
+	
+	public AudioSetItem GetAudioFile(string file) {
+		if(clips.ContainsKey(file)) {
+			return clips[file];
+		}
+		return null;
+	}
+	
+    public AudioSetItem PrepareAudioFileFromResources(string file, bool loop, double volume, bool destroyOnComplete) { // file name without extension
+        file = audioRootPath + file;
+		
+        AudioClip audioClip = LoadClipFromResources(file);
+        GameObject goClip = GameObject.Find(file);
+        if (goClip == null) {
+						
+            goClip = new GameObject(file);
+            AudioSource audioSource = goClip.AddComponent<AudioSource>();
+            goClip.transform.parent = FindGameGlobal();
+            DontDestroyOnLoad(goClip);
+			
+	        goClip.transform.parent = FindOrCreateSoundContainer().transform;
+	        goClip.transform.position = Camera.main.transform.position;
+	        goClip.audio.clip = audioClip;
+	        goClip.audio.loop = loop;
+	        goClip.audio.volume = (float)volume;
+	        goClip.audio.playOnAwake = false;
+			
+			if(destroyOnComplete) {
+	        	goClip.AddComponent<AudioDestroy>();
+			}
+			
+			if(clips == null) {
+				clips = new Dictionary<string, AudioSetItem>();
+			}
+			
+			AudioSetItem item = new AudioSetItem();			
+			item.audioClip = audioClip;
+			item.audioSource = audioSource;
+			item.file = file;
+							
+			if(clips.ContainsKey(file)) {
+				item = clips[file];
+				clips[file] = item;
+			}
+			else {
+				clips.Add(file, item);
+			}
+			
+			return item;
+        }
+		
+		return null;
     }
 
     public void PrepareIntroFileFromResources(string file, bool loop, double volume) { // file name without extension

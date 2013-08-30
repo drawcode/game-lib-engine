@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class So : MonoBehaviour {
     public static So und = null;
-    public int initialCapacity = 5;
+    public int initialCapacity = 10;
 
     private List<Sound> _soundList;
     private Sound _bgSound;
@@ -61,7 +61,7 @@ public class So : MonoBehaviour {
         _bgSound.loop = loop;
         StartCoroutine(_bgSound.playAudioClip(audioClip, AudioRolloffMode.Linear, volume, Vector3.zero));
     }
-
+	
     public Sound playSound(AudioClip audioClip) {
         return playSound(audioClip, AudioRolloffMode.Linear, 0.9f, Vector3.zero);
     }
