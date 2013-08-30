@@ -369,6 +369,43 @@ public class CustomColorItem : DataObject {
     }
 }
 
+
+public class CustomPlayerColorsRunner : DataObject {
+    public string colorCode;
+    public string colorDisplayName;
+
+    public CustomColorItem helmetColor;
+    public CustomColorItem facemaskColor;
+
+    public CustomPlayerColorsRunner() {
+        Reset();
+    }
+
+    public override void Reset() {
+        base.Reset();
+
+        colorCode = "default";
+        colorDisplayName = "Default";
+		//SetMaterialColor name:helmet-facemask color:RGBA(0.838, 1.000, 0.595, 1.000)
+		//SetMaterialColor name:helmet-main color:RGBA(1.000, 0.189, 0.192, 1.000)
+
+
+        helmetColor = new CustomColorItem();
+		helmetColor.FromColor(new Color(1.000f, 0.189f, 0.192f, 1.000f));
+        facemaskColor = new CustomColorItem();
+		facemaskColor.FromColor(new Color(0.838f, 1.000f, 0.595f, 1.000f));
+		
+    }
+
+    public override string ToString() {
+        System.Text.StringBuilder sb = new System.Text.StringBuilder();
+        sb.Append(String.Format("CustomPlayerColors name: {0}", colorDisplayName));
+        sb.Append(String.Format("\r\n\r\nhelmetColor: {0}", helmetColor.ToString()));
+        sb.Append(String.Format("\r\n\r\nfacemaskColor: {0}", facemaskColor.ToString()));
+        return sb.ToString();
+    }
+}
+
 public class CustomPlayerColors : DataObject {
     public string colorCode;
     public string colorDisplayName;
