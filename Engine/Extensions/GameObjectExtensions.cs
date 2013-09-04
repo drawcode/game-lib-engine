@@ -362,4 +362,12 @@ public static class GameObjectExtensions {
         GameObjectHelper.SetMaterialColor(go, name, color);    
 	}
 	
+	public static GameObject LoadFromResources(this GameObject go, string path) {
+		return GameObjectHelper.LoadFromResources(path);
+	}
+	
+	public static GameObject LoadFromBundle(this GameObject go, string path) {
+		return GameObjectHelper.LoadFromBundle(path);
+	}
+	
 }

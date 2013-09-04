@@ -558,8 +558,25 @@ public static class GameObjectHelper {
 		}
 		
 		return false;
-	}
+	}		
+	
+	public static GameObject LoadFromResources(string path) {
 		
+		LogUtil.Log("LoadFromResources: path:" + path);
 	
+		UnityEngine.Object prefabObject = Resources.Load(path);
+		if(prefabObject != null) {
+			GameObject go = UnityEngine.GameObject.Instantiate(prefabObject) as GameObject;
+			if(go != null) {
+				return go;
+			}
+		}
+		
+		return null;	
+	}
 	
+	public static GameObject LoadFromBundle(string path) {
+			
+		return null;	
+	}
 }
