@@ -6,6 +6,12 @@ using System.IO;
 using Engine.Data.Json;
 using Engine.Utility;
 
+public class BaseGameProfileCharacterAttributes {	
+
+	public static string ATT_CHARACTER_CODE = "att-character-code";
+	public static string ATT_CHARACTER_COSTUME_CODE = "att-character-costume-code";
+}	
+
 public class BaseGameProfileCharacters {
 	private static volatile BaseGameProfileCharacter current;
 	private static volatile BaseGameProfileCharacters instance;
@@ -82,9 +88,42 @@ public class BaseGameProfileCharacter : Profile  {
 		return currentValue;
 	}
 		
-	public virtual List<DataAttribute> GetAchievements() {
+	public virtual List<DataAttribute> GetAll() {
 		return GetAttributesList("character");
 	}
+	
+	
+	// CHARACTER - Player specific
+	
+	public string GetCurrentCharacterCode(){
+		return GetCurrentCharacterCode("default");
+	}
+	
+	public string GetCurrentCharacterCode(string defaultValue){
+		string attValue = defaultValue;
+		if(CheckIfAttributeExists(BaseGameProfileCharacterAttributes.ATT_CHARACTER_CODE))
+			attValue = GetAttributeStringValue(BaseGameProfileCharacterAttributes.ATT_CHARACTER_CODE);
+		return attValue;
+	}
+	
+	public void SetCurrentCharacterCode(string attValue) {
+		SetAttributeStringValue(BaseGameProfileCharacterAttributes.ATT_CHARACTER_CODE, attValue);
+	}	
+	
+	public string GetCurrentCharacterCostumeCode(){
+		return GetCurrentCharacterCostumeCode("default");
+	}
+	
+	public string GetCurrentCharacterCostumeCode(string defaultValue){
+		string attValue = defaultValue;
+		if(CheckIfAttributeExists(BaseGameProfileCharacterAttributes.ATT_CHARACTER_COSTUME_CODE))
+			attValue = GetAttributeStringValue(BaseGameProfileCharacterAttributes.ATT_CHARACTER_COSTUME_CODE);
+		return attValue;
+	}
+	
+	public void SetCurrentCharacterCostumeCode(string attValue) {
+		SetAttributeStringValue(BaseGameProfileCharacterAttributes.ATT_CHARACTER_COSTUME_CODE, attValue);
+	}	
 	
 }
 

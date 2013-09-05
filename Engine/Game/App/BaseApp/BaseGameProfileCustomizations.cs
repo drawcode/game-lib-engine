@@ -86,7 +86,7 @@ public class BaseGameProfileCustomization : Profile  {
 		SetAttribute(att);
 	}
 		
-	public virtual List<DataAttribute> GetAchievements() {
+	public virtual List<DataAttribute> GetAll() {
 		return GetAttributesList("customization");
 	}
 	
