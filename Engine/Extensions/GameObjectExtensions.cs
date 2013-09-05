@@ -7,9 +7,17 @@ using UnityEngine;
 public static class GameObjectExtensions {
 
     public static void SetLayerRecursively(this GameObject inst, int layer) {
-        inst.layer = layer;
-        foreach (Transform child in inst.transform)
-            child.gameObject.SetLayerRecursively(layer);
+        if (inst == null)
+            return;
+
+        GameObjectHelper.SetLayerRecursively(inst, layer);
+    }
+	
+	public static void SetLayerRecursively(this GameObject inst, string name) {
+        if (inst == null)
+            return;
+
+        GameObjectHelper.SetLayerRecursively(inst, name);
     }
 
     /// <summary>

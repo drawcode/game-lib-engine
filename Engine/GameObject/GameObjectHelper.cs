@@ -11,6 +11,26 @@ public static class GameObjectHelper {
 	public static float scaleMin = .25f;
 	public static float scaleMax = 3.5f;
 	public static bool deferTap = false;
+	
+	 public static void SetLayerRecursively(GameObject inst, int layer) {
+        if (inst == null)
+            return;
+		
+        inst.layer = layer;
+		
+        foreach (Transform child in inst.transform)
+            child.gameObject.SetLayerRecursively(layer);
+    }
+	
+	public static void SetLayerRecursively(GameObject inst, string name) {
+        if (inst == null)
+            return;
+		
+        inst.layer = LayerMask.NameToLayer(name);
+		
+        foreach (Transform child in inst.transform)
+            child.gameObject.SetLayerRecursively(LayerMask.NameToLayer(name));
+    }
 
     public static void StopSounds(GameObject inst) {
         if (inst == null)

@@ -583,17 +583,17 @@ public class DisplayRecordAchievement {
 
 public class BaseEntity : DataObject {
 
-    public string status { get; set; }
+    public string status;
 
-    public string uuid { get; set; }
+    public string uuid;
 
-    public DateTime date_modified { get; set; }
+    public DateTime date_modified;
 
-    public bool active { get; set; }
+    public bool active;
 
-    public DateTime date_created { get; set; }
+    public DateTime date_created;
 
-    public string type { get; set; }
+    public string type;
 
     public BaseEntity() {
         Reset();
@@ -637,13 +637,13 @@ public class BaseResponse {
 
 public class BaseMeta : BaseEntity {
 
-    public string code { get; set; }
+    public string code;
 
-    public string display_name { get; set; }
+    public string display_name;
 
-    public string name { get; set; }
+    public string name;
 
-    public string description { get; set; }
+    public string description;
 
     public BaseMeta() {
         Reset();
