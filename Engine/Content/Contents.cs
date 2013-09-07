@@ -1554,7 +1554,7 @@ public class Contents : MonoBehaviour {
 	// ----------------------------------------------------------------------------------
 	// HANDLERS	
 	
-	void handleDownloadableAppContentListFilesCallback(Engine.Networking.WebRequest.ResponseObject response) {
+	void handleDownloadableAppContentListFilesCallback(Engine.Networking.WebRequests.ResponseObject response) {
 		
 		response = handleResponseObject(response);
 		
@@ -1611,7 +1611,7 @@ public class Contents : MonoBehaviour {
 		}
 	}
 		
-	void handleDownloadableAppContentListSyncCallback(Engine.Networking.WebRequest.ResponseObject response) {
+	void handleDownloadableAppContentListSyncCallback(Engine.Networking.WebRequests.ResponseObject response) {
 		
 		response = handleResponseObject(response);
 		
@@ -1671,7 +1671,7 @@ public class Contents : MonoBehaviour {
 	// ----------------------------------------------------------------------------------
 	// HANDLERS - DEFAULT
 	
-	void handleDownloadAssetBundleCallback(Engine.Networking.WebRequest.ResponseObject response) {
+	void handleDownloadAssetBundleCallback(Engine.Networking.WebRequests.ResponseObject response) {
 		
 		/*
 		 * 
@@ -1739,7 +1739,7 @@ public class Contents : MonoBehaviour {
 		*/
 	}
 		
-	void handleDownloadableContentInfoCallback(Engine.Networking.WebRequest.ResponseObject response) {
+	void handleDownloadableContentInfoCallback(Engine.Networking.WebRequests.ResponseObject response) {
 		
 		response = handleResponseObject(response);
 		
@@ -1805,7 +1805,7 @@ public class Contents : MonoBehaviour {
 	//HandleDownloadableContentSetSyncCallback
 	
 	void handleDownloadableContentSetSyncCallback(
-		Engine.Networking.WebRequest.ResponseObject response) {
+		Engine.Networking.WebRequests.ResponseObject response) {
 		
 		response = handleResponseObject(response);
 		
@@ -1869,7 +1869,7 @@ public class Contents : MonoBehaviour {
 		}
 	}
 	
-	void handleDownloadableFileCallback(Engine.Networking.WebRequest.ResponseObject response) {
+	void handleDownloadableFileCallback(Engine.Networking.WebRequests.ResponseObject response) {
 		
 		response = handleResponseObject(response);
 		
@@ -1907,7 +1907,7 @@ public class Contents : MonoBehaviour {
 							"Content verified, downloading and loading pack." );
 						//LogUtil.Log("url:" + url);
 						//StartCoroutine(Contents.SceneLoadFromCacheOrDownloadCo(url));
-						//WebRequest.Instance.Request(
+						//WebRequests.Instance.Request(
 					}
 				}
 				else {			
@@ -1932,20 +1932,20 @@ public class Contents : MonoBehaviour {
 		}
 	}
 			
-	//public WebRequest.ResponseObject HandleResponseObjectAssetBundle(WebRequest.ResponseObject responseObject) {		
+	//public WebRequests.ResponseObject HandleResponseObjectAssetBundle(WebRequests.ResponseObject responseObject) {		
 		
 	//}
 	
-	public static Engine.Networking.WebRequest.ResponseObject HandleResponseObject(
-		Engine.Networking.WebRequest.ResponseObject responseObject) {
+	public static Engine.Networking.WebRequests.ResponseObject HandleResponseObject(
+		Engine.Networking.WebRequests.ResponseObject responseObject) {
 		if(isInst) {
 			return Instance.handleResponseObject(responseObject);
 		}
 		return null;
 	}
 	
-	public Engine.Networking.WebRequest.ResponseObject handleResponseObject(
-		Engine.Networking.WebRequest.ResponseObject responseObject) {
+	public Engine.Networking.WebRequests.ResponseObject handleResponseObject(
+		Engine.Networking.WebRequests.ResponseObject responseObject) {
 		
 		bool serverError = false;
 		
@@ -2083,8 +2083,8 @@ public class Contents : MonoBehaviour {
 		string url = getDownloadContentItemUrl(
 			game, version, platform, pack);
 		
-		WebRequest.Instance.Request(
-			WebRequest.RequestType.HTTP_POST, url, data, 
+		WebRequests.Instance.Request(
+			WebRequests.RequestType.HTTP_POST, url, data, 
 			handleDownloadableContentInfoCallback);
 		
 		contentItemStatus = new ContentItemStatus();
@@ -2107,8 +2107,8 @@ public class Contents : MonoBehaviour {
 		downloadInProgress = true;
 		
 		string url = getContentSetUrl(game, version, platform);
-		WebRequest.Instance.Request(
-			WebRequest.RequestType.HTTP_GET, url, 
+		WebRequests.Instance.Request(
+			WebRequests.RequestType.HTTP_GET, url, 
 			handleDownloadableContentSetSyncCallback);
 		
 		Messenger<string>.Broadcast(
@@ -2126,8 +2126,8 @@ public class Contents : MonoBehaviour {
 		
 		downloadInProgress = true;
 		
-		WebRequest.Instance.Request(
-			WebRequest.RequestType.HTTP_GET, url, 
+		WebRequests.Instance.Request(
+			WebRequests.RequestType.HTTP_GET, url, 
 			handleDownloadableFileCallback);
 		
 		Messenger<string>.Broadcast(
@@ -2174,8 +2174,8 @@ public class Contents : MonoBehaviour {
 		
 		downloadUrlObjects.Clear();
 		
-		WebRequest.Instance.Request(
-			WebRequest.RequestType.HTTP_POST, url, data,   
+		WebRequests.Instance.Request(
+			WebRequests.RequestType.HTTP_POST, url, data,   
 			handleDownloadableAppContentListSyncCallback);
 		
 		ChangeSyncState(ContentSyncState.SyncProcessContentList);
@@ -2205,8 +2205,8 @@ public class Contents : MonoBehaviour {
 		
 		downloadUrlObjects.Clear();
 		
-		WebRequest.Instance.Request(
-			WebRequest.RequestType.HTTP_POST, url, data,   
+		WebRequests.Instance.Request(
+			WebRequests.RequestType.HTTP_POST, url, data,   
 			handleDownloadableAppContentListFilesCallback);
 		
 		Messenger<object>.Broadcast(
@@ -2782,7 +2782,7 @@ public class Contents : MonoBehaviour {
 			Messenger<object>.Broadcast(
 				ContentMessages.ContentAppContentListFileDownloadStarted,
 					"Download Started");
-		WebRequest.Instance.RequestBytes(url, handleRequestDownloadBytesCallback);
+		WebRequests.Instance.RequestBytes(url, handleRequestDownloadBytesCallback);
 	}
 	
 	// ----------------------------------------------------------------------------------

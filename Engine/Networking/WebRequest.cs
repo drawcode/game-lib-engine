@@ -12,9 +12,9 @@ using Engine.Events;
 
 namespace Engine.Networking {
 
-public class WebRequest : MonoBehaviour {
+public class WebRequests : MonoBehaviour {
 	
-	public static WebRequest Instance;
+	public static WebRequests Instance;
 
 	public bool processing = false;
 	
@@ -80,14 +80,14 @@ public class WebRequest : MonoBehaviour {
 	// -------------------------------------------------------------------
 	// Singleton access
 
-	private static WebRequest _instance = null;
+	private static WebRequests _instance = null;
 
-	public static WebRequest instance {
+	public static WebRequests instance {
 		get {
 			if(_instance == null) {
-				_instance = FindObjectOfType(typeof(WebRequest)) as WebRequest;
+				_instance = FindObjectOfType(typeof(WebRequests)) as WebRequests;
 				if(_instance == null)
-					LogUtil.LogError("Could not locate an WebRequest object. You have to have exactly one WebRequest in the scene.");
+					LogUtil.LogError("Could not locate an WebRequests object. You have to have exactly one WebRequests in the scene.");
 			}
 
 			return _instance;
@@ -107,12 +107,12 @@ public class WebRequest : MonoBehaviour {
 	}
 
 	public void Init() {
-		LogUtil.Log("WebRequest Init");
+		LogUtil.Log("WebRequests Init");
 	}
 
 	void Start() {
 		Init();
-		LogUtil.Log("WebRequest Start");
+		LogUtil.Log("WebRequests Start");
 	}
 
 	void OnApplicationQuit() {
@@ -122,7 +122,7 @@ public class WebRequest : MonoBehaviour {
 	// -------------------------------------------------------------------
 	// CUSTOM Methods
 
-	public void ServiceResponseObjectCallback(WebRequest.ResponseObject responseObject) {
+	public void ServiceResponseObjectCallback(WebRequests.ResponseObject responseObject) {
 		LogUtil.Log("ServiceResponseTextCallback:" + responseObject.dataValueText);
 	}
 
@@ -256,7 +256,7 @@ public class WebRequest : MonoBehaviour {
 	public void RequestStartCoroutineEnumerator(string url, HandleResponseObjectCallback callback, WWWForm form) {
 		
 		if(Context.Current.hasNetworkAccess) {
-			//Debug.Log("WebRequest: url:" + url);
+			//Debug.Log("WebRequests: url:" + url);
 			StartCoroutine(WaitForResponse(url, form, callback));
 		}
 		else {			
@@ -381,7 +381,7 @@ public class WebRequest : MonoBehaviour {
 	public void RequestStartBytesCoroutineEnumerator(string url, HandleResponseBytesCallback callback, WWWForm form) {
 		
 		if(Context.Current.hasNetworkAccess) {
-			//Debug.Log("WebRequest: url:" + url);
+			//Debug.Log("WebRequests: url:" + url);
 			StartCoroutine(WaitForResponseBytes(url, form, callback));
 		}
 		else {			
@@ -484,7 +484,7 @@ public class WebRequest : MonoBehaviour {
 	public void RequestStartTextCoroutineEnumerator(string url, HandleResponseTextCallback callback, WWWForm form) {
 		
 		if(Context.Current.hasNetworkAccess) {
-			//Debug.Log("WebRequest: url:" + url);
+			//Debug.Log("WebRequests: url:" + url);
 			StartCoroutine(WaitForResponseText(url, form, callback));
 		}
 		else {			

@@ -116,11 +116,11 @@ public class GoogleTracker
 			
 			//Debug.Log("TrackPageView: url: " + url);
 			
-			Engine.Networking.WebRequest.Instance.RequestGet(url, null, HandleTrackPageViewCallback);
+			Engine.Networking.WebRequests.Instance.RequestGet(url, null, HandleTrackPageViewCallback);
 		}
 	}
 	
-	void HandleTrackPageViewCallback(Engine.Networking.WebRequest.ResponseObject response) {
+	void HandleTrackPageViewCallback(Engine.Networking.WebRequests.ResponseObject response) {
 		//string responseText = response.www.text;
 		//Debug.Log("HandleTrackPageViewCallback responseText:" + responseText);		
 	}
@@ -154,11 +154,11 @@ public class GoogleTracker
 			
 			//Debug.Log("TrackEvent: url: " + url);
 			
-			Engine.Networking.WebRequest.Instance.RequestGet(url, null, HandleTrackEventCallback);
+			Engine.Networking.WebRequests.Instance.RequestGet(url, null, HandleTrackEventCallback);
 		}
 	}
 	
-	void HandleTrackEventCallback(Engine.Networking.WebRequest.ResponseObject response) {
+	void HandleTrackEventCallback(Engine.Networking.WebRequests.ResponseObject response) {
 		//string responseText = response.www.text;
 		//Debug.Log("HandleTrackEventCallback responseText:" + responseText);		
 	}
@@ -198,11 +198,11 @@ public class GoogleTracker
 			
 			//Debug.Log("TrackTransaction: url: " + url);
 			
-			Engine.Networking.WebRequest.Instance.RequestGet(url, null, HandleTrackTransactionCallback);
+			Engine.Networking.WebRequests.Instance.RequestGet(url, null, HandleTrackTransactionCallback);
 		}
 	}
 	
-	void HandleTrackTransactionCallback(Engine.Networking.WebRequest.ResponseObject response) {
+	void HandleTrackTransactionCallback(Engine.Networking.WebRequests.ResponseObject response) {
 		//string responseText = response.www.text;
 		//Debug.Log("HandleTrackTransactionCallback responseText:" + responseText);		
 	}

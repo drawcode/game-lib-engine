@@ -45,6 +45,17 @@ public class BaseGameProfileAttributes {
     public static string ATT_CUSTOM_AUDIO = "custom-audio";
     public static string ATT_CUSTOM_COLORS = "custom-colors";
     public static string ATT_CUSTOM_COLORS_RUNNER = "custom-colors-runner";
+	
+	// SOCIAL
+	
+    public static string ATT_AUTH_SOCIAL_NETWORK_TYPE = "auth-social-network-type";
+    public static string ATT_AUTH_SOCIAL_NETWORK_USERNAME = "auth-social-network-username";
+    public static string ATT_AUTH_SOCIAL_NETWORK_NAME = "auth-social-network-name";
+    public static string ATT_AUTH_SOCIAL_NETWORK_FNAME = "auth-social-network-fname";
+    public static string ATT_AUTH_SOCIAL_NETWORK_LNAME = "auth-social-network-lname";
+    public static string ATT_AUTH_SOCIAL_NETWORK_USERID = "auth-social-network-userid";
+    public static string ATT_AUTH_SOCIAL_NETWORK_AUTHTOKEN_USER = "auth-social-network-authtoken-user";
+    public static string ATT_AUTH_SOCIAL_NETWORK_AUTHTOKEN_APP = "auth-social-network-authtoken-app";
 }
 
 public class BaseGameProfileDataState {
@@ -648,6 +659,123 @@ public class BaseGameProfile : Profile {
 
         return currentValue;
     }
+	
+	// SOCIAL
+	
+	// auth/social
+        
+        public string GetSocialNetworkKey(string type, string val) {
+                return val + "-" + type;
+        }
+        
+        public bool IsSocialNetworkUserFound() {
+                string userId = GetSocialNetworkUserId();
+                if(!string.IsNullOrEmpty(userId)) {
+                        return true;
+                }
+                return false;
+        }
+        
+        public string GetSocialNetworkType() {
+                return GetAttributeStringValue(BaseGameProfileAttributes.ATT_AUTH_SOCIAL_NETWORK_TYPE);
+        }
+        
+        public void SetSocialNetworkProfileState(string type, string userId) {
+                SetSocialNetworkType(type);
+                SetSocialNetworkUserId(userId);
+        }
+        
+        public void SetSocialNetworkType(string type) {
+                SetAttributeStringValue(BaseGameProfileAttributes.ATT_AUTH_SOCIAL_NETWORK_TYPE, type);
+        }
+        
+        // user id
+        
+        public string GetSocialNetworkUserId() {
+                string type = GetSocialNetworkType();
+                string userId = GetAttributeStringValue(
+                        GetSocialNetworkKey(
+                                type, 
+                                BaseGameProfileAttributes.ATT_AUTH_SOCIAL_NETWORK_USERID));         
+                return userId;
+        }
+        
+        public void SetSocialNetworkUserId(string userId) {
+                SetAttributeStringValue(
+                        GetSocialNetworkKey(
+                                GetSocialNetworkType(), 
+                                BaseGameProfileAttributes.ATT_AUTH_SOCIAL_NETWORK_USERID), userId);         
+        }
+        
+        // username
+        
+        public string GetSocialNetworkUserName() {
+                string type = GetSocialNetworkType();
+                string val = GetAttributeStringValue(
+                        GetSocialNetworkKey(
+                                type, 
+                                BaseGameProfileAttributes.ATT_AUTH_SOCIAL_NETWORK_USERNAME));               
+                return val;
+        }
+        
+        public void SetSocialNetworkUserName(string userName) {
+                SetAttributeStringValue(
+                        GetSocialNetworkKey(
+                                GetSocialNetworkType(), 
+                                BaseGameProfileAttributes.ATT_AUTH_SOCIAL_NETWORK_USERNAME), userName);             
+        }
+        
+        // Name
+        
+        public string GetSocialNetworkName() {
+                string type = GetSocialNetworkType();
+                string val = GetAttributeStringValue(
+                        GetSocialNetworkKey(
+                                type, 
+                                BaseGameProfileAttributes.ATT_AUTH_SOCIAL_NETWORK_NAME));           
+                return val;
+        }
+        
+        public void SetSocialNetworkName(string name) {
+                SetAttributeStringValue(
+                        GetSocialNetworkKey(
+                                GetSocialNetworkType(), 
+                                BaseGameProfileAttributes.ATT_AUTH_SOCIAL_NETWORK_NAME), name);             
+        }
+        
+        public string GetSocialNetworkFirstName() {
+                string type = GetSocialNetworkType();
+                string val = GetAttributeStringValue(
+                        GetSocialNetworkKey(
+                                type, 
+                                BaseGameProfileAttributes.ATT_AUTH_SOCIAL_NETWORK_FNAME));          
+                return val;
+        }
+        
+        public void SetSocialNetworkFirstName(string name) {
+                SetAttributeStringValue(
+                        GetSocialNetworkKey(
+                                GetSocialNetworkType(), 
+                                BaseGameProfileAttributes.ATT_AUTH_SOCIAL_NETWORK_FNAME), name);            
+        }
+        
+        // auth token user
+        
+        public string GetSocialNetworkAuthTokenUser() {
+                string type = GetSocialNetworkType();
+                string val = GetAttributeStringValue(
+                        GetSocialNetworkKey(
+                                type, 
+                                BaseGameProfileAttributes.ATT_AUTH_SOCIAL_NETWORK_AUTHTOKEN_USER));         
+                return val;
+        }
+        
+        public void SetSocialNetworkAuthTokenUser(string token) {
+                SetAttributeStringValue(
+                        GetSocialNetworkKey(
+                                GetSocialNetworkType(), 
+                                BaseGameProfileAttributes.ATT_AUTH_SOCIAL_NETWORK_AUTHTOKEN_USER), token);          
+        }
 
     /*
 
