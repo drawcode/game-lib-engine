@@ -375,7 +375,15 @@ public class CustomPlayerColorsRunner : DataObject {
     public string colorDisplayName;
 
     public CustomColorItem helmetColor;
-    public CustomColorItem facemaskColor;
+    public CustomColorItem helmetFacemaskColor;
+    public CustomColorItem helmetHighlightColor;
+    public CustomColorItem jerseyColor;
+    public CustomColorItem jerseyHighlightColor;
+    public CustomColorItem pantsColor;
+	
+    public CustomColorItem extra1Color;
+    public CustomColorItem extra2Color;
+    public CustomColorItem extra3Color;
 
     public CustomPlayerColorsRunner() {
         Reset();
@@ -392,16 +400,40 @@ public class CustomPlayerColorsRunner : DataObject {
 
         helmetColor = new CustomColorItem();
 		helmetColor.FromColor(new Color(1.000f, 0.189f, 0.192f, 1.000f));
-        facemaskColor = new CustomColorItem();
-		facemaskColor.FromColor(new Color(0.838f, 1.000f, 0.595f, 1.000f));
+        helmetFacemaskColor = new CustomColorItem();
+		helmetFacemaskColor.FromColor(new Color(0.838f, 1.000f, 0.595f, 1.000f));
 		
+        helmetHighlightColor = new CustomColorItem();
+		helmetHighlightColor.FromColor(new Color(0.838f, 1.000f, 0.595f, 1.000f));
+		
+        jerseyColor = new CustomColorItem();
+		jerseyColor.FromColor(new Color(1.000f, 0.189f, 0.192f, 1.000f));
+        jerseyHighlightColor = new CustomColorItem();
+		jerseyHighlightColor.FromColor(new Color(0.838f, 1.000f, 0.595f, 1.000f));
+		
+        pantsColor = new CustomColorItem();
+		pantsColor.FromColor(new Color(1.000f, 0.189f, 0.192f, 1.000f));
+		
+        extra1Color = new CustomColorItem();
+		extra1Color.FromColor(new Color(1.000f, 0.189f, 0.192f, 1.000f));
+        extra2Color = new CustomColorItem();
+		extra2Color.FromColor(new Color(1.000f, 0.189f, 0.192f, 1.000f));
+        extra3Color = new CustomColorItem();
+		extra3Color.FromColor(new Color(1.000f, 0.189f, 0.192f, 1.000f));
     }
 
     public override string ToString() {
         System.Text.StringBuilder sb = new System.Text.StringBuilder();
         sb.Append(String.Format("CustomPlayerColors name: {0}", colorDisplayName));
-        sb.Append(String.Format("\r\n\r\nhelmetColor: {0}", helmetColor.ToString()));
-        sb.Append(String.Format("\r\n\r\nfacemaskColor: {0}", facemaskColor.ToString()));
+        sb.Append(String.Format("\r\n\r\n helmetColor: {0}", helmetColor.ToString()));
+        sb.Append(String.Format("\r\n\r\n helmetFacemaskColor: {0}", helmetFacemaskColor.ToString()));
+        sb.Append(String.Format("\r\n\r\n helmetHighlightColor: {0}", helmetHighlightColor.ToString()));
+        sb.Append(String.Format("\r\n\r\n jerseyColor: {0}", jerseyColor.ToString()));
+        sb.Append(String.Format("\r\n\r\n jerseyHighlightColor: {0}", jerseyHighlightColor.ToString()));
+        sb.Append(String.Format("\r\n\r\n pantsColor: {0}", pantsColor.ToString()));
+        sb.Append(String.Format("\r\n\r\n extra1Color: {0}", extra1Color.ToString()));
+        sb.Append(String.Format("\r\n\r\n extra2Color: {0}", extra2Color.ToString()));
+        sb.Append(String.Format("\r\n\r\n extra3Color: {0}", extra3Color.ToString()));
         return sb.ToString();
     }
 }
