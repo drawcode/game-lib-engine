@@ -400,6 +400,7 @@ public class CustomPlayerColorsRunner : DataObject {
 
         helmetColor = new CustomColorItem();
 		helmetColor.FromColor(new Color(1.000f, 0.189f, 0.192f, 1.000f));
+		
         helmetFacemaskColor = new CustomColorItem();
 		helmetFacemaskColor.FromColor(new Color(0.838f, 1.000f, 0.595f, 1.000f));
 		
@@ -408,6 +409,7 @@ public class CustomPlayerColorsRunner : DataObject {
 		
         jerseyColor = new CustomColorItem();
 		jerseyColor.FromColor(new Color(1.000f, 0.189f, 0.192f, 1.000f));
+		
         jerseyHighlightColor = new CustomColorItem();
 		jerseyHighlightColor.FromColor(new Color(0.838f, 1.000f, 0.595f, 1.000f));
 		
@@ -416,8 +418,10 @@ public class CustomPlayerColorsRunner : DataObject {
 		
         extra1Color = new CustomColorItem();
 		extra1Color.FromColor(new Color(1.000f, 0.189f, 0.192f, 1.000f));
+		
         extra2Color = new CustomColorItem();
 		extra2Color.FromColor(new Color(1.000f, 0.189f, 0.192f, 1.000f));
+		
         extra3Color = new CustomColorItem();
 		extra3Color.FromColor(new Color(1.000f, 0.189f, 0.192f, 1.000f));
     }

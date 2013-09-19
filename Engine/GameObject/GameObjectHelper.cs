@@ -522,27 +522,106 @@ public static class GameObjectHelper {
 	
 	public static Material GetMaterial(GameObject inst, string name) {
 		
-		MeshRenderer[] renderers = inst.GetComponentsInChildren<MeshRenderer>(true);
+		MeshRenderer[] renderers 
+			= inst.GetComponents<MeshRenderer>();
 		
 		foreach(MeshRenderer mesh in renderers) {
 			foreach(Material m in mesh.materials) {
-				if(m.name.ToLower().Contains(name.ToLower())) {
+				if(FilterMaterialName(m.name) == FilterMaterialName(name)) {
 					return m;
 				}
 			}
 		}
 		
-		MeshRenderer[] renderersChildren = inst.GetComponentsInChildren<MeshRenderer>(true);
+		MeshRenderer[] renderersChildren 
+			= inst.GetComponentsInChildren<MeshRenderer>(true);
 		
 		foreach(MeshRenderer mesh in renderersChildren) {
 			foreach(Material m in mesh.materials) {
-				if(m.name.ToLower().Contains(name.ToLower())) {
+				if(FilterMaterialName(m.name) == FilterMaterialName(name)) {
+					return m;
+				}
+			}
+		}
+		
+		SkinnedMeshRenderer[] skinnedRenderers 
+			= inst.GetComponents<SkinnedMeshRenderer>();
+		
+		foreach(SkinnedMeshRenderer mesh in skinnedRenderers) {
+			foreach(Material m in mesh.materials) {
+				if(FilterMaterialName(m.name) == FilterMaterialName(name)) {
+					return m;
+				}
+			}
+		}
+		
+		SkinnedMeshRenderer[] skinnedRenderersChildren 
+			= inst.GetComponentsInChildren<SkinnedMeshRenderer>(true);
+		
+		foreach(SkinnedMeshRenderer mesh in skinnedRenderersChildren) {
+			foreach(Material m in mesh.materials) {
+				if(FilterMaterialName(m.name) == FilterMaterialName(name)) {
 					return m;
 				}
 			}
 		}
 		
 		return null;
+	}
+	
+	public static List<Material> GetMaterials(GameObject inst, string name) {
+		
+		List<Material> materials = new List<Material>();
+		
+		MeshRenderer[] renderers 
+			= inst.GetComponents<MeshRenderer>();
+		
+		foreach(MeshRenderer mesh in renderers) {
+			foreach(Material m in mesh.materials) {
+				if(FilterMaterialName(m.name) == FilterMaterialName(name)) {
+					materials.Add(m);
+				}
+			}
+		}
+		
+		MeshRenderer[] renderersChildren 
+			= inst.GetComponentsInChildren<MeshRenderer>(true);
+		
+		foreach(MeshRenderer mesh in renderersChildren) {
+			foreach(Material m in mesh.materials) {
+				if(FilterMaterialName(m.name) == FilterMaterialName(name)) {
+					materials.Add(m);
+				}
+			}
+		}
+		
+		SkinnedMeshRenderer[] skinnedRenderers 
+			= inst.GetComponents<SkinnedMeshRenderer>();
+		
+		foreach(SkinnedMeshRenderer mesh in skinnedRenderers) {
+			foreach(Material m in mesh.materials) {
+				if(FilterMaterialName(m.name) == FilterMaterialName(name)) {
+					materials.Add(m);
+				}
+			}
+		}
+		
+		SkinnedMeshRenderer[] skinnedRenderersChildren 
+			= inst.GetComponentsInChildren<SkinnedMeshRenderer>(true);
+		
+		foreach(SkinnedMeshRenderer mesh in skinnedRenderersChildren) {
+			foreach(Material m in mesh.materials) {
+				if(FilterMaterialName(m.name) == FilterMaterialName(name)) {
+					materials.Add(m);
+				}
+			}
+		}
+		
+		return materials;
+	}
+	
+	public static string FilterMaterialName(string name) {
+		return name.ToLower().Replace(" (instance)","").Replace(" (clone)","");
 	}
 	
 	public static bool SetMaterialColor(GameObject inst, string name, Color color, bool all) {
@@ -555,7 +634,7 @@ public static class GameObjectHelper {
 		foreach(MeshRenderer mesh in renderers) {
 			foreach(Material m in mesh.materials) {
 				//LogUtil.Log("SetMaterialColor m:" + m.name);
-				if(m.name.ToLower().Contains(name.ToLower())) {
+				if(FilterMaterialName(m.name) == FilterMaterialName(name)) {
 					m.color = color;
 					LogUtil.Log("SetMaterialColor color:" + color);
 					if(!all)
@@ -570,7 +649,37 @@ public static class GameObjectHelper {
 		foreach(MeshRenderer mesh in renderersChildren) {
 			foreach(Material m in mesh.materials) {
 				//LogUtil.Log("SetMaterialColor m:" + m.name);
-				if(m.name.ToLower().Contains(name.ToLower())) {
+				if(FilterMaterialName(m.name) == FilterMaterialName(name)) {
+					m.color = color;
+					LogUtil.Log("SetMaterialColor color:" + color);
+					if(!all)
+						return true;
+				}
+			}
+		}
+		
+		SkinnedMeshRenderer[] skinnedRenderers = inst.GetComponents<SkinnedMeshRenderer>();
+		//LogUtil.Log("SetMaterialColor renderers:" + renderers.Length );
+		
+		foreach(SkinnedMeshRenderer mesh in skinnedRenderers) {
+			foreach(Material m in mesh.materials) {
+				//LogUtil.Log("SetMaterialColor m:" + m.name);
+				if(FilterMaterialName(m.name) == FilterMaterialName(name)) {
+					m.color = color;
+					LogUtil.Log("SetMaterialColor color:" + color);
+					if(!all)
+						return true;
+				}
+			}
+		}
+		
+		SkinnedMeshRenderer[] skinnedRenderersChildren = inst.GetComponentsInChildren<SkinnedMeshRenderer>(true);
+		//LogUtil.Log("SetMaterialColor renderersChildren:" + renderersChildren.Length );
+		
+		foreach(SkinnedMeshRenderer mesh in skinnedRenderersChildren) {
+			foreach(Material m in mesh.materials) {
+				//LogUtil.Log("SetMaterialColor m:" + m.name);
+				if(FilterMaterialName(m.name) == FilterMaterialName(name)) {
 					m.color = color;
 					LogUtil.Log("SetMaterialColor color:" + color);
 					if(!all)
