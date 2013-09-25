@@ -303,7 +303,37 @@ public static class GameObjectHelper {
 		    go.rigidbody.angularVelocity = (new Vector3(0,-delta.x,0));
 		}
 	}
+	
+	public static bool HasComponent<T>(GameObject inst) where T : Component {
+		if (inst == null) {
+            return false;
+        }
+		
+		if(inst.GetComponentsInChildren<T>(true).Length > 0
+			|| inst.GetComponents<T>().Length > 0) {
+			return true;
+		}
+		
+		return false;
+	}
 
+    public static void Show(GameObject inst) {
+        //LogUtil.Log("Show:" + inst.name);
+        if (inst != null) {
+            if (!inst.activeSelf) {
+                inst.SetActive(true);
+            }
+			ShowRenderers(inst);
+        }
+    }
+
+    public static void Hide(GameObject inst) {
+        //LogUtil.Log("Hide:" + inst.name);
+        if (inst != null) {
+            HideRenderers(inst);
+            inst.SetActive(false);
+        }
+    }
 
 
 	public static void ShowObject(GameObject inst) {

@@ -141,31 +141,26 @@ public static class GameObjectExtensions {
         }
         return null;
     }
+	
+	public static bool HasComponent<T>(this GameObject inst) where T : Component {		
+        if (inst == null)
+            return false;
+
+        return GameObjectHelper.HasComponent<T>(inst);
+	}
 
     public static void Show(this GameObject inst) {
+        if (inst == null)
+            return;
 
-        //LogUtil.Log("Show:" + inst.name);
-        if (inst != null) {
-            if (!inst.activeSelf) {
-                inst.SetActive(true);
-            }
-            if (inst.renderer != null) {
-                if (!inst.renderer.enabled) {
-                    inst.renderer.enabled = true;
-                }
-            }
-        }
+        GameObjectHelper.Show(inst);
     }
 
     public static void Hide(this GameObject inst) {
+        if (inst == null)
+            return;
 
-        //LogUtil.Log("Hide:" + inst.name);
-        if (inst != null) {
-            if (inst.renderer != null) {
-                inst.renderer.enabled = false;
-            }
-            inst.SetActive(false);
-        }
+        GameObjectHelper.Hide(inst);
     }
 
     public static bool IsReady(this UnityEngine.Object inst) {
