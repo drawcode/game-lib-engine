@@ -36,6 +36,8 @@ public class DataObjects<T> {
     }
 
     public virtual void LoadData() {
+		
+		dataStorage = AppConfigs.dataStorage;
 
         switch (dataStorage) {
 
@@ -67,9 +69,34 @@ public class DataObjects<T> {
     }
 
     public virtual void LoadDataFromResources() {
-        string data = LoadDataFromResources(path);
-
-        //LogUtil.Log("BaseGameAchievements:" + data);
+        
+		string pathResources = path;
+		
+		if(!path.Contains(ContentsConfig.contentAppFolder)) {			
+			
+			pathResources = pathResources.Replace("data/","");
+			
+			pathResources = 
+				PathUtil.Combine(Contents.appCachePathData, pathResources)
+					.Replace(Application.persistentDataPath, "")
+					.Replace(Application.dataPath, "");
+			
+			if(pathResources.EndsWith(".json")) {
+				//pathResources += ".txt";
+			}
+			
+			if(pathResources.StartsWith("/")) {
+				pathResources = pathResources.TrimStart('/');
+			}
+			
+			if(pathResources.Contains("/" + ContentsConfig.contentVersion + "/")) {
+				pathResources = pathResources.Replace("/" + ContentsConfig.contentVersion + "/","/version/");
+			}
+		}
+		
+		Debug.Log("LoadDataFromResources:" + pathResources);
+		
+		string data = LoadDataFromResources(pathResources);
         LoadDataFromString(data);
     }
 
@@ -340,14 +367,14 @@ public class DataObjects<T> {
     public string LoadDataFromResources(string resourcesPath) {
         string fileData = "";
 
-        ////Debug.Log("LoadDataFromResources:resourcesPath:" + resourcesPath + " " + pathKey);
+        Debug.Log("LoadDataFromResources:resourcesPath:" + resourcesPath + " " + pathKey);
         TextAsset textData = Resources.Load(resourcesPath, typeof(TextAsset)) as TextAsset;
         if (textData != null) {
             fileData = textData.text;
         }
         LoadDataFromString(fileData);
 
-        ////Debug.Log("LoadDataFromResources:fileData:" + fileData + " " + pathKey);
+        Debug.Log("LoadDataFromResources:fileData:" + fileData + " " + pathKey);
         return fileData;
     }
 
