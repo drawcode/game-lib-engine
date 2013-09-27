@@ -6,6 +6,10 @@ using System.IO;
 using Engine.Data.Json;
 using Engine.Utility;
 
+public class BaseGameProfileVehicleAttributes {
+	public static string ATT_TEAMS = "teams";
+}	
+
 public class BaseGameProfileVehicles {
 	private static volatile BaseGameProfileVehicle current;
 	private static volatile BaseGameProfileVehicles instance;
@@ -82,7 +86,7 @@ public class BaseGameProfileVehicle : Profile  {
 		return currentValue;
 	}
 		
-	public virtual List<DataAttribute> GetAchievements() {
+	public virtual List<DataAttribute> GetList() {
 		return GetAttributesList("vehicle");
 	}
 	

@@ -84,8 +84,7 @@ public class BaseGameProfileProduct : Profile  {
 	public virtual List<DataAttribute> GetList() {
 		return GetAttributesList("rpg");
 	}
-	
-	
+		
 	// UNLOCKS
 
 	public bool GetPromoUnlocked() {

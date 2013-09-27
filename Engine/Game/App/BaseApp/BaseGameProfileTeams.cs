@@ -6,6 +6,10 @@ using System.IO;
 using Engine.Data.Json;
 using Engine.Utility;
 
+public class BaseGameProfileTeamAttributes {
+	public static string  ATT_TEAMS = "teams";
+}	
+
 public class BaseGameProfileTeams {
 	private static volatile BaseGameProfileTeam current;
 	private static volatile BaseGameProfileTeams instance;

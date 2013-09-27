@@ -30,9 +30,6 @@ public class BaseGameProfileModeAttributes {
 	public static string ATT_CURRENT_RACE_MODE_SERIES_RESULT_SET = "race-mode-endless-result-set";
 }
 
-
-
-
 public class BaseGameProfileModes {
 	private static volatile BaseGameProfileMode current;
 	private static volatile BaseGameProfileModes instance;
@@ -101,10 +98,9 @@ public class BaseGameProfileMode : Profile  {
 		SetAttribute(att);
 	}
 		
-	public virtual List<DataAttribute> GetAchievements() {
+	public virtual List<DataAttribute> GetList() {
 		return GetAttributesList("mode");
-	}
-	
+	}	
 	
 	// GAME MODES
 

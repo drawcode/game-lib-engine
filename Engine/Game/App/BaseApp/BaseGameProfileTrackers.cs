@@ -3,6 +3,10 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 
+public class BaseGameProfileTrackerAttributes {
+	public static string ATT_TEAMS = "teams";
+}	
+
 public class BaseGameProfileTrackers {
 	private static volatile BaseGameProfileTracker current;
 	private static volatile BaseGameProfileTrackers instance;
@@ -79,7 +83,7 @@ public class BaseGameProfileTracker : Profile  {
 		return currentValue;
 	}
 		
-	public virtual List<DataAttribute> GetAchievements() {
+	public virtual List<DataAttribute> GetList() {
 		return GetAttributesList("tracker");
 	}
 	

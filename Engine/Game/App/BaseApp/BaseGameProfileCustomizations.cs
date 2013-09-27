@@ -8,6 +8,8 @@ using Engine.Utility;
 
 public class BaseGameProfileCustomizationAttributes {
 	
+	public static string ATT_CHARACTERS = "att-characters";
+	
 	// CUSTOM
 	
 	public static string ATT_CUSTOM_AUDIO = "custom-audio";
@@ -86,10 +88,9 @@ public class BaseGameProfileCustomization : Profile  {
 		SetAttribute(att);
 	}
 		
-	public virtual List<DataAttribute> GetAll() {
+	public virtual List<DataAttribute> GetList() {
 		return GetAttributesList("customization");
-	}
-	
+	}	
 }
 
 

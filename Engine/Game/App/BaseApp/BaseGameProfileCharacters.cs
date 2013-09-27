@@ -4,12 +4,15 @@ using System.Collections.Generic;
 using System.IO;
 
 using Engine.Data.Json;
+using Engine.Events;
 using Engine.Utility;
 
 public class BaseGameProfileCharacterAttributes {	
 
 	public static string ATT_CHARACTER_CODE = "att-character-code";
 	public static string ATT_CHARACTER_COSTUME_CODE = "att-character-costume-code";
+	
+	public static string ATT_CHARACTERS = "att-characters";
 }	
 
 public class BaseGameProfileCharacters {
@@ -51,6 +54,54 @@ public class BaseGameProfileCharacters {
 	// TODO: Common profile actions, lookup, count, etc
 }
 
+public class GameProfileCharacterItems {
+	
+	public List<GameProfileCharacterItem> items;
+	
+	public GameProfileCharacterItems() {
+		Reset();
+	}
+	
+	public void Reset() {
+		items = new List<GameProfileCharacterItem>();
+	}
+	
+	public GameProfileCharacterItem GetCharacter(string code) {
+		foreach(GameProfileCharacterItem item in items) {
+			if(item.code.ToLower() == code.ToLower()) {
+				return item;
+			}
+		}
+		return null;
+	}
+	
+	public void SetCharacter(string code, GameProfileCharacterItem item) {
+		bool found = false;
+		
+		for(int i = 0; i < items.Count; i++) {
+			if(items[i].code.ToLower() == code.ToLower()) {
+				items[i] = item;
+				found = true;
+				break;
+			}
+		}
+		
+		if(!found) {
+			items.Add(item);
+		}
+	}
+}
+
+public class GameProfileCharacterItem {
+	
+	public bool current = true;
+	public string code = "default";
+	public string characterCode = "default";
+	public string characterCustumeCode = "default";
+	
+	public GameItemRPG characterRPG = new GameItemRPG();
+}
+
 public class BaseGameProfileCharacter : Profile  {
 	// BE CAREFUL adding properties as they will cause a need for a profile conversion
 	// Best way to add items to the profile is the GetAttribute and SetAttribute class as 
@@ -64,6 +115,78 @@ public class BaseGameProfileCharacter : Profile  {
 	public override void Reset() {
 		base.Reset();
 		username = "Player";// + UnityEngine.Random.Range(1, 9999999);
+	}
+	
+	// characters
+	
+	public virtual void SetCharacters(GameProfileCharacterItems obj) {
+        string dataText = JsonMapper.ToJson(obj);
+        LogUtil.Log("SetCharcters: " + dataText);
+        SetAttributeStringValue(BaseGameProfileCharacterAttributes.ATT_CHARACTERS, dataText);
+    }
+
+    public virtual GameProfileCharacterItems GetCharacters() {		
+        GameProfileCharacterItems obj = new GameProfileCharacterItems();
+
+        string key = BaseGameProfileCharacterAttributes.ATT_CHARACTERS;
+
+        if (!CheckIfAttributeExists(key)) {
+
+            SetCharacters(obj);
+			
+            Messenger.Broadcast(BaseGameProfileMessages.ProfileShouldBeSaved);
+        }
+
+        string json = GetAttributeStringValue(key);
+		
+        if (!string.IsNullOrEmpty(json)) {
+			
+            try {
+                LogUtil.Log("GetCharcters: " + json);
+                obj = JsonMapper.ToObject<GameProfileCharacterItems>(json);
+            }
+            catch (Exception e) {
+                obj = new GameProfileCharacterItems();
+                LogUtil.Log(e);
+            }
+        }
+		
+		if(obj.items.Count == 0) {
+			// add default
+			obj.SetCharacter("default", GetCurrentCharacter());
+		}		
+		
+        return obj;
+    }
+	
+	// character	
+	
+	public GameItemRPG GetCurrentCharacterRPG() {
+		return GetCurrentCharacter().characterRPG;
+	}
+	
+	public GameProfileCharacterItem GetCurrentCharacter() {
+		return GetCharacter(GetCurrentCharacterCode());
+	}
+	
+	public GameItemRPG GetCharacterRPG(string code) {
+		return GetCharacter(code).characterRPG;
+	}
+	
+	public GameProfileCharacterItem GetCharacter(string code) {
+		
+		GameProfileCharacterItem item = GetCharacters().GetCharacter(code);
+		
+		if(item == null) {
+			item = new GameProfileCharacterItem();
+			GetCharacters().SetCharacter(code, item);
+		}
+		
+		return item;
+	}	
+	
+	public void SetCharacter(string code, GameProfileCharacterItem item) {
+		GetCharacters().SetCharacter(code, item);
 	}
 		
 	// customizations		
@@ -87,13 +210,13 @@ public class BaseGameProfileCharacter : Profile  {
 		
 		return currentValue;
 	}
-		
-	public virtual List<DataAttribute> GetAll() {
-		return GetAttributesList("character");
-	}
 	
+	public virtual List<DataAttribute> GetList() {
+		return GetAttributesList("character");
+	}	
 	
 	// CHARACTER - Player specific
+	
 	
 	public string GetCurrentCharacterCode(){
 		return GetCurrentCharacterCode("default");
@@ -123,8 +246,5 @@ public class BaseGameProfileCharacter : Profile  {
 	
 	public void SetCurrentCharacterCostumeCode(string attValue) {
 		SetAttributeStringValue(BaseGameProfileCharacterAttributes.ATT_CHARACTER_COSTUME_CODE, attValue);
-	}	
-	
+	}		
 }
-
-

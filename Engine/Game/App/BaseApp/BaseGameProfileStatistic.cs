@@ -6,6 +6,10 @@ using System.IO;
 using Engine.Data.Json;
 using Engine.Utility;
 
+public class BaseGameProfileStatisticAttributes {	
+
+}	
+
 public class BaseGameProfileStatistics {
     private static volatile BaseGameProfileStatistic current;
     private static volatile BaseGameProfileStatistics instance;
@@ -89,7 +93,7 @@ public class BaseGameProfileStatistic : Profile {
         return currentValue;
     }
 
-    public virtual List<DataAttribute> GetAchievements() {
+	public virtual List<DataAttribute> GetList() {
         return GetAttributesList("statistic");
     }
 }
