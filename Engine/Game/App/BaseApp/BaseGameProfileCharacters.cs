@@ -153,7 +153,7 @@ public class BaseGameProfileCharacter : Profile  {
 		
 		if(obj.items.Count == 0) {
 			// add default
-			obj.SetCharacter("default", GetCurrentCharacter());
+			obj.SetCharacter("default", new GameProfileCharacterItem());
 		}		
 		
         return obj;
