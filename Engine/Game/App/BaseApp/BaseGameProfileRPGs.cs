@@ -79,6 +79,8 @@ public class GameItemRPGAttributes {
 	public static string attack = prefix + "attack";
 	public static string defense = prefix + "defense";
 	public static string health = prefix + "health";
+	public static string jump = prefix + "jump";
+	public static string fly = prefix + "fly";
 	public static string energy = prefix + "energy";
 	public static string attack_speed = prefix + "attack_speed";
 	public static string recharge_speed = prefix + "recharge_speed";
