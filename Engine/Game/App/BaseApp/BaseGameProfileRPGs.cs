@@ -309,35 +309,35 @@ public class BaseGameProfileRPG : Profile  {
 	
 	// upgrades_applied
 	
-	public double GetUpgradesApplied(){
+	public virtual double GetUpgradesApplied(){
 		return GetUpgradesApplied(0.0);
 	}
 	
-	public double GetUpgradesApplied(double defaultValue){		
+	public virtual double GetUpgradesApplied(double defaultValue){		
 		double attValue = defaultValue;
 		if(CheckIfAttributeExists(GameItemRPGAttributes.upgrades_applied))
 			attValue = GetAttributeDoubleValue(GameItemRPGAttributes.upgrades_applied);
 		return attValue;
 	}
 		
-	public void SetUpgradesApplied(double val) {
+	public virtual void SetUpgradesApplied(double val) {
 		SetAttributeDoubleValue(GameItemRPGAttributes.upgrades_applied, val);
 	}
 	
 	// upgrades
 	
-	public double GetUpgrades(){
+	public virtual double GetUpgrades(){
 		return GetUpgrades(3.0);
 	}
 	
-	public double GetUpgrades(double defaultValue){		
+	public virtual double GetUpgrades(double defaultValue){		
 		double attValue = defaultValue;
 		if(CheckIfAttributeExists(GameItemRPGAttributes.upgrades))
 			attValue = GetAttributeDoubleValue(GameItemRPGAttributes.upgrades);
 		return attValue;
 	}
 		
-	public void SetUpgrades(double val) {
+	public virtual void SetUpgrades(double val) {
 		SetAttributeDoubleValue(GameItemRPGAttributes.upgrades, val);
 	}
 		
