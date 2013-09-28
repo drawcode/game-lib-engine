@@ -64,6 +64,9 @@ public class GameItemRPG : DataObject {
 	public double defense = 0.1;
 	public double health = 0.1;
 	public double energy = 0.1;
+	public double jump = 0.1;
+	public double fly = 0.1;
+	public double boost = 0.1;
 	public double attack_speed = 0.1;
 	public double recharge_speed = 0.1;
 	public double upgrades_applied = 0.0;
@@ -81,6 +84,7 @@ public class GameItemRPGAttributes {
 	public static string health = prefix + "health";
 	public static string jump = prefix + "jump";
 	public static string fly = prefix + "fly";
+	public static string boost = prefix + "boost";
 	public static string energy = prefix + "energy";
 	public static string attack_speed = prefix + "attack_speed";
 	public static string recharge_speed = prefix + "recharge_speed";
