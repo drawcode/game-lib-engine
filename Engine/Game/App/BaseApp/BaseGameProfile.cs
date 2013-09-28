@@ -24,7 +24,6 @@ public class BaseGameProfileAttributes {
     // RPG
     public static string ATT_PROGRESS_XP = "progress-xp";
     public static string ATT_CURRENCY = "currency";
-
     public static string ATT_PROGRESS_HEALTH = "progress-health";
     public static string ATT_PROGRESS_ENERGY = "progress-energy";
     public static string ATT_PROGRESS_LEVEL = "progress-level";
@@ -36,7 +35,6 @@ public class BaseGameProfileAttributes {
 
     // UI STATE
     public static string ATT_UI_HAS_SEEN_HELP = "ui-seen-help";
-
     public static string ATT_HELP_TIPS_SHOWN_DAY = "ui-help-tips-shown-day";
     public static string ATT_HELP_TIPS_SHOWN_DATE = "ui-help-tips-shown-date";
 
@@ -45,9 +43,9 @@ public class BaseGameProfileAttributes {
     public static string ATT_CUSTOM_AUDIO = "custom-audio";
     public static string ATT_CUSTOM_COLORS = "custom-colors";
     public static string ATT_CUSTOM_COLORS_RUNNER = "custom-colors-runner";
-	
-	// SOCIAL
-	
+ 
+    // SOCIAL
+ 
     public static string ATT_AUTH_SOCIAL_NETWORK_TYPE = "auth-social-network-type";
     public static string ATT_AUTH_SOCIAL_NETWORK_USERNAME = "auth-social-network-username";
     public static string ATT_AUTH_SOCIAL_NETWORK_NAME = "auth-social-network-name";
@@ -68,22 +66,21 @@ public class BaseGameProfileDataState {
 }
 
 public enum ProfileControlHanded {
-	RIGHT = 0,
-	LEFT = 1
+    RIGHT = 0,
+    LEFT = 1
 }
 
 public class BaseGameProfiles {
     private static volatile BaseGameProfile current;
     private static volatile BaseGameProfiles instance;
     private static object syncRoot = new Object();
-
     public static string DEFAULT_USERNAME = "Player";
 
     public static BaseGameProfile Current {
         get {
-            if (current == null) {
-                lock (syncRoot) {
-                    if (current == null)
+            if(current == null) {
+                lock(syncRoot) {
+                    if(current == null)
                         current = new BaseGameProfile();
                 }
             }
@@ -97,9 +94,9 @@ public class BaseGameProfiles {
 
     public static BaseGameProfiles Instance {
         get {
-            if (instance == null) {
-                lock (syncRoot) {
-                    if (instance == null)
+            if(instance == null) {
+                lock(syncRoot) {
+                    if(instance == null)
                         instance = new BaseGameProfiles();
                 }
             }
@@ -139,7 +136,7 @@ public class BaseGameProfile : Profile {
 
     public virtual int GetCurrentGameMode(int defaultValue) {
         int attValue = defaultValue;
-        if (CheckIfAttributeExists(BaseGameProfileAttributes.ATT_CURRENT_GAME_MODE))
+        if(CheckIfAttributeExists(BaseGameProfileAttributes.ATT_CURRENT_GAME_MODE))
             attValue = GetAttributeIntValue(BaseGameProfileAttributes.ATT_CURRENT_GAME_MODE);
         return attValue;
     }
@@ -156,7 +153,7 @@ public class BaseGameProfile : Profile {
 
     public virtual int GetCurrentCameraMode(int defaultValue) {
         int attValue = defaultValue;
-        if (CheckIfAttributeExists(BaseGameProfileAttributes.ATT_CURRENT_CAMERA_MODE))
+        if(CheckIfAttributeExists(BaseGameProfileAttributes.ATT_CURRENT_CAMERA_MODE))
             attValue = GetAttributeIntValue(BaseGameProfileAttributes.ATT_CURRENT_CAMERA_MODE);
         return attValue;
     }
@@ -173,7 +170,7 @@ public class BaseGameProfile : Profile {
 
     public virtual int GetHelpTipsShownDay(int defaultValue) {
         int attValue = defaultValue;
-        if (CheckIfAttributeExists(BaseGameProfileAttributes.ATT_HELP_TIPS_SHOWN_DAY))
+        if(CheckIfAttributeExists(BaseGameProfileAttributes.ATT_HELP_TIPS_SHOWN_DAY))
             attValue = GetAttributeIntValue(BaseGameProfileAttributes.ATT_HELP_TIPS_SHOWN_DAY);
         return attValue;
     }
@@ -188,7 +185,7 @@ public class BaseGameProfile : Profile {
 
     public virtual double GetHelpTipsShownDate(double defaultValue) {
         double attValue = defaultValue;
-        if (CheckIfAttributeExists(BaseGameProfileAttributes.ATT_HELP_TIPS_SHOWN_DATE))
+        if(CheckIfAttributeExists(BaseGameProfileAttributes.ATT_HELP_TIPS_SHOWN_DATE))
             attValue = GetAttributeDoubleValue(BaseGameProfileAttributes.ATT_HELP_TIPS_SHOWN_DATE);
         return attValue;
     }
@@ -196,8 +193,8 @@ public class BaseGameProfile : Profile {
     public virtual void SetHelpTipsShownDate(double attValue) {
         SetAttributeDoubleValue(BaseGameProfileAttributes.ATT_HELP_TIPS_SHOWN_DATE, attValue);
     }
-	
-	
+ 
+ 
     // CUSTOMIZATION
     public virtual void SetCustomColorsRunner(CustomPlayerColorsRunner colors) {
         string colorsText = JsonMapper.ToJson(colors);
@@ -210,7 +207,7 @@ public class BaseGameProfile : Profile {
 
         string key = BaseGameProfileAttributes.ATT_CUSTOM_COLORS_RUNNER;
 
-        if (!CheckIfAttributeExists(key)) {
+        if(!CheckIfAttributeExists(key)) {
 
             // add default colors
             SetCustomColorsRunner(new CustomPlayerColorsRunner());
@@ -218,20 +215,20 @@ public class BaseGameProfile : Profile {
         }
 
         string json = GetAttributeStringValue(key);
-        if (!string.IsNullOrEmpty(json)) {
+        if(!string.IsNullOrEmpty(json)) {
             try {
                 LogUtil.Log("GetCustomColors: " + json);
                 colors = JsonMapper.ToObject<CustomPlayerColorsRunner>(json);
             }
-            catch (Exception e) {
+            catch(Exception e) {
                 colors = new CustomPlayerColorsRunner();
                 LogUtil.Log(e);
             }
         }
         return colors;
     }
-	
-	
+ 
+ 
 
     // CUSTOMIZATION
     public virtual void SetCustomColors(CustomPlayerColors colors) {
@@ -245,7 +242,7 @@ public class BaseGameProfile : Profile {
 
         string key = BaseGameProfileAttributes.ATT_CUSTOM_COLORS;
 
-        if (!CheckIfAttributeExists(key)) {
+        if(!CheckIfAttributeExists(key)) {
 
             // add default colors
             SetCustomColors(CustomColors.DefaultSet);
@@ -253,12 +250,12 @@ public class BaseGameProfile : Profile {
         }
 
         string json = GetAttributeStringValue(key);
-        if (!string.IsNullOrEmpty(json)) {
+        if(!string.IsNullOrEmpty(json)) {
             try {
                 LogUtil.Log("GetCustomColors: " + json);
                 colors = JsonMapper.ToObject<CustomPlayerColors>(json);
             }
-            catch (Exception e) {
+            catch(Exception e) {
                 colors = new CustomPlayerColors();
                 LogUtil.Log(e);
             }
@@ -275,12 +272,12 @@ public class BaseGameProfile : Profile {
     public virtual CustomPlayerAudio GetCustomAudio() {
         CustomPlayerAudio audio = new CustomPlayerAudio();
         string json = GetAttributeStringValue(BaseGameProfileAttributes.ATT_CUSTOM_AUDIO);
-        if (!string.IsNullOrEmpty(json)) {
+        if(!string.IsNullOrEmpty(json)) {
             try {
                 LogUtil.Log("GetCustomAudio: " + json);
                 audio = JsonMapper.ToObject<CustomPlayerAudio>(json);
             }
-            catch (Exception e) {
+            catch(Exception e) {
                 audio = new CustomPlayerAudio();
                 LogUtil.Log(e);
             }
@@ -298,7 +295,7 @@ public class BaseGameProfile : Profile {
 
     public virtual double GetControlHorizonTilt(double defaultValue) {
         double attValue = defaultValue;
-        if (CheckIfAttributeExists(BaseGameProfileAttributes.ATT_CONTROL_HORIZON_TILT))
+        if(CheckIfAttributeExists(BaseGameProfileAttributes.ATT_CONTROL_HORIZON_TILT))
             attValue = GetAttributeDoubleValue(BaseGameProfileAttributes.ATT_CONTROL_HORIZON_TILT);
         return attValue;
     }
@@ -315,9 +312,9 @@ public class BaseGameProfile : Profile {
 
     public virtual ProfileControlHanded GetControlHanded(ProfileControlHanded defaultValue) {
         int attValue = (int)defaultValue;
-        if (CheckIfAttributeExists(BaseGameProfileAttributes.ATT_CONTROL_HANDED))
+        if(CheckIfAttributeExists(BaseGameProfileAttributes.ATT_CONTROL_HANDED))
             attValue = GetAttributeIntValue(BaseGameProfileAttributes.ATT_CONTROL_HANDED);
-		ProfileControlHanded controlHanded = (ProfileControlHanded)attValue;
+        ProfileControlHanded controlHanded = (ProfileControlHanded)attValue;
         return controlHanded;
     }
 
@@ -325,7 +322,7 @@ public class BaseGameProfile : Profile {
         SetAttributeIntValue(BaseGameProfileAttributes.ATT_CONTROL_HANDED, (int)attValue);
     }
 
-	// CONTROL VIBRATE
+    // CONTROL VIBRATE
 
     public virtual bool GetControlVibrate() {
         return GetControlVibrate(true);
@@ -333,7 +330,7 @@ public class BaseGameProfile : Profile {
 
     public virtual bool GetControlVibrate(bool defaultValue) {
         bool attValue = defaultValue;
-        if (CheckIfAttributeExists(BaseGameProfileAttributes.ATT_CONTROL_VIBRATE))
+        if(CheckIfAttributeExists(BaseGameProfileAttributes.ATT_CONTROL_VIBRATE))
             attValue = GetAttributeBoolValue(BaseGameProfileAttributes.ATT_CONTROL_VIBRATE);
         return attValue;
     }
@@ -351,7 +348,7 @@ public class BaseGameProfile : Profile {
 
     public virtual bool GetHasSeenHelp(bool defaultValue) {
         bool attValue = defaultValue;
-        if (CheckIfAttributeExists(BaseGameProfileAttributes.ATT_UI_HAS_SEEN_HELP))
+        if(CheckIfAttributeExists(BaseGameProfileAttributes.ATT_UI_HAS_SEEN_HELP))
             attValue = GetAttributeBoolValue(BaseGameProfileAttributes.ATT_UI_HAS_SEEN_HELP);
         return attValue;
     }
@@ -368,7 +365,7 @@ public class BaseGameProfile : Profile {
 
     public virtual bool GetControlTouch(bool defaultValue) {
         bool attValue = defaultValue;
-        if (CheckIfAttributeExists(BaseGameProfileAttributes.ATT_CONTROL_INPUT_TOUCH))
+        if(CheckIfAttributeExists(BaseGameProfileAttributes.ATT_CONTROL_INPUT_TOUCH))
             attValue = GetAttributeBoolValue(BaseGameProfileAttributes.ATT_CONTROL_INPUT_TOUCH);
         return attValue;
     }
@@ -385,7 +382,7 @@ public class BaseGameProfile : Profile {
 
     public virtual bool GetThirdPartyNetworkUser(bool defaultValue) {
         bool attValue = defaultValue;
-        if (CheckIfAttributeExists(BaseGameProfileAttributes.ATT_THIRD_PARTY_NETWORK))
+        if(CheckIfAttributeExists(BaseGameProfileAttributes.ATT_THIRD_PARTY_NETWORK))
             attValue = GetAttributeBoolValue(BaseGameProfileAttributes.ATT_THIRD_PARTY_NETWORK);
         return attValue;
     }
@@ -409,10 +406,10 @@ public class BaseGameProfile : Profile {
         //UnityEngine.//Debug.Log("GetAudioMusicVolume BaseGameProfileDataState.updatedMusicVolume:" + BaseGameProfileDataState.updatedMusicVolume);
 
         //if(BaseGameProfileDataState.updatedMusicVolume) {
-        //	BaseGameProfileDataState.updatedMusicVolume = false;
+        //   BaseGameProfileDataState.updatedMusicVolume = false;
         //UnityEngine.//Debug.Log("GetAudioMusicVolume checking attribute exists:" + BaseGameProfileAttributes.ATT_AUDIO_MUSIC_VOLUME);
 
-        if (CheckIfAttributeExists(BaseGameProfileAttributes.ATT_AUDIO_MUSIC_VOLUME)) {
+        if(CheckIfAttributeExists(BaseGameProfileAttributes.ATT_AUDIO_MUSIC_VOLUME)) {
 
             //UnityEngine.//Debug.Log("GetAudioMusicVolume attribute exists:" + BaseGameProfileAttributes.ATT_AUDIO_MUSIC_VOLUME);
 
@@ -443,9 +440,9 @@ public class BaseGameProfile : Profile {
         attValue = BaseGameProfileDataState.currentVOVolume;
 
         //if(BaseGameProfileDataState.updatedVOVolume) {
-        //	BaseGameProfileDataState.updatedVOVolume = false;
+        //   BaseGameProfileDataState.updatedVOVolume = false;
 
-        if (CheckIfAttributeExists(BaseGameProfileAttributes.ATT_AUDIO_VO_VOLUME)) {
+        if(CheckIfAttributeExists(BaseGameProfileAttributes.ATT_AUDIO_VO_VOLUME)) {
             attValue = GetAttributeDoubleValue(BaseGameProfileAttributes.ATT_AUDIO_VO_VOLUME);
             BaseGameProfileDataState.currentVOVolume = attValue;
         }
@@ -471,9 +468,9 @@ public class BaseGameProfile : Profile {
         attValue = BaseGameProfileDataState.currentEffectsVolume;
 
         //if(BaseGameProfileDataState.updatedEffectsVolume) {
-        //	BaseGameProfileDataState.updatedEffectsVolume = false;
+        //   BaseGameProfileDataState.updatedEffectsVolume = false;
 
-        if (CheckIfAttributeExists(BaseGameProfileAttributes.ATT_AUDIO_EFFECTS_VOLUME)) {
+        if(CheckIfAttributeExists(BaseGameProfileAttributes.ATT_AUDIO_EFFECTS_VOLUME)) {
             attValue = GetAttributeDoubleValue(BaseGameProfileAttributes.ATT_AUDIO_EFFECTS_VOLUME);
             BaseGameProfileDataState.currentEffectsVolume = attValue;
         }
@@ -502,9 +499,9 @@ public class BaseGameProfile : Profile {
     public virtual List<string> GetAccessPermissions() {
         List<string> permissions = new List<string>();
         DataAttribute attribute = GetAttribute("access-permissions");
-        if (attribute != null) {
+        if(attribute != null) {
             permissions = attribute.val as List<string>;
-            if (permissions != null)
+            if(permissions != null)
                 return permissions;
             else
                 permissions = new List<string>();
@@ -514,7 +511,7 @@ public class BaseGameProfile : Profile {
 
     public virtual bool CheckIfAccessPermissionExists(string permission) {
         List<string> permissions = GetAccessPermissions();
-        if (permissions.Contains(permission))
+        if(permissions.Contains(permission))
             return true;
         return false;
     }
@@ -528,115 +525,11 @@ public class BaseGameProfile : Profile {
 
     public virtual void SetAccessPermission(string permission) {
         List<string> permissions = GetAccessPermissions();
-        if (!permissions.Contains(permission)) {
+        if(!permissions.Contains(permission)) {
             permissions.Add(permission);
         }
         SetAccessPermissions(permissions);
     }
-	
-	// CURRENCY
-		
-    public virtual double AddCurrency(double val) {
-      	double currency = GetCurrency();
-		currency += val;
-		SetCurrency(currency);
-		return currency;		
-    }
-	
-    public virtual double SubtractCurrency(double val) {
-      	double currency = GetCurrency();
-		if(val > 0) {
-			val = -val;
-		}
-		currency += val;
-		SetCurrency(currency);
-		return currency;
-    }
-	
-	public virtual double GetCurrency() {
-        return GetCurrency(10.0);
-    }
-
-    public virtual double GetCurrency(double defaultValue) {
-        double attValue = defaultValue;
-        if (CheckIfAttributeExists(BaseGameProfileAttributes.ATT_CURRENCY))
-            attValue = GetAttributeDoubleValue(BaseGameProfileAttributes.ATT_CURRENCY);
-        return attValue;
-    }
-
-    public virtual void SetCurrency(double attValue) {
-        SetAttributeDoubleValue(BaseGameProfileAttributes.ATT_CURRENCY, attValue);
-    }
-
-    // RPG
-
-    public virtual double GetProgressXP() {
-        return GetProgressXP(10.0);
-    }
-
-    public virtual double GetProgressXP(double defaultValue) {
-        double attValue = defaultValue;
-        if (CheckIfAttributeExists(BaseGameProfileAttributes.ATT_PROGRESS_XP))
-            attValue = GetAttributeDoubleValue(BaseGameProfileAttributes.ATT_PROGRESS_XP);
-        return attValue;
-    }
-
-    public virtual void SetProgressXP(double attValue) {
-        SetAttributeDoubleValue(BaseGameProfileAttributes.ATT_PROGRESS_XP, attValue);
-    }
-
-    public virtual double GetProgressLevel() {
-        return GetProgressLevel(0.0);
-    }
-
-    public virtual double GetProgressLevel(double defaultValue) {
-        double attValue = defaultValue;
-        if (CheckIfAttributeExists(BaseGameProfileAttributes.ATT_PROGRESS_LEVEL))
-            attValue = GetAttributeDoubleValue(BaseGameProfileAttributes.ATT_PROGRESS_LEVEL);
-        return attValue;
-    }
-
-    public virtual void SetProgressLevel(double attValue) {
-        SetAttributeDoubleValue(BaseGameProfileAttributes.ATT_PROGRESS_LEVEL, attValue);
-    }
-
-    public virtual double GetProgressHealth() {
-        return GetProgressHealth(1.0);
-    }
-
-    public virtual double GetProgressHealth(double defaultValue) {
-        double attValue = defaultValue;
-        if (CheckIfAttributeExists(BaseGameProfileAttributes.ATT_PROGRESS_HEALTH))
-            attValue = GetAttributeDoubleValue(BaseGameProfileAttributes.ATT_PROGRESS_HEALTH);
-        return attValue;
-    }
-
-    public virtual void SetProgressHealth(double attValue) {
-        SetAttributeDoubleValue(BaseGameProfileAttributes.ATT_PROGRESS_HEALTH, attValue);
-    }
-
-    public virtual double GetProgressEnergy() {
-        return GetProgressEnergy(0.0);
-    }
-
-    public virtual double GetProgressEnergy(double defaultValue) {
-        double attValue = defaultValue;
-        if (CheckIfAttributeExists(BaseGameProfileAttributes.ATT_PROGRESS_ENERGY))
-            attValue = GetAttributeDoubleValue(BaseGameProfileAttributes.ATT_PROGRESS_ENERGY);
-        return attValue;
-    }
-
-    public virtual void SetProgressEnergy(double attValue) {
-        SetAttributeDoubleValue(BaseGameProfileAttributes.ATT_PROGRESS_ENERGY, attValue);
-    }
-
-    /*
-    public double GetTotalScore() {
-        SyncTotalScore();
-
-        return Math.Floor(GameRPG.Instance.totalScoreDisplay);
-    }
-    */
 
     // GAME SETTINGS
 
@@ -653,129 +546,129 @@ public class BaseGameProfile : Profile {
     public virtual string GetGameSettingValue(string code) {
         string currentValue = "";
         object objectValue = GetAttribute(code).val;
-        if (objectValue != null) {
+        if(objectValue != null) {
             currentValue = Convert.ToString(objectValue);
         }
 
         return currentValue;
     }
-	
-	// SOCIAL
-	
-	// auth/social
+ 
+    // SOCIAL
+ 
+    // auth/social
         
-        public string GetSocialNetworkKey(string type, string val) {
-                return val + "-" + type;
+    public string GetSocialNetworkKey(string type, string val) {
+        return val + "-" + type;
+    }
+        
+    public bool IsSocialNetworkUserFound() {
+        string userId = GetSocialNetworkUserId();
+        if(!string.IsNullOrEmpty(userId)) {
+            return true;
         }
+        return false;
+    }
         
-        public bool IsSocialNetworkUserFound() {
-                string userId = GetSocialNetworkUserId();
-                if(!string.IsNullOrEmpty(userId)) {
-                        return true;
-                }
-                return false;
-        }
+    public string GetSocialNetworkType() {
+        return GetAttributeStringValue(BaseGameProfileAttributes.ATT_AUTH_SOCIAL_NETWORK_TYPE);
+    }
         
-        public string GetSocialNetworkType() {
-                return GetAttributeStringValue(BaseGameProfileAttributes.ATT_AUTH_SOCIAL_NETWORK_TYPE);
-        }
+    public void SetSocialNetworkProfileState(string type, string userId) {
+        SetSocialNetworkType(type);
+        SetSocialNetworkUserId(userId);
+    }
         
-        public void SetSocialNetworkProfileState(string type, string userId) {
-                SetSocialNetworkType(type);
-                SetSocialNetworkUserId(userId);
-        }
+    public void SetSocialNetworkType(string type) {
+        SetAttributeStringValue(BaseGameProfileAttributes.ATT_AUTH_SOCIAL_NETWORK_TYPE, type);
+    }
         
-        public void SetSocialNetworkType(string type) {
-                SetAttributeStringValue(BaseGameProfileAttributes.ATT_AUTH_SOCIAL_NETWORK_TYPE, type);
-        }
+    // user id
         
-        // user id
-        
-        public string GetSocialNetworkUserId() {
-                string type = GetSocialNetworkType();
-                string userId = GetAttributeStringValue(
+    public string GetSocialNetworkUserId() {
+        string type = GetSocialNetworkType();
+        string userId = GetAttributeStringValue(
                         GetSocialNetworkKey(
                                 type, 
                                 BaseGameProfileAttributes.ATT_AUTH_SOCIAL_NETWORK_USERID));         
-                return userId;
-        }
+        return userId;
+    }
         
-        public void SetSocialNetworkUserId(string userId) {
-                SetAttributeStringValue(
+    public void SetSocialNetworkUserId(string userId) {
+        SetAttributeStringValue(
                         GetSocialNetworkKey(
                                 GetSocialNetworkType(), 
                                 BaseGameProfileAttributes.ATT_AUTH_SOCIAL_NETWORK_USERID), userId);         
-        }
+    }
         
-        // username
+    // username
         
-        public string GetSocialNetworkUserName() {
-                string type = GetSocialNetworkType();
-                string val = GetAttributeStringValue(
+    public string GetSocialNetworkUserName() {
+        string type = GetSocialNetworkType();
+        string val = GetAttributeStringValue(
                         GetSocialNetworkKey(
                                 type, 
                                 BaseGameProfileAttributes.ATT_AUTH_SOCIAL_NETWORK_USERNAME));               
-                return val;
-        }
+        return val;
+    }
         
-        public void SetSocialNetworkUserName(string userName) {
-                SetAttributeStringValue(
+    public void SetSocialNetworkUserName(string userName) {
+        SetAttributeStringValue(
                         GetSocialNetworkKey(
                                 GetSocialNetworkType(), 
                                 BaseGameProfileAttributes.ATT_AUTH_SOCIAL_NETWORK_USERNAME), userName);             
-        }
+    }
         
-        // Name
+    // Name
         
-        public string GetSocialNetworkName() {
-                string type = GetSocialNetworkType();
-                string val = GetAttributeStringValue(
+    public string GetSocialNetworkName() {
+        string type = GetSocialNetworkType();
+        string val = GetAttributeStringValue(
                         GetSocialNetworkKey(
                                 type, 
                                 BaseGameProfileAttributes.ATT_AUTH_SOCIAL_NETWORK_NAME));           
-                return val;
-        }
+        return val;
+    }
         
-        public void SetSocialNetworkName(string name) {
-                SetAttributeStringValue(
+    public void SetSocialNetworkName(string name) {
+        SetAttributeStringValue(
                         GetSocialNetworkKey(
                                 GetSocialNetworkType(), 
                                 BaseGameProfileAttributes.ATT_AUTH_SOCIAL_NETWORK_NAME), name);             
-        }
+    }
         
-        public string GetSocialNetworkFirstName() {
-                string type = GetSocialNetworkType();
-                string val = GetAttributeStringValue(
+    public string GetSocialNetworkFirstName() {
+        string type = GetSocialNetworkType();
+        string val = GetAttributeStringValue(
                         GetSocialNetworkKey(
                                 type, 
                                 BaseGameProfileAttributes.ATT_AUTH_SOCIAL_NETWORK_FNAME));          
-                return val;
-        }
+        return val;
+    }
         
-        public void SetSocialNetworkFirstName(string name) {
-                SetAttributeStringValue(
+    public void SetSocialNetworkFirstName(string name) {
+        SetAttributeStringValue(
                         GetSocialNetworkKey(
                                 GetSocialNetworkType(), 
                                 BaseGameProfileAttributes.ATT_AUTH_SOCIAL_NETWORK_FNAME), name);            
-        }
+    }
         
-        // auth token user
+    // auth token user
         
-        public string GetSocialNetworkAuthTokenUser() {
-                string type = GetSocialNetworkType();
-                string val = GetAttributeStringValue(
+    public string GetSocialNetworkAuthTokenUser() {
+        string type = GetSocialNetworkType();
+        string val = GetAttributeStringValue(
                         GetSocialNetworkKey(
                                 type, 
                                 BaseGameProfileAttributes.ATT_AUTH_SOCIAL_NETWORK_AUTHTOKEN_USER));         
-                return val;
-        }
+        return val;
+    }
         
-        public void SetSocialNetworkAuthTokenUser(string token) {
-                SetAttributeStringValue(
+    public void SetSocialNetworkAuthTokenUser(string token) {
+        SetAttributeStringValue(
                         GetSocialNetworkKey(
                                 GetSocialNetworkType(), 
                                 BaseGameProfileAttributes.ATT_AUTH_SOCIAL_NETWORK_AUTHTOKEN_USER), token);          
-        }
+    }
 
     /*
 
