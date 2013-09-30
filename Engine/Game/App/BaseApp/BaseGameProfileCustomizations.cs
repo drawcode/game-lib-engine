@@ -73,7 +73,7 @@ public class BaseGameProfileCustomization : Profile  {
 	
 	public override void Reset() {
 		base.Reset();
-		username = "Player";// + UnityEngine.Random.Range(1, 9999999);
+		username = ProfileConfigs.defaultPlayerName;
 	}
 		
 	// customizations		

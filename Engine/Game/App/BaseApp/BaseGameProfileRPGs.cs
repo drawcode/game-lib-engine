@@ -308,7 +308,7 @@ public class BaseGameProfileRPG : Profile {
  
     public override void Reset() {
         base.Reset();
-        username = "Player";// + UnityEngine.Random.Range(1, 9999999);
+        username = ProfileConfigs.defaultPlayerName;
     }
  
     // upgrades_applied
@@ -346,7 +346,7 @@ public class BaseGameProfileRPG : Profile {
         SetUpgrades(upgrades);
         return upgrades;
     }
- 
+
     public virtual double GetUpgrades() {
         return GetUpgrades(3.0);
     }
