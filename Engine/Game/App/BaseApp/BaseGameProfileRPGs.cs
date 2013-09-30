@@ -401,6 +401,18 @@ public class GameProfileRPGItem : DataObject {
     }    
 }
 
+public class GameProfileCustomItem : DataObject {
+
+    public GameProfileCustomItem() {
+        Reset();
+    }
+
+    public void Reset() {
+      attributes = new Dictionary<string, DataAttribute>();
+    }
+}
+
+
 public class BaseGameProfileRPG : Profile {
     // BE CAREFUL adding properties as they will cause a need for a profile conversion
     // Best way to add items to the profile is the GetAttribute and SetAttribute class as 
