@@ -67,11 +67,15 @@ public class GameProfileCharacterItems {
 	}
 	
 	public GameProfileCharacterItem GetCharacter(string code) {
-        if(items == null) {
-             items = new List<GameProfileCharacterItem>();
+        //if(items == null) {
+        //     items = new List<GameProfileCharacterItem>();
+        //
+        //    GameProfileCharacterItem item = new GameProfileCharacterItem();
+        //    items.Add(item);
+        //}
 
-            GameProfileCharacterItem item = new GameProfileCharacterItem();
-            items.Add(item);
+        if(items == null) {
+            return null;
         }
 
 		foreach(GameProfileCharacterItem item in items) {
@@ -206,10 +210,10 @@ public class BaseGameProfileCharacter : Profile  {
 		
 		GameProfileCharacterItem item = GetCharacters().GetCharacter(code);
 		
-		if(item == null) {
-			item = new GameProfileCharacterItem();
-			GetCharacters().SetCharacter(code, item);
-		}
+		//if(item == null) {
+		//	item = new GameProfileCharacterItem();
+		//	GetCharacters().SetCharacter(code, item);
+		//}
 		
 		return item;
 	}	
