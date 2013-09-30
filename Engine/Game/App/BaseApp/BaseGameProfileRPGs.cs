@@ -69,6 +69,9 @@ public class GameItemRPG : DataObject {
     public double recharge_speed = 0.1;
     public double upgrades_applied = 0.0;
     public double upgrades = 0.0;
+    public double xp = 10.0;
+    public double level = 1.0;
+    public double currency = 1.0;
     public string data = ""; 
 }
 
@@ -86,13 +89,20 @@ public class GameItemRPGAttributes {
     public static string energy = prefix + "energy";
     public static string attack_speed = prefix + "attack_speed";
     public static string recharge_speed = prefix + "recharge_speed";
+    public static string xp = prefix + "xp";
+    public static string level = prefix + "level";
+    public static string currency = prefix + "currency";
     public static string data = prefix + "data";
 }
 
 public class GameProfileRPGItem : DataObject {
  
     public GameProfileRPGItem() {
-     
+        Reset();
+    }
+
+    public void Reset() {
+      attributes = new Dictionary<string, DataAttribute>();
     }
  
     public void LoadFromGameItemRPG(GameItemRPG itemRPG) {
@@ -105,6 +115,11 @@ public class GameProfileRPGItem : DataObject {
         SetRechargeSpeed(itemRPG.recharge_speed);
         SetUpgradesApplied(itemRPG.upgrades_applied);
         SetUpgrades(itemRPG.upgrades);
+        SetXP(itemRPG.xp);
+        SetLevel(itemRPG.level);
+        SetCurrency(itemRPG.currency);
+        SetJump(itemRPG.jump);
+        SetFly(itemRPG.fly);
         SetData(itemRPG.data);
     }
  
@@ -119,11 +134,67 @@ public class GameProfileRPGItem : DataObject {
         itemRPG.recharge_speed = GetRechargeSpeed();
         itemRPG.upgrades_applied = GetUpgradesApplied();
         itemRPG.upgrades = GetUpgrades();
+        itemRPG.xp = GetXP();
+        itemRPG.level = GetLevel();
+        itemRPG.currency = GetCurrency();
+        itemRPG.jump = GetJump();
+        itemRPG.fly = GetFly();
         itemRPG.data = GetData();
         return itemRPG;
     }
  
     // properties
+
+    // xp
+
+    public double GetXP() {
+        return GetXP(0.0);
+    }
+
+    public double GetXP(double defaultValue) {
+        double attValue = defaultValue;
+        if(CheckIfAttributeExists(GameItemRPGAttributes.xp))
+            attValue = GetAttributeDoubleValue(GameItemRPGAttributes.xp);
+        return attValue;
+    }
+
+    public void SetXP(double val) {
+        SetAttributeDoubleValue(GameItemRPGAttributes.xp, val);
+    }
+
+    // level
+
+    public double GetLevel() {
+        return GetLevel(0.0);
+    }
+
+    public double GetLevel(double defaultValue) {
+        double attValue = defaultValue;
+        if(CheckIfAttributeExists(GameItemRPGAttributes.level))
+            attValue = GetAttributeDoubleValue(GameItemRPGAttributes.level);
+        return attValue;
+    }
+
+    public void SetLevel(double val) {
+        SetAttributeDoubleValue(GameItemRPGAttributes.level, val);
+    }
+
+    // currency
+
+    public double GetCurrency() {
+        return GetCurrency(0.0);
+    }
+
+    public double GetCurrency(double defaultValue) {
+        double attValue = defaultValue;
+        if(CheckIfAttributeExists(GameItemRPGAttributes.xp))
+            attValue = GetAttributeDoubleValue(GameItemRPGAttributes.xp);
+        return attValue;
+    }
+
+    public void SetCurrency(double val) {
+        SetAttributeDoubleValue(GameItemRPGAttributes.xp, val);
+    }
  
     // upgrades_applied
  
@@ -157,6 +228,40 @@ public class GameProfileRPGItem : DataObject {
      
     public void SetUpgrades(double val) {
         SetAttributeDoubleValue(GameItemRPGAttributes.upgrades, val);
+    }
+
+    // jump
+
+    public double GetJump() {
+        return GetJump(0.1);
+    }
+
+    public double GetJump(double defaultValue) {
+        double attValue = defaultValue;
+        if(CheckIfAttributeExists(GameItemRPGAttributes.jump))
+            attValue = GetAttributeDoubleValue(GameItemRPGAttributes.jump);
+        return attValue;
+    }
+
+    public void SetJump(double val) {
+        SetAttributeDoubleValue(GameItemRPGAttributes.jump, val);
+    }
+
+    // fly
+
+    public double GetFly() {
+        return GetFly(0.1);
+    }
+
+    public double GetFly(double defaultValue) {
+        double attValue = defaultValue;
+        if(CheckIfAttributeExists(GameItemRPGAttributes.fly))
+            attValue = GetAttributeDoubleValue(GameItemRPGAttributes.fly);
+        return attValue;
+    }
+
+    public void SetFly(double val) {
+        SetAttributeDoubleValue(GameItemRPGAttributes.fly, val);
     }
  
     // speed

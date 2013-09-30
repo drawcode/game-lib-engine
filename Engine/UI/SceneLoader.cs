@@ -84,7 +84,7 @@ namespace Engine.UI {
             if (IsComingFromResults(currentSceneName)) {
 
                 //if(GameState.Instance != null) {
-                //	GameState.Instance.SaveProfile();
+                //	GameState.SaveProfile();
                 //}
             }
 

@@ -67,6 +67,13 @@ public class GameProfileCharacterItems {
 	}
 	
 	public GameProfileCharacterItem GetCharacter(string code) {
+        if(items == null) {
+             items = new List<GameProfileCharacterItem>();
+
+            GameProfileCharacterItem item = new GameProfileCharacterItem();
+            items.Add(item);
+        }
+
 		foreach(GameProfileCharacterItem item in items) {
 			if(item.code.ToLower() == code.ToLower()) {
 				return item;
@@ -90,16 +97,38 @@ public class GameProfileCharacterItems {
 			items.Add(item);
 		}
 	}
+
+    public void SetCharacterRPG(string code, GameProfileRPGItem item) {
+        GameProfileCharacterItem character = GetCharacter(code);
+
+        if(character == null) {
+            character = new GameProfileCharacterItem();
+        }
+
+        character.profileRPGItem = item;
+        SetCharacter(code, character);
+    }
 }
 
-public class GameProfileCharacterItem {
+public class GameProfileCharacterItem : DataObject {
 	
-	public bool current = true;
-	public string code = "default";
-	public string characterCode = "default";
-	public string characterCustumeCode = "default";
-	
-	public GameItemRPG characterRPG = new GameItemRPG();
+    public bool current = true;
+    public string code = "default";
+    public string characterCode = "default";
+    public string characterCostumeCode = "default";
+    public GameProfileRPGItem profileRPGItem;
+
+    public GameProfileCharacterItem() {
+        Reset();
+    }
+    
+    public void Reset() {
+        current = true;
+        code = "default";
+        characterCode = "default";
+        characterCostumeCode = "default";
+        profileRPGItem = new GameProfileRPGItem();
+    }
 }
 
 public class BaseGameProfileCharacter : Profile  {
@@ -161,16 +190,16 @@ public class BaseGameProfileCharacter : Profile  {
 	
 	// character	
 	
-	public GameItemRPG GetCurrentCharacterRPG() {
-		return GetCurrentCharacter().characterRPG;
+	public GameProfileRPGItem GetCurrentCharacterRPG() {
+		return GetCurrentCharacter().profileRPGItem;
 	}
 	
 	public GameProfileCharacterItem GetCurrentCharacter() {
-		return GetCharacter(GetCurrentCharacterCode());
+		return GetCharacter("default");
 	}
 	
-	public GameItemRPG GetCharacterRPG(string code) {
-		return GetCharacter(code).characterRPG;
+	public GameProfileRPGItem GetCharacterRPG(string code) {
+		return GetCharacter(code).profileRPGItem;
 	}
 	
 	public GameProfileCharacterItem GetCharacter(string code) {
@@ -188,6 +217,18 @@ public class BaseGameProfileCharacter : Profile  {
 	public void SetCharacter(string code, GameProfileCharacterItem item) {
 		GetCharacters().SetCharacter(code, item);
 	}
+
+    public void SetCharacter(GameProfileCharacterItem item) {
+        GetCharacters().SetCharacter("default", item);
+    }
+
+    public void SetCharacterRPG(string code, GameProfileRPGItem item) {
+        GetCharacters().SetCharacterRPG(code, item);
+    }
+
+    public void SetCharacterRPG(GameProfileRPGItem item) {
+        GetCharacters().SetCharacterRPG("default", item);
+    }
 		
 	// customizations		
 	
