@@ -156,6 +156,8 @@ public class BaseGameProfileCharacter : Profile  {
         string dataText = JsonMapper.ToJson(obj);
         LogUtil.Log("SetCharcters: " + dataText);
         SetAttributeStringValue(BaseGameProfileCharacterAttributes.ATT_CHARACTERS, dataText);
+
+        Messenger.Broadcast(BaseGameProfileMessages.ProfileShouldBeSaved);
     }
 
     public virtual GameProfileCharacterItems GetCharacters() {		
@@ -166,8 +168,6 @@ public class BaseGameProfileCharacter : Profile  {
         if (!CheckIfAttributeExists(key)) {
 
             SetCharacters(obj);
-			
-            Messenger.Broadcast(BaseGameProfileMessages.ProfileShouldBeSaved);
         }
 
         string json = GetAttributeStringValue(key);
@@ -219,19 +219,23 @@ public class BaseGameProfileCharacter : Profile  {
 	}	
 	
 	public void SetCharacter(string code, GameProfileCharacterItem item) {
-		GetCharacters().SetCharacter(code, item);
+        GameProfileCharacterItems characters = GetCharacters();
+		characters.SetCharacter(code, item);
+        SetCharacters(characters);
 	}
 
     public void SetCharacter(GameProfileCharacterItem item) {
-        GetCharacters().SetCharacter("default", item);
+        SetCharacter("default", item);
     }
 
     public void SetCharacterRPG(string code, GameProfileRPGItem item) {
-        GetCharacters().SetCharacterRPG(code, item);
+        GameProfileCharacterItems characters = GetCharacters();
+        characters.SetCharacterRPG("default", item);
+        SetCharacters(characters);
     }
 
     public void SetCharacterRPG(GameProfileRPGItem item) {
-        GetCharacters().SetCharacterRPG("default", item);
+        SetCharacterRPG("default", item);
     }
 		
 	// customizations		
