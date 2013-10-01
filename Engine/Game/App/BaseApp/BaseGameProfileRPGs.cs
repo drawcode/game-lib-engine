@@ -427,8 +427,9 @@ public class BaseGameProfileRPG : Profile {
         base.Reset();
         username = ProfileConfigs.defaultPlayerName;
     }
- 
-    // upgrades_applied
+
+    // ----------------------------------------------------------
+    // UPGRADES_APPLIED
  
     public virtual double GetUpgradesApplied() {
         return GetUpgradesApplied(0.0);
@@ -444,8 +445,9 @@ public class BaseGameProfileRPG : Profile {
     public virtual void SetUpgradesApplied(double val) {
         SetAttributeDoubleValue(GameItemRPGAttributes.upgrades_applied, val);
     }
- 
-    // upgrades
+
+    // ----------------------------------------------------------
+    // UPGRADES
 
     public virtual double AddUpgrades(double val) {
         double upgrades = GetUpgrades();
@@ -478,8 +480,9 @@ public class BaseGameProfileRPG : Profile {
     public virtual void SetUpgrades(double val) {
         SetAttributeDoubleValue(GameItemRPGAttributes.upgrades, val);
     }
-     
-    // customizations
+
+    // ----------------------------------------------------------
+    // CUSTOMIZATIONS
  
     public virtual void SetValue(string code, object value) {
         DataAttribute att = new DataAttribute();
@@ -495,24 +498,18 @@ public class BaseGameProfileRPG : Profile {
         return GetAttributesList("rpg");
     }
 
-
+    // ----------------------------------------------------------
     // CURRENCY
 
     public virtual double AddCurrency(double val) {
-        double currency = GetCurrency();
-        currency += val;
-        SetCurrency(currency);
-        return currency;
+        double v = GetCurrency();
+        v += val;
+        SetCurrency(v);
+        return v;
     }
 
     public virtual double SubtractCurrency(double val) {
-        double currency = GetCurrency();
-        if(val > 0) {
-            val = -val;
-        }
-        currency += val;
-        SetCurrency(currency);
-        return currency;
+        return AddCurrency(-val);
     }
  
     public virtual double GetCurrency() {
@@ -544,8 +541,23 @@ public class BaseGameProfileRPG : Profile {
     public virtual void SetGamePlayerProgressCurrency(double attValue) {
         SetAttributeDoubleValue(BaseGameProfileRPGAttributes.ATT_PROGRESS_CURRENCY, attValue);
     }
- 
+
+    // ----------------------------------------------------------
     // RPG - Player specific
+
+    // -------------
+    // XP
+
+    public virtual double AddGamePlayerProgressXP(double val) {
+        double v = GetGamePlayerProgressXP();
+        v += val;
+        SetGamePlayerProgressXP(v);
+        return v;
+    }
+
+    public virtual double SubtractGamePlayerProgressXP(double val) {
+        return AddGamePlayerProgressXP(-val);
+    }
  
     public double GetGamePlayerProgressXP() {
         return GetGamePlayerProgressXP(10.0);
@@ -560,6 +572,20 @@ public class BaseGameProfileRPG : Profile {
  
     public void SetGamePlayerProgressXP(double attValue) {
         SetAttributeDoubleValue(BaseGameProfileRPGAttributes.ATT_PROGRESS_XP, attValue);
+    }
+
+    // -------------
+    // LEVEL
+
+    public virtual double AddGamePlayerProgressLevel(double val) {
+        double v = GetGamePlayerProgressLevel();
+        v += val;
+        SetGamePlayerProgressLevel(v);
+        return v;
+    }
+
+    public virtual double SubtractGamePlayerProgressLevel(double val) {
+        return AddGamePlayerProgressLevel(-val);
     }
  
     public double GetGamePlayerProgressLevel() {
@@ -577,6 +603,20 @@ public class BaseGameProfileRPG : Profile {
     public void SetGamePlayerProgressLevel(double attValue) {
         SetAttributeDoubleValue(BaseGameProfileRPGAttributes.ATT_PROGRESS_LEVEL, attValue);
     }
+
+    // -------------
+    // HEALTH
+
+    public virtual double AddGamePlayerProgressHealth(double val) {
+        double v = GetGamePlayerProgressHealth();
+        v += val;
+        SetGamePlayerProgressHealth(v);
+        return v;
+    }
+
+    public virtual double SubtractGamePlayerProgressHealth(double val) {
+        return AddGamePlayerProgressHealth(-val);
+    }
  
     public double GetGamePlayerProgressHealth() {
         return GetGamePlayerProgressHealth(1.0);
@@ -592,6 +632,20 @@ public class BaseGameProfileRPG : Profile {
  
     public void SetGamePlayerProgressHealth(double attValue) {
         SetAttributeDoubleValue(BaseGameProfileRPGAttributes.ATT_PROGRESS_HEALTH, attValue);
+    }
+
+    // -------------
+    // ENERGY
+
+    public virtual double AddGamePlayerProgressEnergy(double val) {
+        double v = GetGamePlayerProgressEnergy();
+        v += val;
+        SetGamePlayerProgressEnergy(v);
+        return v;
+    }
+
+    public virtual double SubtractGamePlayerProgressEnergy(double val) {
+        return AddGamePlayerProgressEnergy(-val);
     }
  
     public double GetGamePlayerProgressEnergy() {
