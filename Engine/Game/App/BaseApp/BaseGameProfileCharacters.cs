@@ -50,6 +50,24 @@ public class BaseGameProfileCharacters {
     }
  
     // TODO: Common profile actions, lookup, count, etc
+
+    public static GameProfilePlayerProgress currentProgress {
+        get {
+            return GameProfileCharacters.Current.GetCurrentCharacter().profilePlayerProgress;
+        }
+    }
+
+    public static GameProfileRPGItem currentRPG {
+        get {
+            return GameProfileCharacters.Current.GetCurrentCharacter().profileRPGItem;
+        }
+    }
+
+    public static GameProfileCustomItem currentCustom {
+        get {
+            return GameProfileCharacters.Current.GetCurrentCharacter().profileCustomItem;
+        }
+    }
 }
 
 public class GameProfileCharacterItems {
