@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.IO;
 
 using Engine.Data.Json;
+using Engine.Events;
 using Engine.Utility;
 
 public class BaseGameProfileRPGAttributes {
@@ -93,6 +94,139 @@ public class GameItemRPGAttributes {
     public static string level = prefix + "level";
     public static string currency = prefix + "currency";
     public static string data = prefix + "data";
+}
+
+public class GameProfilePlayerProgress : DataObject {
+
+    public GameProfilePlayerProgress() {
+        Reset();
+    }
+
+    public void Reset() {
+        attributes = new Dictionary<string, DataAttribute>();
+    }
+
+    // ----------------------------------------------------------
+    // RPG - Player Character specific
+
+    // -------------
+    // XP
+
+    public virtual double AddGamePlayerProgressXP(double val) {
+        double v = GetGamePlayerProgressXP();
+        v += val;
+        SetGamePlayerProgressXP(v);
+        return v;
+    }
+
+    public virtual double SubtractGamePlayerProgressXP(double val) {
+        return AddGamePlayerProgressXP(-val);
+    }
+ 
+    public double GetGamePlayerProgressXP() {
+        return GetGamePlayerProgressXP(10.0);
+    }
+ 
+    public double GetGamePlayerProgressXP(double defaultValue) {
+        double attValue = defaultValue;
+        if(CheckIfAttributeExists(BaseGameProfileRPGAttributes.ATT_PROGRESS_XP))
+            attValue = GetAttributeDoubleValue(BaseGameProfileRPGAttributes.ATT_PROGRESS_XP);
+        return attValue;
+    }
+ 
+    public void SetGamePlayerProgressXP(double attValue) {
+        SetAttributeDoubleValue(BaseGameProfileRPGAttributes.ATT_PROGRESS_XP, attValue);
+    }
+
+    // -------------
+    // LEVEL
+
+    public virtual double AddGamePlayerProgressLevel(double val) {
+        double v = GetGamePlayerProgressLevel();
+        v += val;
+        SetGamePlayerProgressLevel(v);
+        return v;
+    }
+
+    public virtual double SubtractGamePlayerProgressLevel(double val) {
+        return AddGamePlayerProgressLevel(-val);
+    }
+ 
+    public double GetGamePlayerProgressLevel() {
+        return GetGamePlayerProgressLevel(0.0);
+    }
+ 
+    public double GetGamePlayerProgressLevel(double defaultValue) {
+     
+        double attValue = defaultValue;
+        if(CheckIfAttributeExists(BaseGameProfileRPGAttributes.ATT_PROGRESS_LEVEL))
+            attValue = GetAttributeDoubleValue(BaseGameProfileRPGAttributes.ATT_PROGRESS_LEVEL);
+        return attValue;
+    }
+ 
+    public void SetGamePlayerProgressLevel(double attValue) {
+        SetAttributeDoubleValue(BaseGameProfileRPGAttributes.ATT_PROGRESS_LEVEL, attValue);
+    }
+
+    // -------------
+    // HEALTH
+
+    public virtual double AddGamePlayerProgressHealth(double val) {
+        double v = GetGamePlayerProgressHealth();
+        v += val;
+        SetGamePlayerProgressHealth(v);
+        return v;
+    }
+
+    public virtual double SubtractGamePlayerProgressHealth(double val) {
+        return AddGamePlayerProgressHealth(-val);
+    }
+ 
+    public double GetGamePlayerProgressHealth() {
+        return GetGamePlayerProgressHealth(1.0);
+    }
+ 
+    public double GetGamePlayerProgressHealth(double defaultValue) {
+     
+        double attValue = defaultValue;
+        if(CheckIfAttributeExists(BaseGameProfileRPGAttributes.ATT_PROGRESS_HEALTH))
+            attValue = GetAttributeDoubleValue(BaseGameProfileRPGAttributes.ATT_PROGRESS_HEALTH);
+        return attValue;
+    }
+ 
+    public void SetGamePlayerProgressHealth(double attValue) {
+        SetAttributeDoubleValue(BaseGameProfileRPGAttributes.ATT_PROGRESS_HEALTH, attValue);
+    }
+
+    // -------------
+    // ENERGY
+
+    public virtual double AddGamePlayerProgressEnergy(double val) {
+        double v = GetGamePlayerProgressEnergy();
+        v += val;
+        SetGamePlayerProgressEnergy(v);
+        return v;
+    }
+
+    public virtual double SubtractGamePlayerProgressEnergy(double val) {
+        return AddGamePlayerProgressEnergy(-val);
+    }
+ 
+    public double GetGamePlayerProgressEnergy() {
+        return GetGamePlayerProgressEnergy(0.0);
+    }
+ 
+    public double GetGamePlayerProgressEnergy(double defaultValue) {
+     
+        double attValue = defaultValue;
+        if(CheckIfAttributeExists(BaseGameProfileRPGAttributes.ATT_PROGRESS_ENERGY))
+            attValue = GetAttributeDoubleValue(BaseGameProfileRPGAttributes.ATT_PROGRESS_ENERGY);
+        return attValue;
+    }
+ 
+    public void SetGamePlayerProgressEnergy(double attValue) {
+        SetAttributeDoubleValue(BaseGameProfileRPGAttributes.ATT_PROGRESS_ENERGY, attValue);
+    }
 }
 
 public class GameProfileRPGItem : DataObject {
@@ -410,6 +544,127 @@ public class GameProfileCustomItem : DataObject {
     public void Reset() {
       attributes = new Dictionary<string, DataAttribute>();
     }
+
+    // ----------------------------------------------------------
+    // color items
+
+    public virtual string GetCustomColorItemKey(string key) {
+        string fullKey = BaseGameProfileAttributes.ATT_CUSTOM_COLOR_ITEM;
+        fullKey = fullKey + "-" + key.ToLower().Trim().Replace(" ", "-");
+        return fullKey;
+    }
+
+    public virtual void SetCustomColorItem(string colorKey, CustomColorItem colorItem) {
+        string key = GetCustomColorItemKey(colorKey);
+        string colorItemText = JsonMapper.ToJson(colorItem);
+        LogUtil.Log("SetCustomColorItem: " + colorItemText);
+        SetAttributeStringValue(key, colorItemText);
+    }
+
+    public virtual CustomColorItem GetCustomColorItem(string colorKey) {
+        CustomColorItem colorItem = new CustomColorItem();
+
+        string key = GetCustomColorItemKey(colorKey);
+
+        if(!CheckIfAttributeExists(key)) {
+
+            // add default colorItem
+            SetCustomColorItem(key, new CustomColorItem());
+            Messenger.Broadcast(BaseGameProfileMessages.ProfileShouldBeSaved);
+        }
+
+        string json = GetAttributeStringValue(key);
+        if(!string.IsNullOrEmpty(json)) {
+            try {
+                LogUtil.Log("GetCustomColorItem: " + json);
+                colorItem = JsonMapper.ToObject<CustomColorItem>(json);
+            }
+            catch(Exception e) {
+                colorItem = new CustomColorItem();
+                LogUtil.Log(e);
+            }
+        }
+        return colorItem;
+    }
+
+    // ----------------------------------------------------------
+    // color items
+
+
+    /*
+
+public class CustomPlayerColorsRunner : DataObject {
+    public string colorCode;
+    public string colorDisplayName;
+
+    public CustomColorItem helmetColor;
+    public CustomColorItem helmetFacemaskColor;
+    public CustomColorItem helmetHighlightColor;
+    public CustomColorItem jerseyColor;
+    public CustomColorItem jerseyHighlightColor;
+    public CustomColorItem pantsColor;
+ 
+    public CustomColorItem extra1Color;
+    public CustomColorItem extra2Color;
+    public CustomColorItem extra3Color;
+
+    public CustomPlayerColorsRunner() {
+        Reset();
+    }
+
+    public override void Reset() {
+        base.Reset();
+
+        colorCode = "default";
+        colorDisplayName = "Default";
+     //SetMaterialColor name:helmet-facemask color:RGBA(0.838, 1.000, 0.595, 1.000)
+     //SetMaterialColor name:helmet-main color:RGBA(1.000, 0.189, 0.192, 1.000)
+
+
+        helmetColor = new CustomColorItem();
+     helmetColor.FromColor(new Color(0.979f, 0.943f, 0.938f, 1.000f));
+     
+        helmetFacemaskColor = new CustomColorItem();
+     helmetFacemaskColor.FromColor(new Color(0.973f, 0.974f, 0.991f, 1.000f));
+     
+        helmetHighlightColor = new CustomColorItem();
+     helmetHighlightColor.FromColor(new Color(0.442f, 0.114f, 0.067f, 1.000f));
+     
+        jerseyColor = new CustomColorItem();
+     jerseyColor.FromColor(new Color(0.448f, 0.093f, 0.042f, 1.000f));
+     
+        jerseyHighlightColor = new CustomColorItem();
+     jerseyHighlightColor.FromColor(new Color(0.974f, 0.955f, 0.952f, 1.000f));
+     
+        pantsColor = new CustomColorItem();
+     pantsColor.FromColor(new Color(0.979f, 0.943f, 0.938f, 1.000f));
+     
+        extra1Color = new CustomColorItem();
+     extra1Color.FromColor(new Color(1.000f, 0.189f, 0.192f, 1.000f));
+     
+        extra2Color = new CustomColorItem();
+     extra2Color.FromColor(new Color(1.000f, 0.189f, 0.192f, 1.000f));
+     
+        extra3Color = new CustomColorItem();
+     extra3Color.FromColor(new Color(1.000f, 0.189f, 0.192f, 1.000f));
+    }
+
+    public override string ToString() {
+        System.Text.StringBuilder sb = new System.Text.StringBuilder();
+        sb.Append(String.Format("CustomPlayerColors name: {0}", colorDisplayName));
+        sb.Append(String.Format("\r\n\r\n helmetColor: {0}", helmetColor.ToString()));
+        sb.Append(String.Format("\r\n\r\n helmetFacemaskColor: {0}", helmetFacemaskColor.ToString()));
+        sb.Append(String.Format("\r\n\r\n helmetHighlightColor: {0}", helmetHighlightColor.ToString()));
+        sb.Append(String.Format("\r\n\r\n jerseyColor: {0}", jerseyColor.ToString()));
+        sb.Append(String.Format("\r\n\r\n jerseyHighlightColor: {0}", jerseyHighlightColor.ToString()));
+        sb.Append(String.Format("\r\n\r\n pantsColor: {0}", pantsColor.ToString()));
+        sb.Append(String.Format("\r\n\r\n extra1Color: {0}", extra1Color.ToString()));
+        sb.Append(String.Format("\r\n\r\n extra2Color: {0}", extra2Color.ToString()));
+        sb.Append(String.Format("\r\n\r\n extra3Color: {0}", extra3Color.ToString()));
+        return sb.ToString();
+    }
+}
+*/
 }
 
 

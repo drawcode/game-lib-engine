@@ -130,6 +130,7 @@ public class GameProfileCharacterItem : DataObject {
     public string characterCode = "default";
     public string characterCostumeCode = "default";
     public GameProfileRPGItem profileRPGItem;
+    public GameProfilePlayerProgress profilePlayerProgress;
     public GameProfileCustomItem profileCustomItem;
 
     public GameProfileCharacterItem() {
@@ -142,6 +143,7 @@ public class GameProfileCharacterItem : DataObject {
         characterCode = "default";
         characterCostumeCode = "default";
         profileRPGItem = new GameProfileRPGItem();
+        profilePlayerProgress = new GameProfilePlayerProgress();
         profileCustomItem = new GameProfileCustomItem();
     }
 }

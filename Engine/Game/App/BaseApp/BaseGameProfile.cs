@@ -43,6 +43,7 @@ public class BaseGameProfileAttributes {
     public static string ATT_CUSTOM_AUDIO = "custom-audio";
     public static string ATT_CUSTOM_COLORS = "custom-colors";
     public static string ATT_CUSTOM_COLORS_RUNNER = "custom-colors-runner";
+    public static string ATT_CUSTOM_COLOR_ITEM = "custom-color-item";
  
     // SOCIAL
  
