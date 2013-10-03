@@ -268,6 +268,14 @@ public static class GameObjectHelper {
 			go.transform.localRotation = objectRotation;
 		}
 	}
+
+    public static void ResetPosition(GameObject go) {
+         if(go != null) {
+             Vector3 pos = Vector3.zero;
+             go.transform.position = pos;
+             go.transform.localPosition = pos;
+         }
+     }
 	
 	public static void RotateObjectX(GameObject go, float val) {
 		RotateObject(go, Vector3.zero.WithX(val));

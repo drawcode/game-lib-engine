@@ -340,6 +340,10 @@ public static class GameObjectExtensions {
 	public static void ResetRotation(this GameObject go) {
         GameObjectHelper.ResetRotation(go);   
 	}
+
+    public static void ResetPosition(this GameObject go) {
+        GameObjectHelper.ResetPosition(go);
+    }
 	
 	public static void RotateObjectX(this GameObject go, float val) {
         GameObjectHelper.RotateObjectX(go, val);
