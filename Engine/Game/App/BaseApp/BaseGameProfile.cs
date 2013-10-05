@@ -432,7 +432,7 @@ public class BaseGameProfile : Profile {
     // AUDIO VO
 
     public virtual double GetAudioVOVolume() {
-        return GetAudioVOVolume(0.5);
+        return GetAudioVOVolume(0.7);
     }
 
     public virtual double GetAudioVOVolume(double defaultValue) {
@@ -460,7 +460,7 @@ public class BaseGameProfile : Profile {
     // AUDIO EFFECTS
 
     public virtual double GetAudioEffectsVolume() {
-        return GetAudioEffectsVolume(0.5);
+        return GetAudioEffectsVolume(0.9);
     }
 
     public virtual double GetAudioEffectsVolume(double defaultValue) {

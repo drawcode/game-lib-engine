@@ -185,7 +185,7 @@ public class BaseGameProfileCharacter : Profile {
  
     public virtual void SetCharacters(GameProfileCharacterItems obj) {
         string dataText = JsonMapper.ToJson(obj);
-        LogUtil.Log("SetCharcters: " + dataText);
+        //LogUtil.Log("SetCharacters: " + dataText);
         SetAttributeStringValue(BaseGameProfileCharacterAttributes.ATT_CHARACTERS, dataText);
 
         Messenger.Broadcast(BaseGameProfileMessages.ProfileShouldBeSaved);
@@ -206,7 +206,7 @@ public class BaseGameProfileCharacter : Profile {
         if(!string.IsNullOrEmpty(json)) {
          
             try {
-                LogUtil.Log("GetCharcters: " + json);
+                //LogUtil.Log("GetCharacters: " + json);
                 obj = JsonMapper.ToObject<GameProfileCharacterItems>(json);
             }
             catch(Exception e) {
