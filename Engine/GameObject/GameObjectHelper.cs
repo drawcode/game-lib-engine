@@ -505,6 +505,26 @@ public static class GameObjectHelper {
 			particleSystem.emissionRate = emissionRate;
         }
 	}
+
+    public static void SetParticleSystemStartColor(GameObject inst, Color startColor, bool includeChildren) {
+        if(inst == null)
+            return;
+    
+        ParticleSystem particleSystemCurrent = inst.GetComponent<ParticleSystem>();
+        if(particleSystemCurrent != null) {
+            particleSystemCurrent.startColor = startColor;
+        }
+    
+        if(!includeChildren) {
+            return;
+        }
+    
+        ParticleSystem[] particleSystems = inst.GetComponentsInChildren<ParticleSystem>(true);
+    
+        foreach (ParticleSystem particleSystem in particleSystems) {
+            particleSystem.startColor = startColor;
+        }
+    }
 	
 	public static void PlayParticleSystem(GameObject inst, bool includeChildren) {
 		if(inst == null)

@@ -244,6 +244,12 @@ public static class GameObjectExtensions {
         GameObjectHelper.HideRenderers(inst);
     }
 
+    public static void SetParticleSystemStartColor(this GameObject inst, Color startColor, bool includeChildren) {
+        if(inst == null)
+            return;
+
+        GameObjectHelper.SetParticleSystemStartColor(inst, startColor, includeChildren);
+    }
 
     public static void PlayParticleSystem(this GameObject inst, bool includeChildren) {
         if(inst == null)
