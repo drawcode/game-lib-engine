@@ -338,17 +338,33 @@ public static class GameObjectExtensions {
 	public static void ResetObject(this GameObject go) {
         GameObjectHelper.ResetObject(go);           
 	}
+
+    public static void ResetObject(this GameObject go, bool includeChildren) {
+        GameObjectHelper.ResetObject(go, includeChildren);
+    }
 	
 	public static void ResetScale(this GameObject go, float valueTo) {
         GameObjectHelper.ResetScale(go, valueTo);   
 	}
+
+    public static void ResetScale(this GameObject go, float valueTo, bool includeChildren) {
+        GameObjectHelper.ResetScale(go, valueTo, includeChildren);
+    }
 	
 	public static void ResetRotation(this GameObject go) {
         GameObjectHelper.ResetRotation(go);   
 	}
 
+    public static void ResetRotation(this GameObject go, bool includeChildren) {
+        GameObjectHelper.ResetRotation(go, includeChildren);
+    }
+
     public static void ResetPosition(this GameObject go) {
         GameObjectHelper.ResetPosition(go);
+    }
+
+    public static void ResetPosition(this GameObject go, bool includeChildren) {
+        GameObjectHelper.ResetPosition(go, includeChildren);
     }
 	
 	public static void RotateObjectX(this GameObject go, float val) {

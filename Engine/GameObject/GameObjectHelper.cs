@@ -245,11 +245,24 @@ public static class GameObjectHelper {
 			go.transform.localScale = currentObjectScale;
 		}            
     }
-        
-	public static void ResetObject(GameObject go) {
+
+    public static void ResetObject(GameObject go) {
 		ResetScale(go, 1);
 		ResetRotation(go);
+        ResetPosition(go);
 	}
+
+    public static void ResetObject(GameObject go, bool includeChildren) {
+        if(go != null) {
+            ResetObject(go);
+
+            if(includeChildren) {
+                foreach(Transform t in go.transform) {
+                    ResetObject(t.gameObject);
+                }
+            }
+        }
+    }
 	
 	public static void ResetScale(GameObject go, float valueTo) {
 		if(go != null) {        
@@ -260,6 +273,18 @@ public static class GameObjectHelper {
 			go.transform.localScale = currentObjectScale;
 		}
 	}
+
+    public static void ResetScale(GameObject go, float valueTo, bool includeChildren) {
+        if(go != null) {
+            ResetScale(go, valueTo);
+
+            if(includeChildren) {
+                foreach(Transform t in go.transform) {
+                    ResetScale(t.gameObject, valueTo);
+                }
+            }
+        }
+    }
 	
 	public static void ResetRotation(GameObject go) {
 		if(go != null) {        
@@ -269,13 +294,37 @@ public static class GameObjectHelper {
 		}
 	}
 
+    public static void ResetRotation(GameObject go, bool includeChildren) {
+        if(go != null) {
+            ResetRotation(go);
+
+            if(includeChildren) {
+                foreach(Transform t in go.transform) {
+                    ResetRotation(t.gameObject);
+                }
+            }
+        }
+    }
+
     public static void ResetPosition(GameObject go) {
          if(go != null) {
              Vector3 pos = Vector3.zero;
              go.transform.position = pos;
              go.transform.localPosition = pos;
          }
-     }
+    }
+
+    public static void ResetPosition(GameObject go, bool includeChildren) {
+        if(go != null) {
+            ResetPosition(go);
+
+            if(includeChildren) {
+                foreach(Transform t in go.transform) {
+                    ResetPosition(t.gameObject);
+                }
+            }
+        }
+    }
 	
 	public static void RotateObjectX(GameObject go, float val) {
 		RotateObject(go, Vector3.zero.WithX(val));
