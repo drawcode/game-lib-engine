@@ -821,4 +821,49 @@ public static class GameObjectHelper {
 			
 		return null;	
 	}
+
+    // RIGIDBODY
+
+    public static void FreezeRigidbodies(GameObject inst) {
+
+        if(inst == null) {
+            return;
+        }
+
+        Rigidbody[] rigidbodies
+            = inst.GetComponents<Rigidbody>();
+
+        foreach(Rigidbody r in rigidbodies) {
+            r.Freeze();
+        }
+
+        Rigidbody[] rigidbodiesChildren
+            = inst.GetComponentsInChildren<Rigidbody>(true);
+
+        foreach(Rigidbody r in rigidbodiesChildren) {
+            r.Freeze();
+        }
+    }
+
+    public static void UnFreezeRigidbodies(GameObject inst) {
+
+        if(inst == null) {
+            return;
+        }
+
+        Rigidbody[] rigidbodies
+            = inst.GetComponents<Rigidbody>();
+
+        foreach(Rigidbody r in rigidbodies) {
+            r.UnFreeze();
+        }
+
+        Rigidbody[] rigidbodiesChildren
+            = inst.GetComponentsInChildren<Rigidbody>(true);
+
+        foreach(Rigidbody r in rigidbodiesChildren) {
+            r.UnFreeze();
+        }
+    }
+
 }

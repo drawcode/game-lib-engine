@@ -402,5 +402,15 @@ public static class GameObjectExtensions {
 	public static GameObject LoadFromBundle(this GameObject go, string path) {
 		return GameObjectHelper.LoadFromBundle(path);
 	}
+
+    // RIGIDBODIES
+
+    public static void FreezeRigidBodies(this GameObject go) {
+        GameObjectHelper.FreezeRigidbodies(go);
+    }
+
+    public static void UnFreezeRigidBodies(this GameObject go) {
+        GameObjectHelper.UnFreezeRigidbodies(go);
+    }
 	
 }
