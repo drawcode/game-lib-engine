@@ -160,7 +160,7 @@ public class LogUtil {
     }
 
     public static void Log(string key, object message) {
-        LogUtil.Instance.LogInternal(message);
+        LogUtil.Instance.LogInternal(key + ":" + message);
     }
 
     public static void Log(object message) {
