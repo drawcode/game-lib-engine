@@ -60,12 +60,6 @@ public class AppStates : BaseAppStates<AppState>
 		LoadData();
 	}
 	
-	public void ChangeState(string code) {
-		if(Current.code != code) {
-			Current = GetById(code);
-		}
-	}
-	
 	/*
 	public void ChangeState(AppState appStateTo) {
 		if(lastAppState != appStateTo) {

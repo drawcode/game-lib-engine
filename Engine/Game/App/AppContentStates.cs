@@ -63,64 +63,7 @@ public class AppContentStates : BaseAppContentStates<AppContentState>
 		pathKey = DATA_KEY;
 		LoadData();
 	}
-	
-	public void ChangeState(string code) {
-		if(Current.code != code) {
-			Current = GetById(code);
-		}
-	}
-	
-	/*
-	public List<AppContentState> GetListByPack(string packCode) {
-		List<AppContentState> filteredList = new List<AppContentState>();
-		foreach(AppContentState obj in GetAll()) {
-			if(packCode.ToLower() == obj.pack_code.ToLower()) {
-				filteredList.Add(obj);
-			}
-		}
-		
-		return filteredList;
-	}
-	*/
-	
-	public List<AppContentState> GetListByCodeAndPackCode(string stateCode, string packCode) {
-		List<AppContentState> filteredList = new List<AppContentState>();
-		foreach(AppContentState obj in GetListByPack(packCode)) {
-			if(stateCode.ToLower() == obj.code.ToLower()) {
-				filteredList.Add(obj);
-			}
-		}
-		
-		return filteredList;
-	}
-	
-	public List<AppContentState> GetByAppState(string appState) {
-		Dictionary<string, int> packSorts = new Dictionary<string, int>();
-		List<AppContentState> appContentStates = new List<AppContentState>();
-		foreach(AppContentState state in GetAll()) {
-			if(state.appStates.Contains(appState) 
-				|| state.appStates.Contains("*")) {
-				int sortOrder = 1;
-				if(packSorts.ContainsKey(state.pack_code)) {
-					sortOrder = packSorts[state.pack_code];
-				}
-				else {
-					GamePack gamePack = GamePacks.Instance.GetById(state.pack_code);
-					if(gamePack != null) {
-						sortOrder = gamePack.sort_order;
-						packSorts.Add(state.pack_code, sortOrder);
-					}
-				}
-				state.sort_order = state.sort_order * sortOrder;
-				appContentStates.Add(state);
-			}			
-		}
-		appContentStates = SortList(appContentStates);
-		
-		return appContentStates;
-	}
-	
-	
+
 	/*
 	public void ChangeState(AppState appStateTo) {
 		if(lastAppState != appStateTo) {
@@ -183,14 +126,6 @@ public class AppContentStates : BaseAppContentStates<AppContentState>
 	*/
 }
 
-public class DataPlatformStoreMeta {
-	public string platform = "";
-	public string url = "";
-	public string storeUrl = "";
-	public string appId = "";
-	public string locale = "en";
-	public string price = "0";
-}
 
 public class AppContentState : BaseAppContentState 
 {
@@ -205,31 +140,6 @@ public class AppContentState : BaseAppContentState
 	public override void Reset() {
 		base.Reset();
 	}
-	
-	public DataPlatformStoreMeta GetDataPlatformAttribute(string key) {
-		key = GetPlatformAttributeKey(key);
-		//UnityEngine.Debug.LogWarning("key:" + key);
-		string json = GetAttributeStringValue(key);
-		//UnityEngine.Debug.LogWarning("json:" + json);
-		//UnityEngine.Debug.LogWarning("json:" + json.Replace("\\\"", "\""));
-		if(!string.IsNullOrEmpty(json)) {
-			try {
-				return JsonMapper.ToObject<DataPlatformStoreMeta>(json);
-			}
-			catch (Exception e){
-				UnityEngine.Debug.LogWarning("Error parsing DataPlatformStoreMeta" + e);
-			}
-		}
-		return null;
-	}
-	
-	public DataPlatformStoreMeta GetDataPlatformStoreMeta() {
-		string key = "storemeta";
-		return GetDataPlatformAttribute(key);
-	}
-	
-	public bool IsExternalContent() {
-		return GetDataPlatformStoreMeta() != null;
-	}
+
 	
 }

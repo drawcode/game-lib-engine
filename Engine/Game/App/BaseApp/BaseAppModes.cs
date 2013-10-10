@@ -51,6 +51,19 @@ public class BaseAppModes<T> : DataObjects<T> where T : new() {
         pathKey = BASE_DATA_KEY;
         LoadData();
     }
+
+    public void ChangeState(string code) {
+
+        if(AppModes.Current.code != code) {
+
+            AppMode appMode = AppModes.Instance.GetByCode(code);
+
+            if(appMode != null) {
+                AppModes.Current = appMode;
+                LogUtil.Log("AppModes:ChangeState:code:" + AppModes.Current.code);
+            }
+        }
+    }
 }
 
 public class BaseAppMode : GameDataObject {

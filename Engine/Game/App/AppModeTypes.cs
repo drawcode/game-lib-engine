@@ -59,12 +59,6 @@ public class AppModeTypes : BaseAppModeTypes<AppModeType> {
         pathKey = DATA_KEY;
         LoadData();
     }
-    
-    public void ChangeState(string code) {
-        if(Current.code != code) {
-            Current = GetById(code);
-        }
-    }
 }
 
 public class AppModeType : BaseAppModeType {

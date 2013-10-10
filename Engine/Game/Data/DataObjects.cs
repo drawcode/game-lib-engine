@@ -397,6 +397,10 @@ public class DataObjects<T> {
         return objs;
     }
 
+    public T GetByCode(string code) {
+        return GetByStringKey("code", code);
+    }
+
     public T GetById(string id) {
         return GetByStringKey("code", id);
     }
@@ -407,6 +411,10 @@ public class DataObjects<T> {
 
     public bool CheckById(string id) {
         return CheckByStringKey("code", id);
+    }
+
+    public bool CheckByCode(string code) {
+        return CheckByStringKey("code", code);
     }
 
     public T GetByUuid(string id) {

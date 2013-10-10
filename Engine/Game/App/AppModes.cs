@@ -12,7 +12,7 @@ public class AppModes : BaseAppModes<AppMode> {
     private static volatile AppModes instance;
     private static System.Object syncRoot = new System.Object();
     
-    public static string DATA_KEY = "app-mode-type-data";
+    public static string DATA_KEY = "app-mode-data";
     
     public static AppMode Current {
 
@@ -50,7 +50,6 @@ public class AppModes : BaseAppModes<AppMode> {
          
     public AppModes() {
         Reset();
-        ChangeState(AppModeDefaults.gameModeTypeArcade);
     }
 
     public AppModes(bool loadData) {
@@ -58,12 +57,6 @@ public class AppModes : BaseAppModes<AppMode> {
         path = "data/" + DATA_KEY + ".json";
         pathKey = DATA_KEY;
         LoadData();
-    }
-    
-    public void ChangeState(string code) {
-        if(Current.code != code) {
-            Current = GetById(code);
-        }
     }
 }
 

@@ -51,6 +51,19 @@ public class BaseAppStates<T> : DataObjects<T> where T : new() {
         pathKey = BASE_DATA_KEY;
         LoadData();
     }
+
+    public void ChangeState(string code) {
+
+        if(AppStates.Current.code != code) {
+
+            AppState appState = AppStates.Instance.GetByCode(code);
+
+            if(appState != null) {
+                AppStates.Current = appState;
+                LogUtil.Log("AppStates:ChangeState:code:" + AppStates.Current.code);
+            }
+        }
+    }
 }
 
 public class BaseAppState : GameDataObject {
