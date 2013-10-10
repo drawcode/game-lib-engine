@@ -128,8 +128,7 @@ public class AppStates : BaseAppStates<AppState>
 	*/
 }
 
-public class AppState : BaseAppState 
-{
+public class AppState : BaseAppState {
 	
 	// Attributes that are added or changed after launch should be like this to prevent
 	// profile conversions.

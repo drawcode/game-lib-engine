@@ -675,6 +675,8 @@ public class BaseMeta : BaseEntity {
 
     public string code;
 
+    public string parent_code;
+
     public string display_name;
 
     public string name;
@@ -687,6 +689,7 @@ public class BaseMeta : BaseEntity {
 
     public override void Reset() {
         base.Reset();
+        parent_code = "";
         code = "";
         display_name = "";
         name = "";

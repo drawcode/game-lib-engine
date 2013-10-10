@@ -605,6 +605,10 @@ public class DataObjects<T> {
 	public List<T> GetListByPack(string val) {
             return GetListPack(val, true);
     }
+
+    public List<T> GetListByParentCode(string val) {
+            return GetList("parent_code", val);
+    }
 	
 	public List<T> GetListPack(object val, bool all) {
             return GetListPack("pack_code", val, all);
