@@ -2,8 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 
-public class AppModeDefaults {
-    public static string gameModeTypeArcade = "game-mode-type-arcade";
+public class AppModeMeta : BaseAppModeMeta {
+    //public static string appModeTypeGameDefault = "app-mode-game-default";
 }
 
 public class AppModes : BaseAppModes<AppMode> {

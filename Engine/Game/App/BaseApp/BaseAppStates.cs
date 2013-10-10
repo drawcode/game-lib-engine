@@ -2,6 +2,11 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 
+public class BaseAppStateMeta {
+    //public static string appModeTypeGameDefault = "app-mode-game-default";
+    public static string appStateGame = "app-state-game";
+}
+
 public class BaseAppStates<T> : DataObjects<T> where T : new() {
     private static T current;
     private static volatile BaseAppStates<T> instance;

@@ -2,6 +2,26 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 
+/*
+AppModesTypes
+app-mode-type-game-default
+app-mode-type-game-choice
+app-mode-type-game-collection
+app-mode-type-game-content
+app-mode-type-game-tips
+
+
+*/
+
+public class BaseAppModeTypeMeta {
+    public static string appModeTypeGameDefault = "app-mode-type-game-default";
+    public static string appModeTypeGameChoice = "app-mode-type-game-choice";
+    public static string appModeTypeGameCollection = "app-mode-type-game-collection";
+    public static string appModeTypeGameContent = "app-mode-type-game-content";
+    public static string appModeTypeGameTips = "app-mode-type-game-tips";
+}
+
+
 public class BaseAppModeTypes<T> : DataObjects<T> where T : new() {
     private static T current;
     private static volatile BaseAppModeTypes<T> instance;

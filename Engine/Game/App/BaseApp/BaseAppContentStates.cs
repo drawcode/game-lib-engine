@@ -4,6 +4,29 @@ using System.IO;
 
 using Engine.Data.Json;
 
+/*
+AppContentStates
+app-content-state-game-arcade
+app-content-state-game-challenge
+app-content-state-game-training-choice-quiz
+app-content-state-game-training-collection-safety
+app-content-state-game-training-collection-smarts
+app-content-state-game-training-content
+app-content-state-game-training-tips
+
+*/
+
+public class BaseAppContentStateMeta {
+    //public static string appModeTypeGameDefault = "app-mode-game-default";
+    public static string appContentStateGameArcade = "app-content-state-game-arcade";
+    public static string appContentStateGameChallenge = "app-content-state-game-challenge";
+    public static string appContentStateGameTraining = "app-content-state-game-training";
+    public static string appContentStateGameTrainingChoice = "app-content-state-game-training-choice";
+    public static string appContentStateGameTrainingCollection = "app-content-state-game-training-collection";
+    public static string appContentStateGameContent = "app-content-state-game-content";
+    public static string appContentStateGameTips = "app-content-state-game-tips";
+}
+
 public class BaseAppContentStates<T> : DataObjects<T> where T : new() {
     private static T current;
     private static volatile BaseAppContentStates<T> instance;
@@ -61,19 +84,21 @@ public class BaseAppContentStates<T> : DataObjects<T> where T : new() {
 
             if(appContentState != null) {
 
-                if(AppContentStates.Current.code != appContentState.code) {
-                    AppContentStates.Current = appContentState;
-
-                    string modeType = appContentState.type;
-                    string mode = appContentState.key;
-                    string state = appContentState.GetAppStateDefault();
-
-                    AppStates.Instance.ChangeState(state);
-                    AppModes.Instance.ChangeState(mode);
-                    AppModeTypes.Instance.ChangeState(modeType);
-                }
+                AppContentStates.Current = appContentState;
 
                 LogUtil.Log("AppContentStates:code:" + AppContentStates.Current.code);
+
+                string modeType = appContentState.type;
+                string mode = appContentState.key;
+                string state = appContentState.GetAppStateDefault();
+
+                LogUtil.Log("AppContentStates:modeType:" + modeType);
+                LogUtil.Log("AppContentStates:mode:" + mode);
+                LogUtil.Log("AppContentStates:state:" + state);
+
+                AppStates.Instance.ChangeState(state);
+                AppModes.Instance.ChangeState(mode);
+                AppModeTypes.Instance.ChangeState(modeType);
             }
         }
     }

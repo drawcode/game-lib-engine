@@ -2,8 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 
-public class AppModeTypeDefaults {
-    public static string gameModeTypeArcade = "game-mode-type-arcade";
+public class AppModeTypeMeta : BaseAppModeTypeMeta {
+    //public static string appModeTypeGameDefault = "app-mode-type-game-default";
 }
 
 public class AppModeTypes : BaseAppModeTypes<AppModeType> {
@@ -50,7 +50,6 @@ public class AppModeTypes : BaseAppModeTypes<AppModeType> {
          
     public AppModeTypes() {
         Reset();
-        ChangeState(AppModeTypeDefaults.gameModeTypeArcade);
     }
 
     public AppModeTypes(bool loadData) {

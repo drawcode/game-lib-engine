@@ -5,6 +5,25 @@ using System.IO;
 using Engine.Events;
 using Engine.Data.Json;
 
+/*
+AppContentStates
+app-content-state-game-arcade
+app-content-state-game-challenge
+app-content-state-game-training-choice-quiz
+app-content-state-game-training-collection-safety
+app-content-state-game-training-collection-smarts
+app-content-state-game-training-content
+app-content-state-game-training-tips
+
+*/
+
+public class AppContentStateMeta : BaseAppContentStateMeta {
+    //public static string appModeTypeGameDefault = "app-mode-game-default";
+    public static string appContentStateGameTrainingChoiceQuiz = "app-content-state-game-training-choice-quiz";
+    public static string appContentStateGameTrainingCollectionSafety = "app-content-state-game-training-collection-safety";
+    public static string appContentStateGameTrainingCollectionSmarts = "app-content-state-game-training-collection-smarts";
+}
+
 public class AppContentStates : BaseAppContentStates<AppContentState>
 {
 	private static volatile AppContentState current;

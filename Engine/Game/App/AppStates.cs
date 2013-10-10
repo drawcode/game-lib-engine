@@ -2,18 +2,16 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 
+public class AppStateMeta : BaseAppStateMeta {
+    //public static string appModeTypeGameDefault = "app-mode-game-default";
+}
+
 public class AppStates : BaseAppStates<AppState>
 {
 	private static volatile AppState current;
 	private static volatile AppStates instance;
 	private static System.Object syncRoot = new System.Object();
-	
-	public static string APP_STATE_BOOKS = "app-state-books";
-	public static string APP_STATE_CARDS = "app-state-cards";
-	public static string APP_STATE_GAMES = "app-state-games";
-	public static string APP_STATE_SETTINGS = "app-state-settings";
-	public static string APP_STATE_TROPHIES = "app-state-trophies";
-		
+
 	public static string DATA_KEY = "app-state-data";
 		
 	public static AppState Current {
@@ -50,7 +48,6 @@ public class AppStates : BaseAppStates<AppState>
 			
 	public AppStates() {
 		Reset();
-		ChangeState(APP_STATE_BOOKS);
 	}
 	
 	public AppStates(bool loadData) {
