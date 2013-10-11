@@ -83,6 +83,24 @@ public class AppContentStates : BaseAppContentStates<AppContentState>
 		LoadData();
 	}
 
+    public bool isAppContentStateGameTrainingChoiceQuiz {
+        get {
+            return IsAppContentState(AppContentStateMeta.appContentStateGameTrainingChoiceQuiz);
+        }
+    }
+
+    public bool isAppContentStateGameTrainingCollectionSafety {
+        get {
+            return IsAppContentState(AppContentStateMeta.appContentStateGameTrainingCollectionSafety);
+        }
+    }
+
+    public bool isAppContentStateGameTrainingCollectionSmarts {
+        get {
+            return IsAppContentState(AppContentStateMeta.appContentStateGameTrainingCollectionSmarts);
+        }
+    }
+
 	/*
 	public void ChangeState(AppState appStateTo) {
 		if(lastAppState != appStateTo) {

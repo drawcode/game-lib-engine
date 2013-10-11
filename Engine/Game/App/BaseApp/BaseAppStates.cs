@@ -57,6 +57,19 @@ public class BaseAppStates<T> : DataObjects<T> where T : new() {
         LoadData();
     }
 
+    public bool isAppStateGame {
+        get {
+            return IsAppState(AppStateMeta.appStateGame);
+        }
+    }
+
+    public bool IsAppState(string code) {
+        if(AppStates.Current.code == code) {
+            return true;
+        }
+        return false;
+    }
+
     public void ChangeState(string code) {
 
         if(AppStates.Current.code != code) {
@@ -65,6 +78,9 @@ public class BaseAppStates<T> : DataObjects<T> where T : new() {
 
             if(appState != null) {
                 AppStates.Current = appState;
+
+                GameProfiles.Current.SetCurrentAppState(code);
+
                 LogUtil.Log("AppStates:ChangeState:code:" + AppStates.Current.code);
             }
         }

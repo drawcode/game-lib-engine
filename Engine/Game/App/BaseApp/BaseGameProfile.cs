@@ -33,6 +33,12 @@ public class BaseGameProfileAttributes {
     public static string ATT_CURRENT_GAME_MODE = "game-mode";
     public static string ATT_CURRENT_CAMERA_MODE = "camera-mode";
 
+
+    public static string ATT_CURRENT_APP_MODE = "app-mode";
+    public static string ATT_CURRENT_APP_MODE_TYPE = "app-mode-type";
+    public static string ATT_CURRENT_APP_STATE = "app-state";
+    public static string ATT_CURRENT_APP_CONTENT_STATE = "app-content-state";
+
     // UI STATE
     public static string ATT_UI_HAS_SEEN_HELP = "ui-seen-help";
     public static string ATT_HELP_TIPS_SHOWN_DAY = "ui-help-tips-shown-day";
@@ -144,6 +150,82 @@ public class BaseGameProfile : Profile {
 
     public virtual void SetCurrentGameMode(int attValue) {
         SetAttributeIntValue(BaseGameProfileAttributes.ATT_CURRENT_GAME_MODE, attValue);
+    }
+
+    // APP MODES
+
+    public virtual string GetCurrentAppMode() {
+        return GetCurrentAppMode("default");
+    }
+
+    public virtual string GetCurrentAppMode(string defaultValue) {
+        string attValue = defaultValue;
+        string key = BaseGameProfileAttributes.ATT_CURRENT_APP_MODE;
+        if(CheckIfAttributeExists(key))
+            attValue = GetAttributeStringValue(key);
+        return attValue;
+    }
+
+    public virtual void SetCurrentAppMode(string attValue) {
+        string key = BaseGameProfileAttributes.ATT_CURRENT_APP_MODE;
+        SetAttributeStringValue(key, attValue);
+    }
+
+    // APP MODE TYPES
+
+    public virtual string GetCurrentAppModeType() {
+        return GetCurrentAppModeType("default");
+    }
+
+    public virtual string GetCurrentAppModeType(string defaultValue) {
+        string attValue = defaultValue;
+        string key = BaseGameProfileAttributes.ATT_CURRENT_APP_MODE_TYPE;
+        if(CheckIfAttributeExists(key))
+            attValue = GetAttributeStringValue(key);
+        return attValue;
+    }
+
+    public virtual void SetCurrentAppModeType(string attValue) {
+        string key = BaseGameProfileAttributes.ATT_CURRENT_APP_MODE_TYPE;
+        SetAttributeStringValue(key, attValue);
+    }
+
+    // APP STATE
+
+    public virtual string GetCurrentAppState() {
+        return GetCurrentAppState("default");
+    }
+
+    public virtual string GetCurrentAppState(string defaultValue) {
+        string attValue = defaultValue;
+        string key = BaseGameProfileAttributes.ATT_CURRENT_APP_STATE;
+        if(CheckIfAttributeExists(key))
+            attValue = GetAttributeStringValue(key);
+        return attValue;
+    }
+
+    public virtual void SetCurrentAppState(string attValue) {
+        string key = BaseGameProfileAttributes.ATT_CURRENT_APP_STATE;
+        SetAttributeStringValue(key, attValue);
+    }
+
+    // APP CONTENT STATE
+
+    public virtual string GetCurrentAppContentState() {
+        return GetCurrentAppContentState("default");
+    }
+
+    public virtual string GetCurrentAppContentState(string defaultValue) {
+        string attValue = defaultValue;
+        string key = BaseGameProfileAttributes.ATT_CURRENT_APP_CONTENT_STATE;
+        if(CheckIfAttributeExists(key))
+            attValue = GetAttributeStringValue(key);
+        return attValue;
+    }
+
+    public virtual void SetCurrentAppContentState(string attValue) {
+        string key = BaseGameProfileAttributes.ATT_CURRENT_APP_CONTENT_STATE;
+        SetAttributeStringValue(key, attValue);
     }
 
     // CAMERA MODES

@@ -72,6 +72,43 @@ public class BaseAppModeTypes<T> : DataObjects<T> where T : new() {
         LoadData();
     }
 
+    public bool isAppModeTypeGameDefault {
+        get {
+            return IsAppModeType(AppModeTypeMeta.appModeTypeGameDefault);
+        }
+    }
+
+    public bool isAppModeTypeGameChoice {
+        get {
+            return IsAppModeType(AppModeTypeMeta.appModeTypeGameChoice);
+        }
+    }
+
+    public bool isAppModeTypeGameCollection {
+        get {
+            return IsAppModeType(AppModeTypeMeta.appModeTypeGameCollection);
+        }
+    }
+
+    public bool isAppModeTypeGameContent {
+        get {
+            return IsAppModeType(AppModeTypeMeta.appModeTypeGameContent);
+        }
+    }
+
+    public bool isAppModeTypeGameTips {
+        get {
+            return IsAppModeType(AppModeTypeMeta.appModeTypeGameTips);
+        }
+    }
+
+    public bool IsAppModeType(string code) {
+        if(AppModeTypes.Current.code == code) {
+            return true;
+        }
+        return false;
+    }
+
     public void ChangeState(string code) {
 
         if(AppModeTypes.Current.code != code) {
@@ -80,6 +117,9 @@ public class BaseAppModeTypes<T> : DataObjects<T> where T : new() {
 
             if(appModeType != null) {
                 AppModeTypes.Current = appModeType;
+
+                GameProfiles.Current.SetCurrentAppModeType(code);
+
                 LogUtil.Log("AppModeTypes:ChangeState:code:" + AppModeTypes.Current.code);
             }
         }

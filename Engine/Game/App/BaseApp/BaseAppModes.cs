@@ -72,6 +72,49 @@ public class BaseAppModes<T> : DataObjects<T> where T : new() {
         LoadData();
     }
 
+    public bool isAppModeGameDefault {
+        get {
+            return IsAppMode(AppModeMeta.appModeGameDefault);
+        }
+    }
+
+    public bool isAppModeGameArcade {
+        get {
+            return IsAppMode(AppModeMeta.appModeGameArcade);
+        }
+    }
+
+    public bool isAppModeGameChallenge {
+        get {
+            return IsAppMode(AppModeMeta.appModeGameChallenge);
+        }
+    }
+
+    public bool isAppModeGameTraining {
+        get {
+            return IsAppMode(AppModeMeta.appModeGameTraining);
+        }
+    }
+
+    public bool isAppModeGameMatchup {
+        get {
+            return IsAppMode(AppModeMeta.appModeGameMatchup);
+        }
+    }
+
+    public bool isAppModeGameCoop {
+        get {
+            return IsAppMode(AppModeMeta.appModeGameCoop);
+        }
+    }
+
+    public bool IsAppMode(string code) {
+        if(AppModes.Current.code == code) {
+            return true;
+        }
+        return false;
+    }
+
     public void ChangeState(string code) {
 
         if(AppModes.Current.code != code) {
@@ -80,6 +123,9 @@ public class BaseAppModes<T> : DataObjects<T> where T : new() {
 
             if(appMode != null) {
                 AppModes.Current = appMode;
+
+                GameProfiles.Current.SetCurrentAppMode(code);
+
                 LogUtil.Log("AppModes:ChangeState:code:" + AppModes.Current.code);
             }
         }

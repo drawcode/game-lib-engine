@@ -77,6 +77,50 @@ public class BaseAppContentStates<T> : DataObjects<T> where T : new() {
         LoadData();
     }
 
+
+    public bool isAppContentStateGameArcade {
+        get {
+            return IsAppContentState(AppContentStateMeta.appContentStateGameArcade);
+        }
+    }
+
+    public bool isAppContentStateGameChallenge {
+        get {
+            return IsAppContentState(AppContentStateMeta.appContentStateGameChallenge);
+        }
+    }
+
+    public bool isAppContentStateGameContent {
+        get {
+            return IsAppContentState(AppContentStateMeta.appContentStateGameContent);
+        }
+    }
+
+    public bool isAppContentStateGameTraining {
+        get {
+            return IsAppContentState(AppContentStateMeta.appContentStateGameTraining);
+        }
+    }
+
+    public bool isAppContentStateGameTrainingChoice {
+        get {
+            return IsAppContentState(AppContentStateMeta.appContentStateGameTrainingChoice);
+        }
+    }
+
+    public bool isAppContentStateGameTrainingCollection {
+        get {
+            return IsAppContentState(AppContentStateMeta.appContentStateGameTrainingCollection);
+        }
+    }
+
+    public bool IsAppContentState(string code) {
+        if(AppContentStates.Current.code == code) {
+            return true;
+        }
+        return false;
+    }
+
     public void ChangeState(string code) {
 
         if(AppContentStates.Current.code != code) {
@@ -85,6 +129,8 @@ public class BaseAppContentStates<T> : DataObjects<T> where T : new() {
             if(appContentState != null) {
 
                 AppContentStates.Current = appContentState;
+
+                GameProfiles.Current.SetCurrentAppContentState(code);
 
                 LogUtil.Log("AppContentStates:code:" + AppContentStates.Current.code);
 
