@@ -56,4 +56,30 @@ public static class VectorExtensions {
         inst.y = y;
         return inst;
     }
+
+    public static float CrossAngle(this Vector2 toVector2) {
+        Vector2 fromVector2 = Vector2.zero.WithY(1); // default to up being second angle
+        //Vector2 toVector2 = gesture.Move;
+
+        float angle = Vector2.Angle(fromVector2, toVector2);
+        Vector3 cross = Vector3.Cross(fromVector2, toVector2);
+
+        if (cross.z > 0)
+            angle = 360 - angle;
+
+        return angle;
+    }
+
+    public static float CrossAngle(this Vector2 fromVector2, Vector2 toVector2) {
+        //Vector2 fromVector2 = Vector2.zero.WithY(1);
+        //Vector2 toVector2 = gesture.Move;
+
+        float angle = Vector2.Angle(fromVector2, toVector2);
+        Vector3 cross = Vector3.Cross(fromVector2, toVector2);
+
+        if (cross.z > 0)
+            angle = 360 - angle;
+
+        return angle;
+    }
 }

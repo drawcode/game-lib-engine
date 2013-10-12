@@ -300,7 +300,7 @@ public class BaseGameProfile : Profile {
         string json = GetAttributeStringValue(key);
         if(!string.IsNullOrEmpty(json)) {
             try {
-                LogUtil.Log("GetCustomColors: " + json);
+                //LogUtil.Log("GetCustomColors: " + json);
                 colors = JsonMapper.ToObject<CustomPlayerColorsRunner>(json);
             }
             catch(Exception e) {
