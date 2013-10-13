@@ -6,6 +6,20 @@ public class AppModeTypeMeta : BaseAppModeTypeMeta {
     //public static string appModeTypeGameDefault = "app-mode-type-game-default";
 }
 
+public enum AppModeTypeChoiceFlowState {
+    AppModeTypeChoiceOverview,
+    AppModeTypeChoiceDisplayItem,
+    AppModeTypeChoiceResultItem,
+    AppModeTypeChoiceResults,
+}
+
+public enum AppModeTypeCollectionFlowState {
+    AppModeTypeCollectionOverview,
+    AppModeTypeCollectionDisplayItem,
+    AppModeTypeCollectionResultItem,
+    AppModeTypeCollectionResults,
+}
+
 public class AppModeTypes : BaseAppModeTypes<AppModeType> {
 
     private static volatile AppModeType current;

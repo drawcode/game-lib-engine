@@ -683,6 +683,8 @@ public class BaseMeta : BaseEntity {
 
     public string description;
 
+    public List<string> tags;
+
     public BaseMeta() {
         Reset();
     }
@@ -694,6 +696,7 @@ public class BaseMeta : BaseEntity {
         display_name = "";
         name = "";
         description = "";
+        tags = new List<string>();
     }
 }
 
