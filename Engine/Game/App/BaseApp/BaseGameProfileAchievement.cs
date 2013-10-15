@@ -15,9 +15,7 @@ public class BaseGameProfileAchievements {
     private static volatile BaseGameProfileAchievements instance;
     private static object syncRoot = new Object();
 
-    public static string DEFAULT_USERNAME = "Player";
-
-    public static BaseGameProfileAchievement Current {
+    public static BaseGameProfileAchievement BaseCurrent {
         get {
             if (current == null) {
                 lock (syncRoot) {
@@ -33,7 +31,7 @@ public class BaseGameProfileAchievements {
         }
     }
 
-    public static BaseGameProfileAchievements Instance {
+    public static BaseGameProfileAchievements BaseInstance {
         get {
             if (instance == null) {
                 lock (syncRoot) {

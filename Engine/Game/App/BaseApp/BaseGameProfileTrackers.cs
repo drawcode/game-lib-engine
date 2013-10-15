@@ -13,7 +13,7 @@ public class BaseGameProfileTrackers {
     private static object syncRoot = new Object();
     public static string DEFAULT_USERNAME = "Player";
  
-    public static BaseGameProfileTracker Current {
+    public static BaseGameProfileTracker BaseCurrent {
         get {
             if(current == null) {
                 lock(syncRoot) {
@@ -29,7 +29,7 @@ public class BaseGameProfileTrackers {
         }
     }
      
-    public static BaseGameProfileTrackers Instance {
+    public static BaseGameProfileTrackers BaseInstance {
         get {
             if(instance == null) {
                 lock(syncRoot) {

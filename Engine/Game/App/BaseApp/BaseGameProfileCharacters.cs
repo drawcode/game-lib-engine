@@ -155,7 +155,9 @@ public class GameProfileCharacterItem : DataObject {
         Reset();
     }
     
-    public void Reset() {
+    public override void Reset() {
+        base.Reset();
+
         current = true;
         code = "default";
         characterCode = "default";

@@ -17,7 +17,7 @@ public class BaseGameProfileStatistics {
 
     public static string DEFAULT_USERNAME = "Player";
 
-    public static BaseGameProfileStatistic Current {
+    public static BaseGameProfileStatistic BaseCurrent {
         get {
             if (current == null) {
                 lock (syncRoot) {
@@ -33,7 +33,7 @@ public class BaseGameProfileStatistics {
         }
     }
 
-    public static BaseGameProfileStatistics Instance {
+    public static BaseGameProfileStatistics BaseInstance {
         get {
             if (instance == null) {
                 lock (syncRoot) {

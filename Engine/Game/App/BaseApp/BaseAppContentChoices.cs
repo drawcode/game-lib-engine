@@ -242,7 +242,7 @@ public class AppContentChoiceItem : DataObject {
         Reset();
     }
 
-    public void Reset() {
+    public override void Reset() {
         code = "";
         display = "False";
         type = AppContentChoiceType.incorrect;
@@ -286,7 +286,7 @@ public class AppContentChoicesData : DataObject {
         return GetChoicesCorrect() / GetChoicesCount();
     }
 
-    public void Reset() {
+    public override void Reset() {
         choices = new Dictionary<string, AppContentChoiceData>();
     }
 
@@ -328,9 +328,9 @@ public class AppContentChoicesData : DataObject {
     }
 
     public void UpdateValues() {
-        foreach(KeyValuePair<string, AppContentChoiceData> pair in choices) {
+        //foreach(KeyValuePair<string, AppContentChoiceData> pair in choices) {
 
-        }
+        //}
     }
 }
 
@@ -343,7 +343,7 @@ public class AppContentChoiceData : DataObject {
         Reset();
     }
 
-    public void Reset() {
+    public override void Reset() {
         choiceCode = "";
         choiceData = "";
         choices = new List<AppContentChoiceItem>();

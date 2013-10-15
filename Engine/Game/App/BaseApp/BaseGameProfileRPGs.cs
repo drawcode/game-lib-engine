@@ -102,7 +102,7 @@ public class GameProfilePlayerProgress : DataObject {
         Reset();
     }
 
-    public void Reset() {
+    public override void Reset() {
         attributes = new Dictionary<string, DataAttribute>();
     }
 
@@ -235,7 +235,9 @@ public class GameProfileRPGItem : DataObject {
         Reset();
     }
 
-    public void Reset() {
+    public override void Reset() {
+        base.Reset();
+
       attributes = new Dictionary<string, DataAttribute>();
     }
  
@@ -541,7 +543,9 @@ public class GameProfileCustomItem : DataObject {
         Reset();
     }
 
-    public void Reset() {
+    public override void Reset() {
+        base.Reset();
+
       attributes = new Dictionary<string, DataAttribute>();
     }
 
