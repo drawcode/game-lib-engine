@@ -247,6 +247,38 @@ public class AppContentChoiceItem : DataObject {
         display = "False";
         type = AppContentChoiceType.incorrect;
     }
+
+    public bool IsTypeCorrect() {
+        return type == AppContentChoiceType.correct ? true : false;
+    }
+
+    public bool IsTypeIncorrect() {
+        return type == AppContentChoiceType.incorrect ? true : false;
+    }
+
+    public bool IsTypeBoost() {
+        return type == AppContentChoiceType.boost ? true : false;
+    }
+
+    public bool IsTypeDoor() {
+        return type == AppContentChoiceType.door ? true : false;
+    }
+
+    public bool IsTypeLevel() {
+        return type == AppContentChoiceType.level ? true : false;
+    }
+
+    public bool IsTypeCustom() {
+        return type == AppContentChoiceType.custom ? true : false;
+    }
+
+    public bool IsTypePortal() {
+        return type == AppContentChoiceType.portal ? true : false;
+    }
+
+    public bool IsTypeWarp() {
+        return type == AppContentChoiceType.warp ? true : false;
+    }
 }
 
 public class AppContentChoicesData : DataObject {
