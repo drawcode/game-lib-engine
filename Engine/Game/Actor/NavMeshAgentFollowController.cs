@@ -33,6 +33,15 @@ namespace Engine.Game.Actor {
 
         // Update is called once per frame
         private void Update() {
+
+            if(!GameConfigs.isGameRunning) {
+
+                if (agent != null) {
+                   agent.Stop();
+                }
+                return;
+            }
+
             if (agent != null) {
                 if (agent.remainingDistance == 0 || agent.isPathStale) {
                     NavigateToDestination();
