@@ -360,8 +360,25 @@ public static class GameObjectHelper {
 		    go.rigidbody.angularVelocity = (new Vector3(0,-delta.x,0));
 		}
 	}
+
+    public static T Get<T>(GameObject inst) where T : Component {
+        if (inst == null) {
+            return null;
+        }
+
+        foreach(T obj in inst.GetComponents<T>()) {
+            return obj;
+        }
+
+    
+        foreach(T obj in inst.GetComponentsInChildren<T>(true)) {
+            return obj;
+        }
+    
+        return null;
+    }
 	
-	public static bool HasComponent<T>(GameObject inst) where T : Component {
+	public static bool Has<T>(GameObject inst) where T : Component {
 		if (inst == null) {
             return false;
         }

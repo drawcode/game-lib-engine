@@ -141,12 +141,19 @@ public static class GameObjectExtensions {
         }
         return null;
     }
-	
-	public static bool HasComponent<T>(this GameObject inst) where T : Component {		
+
+    public static T Get<T>(this GameObject inst) where T : Component {
+        if (inst == null)
+            return null;
+
+        return GameObjectHelper.Get<T>(inst);
+    }
+
+	public static bool Has<T>(this GameObject inst) where T : Component {
         if (inst == null)
             return false;
 
-        return GameObjectHelper.HasComponent<T>(inst);
+        return GameObjectHelper.Has<T>(inst);
 	}
 
     public static void Show(this GameObject inst) {
