@@ -244,7 +244,7 @@ public class AppContentChoiceItem : DataObject {
 
     public override void Reset() {
         code = "";
-        display = "False";
+        display = "";
         type = AppContentChoiceType.incorrect;
     }
 
