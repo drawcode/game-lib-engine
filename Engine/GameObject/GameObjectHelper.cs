@@ -377,6 +377,13 @@ public static class GameObjectHelper {
     
         return null;
     }
+
+    public static T[] GetList<T>(GameObject inst) where T : Component {
+        if (inst == null) {
+            return null;
+        }
+        return inst.GetComponentsInChildren<T>(true);
+    }
 	
 	public static bool Has<T>(GameObject inst) where T : Component {
 		if (inst == null) {

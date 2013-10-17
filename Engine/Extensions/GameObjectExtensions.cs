@@ -149,6 +149,13 @@ public static class GameObjectExtensions {
         return GameObjectHelper.Get<T>(inst);
     }
 
+    public static T[] GetList<T>(this GameObject inst) where T : Component {
+        if (inst == null)
+            return null;
+
+        return GameObjectHelper.GetList<T>(inst);
+    }
+
 	public static bool Has<T>(this GameObject inst) where T : Component {
         if (inst == null)
             return false;
