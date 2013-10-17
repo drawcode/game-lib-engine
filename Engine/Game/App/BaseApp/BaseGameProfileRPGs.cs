@@ -57,6 +57,7 @@ public class BaseGameProfileRPGs {
     // TODO: Common profile actions, lookup, count, etc
 }
 
+/*
 public class GameItemRPG : DataObject {
     public double speed = 0.1;
     public double attack = 0.1;
@@ -75,6 +76,7 @@ public class GameItemRPG : DataObject {
     public double currency = 1.0;
     public string data = ""; 
 }
+*/
 
 public class GameItemRPGAttributes {
     public static string prefix = "game-item-rpg-";
