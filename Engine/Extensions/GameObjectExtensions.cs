@@ -95,7 +95,7 @@ public static class GameObjectExtensions {
     public static GameObject FindTypeAboveObject<T>(this GameObject inst)
         where T : Component {
         if (inst == null) {
-            return null;
+            return inst;
         }
 
         return FindTypeAboveObjectRecursive<T>(inst);
@@ -108,13 +108,42 @@ public static class GameObjectExtensions {
         }
 
         if (inst != null) {
-			var instItem = inst.GetComponent<T>();
+			T instItem = inst.GetComponent<T>();
             if (instItem != null) {
                 return inst;
             }
 
             if (inst.transform.parent != null) {
                 return FindTypeAboveObjectRecursive<T>(inst.transform.parent.gameObject);
+            }
+        }
+
+        return null;
+    }
+
+    public static T FindTypeAbove<T>(this GameObject inst)
+        where T : Component {
+        if (inst == null) {
+            return default(T);
+        }
+
+        return FindTypeAboveRecursive<T>(inst);
+    }
+
+    public static T FindTypeAboveRecursive<T>(this GameObject inst)
+        where T : Component {
+        if (inst == null) {
+            return null;
+        }
+
+        if (inst != null) {
+         T instItem = inst.GetComponent<T>();
+            if (instItem != null) {
+                return default(T);
+            }
+
+            if (inst.transform.parent != null) {
+                return FindTypeAboveRecursive<T>(inst.transform.parent.gameObject);
             }
         }
 
