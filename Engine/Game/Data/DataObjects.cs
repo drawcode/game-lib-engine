@@ -42,22 +42,22 @@ public class DataObjects<T> {
         switch (dataStorage) {
 
             case DataObjectsStorage.SERVER:
-                Debug.Log("LoadDataFromServer:" + path + " " + pathKey);
+                //Debug.Log("LoadDataFromServer:" + path + " " + pathKey);
                 LoadDataFromServer();
                 break;
 
             case DataObjectsStorage.RESOURCES:
-                Debug.Log("LoadDataFromResources:" + path + " " + pathKey);
+                //Debug.Log("LoadDataFromResources:" + path + " " + pathKey);
                 LoadDataFromResources();
                 break;
 
             case DataObjectsStorage.PREFERENCES:
-                Debug.Log("LoadDataFromResources:" + path + " " + pathKey);
+                //Debug.Log("LoadDataFromResources:" + path + " " + pathKey);
                 LoadDataFromPrefs();
                 break;
 
             default:
-                Debug.Log("LoadDataFromPersistent:" + path + " " + pathKey);
+                //Debug.Log("LoadDataFromPersistent:" + path + " " + pathKey);
                 LoadDataFromPersistent();
                 break;
 
