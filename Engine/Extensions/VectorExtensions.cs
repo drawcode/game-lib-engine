@@ -57,6 +57,15 @@ public static class VectorExtensions {
         return inst;
     }
 
+    // Reset
+
+    public static Vector3 Reset(this Vector3 inst) {
+        inst = Vector3.zero;
+        return inst;
+    }
+
+    //
+
     public static float CrossAngle(this Vector2 toVector2) {
         Vector2 fromVector2 = Vector2.zero.WithY(1); // default to up being second angle
         //Vector2 toVector2 = gesture.Move;
