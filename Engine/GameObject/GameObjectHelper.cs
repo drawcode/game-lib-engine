@@ -11,8 +11,10 @@ public static class GameObjectHelper {
 	public static float scaleMin = .25f;
 	public static float scaleMax = 3.5f;
 	public static bool deferTap = false;
-	
-	 public static void SetLayerRecursively(GameObject inst, int layer) {
+
+    // LAYER
+
+	public static void SetLayerRecursively(GameObject inst, int layer) {
         if (inst == null)
             return;
 		
@@ -31,6 +33,8 @@ public static class GameObjectHelper {
         foreach (Transform child in inst.transform)
             child.gameObject.SetLayerRecursively(LayerMask.NameToLayer(name));
     }
+
+    // AUDIO
 
     public static void StopSounds(GameObject inst) {
         if (inst == null)
@@ -96,6 +100,70 @@ public static class GameObjectHelper {
         return false;
     }
 
+    // RENDERERS
+
+    public static bool IsRenderersVisibleByCamera(GameObject inst) {
+        if (inst == null)
+            return false;
+
+        if(!inst.IsRenderersVisible()) {
+            return false;
+        }
+
+        if (inst.renderer != null) {
+            if (inst.renderer.enabled) {
+                if(inst.renderer.isVisible) {
+                    return true;
+                }
+            }
+        }
+
+        Renderer[] rendererComponents = inst.GetComponentsInChildren<Renderer>();
+
+        // Enable rendering:
+        foreach (Renderer component in rendererComponents) {
+            if (component.enabled) {
+                if(inst.renderer.isVisible) {
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
+
+    public static bool IsRenderersVisibleByCamera(GameObject inst, Camera cam) {
+        if (inst == null)
+            return false;
+
+        if(!inst.IsRenderersVisible()) {
+            return false;
+        }
+
+        if (inst.renderer != null) {
+            if (inst.renderer.enabled) {
+                if(inst.renderer.isVisible
+                    && inst.renderer.IsVisibleFrom(cam)) {
+                    return true;
+                }
+            }
+        }
+
+        Renderer[] rendererComponents = inst.GetComponentsInChildren<Renderer>();
+
+        // Enable rendering:
+        foreach (Renderer component in rendererComponents) {
+            if (component.enabled) {
+                if(inst.renderer.isVisible
+                    && inst.renderer.IsVisibleFrom(cam)) {
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
+
     public static bool IsRenderersVisible(GameObject inst) {
         if (inst == null)
             return false;
@@ -149,6 +217,8 @@ public static class GameObjectHelper {
             component.enabled = false;
         }
     }
+
+    // DEBUG
 
     public static void DumpRootTransforms() {
         UnityEngine.Object[] objs = UnityEngine.GameObject.FindObjectsOfType(typeof(GameObject));
@@ -216,6 +286,8 @@ public static class GameObjectHelper {
     private static void DumpComponent(Component component, StringBuilder sb, string indent) {
         sb.Append(string.Format("{0}{1}", indent, (component == null ? "(null)" : component.GetType().Name)));
     }
+
+    // MOVEMENT
         
     public static void ScaleTweenObjectAbsolute(GameObject go, float absoluteValue) {            
 		if (go != null) {
@@ -361,6 +433,8 @@ public static class GameObjectHelper {
 		}
 	}
 
+    // COMPONENTS
+
     public static T Get<T>(GameObject inst) where T : Component {
         if (inst == null) {
             return null;
@@ -398,6 +472,8 @@ public static class GameObjectHelper {
 		return false;
 	}
 
+    // VISIBILITY
+
     public static void Show(GameObject inst) {
         //LogUtil.Log("Show:" + inst.name);
         if (inst != null) {
@@ -430,6 +506,8 @@ public static class GameObjectHelper {
 		
 		inst.Hide();
 	}
+
+    // ANIMATIONS
 
 	public static void ResetAnimations(GameObject inst) {
 		if(inst == null)
@@ -538,6 +616,8 @@ public static class GameObjectHelper {
 			}
 		}
 	}
+
+    // PARTICLE SYSTEMS
 
 	public static void SetParticleSystemEmission(GameObject inst, bool emissionEnabled, bool includeChildren) {
 		if(inst == null)
@@ -650,6 +730,8 @@ public static class GameObjectHelper {
 			}
         }
 	}
+
+    // MATERIALS
 	
 	public static Material GetMaterial(GameObject inst, string name) {
 		

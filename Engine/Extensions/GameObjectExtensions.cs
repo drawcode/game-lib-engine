@@ -259,6 +259,9 @@ public static class GameObjectExtensions {
         GameObjectHelper.StopAnimation(inst, name);
     }
 
+    //---------------------------------------------------------------
+    // RENDERERS
+
     public static bool IsRenderersVisible(this GameObject inst) {
         if (inst == null)
             return false;
@@ -266,11 +269,18 @@ public static class GameObjectExtensions {
         return GameObjectHelper.IsRenderersVisible(inst);
     }
 
-    public static bool IsAudioSourcePlaying(this GameObject inst) {
+    public static bool IsRenderersVisibleByCamera(this GameObject inst) {
         if (inst == null)
             return false;
 
-        return GameObjectHelper.IsAudioSourcePlaying(inst);
+        return GameObjectHelper.IsRenderersVisibleByCamera(inst);
+    }
+
+    public static bool IsRenderersVisibleByCamera(this GameObject inst, Camera cam) {
+        if (inst == null)
+            return false;
+
+        return GameObjectHelper.IsRenderersVisibleByCamera(inst, cam);
     }
 
     public static void ShowRenderers(this GameObject inst) {
@@ -286,6 +296,19 @@ public static class GameObjectExtensions {
 
         GameObjectHelper.HideRenderers(inst);
     }
+
+    //---------------------------------------------------------------
+    // AUDIO
+
+    public static bool IsAudioSourcePlaying(this GameObject inst) {
+        if (inst == null)
+            return false;
+
+        return GameObjectHelper.IsAudioSourcePlaying(inst);
+    }
+
+    //---------------------------------------------------------------
+    // PARTICLE SYSTEMS
 
     public static void SetParticleSystemStartColor(this GameObject inst, Color startColor, bool includeChildren) {
         if(inst == null)
@@ -321,6 +344,9 @@ public static class GameObjectExtensions {
 
         GameObjectHelper.SetParticleSystemEmission(inst, emissionEnabled, includeChildren);
     }
+
+    //---------------------------------------------------------------
+    // AUDIO
     
     public static void DestroyNow(this GameObject inst) {
         if(inst == null)
