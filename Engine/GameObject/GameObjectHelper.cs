@@ -123,8 +123,10 @@ public static class GameObjectHelper {
         // Enable rendering:
         foreach (Renderer component in rendererComponents) {
             if (component.enabled) {
-                if(inst.renderer.isVisible) {
-                    return true;
+                if(inst.renderer != null) {
+                    if(inst.renderer.isVisible) {
+                        return true;
+                    }
                 }
             }
         }
@@ -154,9 +156,11 @@ public static class GameObjectHelper {
         // Enable rendering:
         foreach (Renderer component in rendererComponents) {
             if (component.enabled) {
-                if(inst.renderer.isVisible
-                    && inst.renderer.IsVisibleFrom(cam)) {
-                    return true;
+                if(inst.renderer != null) {
+                    if(inst.renderer.isVisible
+                        && inst.renderer.IsVisibleFrom(cam)) {
+                        return true;
+                    }
                 }
             }
         }
