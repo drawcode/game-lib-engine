@@ -13,6 +13,9 @@ public class ScreenUtil {
     private static volatile ScreenUtil instance;
     private static object syncRoot = new Object();
 
+    public float defaultDesiredWidth = 960f;
+    public float defaultDesiredHeight = 640f;
+
     private ScreenUtil() {
     }
 
@@ -36,6 +39,54 @@ public class ScreenUtil {
 
         //UploadPNG();
     }
+
+    // SCREEN SIZE
+
+    public static float relativeWidth {
+        get {
+            return GetRelativeWidth();
+        }
+    }
+
+    public static float relativeHeight {
+        get {
+            return GetRelativeHeight();
+        }
+    }
+
+    public static float GetRelativeWidth() {
+        return Instance.getRelativeWidth();
+    }
+
+    public float getRelativeWidth() {
+        return Screen.width / defaultDesiredWidth;
+    }
+
+    public static float GetRelativeWidth(float desiredWidth) {
+        return Instance.getRelativeWidth(desiredWidth);
+    }
+
+    public float getRelativeWidth(float desiredWidth) {
+        return Screen.width / desiredWidth;
+    }
+
+    public static float GetRelativeHeight() {
+        return Instance.getRelativeHeight();
+    }
+
+    public float getRelativeHeight() {
+        return Screen.height / defaultDesiredHeight;
+    }
+
+    public static float GetRelativeHeight(float desiredHeight) {
+        return Instance.getRelativeHeight(desiredHeight);
+    }
+
+    public float getRelativeHeight(float desiredHeight) {
+        return Screen.height / desiredHeight;
+    }
+
+    // SCREENSHOT IMAGES
 
     public IEnumerator UploadImage() {
 
