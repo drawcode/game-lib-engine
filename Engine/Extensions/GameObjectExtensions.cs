@@ -6,6 +6,16 @@ using UnityEngine;
 
 public static class GameObjectExtensions {
 
+     // GAME OBJECT
+
+    public static bool ContainsChild(this GameObject inst, string name) {
+        if(inst == null) {
+            return false;
+        }
+
+        return GameObjectHelper.ContainsChild(inst, name);
+    }
+
     public static void SetLayerRecursively(this GameObject inst, int layer) {
         if (inst == null)
             return;

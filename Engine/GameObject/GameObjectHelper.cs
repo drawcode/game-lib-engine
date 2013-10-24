@@ -12,6 +12,27 @@ public static class GameObjectHelper {
 	public static float scaleMax = 3.5f;
 	public static bool deferTap = false;
 
+    // GAME OBJECT
+
+    public static bool ContainsChild(GameObject inst, string name) {
+        if(inst == null) {
+            return false;
+        }
+
+        Transform child = inst.transform.FindChild(name);
+
+        if(child != null) {
+            return true;
+        }
+        else {
+            foreach(Transform t in inst.transform) {
+                return ContainsChild(t.gameObject, name);
+            }
+        }
+
+        return false;
+    }
+
     // LAYER
 
 	public static void SetLayerRecursively(GameObject inst, int layer) {
