@@ -165,6 +165,7 @@ public class GameProfileCharacterItem : DataObject {
         profileRPGItem = new GameProfileRPGItem();
         profilePlayerProgress = new GameProfilePlayerProgress();
         profileCustomItem = new GameProfileCustomItem();
+
     }
 }
 
@@ -255,7 +256,8 @@ public class BaseGameProfileCharacter : Profile {
         //   item = new GameProfileCharacterItem();
         //   GetCharacters().SetCharacter(code, item);
         //}
-     
+        item.profileCustomItem = GameCustomController.Instance.CheckCustomColorInit(item.profileCustomItem);
+
         return item;
     }
  
