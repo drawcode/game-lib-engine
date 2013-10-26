@@ -3,6 +3,8 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 
+using UnityEngine;
+
 using Engine.Data.Json;
 using Engine.Events;
 using Engine.Utility;
@@ -22,7 +24,7 @@ public class BaseGameProfileRPGAttributes {
 public class BaseGameProfileRPGs {
     private static volatile BaseGameProfileRPG current;
     private static volatile BaseGameProfileRPGs instance;
-    private static object syncRoot = new Object();
+    private static System.Object syncRoot = new System.Object();
     public static string DEFAULT_USERNAME = "Player";
  
     public static BaseGameProfileRPG BaseCurrent {
@@ -558,6 +560,12 @@ public class GameProfileCustomItem : DataObject {
         return fullKey;
     }
 
+    public virtual void SetCustomColor(string colorKey, Color color) {
+        CustomColorItem colorItem = GetCustomColorItem(colorKey);
+        colorItem.FromColor(color);
+        SetCustomColorItem(colorKey, colorItem);
+    }
+
     public virtual void SetCustomColorItem(string colorKey, CustomColorItem colorItem) {
         string key = GetCustomColorItemKey(colorKey);
         string colorItemText = JsonMapper.ToJson(colorItem);
@@ -565,22 +573,19 @@ public class GameProfileCustomItem : DataObject {
         SetAttributeStringValue(key, colorItemText);
     }
 
+    public virtual Color GetCustomColor(string colorKey) {
+        return GetCustomColorItem(colorKey).GetColor();
+    }
+
     public virtual CustomColorItem GetCustomColorItem(string colorKey) {
         CustomColorItem colorItem = new CustomColorItem();
 
         string key = GetCustomColorItemKey(colorKey);
 
-        if(!CheckIfAttributeExists(key)) {
-
-            // add default colorItem
-            SetCustomColorItem(key, new CustomColorItem());
-            Messenger.Broadcast(BaseGameProfileMessages.ProfileShouldBeSaved);
-        }
-
         string json = GetAttributeStringValue(key);
         if(!string.IsNullOrEmpty(json)) {
             try {
-                LogUtil.Log("GetCustomColorItem: " + json);
+                //LogUtil.Log("GetCustomColorItem: " + json);
                 colorItem = JsonMapper.ToObject<CustomColorItem>(json);
             }
             catch(Exception e) {

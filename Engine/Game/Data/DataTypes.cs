@@ -369,7 +369,7 @@ public class CustomColorItem : DataObject {
     }
 }
 
-
+/*
 public class CustomPlayerColorsRunner : DataObject {
     public string colorCode;
     public string colorDisplayName;
@@ -441,6 +441,7 @@ public class CustomPlayerColorsRunner : DataObject {
         return sb.ToString();
     }
 }
+*/
 
 public class CustomPlayerColors : DataObject {
     public string colorCode;

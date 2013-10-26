@@ -277,7 +277,8 @@ public class BaseGameProfile : Profile {
         SetAttributeDoubleValue(BaseGameProfileAttributes.ATT_HELP_TIPS_SHOWN_DATE, attValue);
     }
  
- 
+
+    /*
     // CUSTOMIZATION
     public virtual void SetCustomColorsRunner(CustomPlayerColorsRunner colors) {
         string colorsText = JsonMapper.ToJson(colors);
@@ -310,7 +311,7 @@ public class BaseGameProfile : Profile {
         }
         return colors;
     }
- 
+
  
 
     // CUSTOMIZATION
@@ -345,6 +346,8 @@ public class BaseGameProfile : Profile {
         }
         return colors;
     }
+
+    */
 
     public virtual void SetCustomAudio(CustomPlayerAudio audio) {
         string audioText = JsonMapper.ToJson(audio);
