@@ -176,6 +176,7 @@ public class GameProfilePlayerProgress : DataObject {
     public virtual double AddGamePlayerProgressHealth(double val) {
         double v = GetGamePlayerProgressHealth();
         v += val;
+        v = Mathf.Clamp((float)v, 0f, 1f);
         SetGamePlayerProgressHealth(v);
         return v;
     }
@@ -206,6 +207,7 @@ public class GameProfilePlayerProgress : DataObject {
     public virtual double AddGamePlayerProgressEnergy(double val) {
         double v = GetGamePlayerProgressEnergy();
         v += val;
+        v = Mathf.Clamp((float)v, 0f, 1f);
         SetGamePlayerProgressEnergy(v);
         return v;
     }
@@ -874,6 +876,7 @@ public class BaseGameProfileRPG : Profile {
     public virtual double AddGamePlayerProgressHealth(double val) {
         double v = GetGamePlayerProgressHealth();
         v += val;
+        v = Mathf.Clamp((float)v, 0, 1);
         SetGamePlayerProgressHealth(v);
         return v;
     }
@@ -904,6 +907,7 @@ public class BaseGameProfileRPG : Profile {
     public virtual double AddGamePlayerProgressEnergy(double val) {
         double v = GetGamePlayerProgressEnergy();
         v += val;
+        v = Mathf.Clamp((float)v, 0, 1);
         SetGamePlayerProgressEnergy(v);
         return v;
     }
