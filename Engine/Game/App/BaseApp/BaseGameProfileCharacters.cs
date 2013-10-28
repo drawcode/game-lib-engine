@@ -239,6 +239,8 @@ public class BaseGameProfileCharacter : Profile {
 
     // helpers
 
+    GameProfileCharacterItem character = null;
+
     public void CurrentCharacterAddGamePlayerProgressXP(double val) {
         GameProfileCharacterItem character = GetCurrentCharacter();
         character.profilePlayerProgress.AddGamePlayerProgressXP(val);
@@ -278,7 +280,8 @@ public class BaseGameProfileCharacter : Profile {
     }
  
     public GameProfileCharacterItem GetCurrentCharacter() {
-        return GetCharacter("default");
+        character = GetCharacter("default");
+        return character;
     }
  
     public GameProfileRPGItem GetCharacterRPG(string code) {
@@ -294,18 +297,21 @@ public class BaseGameProfileCharacter : Profile {
     }
  
     public GameProfileCharacterItem GetCharacter(string code) {
-     
-        GameProfileCharacterItem item = GetCharacters().GetCharacter(code);
-     
-        //if(item == null) {
-        //   item = new GameProfileCharacterItem();
-        //   GetCharacters().SetCharacter(code, item);
-        //}
-        if(item != null) {
-            item.profileCustomItem = GameCustomController.Instance.CheckCustomColorInit(item.profileCustomItem);
-        }
 
-        return item;
+        //if(character == null) {
+            GameProfileCharacterItem item = GetCharacters().GetCharacter(code);
+    
+            //if(item == null) {
+            //   item = new GameProfileCharacterItem();
+            //   GetCharacters().SetCharacter(code, item);
+            //}
+            if(item != null) {
+                item.profileCustomItem = GameCustomController.Instance.CheckCustomColorInit(item.profileCustomItem);
+                character = item;
+            }
+        //}
+
+        return character;
     }
  
     public void SetCharacter(string code, GameProfileCharacterItem item) {
