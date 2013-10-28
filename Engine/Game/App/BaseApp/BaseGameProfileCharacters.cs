@@ -51,7 +51,7 @@ public class BaseGameProfileCharacters {
  
     // TODO: Common profile actions, lookup, count, etc
 
-    public static GameProfilePlayerProgress currentProgress {
+    public static GameProfilePlayerProgressItem currentProgress {
         get {
             return GameProfileCharacters.Current.GetCurrentCharacter().profilePlayerProgress;
         }
@@ -139,6 +139,17 @@ public class GameProfileCharacterItems {
         character.profileCustomItem = item;
         SetCharacter(code, character);
     }
+
+    public void SetCharacterProgress(string code, GameProfilePlayerProgressItem item) {
+        GameProfileCharacterItem character = GetCharacter(code);
+
+        if(character == null) {
+            character = new GameProfileCharacterItem();
+        }
+
+        character.profilePlayerProgress = item;
+        SetCharacter(code, character);
+    }
 }
 
 public class GameProfileCharacterItem : DataObject {
@@ -148,7 +159,7 @@ public class GameProfileCharacterItem : DataObject {
     public string characterCode = "default";
     public string characterCostumeCode = "default";
     public GameProfileRPGItem profileRPGItem;
-    public GameProfilePlayerProgress profilePlayerProgress;
+    public GameProfilePlayerProgressItem profilePlayerProgress;
     public GameProfileCustomItem profileCustomItem;
 
     public GameProfileCharacterItem() {
@@ -163,7 +174,7 @@ public class GameProfileCharacterItem : DataObject {
         characterCode = "default";
         characterCostumeCode = "default";
         profileRPGItem = new GameProfileRPGItem();
-        profilePlayerProgress = new GameProfilePlayerProgress();
+        profilePlayerProgress = new GameProfilePlayerProgressItem();
         profileCustomItem = new GameProfileCustomItem();
 
     }
@@ -225,6 +236,32 @@ public class BaseGameProfileCharacter : Profile {
      
         return obj;
     }
+
+    // helpers
+
+    public void CurrentCharacterAddGamePlayerProgressXP(double val) {
+        GameProfileCharacterItem character = GetCurrentCharacter();
+        character.profilePlayerProgress.AddGamePlayerProgressXP(val);
+        SetCharacter(character);
+    }
+
+    public void CurrentCharacterAddGamePlayerProgressLevel(double val) {
+        GameProfileCharacterItem character = GetCurrentCharacter();
+        character.profilePlayerProgress.AddGamePlayerProgressLevel(val);
+        SetCharacter(character);
+    }
+
+    public void CurrentCharacterAddGamePlayerProgressEnergy(double val) {
+        GameProfileCharacterItem character = GetCurrentCharacter();
+        character.profilePlayerProgress.AddGamePlayerProgressEnergy(val);
+        SetCharacter(character);
+    }
+
+    public void CurrentCharacterAddGamePlayerProgressHealth(double val) {
+        GameProfileCharacterItem character = GetCurrentCharacter();
+        character.profilePlayerProgress.AddGamePlayerProgressHealth(val);
+        SetCharacter(character);
+    }
  
     // character 
  
@@ -234,6 +271,10 @@ public class BaseGameProfileCharacter : Profile {
 
     public GameProfileCustomItem GetCurrentCharacterCustom() {
         return GetCurrentCharacter().profileCustomItem;
+    }
+
+    public GameProfilePlayerProgressItem GetCurrentCharacterProgress() {
+        return GetCurrentCharacter().profilePlayerProgress;
     }
  
     public GameProfileCharacterItem GetCurrentCharacter() {
@@ -246,6 +287,10 @@ public class BaseGameProfileCharacter : Profile {
 
     public GameProfileCustomItem GetCharacterCustom(string code) {
         return GetCharacter(code).profileCustomItem;
+    }
+
+    public GameProfilePlayerProgressItem GetCharacterProgress(string code) {
+        return GetCharacter(code).profilePlayerProgress;
     }
  
     public GameProfileCharacterItem GetCharacter(string code) {
@@ -276,6 +321,12 @@ public class BaseGameProfileCharacter : Profile {
     public void SetCharacterRPG(string code, GameProfileRPGItem item) {
         GameProfileCharacterItems characters = GetCharacters();
         characters.SetCharacterRPG(code, item);
+        SetCharacters(characters);
+    }
+
+    public void SetCharacterProgress(string code, GameProfilePlayerProgressItem item) {
+        GameProfileCharacterItems characters = GetCharacters();
+        characters.SetCharacterProgress(code, item);
         SetCharacters(characters);
     }
 

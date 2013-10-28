@@ -98,9 +98,9 @@ public class GameItemRPGAttributes {
     public static string data = prefix + "data";
 }
 
-public class GameProfilePlayerProgress : DataObject {
+public class GameProfilePlayerProgressItem : DataObject {
 
-    public GameProfilePlayerProgress() {
+    public GameProfilePlayerProgressItem() {
         Reset();
     }
 
@@ -115,8 +115,12 @@ public class GameProfilePlayerProgress : DataObject {
     // XP
 
     public virtual double AddGamePlayerProgressXP(double val) {
+
+        Debug.Log("AddGamePlayerProgressXP:val:" + val);
         double v = GetGamePlayerProgressXP();
+
         v += val;
+        Debug.Log("AddGamePlayerProgressXP:v:" + v);
         SetGamePlayerProgressXP(v);
         return v;
     }
@@ -137,6 +141,7 @@ public class GameProfilePlayerProgress : DataObject {
     }
  
     public void SetGamePlayerProgressXP(double attValue) {
+        Debug.Log("SetGamePlayerProgressXP:attValue:" + attValue);
         SetAttributeDoubleValue(BaseGameProfileRPGAttributes.ATT_PROGRESS_XP, attValue);
     }
 
