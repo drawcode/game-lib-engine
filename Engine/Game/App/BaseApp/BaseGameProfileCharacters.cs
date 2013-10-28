@@ -259,6 +259,18 @@ public class BaseGameProfileCharacter : Profile {
         SetCharacter(character);
     }
 
+    public void CurrentCharacterAddGamePlayerProgressEnergyAndHealth(double valEnergy, double valHealth) {
+        GameProfileCharacterItem character = GetCurrentCharacter();
+        character.profilePlayerProgress.AddGamePlayerProgressEnergy(valEnergy);
+        character.profilePlayerProgress.AddGamePlayerProgressHealth(valHealth);
+        SetCharacter(character);
+    }
+
+    public void CurrentCharacterAddGamePlayerProgressEnergyAndHealthRuntime(double valEnergy, double valHealth) {
+        BaseGameProfileCharacters.currentCharacter.profilePlayerProgress.AddGamePlayerProgressEnergy(valEnergy);
+        BaseGameProfileCharacters.currentCharacter.profilePlayerProgress.AddGamePlayerProgressHealth(valHealth);
+    }
+
     public void CurrentCharacterAddGamePlayerProgressHealth(double val) {
         GameProfileCharacterItem character = GetCurrentCharacter();
         character.profilePlayerProgress.AddGamePlayerProgressHealth(val);
