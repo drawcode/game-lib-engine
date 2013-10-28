@@ -68,6 +68,8 @@ public class BaseGameProfileCharacters {
             return GameProfileCharacters.Current.GetCurrentCharacter().profileCustomItem;
         }
     }
+
+    public static GameProfileCharacterItem currentCharacter = null;
 }
 
 public class GameProfileCharacterItems {
@@ -239,8 +241,6 @@ public class BaseGameProfileCharacter : Profile {
 
     // helpers
 
-    GameProfileCharacterItem character = null;
-
     public void CurrentCharacterAddGamePlayerProgressXP(double val) {
         GameProfileCharacterItem character = GetCurrentCharacter();
         character.profilePlayerProgress.AddGamePlayerProgressXP(val);
@@ -280,8 +280,7 @@ public class BaseGameProfileCharacter : Profile {
     }
  
     public GameProfileCharacterItem GetCurrentCharacter() {
-        character = GetCharacter("default");
-        return character;
+        return GetCharacter("default");
     }
  
     public GameProfileRPGItem GetCharacterRPG(string code) {
@@ -298,7 +297,7 @@ public class BaseGameProfileCharacter : Profile {
  
     public GameProfileCharacterItem GetCharacter(string code) {
 
-        //if(character == null) {
+        if(BaseGameProfileCharacters.currentCharacter == null) {
             GameProfileCharacterItem item = GetCharacters().GetCharacter(code);
     
             //if(item == null) {
@@ -307,15 +306,16 @@ public class BaseGameProfileCharacter : Profile {
             //}
             if(item != null) {
                 item.profileCustomItem = GameCustomController.Instance.CheckCustomColorInit(item.profileCustomItem);
-                character = item;
+                BaseGameProfileCharacters.currentCharacter = item;
             }
-        //}
+        }
 
-        return character;
+        return BaseGameProfileCharacters.currentCharacter;
     }
  
     public void SetCharacter(string code, GameProfileCharacterItem item) {
         GameProfileCharacterItems characters = GetCharacters();
+        BaseGameProfileCharacters.currentCharacter = item;
         characters.SetCharacter(code, item);
         SetCharacters(characters);
     }
