@@ -177,6 +177,7 @@ public class GameProfilePlayerProgress : DataObject {
         double v = GetGamePlayerProgressHealth();
         v += val;
         v = Mathf.Clamp((float)v, 0f, 1f);
+        Debug.Log("AddGamePlayerProgressHealth:val:" + val);
         SetGamePlayerProgressHealth(v);
         return v;
     }
@@ -208,6 +209,7 @@ public class GameProfilePlayerProgress : DataObject {
         double v = GetGamePlayerProgressEnergy();
         v += val;
         v = Mathf.Clamp((float)v, 0f, 1f);
+        Debug.Log("AddGamePlayerProgressEnergy:val:" + val);
         SetGamePlayerProgressEnergy(v);
         return v;
     }

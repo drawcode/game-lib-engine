@@ -256,7 +256,9 @@ public class BaseGameProfileCharacter : Profile {
         //   item = new GameProfileCharacterItem();
         //   GetCharacters().SetCharacter(code, item);
         //}
-        item.profileCustomItem = GameCustomController.Instance.CheckCustomColorInit(item.profileCustomItem);
+        if(item != null) {
+            item.profileCustomItem = GameCustomController.Instance.CheckCustomColorInit(item.profileCustomItem);
+        }
 
         return item;
     }
