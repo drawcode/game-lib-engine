@@ -123,7 +123,12 @@ public class BaseAppContentStates<T> : DataObjects<T> where T : new() {
 
     public void ChangeState(string code) {
 
+        LogUtil.Log("ChangeState:code:" + code);
+
         if(AppContentStates.Current.code != code) {
+
+            LogUtil.Log("ChangeState:code-CHANGE:" + code);
+
             AppContentState appContentState = AppContentStates.Instance.GetByCode(code);
 
             if(appContentState != null) {

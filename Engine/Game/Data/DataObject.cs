@@ -1,6 +1,7 @@
 using System;
 using System.IO;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 using Engine.Events;
@@ -82,6 +83,58 @@ public class DataObject {
             FileSystemUtil.WriteString(fileFullPath, data);
         }
 #endif
+    }
+
+    public object GetFieldValue(object obj, string fieldName) {
+        ////Debug.Log("GetFieldValue:obj.GetType():" + obj.GetType());
+
+        return null;
+        /*
+
+        bool hasGet = false;
+
+        foreach(var prop in fieldName.Split('.').Select(s => obj.GetType().GetField(s))) {
+            if(obj != null) {
+                obj = prop.GetValue(obj);
+                hasGet = true;
+            }
+        }
+
+        if(!hasGet) {
+            foreach(System.Reflection.PropertyInfo prop in obj.GetType().GetProperties()) {
+                if(prop.Name == fieldName) {
+                    obj = prop.GetValue(obj, null);
+                }
+            }
+        }
+
+        return obj;
+        */
+    }
+
+    public void SetFieldValue(object obj, string fieldName, object fieldValue) {
+        ////Debug.Log("SetFieldValue:obj.GetType():" + obj.GetType());
+
+        //bool hasSet = false;
+        /*
+
+        foreach(System.Reflection.FieldInfo field in fieldName.Split('.').Select(s => obj.GetType().GetField(s))) {
+            if(field != null) {
+                field.SetValue(obj, fieldValue);
+
+                //hasSet = true;
+            }
+        }
+
+        //if(!hasSet) {
+        foreach(System.Reflection.PropertyInfo prop in obj.GetType().GetProperties()) {
+            if(prop.Name == fieldName) {
+                prop.SetValue(obj, fieldValue, null);
+            }
+        }
+        */
+
+        //}
     }
  
     public virtual void Reset() {

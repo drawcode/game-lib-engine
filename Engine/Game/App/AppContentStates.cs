@@ -63,6 +63,8 @@ public class AppContentStates : BaseAppContentStates<AppContentState>
 				      instance = new AppContentStates(true);
 				}
 			}
+
+            LogUtil.Log("AppContentStates:Instanceget:");
 			
 			return instance;
 		}
