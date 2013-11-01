@@ -70,30 +70,47 @@ public class DataObjects<T> {
         string pathResources = path;
 
         LogUtil.Log("LoadDataFromResources:pathResources:" + pathResources);
+        LogUtil.Log("LoadDataFromResources:ContentsConfig.contentRootFolder:" + ContentsConfig.contentRootFolder);
         LogUtil.Log("LoadDataFromResources:ContentsConfig.contentAppFolder:" + ContentsConfig.contentAppFolder);
         LogUtil.Log("LoadDataFromResources:Application.persistentDataPath:" + Application.persistentDataPath);
         LogUtil.Log("LoadDataFromResources:Application.dataPath:" + Application.dataPath);
-        LogUtil.Log("LoadDataFromResources:ContentsConfig.contentVersion:" + ContentsConfig.contentVersion);
 
         if(!path.Contains(ContentsConfig.contentAppFolder)) {            
          
             pathResources = pathResources.Replace("data/", "");
-         
-            pathResources = 
-             PathUtil.Combine(Contents.appCachePathData, pathResources)
-                 .Replace(Application.persistentDataPath, "")
-                 .Replace(Application.dataPath, "");
-         
-            if(pathResources.EndsWith(".json")) {
-                //pathResources += ".txt";
+
+            if(Application.isWebPlayer) {
+
+                System.Text.StringBuilder sbPath = new System.Text.StringBuilder();
+
+                sbPath.Append(ContentsConfig.contentRootFolder);
+                sbPath.Append("/");
+                sbPath.Append(ContentsConfig.contentAppFolder);
+                sbPath.Append("/version/data/");
+                sbPath.Append(pathResources);
+
+                pathResources = sbPath.ToString();
+
+                LogUtil.Log("LoadDataFromResources:web:pathResources:" + pathResources);
             }
-         
-            if(pathResources.StartsWith("/")) {
-                pathResources = pathResources.TrimStart('/');
-            }
-         
-            if(pathResources.Contains("/" + ContentsConfig.contentVersion + "/")) {
-                pathResources = pathResources.Replace("/" + ContentsConfig.contentVersion + "/", "/version/");
+            else {
+
+                pathResources =
+                 PathUtil.Combine(Contents.appCachePathData, pathResources)
+                     .Replace(Application.persistentDataPath, "")
+                     .Replace(Application.dataPath, "");
+             
+                if(pathResources.EndsWith(".json")) {
+                    //pathResources += ".txt";
+                }
+    
+                if(pathResources.StartsWith("/")) {
+                    pathResources = pathResources.TrimStart('/');
+                }
+    
+                if(pathResources.Contains("/" + ContentsConfig.contentVersion + "/")) {
+                    pathResources = pathResources.Replace("/" + ContentsConfig.contentVersion + "/", "/version/");
+                }
             }
         }
      
