@@ -10,7 +10,7 @@ public class AppStates : BaseAppStates<AppState>
 {
 	private static volatile AppState current;
 	private static volatile AppStates instance;
-	private static System.Object syncRoot = new System.Object();
+	private static object syncRoot = new System.Object();
 
 	public static string DATA_KEY = "app-state-data";
 		

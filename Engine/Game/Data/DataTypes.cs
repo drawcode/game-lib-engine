@@ -717,8 +717,8 @@ public class BaseSerializable<T> {
     }
 
     public void Save(string fileName) {
-        string objectString = JsonMapper.ToJson(this);
 #if !UNITY_WEBPLAYER
+        string objectString = JsonMapper.ToJson(this);
         FileSystemUtil.WriteString(fileName, objectString);
 #endif
     }

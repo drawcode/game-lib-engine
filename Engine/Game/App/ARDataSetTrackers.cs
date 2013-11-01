@@ -10,7 +10,7 @@ public class ARDataSetTrackers : BaseARDataSetTrackers<ARDataSetTracker>
 {
 	private static volatile ARDataSetTracker current;
 	private static volatile ARDataSetTrackers instance;
-	private static System.Object syncRoot = new System.Object();
+	private static object syncRoot = new System.Object();
 		
 	public List<ARDataSetTracker> currentTrackers;
 	public List<ARDataSetTracker> currentViewableTrackers;

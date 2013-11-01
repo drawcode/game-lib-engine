@@ -28,7 +28,7 @@ public class AppContentStates : BaseAppContentStates<AppContentState>
 {
 	private static volatile AppContentState current;
 	private static volatile AppContentStates instance;
-	private static System.Object syncRoot = new System.Object();
+	private static object syncRoot = new System.Object();
 	/*
 	public static string APP_STATE_BOOKS = "app-state-books";
 	public static string APP_STATE_CARDS = "app-state-cards";

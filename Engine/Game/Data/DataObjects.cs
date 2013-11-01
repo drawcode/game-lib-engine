@@ -39,22 +39,22 @@ public class DataObjects<T> {
         switch(dataStorage) {
 
         case DataObjectsStorage.SERVER:
-                //Debug.Log("LoadDataFromServer:" + path + " " + pathKey);
+            LogUtil.Log("LoadDataFromServer:" + path + " " + pathKey);
             LoadDataFromServer();
             break;
 
         case DataObjectsStorage.RESOURCES:
-                //Debug.Log("LoadDataFromResources:" + path + " " + pathKey);
+            LogUtil.Log("LoadDataFromResources:" + path + " " + pathKey);
             LoadDataFromResources();
             break;
 
         case DataObjectsStorage.PREFERENCES:
-                //Debug.Log("LoadDataFromResources:" + path + " " + pathKey);
+            LogUtil.Log("LoadDataFromResources:" + path + " " + pathKey);
             LoadDataFromPrefs();
             break;
 
         default:
-                //Debug.Log("LoadDataFromPersistent:" + path + " " + pathKey);
+            LogUtil.Log("LoadDataFromPersistent:" + path + " " + pathKey);
             LoadDataFromPersistent();
             break;
 
@@ -154,8 +154,8 @@ public class DataObjects<T> {
         path = PathUtil.Combine(Contents.appCacheVersionPath, path.TrimStart('/'));
         string pathVersioned = Contents.GetFileVersioned(path);
 
-        Debug.Log("LoadDataFromPersistent:path:" + path);
-        Debug.Log("LoadDataFromPersistent:pathVersioned:" + pathVersioned + " " + pathKey);
+        LogUtil.Log("LoadDataFromPersistent:path:" + path);
+        LogUtil.Log("LoadDataFromPersistent:pathVersioned:" + pathVersioned + " " + pathKey);
 
         bool prepared = PreparePersistentFile(pathPart, pathVersioned);
 
@@ -166,7 +166,7 @@ public class DataObjects<T> {
 
         FileSystemUtil.WriteString(pathVersioned, fileData);
 
-        Debug.Log("SaveDataItemsToPersistent:fileData:" + fileData + " " + pathKey);
+        LogUtil.Log("SaveDataItemsToPersistent:fileData:" + fileData + " " + pathKey);
 
         saved = true;
 
@@ -181,8 +181,8 @@ public class DataObjects<T> {
         path = PathUtil.Combine(Contents.appCacheVersionPath, path.TrimStart('/'));
         string pathVersioned = Contents.GetFileVersioned(path);
 
-        Debug.Log("LoadDataFromPersistent:path:" + path);
-        Debug.Log("LoadDataFromPersistent:pathVersioned:" + pathVersioned + " " + pathKey);
+        LogUtil.Log("LoadDataFromPersistent:path:" + path);
+        LogUtil.Log("LoadDataFromPersistent:pathVersioned:" + pathVersioned + " " + pathKey);
 
         bool prepared = PreparePersistentFile(pathPart, pathVersioned);
 
@@ -193,7 +193,7 @@ public class DataObjects<T> {
 
         FileSystemUtil.WriteString(pathVersioned, fileData);
 
-        Debug.Log("SaveDataItemsToPersistent:fileData:" + fileData + " " + pathKey);
+        LogUtil.Log("SaveDataItemsToPersistent:fileData:" + fileData + " " + pathKey);
 
         saved = true;
 
@@ -206,18 +206,18 @@ public class DataObjects<T> {
         if(!FileSystemUtil.CheckFileExists(pathVersioned)) {
             prepared = false;
 
-            Debug.Log("LoadDataFromPersistent:pathVersioned not exist:" + pathVersioned + " " + pathKey);
+            LogUtil.Log("LoadDataFromPersistent:pathVersioned not exist:" + pathVersioned + " " + pathKey);
 
             // copy from streaming assets
             string pathToCopy = PathUtil.Combine(Contents.appCacheVersionPath, pathPart.TrimStart('/'));
-            Debug.Log("LoadDataFromPersistent:pathToCopy:" + pathToCopy + " " + pathKey);
+            LogUtil.Log("LoadDataFromPersistent:pathToCopy:" + pathToCopy + " " + pathKey);
             if(FileSystemUtil.CheckFileExists(pathToCopy)) {
                 FileSystemUtil.MoveFile(pathToCopy, pathVersioned);
-                Debug.Log("LoadDataFromPersistent:file moved:" + pathToCopy + " " + pathKey);
+                LogUtil.Log("LoadDataFromPersistent:file moved:" + pathToCopy + " " + pathKey);
                 prepared = true;
             }
             else {
-                Debug.Log("LoadDataFromPersistent:move not exist:" + pathToCopy + " " + pathKey);
+                LogUtil.Log("LoadDataFromPersistent:move not exist:" + pathToCopy + " " + pathKey);
                 prepared = false;
             }
         }
@@ -371,7 +371,7 @@ public class DataObjects<T> {
         }
         LoadDataFromString(fileData);
 
-        Debug.Log("LoadDataFromResources:fileData:" + fileData + " " + pathKey);
+        LogUtil.Log("LoadDataFromResources:fileData:" + fileData + " " + pathKey);
         return fileData;
     }
 
@@ -526,11 +526,8 @@ public class DataObjects<T> {
 
 
     public object GetFieldValue(object obj, string fieldName) {
-        ////Debug.Log("GetFieldValue:obj.GetType():" + obj.GetType());
+        LogUtil.Log("GetFieldValue:obj.GetType():" + obj.GetType());
 
-        return null;
-
-        /*
         bool hasGet = false;
 
         foreach(var prop in fieldName.Split('.').Select(s => obj.GetType().GetField(s))) {
@@ -549,15 +546,13 @@ public class DataObjects<T> {
         }
 
         return obj;
-        */
     }
 
     public void SetFieldValue(object obj, string fieldName, object fieldValue) {
-        ////Debug.Log("SetFieldValue:obj.GetType():" + obj.GetType());
+        LogUtil.Log("SetFieldValue:obj.GetType():" + obj.GetType());
 
         //bool hasSet = false;
 
-        /*
         foreach(System.Reflection.FieldInfo field in fieldName.Split('.').Select(s => obj.GetType().GetField(s))) {
             if(field != null) {
                 field.SetValue(obj, fieldValue);
@@ -572,13 +567,12 @@ public class DataObjects<T> {
                 prop.SetValue(obj, fieldValue, null);
             }
         }
-        */
 
         //}
     }
 
     public bool CheckByStringKey(string key, string keyValue) {
-        /*
+
         foreach(T obj in GetAll()) {
             try {
                 bool found = false;
@@ -600,7 +594,7 @@ public class DataObjects<T> {
                 return false;
             }
         }
-        */
+
         return false;
     }
 

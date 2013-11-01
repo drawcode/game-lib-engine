@@ -24,7 +24,7 @@ public class AppModeTypes : BaseAppModeTypes<AppModeType> {
 
     private static volatile AppModeType current;
     private static volatile AppModeTypes instance;
-    private static System.Object syncRoot = new System.Object();
+    private static object syncRoot = new System.Object();
     
     public static string DATA_KEY = "app-mode-type-data";
     

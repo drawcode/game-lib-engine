@@ -3,9 +3,9 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
-using System.Reflection;
 
 #if !UNITY_WEBPLAYER
+using System.Reflection;
 using System.IO;
 #endif
 
@@ -16,7 +16,7 @@ public class AppContentActions : BaseAppContentActions<AppContentAction>
 {
 	private static volatile AppContentAction current;
 	private static volatile AppContentActions instance;
-	private static System.Object syncRoot = new System.Object();
+	private static object syncRoot = new System.Object();
 	/*
 	public static string APP_STATE_BOOKS = "app-state-books";
 	public static string APP_STATE_CARDS = "app-state-cards";
@@ -1431,30 +1431,7 @@ public class AppContentAction : BaseAppContentAction
 		}
 		return null;
 	}
-	
-	public object GetFieldValue(object obj, string fieldName) {
-		////Debug.Log("GetFieldValue:obj.GetType():" + obj.GetType());
-				
-		bool hasGet = false;
-		
-		foreach (var prop in fieldName.Split('.').Select(s => obj.GetType().GetField(s))) {
-			if(obj != null) {
-	    		obj = prop.GetValue(obj);
-				hasGet = true;
-			}
-		}
-		
-		if(!hasGet) {
-			foreach (PropertyInfo prop in obj.GetType().GetProperties()) {
-				if(prop.Name == fieldName) {
-					obj = prop.GetValue(obj, null);	
-				}
-			}
-		}
-	
-	    return obj;
-	}
-	
+
 	public List<AppContentActionEvent> GetAppContentActionEvents(string filterType) {
 		List<AppContentActionEvent> filterList = new List<AppContentActionEvent>();
 		if(content_events != null) {

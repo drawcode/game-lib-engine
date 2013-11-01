@@ -8,7 +8,7 @@ public class ARDataSets : BaseARDataSets<ARDataSet>
 {
 	private static volatile ARDataSet current;
 	private static volatile ARDataSets instance;
-	private static System.Object syncRoot = new System.Object();
+	private static object syncRoot = new System.Object();
 		
 	public static string DATA_KEY = "ar-data-set-data";
 		

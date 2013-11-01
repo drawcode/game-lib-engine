@@ -8,7 +8,7 @@ public class GamePacks : DataObjects<GamePack>
 {
 	private static volatile GamePack current;
 	private static volatile GamePacks instance;
-	private static System.Object syncRoot = new System.Object();
+	private static object syncRoot = new System.Object();
 		
 	public static string DATA_KEY = "pack-data";
 	

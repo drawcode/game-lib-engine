@@ -368,9 +368,9 @@ public class BaseGameAudioRecorder {
 
         LogUtil.Log("Load: onSuccess: " + onSuccess);
         LogUtil.Log("Load: filePath: " + filename);
-
+#if !UNITY_WEBPLAYER
         var onFailure = new Action<string>(error => LogUtil.Log(error));
-
+#endif
 #if UNITY_STANDALONE_OSX
 #elif UNITY_STANDALONE_WIN
 #elif UNITY_ANDROID

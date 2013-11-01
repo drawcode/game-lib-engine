@@ -7,7 +7,7 @@ public class AppContentListItems : BaseAppContentListItems<AppContentListItem>
 {
 	private static volatile AppContentListItem current;
 	private static volatile AppContentListItems instance;
-	private static System.Object syncRoot = new System.Object();
+	private static object syncRoot = new System.Object();
 		
 	public static string DATA_KEY = "app-content-list-item-data";
 		

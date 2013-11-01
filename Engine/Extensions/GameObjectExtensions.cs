@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
+#if !UNITY_WEBPLAYER
 using System.Reflection;
+#endif
 using Engine.Utility;
 using UnityEngine;
 

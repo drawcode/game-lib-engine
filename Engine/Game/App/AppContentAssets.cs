@@ -6,7 +6,7 @@ public class AppContentAssets : BaseAppContentAssets<AppContentAsset>
 {
 	private static volatile AppContentAsset current;
 	private static volatile AppContentAssets instance;
-	private static System.Object syncRoot = new System.Object();
+	private static object syncRoot = new System.Object();
 	/*
 	public static string APP_STATE_BOOKS = "app-state-books";
 	public static string APP_STATE_CARDS = "app-state-cards";

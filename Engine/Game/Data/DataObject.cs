@@ -54,9 +54,9 @@ public class DataObject {
     }
  
     public T LoadData<T>(string folderPath, string fileKey) {
-        string path = PathUtil.Combine(folderPath, (fileKey + ".json").TrimStart('/'));
         string fileData = "";
-#if !UNITY_WEBPLAYER 
+#if !UNITY_WEBPLAYER
+        string path = PathUtil.Combine(folderPath, (fileKey + ".json").TrimStart('/'));
         if(FileSystemUtil.CheckFileExists(path)) {       
             fileData = FileSystemUtil.ReadString(path);
         }        
@@ -88,9 +88,6 @@ public class DataObject {
     public object GetFieldValue(object obj, string fieldName) {
         ////Debug.Log("GetFieldValue:obj.GetType():" + obj.GetType());
 
-        return null;
-        /*
-
         bool hasGet = false;
 
         foreach(var prop in fieldName.Split('.').Select(s => obj.GetType().GetField(s))) {
@@ -109,14 +106,12 @@ public class DataObject {
         }
 
         return obj;
-        */
     }
 
     public void SetFieldValue(object obj, string fieldName, object fieldValue) {
         ////Debug.Log("SetFieldValue:obj.GetType():" + obj.GetType());
 
         //bool hasSet = false;
-        /*
 
         foreach(System.Reflection.FieldInfo field in fieldName.Split('.').Select(s => obj.GetType().GetField(s))) {
             if(field != null) {
@@ -132,7 +127,6 @@ public class DataObject {
                 prop.SetValue(obj, fieldValue, null);
             }
         }
-        */
 
         //}
     }

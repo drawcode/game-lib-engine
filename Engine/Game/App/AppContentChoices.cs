@@ -6,7 +6,7 @@ public class AppContentChoices : BaseAppContentChoices<AppContentChoice>
 {
 	private static volatile AppContentChoice current;
 	private static volatile AppContentChoices instance;
-	private static System.Object syncRoot = new System.Object();
+	private static object syncRoot = new System.Object();
 	/*
 	public static string APP_STATE_BOOKS = "app-state-books";
 	public static string APP_STATE_CARDS = "app-state-cards";

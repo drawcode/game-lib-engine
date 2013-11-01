@@ -10,7 +10,7 @@ public class AppModes : BaseAppModes<AppMode> {
 
     private static volatile AppMode current;
     private static volatile AppModes instance;
-    private static System.Object syncRoot = new System.Object();
+    private static object syncRoot = new System.Object();
     
     public static string DATA_KEY = "app-mode-data";
     

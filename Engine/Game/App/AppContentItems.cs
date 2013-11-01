@@ -6,7 +6,7 @@ public class AppContentItems : BaseAppContentItems<AppContentItem>
 {
 	private static volatile AppContentItem current;
 	private static volatile AppContentItems instance;
-	private static System.Object syncRoot = new System.Object();
+	private static object syncRoot = new System.Object();
 	/*
 	public static string APP_STATE_BOOKS = "app-state-books";
 	public static string APP_STATE_CARDS = "app-state-cards";
