@@ -39,22 +39,22 @@ public class DataObjects<T> {
         switch(dataStorage) {
 
         case DataObjectsStorage.SERVER:
-            LogUtil.Log("LoadDataFromServer:" + path + " " + pathKey);
+            LogUtil.Log("LoadData:LoadDataFromServer:" + path + " " + pathKey);
             LoadDataFromServer();
             break;
 
         case DataObjectsStorage.RESOURCES:
-            LogUtil.Log("LoadDataFromResources:" + path + " " + pathKey);
+            LogUtil.Log("LoadData:LoadDataFromResources:" + path + " " + pathKey);
             LoadDataFromResources();
             break;
 
         case DataObjectsStorage.PREFERENCES:
-            LogUtil.Log("LoadDataFromResources:" + path + " " + pathKey);
+            LogUtil.Log("LoadData:LoadDataFromPrefs:" + path + " " + pathKey);
             LoadDataFromPrefs();
             break;
 
         default:
-            LogUtil.Log("LoadDataFromPersistent:" + path + " " + pathKey);
+            LogUtil.Log("LoadData:LoadDataFromPersistent:" + path + " " + pathKey);
             LoadDataFromPersistent();
             break;
 
@@ -68,7 +68,13 @@ public class DataObjects<T> {
     public virtual void LoadDataFromResources() {
         
         string pathResources = path;
-     
+
+        LogUtil.Log("LoadDataFromResources:pathResources:" + pathResources);
+        LogUtil.Log("LoadDataFromResources:ContentsConfig.contentAppFolder:" + ContentsConfig.contentAppFolder);
+        LogUtil.Log("LoadDataFromResources:Application.persistentDataPath:" + Application.persistentDataPath);
+        LogUtil.Log("LoadDataFromResources:Application.dataPath:" + Application.dataPath);
+        LogUtil.Log("LoadDataFromResources:ContentsConfig.contentVersion:" + ContentsConfig.contentVersion);
+
         if(!path.Contains(ContentsConfig.contentAppFolder)) {            
          
             pathResources = pathResources.Replace("data/", "");
@@ -91,7 +97,7 @@ public class DataObjects<T> {
             }
         }
      
-        Debug.Log("LoadDataFromResources:" + pathResources);
+        LogUtil.Log("LoadDataFromResources:void:" + pathResources);
      
         string data = LoadDataFromResources(pathResources);
         LoadDataFromString(data);
@@ -364,7 +370,7 @@ public class DataObjects<T> {
     public string LoadDataFromResources(string resourcesPath) {
         string fileData = "";
 
-        Debug.Log("LoadDataFromResources:resourcesPath:" + resourcesPath + " " + pathKey);
+        LogUtil.Log("LoadDataFromResources:string:resourcesPath:" + resourcesPath + " " + pathKey);
         TextAsset textData = Resources.Load(resourcesPath, typeof(TextAsset)) as TextAsset;
         if(textData != null) {
             fileData = textData.text;
@@ -434,7 +440,6 @@ public class DataObjects<T> {
     }
 
     public T GetByStringKey(string key, string keyValue) {
-        /*
         foreach(T obj in GetAll()) {
             try {
                 bool found = false;
@@ -472,7 +477,7 @@ public class DataObjects<T> {
                 return default(T);
             }
         }
-        */
+
         return default(T);
     }
 
@@ -590,7 +595,7 @@ public class DataObjects<T> {
                 }
             }
             catch(Exception e) {
-                Debug.Log("GetByStringKey warning no key:" + e);
+                LogUtil.Log("GetByStringKey warning no key:" + e);
                 return false;
             }
         }
