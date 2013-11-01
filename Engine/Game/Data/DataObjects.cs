@@ -76,8 +76,6 @@ public class DataObjects<T> {
         LogUtil.Log("LoadDataFromResources:Application.dataPath:" + Application.dataPath);
 
         if(!path.Contains(ContentsConfig.contentAppFolder)) {            
-         
-            pathResources = pathResources.Replace("data/", "");
 
             if(Application.isWebPlayer) {
 
@@ -86,7 +84,7 @@ public class DataObjects<T> {
                 sbPath.Append(ContentsConfig.contentRootFolder);
                 sbPath.Append("/");
                 sbPath.Append(ContentsConfig.contentAppFolder);
-                sbPath.Append("/version/data/");
+                sbPath.Append("/version/");
                 sbPath.Append(pathResources);
 
                 pathResources = sbPath.ToString();
@@ -94,6 +92,8 @@ public class DataObjects<T> {
                 LogUtil.Log("LoadDataFromResources:web:pathResources:" + pathResources);
             }
             else {
+
+                pathResources = pathResources.Replace("data/", "");
 
                 pathResources =
                  PathUtil.Combine(Contents.appCachePathData, pathResources)
