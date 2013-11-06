@@ -2,7 +2,6 @@
 //	Allows "OnMouseDown()" events to work on the iPhone.
 //	Attack to the main camera.
 
-#if UNITY_IPHONE
 
 using UnityEngine;
 using System.Collections;
@@ -18,6 +17,7 @@ namespace Engine.Events {
 
 		void Update () {
 
+#if UNITY_IPHONE
 			// Code for OnMouseDown in the iPhone. Unquote to test.
 			RaycastHit hit = new RaycastHit();
 			for (int i = 0; i < Input.touchCount; ++i) {
@@ -34,7 +34,7 @@ namespace Engine.Events {
 			      }
 			   }
 		   }
+#endif
 		}
 	}
 }
-#endif

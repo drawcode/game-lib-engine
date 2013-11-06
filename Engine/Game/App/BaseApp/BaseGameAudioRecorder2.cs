@@ -1,3 +1,4 @@
+/*
 #define ANDROID_AMAZONN
 
 using System;
@@ -7,7 +8,7 @@ using Engine.Data.Json;
 using Engine.Utility;
 using UnityEngine;
 
-public class BaseGameAudioRecordItems {
+public class BaseGameAudioRecordItems2 {
 
     // UI sounds
 
@@ -42,8 +43,8 @@ public class BaseGameAudioRecordItems {
     public static string audio_effect_crowd_cheer_boost_1 = "audio_effect_crowd_cheer_boost_1";
 }
 
-public class BaseGameAudioRecorder {
-    private static volatile BaseGameAudioRecorder instance;
+public class BaseGameAudioRecorder2 {
+    private static volatile BaseGameAudioRecorder2 instance;
     private static System.Object syncRoot = new System.Object();
 
     public string currentFileName = "";
@@ -53,23 +54,23 @@ public class BaseGameAudioRecorder {
 
     public Dictionary<string, AudioClip> loadedClips;
 
-    public static BaseGameAudioRecorder Instance {
+    public static BaseGameAudioRecorder2 BaseInstance {
         get {
             if (instance == null) {
                 lock (syncRoot) {
                     if (instance == null)
-                        instance = new BaseGameAudioRecorder();
+                        instance = new BaseGameAudioRecorder2();
                 }
             }
             return instance;
         }
     }
 
-    public BaseGameAudioRecorder() {
+    public BaseGameAudioRecorder2() {
         loadedClips = new Dictionary<string, AudioClip>();
     }
 
-    private void OnEnable() {
+    public virtual void OnEnable() {
 #if UNITY_STANDALONE_OSX
 #elif UNITY_STANDALONE_WIN
 #elif UNITY_ANDROID
@@ -83,7 +84,7 @@ public class BaseGameAudioRecorder {
 #endif
     }
 
-    private void OnDisable() {
+    public virtual void OnDisable() {
 #if UNITY_STANDALONE_OSX
 #elif UNITY_STANDALONE_WIN
 #elif UNITY_ANDROID
@@ -100,19 +101,19 @@ public class BaseGameAudioRecorder {
 #if UNITY_STANDALONE_OSX
 #elif UNITY_STANDALONE_WIN
 #elif UNITY_ANDROID
-	void startRecordingFailedEvent(string param) {
+	public virtual void startRecordingFailedEvent(string param) {
 		LogUtil.Log("GameAudioRecorder:: startRecordingFailedEvent:" + param);
 		currentlyRecording = false;
 		lastRecordingSucceeded = false;
 	}
 
-	void stopRecordingFinishedEvent(string file) {
+	public virtual void stopRecordingFinishedEvent(string file) {
 		LogUtil.Log("GameAudioRecorder:: stopRecordingFinishedEvent:" + file);
 		currentlyRecording = false;
 		lastRecordingSucceeded = true;
 	}
 
-	void stopRecordingFailedEvent(string error) {
+	public virtual void stopRecordingFailedEvent(string error) {
 		LogUtil.Log("GameAudioRecorder:: stopRecordingFailedEvent:" + error);
 		currentlyRecording = false;
 		lastRecordingSucceeded = false;
@@ -122,11 +123,11 @@ public class BaseGameAudioRecorder {
 #elif UNITY_EDITOR
 #endif
 
-    public Dictionary<string, AudioClip> GetLoadedClips() {
+    public virtual Dictionary<string, AudioClip> GetLoadedClips() {
         return loadedClips;
     }
 
-    public void ClearLoadedClips() {
+    public virtual void ClearLoadedClips() {
         if (loadedClips != null) {
             foreach (KeyValuePair<string, AudioClip> pair in loadedClips) {
                 MonoBehaviour.Destroy(pair.Value);
@@ -136,7 +137,7 @@ public class BaseGameAudioRecorder {
         }
     }
 
-    public void PrepareAudioFilename(string filename) {
+    public virtual void PrepareAudioFilename(string filename) {
         string error = "No recorder";
         currentFileName = filename;
 #if UNITY_STANDALONE_OSX
@@ -161,14 +162,14 @@ public class BaseGameAudioRecorder {
         }
     }
 
-    public string GetFileName(string file) {
+    public virtual string GetFileName(string file) {
         if (file.IndexOf(".wav") == -1) {
             file = file + ".wav";
         }
         return file;
     }
 
-    public string GetPersistentPath(string file) {
+    public virtual string GetPersistentPath(string file) {
         string filepath = file;
         if (filepath.IndexOf(Application.persistentDataPath) == -1) {
             filepath = Application.persistentDataPath + "/" + filepath;
@@ -179,7 +180,7 @@ public class BaseGameAudioRecorder {
         return filepath;
     }
 
-    public string FilterPersistentPathAndroid(string file) {
+    public virtual string FilterPersistentPathAndroid(string file) {
         string filepath = file;
         if (filepath.IndexOf("/mnt/sdcard") > -1) {
             filepath = filepath.Replace("/mnt/sdcard", "");
@@ -187,11 +188,11 @@ public class BaseGameAudioRecorder {
         return filepath;
     }
 
-    public bool CheckIfSoundExistsByKey(string key) {
+    public virtual bool CheckIfSoundExistsByKey(string key) {
         return CheckIfSoundExists(Application.persistentDataPath + "/" + GetFileName(key));
     }
 
-    public bool CheckIfSoundExists(string file) {
+    public virtual bool CheckIfSoundExists(string file) {
         bool exists = false;
 
 #if UNITY_STANDALONE_OSX
@@ -210,15 +211,15 @@ public class BaseGameAudioRecorder {
         return exists;
     }
 
-    public void Play() {
+    public virtual void Play() {
         Play(currentFileName, (float)BaseGameProfiles.Current.GetAudioEffectsVolume());
     }
 
-    public void Play(string filename) {
+    public virtual void Play(string filename) {
         Play(filename, (float)BaseGameProfiles.Current.GetAudioEffectsVolume());
     }
 
-    public void Play(string filename, float volume) {
+    public virtual void Play(string filename, float volume) {
         var onSuccess = new Action<AudioClip>(clip => {
             AudioSystem.Instance.PlayEffect(clip, volume);
 
@@ -229,61 +230,8 @@ public class BaseGameAudioRecorder {
         Load(filename, onSuccess);
     }
 
-    /*
-
     // loads up the audio file and returns an AudioClip ready for use in the callback
-    public IEnumerator loadAudioFileAtPathVehicles( string file, VehicleSounds vehicleSounds, Action<string> onFailure, Action<AudioClip, VehicleSounds> onSuccess )
-    {
-        // TODO swap out to better pool
-        AudioClip audioClip = null;
-
-        if(GameAudioRecorder.Instance.loadedClips.ContainsKey(file)) {
-            audioClip = GameAudioRecorder.Instance.loadedClips[file];
-            if(audioClip == null) {
-                GameAudioRecorder.Instance.loadedClips.Remove(file);
-            }
-        }
-
-        if(audioClip == null) {
-            var www = new WWW( file );
-
-            LogUtil.Log( "loadAudioFileAtPathVehicles: file: " + file );
-
-            yield return www;
-
-            if( www.error != null ) {
-                if( onFailure != null ) {
-                    onFailure( www.error );
-
-                    LogUtil.Log( "loadAudioFileAtPathVehicles: www.error: " + www.error );
-                }
-            }
-
-            if( www.audioClip ) {
-                audioClip = www.GetAudioClip(true);
-
-                GameAudioRecorder.Instance.loadedClips.Add(file, audioClip);
-
-                LogUtil.Log( "loadAudioFileAtPathVehicles: www.audioClip: " + audioClip );
-                LogUtil.Log( "loadAudioFileAtPathVehicles: www.audioClip.name: " + audioClip.name );
-            }
-
-            www.Dispose();
-            GC.Collect();
-
-            //Resources.UnloadUnusedAssets();
-        }
-
-        if(audioClip != null) {
-            if( onSuccess != null ) {
-                onSuccess(audioClip, vehicleSounds);
-            }
-        }
-    }
-    */
-
-    // loads up the audio file and returns an AudioClip ready for use in the callback
-    public IEnumerator loadAudioFileAtPath(string file, Action<string> onFailure, Action<AudioClip> onSuccess) {
+    public virtual IEnumerator loadAudioFileAtPath(string file, Action<string> onFailure, Action<AudioClip> onSuccess) {
         AudioClip audioClip = null;
 
         // TODO swap out to better pool
@@ -324,40 +272,7 @@ public class BaseGameAudioRecorder {
         }
     }
 
-    /*
-    public string LoadVehicleSounds(string filename, VehicleSounds vehicleSounds, Action<AudioClip, VehicleSounds> onSuccess) {
-        filename = GetFileName(filename);
-
-        var filePath = GetPersistentPath(filename);
-        var file = "file://" + filePath;
-
-        currentFileName = filename;
-
-        LogUtil.Log( "Load: onSuccess: " + onSuccess );
-        LogUtil.Log( "Load: filePath: " + filename );
-
-        var onFailure = new Action<string>( error => LogUtil.Log( error ) );
-
-#if UNITY_STANDALONE_OSX
-#elif UNITY_STANDALONE_WIN
-#elif UNITY_ANDROID
-        if(CheckIfSoundExists(filePath)) {
-            CoroutineUtil.Start( loadAudioFileAtPathVehicles( file, vehicleSounds, onFailure, onSuccess ) );
-        }
-#elif UNITY_WEBPLAYER
-#elif UNITY_IPHONE
-        if(CheckIfSoundExists(filePath)) {
-            CoroutineUtil.Start( loadAudioFileAtPathVehicles( file, vehicleSounds, onFailure, onSuccess ) );
-        }
-#elif UNITY_EDITOR
-#endif
-        LogUtil.Log( "Load: " + file );
-        LogUtil.Log( "Load checked: " + filePath );
-        return file;
-    }
-    */
-
-    public string Load(string filename, Action<AudioClip> onSuccess) {
+    public virtual string Load(string filename, Action<AudioClip> onSuccess) {
         filename = GetFileName(filename);
 
         var filePath = GetPersistentPath(filename);
@@ -389,7 +304,7 @@ public class BaseGameAudioRecorder {
         return file;
     }
 
-    public bool Record() {
+    public virtual bool Record() {
         currentlyRecording = true;
         bool didRecord = false;
 #if UNITY_STANDALONE_OSX
@@ -412,7 +327,7 @@ public class BaseGameAudioRecorder {
         return didRecord;
     }
 
-    public bool Record(float duration) {
+    public virtual bool Record(float duration) {
         currentlyRecording = true;
         bool didRecord = false;
 #if UNITY_STANDALONE_OSX
@@ -435,7 +350,7 @@ public class BaseGameAudioRecorder {
         return didRecord;
     }
 
-    public void Pause() {
+    public virtual void Pause() {
 #if UNITY_STANDALONE_OSX
 #elif UNITY_STANDALONE_WIN
 #elif UNITY_ANDROID
@@ -449,7 +364,7 @@ public class BaseGameAudioRecorder {
 #endif
     }
 
-    public void Stop(bool finish) {
+    public virtual void Stop(bool finish) {
 #if UNITY_STANDALONE_OSX
 #elif UNITY_STANDALONE_WIN
 #elif UNITY_ANDROID
@@ -464,7 +379,7 @@ public class BaseGameAudioRecorder {
         LogUtil.Log("Stop finish: " + finish);
     }
 
-    public bool IsRecording() {
+    public virtual bool IsRecording() {
         bool isRecording = false;
 #if UNITY_STANDALONE_OSX
 #elif UNITY_STANDALONE_WIN
@@ -481,7 +396,7 @@ public class BaseGameAudioRecorder {
         return isRecording;
     }
 
-    public float GetRecordedTime() {
+    public virtual float GetRecordedTime() {
         float duration = 0f;
 #if UNITY_STANDALONE_OSX
 #elif UNITY_STANDALONE_WIN
@@ -585,3 +500,4 @@ public class BaseGameAudioRecorder {
         }
     }
 }
+*/
