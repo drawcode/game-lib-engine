@@ -931,7 +931,72 @@ public static class GameObjectHelper {
 	
 	public static bool SetMaterialColor(GameObject inst, string name, Color color) {
 		return SetMaterialColor(inst, name, color, true);
-	}		
+	}
+
+    public static GameObject CreateGameObject(
+        GameObject go,
+        Vector3 pos,
+        Quaternion rotate,
+        bool pooled) {
+
+        GameObject obj = null;
+
+        if(!pooled) {
+            obj = GameObject.Instantiate(go, pos, rotate) as GameObject;
+        }
+        else {
+            obj = ObjectPoolManager.createPooled(go, pos, rotate);
+        }
+
+        return obj;
+    }
+
+    public static void DestroyGameObject(GameObject go, bool pooled) {
+        DestroyGameObject(go, 0f, pooled);
+    }
+
+    public static void DestroyGameObject(GameObject go, float delay, bool pooled) {
+        if(!pooled) {
+            DestroyDelayed(go, delay);
+        }
+        else {
+            ObjectPoolManager.destroyPooled(go, delay);
+        }
+    }
+
+    public static void DestroyNow(GameObject inst) {
+        if(inst == null)
+                return;
+
+        GameObject.Destroy(inst);
+    }
+    
+    public static void DestroyDelayed(GameObject inst, float delay) {
+        if(inst == null)
+                return;
+
+        GameObject.Destroy(inst, delay);
+    }
+
+    public static void DestroyChildren(GameObject inst) {
+        if (inst == null)
+            return;
+
+        List<Transform> transforms = new List<Transform>();// inst.transform.childCount;
+        int b = 0;
+        foreach (Transform t in inst.transform) {
+            transforms.Add(t);// = t;
+            b++;
+        }
+
+        foreach (Transform t in transforms) {
+            t.parent = null;
+            UnityEngine.Object.Destroy(t.gameObject);
+        }
+
+        transforms.Clear();
+        transforms = null;
+    }
 	
 	public static GameObject LoadFromResources(string path) {
 		

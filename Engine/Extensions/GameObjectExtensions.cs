@@ -361,37 +361,15 @@ public static class GameObjectExtensions {
     // AUDIO
     
     public static void DestroyNow(this GameObject inst) {
-        if(inst == null)
-                return;
-
-        GameObject.Destroy(inst);
+        GameObjectHelper.DestroyNow(inst);
     }
     
     public static void DestroyDelayed(this GameObject inst, float delay) {
-        if(inst == null)
-                return;
-
-        GameObject.Destroy(inst, delay);
+        GameObjectHelper.DestroyDelayed(inst, delay);
     }
 
     public static void DestroyChildren(this GameObject inst) {
-        if (inst == null)
-            return;
-
-        List<Transform> transforms = new List<Transform>();// inst.transform.childCount;
-        int b = 0;
-        foreach (Transform t in inst.transform) {
-            transforms.Add(t);// = t;
-            b++;
-        }
-
-        foreach (Transform t in transforms) {
-            t.parent = null;
-            UnityEngine.Object.Destroy(t.gameObject);
-        }
-
-        transforms.Clear();
-        transforms = null;
+        GameObjectHelper.DestroyChildren(inst);
     }
 
     public static void ChangeLayersRecursively(this GameObject inst, string name) {
@@ -475,6 +453,18 @@ public static class GameObjectExtensions {
 	public static void SetMaterialColor(this GameObject go, string name, Color color) {
         GameObjectHelper.SetMaterialColor(go, name, color);    
 	}
+
+    public static GameObject CreateGameObject(
+        this GameObject go,
+        Vector3 pos,
+        Quaternion rotate,
+        bool pooled) {
+        return GameObjectHelper.CreateGameObject(go, pos, rotate, pooled);
+    }
+
+    public static void DestroyGameObject(this GameObject go, float delay, bool pooled) {
+        GameObjectHelper.DestroyGameObject(go, delay, pooled);
+    }
 	
 	public static GameObject LoadFromResources(this GameObject go, string path) {
 		return GameObjectHelper.LoadFromResources(path);
