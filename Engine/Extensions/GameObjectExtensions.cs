@@ -372,6 +372,10 @@ public static class GameObjectExtensions {
         GameObjectHelper.DestroyChildren(inst);
     }
 
+    public static void DestroyChildren(this GameObject inst, bool pooled) {
+        GameObjectHelper.DestroyChildren(inst, pooled);
+    }
+
     public static void ChangeLayersRecursively(this GameObject inst, string name) {
         if (inst == null)
             return;

@@ -997,6 +997,26 @@ public static class GameObjectHelper {
         transforms.Clear();
         transforms = null;
     }
+
+    public static void DestroyChildren(GameObject inst, bool pooled) {
+        if (inst == null)
+            return;
+
+        List<Transform> transforms = new List<Transform>();// inst.transform.childCount;
+        int b = 0;
+        foreach (Transform t in inst.transform) {
+            transforms.Add(t);// = t;
+            b++;
+        }
+
+        foreach (Transform t in transforms) {
+            t.parent = null;
+            DestroyGameObject(t.gameObject, pooled);
+        }
+
+        transforms.Clear();
+        transforms = null;
+    }
 	
 	public static GameObject LoadFromResources(string path) {
 		
