@@ -244,6 +244,7 @@ public class BaseGameProfileCharacter : Profile {
     public void CurrentCharacterAddGamePlayerProgressXP(double val) {
         GameProfileCharacterItem character = GetCurrentCharacter();
         character.profilePlayerProgress.AddGamePlayerProgressXP(val);
+        GamePlayerProgress.SetStatXP(val);
         SetCharacter(character);
     }
 

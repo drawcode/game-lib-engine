@@ -103,29 +103,33 @@ namespace Engine.Events {
 
         public InputTouchInfo GetTouchInfoFromInput() {
             if (!Context.Current.isMobile) {
-                if (Input.GetMouseButtonDown(0)) {
-                    touchInfo.position2d.x = Input.mousePosition.x;
-                    touchInfo.position2d.y = Input.mousePosition.y;
-                    touchInfo.position3d = Input.mousePosition;
-                    lastTouch = touchInfo;
-
-                    //LogUtil.Log("lastTouch:" + lastTouch);
-                    //LogUtil.Log("lastTouch.position2d.x:" + lastTouch.position2d.x);
-                    //LogUtil.Log("lastTouch.position2d.y:" + lastTouch.position2d.y);
+                if(touchInfo != null) {
+                    if (Input.GetMouseButtonDown(0)) {
+                        touchInfo.position2d.x = Input.mousePosition.x;
+                        touchInfo.position2d.y = Input.mousePosition.y;
+                        touchInfo.position3d = Input.mousePosition;
+                        lastTouch = touchInfo;
+    
+                        //LogUtil.Log("lastTouch:" + lastTouch);
+                        //LogUtil.Log("lastTouch.position2d.x:" + lastTouch.position2d.x);
+                        //LogUtil.Log("lastTouch.position2d.y:" + lastTouch.position2d.y);
+                    }
                 }
             }
             else {
                 foreach (Touch touch in Input.touches) {
                     if (touch.phase == TouchPhase.Moved
                        || touch.tapCount > 0) {
-                        touchInfo.position2d = touch.position;
-                        touchInfo.position3d.x = touch.position.x;
-                        touchInfo.position3d.y = touch.position.y;
-                        lastTouch = touchInfo;
-
-                        //LogUtil.Log("lastTouch:" + lastTouch);
-                        //LogUtil.Log("lastTouch.position2d.x:" + lastTouch.position2d.x);
-                        //LogUtil.Log("lastTouch.position2d.y:" + lastTouch.position2d.y);
+                        if(touchInfo != null) {
+                            touchInfo.position2d = touch.position;
+                            touchInfo.position3d.x = touch.position.x;
+                            touchInfo.position3d.y = touch.position.y;
+                            lastTouch = touchInfo;
+    
+                            //LogUtil.Log("lastTouch:" + lastTouch);
+                            //LogUtil.Log("lastTouch.position2d.x:" + lastTouch.position2d.x);
+                            //LogUtil.Log("lastTouch.position2d.y:" + lastTouch.position2d.y);
+                        }
                     }
                 }
             }
