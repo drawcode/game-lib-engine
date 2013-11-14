@@ -28,6 +28,15 @@ public static class Vector4Extensions {
 
 public static class VectorExtensions {
 
+    public static bool IsBiggerThanDeadzone(this Vector3 inst, float deadZone) {
+        if(Mathf.Abs(inst.x) > deadZone
+           || Mathf.Abs(inst.y) > deadZone
+           || Mathf.Abs(inst.z) > deadZone) {
+            return true;
+        }
+        return false;
+    }
+
     // 3
 
     public static Vector3 WithX(this Vector3 inst, float x) {

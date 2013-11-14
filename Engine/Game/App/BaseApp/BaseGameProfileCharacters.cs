@@ -318,7 +318,9 @@ public class BaseGameProfileCharacter : Profile {
             //   GetCharacters().SetCharacter(code, item);
             //}
             if(item != null) {
-                item.profileCustomItem = GameCustomController.Instance.CheckCustomColorInit(item.profileCustomItem);
+				if(item.profileCustomItem != null && GameController.Instance != null) {
+                	item.profileCustomItem = GameCustomController.Instance.CheckCustomColorInit(item.profileCustomItem);
+				}
                 BaseGameProfileCharacters.currentCharacter = item;
             }
         }
