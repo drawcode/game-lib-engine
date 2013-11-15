@@ -548,6 +548,56 @@ public class GameProfileRPGItem : DataObject {
     }    
 }
 
+public class GameProfileCustomPreset {
+    public string code = "";
+    public string name = "";
+    public GameProfileCustomItem customItem = new GameProfileCustomItem();
+}
+
+public class GameProfileCustomPresets {
+
+    public List<GameProfileCustomPreset> presets;
+
+    public GameProfileCustomPresets() {
+        Reset();
+    }
+
+    public void Reset() {
+        presets = new List<GameProfileCustomPreset>();
+    }
+
+    public void SetPresetColorKey(string code, string name, string key, Color color) {
+                
+        GameProfileCustomPreset preset = new GameProfileCustomPreset();
+        bool found = false;
+
+        for(int i = 0; i < presets.Count - 1; i++ ) {            
+            if(preset.code.ToLower() == code.ToLower()) {
+                preset = presets[i];
+                found = true;
+            }
+        }
+
+        preset.code = code;
+        preset.name = name;
+        preset.customItem.SetCustomColor(key, color);
+
+        if(!found) {
+            presets.Add(preset);
+        }
+    }
+
+    public void SetPresetColor(string code, string name, GameProfileCustomPreset preset) {
+                
+        foreach(GameProfileCustomPreset presetItem in presets) {
+            if(preset.code.ToLower() == code.ToLower()) {
+               // presetItem = preset;
+            }
+        }
+
+    }
+}
+
 public class GameProfileCustomItem : DataObject {
 
     public GameProfileCustomItem() {
