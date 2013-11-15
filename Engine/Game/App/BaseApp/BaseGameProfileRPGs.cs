@@ -575,6 +575,7 @@ public class GameProfileCustomPresets {
             if(preset.code.ToLower() == code.ToLower()) {
                 preset = presets[i];
                 found = true;
+                break;
             }
         }
 
@@ -587,15 +588,16 @@ public class GameProfileCustomPresets {
         }
     }
 
-    public void SetPresetColor(string code, string name, GameProfileCustomPreset preset) {
-                
-        foreach(GameProfileCustomPreset presetItem in presets) {
-            if(preset.code.ToLower() == code.ToLower()) {
-               // presetItem = preset;
-            }
-        }
-
-    }
+    //
+    //public void SetPresetColor(string code, string name, GameProfileCustomPreset preset) {
+    //           
+    //    foreach(GameProfileCustomPreset presetItem in presets) {
+    //        if(preset.code.ToLower() == code.ToLower()) {
+    //           // presetItem = preset;
+    //        }
+    //    }
+    //
+    //}
 }
 
 public class GameProfileCustomItem : DataObject {
