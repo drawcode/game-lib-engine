@@ -571,11 +571,13 @@ public class GameProfileCustomPresets {
         GameProfileCustomPreset preset = new GameProfileCustomPreset();
         bool found = false;
 
-        for(int i = 0; i < presets.Count - 1; i++ ) {            
-            if(preset.code.ToLower() == code.ToLower()) {
-                preset = presets[i];
+        for(int i = 0; i < presets.Count; i++ ) {            
+            if(presets[i].code.ToLower() == code.ToLower()) {
+                presets[i].customItem.SetCustomColor(key, color);
                 found = true;
-                break;
+                //preset = presets[i];
+                //break;
+                return;
             }
         }
 
@@ -588,16 +590,24 @@ public class GameProfileCustomPresets {
         }
     }
 
-    //
-    //public void SetPresetColor(string code, string name, GameProfileCustomPreset preset) {
-    //           
-    //    foreach(GameProfileCustomPreset presetItem in presets) {
-    //        if(preset.code.ToLower() == code.ToLower()) {
-    //           // presetItem = preset;
-    //        }
-    //    }
-    //
-    //}
+
+    public void SetPresetColor(GameProfileCustomPreset preset) {
+
+        bool found = false;
+        
+        for(int i = 0; i < presets.Count; i++ ) {            
+            if(presets[i].code.ToLower() == preset.code.ToLower()) {
+                presets[i] = preset;
+                found = true;
+                return;
+            }
+        }
+        
+        if(!found) {
+            presets.Add(preset);
+        }
+    
+    }
 }
 
 public class GameProfileCustomItem : DataObject {
