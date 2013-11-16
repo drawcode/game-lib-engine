@@ -640,7 +640,7 @@ public class GameProfileCustomItem : DataObject {
     public virtual void SetCustomColorItem(string colorKey, CustomColorItem colorItem) {
         string key = GetCustomColorItemKey(colorKey);
         string colorItemText = JsonMapper.ToJson(colorItem);
-        LogUtil.Log("SetCustomColorItem: " + colorItemText);
+        //LogUtil.Log("SetCustomColorItem: " + colorItemText);
         SetAttributeStringValue(key, colorItemText);
     }
 
