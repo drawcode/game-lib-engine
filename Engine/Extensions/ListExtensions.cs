@@ -14,4 +14,14 @@ public static class ListExtensions {
             list[n] = value;
         }
     }
+
+    /*
+    public static bool ContainsKey(this IList<T> list, string key) {
+        if(list == null) {
+            return false;
+        }
+
+        foreach
+    }
+    */
 }

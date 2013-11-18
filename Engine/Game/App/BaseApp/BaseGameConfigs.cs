@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 
+
 public class BaseGameConfigs<T> : DataObjects<T> where T : new() {
     private static T current;
     private static volatile BaseGameConfigs<T> instance;
@@ -60,8 +61,16 @@ public class BaseGameConfigs<T> : DataObjects<T> where T : new() {
         pathKey = BASE_DATA_KEY;
         LoadData();
     }
-
-    // TODO: Common config actions, lookup, count, etc
+    
+    public static bool isGameRunning {
+        get {
+            if (GameController.IsGameRunning
+                && !GameUIController.Instance.uiVisible) {
+                return true;
+            }
+            return false;
+        }
+    }
 }
 
 public class BaseGameConfig : Config {
