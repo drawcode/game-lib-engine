@@ -25,6 +25,11 @@ public class DeviceUtil : MonoBehaviour {
 	}
 	
 	public static void Vibrate() {
+
+        if(!GameProfiles.Current.GetControlVibrate()) {
+            return;
+        }
+
 #if UNITY_IPHONE || UNITY_ANDROID
         if(!Application.isEditor) {
 	        Handheld.Vibrate();
