@@ -116,11 +116,11 @@ public class GameProfilePlayerProgressItem : DataObject {
 
     public virtual double AddGamePlayerProgressXP(double val) {
 
-        Debug.Log("AddGamePlayerProgressXP:val:" + val);
+        //Debug.Log("AddGamePlayerProgressXP:val:" + val);
         double v = GetGamePlayerProgressXP();
 
         v += val;
-        Debug.Log("AddGamePlayerProgressXP:v:" + v);
+        //Debug.Log("AddGamePlayerProgressXP:v:" + v);
         SetGamePlayerProgressXP(v);
         return v;
     }
@@ -141,7 +141,7 @@ public class GameProfilePlayerProgressItem : DataObject {
     }
  
     public void SetGamePlayerProgressXP(double attValue) {
-        Debug.Log("SetGamePlayerProgressXP:attValue:" + attValue);
+        //Debug.Log("SetGamePlayerProgressXP:attValue:" + attValue);
         SetAttributeDoubleValue(BaseGameProfileRPGAttributes.ATT_PROGRESS_XP, attValue);
     }
 
@@ -182,7 +182,7 @@ public class GameProfilePlayerProgressItem : DataObject {
         double v = GetGamePlayerProgressHealth();
         v += val;
         v = Mathf.Clamp((float)v, 0f, 1f);
-        Debug.Log("AddGamePlayerProgressHealth:val:" + val);
+        //Debug.Log("AddGamePlayerProgressHealth:val:" + val);
         SetGamePlayerProgressHealth(v);
         return v;
     }
@@ -214,7 +214,7 @@ public class GameProfilePlayerProgressItem : DataObject {
         double v = GetGamePlayerProgressEnergy();
         v += val;
         v = Mathf.Clamp((float)v, 0f, 1f);
-        Debug.Log("AddGamePlayerProgressEnergy:val:" + val);
+        //Debug.Log("AddGamePlayerProgressEnergy:val:" + val);
         SetGamePlayerProgressEnergy(v);
         return v;
     }
