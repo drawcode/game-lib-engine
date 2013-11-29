@@ -531,6 +531,40 @@ public static class GameObjectHelper {
 		
 		inst.Hide();
 	}
+    
+    
+    public static void HideChildren(GameObject inst, bool applyGameObjectInactive) {
+        if(inst == null)
+            return;
+        
+        List<Transform> transforms = new List<Transform>();// inst.transform.childCount;
+
+        int b = 0;
+        foreach(Transform t in inst.transform) {
+            transforms.Add(t);// = t;
+            b++;
+        }
+        
+        foreach(Transform t in transforms) {
+            //t.parent = null;
+            if(applyGameObjectInactive) {
+                if(t.gameObject.GetComponent<GameObjectInactive>()) {
+                    // already has it
+                }
+                else {
+                    t.gameObject.AddComponent<GameObjectInactive>();
+                }
+            }   
+            t.gameObject.Hide();
+        }
+        
+        transforms.Clear();
+        transforms = null;
+    }
+    
+    public static void HideChildren(GameObject inst) {
+        HideChildren(inst, false);
+    }
 
     // ANIMATIONS
 

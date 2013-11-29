@@ -307,6 +307,20 @@ public static class GameObjectExtensions {
             return;
 
         GameObjectHelper.HideRenderers(inst);
+    }    
+    
+    public static void HideChildren(this GameObject inst) {
+        if (inst == null)
+            return;
+        
+        GameObjectHelper.HideChildren(inst);
+    }
+    
+    public static void HideChildren(this GameObject inst, bool applyGameObjectInactiv) {
+        if (inst == null)
+            return;
+        
+        GameObjectHelper.HideChildren(inst, applyGameObjectInactiv);
     }
 
     //---------------------------------------------------------------
