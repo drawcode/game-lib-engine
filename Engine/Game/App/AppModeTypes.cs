@@ -13,8 +13,10 @@ public enum AppModeTypeChoiceFlowState {
     AppModeTypeChoiceResults,
 }
 
-public enum AppModeOverviewFlowState {
-    AppModeOverview
+public enum AppOverviewFlowState {
+    Mode,
+    GameplayTips,
+    Tutorial
 }
 
 public enum AppModeTypeCollectionFlowState {

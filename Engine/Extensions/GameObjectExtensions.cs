@@ -316,11 +316,11 @@ public static class GameObjectExtensions {
         GameObjectHelper.HideChildren(inst);
     }
     
-    public static void HideChildren(this GameObject inst, bool applyGameObjectInactiv) {
+    public static void HideChildren(this GameObject inst, bool applyGameObjectInactive) {
         if (inst == null)
             return;
         
-        GameObjectHelper.HideChildren(inst, applyGameObjectInactiv);
+        GameObjectHelper.HideChildren(inst, applyGameObjectInactive);
     }
 
     //---------------------------------------------------------------
