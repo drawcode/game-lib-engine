@@ -419,7 +419,6 @@ public class AudioSystem : MonoBehaviour {
 
         goClip.audio.volume = volume;
         goClip.audio.playOnAwake = false;
-        goClip.AddComponent<AudioDestroy>();
         goClip.audio.Play();
 
         return goClip;
@@ -462,7 +461,7 @@ public class AudioSystem : MonoBehaviour {
         }*/
         goClip.audio.volume = volume;
         goClip.audio.playOnAwake = false;
-        goClip.AddComponent<AudioDestroy>();
+        //goClip.AddComponent<AudioDestroy>();
         goClip.audio.Play();
     }
 
