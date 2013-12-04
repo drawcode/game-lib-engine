@@ -19,13 +19,13 @@ public class AudioSystem : MonoBehaviour {
     public AudioSource currentGameLoop;
     public AudioSource currentIntro;
 
-    public AudioSource[] currentGameLoopLap;
 
     public AudioClip currentLoopClip;
     public AudioClip currentGameLoopClip;
     public AudioClip currentIntroClip;
-
-    public AudioClip[] currentGameClipLap;
+    
+    public List<AudioSource> currentGameLoops;
+    public List<AudioClip> currentGameClips;
 
     public Dictionary<string, AudioSetItem> clips;
 
@@ -79,8 +79,8 @@ public class AudioSystem : MonoBehaviour {
         ambienceActive = false;
         DontDestroyOnLoad(gameObject);
 
-        currentGameClipLap = new AudioClip[4];
-        currentGameLoopLap = new AudioSource[4];
+        currentGameClips = new List<AudioClip>();
+        currentGameLoops = new List<AudioSource>();
     }
 
     public void Start() {
@@ -343,19 +343,19 @@ public class AudioSystem : MonoBehaviour {
 
     public void PrepareGameLapLoopFileFromResources(int index, string file, bool loop, double volume) { // file name without extension
         file = audioRootPath  + file;
-        currentGameClipLap[index] = LoadClipFromResources(file);
+        currentGameClips.Insert(index, LoadClipFromResources(file));
         GameObject goClip = GameObject.Find(file);
         if (goClip != null) {
         }
         else {
             goClip = new GameObject(file);
-            currentGameLoopLap[index] = goClip.AddComponent<AudioSource>();
+            currentGameLoops.Insert(index, goClip.AddComponent<AudioSource>());
             goClip.transform.parent = FindGameGlobal();
             DontDestroyOnLoad(gameObject);
         }
         goClip.transform.parent = FindOrCreateSoundContainer().transform;
         goClip.transform.position = Camera.main.transform.position;
-        goClip.audio.clip = currentGameClipLap[index];
+        goClip.audio.clip = currentGameClips[index];
         goClip.audio.loop = loop;
         goClip.audio.volume = (float)volume;
         goClip.audio.playOnAwake = false;
@@ -647,7 +647,7 @@ public class AudioSystem : MonoBehaviour {
     }
 
     public IEnumerator StartGameLoopsForLapsCoroutine() {
-        foreach (AudioSource source in currentGameLoopLap) {
+        foreach (AudioSource source in currentGameLoops) {
             if (source != null) {
                 source.volume = 0f;
                 if (!source.isPlaying) {
@@ -659,95 +659,23 @@ public class AudioSystem : MonoBehaviour {
         yield return new WaitForSeconds(.3f);
     }
 
-    public void StartGameLoopForLap(int lap) {
+    public void StartGameLoop(int loop) {
 
         // TODO fix this hack..,
 
         float volumeLevel = (float)musicSoundVolume * 1.7f;
 
-        if (lap == 1) {
-            if (currentGameLoopLap[0].isPlaying) {
-                currentGameLoopLap[0].gameObject.AudioTo(volumeLevel, 1f, .5f, 0f);
-            }
 
-            if (currentGameLoopLap[1].isPlaying) {
-                currentGameLoopLap[1].gameObject.AudioTo(0f, 1f, .5f, 0f);
-            }
+        for(int i = 0; i < currentGameLoops.Count; i++) {
 
-            if (currentGameLoopLap[2].isPlaying) {
-                currentGameLoopLap[2].gameObject.AudioTo(0f, 1f, .5f, 0f);
-            }
+            float currentVolumeLevel = 0f;
 
-            if (currentGameLoopLap[3].isPlaying) {
-                currentGameLoopLap[3].gameObject.AudioTo(0f, 1f, .5f, 0f);
+            if(loop - 1 == i) {
+                currentVolumeLevel = volumeLevel;
             }
-        }
-        else if (lap == 2) {
-            if (currentGameLoopLap[0].isPlaying) {
-                currentGameLoopLap[0].gameObject.AudioTo(0f, 1f, .5f, 0f);
-            }
-
-            if (currentGameLoopLap[1].isPlaying) {
-                currentGameLoopLap[1].gameObject.AudioTo(volumeLevel, 1f, .5f, 0f);
-            }
-
-            if (currentGameLoopLap[2].isPlaying) {
-                currentGameLoopLap[2].gameObject.AudioTo(0f, 1f, .5f, 0f);
-            }
-
-            if (currentGameLoopLap[3].isPlaying) {
-                currentGameLoopLap[3].gameObject.AudioTo(0f, 1f, .5f, 0f);
-            }
-        }
-        else if (lap == 3) {
-            if (currentGameLoopLap[0].isPlaying) {
-                currentGameLoopLap[0].gameObject.AudioTo(0f, 1f, .5f, 0f);
-            }
-
-            if (currentGameLoopLap[1].isPlaying) {
-                currentGameLoopLap[1].gameObject.AudioTo(0f, 1f, .5f, 0f);
-            }
-
-            if (currentGameLoopLap[2].isPlaying) {
-                currentGameLoopLap[2].gameObject.AudioTo(volumeLevel, 1f, .5f, 0f);
-            }
-
-            if (currentGameLoopLap[3].isPlaying) {
-                currentGameLoopLap[3].gameObject.AudioTo(0f, 1f, .5f, 0f);
-            }
-        }
-        else if (lap == 4) {
-            if (currentGameLoopLap[0].isPlaying) {
-                currentGameLoopLap[0].gameObject.AudioTo(0f, 1f, .5f, 0f);
-            }
-
-            if (currentGameLoopLap[1].isPlaying) {
-                currentGameLoopLap[1].gameObject.AudioTo(0f, 1f, .5f, 0f);
-            }
-
-            if (currentGameLoopLap[2].isPlaying) {
-                currentGameLoopLap[2].gameObject.AudioTo(0f, 1f, .5f, 0f);
-            }
-
-            if (currentGameLoopLap[3].isPlaying) {
-                currentGameLoopLap[3].gameObject.AudioTo(volumeLevel, 1f, .5f, 0f);
-            }
-        }
-        else {
-            if (currentGameLoopLap[0].isPlaying) {
-                currentGameLoopLap[0].gameObject.AudioTo(0f, 1f, 2f, 0f);
-            }
-
-            if (currentGameLoopLap[1].isPlaying) {
-                currentGameLoopLap[1].gameObject.AudioTo(0f, 1f, 2f, 0f);
-            }
-
-            if (currentGameLoopLap[2].isPlaying) {
-                currentGameLoopLap[2].gameObject.AudioTo(0f, 1f, 2f, 0f);
-            }
-
-            if (currentGameLoopLap[3].isPlaying) {
-                currentGameLoopLap[3].gameObject.AudioTo(0f, 1f, .5f, 0f);
+            
+            if (currentGameLoops[i].isPlaying) {
+                currentGameLoops[i].gameObject.AudioTo(currentVolumeLevel, 1f, .1f, 0f);
             }
         }
     }
