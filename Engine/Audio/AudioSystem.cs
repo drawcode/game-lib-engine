@@ -134,6 +134,11 @@ public class AudioSystem : MonoBehaviour {
         return musicSoundVolume;
     }
 
+    public GameObject PlayEffectObject(Transform parentTransform, string name, bool loop, float volume) {
+       return PlayFileFromResourcesObject(parentTransform, 
+                              audioRootPath + name, loop, soundIncrement, volume);
+    }
+
     public void PlayEffect(string name) {
         PlayEffect(name, 1f);
     }
@@ -385,7 +390,11 @@ public class AudioSystem : MonoBehaviour {
         PlayFileFromResources(file, loop, 0, 1f);
     }
 
-	 public void PlayFileFromResources(Transform parentTransform, string file, bool loop, int increment, float volume) { // file name without extension
+    public void PlayFileFromResources(Transform parentTransform, string file, bool loop, int increment, float volume) { // file name without extension
+        PlayFileFromResourcesObject(parentTransform, file, loop, increment, volume);
+    }
+
+    public GameObject PlayFileFromResourcesObject(Transform parentTransform, string file, bool loop, int increment, float volume) { // file name without extension
         AudioClip clip = LoadClipFromResources(file);
         string fileVersion = file + "-" + increment.ToString();
         GameObject goClip = GameObject.Find(fileVersion);
@@ -412,6 +421,8 @@ public class AudioSystem : MonoBehaviour {
         goClip.audio.playOnAwake = false;
         goClip.AddComponent<AudioDestroy>();
         goClip.audio.Play();
+
+        return goClip;
     }
 
     public void PlayFileFromResources(string file, bool loop, int increment, float volume) { // file name without extension
@@ -496,6 +507,40 @@ public class AudioSystem : MonoBehaviour {
         goClip.audio.volume = volume;
         goClip.audio.playOnAwake = false;
         goClip.audio.Play();
+    }
+    
+    public GameObject PlayAudioClipGameObject(Transform parent, AudioClip clip, bool loop, float volume) {
+        return PlayAudioClipGameObject(parent.transform.position, parent, clip, loop, 0, volume);
+    }
+
+    public GameObject PlayAudioClipGameObject(Vector3 pos, Transform parent, AudioClip clip, bool loop, int increment, float volume) {
+        string fileVersion = clip.name + "-" + increment.ToString();
+        Transform goClipTransform = parent.FindChild(fileVersion);
+        GameObject goClip = null;
+        if (goClipTransform != null) {
+            goClip = goClipTransform.gameObject;
+        }
+        if (goClip != null && increment == 0) {
+        }
+        else {
+            goClip = new GameObject(fileVersion);
+            goClip.AddComponent<AudioSource>();
+            if (increment == 0) {
+                DontDestroyOnLoad(goClip);
+            }
+            else {
+                goClip.AddComponent<AudioDestroy>();
+            }
+            goClip.audio.clip = clip;
+        }
+        goClip.transform.parent = parent;
+        goClip.transform.position = pos;
+        goClip.audio.loop = loop;
+        goClip.audio.volume = volume;
+        goClip.audio.playOnAwake = true;
+        goClip.audio.Play();
+
+        return goClip;
     }
 
     public void PlayAudioClip(Vector3 pos, Transform parent, AudioClip clip, bool loop, int increment, float volume, float panLevel) {

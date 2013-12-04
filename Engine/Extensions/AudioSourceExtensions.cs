@@ -4,6 +4,16 @@ using UnityEngine;
 
 public static class AudioSourceExtensions {
 
+    public static void StopIfPlaying(this AudioSource audioSource) {
+        if(audioSource == null) {
+            return;
+        }
+
+        if(audioSource.isPlaying) {
+            audioSource.Stop();
+        }
+    }
+
     public static IEnumerator fadeOut(this AudioSource audioSource, float duration, Action onComplete) {
         float startingVolume = audioSource.volume;
 
