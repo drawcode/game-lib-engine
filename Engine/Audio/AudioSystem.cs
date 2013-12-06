@@ -35,6 +35,8 @@ public class AudioSystem : MonoBehaviour {
     public bool ambienceActive = false;
 
     public int soundIncrement = 0;
+    
+    int currentLoopIndex = 0;
 	
 	public string audioRootPath {
 		get {			
@@ -116,18 +118,30 @@ public class AudioSystem : MonoBehaviour {
     }
 
     public void SetAmbienceVolume(double volume) {
-        musicSoundVolume = volume / 3;
+        musicSoundVolume = volume;
 
         LogUtil.Log("Sounds::SetAmbienceVolume::" + musicSoundVolume);
 
-        if (currentIntro != null)
+        if (currentIntro != null) {
             currentIntro.volume = (float)musicSoundVolume;
-
-        if (currentLoop != null)
+        }
+         
+        if (currentLoop != null) {
             currentLoop.volume = (float)musicSoundVolume;
+        }
 
-        if (currentGameLoop != null)
+        if (currentGameLoop != null) {
             currentGameLoop.volume = (float)musicSoundVolume;
+        }
+
+        if(currentGameLoops != null) {
+            if(currentGameLoops.Count > 0 
+               && currentGameLoops.Count > currentLoopIndex) {
+                if(currentGameLoops[currentLoopIndex] != null) {
+                    currentGameLoops[currentLoopIndex].volume = (float)musicSoundVolume;
+                }
+            }
+        }
     }
 
     public double GetAmbienceVolume() {
@@ -349,7 +363,7 @@ public class AudioSystem : MonoBehaviour {
         }
         else {
             goClip = new GameObject(file);
-            currentGameLoops.Insert(index, goClip.AddComponent<AudioSource>());
+            currentGameLoops[index] = goClip.AddComponent<AudioSource>();
             goClip.transform.parent = FindGameGlobal();
             DontDestroyOnLoad(gameObject);
         }
@@ -663,19 +677,33 @@ public class AudioSystem : MonoBehaviour {
 
         // TODO fix this hack..,
 
-        float volumeLevel = (float)musicSoundVolume * 1.7f;
+        currentLoopIndex = loop - 1;
+
+        float volumeLevel = (float)musicSoundVolume;
 
 
         for(int i = 0; i < currentGameLoops.Count; i++) {
 
             float currentVolumeLevel = 0f;
+            bool isCurrent = currentLoopIndex == i ? true : false;
 
-            if(loop - 1 == i) {
+            if(isCurrent) {
                 currentVolumeLevel = volumeLevel;
             }
-            
-            if (currentGameLoops[i].isPlaying) {
-                currentGameLoops[i].gameObject.AudioTo(currentVolumeLevel, 1f, .1f, 0f);
+
+            if(isCurrent) {
+                if (!currentGameLoops[i].isPlaying) {
+                    currentGameLoops[i].Play();
+                    currentGameLoops[i].time = 0f; // TODO for laps or syned get time of last loop
+                    currentGameLoops[i].volume = 0f;
+                }
+                if(currentGameLoops[i].isPlaying) {
+                    currentGameLoops[i].gameObject.AudioTo(currentVolumeLevel, 1f, .1f, 0f);
+                }
+            }
+            else  {
+                currentGameLoops[i].gameObject.AudioTo(currentVolumeLevel, 0f, .1f, 0f);
+                currentGameLoops[i].StopIfPlaying();
             }
         }
     }
