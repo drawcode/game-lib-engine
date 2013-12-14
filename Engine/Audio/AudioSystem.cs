@@ -136,7 +136,8 @@ public class AudioSystem : MonoBehaviour {
 
         if(currentGameLoops != null) {
             if(currentGameLoops.Count > 0 
-               && currentGameLoops.Count > currentLoopIndex) {
+               && currentGameLoops.Count > currentLoopIndex
+               && currentLoopIndex > -1) {
                 if(currentGameLoops[currentLoopIndex] != null) {
                     currentGameLoops[currentLoopIndex].volume = (float)musicSoundVolume;
                 }
@@ -363,7 +364,7 @@ public class AudioSystem : MonoBehaviour {
         }
         else {
             goClip = new GameObject(file);
-            currentGameLoops[index] = goClip.AddComponent<AudioSource>();
+            currentGameLoops.Insert(index, goClip.AddComponent<AudioSource>());
             goClip.transform.parent = FindGameGlobal();
             DontDestroyOnLoad(gameObject);
         }
