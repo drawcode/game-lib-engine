@@ -676,8 +676,6 @@ public class AudioSystem : MonoBehaviour {
 
     public void StartGameLoop(int loop) {
 
-        // TODO fix this hack..,
-
         currentLoopIndex = loop - 1;
 
         float volumeLevel = (float)musicSoundVolume;
