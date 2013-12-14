@@ -677,9 +677,11 @@ public class AudioSystem : MonoBehaviour {
     public void StartGameLoop(int loop) {
 
         currentLoopIndex = loop - 1;
+        
+        LogUtil.Log("StartGameLoop:", " loop:" + loop.ToString());
+        LogUtil.Log("StartGameLoop:", " currentLoopIndex:" + currentLoopIndex.ToString());
 
         float volumeLevel = (float)musicSoundVolume;
-
 
         for(int i = 0; i < currentGameLoops.Count; i++) {
 
@@ -690,7 +692,9 @@ public class AudioSystem : MonoBehaviour {
                 currentVolumeLevel = volumeLevel;
             }
 
+
             if(isCurrent) {
+
                 if (!currentGameLoops[i].isPlaying) {
                     currentGameLoops[i].Play();
                     currentGameLoops[i].time = 0f; // TODO for laps or syned get time of last loop
@@ -699,8 +703,11 @@ public class AudioSystem : MonoBehaviour {
                 if(currentGameLoops[i].isPlaying) {
                     currentGameLoops[i].gameObject.AudioTo(currentVolumeLevel, 1f, .1f, 0f);
                 }
+
+                LogUtil.Log("StartGameLoop:", " i:play:" + currentGameLoops[i].name);
             }
             else  {
+
                 currentGameLoops[i].gameObject.AudioTo(currentVolumeLevel, 0f, .1f, 0f);
                 currentGameLoops[i].StopIfPlaying();
             }
