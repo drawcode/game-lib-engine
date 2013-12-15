@@ -790,6 +790,42 @@ public static class GameObjectHelper {
         }
 	}
 
+    // TRAIL RENDERERS
+    
+    public static void SetTrailRendererColors(GameObject inst, Color color, bool includeChildren) {
+        List<Color> colors = new List<Color>();
+        colors.Add(color);
+        SetTrailRendererColors(inst, colors, includeChildren);
+    
+    }
+
+    public static void SetTrailRendererColors(GameObject inst, List<Color> colors, bool includeChildren) {
+        if(inst == null)
+            return;
+        
+        TrailRenderer trailRendererCurrent = inst.GetComponent<TrailRenderer>();
+        if(trailRendererCurrent != null) {
+            foreach(Color color in colors) {
+                //trailRendererCurrent..color = color;
+            }
+        }
+        
+        if(!includeChildren) {
+            return;
+        }
+        
+        TrailRenderer[] trailRenderers = inst.GetComponentsInChildren<TrailRenderer>(true);
+        
+        foreach (TrailRenderer trailRenderer in trailRenderers) {
+            
+            foreach(Color color in colors) {
+                foreach(Material material in trailRenderer.materials) {
+                    material.SetColor("_MainColor", color);
+                }
+            }
+        }
+    }
+
     // MATERIALS
 	
 	public static Material GetMaterial(GameObject inst, string name) {
