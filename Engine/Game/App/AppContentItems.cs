@@ -93,7 +93,7 @@ public class AppContentItems : BaseAppContentItems<AppContentItem>
 	
 	public string GetAppContentItemContentPath(string packCode, string asset, bool versioned) {
 		string packPath = PathUtil.Combine(
-			Contents.appCachePathSharedPacks,
+			ContentPaths.appCachePathSharedPacks,
 			packCode);
 		string packPathContent = PathUtil.Combine(
 			packPath, 

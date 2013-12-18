@@ -14,7 +14,7 @@ public class Config : DataObject {
     public override void Reset() {
         base.Reset();
 
-        lastLoggedOnUser = GetDefaultPlayer();
+        lastLoggedOnUser = "Player";
 
         //fileName = "config.json";
         //filePath = PathUtil.AppPersistencePath;

@@ -147,12 +147,12 @@ public class AppContentListItemPath {
 		
 		pathNonVersionedApp = filePathNonVersioned.Replace(pathCurrentAppBase,"");
 		pathNonVersionedSystem 
-			= PathUtil.Combine(Contents.appCachePath, pathNonVersionedApp);
+			= PathUtil.Combine(ContentPaths.appCachePath, pathNonVersionedApp);
 		pathNonVersionedFull = filePathNonVersioned;
 		
 		pathVersionedApp = filePathVersioned.Replace(pathCurrentAppBase,"");
 		pathVersionedSystem 
-			= PathUtil.Combine(Contents.appCachePath, pathVersionedApp);
+			= PathUtil.Combine(ContentPaths.appCachePath, pathVersionedApp);
 		pathVersionedFull = filePathVersioned;
 		
 		pathVersionedSystemSync = Contents.GetFullPathVersionedSync(pathVersionedSystem);

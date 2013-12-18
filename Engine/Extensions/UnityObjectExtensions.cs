@@ -42,4 +42,18 @@ public static class ObjectUtil {
 }
 
 public static class ObjectExtensions {
+
+    public static string ToJson(this object inst) {
+        return Engine.Data.Json.JsonMapper.ToJson(inst);
+    }
+
+    public static T FromJson<T>(this string inst) {
+        return Engine.Data.Json.JsonMapper.ToObject<T>(inst);
+    }
+        
+    public static object FromJson(this string inst) {
+        return Engine.Data.Json.JsonMapper.ToObject<object>(inst);
+    }
+
+
 }

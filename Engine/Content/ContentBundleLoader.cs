@@ -72,7 +72,7 @@ public class ContentBundleLoader : MonoBehaviour
 	IEnumerator _Download (ContentBundleDownloadHandle handle) {
 		if (cachePath == null)
 			cachePath = PathUtil.Combine (Application.persistentDataPath, "bundlecache");
-		//PathUtil.Combine(Contents.appCachePlatformPath, "packs/popar-pack-book-construction-1/" + assetName + ".unity3d");
+		//PathUtil.Combine(ContentPaths.appCachePlatformPath, "packs/popar-pack-book-construction-1/" + assetName + ".unity3d");
 		var uri = handle.uri;
 		var dir = PathUtil.Combine (PathUtil.Combine (cachePath, uri.Host), Path.GetDirectoryName (uri.AbsolutePath).Substring (1));
 		var file = Path.GetFileName (uri.AbsolutePath);
@@ -105,7 +105,7 @@ public class ContentBundleLoader : MonoBehaviour
 	{
 		if (cachePath == null)
 			cachePath = PathUtil.Combine (Application.persistentDataPath, "bundlecache");
-		//PathUtil.Combine(Contents.appCachePlatformPath, "packs/popar-pack-book-construction-1/" + assetName + ".unity3d");
+		//PathUtil.Combine(ContentPaths.appCachePlatformPath, "packs/popar-pack-book-construction-1/" + assetName + ".unity3d");
 		var uri = handle.uri;
 		var dir = PathUtil.Combine (PathUtil.Combine (cachePath, uri.Host), Path.GetDirectoryName (uri.AbsolutePath).Substring (1));
 		var file = Path.GetFileName (uri.AbsolutePath);

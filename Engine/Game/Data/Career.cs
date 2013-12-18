@@ -31,7 +31,6 @@ public class Career : DataObject {
     public override void Reset() {
         base.Reset();
 
-        username = GetDefaultPlayer();
         uuid = "";//Puid.New();
         udid = "";
         loginCount = 0;

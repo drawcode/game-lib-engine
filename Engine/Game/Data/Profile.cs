@@ -31,7 +31,7 @@ public class Profile : DataObject {
     public override void Reset() {
         base.Reset();
 
-        username = GetDefaultPlayer();
+        username = "Player";
         uuid = "";
         udid = "";
     }

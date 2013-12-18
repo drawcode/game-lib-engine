@@ -40,7 +40,7 @@ public class AudioSystem : MonoBehaviour {
 	
 	public string audioRootPath {
 		get {			
-			return Contents.appCacheVersionSharedAudio; 
+			return ContentPaths.appCacheVersionSharedAudio; 
 		}
 	}
 

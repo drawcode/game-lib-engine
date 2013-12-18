@@ -392,6 +392,344 @@ public enum ContentVersionSyncEnum {
 	VersionedSync // hashed with checksum
 }
 
+public class ContentPaths {
+    
+    public static string persistenceFolder = "";
+    public static string streamingAssetsFolder = "";
+    
+    public static string appCachePath = "";
+    public static string appCachePathAssetBundles = "";
+    public static string appCachePathTrackers = "";
+    public static string appCachePathPacks = "";
+    public static string appCachePathShared = "";
+    public static string appCachePathAll = "";
+    public static string appCachePathAllShared = "";
+    public static string appCachePathAllSharedUserData = "";
+    public static string appCachePathSharedPacks = "";
+    public static string appCachePathSharedTrackers = "";
+    public static string appCachePathAllSharedTrackers = "";
+    public static string appCachePathAllPlatform = "";
+    public static string appCachePathAllPlatformPacks = "";
+    public static string appCachePathAllPlatformData = "";
+    public static string appCachePathData = "";
+    public static string appCacheVersionPath = "";
+    public static string appCachePlatformPath = "";
+    
+    public static string appShipCachePath = "";
+    public static string appShipCachePathAssetBundles = "";
+    public static string appShipCachePathTrackers = "";
+    public static string appShipCachePathPacks = "";
+    public static string appShipCachePathShared = "";
+    public static string appShipCachePathAll = "";
+    public static string appShipCachePathData = "";
+    public static string appShipCacheVersionPath = "";
+    public static string appShipCachePlatformPath = "";
+    public static string appShipCachePathPlatformPath = "";
+    
+    public static string currentPlatformCode = "ios";
+    
+    public static List<string> packPaths;
+    public static List<string> packPathsVersionedShared;
+    public static List<string> packPathsVersioned;
+    
+    public static string appCacheVersionSharedAudio {
+        get {
+            return ContentsConfig.contentRootFolder + "/"
+                + ContentsConfig.contentAppFolder + "/version/shared/audio/";
+        }
+    }
+    
+    public static string appCacheVersionSharedPrefab {
+        get {
+            return ContentsConfig.contentRootFolder + "/"
+                + ContentsConfig.contentAppFolder + "/version/shared/prefab/";
+        }
+    }
+    
+    public static string appCacheVersionSharedPrefabCharacters {
+        get {
+            return appCacheVersionSharedPrefab + "characters/";
+        }
+    }
+    
+    public static string appCacheVersionSharedPrefabLevelAssets {
+        get {
+            return appCacheVersionSharedPrefab + "levelassets/";
+        }
+    }
+    
+    public static string appCacheVersionSharedPrefabLevelItems {
+        get {
+            return appCacheVersionSharedPrefab + "items/";
+        }
+    }
+    
+    public static string appCacheVersionSharedPrefabLevelNetwork {
+        get {
+            return appCacheVersionSharedPrefab + "network/";
+        }
+    }
+    
+    public static string appCacheVersionSharedPrefabLevelUI {
+        get {
+            return appCacheVersionSharedPrefab + "ui/";
+        }
+    }
+    
+    public static string appCacheVersionSharedPrefabWeapons {
+        get {
+            return appCacheVersionSharedPrefab + "weapons/";
+        }
+    }
+    
+    public static string GetCurrentPlatformCode() {
+
+        #if UNITY_IPHONE
+        return "ios";
+        #elif UNITY_ANDROID
+        return "android";
+        #else 
+        return "desktop";
+        #endif  
+    }
+
+    public static void ResetPaths() {
+        persistenceFolder = "";
+        streamingAssetsFolder = "";
+        
+        appCachePath = "";
+        appCachePathAssetBundles = "";
+        appCachePathTrackers = "";
+        appCachePathPacks = "";
+        appCachePathShared = "";
+        appCachePathAll = "";
+        appCachePathAllShared = "";
+        appCachePathAllSharedUserData = "";
+        appCachePathSharedPacks = "";
+        appCachePathSharedTrackers = "";
+        appCachePathAllSharedTrackers = "";
+        appCachePathAllPlatform = "";
+        appCachePathAllPlatformPacks = "";
+        appCachePathAllPlatformData = "";
+        appCachePathData = "";
+        appCacheVersionPath = "";
+        appCachePlatformPath = "";
+        
+        appShipCachePath = "";
+        appShipCachePathAssetBundles = "";
+        appShipCachePathTrackers = "";
+        appShipCachePathPacks = "";
+        appShipCachePathShared = "";
+        appShipCachePathAll = "";
+        appShipCachePathData = "";
+        appShipCacheVersionPath = "";
+        appShipCachePlatformPath = "";
+        appShipCachePathPlatformPath = "";
+        
+        currentPlatformCode = GetCurrentPlatformCode();        
+        
+        packPaths = new List<string>();
+        packPathsVersioned = new List<string>();
+        packPathsVersionedShared = new List<string>();
+
+    }
+
+    public static bool pathsCreated {
+        get {
+            if(string.IsNullOrEmpty(appCachePath)) {
+                return false;
+            }
+            return true;
+        }
+    }
+
+    public static bool CheckPathsCreated(bool create) {
+        if(!pathsCreated) {
+            if(create) {
+                CreateCachePaths(); 
+            }
+            else {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    
+    public static void CreateCachePaths() {
+
+        if(CheckPathsCreated(false)) {
+            return;
+        }
+        
+        ContentPaths.persistenceFolder = PathUtil.AppPersistencePath;
+        ContentPaths.streamingAssetsFolder = Application.streamingAssetsPath;
+        
+        LogUtil.Log("Contents::persistenceFolder: " + ContentPaths.persistenceFolder);
+        LogUtil.Log("Contents::streamingAssetsFolder: " + ContentPaths.streamingAssetsFolder);
+        
+        string pathRoot = PathUtil.Combine(ContentPaths.persistenceFolder, ContentsConfig.contentRootFolder);
+        string pathShipRoot = PathUtil.Combine(ContentPaths.streamingAssetsFolder, ContentsConfig.contentRootFolder);
+        
+        FileSystemUtil.EnsureDirectory(pathRoot, false);
+        FileSystemUtil.EnsureDirectory(pathShipRoot, false);
+        
+        string pathRootAppend = PathUtil.Combine(pathRoot, ContentsConfig.contentAppFolder);
+        string pathShipRootAppend = PathUtil.Combine(pathShipRoot, ContentsConfig.contentAppFolder);
+        
+        FileSystemUtil.EnsureDirectory(pathRootAppend, false);
+        FileSystemUtil.EnsureDirectory(pathShipRootAppend, false);
+        
+        ContentPaths.appCachePath = pathRootAppend;
+        ContentPaths.appShipCachePath = pathShipRootAppend;  
+        
+        FileSystemUtil.EnsureDirectory(ContentPaths.appCachePath, false);
+        FileSystemUtil.EnsureDirectory(ContentPaths.appShipCachePath, false);
+        
+        ContentPaths.appCacheVersionPath = PathUtil.Combine(ContentPaths.appCachePath, ContentsConfig.contentVersion);
+        ContentPaths.appShipCacheVersionPath = PathUtil.Combine(ContentPaths.appShipCachePath, ContentConfig.contentCacheVersion);
+        
+        FileSystemUtil.EnsureDirectory(ContentPaths.appCacheVersionPath, false);
+        FileSystemUtil.EnsureDirectory(ContentPaths.appShipCacheVersionPath, false);
+        
+        ContentPaths.appCachePathAll = PathUtil.Combine(ContentPaths.appCachePath, ContentConfig.contentCacheAll);
+        ContentPaths.appShipCachePathAll = PathUtil.Combine(ContentPaths.appShipCachePath, ContentConfig.contentCacheAll);        
+        ContentPaths.appCachePathAllShared = PathUtil.Combine(ContentPaths.appCachePathAll, ContentConfig.contentCacheShared);
+        ContentPaths.appCachePathAllSharedTrackers = PathUtil.Combine(ContentPaths.appCachePathAllShared, ContentConfig.contentCacheTrackers);
+        ContentPaths.appCachePathAllSharedUserData = PathUtil.Combine(ContentPaths.appCachePathAllShared, ContentConfig.contentCacheUserData);
+        
+        FileSystemUtil.EnsureDirectory(ContentPaths.appCachePathAll, false);
+        FileSystemUtil.EnsureDirectory(ContentPaths.appShipCachePathAll, false);
+        FileSystemUtil.EnsureDirectory(ContentPaths.appCachePathAllShared, false);
+        FileSystemUtil.EnsureDirectory(ContentPaths.appCachePathAllSharedTrackers, false);
+        FileSystemUtil.EnsureDirectory(ContentPaths.appCachePathAllSharedUserData, false);
+        
+        ContentPaths.appCachePathAllPlatform = PathUtil.Combine(ContentPaths.appCachePathAll, GetCurrentPlatformCode());
+        ContentPaths.appCachePathAllPlatformPacks = PathUtil.Combine(ContentPaths.appCachePathAllPlatform, ContentConfig.contentCachePacks);
+        ContentPaths.appCachePathAllPlatformData = PathUtil.Combine(ContentPaths.appCachePathAllPlatform, ContentConfig.contentCacheData);
+        
+        FileSystemUtil.EnsureDirectory(ContentPaths.appCachePathAllPlatform, false);
+        FileSystemUtil.EnsureDirectory(ContentPaths.appCachePathAllPlatformPacks, false);
+        FileSystemUtil.EnsureDirectory(ContentPaths.appCachePathAllPlatformData, false);
+        
+        ContentPaths.appCachePlatformPath = PathUtil.Combine(ContentPaths.appCacheVersionPath, GetCurrentPlatformCode());
+        ContentPaths.appShipCachePlatformPath = PathUtil.Combine(ContentPaths.appShipCacheVersionPath, GetCurrentPlatformCode());     
+        
+        FileSystemUtil.EnsureDirectory(ContentPaths.appCachePlatformPath, false);
+        FileSystemUtil.EnsureDirectory(ContentPaths.appShipCachePlatformPath, false);
+        
+        appCachePathData = PathUtil.Combine(
+            appCacheVersionPath, ContentConfig.contentCacheData);
+        
+        appCachePathShared = PathUtil.Combine(
+            appCacheVersionPath, ContentConfig.contentCacheShared);
+        
+        appCachePathSharedPacks = PathUtil.Combine(
+            appCachePathShared, ContentConfig.contentCachePacks);
+        
+        appCachePathSharedTrackers = PathUtil.Combine(
+            appCachePathShared, ContentConfig.contentCacheTrackers);
+        
+        appCachePathPacks = PathUtil.Combine(
+            appCachePlatformPath, ContentConfig.contentCachePacks);
+        
+        FileSystemUtil.EnsureDirectory(ContentPaths.appCachePathData, false);
+        FileSystemUtil.EnsureDirectory(ContentPaths.appCachePathShared, false);
+        FileSystemUtil.EnsureDirectory(ContentPaths.appCachePathSharedPacks, false);
+        FileSystemUtil.EnsureDirectory(ContentPaths.appCachePathSharedTrackers, false);
+        FileSystemUtil.EnsureDirectory(ContentPaths.appCachePathPacks, false);
+        
+        ContentPaths.appShipCachePathData = PathUtil.Combine(
+            ContentPaths.appShipCacheVersionPath, ContentConfig.contentCacheData);
+        
+        ContentPaths.appShipCachePathShared = PathUtil.Combine(
+            ContentPaths.appShipCacheVersionPath, ContentConfig.contentCacheShared);
+        
+        FileSystemUtil.EnsureDirectory(ContentPaths.appShipCachePathData, false);
+        FileSystemUtil.EnsureDirectory(ContentPaths.appShipCachePathShared, false);
+       
+    }
+    
+    public static List<string> GetPackPathsNonVersioned() {
+        LoadPackPaths();
+        return ContentPaths.packPaths;
+    }
+    
+    public static List<string> GetPackPathsVersioned() {
+        LoadPackPaths();
+        return ContentPaths.packPathsVersioned;
+    }
+    
+    public static List<string> GetPackPathsVersionedShared() {
+        LoadPackPaths();
+        return ContentPaths.packPathsVersionedShared;
+    }
+    
+    public static void LoadPackPaths() {
+
+        if(string.IsNullOrEmpty(ContentPaths.appCachePath)) {
+            CreateCachePaths();
+        }
+        
+        ////LogUtil.Log("LoadPackPaths:appCachePathPacks:" + appCachePathPacks);
+        ////LogUtil.Log("LoadPackPaths:appCachePathAllPlatformPacks:" + appCachePathAllPlatformPacks);
+        
+        if(ContentPaths.packPaths.Count == 0) {
+            //LogUtil.Log("Loading packPathsNONVersioned: " + appCachePathPacks);
+            
+            if(!string.IsNullOrEmpty(appCachePathPacks)) {
+                #if !UNITY_WEBPLAYER
+                foreach(string path in Directory.GetDirectories(ContentPaths.appCachePathPacks)) {
+                    string pathToAdd = PathUtil.Combine(appCachePathPacks, path);
+                    if(!string.IsNullOrEmpty(pathToAdd)) {
+                        if(!ContentPaths.packPaths.Contains(pathToAdd)) {
+                            ContentPaths.packPaths.Add(pathToAdd);
+                            //LogUtil.Log("Adding packPathsNONVersioned: pathToAdd:" + pathToAdd);
+                        }
+                    }
+                }
+                #endif
+            }
+        }
+        
+        if(packPathsVersionedShared.Count == 0) {
+            //LogUtil.Log("Loading packPathsVersionedShared: " + appCachePathSharedPacks);
+            
+            if(!string.IsNullOrEmpty(appCachePathSharedPacks)) {
+                #if !UNITY_WEBPLAYER
+                foreach(string path in Directory.GetDirectories(appCachePathSharedPacks)) {
+                    string pathToAdd = PathUtil.Combine(appCachePathSharedPacks, path);
+                    if(!string.IsNullOrEmpty(pathToAdd)) {
+                        if(!packPathsVersionedShared.Contains(pathToAdd)) {
+                            packPathsVersionedShared.Add(pathToAdd);
+                            //LogUtil.Log("Adding packPathsVersionedShared: pathToAdd:" + pathToAdd);
+                        }
+                    }
+                }
+                #endif
+            }
+        }
+        
+        if(packPathsVersioned.Count == 0) {
+            //LogUtil.Log("Loading packPathsVersioned: " + appCachePathAllPlatformPacks);
+            if(!string.IsNullOrEmpty(appCachePathAllPlatformPacks)) {
+                #if !UNITY_WEBPLAYER
+                foreach(string path in Directory.GetDirectories(appCachePathAllPlatformPacks)) {
+                    string pathToAdd = PathUtil.Combine(appCachePathAllPlatformPacks, path);
+                    if(!string.IsNullOrEmpty(pathToAdd)) {
+                        if(!packPathsVersioned.Contains(pathToAdd)) {
+                            packPathsVersioned.Add(pathToAdd);
+                            //LogUtil.Log("Adding packPathsVersioned: pathToAdd:" + pathToAdd);
+                        }
+                    }
+                }
+                #endif
+            }
+        }
+    }
+
+}
+
 public class Contents : MonoBehaviour {
 	
 	/*
@@ -429,8 +767,8 @@ public class Contents : MonoBehaviour {
 	
 	public bool isReady {
 		get {
-			if(!string.IsNullOrEmpty(Contents.appCachePath)
-				&& !string.IsNullOrEmpty(Contents.appShipCachePath)) {
+			if(!string.IsNullOrEmpty(ContentPaths.appCachePath)
+				&& !string.IsNullOrEmpty(ContentPaths.appShipCachePath)) {
 				return true;
 			}
 			return false;
@@ -474,113 +812,22 @@ public class Contents : MonoBehaviour {
 	public static bool downloadInProgress = false;
 	
 	public static ContentItemAccessDictionary contentItemAccess;
-    public static string persistenceFolder = "";
-    public static string streamingAssetsFolder = "";
-    
-	public static string appCachePath = "";
-	public static string appCachePathAssetBundles = "";
-	public static string appCachePathTrackers = "";
-	public static string appCachePathPacks = "";
-	public static string appCachePathShared = "";
-	public static string appCachePathAll = "";
-	public static string appCachePathAllShared = "";
-	public static string appCachePathAllSharedUserData = "";
-	public static string appCachePathSharedPacks = "";
-	public static string appCachePathSharedTrackers = "";
-	public static string appCachePathAllSharedTrackers = "";
-	public static string appCachePathAllPlatform = "";
-	public static string appCachePathAllPlatformPacks = "";
-	public static string appCachePathAllPlatformData = "";
-	public static string appCachePathData = "";
-	public static string appCacheVersionPath = "";
-	public static string appCachePlatformPath = "";
-	
-	public static string appShipCachePath = "";
-	public static string appShipCachePathAssetBundles = "";
-	public static string appShipCachePathTrackers = "";
-	public static string appShipCachePathPacks = "";
-	public static string appShipCachePathShared = "";
-	public static string appShipCachePathAll = "";
-	public static string appShipCachePathData = "";
-	public static string appShipCacheVersionPath = "";
-	public static string appShipCachePlatformPath = "";
-	public static string appShipCachePathPlatformPath = "";
-	
-	public static string currentPlatformCode = "ios";
-	
-	public static List<string> packPaths;
-	public static List<string> packPathsVersionedShared;
-	public static List<string> packPathsVersioned;
-	
+		
 	public static Dictionary<string,string> fileHashLookup = null;
 	
 	public static bool initialSyncCompleted = false;
 	public static bool initialDownload = false;
-	public static string currentPackCodeSync = "default";
-	
-	public static string appCacheVersionSharedAudio {
-		get {
-			return ContentsConfig.contentRootFolder + "/"
-				+ ContentsConfig.contentAppFolder + "/version/shared/audio/";
-		}
-	}
-	
-	public static string appCacheVersionSharedPrefab {
-		get {
-			return ContentsConfig.contentRootFolder + "/"
-				+ ContentsConfig.contentAppFolder + "/version/shared/prefab/";
-		}
-	}
-	
-	public static string appCacheVersionSharedPrefabCharacters {
-		get {
-			return appCacheVersionSharedPrefab + "characters/";
-		}
-	}
-	
-	public static string appCacheVersionSharedPrefabLevelAssets {
-		get {
-			return appCacheVersionSharedPrefab + "levelassets/";
-		}
-	}
-	
-	public static string appCacheVersionSharedPrefabLevelItems {
-		get {
-			return appCacheVersionSharedPrefab + "items/";
-		}
-	}
-	
-	public static string appCacheVersionSharedPrefabLevelNetwork {
-		get {
-			return appCacheVersionSharedPrefab + "network/";
-		}
-	}
-		
-	public static string appCacheVersionSharedPrefabLevelUI {
-		get {
-			return appCacheVersionSharedPrefab + "ui/";
-		}
-	}
-	
-	public static string appCacheVersionSharedPrefabWeapons {
-		get {
-			return appCacheVersionSharedPrefab + "weapons/";
-		}
-	}
+	public static string currentPackCodeSync = "default";	
 	
 	void Start() {
-		
-		currentPlatformCode = GetCurrentPlatformCode();
-				
+				        
+        ContentPaths.CreateCachePaths();
+
 		contentItemAccess = new ContentItemAccessDictionary();		
 		contentItemAccess.Load();
 		
 		//InitCache();
-		
-		packPaths = new List<string>();
-		packPathsVersioned = new List<string>();
-		packPathsVersionedShared = new List<string>();
-		
+
 		fileHashLookup = new Dictionary<string, string>();
 		
 		// Content Sync Full
@@ -1000,32 +1247,6 @@ public class Contents : MonoBehaviour {
 			}
 		}
 	}
-	
-	// -----------------------------------------------------------------------
-	
-	public static string GetCurrentPlatformCode() {
-		if(isInst) {
-			Instance.getCurrentPlatformCode();
-		}
-#if UNITY_IPHONE
-		return "ios";
-#elif UNITY_ANDROID
-		return "android";
-#else 
-		return "desktop";
-#endif	
-	}
-	        
-	public string getCurrentPlatformCode() {
-#if UNITY_IPHONE
-		return "ios";
-#elif UNITY_ANDROID
-		return "android";
-#else 
-		return "desktop";
-#endif		
-	}
-	
 	// -----------------------------------------------------------------------
 	
 	public static void ChangePackAndLoadMainScene(string pack) {	
@@ -1297,7 +1518,7 @@ public class Contents : MonoBehaviour {
 			bool hashVerified = false;
 			
 			if(!fileExists) {
-				pathVersioned = PathUtil.Combine(Contents.appCachePath, pathVersioned);
+				pathVersioned = PathUtil.Combine(ContentPaths.appCachePath, pathVersioned);
 				pathVersioned = GetPathUpdatedVersion(pathVersioned);
 				fileExists = FileSystemUtil.CheckFileExists(pathVersioned);
 			}
@@ -1398,7 +1619,7 @@ public class Contents : MonoBehaviour {
 		
 		// app content list data
 		pathPack = ContentsConfig.contentVersion +
-			"/" + GetCurrentPlatformCode() + "/packs/" +
+			"/" + ContentPaths.GetCurrentPlatformCode() + "/packs/" +
 				packCode +
 				"/data/" + 
 				key +
@@ -2161,7 +2382,7 @@ public class Contents : MonoBehaviour {
 		downloadInProgress = true;
 		
 		string game = ContentsConfig.contentAppFolder;
-		string platform = GetCurrentPlatformCode();
+		string platform = ContentPaths.GetCurrentPlatformCode();
 		string version = ContentsConfig.contentVersion;
 		
 		string url = GetDownloadAppContentListFilesUrl(game, version, platform);
@@ -2192,7 +2413,7 @@ public class Contents : MonoBehaviour {
 		downloadInProgress = true;
 		
 		string game = ContentsConfig.contentAppFolder;
-		string platform = GetCurrentPlatformCode();
+		string platform = ContentPaths.GetCurrentPlatformCode();
 		string version = ContentsConfig.contentVersion;
 		
 		string url = GetDownloadAppContentListFilesUrl(game, version, platform);
@@ -2377,8 +2598,8 @@ public class Contents : MonoBehaviour {
 
 	public string getHashCodeFromFile(string url) {
 		string hash = "";
-		if(!url.Contains(appCachePath)) {
-			url = PathUtil.Combine(appCachePath, url);
+		if(!url.Contains(ContentPaths.appCachePath)) {
+            url = PathUtil.Combine(ContentPaths.appCachePath, url);
 		}
 		hash = ChecksumHash(url);
 		return hash;
@@ -2439,7 +2660,7 @@ public class Contents : MonoBehaviour {
 			
 			string path = urlObject.path;
 			string pathSave = path;
-			string pathCache = Contents.appCachePath;
+			string pathCache = ContentPaths.appCachePath;
 			
 			if(!pathSave.Contains(pathCache)) {
 				pathSave = PathUtil.Combine(pathCache, path);
@@ -2585,7 +2806,7 @@ public class Contents : MonoBehaviour {
 				
 		string path = urlObject.path;
 		string pathSave = path;
-		string pathCache = Contents.appCachePath;		
+		string pathCache = ContentPaths.appCachePath;		
 		
 		if(!pathSave.Contains(pathCache)) {
 			pathSave = PathUtil.Combine(pathCache, path);
@@ -2864,108 +3085,7 @@ public class Contents : MonoBehaviour {
 		
 		yield break;
 	}    
-	
-	public static List<string> GetPackPathsNonVersioned() {
-		if(isInst) {
-			return Instance.getPackPathsNonVersioned();
-		}
-		return new System.Collections.Generic.List<string>();
-	}
-	
-	public List<string> getPackPathsNonVersioned() {
-		LoadPackPaths();
-		return packPaths;
-	}
-	
-	public static List<string> GetPackPathsVersioned() {
-		if(isInst) {
-			return Instance.getPackPathsVersioned();
-		}
-		return new System.Collections.Generic.List<string>();
-	}
-	
-	public List<string> getPackPathsVersioned() {
-		LoadPackPaths();
-		return packPathsVersioned;
-	}
-	
-	public static List<string> GetPackPathsVersionedShared() {
-		if(isInst) {
-			return Instance.getPackPathsVersionedShared();
-		}
-		return new System.Collections.Generic.List<string>();
-	}
-	
-	public List<string> getPackPathsVersionedShared() {
-		LoadPackPaths();
-		return packPathsVersionedShared;
-	}
-	
-	public static void LoadPackPaths() {
-		if(isInst) {
-			Instance.loadPackPaths();
-		}
-	}
-	
-	public void loadPackPaths() {
-
-		////LogUtil.Log("LoadPackPaths:appCachePathPacks:" + appCachePathPacks);
-		////LogUtil.Log("LoadPackPaths:appCachePathAllPlatformPacks:" + appCachePathAllPlatformPacks);
-				
-		if(packPaths.Count == 0) {
-			//LogUtil.Log("Loading packPathsNONVersioned: " + appCachePathPacks);
-			
-			if(!string.IsNullOrEmpty(appCachePathPacks)) {
-#if !UNITY_WEBPLAYER
-				foreach(string path in Directory.GetDirectories(appCachePathPacks)) {
-					string pathToAdd = PathUtil.Combine(appCachePathPacks, path);
-					if(!string.IsNullOrEmpty(pathToAdd)) {
-						if(!packPaths.Contains(pathToAdd)) {
-							packPaths.Add(pathToAdd);
-							//LogUtil.Log("Adding packPathsNONVersioned: pathToAdd:" + pathToAdd);
-						}
-					}
-				}
-#endif
-			}
-		}
 		
-		if(packPathsVersionedShared.Count == 0) {
-			//LogUtil.Log("Loading packPathsVersionedShared: " + appCachePathSharedPacks);
-			
-			if(!string.IsNullOrEmpty(appCachePathSharedPacks)) {
-#if !UNITY_WEBPLAYER
-				foreach(string path in Directory.GetDirectories(appCachePathSharedPacks)) {
-					string pathToAdd = PathUtil.Combine(appCachePathSharedPacks, path);
-					if(!string.IsNullOrEmpty(pathToAdd)) {
-						if(!packPathsVersionedShared.Contains(pathToAdd)) {
-							packPathsVersionedShared.Add(pathToAdd);
-							//LogUtil.Log("Adding packPathsVersionedShared: pathToAdd:" + pathToAdd);
-						}
-					}
-				}
-#endif
-			}
-		}
-		
-		if(packPathsVersioned.Count == 0) {
-			//LogUtil.Log("Loading packPathsVersioned: " + appCachePathAllPlatformPacks);
-			if(!string.IsNullOrEmpty(appCachePathAllPlatformPacks)) {
-#if !UNITY_WEBPLAYER
-				foreach(string path in Directory.GetDirectories(appCachePathAllPlatformPacks)) {
-					string pathToAdd = PathUtil.Combine(appCachePathAllPlatformPacks, path);
-					if(!string.IsNullOrEmpty(pathToAdd)) {
-						if(!packPathsVersioned.Contains(pathToAdd)) {
-							packPathsVersioned.Add(pathToAdd);
-							//LogUtil.Log("Adding packPathsVersioned: pathToAdd:" + pathToAdd);
-						}
-					}
-				}
-#endif
-			}
-		}
-	}
-	
 	public static string GetFileDataFromPersistentCache(
 		string path, bool versioned, bool absolute) {		
 		if(isInst) {
@@ -2982,12 +3102,12 @@ public class Contents : MonoBehaviour {
 		
 		string pathToCopy = "";
 		pathToCopy = PathUtil.Combine(
-			Contents.appShipCacheVersionPath, pathPart);
+			ContentPaths.appShipCacheVersionPath, pathPart);
 		
 		if(!absolute) {
 			path = PathUtil.Combine(
-				Contents.appCacheVersionPath, path);
-			//shipPath = PathUtil.Combine(Contents.appShipCacheVersionPath, path);
+				ContentPaths.appCacheVersionPath, path);
+			//shipPath = PathUtil.Combine(ContentPaths.appShipCacheVersionPath, path);
 		}
 		string pathVersioned = path;
 		
@@ -2998,9 +3118,9 @@ public class Contents : MonoBehaviour {
 		//LogUtil.Log("GetFileDataFromPersistentCache:path:" + path);
 		//LogUtil.Log("GetFileDataFromPersistentCache:pathVersioned:" + pathVersioned );
 		//LogUtil.Log("GetFileDataFromPersistentCache:pathToCopy:" + pathToCopy );
-		//LogUtil.Log("GetFileDataFromPersistentCache:Contents.appShipCacheVersionPath:" + Contents.appShipCacheVersionPath );
+		//LogUtil.Log("GetFileDataFromPersistentCache:ContentPaths.appShipCacheVersionPath:" + ContentPaths.appShipCacheVersionPath );
 
-		//LogUtil.Log("GetFileDataFromPersistentCache:Contents.appCacheVersionPath:" + Contents.appCacheVersionPath );
+		//LogUtil.Log("GetFileDataFromPersistentCache:ContentPaths.appCacheVersionPath:" + ContentPaths.appCacheVersionPath );
 
 		bool versionedExists = FileSystemUtil.CheckFileExists(pathVersioned);
 				
@@ -3236,7 +3356,7 @@ public class Contents : MonoBehaviour {
 	//		yield break;
 	//	}
 	//}
-	
+
     public IEnumerator syncFoldersCo(bool syncFolders, bool syncServer) {
 		
         
@@ -3247,101 +3367,17 @@ public class Contents : MonoBehaviour {
 		Messenger<object>.Broadcast(ContentMessages.ContentSyncShipContentStarted, "started");
 		
         LogUtil.Log("Contents::SyncFolders");
-        
-        persistenceFolder = PathUtil.AppPersistencePath;
-        streamingAssetsFolder = Application.streamingAssetsPath;
-        
-       	LogUtil.Log("Contents::persistenceFolder: " + persistenceFolder);
-       	LogUtil.Log("Contents::streamingAssetsFolder: " + streamingAssetsFolder);
-        
-        string pathRoot = PathUtil.Combine(persistenceFolder, ContentsConfig.contentRootFolder);
-        string pathShipRoot = PathUtil.Combine(streamingAssetsFolder, ContentsConfig.contentRootFolder);
-		
-		FileSystemUtil.EnsureDirectory(pathRoot, false);
-		FileSystemUtil.EnsureDirectory(pathShipRoot, false);
-        
-        string pathRootAppend = PathUtil.Combine(pathRoot, ContentsConfig.contentAppFolder);
-        string pathShipRootAppend = PathUtil.Combine(pathShipRoot, ContentsConfig.contentAppFolder);
 
-		FileSystemUtil.EnsureDirectory(pathRootAppend, false);
-		FileSystemUtil.EnsureDirectory(pathShipRootAppend, false);
-        
-        appCachePath = pathRootAppend;
-        appShipCachePath = pathShipRootAppend;  
-		
-		FileSystemUtil.EnsureDirectory(appCachePath, false);
-		FileSystemUtil.EnsureDirectory(appShipCachePath, false);
+        ContentPaths.CreateCachePaths();
 
-        appCacheVersionPath = PathUtil.Combine(appCachePath, ContentsConfig.contentVersion);
-        appShipCacheVersionPath = PathUtil.Combine(appShipCachePath, ContentConfig.contentCacheVersion);
-		
-		FileSystemUtil.EnsureDirectory(appCacheVersionPath, false);
-		FileSystemUtil.EnsureDirectory(appShipCacheVersionPath, false);
-		
-        appCachePathAll = PathUtil.Combine(appCachePath, ContentConfig.contentCacheAll);
-        appShipCachePathAll = PathUtil.Combine(appShipCachePath, ContentConfig.contentCacheAll);		
-        appCachePathAllShared = PathUtil.Combine(appCachePathAll, ContentConfig.contentCacheShared);
-        appCachePathAllSharedTrackers = PathUtil.Combine(appCachePathAllShared, ContentConfig.contentCacheTrackers);
-        appCachePathAllSharedUserData = PathUtil.Combine(appCachePathAllShared, ContentConfig.contentCacheUserData);
-		
-		FileSystemUtil.EnsureDirectory(appCachePathAll, false);
-		FileSystemUtil.EnsureDirectory(appShipCachePathAll, false);
-		FileSystemUtil.EnsureDirectory(appCachePathAllShared, false);
-		FileSystemUtil.EnsureDirectory(appCachePathAllSharedTrackers, false);
-		FileSystemUtil.EnsureDirectory(appCachePathAllSharedUserData, false);
-		
-        appCachePathAllPlatform = PathUtil.Combine(appCachePathAll, GetCurrentPlatformCode());
-        appCachePathAllPlatformPacks = PathUtil.Combine(appCachePathAllPlatform, ContentConfig.contentCachePacks);
-        appCachePathAllPlatformData = PathUtil.Combine(appCachePathAllPlatform, ContentConfig.contentCacheData);
-		
-		FileSystemUtil.EnsureDirectory(appCachePathAllPlatform, false);
-		FileSystemUtil.EnsureDirectory(appCachePathAllPlatformPacks, false);
-		FileSystemUtil.EnsureDirectory(appCachePathAllPlatformData, false);
-		
-        appCachePlatformPath = PathUtil.Combine(appCacheVersionPath, GetCurrentPlatformCode());
-        appShipCachePlatformPath = PathUtil.Combine(appShipCacheVersionPath, GetCurrentPlatformCode());		
-		
-		FileSystemUtil.EnsureDirectory(appCachePlatformPath, false);
-		FileSystemUtil.EnsureDirectory(appShipCachePlatformPath, false);
-        
-        appCachePathData = PathUtil.Combine(
-			appCacheVersionPath, ContentConfig.contentCacheData);
-        
-		appCachePathShared = PathUtil.Combine(
-			appCacheVersionPath, ContentConfig.contentCacheShared);
-        
-		appCachePathSharedPacks = PathUtil.Combine(
-			appCachePathShared, ContentConfig.contentCachePacks);
-        
-		appCachePathSharedTrackers = PathUtil.Combine(
-			appCachePathShared, ContentConfig.contentCacheTrackers);
-        
-		appCachePathPacks = PathUtil.Combine(
-			appCachePlatformPath, ContentConfig.contentCachePacks);
-		
-		FileSystemUtil.EnsureDirectory(appCachePathData, false);
-		FileSystemUtil.EnsureDirectory(appCachePathShared, false);
-		FileSystemUtil.EnsureDirectory(appCachePathSharedPacks, false);
-		FileSystemUtil.EnsureDirectory(appCachePathSharedTrackers, false);
-		FileSystemUtil.EnsureDirectory(appCachePathPacks, false);
-		
-		appShipCachePathData = PathUtil.Combine(
-			appShipCacheVersionPath, ContentConfig.contentCacheData);
-		
-		appShipCachePathShared = PathUtil.Combine(
-			appShipCacheVersionPath, ContentConfig.contentCacheShared);
-		
-		FileSystemUtil.EnsureDirectory(appShipCachePathData, false);
-		FileSystemUtil.EnsureDirectory(appShipCachePathShared, false);
-		
 		LogUtil.Log("Contents::syncFoldersCo:Folders Created:", " syncFolders:" + syncFolders + " syncServer:" + syncServer);
 		
 		if(syncFolders) {
-			yield return StartCoroutine(directoryCopyCo(appShipCachePlatformPath, appCachePlatformPath, true, true));
-			//DirectoryCopy(appShipCachePathPacks, appCachePathPacks, true);
-			yield return StartCoroutine(directoryCopyCo(appShipCachePathData, appCachePathData, true, true));
-			yield return StartCoroutine(directoryCopyCo(appShipCachePathShared, appCachePathShared, true, true));
-			yield return StartCoroutine(directoryCopyCo(appShipCachePathAll, appCachePathAll, true, false));  // files in all/shared are not versioned...
+            yield return StartCoroutine(directoryCopyCo(ContentPaths.appShipCachePlatformPath, ContentPaths.appCachePlatformPath, true, true));
+            //DirectoryCopy(appShipCachePathPacks, ContentPaths.appCachePathPacks, true);
+            yield return StartCoroutine(directoryCopyCo(ContentPaths.appShipCachePathData, ContentPaths.appCachePathData, true, true));
+            yield return StartCoroutine(directoryCopyCo(ContentPaths.appShipCachePathShared, ContentPaths.appCachePathShared, true, true));
+            yield return StartCoroutine(directoryCopyCo(ContentPaths.appShipCachePathAll, ContentPaths.appCachePathAll, true, false));  // files in all/shared are not versioned...
 		}
 		
 		if(syncServer) {
@@ -3679,7 +3715,7 @@ public class Contents : MonoBehaviour {
 	}
 	
 	public void loadLevelBundle(string pack, int increment) {
-		string pathPack = PathUtil.Combine(appCachePathAllPlatformPacks, pack);
+        string pathPack = PathUtil.Combine(ContentPaths.appCachePathAllPlatformPacks, pack);
 		pathPack = PathUtil.Combine(pathPack, ContentConfig.contentCacheScenes);
 		
 		GamePacks.Instance.ChangeCurrentGamePack(pack);

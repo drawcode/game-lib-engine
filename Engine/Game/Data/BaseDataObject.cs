@@ -26,7 +26,12 @@ public class BaseDataObjectKeys {
     public static string order_by = "order_by";
     public static string status = "status";
     public static string data_items = "data_items";
-
+    
+    public static string pack_code = "pack_code";
+    public static string pack_sort = "pack_sort";
+    
+    public static string date_created = "date_created";
+    public static string date_modified = "date_modified";
 }
 
 public class BaseDataObject : Dictionary<string, object> {  
@@ -38,8 +43,8 @@ public class BaseDataObject : Dictionary<string, object> {
     // VALUES
     // use keyed dictionaries for all data objects to prevent
     // serialize and deserialize issues with keys on versions.    
-    
-    [JsonIgnore]
+
+    //[JsonIgnore(JsonIgnoreWhen.Deserializing)]
     public virtual string uuid {
         get { 
             return Get<string>(BaseDataObjectKeys.uuid);
@@ -50,7 +55,7 @@ public class BaseDataObject : Dictionary<string, object> {
         }
     }
     
-    [JsonIgnore]
+    //[JsonIgnore(JsonIgnoreWhen.Deserializing)]
     public virtual string code {
         get {
             return Get<string>(BaseDataObjectKeys.code);
@@ -61,7 +66,7 @@ public class BaseDataObject : Dictionary<string, object> {
         }
     }
     
-    [JsonIgnore]
+    //[JsonIgnore(JsonIgnoreWhen.Deserializing)]
     public virtual string display_name {
         get {
             return Get<string>(BaseDataObjectKeys.display_name);
@@ -72,7 +77,7 @@ public class BaseDataObject : Dictionary<string, object> {
         }
     }    
     
-    [JsonIgnore]
+    //[JsonIgnore(JsonIgnoreWhen.Deserializing)]
     public virtual string name {
         get {
             return Get<string>(BaseDataObjectKeys.name);
@@ -83,7 +88,7 @@ public class BaseDataObject : Dictionary<string, object> {
        }
     }   
     
-    [JsonIgnore]
+    //[JsonIgnore(JsonIgnoreWhen.Deserializing)]
     public virtual string description {
         get {
             return Get<string>(BaseDataObjectKeys.description);
@@ -94,7 +99,7 @@ public class BaseDataObject : Dictionary<string, object> {
         }
     }      
     
-    [JsonIgnore]
+    //[JsonIgnore(JsonIgnoreWhen.Deserializing)]
     public virtual Dictionary<string, DataAttribute> attributes {
         get {
             return Get<Dictionary<string, DataAttribute>>(BaseDataObjectKeys.attributes);
@@ -105,7 +110,7 @@ public class BaseDataObject : Dictionary<string, object> {
         }
     }        
     
-    [JsonIgnore]
+    //[JsonIgnore(JsonIgnoreWhen.Deserializing)]
     public virtual object data {
         get {
             return Get(BaseDataObjectKeys.data);
@@ -116,7 +121,7 @@ public class BaseDataObject : Dictionary<string, object> {
         }
     }       
     
-    [JsonIgnore]
+    //[JsonIgnore(JsonIgnoreWhen.Deserializing)]
     public virtual int sort_order {
         get {
             return Get<int>(BaseDataObjectKeys.sort_order);
@@ -126,8 +131,8 @@ public class BaseDataObject : Dictionary<string, object> {
             Set(BaseDataObjectKeys.sort_order, value);
         }
     }  
-        
-    [JsonIgnore]
+    
+    //[JsonIgnore(JsonIgnoreWhen.Deserializing)]
     public virtual int sort_order_type {
         get {
             return Get<int>(BaseDataObjectKeys.sort_order_type);
@@ -138,7 +143,7 @@ public class BaseDataObject : Dictionary<string, object> {
         }
     }  
     
-    [JsonIgnore]
+    //[JsonIgnore(JsonIgnoreWhen.Deserializing)]
     public virtual bool active {
         get {
             return Get<bool>(BaseDataObjectKeys.active);
@@ -149,7 +154,7 @@ public class BaseDataObject : Dictionary<string, object> {
         }
     }      
     
-    [JsonIgnore]
+    //[JsonIgnore(JsonIgnoreWhen.Deserializing)]
     public virtual string key {
         get {
             return Get<string>(BaseDataObjectKeys.key);
@@ -160,7 +165,7 @@ public class BaseDataObject : Dictionary<string, object> {
         }
     }    
     
-    [JsonIgnore]
+    //[JsonIgnore(JsonIgnoreWhen.Deserializing)]
     public virtual string game_id {
         get {
             return Get<string>(BaseDataObjectKeys.game_id);
@@ -171,7 +176,7 @@ public class BaseDataObject : Dictionary<string, object> {
         }
     }    
     
-    [JsonIgnore]
+    //[JsonIgnore(JsonIgnoreWhen.Deserializing)]
     public virtual string type {
         get {
             return Get<string>(BaseDataObjectKeys.type);
@@ -182,7 +187,7 @@ public class BaseDataObject : Dictionary<string, object> {
         }
     }    
     
-    [JsonIgnore]
+    //[JsonIgnore(JsonIgnoreWhen.Deserializing)]
     public virtual string order_by {
         get {
             return Get<string>(BaseDataObjectKeys.order_by);
@@ -193,7 +198,7 @@ public class BaseDataObject : Dictionary<string, object> {
         }
     }      
     
-    [JsonIgnore]
+    //[JsonIgnore(JsonIgnoreWhen.Deserializing)]
     public virtual string status {
         get {
             return Get<string>(BaseDataObjectKeys.status);
@@ -203,6 +208,50 @@ public class BaseDataObject : Dictionary<string, object> {
             Set(BaseDataObjectKeys.status, value);
         }
     }  
+    
+    //[JsonIgnore(JsonIgnoreWhen.Deserializing)]
+    public virtual string pack_code {
+        get {
+            return Get<string>(BaseDataObjectKeys.pack_code);
+        }
+        
+        set {
+            Set(BaseDataObjectKeys.pack_code, value);
+        }
+    }  
+    
+    //[JsonIgnore(JsonIgnoreWhen.Deserializing)]
+    public virtual int pack_sort {
+        get {
+            return Get<int>(BaseDataObjectKeys.pack_sort);
+        }
+        
+        set {
+            Set(BaseDataObjectKeys.pack_sort, value);
+        }
+    } 
+    
+    //[JsonIgnore(JsonIgnoreWhen.Deserializing)]
+    public virtual DateTime date_created {
+        get {
+            return Get<DateTime>(BaseDataObjectKeys.date_created);
+        }
+        
+        set {
+            Set(BaseDataObjectKeys.date_created, value);
+        }
+    } 
+    
+    //[JsonIgnore(JsonIgnoreWhen.Deserializing)]
+    public virtual DateTime date_modified {
+        get {
+            return Get<DateTime>(BaseDataObjectKeys.date_modified);
+        }
+        
+        set {
+            Set(BaseDataObjectKeys.date_modified, value);
+        }
+    } 
 
     // -----------------------------------------------------------------------
     // VALUE ACCESSORS
@@ -213,7 +262,7 @@ public class BaseDataObject : Dictionary<string, object> {
         return Get<T>(code, null);
     } 
     
-    public virtual T Get<T>(string code, string defaultValue) {                
+    public virtual T Get<T>(string code, object defaultValue) {                
         try {
             return (T)Get(code, defaultValue);
         }
@@ -228,17 +277,11 @@ public class BaseDataObject : Dictionary<string, object> {
         return Get<object>(code, null);
     }    
     
-    public virtual object Get(string code, string defaultValue) {
-        return Get<object>(code, defaultValue);
-    }
-    
-    
-    public virtual string GetString(string code) {
-        return Get<string>(code, null);
-    }    
-    
-    public virtual string GetString(string code, string defaultValue) {
-        return Get<string>(code, defaultValue);
+    public virtual object Get(string code, object defaultValue) {
+        if(ContainsKey(code)) {
+            return this[code];
+        }
+        return defaultValue;
     }
 
     // sets
@@ -253,6 +296,11 @@ public class BaseDataObject : Dictionary<string, object> {
     }
     
     public virtual void Set(string code, DataAttribute val) {
+        if(attributes == null) {
+            attributes = new Dictionary<string, DataAttribute>();                        
+        }
+
+
         if(attributes.ContainsKey(code)) {
             attributes[code] = val;
         }
@@ -383,7 +431,7 @@ public class BaseDataObject : Dictionary<string, object> {
     }
     
     public virtual void Reset() {
-        attributes = new Dictionary<string, DataAttribute>();
+        //attributes = new Dictionary<string, DataAttribute>();
     }
     
     // -----------------------------------------------------------------------

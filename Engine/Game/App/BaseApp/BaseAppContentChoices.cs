@@ -73,7 +73,7 @@ public class BaseAppContentChoices<T> : DataObjects<T> where T : new() {
 
     public string GetAppContentChoiceContentPath(string packCode, string asset, bool versioned) {
         string packPath = PathUtil.Combine(
-            Contents.appCachePathSharedPacks,
+            ContentPaths.appCachePathSharedPacks,
             packCode);
 
         string packPathContent = PathUtil.Combine(
