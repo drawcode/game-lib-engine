@@ -17,7 +17,9 @@ public class BaseGameConfigs<T> : DataObjects<T> where T : new() {
 	public static bool usePooledGamePlayers = true;
 	public static bool usePooledIndicators = false;
 	public static bool usePooledProjectiles = true;
-	public static bool usePooledItems = true;
+    public static bool usePooledItems = true;
+    public static bool usePooledLevelItems = true;
+
 
     public static bool useCoinRewardsForAchievements = true;
     public static double coinRewardAchievementPoint = 50;

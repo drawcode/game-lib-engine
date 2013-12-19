@@ -536,7 +536,7 @@ public class DataObjects<T> {
         bool hasGet = false;
 
         foreach (var prop in fieldName.Split('.').Select(s => obj.GetType().GetField(s))) {
-            if (obj != null) {
+            if (obj != null && prop != null) {
                 obj = prop.GetValue(obj);
                 hasGet = true;
             }
@@ -544,8 +544,10 @@ public class DataObjects<T> {
 
         if (!hasGet) {
             foreach (System.Reflection.PropertyInfo prop in obj.GetType().GetProperties()) {
-                if (prop.Name == fieldName) {
-                    obj = prop.GetValue(obj, null);
+                if (obj != null && prop != null) {
+                    if (prop.Name == fieldName) {
+                        obj = prop.GetValue(obj, null);
+                    }
                 }
             }
         }
