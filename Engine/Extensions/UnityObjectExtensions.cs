@@ -40,20 +40,3 @@ public static class ObjectUtil {
         return UnityEngine.Object.FindObjectsOfType(typeof(T)) as T[];
     }
 }
-
-public static class ObjectExtensions {
-
-    public static string ToJson(this object inst) {
-        return Engine.Data.Json.JsonMapper.ToJson(inst);
-    }
-
-    public static T FromJson<T>(this string inst) {
-        return Engine.Data.Json.JsonMapper.ToObject<T>(inst);
-    }
-        
-    public static object FromJson(this string inst) {
-        return Engine.Data.Json.JsonMapper.ToObject<object>(inst);
-    }
-
-
-}

@@ -23,9 +23,7 @@ public class DataKeyedObjectLeaf : DataKeyedObject {
 public class TestsData {
 
     public static void Advance(string name) {
-        Debug.Log("----------------------------------\r\n\r\n");
-        Debug.Log(name);
-        Debug.Log("----------------------------------\r\n\r\n");
+        Debug.Log(name + "\r\n----------------------------------\r\n\r\n");
     }
 
     public static void RunTest() {
@@ -42,40 +40,34 @@ public class TestsData {
         Advance("Creating Contents cache paths");
         ContentPaths.CreateCachePaths();
 
-        Advance("TestGameCharacterSkin");
-        TestGameCharacterSkin();
+        //Advance("TestGameCharacterSkin");
+        //TestGameCharacterSkin();
 
-        Advance("TestGameCharacterSkinLoadData");
-        TestGameCharacterSkinLoadData();
+        //Advance("TestGameCharacterSkinLoadData");
+        //TestGameCharacterSkinLoadData();
+        
+        //Advance("TestGameState_LoadProfile");
+        //TestGameState_LoadProfile();
+
+        
+        //Advance("TestGameState_SaveProfile");
+        //TestGameState_SaveProfile();
+
+        //Advance("TestGameProfileCharacter_GetCharacter");
+        //TestGameProfileCharacter_GetCharacter();
+        
+        //Advance("TestGameProfileCharacter_GetCurrentCharacter");
+        //TestGameProfileCharacter_GetCurrentCharacter();
+        
+        //Advance("TestGameProfileCharacter_currentCharacter");
+        //TestGameProfileCharacter_currentCharacter();
+                
+        Advance("TestGameProfileCharacter_currentProgress");
+        TestGameProfileCharacter_currentProgress();
     }
 
-    public static void TestDefault() {
-
-        DataKeyedObjectLeaf leaf = new DataKeyedObjectLeaf();
-
-        leaf.active = true;
-
-        leaf.display_name = "tester";
-        
-        Debug.Log("DataKeyedObjectLeaf:leaf:display_name:" + leaf.display_name);
-        Debug.Log("DataKeyedObjectLeaf:leaf:display_name2:" + leaf.Get(BaseDataObjectKeys.display_name));
-
-        string leafData = JsonMapper.ToJson(leaf);
-
-        Debug.Log("DataKeyedObjectLeaf:leafData:" + leafData);
-
-        DataKeyedObjectLeaf leaf2 = new DataKeyedObjectLeaf();
-
-        leaf2 = JsonMapper.ToObject<DataKeyedObjectLeaf>(leafData);
-        
-        Debug.Log("DataKeyedObjectLeaf:display_name:" + leaf2.display_name);
-        
-        string leaf2Data = JsonMapper.ToJson(leaf2);
-        
-        Debug.Log("DataKeyedObjectLeaf:leaf2Data:" + leaf2Data);
-
-        
-        AssertEquals("DataKeyedObjectLeaf", leaf, leaf2);
+    public static void DumpObj(string name, string oname, object o) {        
+        Debug.Log(string.Format("{0} : {1}  : {2} ", name, oname, o));
     }
 
     public static bool AssertEquals(string name, object a, object b) {
@@ -85,13 +77,177 @@ public class TestsData {
         if(dataA == dataB) {            
             equal = true;
             Debug.Log(name + ": SUCCESS :" + equal);
-            return equal;
         }
         else {       
             Debug.LogError(name + ": FAIL :" + equal);
         }
+
+        DumpObj(name, "dataA", dataA);
+        DumpObj(name, "dataB", dataB);
+
         return equal;
     }
+
+    public static void TestGameState_LoadProfile() {
+        
+        string name = "TestGameState_LoadProfile";
+        
+        Debug.Log(name);
+
+        GameState.LoadProfile();
+
+        string username = GameProfiles.Current.username;
+            DumpObj(name, "username", username);
+
+        AssertEquals(name, username, "Player");
+    }
+
+    public static void TestGameState_SaveProfile() {
+        
+        string name = "TestGameState_SaveProfile";
+        
+        Debug.Log(name);
+        
+        GameState.SaveProfile();
+        
+        string username = GameProfiles.Current.username;
+        DumpObj(name, "username", username);
+        
+        AssertEquals(name, username, "Player");
+    }
+    
+    public static void TestGameProfileCharacter_GetCharacter() {
+        
+        string name = "TestGameProfileCharacter_GetCharacter";
+        
+        Debug.Log(name);
+
+        string characterCode = "default";
+                
+        GameProfileCharacterItem characterItem = GameProfileCharacters.Current.GetCharacter(characterCode);
+
+
+        if(characterItem == null) {
+            
+            DumpObj(name, "characterItem:NULL", characterItem);
+        }
+        else {
+            
+            DumpObj(name, "characterItem:EXISTS", characterItem);
+            
+            DumpObj(name, "characterItem:characterCode", characterItem.characterCode);
+            DumpObj(name, "characterItem:characterCostumeCode", characterItem.characterCostumeCode);
+            DumpObj(name, "characterItem:code", characterItem.code);
+
+            DumpObj(name, "characterItem:characterCode.profileRPGItem.GetAttack()", 
+                    characterItem.profileRPGItem.GetAttack());
+        }
+
+        DumpObj(name, "characterItem", characterItem);
+
+        //Debug.Break();
+    }
+    
+    public static void TestGameProfileCharacter_GetCurrentCharacter() {
+        
+        string name = "TestGameProfileCharacter_GetCurrentCharacter";
+        
+        Debug.Log(name);
+        
+        string characterCode = "default";
+        
+        GameProfileCharacterItem characterItem = GameProfileCharacters.Current.GetCurrentCharacter();
+        
+        
+        if(characterItem == null) {
+            
+            DumpObj(name, "characterItem:NULL", characterItem);
+        }
+        else {
+            
+            DumpObj(name, "characterItem:EXISTS", characterItem);
+            
+            DumpObj(name, "characterItem:characterCode", characterItem.characterCode);
+            DumpObj(name, "characterItem:characterCostumeCode", characterItem.characterCostumeCode);
+            DumpObj(name, "characterItem:code", characterItem.code);
+            
+            //DumpObj(name, "characterItem:characterCode.profileCustomItem.code", 
+            //        characterItem.profileCustomItem.code);
+            //DumpObj(name, "characterItem:characterCode.profileRPGItem.GetAttack()", 
+            //        characterItem.profileRPGItem.GetAttack());
+        }
+        
+        DumpObj(name, "characterItem", characterItem);
+        
+        //Debug.Break();        
+    }    
+    
+    public static void TestGameProfileCharacter_currentCharacter() {
+        
+        string name = "TestGameProfileCharacter_currentCharacter";
+        
+        Debug.Log(name);
+        
+        string characterCode = "default";
+        
+        GameProfileCharacterItem characterItem = GameProfileCharacters.currentCharacter;
+        
+        
+        if(characterItem == null) {
+            
+            DumpObj(name, "characterItem:NULL", characterItem);
+        }
+        else {
+            
+            DumpObj(name, "characterItem:EXISTS", characterItem);
+            
+            DumpObj(name, "characterItem:characterCode", characterItem.characterCode);
+            DumpObj(name, "characterItem:characterCostumeCode", characterItem.characterCostumeCode);
+            DumpObj(name, "characterItem:code", characterItem.code);
+            
+            //DumpObj(name, "characterItem:characterCode.profileCustomItem.code", 
+            //        characterItem.profileCustomItem.code);
+            //DumpObj(name, "characterItem:characterCode.profileRPGItem.GetAttack()", 
+            //        characterItem.profileRPGItem.GetAttack());
+        }
+        
+        DumpObj(name, "characterItem", characterItem);
+        
+        //Debug.Break();        
+    }
+
+    
+    public static void TestGameProfileCharacter_currentProgress() {
+        
+        string name = "TestGameProfileCharacter_currentCharacter";
+        
+        Debug.Log(name);
+        
+        string characterCode = "default";
+        
+        GameProfilePlayerProgressItem item = GameProfileCharacters.currentProgress;
+        
+        
+        if(item == null) {
+            
+            DumpObj(name, "item:NULL", item);
+        }
+        else {
+            
+            DumpObj(name, "item:EXISTS", item);
+
+            //DumpObj(name, "characterItem:characterCode.profileCustomItem.code", 
+            //        characterItem.profileCustomItem.code);
+            //DumpObj(name, "characterItem:characterCode.profileRPGItem.GetAttack()", 
+            //        characterItem.profileRPGItem.GetAttack());
+        }
+        
+        DumpObj(name, "characterItem", item);
+        
+        //Debug.Break();
+        
+    }
+
 
     // -----------------------------------------------------------------
     // GAME CHARACTER SKIN
@@ -135,6 +291,44 @@ public class TestsData {
             Debug.Log(e);
         }
     }
+
+
+
+
+
+
+
+    /*
+    
+    public static void TestDefault() {
+        
+        DataKeyedObjectLeaf leaf = new DataKeyedObjectLeaf();
+        
+        leaf.active = true;
+        
+        leaf.display_name = "tester";
+        
+        Debug.Log("DataKeyedObjectLeaf:leaf:display_name:" + leaf.display_name);
+        Debug.Log("DataKeyedObjectLeaf:leaf:display_name2:" + leaf.Get(BaseDataObjectKeys.display_name));
+        
+        string leafData = JsonMapper.ToJson(leaf);
+        
+        Debug.Log("DataKeyedObjectLeaf:leafData:" + leafData);
+        
+        DataKeyedObjectLeaf leaf2 = new DataKeyedObjectLeaf();
+        
+        leaf2 = JsonMapper.ToObject<DataKeyedObjectLeaf>(leafData);
+        
+        Debug.Log("DataKeyedObjectLeaf:display_name:" + leaf2.display_name);
+        
+        string leaf2Data = JsonMapper.ToJson(leaf2);
+        
+        Debug.Log("DataKeyedObjectLeaf:leaf2Data:" + leaf2Data);
+        
+        
+        AssertEquals("DataKeyedObjectLeaf", leaf, leaf2);
+    }
+    */
     
 }
 

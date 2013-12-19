@@ -50,6 +50,8 @@ public class BaseGameProfileCharacters {
     }
  
     // TODO: Common profile actions, lookup, count, etc
+    
+    public static GameProfileCharacterItem currentCharacter = null;
 
     public static GameProfilePlayerProgressItem currentProgress {
         get {
@@ -69,7 +71,38 @@ public class BaseGameProfileCharacters {
         }
     }
 
+    /*
     public static GameProfileCharacterItem currentCharacter = null;
+
+    public static GameProfilePlayerProgressItem currentProgress {
+        get {
+            if(currentCharacter == null) {
+                return null;
+            }
+            return currentCharacter.profilePlayerProgress;
+        }
+    }
+
+    public static GameProfileRPGItem currentRPG {
+        get {
+            if(currentCharacter == null) {
+                return null;
+            }
+            return currentCharacter.profileRPGItem;
+            
+        }
+    }
+
+    public static GameProfileCustomItem currentCustom {
+        get {
+            if(currentCharacter == null) {
+                return null;
+            }
+            return currentCharacter.profileCustomItem;
+        }
+    }
+    */
+
 }
 
 public class GameProfileCharacterItems {

@@ -1,3 +1,4 @@
+
 using System;
 using System.IO;
 using System.Collections.Generic;
@@ -7,118 +8,17 @@ using UnityEngine;
 using Engine.Events;
 using Engine.Data.Json;
 
-public class BaseDataObjectKeys { 
+public class DataObjectProfile {  
     
-    public static string uuid = "uuid";
-    public static string code = "code";
-    public static string name = "name";
-    public static string description = "description";
-    public static string display_name = "display_name";
-    public static string attributes = "attributes";
-    public static string data = "data";
-
-    public static string sort_order = "sort_order";
-    public static string sort_order_type = "sort_order_type";
-    public static string active = "active";
-    public static string key = "key";
-    public static string game_id = "game_id";
-    public static string type = "type";
-    public static string order_by = "order_by";
-    public static string status = "status";
-    public static string data_items = "data_items";
+    public Dictionary<string, DataAttribute> attributes;
     
-    public static string pack_code = "pack_code";
-    public static string pack_sort = "pack_sort";
-    
-    public static string date_created = "date_created";
-    public static string date_modified = "date_modified";
-}
-
-public class BaseDataObject : Dictionary<string, object> {  
-
-    public BaseDataObject() {
-        
-    }    
-    
-    // VALUES
-    // use keyed dictionaries for all data objects to prevent
-    // serialize and deserialize issues with keys on versions.    
-    
-    //[JsonIgnore(JsonIgnoreWhen.Deserializing)]
-    public virtual Dictionary<string, DataAttribute> attributes {
-        get {
-            return Get<Dictionary<string, DataAttribute>>(BaseDataObjectKeys.attributes);
-        }
-        
-        set {
-            Set(BaseDataObjectKeys.attributes, value);
-        }
-    }      
-
-    // -----------------------------------------------------------------------
-    // VALUE ACCESSORS
-
-    // generics
-
-    public virtual T Get<T>(string code) {
-        return Get<T>(code, null);
-    } 
-    
-    public virtual T Get<T>(string code, object defaultValue) {                
-        try {
-            return (T)Get(code, defaultValue);
-        }
-        catch(Exception e) {
-            return default(T);
-        }
+    public DataObjectProfile() {
+        Reset();
     }
-
-    // typed gets
-
-    public virtual object Get(string code) {
-        return Get<object>(code, null);
-    }    
-    
-    public virtual object Get(string code, object defaultValue) {
-        if(ContainsKey(code)) {
-            return this[code];
-        }
-        return defaultValue;
-    }
-
-    // sets
-    
-    public virtual void Set(string code, object val) {
-        if(ContainsKey(code)) {
-            this[code] = val;
-        }
-        else {
-            Add(code, val);
-        }
-    }
-    
-    public virtual void Set(string code, DataAttribute val) {
-        if(attributes == null) {
-            attributes = new Dictionary<string, DataAttribute>();                        
-        }
-
-
-        if(attributes.ContainsKey(code)) {
-            attributes[code] = val;
-        }
-        else {
-            attributes.Add(code, val);
-        }
-    }
-
-    //
     
     public virtual void Clone(DataObject toCopy) {
         attributes = toCopy.attributes;
     }
-    
-    // -----------------------------------------------------------------------
-    // LOADING/SAVING
     
     public string LoadDataFromResources(string resourcesFilePath) {
         string fileData = "";
@@ -183,9 +83,6 @@ public class BaseDataObject : Dictionary<string, object> {
         #endif
     }
     
-    // -----------------------------------------------------------------------
-    // HELPERS, REFLECT
-    
     public object GetFieldValue(object obj, string fieldName) {
         ////Debug.Log("GetFieldValue:obj.GetType():" + obj.GetType());
         
@@ -233,19 +130,33 @@ public class BaseDataObject : Dictionary<string, object> {
     }
     
     public virtual void Reset() {
-        //attributes = new Dictionary<string, DataAttribute>();
+        attributes = new Dictionary<string, DataAttribute>();
     }
     
-    // -----------------------------------------------------------------------
+    
     // ATTRIBUTES
     
     public void SetAttribute(DataAttribute attribute) {
-
-        Set(BaseDataObjectKeys.attributes, attribute);
+        
+        string code = attribute.code;//UniqueUtil.Instance.GetStringHash(attribute.code);
+        
+        if(attributes == null) {
+            attributes = new Dictionary<string, DataAttribute>();
+        }
+        
+        // UPSERT        
+        if(CheckIfAttributeExists(code)) {
+            // UPDATE
+            attributes[code] = attribute;
+        }
+        else {
+            // INSERT
+            attributes.Add(code, attribute);
+        }
     }
     
     public bool CheckIfAttributeExists(string code) {
-        if(Get(BaseDataObjectKeys.attributes) != null) {
+        if(attributes != null) {
             //code = UniqueUtil.Instance.GetStringHash(code);
             if(attributes.ContainsKey(code)) {
                 return true;
@@ -265,7 +176,10 @@ public class BaseDataObject : Dictionary<string, object> {
         
         return attribute;
     }
-        
+    
+    
+    // ATTRIBUTES
+    
     public List<DataAttribute> GetAttributesList() {
         List<DataAttribute> attributesList = new List<DataAttribute>();
         foreach(DataAttribute attribute in attributes.Values) {
