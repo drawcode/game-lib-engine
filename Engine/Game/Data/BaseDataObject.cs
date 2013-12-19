@@ -15,6 +15,8 @@ public class BaseDataObjectKeys {
     public static string description = "description";
     public static string display_name = "display_name";
     public static string attributes = "attributes";
+    public static string url = "url";
+    public static string host = "host";
     public static string data = "data";
     public static string sort_order = "sort_order";
     public static string sort_order_type = "sort_order_type";
@@ -29,6 +31,14 @@ public class BaseDataObjectKeys {
     public static string pack_sort = "pack_sort";
     public static string date_created = "date_created";
     public static string date_modified = "date_modified";
+
+    
+    public static string username = "username";
+    public static string udid = "udid";
+    public static string file_name = "file_name";
+    public static string file_path = "file_path";
+    public static string file_full_path = "file_full_path";
+
 }
 
 public class BaseDataObject : Dictionary<string, object> {  
@@ -60,12 +70,15 @@ public class BaseDataObject : Dictionary<string, object> {
     // generics
 
     public virtual T Get<T>(string code) {
-        return Get<T>(code, null);
+        return Get<T>(code, default(T));
     }
     
-    public virtual T Get<T>(string code, object defaultValue) {                
+    public virtual T Get<T>(string code, T defaultValue) {                
         try {
-            return (T)Get(code, defaultValue);
+            if (ContainsKey(code)) {
+                return (T)this[code];
+            }
+            return defaultValue;
         }
         catch (Exception e) {
             return default(T);
@@ -74,19 +87,27 @@ public class BaseDataObject : Dictionary<string, object> {
 
     // typed gets
 
+    /*
     public virtual object Get(string code) {
         return Get<object>(code, null);
     }
     
     public virtual object Get(string code, object defaultValue) {
-        if (ContainsKey(code)) {
-            return this[code];
-        }
-        return defaultValue;
+        return Get<object>(code, defaultValue);;
     }
+    */
 
     // sets
     
+    public virtual void Set<T>(string code, T val) {
+        if (ContainsKey(code)) {
+            this[code] = val;
+        }
+        else {
+            Add(code, val);
+        }
+    }
+
     public virtual void Set(string code, object val) {
         if (ContainsKey(code)) {
             this[code] = val;

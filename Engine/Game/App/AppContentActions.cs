@@ -699,7 +699,7 @@ public class AppContentSetActionType {
 	public static string actionNone = "none";
 }
 
-public class AppContentSet : DataObject {
+public class AppContentSet : DataObjectItem {
 	
 	public string type = "";
 	public string actionType = "";

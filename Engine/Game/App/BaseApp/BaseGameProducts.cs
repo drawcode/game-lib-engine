@@ -84,20 +84,10 @@ public class BaseGameProductInfo {
     }
 }
 
-public class BaseGameProduct : DataObject {
+public class BaseGameProduct : GameDataObject {
 
     // Attributes that are added or changed after launch should be like this to prevent
     // profile conversions.
-
-    public int sort_order = 0;
-    public int sort_order_type = 0;
-    public string type;
-    public string key;
-    public string game_id;
-    public string order_by;
-    public string code;
-    public string uuid;
-    public bool active;
 
     public BaseGameProduct() {
         Reset();
@@ -105,30 +95,10 @@ public class BaseGameProduct : DataObject {
 
     public override void Reset() {
         base.Reset();
-
-        sort_order = 0;
-        sort_order_type = 0;
-        type = "default";
-        key = "default";
-        game_id = "default";
-        order_by = "default";
-        code = "default";
-        uuid = "default";
-        active = true;
     }
 
     public void Clone(BaseGameProduct toCopy) {
         base.Clone(toCopy);
-
-        active = toCopy.active;
-        code = toCopy.code;
-        game_id = toCopy.game_id;
-        key = toCopy.key;
-        order_by = toCopy.order_by;
-        sort_order = toCopy.sort_order;
-        sort_order_type = toCopy.sort_order_type;
-        type = toCopy.type;
-        uuid = toCopy.uuid;
     }
 
     // Attributes that are added or changed after launch should be like this to prevent

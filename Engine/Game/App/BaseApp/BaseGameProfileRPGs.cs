@@ -59,7 +59,7 @@ public class BaseGameProfileRPGs {
     // TODO: Common profile actions, lookup, count, etc
 }
 
-public class GameItemRPG : DataObject {
+public class GameItemRPG : DataObjectItem {
     public double speed = 0.1;
     public double attack = 0.1;
     public double defense = 0.1;
@@ -98,7 +98,7 @@ public class GameItemRPGAttributes {
     public static string data = prefix + "data";
 }
 
-public class GameProfilePlayerProgressItem : DataObject {
+public class GameProfilePlayerProgressItem : DataObjectItem {
 
     public GameProfilePlayerProgressItem() {
         Reset();
@@ -240,7 +240,7 @@ public class GameProfilePlayerProgressItem : DataObject {
     }
 }
 
-public class GameProfileRPGItem : DataObject {
+public class GameProfileRPGItem : DataObjectItem {
  
     public GameProfileRPGItem() {
         Reset();
@@ -610,7 +610,7 @@ public class GameProfileCustomPresets {
     }
 }
 
-public class GameProfileCustomItem : DataObject {
+public class GameProfileCustomItem : DataObjectItem {
 
     public GameProfileCustomItem() {
         Reset();

@@ -60,7 +60,32 @@ public class BaseGameStatistics<T> : DataObjects<T> where T : new() {
     }
 }
 
-public class BaseGameStatistic : StatisticMeta {
+public class BaseGameStatisticKeys {
+    public static string order = "order";
+    public static string store_count = "store_count";
+}
+
+public class BaseGameStatistic : GameDataObject {
+
+    public virtual string order {
+        get {
+            return Get<string>(BaseGameStatisticKeys.order);
+        }
+        
+        set {
+            Set(BaseGameStatisticKeys.order, value);
+        }
+    } 
+
+    public virtual int store_count {
+        get {
+            return Get<int>(BaseGameStatisticKeys.store_count);
+        }
+        
+        set {
+            Set(BaseGameStatisticKeys.store_count, value);
+        }
+    } 
 
     // Attributes that are added or changed after launch should be like this to prevent
     // profile conversions.

@@ -328,7 +328,7 @@ public class CustomColors {
     }
 }
 
-public class CustomColorItem : DataObject {
+public class CustomColorItem : DataObjectItem {
     public string colorCode;
     public double r;
     public double g;
@@ -485,7 +485,7 @@ public class CustomPlayerColors : DataObject {
     }
 }
 
-public class CustomPlayerAudioItem : DataObject {
+public class CustomPlayerAudioItem : DataObjectItem {
     public bool useCustom = false;
 }
 
@@ -498,7 +498,7 @@ public class CustomPlayerAudioKeys {
     public static string audioCrowdBoo = "audio-crowd-boo";
 }
 
-public class CustomPlayerAudio : DataObject {
+public class CustomPlayerAudio : DataObjectItem {
     public Dictionary<string, CustomPlayerAudioItem> audioItems = new Dictionary<string, CustomPlayerAudioItem>();
 
     public CustomPlayerAudioItem GetSoundBikeRevving() {
@@ -618,7 +618,7 @@ public class DisplayRecordAchievement {
     }
 }
 
-public class BaseEntity : DataObject {
+public class BaseEntity : DataObjectItem {
 
     public string status;
 

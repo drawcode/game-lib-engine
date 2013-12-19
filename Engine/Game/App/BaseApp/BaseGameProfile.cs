@@ -32,8 +32,6 @@ public class BaseGameProfileAttributes {
 
     public static string ATT_CURRENT_GAME_MODE = "game-mode";
     public static string ATT_CURRENT_CAMERA_MODE = "camera-mode";
-
-
     public static string ATT_CURRENT_APP_MODE = "app-mode";
     public static string ATT_CURRENT_APP_MODE_TYPE = "app-mode-type";
     public static string ATT_CURRENT_APP_STATE = "app-state";
@@ -85,9 +83,9 @@ public class BaseGameProfiles {
 
     public static BaseGameProfile Current {
         get {
-            if(current == null) {
-                lock(syncRoot) {
-                    if(current == null)
+            if (current == null) {
+                lock (syncRoot) {
+                    if (current == null)
                         current = new BaseGameProfile();
                 }
             }
@@ -101,9 +99,9 @@ public class BaseGameProfiles {
 
     public static BaseGameProfiles Instance {
         get {
-            if(instance == null) {
-                lock(syncRoot) {
-                    if(instance == null)
+            if (instance == null) {
+                lock (syncRoot) {
+                    if (instance == null)
                         instance = new BaseGameProfiles();
                 }
             }
@@ -143,7 +141,7 @@ public class BaseGameProfile : Profile {
 
     public virtual int GetCurrentGameMode(int defaultValue) {
         int attValue = defaultValue;
-        if(CheckIfAttributeExists(BaseGameProfileAttributes.ATT_CURRENT_GAME_MODE))
+        if (CheckIfAttributeExists(BaseGameProfileAttributes.ATT_CURRENT_GAME_MODE))
             attValue = GetAttributeIntValue(BaseGameProfileAttributes.ATT_CURRENT_GAME_MODE);
         return attValue;
     }
@@ -161,7 +159,7 @@ public class BaseGameProfile : Profile {
     public virtual string GetCurrentAppMode(string defaultValue) {
         string attValue = defaultValue;
         string key = BaseGameProfileAttributes.ATT_CURRENT_APP_MODE;
-        if(CheckIfAttributeExists(key))
+        if (CheckIfAttributeExists(key))
             attValue = GetAttributeStringValue(key);
         return attValue;
     }
@@ -180,7 +178,7 @@ public class BaseGameProfile : Profile {
     public virtual string GetCurrentAppModeType(string defaultValue) {
         string attValue = defaultValue;
         string key = BaseGameProfileAttributes.ATT_CURRENT_APP_MODE_TYPE;
-        if(CheckIfAttributeExists(key))
+        if (CheckIfAttributeExists(key))
             attValue = GetAttributeStringValue(key);
         return attValue;
     }
@@ -199,7 +197,7 @@ public class BaseGameProfile : Profile {
     public virtual string GetCurrentAppState(string defaultValue) {
         string attValue = defaultValue;
         string key = BaseGameProfileAttributes.ATT_CURRENT_APP_STATE;
-        if(CheckIfAttributeExists(key))
+        if (CheckIfAttributeExists(key))
             attValue = GetAttributeStringValue(key);
         return attValue;
     }
@@ -218,7 +216,7 @@ public class BaseGameProfile : Profile {
     public virtual string GetCurrentAppContentState(string defaultValue) {
         string attValue = defaultValue;
         string key = BaseGameProfileAttributes.ATT_CURRENT_APP_CONTENT_STATE;
-        if(CheckIfAttributeExists(key))
+        if (CheckIfAttributeExists(key))
             attValue = GetAttributeStringValue(key);
         return attValue;
     }
@@ -236,7 +234,7 @@ public class BaseGameProfile : Profile {
 
     public virtual int GetCurrentCameraMode(int defaultValue) {
         int attValue = defaultValue;
-        if(CheckIfAttributeExists(BaseGameProfileAttributes.ATT_CURRENT_CAMERA_MODE))
+        if (CheckIfAttributeExists(BaseGameProfileAttributes.ATT_CURRENT_CAMERA_MODE))
             attValue = GetAttributeIntValue(BaseGameProfileAttributes.ATT_CURRENT_CAMERA_MODE);
         return attValue;
     }
@@ -253,7 +251,7 @@ public class BaseGameProfile : Profile {
 
     public virtual int GetHelpTipsShownDay(int defaultValue) {
         int attValue = defaultValue;
-        if(CheckIfAttributeExists(BaseGameProfileAttributes.ATT_HELP_TIPS_SHOWN_DAY))
+        if (CheckIfAttributeExists(BaseGameProfileAttributes.ATT_HELP_TIPS_SHOWN_DAY))
             attValue = GetAttributeIntValue(BaseGameProfileAttributes.ATT_HELP_TIPS_SHOWN_DAY);
         return attValue;
     }
@@ -268,7 +266,7 @@ public class BaseGameProfile : Profile {
 
     public virtual double GetHelpTipsShownDate(double defaultValue) {
         double attValue = defaultValue;
-        if(CheckIfAttributeExists(BaseGameProfileAttributes.ATT_HELP_TIPS_SHOWN_DATE))
+        if (CheckIfAttributeExists(BaseGameProfileAttributes.ATT_HELP_TIPS_SHOWN_DATE))
             attValue = GetAttributeDoubleValue(BaseGameProfileAttributes.ATT_HELP_TIPS_SHOWN_DATE);
         return attValue;
     }
@@ -358,12 +356,12 @@ public class BaseGameProfile : Profile {
     public virtual CustomPlayerAudio GetCustomAudio() {
         CustomPlayerAudio audio = new CustomPlayerAudio();
         string json = GetAttributeStringValue(BaseGameProfileAttributes.ATT_CUSTOM_AUDIO);
-        if(!string.IsNullOrEmpty(json)) {
+        if (!string.IsNullOrEmpty(json)) {
             try {
                 LogUtil.Log("GetCustomAudio: " + json);
                 audio = JsonMapper.ToObject<CustomPlayerAudio>(json);
             }
-            catch(Exception e) {
+            catch (Exception e) {
                 audio = new CustomPlayerAudio();
                 LogUtil.Log(e);
             }
@@ -381,7 +379,7 @@ public class BaseGameProfile : Profile {
 
     public virtual double GetControlHorizonTilt(double defaultValue) {
         double attValue = defaultValue;
-        if(CheckIfAttributeExists(BaseGameProfileAttributes.ATT_CONTROL_HORIZON_TILT))
+        if (CheckIfAttributeExists(BaseGameProfileAttributes.ATT_CONTROL_HORIZON_TILT))
             attValue = GetAttributeDoubleValue(BaseGameProfileAttributes.ATT_CONTROL_HORIZON_TILT);
         return attValue;
     }
@@ -398,7 +396,7 @@ public class BaseGameProfile : Profile {
 
     public virtual ProfileControlHanded GetControlHanded(ProfileControlHanded defaultValue) {
         int attValue = (int)defaultValue;
-        if(CheckIfAttributeExists(BaseGameProfileAttributes.ATT_CONTROL_HANDED))
+        if (CheckIfAttributeExists(BaseGameProfileAttributes.ATT_CONTROL_HANDED))
             attValue = GetAttributeIntValue(BaseGameProfileAttributes.ATT_CONTROL_HANDED);
         ProfileControlHanded controlHanded = (ProfileControlHanded)attValue;
         return controlHanded;
@@ -416,7 +414,7 @@ public class BaseGameProfile : Profile {
 
     public virtual bool GetControlVibrate(bool defaultValue) {
         bool attValue = defaultValue;
-        if(CheckIfAttributeExists(BaseGameProfileAttributes.ATT_CONTROL_VIBRATE))
+        if (CheckIfAttributeExists(BaseGameProfileAttributes.ATT_CONTROL_VIBRATE))
             attValue = GetAttributeBoolValue(BaseGameProfileAttributes.ATT_CONTROL_VIBRATE);
         return attValue;
     }
@@ -434,7 +432,7 @@ public class BaseGameProfile : Profile {
 
     public virtual bool GetHasSeenHelp(bool defaultValue) {
         bool attValue = defaultValue;
-        if(CheckIfAttributeExists(BaseGameProfileAttributes.ATT_UI_HAS_SEEN_HELP))
+        if (CheckIfAttributeExists(BaseGameProfileAttributes.ATT_UI_HAS_SEEN_HELP))
             attValue = GetAttributeBoolValue(BaseGameProfileAttributes.ATT_UI_HAS_SEEN_HELP);
         return attValue;
     }
@@ -451,7 +449,7 @@ public class BaseGameProfile : Profile {
 
     public virtual bool GetControlTouch(bool defaultValue) {
         bool attValue = defaultValue;
-        if(CheckIfAttributeExists(BaseGameProfileAttributes.ATT_CONTROL_INPUT_TOUCH))
+        if (CheckIfAttributeExists(BaseGameProfileAttributes.ATT_CONTROL_INPUT_TOUCH))
             attValue = GetAttributeBoolValue(BaseGameProfileAttributes.ATT_CONTROL_INPUT_TOUCH);
         return attValue;
     }
@@ -468,7 +466,7 @@ public class BaseGameProfile : Profile {
 
     public virtual bool GetThirdPartyNetworkUser(bool defaultValue) {
         bool attValue = defaultValue;
-        if(CheckIfAttributeExists(BaseGameProfileAttributes.ATT_THIRD_PARTY_NETWORK))
+        if (CheckIfAttributeExists(BaseGameProfileAttributes.ATT_THIRD_PARTY_NETWORK))
             attValue = GetAttributeBoolValue(BaseGameProfileAttributes.ATT_THIRD_PARTY_NETWORK);
         return attValue;
     }
@@ -495,7 +493,7 @@ public class BaseGameProfile : Profile {
         //   BaseGameProfileDataState.updatedMusicVolume = false;
         //UnityEngine.//Debug.Log("GetAudioMusicVolume checking attribute exists:" + BaseGameProfileAttributes.ATT_AUDIO_MUSIC_VOLUME);
 
-        if(CheckIfAttributeExists(BaseGameProfileAttributes.ATT_AUDIO_MUSIC_VOLUME)) {
+        if (CheckIfAttributeExists(BaseGameProfileAttributes.ATT_AUDIO_MUSIC_VOLUME)) {
 
             //UnityEngine.//Debug.Log("GetAudioMusicVolume attribute exists:" + BaseGameProfileAttributes.ATT_AUDIO_MUSIC_VOLUME);
 
@@ -528,7 +526,7 @@ public class BaseGameProfile : Profile {
         //if(BaseGameProfileDataState.updatedVOVolume) {
         //   BaseGameProfileDataState.updatedVOVolume = false;
 
-        if(CheckIfAttributeExists(BaseGameProfileAttributes.ATT_AUDIO_VO_VOLUME)) {
+        if (CheckIfAttributeExists(BaseGameProfileAttributes.ATT_AUDIO_VO_VOLUME)) {
             attValue = GetAttributeDoubleValue(BaseGameProfileAttributes.ATT_AUDIO_VO_VOLUME);
             BaseGameProfileDataState.currentVOVolume = attValue;
         }
@@ -556,7 +554,7 @@ public class BaseGameProfile : Profile {
         //if(BaseGameProfileDataState.updatedEffectsVolume) {
         //   BaseGameProfileDataState.updatedEffectsVolume = false;
 
-        if(CheckIfAttributeExists(BaseGameProfileAttributes.ATT_AUDIO_EFFECTS_VOLUME)) {
+        if (CheckIfAttributeExists(BaseGameProfileAttributes.ATT_AUDIO_EFFECTS_VOLUME)) {
             attValue = GetAttributeDoubleValue(BaseGameProfileAttributes.ATT_AUDIO_EFFECTS_VOLUME);
             BaseGameProfileDataState.currentEffectsVolume = attValue;
         }
@@ -585,9 +583,9 @@ public class BaseGameProfile : Profile {
     public virtual List<string> GetAccessPermissions() {
         List<string> permissions = new List<string>();
         DataAttribute attribute = GetAttribute("access-permissions");
-        if(attribute != null) {
+        if (attribute != null) {
             permissions = attribute.val as List<string>;
-            if(permissions != null)
+            if (permissions != null)
                 return permissions;
             else
                 permissions = new List<string>();
@@ -597,7 +595,7 @@ public class BaseGameProfile : Profile {
 
     public virtual bool CheckIfAccessPermissionExists(string permission) {
         List<string> permissions = GetAccessPermissions();
-        if(permissions.Contains(permission))
+        if (permissions.Contains(permission))
             return true;
         return false;
     }
@@ -611,7 +609,7 @@ public class BaseGameProfile : Profile {
 
     public virtual void SetAccessPermission(string permission) {
         List<string> permissions = GetAccessPermissions();
-        if(!permissions.Contains(permission)) {
+        if (!permissions.Contains(permission)) {
             permissions.Add(permission);
         }
         SetAccessPermissions(permissions);
@@ -632,7 +630,7 @@ public class BaseGameProfile : Profile {
     public virtual string GetGameSettingValue(string code) {
         string currentValue = "";
         object objectValue = GetAttribute(code).val;
-        if(objectValue != null) {
+        if (objectValue != null) {
             currentValue = Convert.ToString(objectValue);
         }
 
@@ -649,7 +647,7 @@ public class BaseGameProfile : Profile {
         
     public bool IsSocialNetworkUserFound() {
         string userId = GetSocialNetworkUserId();
-        if(!string.IsNullOrEmpty(userId)) {
+        if (!string.IsNullOrEmpty(userId)) {
             return true;
         }
         return false;

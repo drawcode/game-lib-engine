@@ -218,11 +218,43 @@ public class DataPlatformStoreMeta {
     public string locale = "en";
     public string price = "0";
 }
+public class BaseAppContentStateKeys {
+    public static string appStates = "appStates";
+    public static string requiredPacks = "requiredPacks";
+    public static string requiredTrackers = "requiredTrackers";
+}
 
 public class BaseAppContentState : GameDataObject {
-    public List<string> appStates;
-    public List<string> requiredPacks;
-    public List<string> requiredTrackers;
+
+    public virtual List<string> appStates {
+        get {
+            return Get<List<string>>(BaseAppContentStateKeys.appStates);
+        }
+        
+        set {
+            Set(BaseAppContentStateKeys.appStates, value);
+        }
+    }
+    
+    public virtual List<string> requiredPacks {
+        get {
+            return Get<List<string>>(BaseAppContentStateKeys.requiredPacks);
+        }
+        
+        set {
+            Set(BaseAppContentStateKeys.requiredPacks, value);
+        }
+    }
+    
+    public virtual List<string> requiredTrackers {
+        get {
+            return Get<List<string>>(BaseAppContentStateKeys.requiredTrackers);
+        }
+        
+        set {
+            Set(BaseAppContentStateKeys.requiredTrackers, value);
+        }
+    }
 
     // type
 

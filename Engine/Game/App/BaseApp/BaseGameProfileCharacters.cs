@@ -246,7 +246,7 @@ public class GameProfileCharacterItem : DataObject {
     public virtual GameProfileRPGItem profileRPGItem {
         get { 
             return Get<GameProfileRPGItem>(
-                GameProfileCharacterItemKeys.profileRPGItem, "default");
+                GameProfileCharacterItemKeys.profileRPGItem);
         }
         
         set {
@@ -257,7 +257,7 @@ public class GameProfileCharacterItem : DataObject {
     public virtual GameProfilePlayerProgressItem profilePlayerProgress {
         get { 
             return Get<GameProfilePlayerProgressItem>(
-                GameProfileCharacterItemKeys.profilePlayerProgress, "default");
+                GameProfileCharacterItemKeys.profilePlayerProgress);
         }
         
         set {
@@ -268,7 +268,7 @@ public class GameProfileCharacterItem : DataObject {
     public virtual GameProfileCustomItem profileCustomItem {
         get { 
             return Get<GameProfileCustomItem>(
-                GameProfileCharacterItemKeys.profileCustomItem, "default");
+                GameProfileCharacterItemKeys.profileCustomItem);
         }
         
         set {

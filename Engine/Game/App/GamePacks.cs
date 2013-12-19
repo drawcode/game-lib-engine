@@ -116,27 +116,11 @@ public class GamePacks : DataObjects<GamePack>
 }
 
 
-public class GamePack : DataObject 
+public class GamePack : GameDataObject 
 {
 	
 	// Attributes that are added or changed after launch should be like this to prevent
 	// profile conversions.
-	
-	public int sort_order = 0;
-	public int sort_order_type = 0;
-	public string type;
-	public string key;
-	public string game_id;
-	public string order_by;
-	public string code;
-	public string display_name;
-	public string name;
-	public string description;
-	public string status;
-	public string url;
-	public string host;
-	public string uuid;
-	public bool active;	
 		
 	public GamePack () {
 		Reset();
@@ -144,43 +128,11 @@ public class GamePack : DataObject
 	
 	public override void Reset() {
 		base.Reset();
-		
-		sort_order = 0;
-		sort_order_type = 0;
-		type = "default";
-		key = "default";
-		game_id = "default";
-		order_by = "default";
-		code = "default";
-		display_name = "default";
-		name = "default";
-		description = "default";
-		status = "default";
-		url = "default";
-		host = "dlc.supasupagames.com";
-		uuid = "default";
-		active = true;	
 	}
 	
 	public void Clone(GamePack toCopy) {
 		
 		base.Clone(toCopy);
-		
-		active = toCopy.active;
-		code = toCopy.code;
-		description = toCopy.description;
-		display_name = toCopy.display_name;
-		game_id = toCopy.game_id;
-		key = toCopy.key;
-		name = toCopy.name;
-		order_by = toCopy.order_by;
-		sort_order = toCopy.sort_order;
-		sort_order_type = toCopy.sort_order_type;
-		url = toCopy.url;
-		host = toCopy.host;
-		status = toCopy.status;
-		type = toCopy.type;
-		uuid = toCopy.uuid;
 	}
 	
 	// Attributes that are added or changed after launch should be like this to prevent

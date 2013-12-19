@@ -54,7 +54,7 @@ public class ContentItemStatus {
 	}	
 }
 
-public class ContentItemAccess : DataObject {
+public class ContentItemAccess : DataObjectItem {
 	public bool globalItem = true;
 	public string code = "";
 	public string profileId = "";
@@ -64,7 +64,7 @@ public class ContentItemAccess : DataObject {
 	public string productCode = "";
 }
 
-public class ContentItemAccessDictionary : DataObject {
+public class ContentItemAccessDictionary : DataObjectItem {
 	public Dictionary<string, ContentItemAccess> accessItems = new Dictionary<string, ContentItemAccess>();
 		
 	public void CheckDictionary() {

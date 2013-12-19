@@ -15,7 +15,7 @@ public class GameDataObject : DataObject {
         }
         
         set {
-            Set(BaseDataObjectKeys.uuid, value);
+            Set<string>(BaseDataObjectKeys.uuid, value);
         }
     }
     
@@ -26,7 +26,7 @@ public class GameDataObject : DataObject {
         }
         
         set {
-            Set(BaseDataObjectKeys.code, value);
+            Set<string>(BaseDataObjectKeys.code, value);
         }
     }
     
@@ -37,7 +37,7 @@ public class GameDataObject : DataObject {
         }
         
         set {
-            Set(BaseDataObjectKeys.display_name, value);
+            Set<string>(BaseDataObjectKeys.display_name, value);
         }
     }    
     
@@ -48,7 +48,7 @@ public class GameDataObject : DataObject {
         }
         
         set {
-            Set(BaseDataObjectKeys.name, value);
+            Set<string>(BaseDataObjectKeys.name, value);
         }
     }   
     
@@ -59,18 +59,40 @@ public class GameDataObject : DataObject {
         }
         
         set {
-            Set(BaseDataObjectKeys.description, value);
+            Set<string>(BaseDataObjectKeys.description, value);
         }
     }     
+
+    //[JsonIgnore(JsonIgnoreWhen.Deserializing)]
+    public virtual string url {
+        get {
+            return Get<string>(BaseDataObjectKeys.url, "");
+        }
+        
+        set {
+            Set<string>(BaseDataObjectKeys.url, value);
+        }
+    }
+
+    //[JsonIgnore(JsonIgnoreWhen.Deserializing)]
+    public virtual string host {
+        get {
+            return Get<string>(BaseDataObjectKeys.host, "");
+        }
+        
+        set {
+            Set<string>(BaseDataObjectKeys.host, value);
+        }
+    }
     
     //[JsonIgnore(JsonIgnoreWhen.Deserializing)]
     public virtual object data {
         get {
-            return Get(BaseDataObjectKeys.data);
+            return Get<object>(BaseDataObjectKeys.data);
         }
         
         set {
-            Set(BaseDataObjectKeys.data, value);
+            Set<object>(BaseDataObjectKeys.data, value);
         }
     }       
     
@@ -81,7 +103,7 @@ public class GameDataObject : DataObject {
         }
         
         set {
-            Set(BaseDataObjectKeys.sort_order, value);
+            Set<int>(BaseDataObjectKeys.sort_order, value);
         }
     }  
     
@@ -92,7 +114,7 @@ public class GameDataObject : DataObject {
         }
         
         set {
-            Set(BaseDataObjectKeys.sort_order_type, value);
+            Set<int>(BaseDataObjectKeys.sort_order_type, value);
         }
     }  
     
@@ -103,7 +125,7 @@ public class GameDataObject : DataObject {
         }
         
         set {
-            Set(BaseDataObjectKeys.active, value);
+            Set<bool>(BaseDataObjectKeys.active, value);
         }
     }      
     
@@ -114,7 +136,7 @@ public class GameDataObject : DataObject {
         }
         
         set {
-            Set(BaseDataObjectKeys.key, value);
+            Set<string>(BaseDataObjectKeys.key, value);
         }
     }    
     
@@ -125,7 +147,7 @@ public class GameDataObject : DataObject {
         }
         
         set {
-            Set(BaseDataObjectKeys.game_id, value);
+            Set<string>(BaseDataObjectKeys.game_id, value);
         }
     }    
     
@@ -136,7 +158,7 @@ public class GameDataObject : DataObject {
         }
         
         set {
-            Set(BaseDataObjectKeys.type, value);
+            Set<string>(BaseDataObjectKeys.type, value);
         }
     }    
     
@@ -147,7 +169,7 @@ public class GameDataObject : DataObject {
         }
         
         set {
-            Set(BaseDataObjectKeys.order_by, value);
+            Set<string>(BaseDataObjectKeys.order_by, value);
         }
     }      
     
@@ -158,7 +180,7 @@ public class GameDataObject : DataObject {
         }
         
         set {
-            Set(BaseDataObjectKeys.status, value);
+            Set<string>(BaseDataObjectKeys.status, value);
         }
     }  
     
@@ -169,18 +191,18 @@ public class GameDataObject : DataObject {
         }
         
         set {
-            Set(BaseDataObjectKeys.pack_code, value);
+            Set<string>(BaseDataObjectKeys.pack_code, value);
         }
     }  
     
     //[JsonIgnore(JsonIgnoreWhen.Deserializing)]
     public virtual int pack_sort {
         get {
-            return Get<int>(BaseDataObjectKeys.pack_sort, "");
+            return Get<int>(BaseDataObjectKeys.pack_sort, 0);
         }
         
         set {
-            Set(BaseDataObjectKeys.pack_sort, value);
+            Set<int>(BaseDataObjectKeys.pack_sort, value);
         }
     } 
     
@@ -191,7 +213,7 @@ public class GameDataObject : DataObject {
         }
         
         set {
-            Set(BaseDataObjectKeys.date_created, value);
+            Set<DateTime>(BaseDataObjectKeys.date_created, value);
         }
     } 
     
@@ -202,9 +224,59 @@ public class GameDataObject : DataObject {
         }
         
         set {
-            Set(BaseDataObjectKeys.date_modified, value);
+            Set<DateTime>(BaseDataObjectKeys.date_modified, value);
         }
-    } 
+    }
+        
+    public virtual string username {
+        get {
+            return Get<string>(BaseDataObjectKeys.username);
+        }
+        
+        set {
+            Set<string>(BaseDataObjectKeys.username, value);
+        }
+    }
+    
+    public virtual string udid {
+        get {
+            return Get<string>(BaseDataObjectKeys.udid);
+        }
+        
+        set {
+            Set<string>(BaseDataObjectKeys.udid, value);
+        }
+    }
+    
+    public virtual string file_name {
+        get {
+            return Get<string>(BaseDataObjectKeys.file_name);
+        }
+        
+        set {
+            Set<string>(BaseDataObjectKeys.file_name, value);
+        }
+    }
+    
+    public virtual string file_path {
+        get {
+            return Get<string>(BaseDataObjectKeys.file_path);
+        }
+        
+        set {
+            Set<string>(BaseDataObjectKeys.file_path, value);
+        }
+    }
+    
+    public virtual string file_full_path {
+        get {
+            return Get<string>(BaseDataObjectKeys.file_full_path);
+        }
+        
+        set {
+            Set<string>(BaseDataObjectKeys.file_full_path, value);
+        }
+    }
 
     public GameDataObject() {
         Reset();

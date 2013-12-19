@@ -54,10 +54,43 @@ public class BaseAppContentAssets<T> : DataObjects<T> where T : new() {
     }
 }
 
+public class BaseAppContentAssetKeys {
+    public static string appStates = "appStates";
+    public static string appContentStates = "appContentStates";
+    public static string requiredAssets = "requiredAssets";
+}
+
 public class BaseAppContentAsset : GameDataObject {
-    public List<string> appStates;
-    public List<string> appContentStates;
-    public Dictionary<string, List<string>> requiredAssets;
+
+    public virtual List<string> appStates {
+        get {
+            return Get<List<string>>(BaseAppContentAssetKeys.appStates);
+        }
+        
+        set {
+            Set(BaseAppContentAssetKeys.appStates, value);
+        }
+    }
+
+    public virtual List<string> appContentStates {
+        get {
+            return Get<List<string>>(BaseAppContentAssetKeys.appContentStates);
+        }
+        
+        set {
+            Set(BaseAppContentAssetKeys.appContentStates, value);
+        }
+    }
+
+    public virtual Dictionary<string, List<string>> requiredAssets {
+        get {
+            return Get<Dictionary<string, List<string>>>(BaseAppContentAssetKeys.requiredAssets);
+        }
+        
+        set {
+            Set(BaseAppContentAssetKeys.requiredAssets, value);
+        }
+    }
 
     // types: tracker, pack, data, generic
 

@@ -3,16 +3,41 @@ using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
 
+public class ProfileKeys {
+    public static string login_count = "login_count";
+}
+
 public class Profile : DataObject {
-    public string username;
-    public string uuid;
-    public string udid;
-
-    public string fileName;
-    public string filePath;
-    public string fileFullPath;
-
-    public int loginCount = 0;
+    
+    public virtual int login_count {
+        get {
+            return Get<int>(ProfileKeys.login_count);
+        }
+        
+        set {
+            Set(ProfileKeys.login_count, value);
+        }
+    }   
+    
+    public virtual string username {
+        get {
+            return Get<string>(BaseDataObjectKeys.username);
+        }
+        
+        set {
+            Set(BaseDataObjectKeys.username, value);
+        }
+    }
+    
+    public virtual string uuid {
+        get {
+            return Get<string>(BaseDataObjectKeys.uuid);
+        }
+        
+        set {
+            Set(BaseDataObjectKeys.uuid, value);
+        }
+    }
 
     public Profile() {
         Reset();
@@ -33,6 +58,5 @@ public class Profile : DataObject {
 
         username = "Player";
         uuid = "";
-        udid = "";
     }
 }

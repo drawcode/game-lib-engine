@@ -7,7 +7,7 @@ public class BaseGameWeaponTextures<T> : DataObjects<T> where T : new() {
     private static volatile BaseGameWeaponTextures<T> instance;
     private static object syncRoot = new Object();
 
-    private string BASE_DATA_KEY = "game-weapon-skin-data";
+    private string BASE_DATA_KEY = "game-weapon-texture-data";
 
     public static T BaseCurrent {
         get {

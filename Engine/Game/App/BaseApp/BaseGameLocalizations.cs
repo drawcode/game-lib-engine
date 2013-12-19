@@ -58,21 +58,17 @@ public class BaseGameLocalizations<T> : DataObjects<T> where T : new() {
     }
 }
 
-public class BaseGameLocalization : DataObject {
-    public string name = "default";
-    public string code = "default";
+public class BaseGameLocalization : GameDataObject {
 
     public BaseGameLocalization() {
         Reset();
     }
 
     public override void Reset() {
-        name = "default";
-        code = "default";
+
     }
 
     public void Clone(BaseGameLocalization toCopy) {
-        name = toCopy.name;
-        code = toCopy.code;
+        //base.Clone(toCopy);
     }
 }

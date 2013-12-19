@@ -232,11 +232,45 @@ public class AppContentChoiceType {
     public static string custom = "custom";
 }
 
+
+public class AppContentChoiceItemKeys {
+    public static string code = "code";
+    public static string display = "display";
+    public static string type = "type";
+}
+
 public class AppContentChoiceItem : DataObject {
 
-    public string code = "";
-    public string display = "";
-    public string type = "";
+
+    public virtual string code {
+        get {
+            return Get<string>(AppContentChoiceItemKeys.code, "");
+        }
+        
+        set {
+            Set(AppContentChoiceItemKeys.code, value);
+        }
+    }
+
+    public virtual string display {
+        get {
+            return Get<string>(AppContentChoiceItemKeys.display, "");
+        }
+        
+        set {
+            Set(AppContentChoiceItemKeys.display, value);
+        }
+    }
+
+    public virtual string type {
+        get {
+            return Get<string>(AppContentChoiceItemKeys.type, "");
+        }
+        
+        set {
+            Set(AppContentChoiceItemKeys.type, value);
+        }
+    }
 
     public AppContentChoiceItem() {
         Reset();
@@ -281,11 +315,33 @@ public class AppContentChoiceItem : DataObject {
     }
 }
 
+public class AppContentChoicesDataKeys {
+    public static string choicesCorrect = "choicesCorrect";
+    public static string choices = "choices";
+}
+
 public class AppContentChoicesData : DataObject {
+    
+    public virtual double choicesCorrect {
+        get {
+            return Get<double>(AppContentChoicesDataKeys.choicesCorrect, 0);
+        }
+        
+        set {
+            Set(AppContentChoicesDataKeys.choicesCorrect, value);
+        }
+    }
 
-    public double choicesCorrect = 0;
-
-    public Dictionary<string, AppContentChoiceData> choices;
+    public virtual Dictionary<string, AppContentChoiceData> choices {
+        get {
+            return Get<Dictionary<string, AppContentChoiceData>>(
+                AppContentChoicesDataKeys.choices);
+        }
+        
+        set {
+            Set(AppContentChoicesDataKeys.choices, value);
+        }
+    }
 
     public AppContentChoicesData() {
         Reset();
@@ -366,10 +422,44 @@ public class AppContentChoicesData : DataObject {
     }
 }
 
+public class AppContentChoiceDataKeys {
+    public static string choiceCode = "choiceCode";
+    public static string choiceData = "choiceData";
+    public static string choices = "choices";
+}
+
 public class AppContentChoiceData : DataObject {
-    public string choiceCode = "";
-    public string choiceData = "";
-    public List<AppContentChoiceItem> choices;
+        
+    public virtual string choiceCode {
+        get {
+            return Get<string>(AppContentChoiceDataKeys.choiceCode, "");
+        }
+        
+        set {
+            Set(AppContentChoiceDataKeys.choiceCode, value);
+        }
+    }
+    
+    public virtual string choiceData {
+        get {
+            return Get<string>(AppContentChoiceDataKeys.choiceData, "");
+        }
+        
+        set {
+            Set(AppContentChoiceDataKeys.choiceData, value);
+        }
+    }
+    
+    public virtual List<AppContentChoiceItem> choices {
+        get {
+            return Get<List<AppContentChoiceItem>>(
+                AppContentChoiceDataKeys.choices);
+        }
+        
+        set {
+            Set(AppContentChoiceDataKeys.choices, value);
+        }
+    }
 
     public AppContentChoiceData() {
         Reset();
@@ -416,14 +506,76 @@ public class AppContentChoiceData : DataObject {
     }
 }
 
+public class BaseAppContentChoiceKeys {
+    public static string appStates = "appStates";
+    public static string appContentStates = "appContentStates";
+    public static string requiredAssets = "requiredAssets";
+    public static string keys = "keys";
+    public static string contentAttributes = "contentAttributes";
+    public static string choices = "choices";
+}
+
 public class BaseAppContentChoice : GameDataObject {
-    public List<string> appStates;
-    public List<string> appContentStates;
-    public Dictionary<string, List<string>> requiredAssets;
     
-    public List<string> keys;
-    public Dictionary<string, string> content_attributes;
-    public List<AppContentChoiceItem> choices;
+    public virtual List<string> appStates {
+        get {
+            return Get<List<string>>(BaseAppContentChoiceKeys.appStates);
+        }
+        
+        set {
+            Set(BaseAppContentChoiceKeys.appStates, value);
+        }
+    }
+    
+    public virtual List<string> appContentStates {
+        get {
+            return Get<List<string>>(BaseAppContentChoiceKeys.appContentStates);
+        }
+        
+        set {
+            Set(BaseAppContentChoiceKeys.appContentStates, value);
+        }
+    }
+
+    public virtual Dictionary<string, List<string>> requiredAssets {
+        get {
+            return Get<Dictionary<string, List<string>>>(BaseAppContentChoiceKeys.requiredAssets);
+        }
+        
+        set {
+            Set(BaseAppContentChoiceKeys.requiredAssets, value);
+        }
+    }
+
+    public virtual List<string> keys {
+        get {
+            return Get<List<string>>(BaseAppContentChoiceKeys.keys);
+        }
+        
+        set {
+            Set(BaseAppContentChoiceKeys.keys, value);
+        }
+    }
+
+    public virtual Dictionary<string, string> contentAttributes {
+        get {
+            return Get<Dictionary<string, string>>(BaseAppContentChoiceKeys.contentAttributes);
+        }
+        
+        set {
+            Set(BaseAppContentChoiceKeys.contentAttributes, value);
+        }
+    }
+
+    public virtual List<AppContentChoiceItem> choices {
+        get {
+            return Get<List<AppContentChoiceItem>>(BaseAppContentChoiceKeys.choices);
+        }
+        
+        set {
+            Set(BaseAppContentChoiceKeys.choices, value);
+        }
+    }
 
     // types: tracker, pack, data, generic
 
@@ -440,7 +592,7 @@ public class BaseAppContentChoice : GameDataObject {
         appContentStates = new List<string>();
         requiredAssets = new Dictionary<string, List<string>>();
         keys = new List<string>();
-        content_attributes = new Dictionary<string, string>();
+        contentAttributes = new Dictionary<string, string>();
         choices = new List<AppContentChoiceItem>();
     }
 
@@ -465,8 +617,8 @@ public class BaseAppContentChoice : GameDataObject {
  
     public string GetContentString(string key) {
         string content = "";
-        if(content_attributes.ContainsKey(key)) {
-            content = content_attributes[key];
+        if(contentAttributes.ContainsKey(key)) {
+            content = contentAttributes[key];
         }
         return content;
     }
