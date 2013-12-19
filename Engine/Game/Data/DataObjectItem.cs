@@ -8,11 +8,11 @@ using UnityEngine;
 using Engine.Events;
 using Engine.Data.Json;
 
-public class DataObjectProfile {  
+public class DataObjectItem {  
     
     public Dictionary<string, DataAttribute> attributes;
     
-    public DataObjectProfile() {
+    public DataObjectItem() {
         Reset();
     }
     

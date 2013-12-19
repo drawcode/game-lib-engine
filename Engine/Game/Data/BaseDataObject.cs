@@ -16,7 +16,6 @@ public class BaseDataObjectKeys {
     public static string display_name = "display_name";
     public static string attributes = "attributes";
     public static string data = "data";
-
     public static string sort_order = "sort_order";
     public static string sort_order_type = "sort_order_type";
     public static string active = "active";
@@ -26,24 +25,24 @@ public class BaseDataObjectKeys {
     public static string order_by = "order_by";
     public static string status = "status";
     public static string data_items = "data_items";
-    
     public static string pack_code = "pack_code";
     public static string pack_sort = "pack_sort";
-    
     public static string date_created = "date_created";
     public static string date_modified = "date_modified";
 }
 
 public class BaseDataObject : Dictionary<string, object> {  
 
+    //public Dictionary<string, DataAttribute> attributes;
+
     public BaseDataObject() {
         
-    }    
+    }
     
     // VALUES
     // use keyed dictionaries for all data objects to prevent
     // serialize and deserialize issues with keys on versions.    
-    
+
     //[JsonIgnore(JsonIgnoreWhen.Deserializing)]
     public virtual Dictionary<string, DataAttribute> attributes {
         get {
@@ -53,7 +52,7 @@ public class BaseDataObject : Dictionary<string, object> {
         set {
             Set(BaseDataObjectKeys.attributes, value);
         }
-    }      
+    } 
 
     // -----------------------------------------------------------------------
     // VALUE ACCESSORS
@@ -62,13 +61,13 @@ public class BaseDataObject : Dictionary<string, object> {
 
     public virtual T Get<T>(string code) {
         return Get<T>(code, null);
-    } 
+    }
     
     public virtual T Get<T>(string code, object defaultValue) {                
         try {
             return (T)Get(code, defaultValue);
         }
-        catch(Exception e) {
+        catch (Exception e) {
             return default(T);
         }
     }
@@ -77,10 +76,10 @@ public class BaseDataObject : Dictionary<string, object> {
 
     public virtual object Get(string code) {
         return Get<object>(code, null);
-    }    
+    }
     
     public virtual object Get(string code, object defaultValue) {
-        if(ContainsKey(code)) {
+        if (ContainsKey(code)) {
             return this[code];
         }
         return defaultValue;
@@ -89,7 +88,7 @@ public class BaseDataObject : Dictionary<string, object> {
     // sets
     
     public virtual void Set(string code, object val) {
-        if(ContainsKey(code)) {
+        if (ContainsKey(code)) {
             this[code] = val;
         }
         else {
@@ -98,12 +97,12 @@ public class BaseDataObject : Dictionary<string, object> {
     }
     
     public virtual void Set(string code, DataAttribute val) {
-        if(attributes == null) {
+        if (attributes == null) {
             attributes = new Dictionary<string, DataAttribute>();                        
         }
 
 
-        if(attributes.ContainsKey(code)) {
+        if (attributes.ContainsKey(code)) {
             attributes[code] = val;
         }
         else {
@@ -124,7 +123,7 @@ public class BaseDataObject : Dictionary<string, object> {
         string fileData = "";
         
         TextAsset textData = Resources.Load(resourcesFilePath, typeof(TextAsset)) as TextAsset;          
-        if(textData != null) {
+        if (textData != null) {
             fileData = textData.text;
         }
         
@@ -134,7 +133,7 @@ public class BaseDataObject : Dictionary<string, object> {
     public string LoadDataFromPrefs(string key) {
         string data = "";
         
-        if(!SystemPrefUtil.HasLocalSetting(key)) {
+        if (!SystemPrefUtil.HasLocalSetting(key)) {
             data = SystemPrefUtil.GetLocalSettingString(key);
         }
         return data;
@@ -144,7 +143,7 @@ public class BaseDataObject : Dictionary<string, object> {
         string fileData = "";
         
         #if !UNITY_WEBPLAYER 
-        if(FileSystemUtil.CheckFileExists(fileFullPath)) {       
+        if (FileSystemUtil.CheckFileExists(fileFullPath)) {       
             fileData = FileSystemUtil.ReadString(fileFullPath);
         }        
         #endif       
@@ -155,11 +154,11 @@ public class BaseDataObject : Dictionary<string, object> {
         string fileData = "";
         #if !UNITY_WEBPLAYER
         string path = PathUtil.Combine(folderPath, (fileKey + ".json").TrimStart('/'));
-        if(FileSystemUtil.CheckFileExists(path)) {       
+        if (FileSystemUtil.CheckFileExists(path)) {       
             fileData = FileSystemUtil.ReadString(path);
         }        
         #endif   
-        if(!string.IsNullOrEmpty(fileData)) {
+        if (!string.IsNullOrEmpty(fileData)) {
             return JsonMapper.ToObject<T>(fileData);
         }
         
@@ -175,8 +174,8 @@ public class BaseDataObject : Dictionary<string, object> {
     public void SaveData(string fileFullPath, string data) {
         #if !UNITY_WEBPLAYER
         
-        if(fileFullPath.Contains(Application.dataPath)
-           || fileFullPath.Contains(Application.persistentDataPath)) {
+        if (fileFullPath.Contains(Application.dataPath)
+            || fileFullPath.Contains(Application.persistentDataPath)) {
             
             FileSystemUtil.WriteString(fileFullPath, data);
         }
@@ -191,16 +190,16 @@ public class BaseDataObject : Dictionary<string, object> {
         
         bool hasGet = false;
         
-        foreach(var prop in fieldName.Split('.').Select(s => obj.GetType().GetField(s))) {
-            if(obj != null) {
+        foreach (var prop in fieldName.Split('.').Select(s => obj.GetType().GetField(s))) {
+            if (obj != null) {
                 obj = prop.GetValue(obj);
                 hasGet = true;
             }
         }
         
-        if(!hasGet) {
-            foreach(System.Reflection.PropertyInfo prop in obj.GetType().GetProperties()) {
-                if(prop.Name == fieldName) {
+        if (!hasGet) {
+            foreach (System.Reflection.PropertyInfo prop in obj.GetType().GetProperties()) {
+                if (prop.Name == fieldName) {
                     obj = prop.GetValue(obj, null);
                 }
             }
@@ -214,8 +213,8 @@ public class BaseDataObject : Dictionary<string, object> {
         
         //bool hasSet = false;
         
-        foreach(System.Reflection.FieldInfo field in fieldName.Split('.').Select(s => obj.GetType().GetField(s))) {
-            if(field != null) {
+        foreach (System.Reflection.FieldInfo field in fieldName.Split('.').Select(s => obj.GetType().GetField(s))) {
+            if (field != null) {
                 field.SetValue(obj, fieldValue);
                 
                 //hasSet = true;
@@ -223,8 +222,8 @@ public class BaseDataObject : Dictionary<string, object> {
         }
         
         //if(!hasSet) {
-        foreach(System.Reflection.PropertyInfo prop in obj.GetType().GetProperties()) {
-            if(prop.Name == fieldName) {
+        foreach (System.Reflection.PropertyInfo prop in obj.GetType().GetProperties()) {
+            if (prop.Name == fieldName) {
                 prop.SetValue(obj, fieldValue, null);
             }
         }
@@ -233,21 +232,27 @@ public class BaseDataObject : Dictionary<string, object> {
     }
     
     public virtual void Reset() {
-        //attributes = new Dictionary<string, DataAttribute>();
+        attributes = new Dictionary<string, DataAttribute>();
     }
     
     // -----------------------------------------------------------------------
     // ATTRIBUTES
     
     public void SetAttribute(DataAttribute attribute) {
-
-        Set(BaseDataObjectKeys.attributes, attribute);
+        
+        if (CheckIfAttributeExists(attribute.code)) {
+            attributes[attribute.code] = attribute;
+        }
+        else {
+            attributes.Add(attribute.code, attribute);
+        }
+        Set(BaseDataObjectKeys.attributes, attributes);
     }
     
     public bool CheckIfAttributeExists(string code) {
-        if(Get(BaseDataObjectKeys.attributes) != null) {
+        if (attributes != null) {
             //code = UniqueUtil.Instance.GetStringHash(code);
-            if(attributes.ContainsKey(code)) {
+            if (attributes.ContainsKey(code)) {
                 return true;
             }
         }
@@ -259,7 +264,7 @@ public class BaseDataObject : Dictionary<string, object> {
         
         //code = UniqueUtil.Instance.GetStringHash(code);
         
-        if(CheckIfAttributeExists(code)) {
+        if (CheckIfAttributeExists(code)) {
             attribute = attributes[code];
         }
         
@@ -268,7 +273,7 @@ public class BaseDataObject : Dictionary<string, object> {
         
     public List<DataAttribute> GetAttributesList() {
         List<DataAttribute> attributesList = new List<DataAttribute>();
-        foreach(DataAttribute attribute in attributes.Values) {
+        foreach (DataAttribute attribute in attributes.Values) {
             attributesList.Add(attribute);
         }
         return attributesList;
@@ -276,8 +281,8 @@ public class BaseDataObject : Dictionary<string, object> {
     
     public List<DataAttribute> GetAttributesList(string objectType) {
         List<DataAttribute> attributesFiltered = new List<DataAttribute>();
-        foreach(DataAttribute attribute in attributes.Values) {
-            if(attribute.otype == objectType) {
+        foreach (DataAttribute attribute in attributes.Values) {
+            if (attribute.otype == objectType) {
                 attributesFiltered.Add(attribute);
             }
         }
@@ -290,8 +295,8 @@ public class BaseDataObject : Dictionary<string, object> {
     
     public Dictionary<string, DataAttribute> GetAttributesDictionary(string objectType) {
         Dictionary<string, DataAttribute> attributesFiltered = new Dictionary<string, DataAttribute>();
-        foreach(KeyValuePair<string, DataAttribute> pair in attributes) {
-            if(pair.Value.otype == objectType) {
+        foreach (KeyValuePair<string, DataAttribute> pair in attributes) {
+            if (pair.Value.otype == objectType) {
                 attributesFiltered.Add(pair.Value.code, pair.Value);
             }
         }
@@ -311,7 +316,7 @@ public class BaseDataObject : Dictionary<string, object> {
     public bool GetAttributeBoolValue(string code) {
         bool currentValue = false;
         object objectValue = GetAttribute(code).val;
-        if(objectValue != null) {
+        if (objectValue != null) {
             currentValue = Convert.ToBoolean(objectValue);
         }
         
@@ -331,7 +336,7 @@ public class BaseDataObject : Dictionary<string, object> {
     public string GetAttributeStringValue(string code) {
         string currentValue = "";
         object objectValue = GetAttribute(code).val;
-        if(objectValue != null) {
+        if (objectValue != null) {
             currentValue = Convert.ToString(objectValue);
         }
         
@@ -351,7 +356,7 @@ public class BaseDataObject : Dictionary<string, object> {
     public double GetAttributeDoubleValue(string code) {
         double currentValue = 0.0;
         object objectValue = GetAttribute(code).val;
-        if(objectValue != null) {
+        if (objectValue != null) {
             currentValue = Convert.ToDouble(objectValue);
         }
         
@@ -371,7 +376,7 @@ public class BaseDataObject : Dictionary<string, object> {
     public int GetAttributeIntValue(string code) {
         int currentValue = 0;
         object objectValue = GetAttribute(code).val;
-        if(objectValue != null) {
+        if (objectValue != null) {
             currentValue = Convert.ToInt32(objectValue);
         }
         

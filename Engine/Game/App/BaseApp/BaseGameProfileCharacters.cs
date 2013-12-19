@@ -187,15 +187,94 @@ public class GameProfileCharacterItems {
     }
 }
 
+public class GameProfileCharacterItemKeys {
+    public static string code = "code";
+    public static string current = "current";
+    public static string characterCode = "characterCode";
+    public static string characterCostumeCode = "characterCostumeCode";
+    public static string profileRPGItem = "profileRPGItem";
+    public static string profilePlayerProgress = "profilePlayerProgress";
+    public static string profileCustomItem = "profileCustomItem";
+}
+
 public class GameProfileCharacterItem : DataObject {
- 
-    public bool current = true;
-    public string code = "default";
-    public string characterCode = "default";
-    public string characterCostumeCode = "default";
-    public GameProfileRPGItem profileRPGItem;
-    public GameProfilePlayerProgressItem profilePlayerProgress;
-    public GameProfileCustomItem profileCustomItem;
+    
+    public virtual string code {
+        get { 
+            return Get<string>(
+                GameProfileCharacterItemKeys.code, "default");
+        }
+        
+        set {
+            Set(GameProfileCharacterItemKeys.characterCode, value);
+        }
+    }
+
+    public virtual bool current {
+        get { 
+            return Get<bool>(
+                GameProfileCharacterItemKeys.current, true);
+        }
+        
+        set {
+            Set(GameProfileCharacterItemKeys.current, value);
+        }
+    }
+
+    public virtual string characterCode {
+        get { 
+            return Get<string>(
+                GameProfileCharacterItemKeys.characterCode, "default");
+        }
+        
+        set {
+            Set(GameProfileCharacterItemKeys.characterCode, value);
+        }
+    }
+    
+    public virtual string characterCostumeCode {
+        get { 
+            return Get<string>(
+                GameProfileCharacterItemKeys.characterCostumeCode, "default");
+        }
+        
+        set {
+            Set(GameProfileCharacterItemKeys.characterCostumeCode, value);
+        }
+    }
+    
+    public virtual GameProfileRPGItem profileRPGItem {
+        get { 
+            return Get<GameProfileRPGItem>(
+                GameProfileCharacterItemKeys.profileRPGItem, "default");
+        }
+        
+        set {
+            Set(GameProfileCharacterItemKeys.profileRPGItem, value);
+        }
+    }
+    
+    public virtual GameProfilePlayerProgressItem profilePlayerProgress {
+        get { 
+            return Get<GameProfilePlayerProgressItem>(
+                GameProfileCharacterItemKeys.profilePlayerProgress, "default");
+        }
+        
+        set {
+            Set(GameProfileCharacterItemKeys.profilePlayerProgress, value);
+        }
+    }
+    
+    public virtual GameProfileCustomItem profileCustomItem {
+        get { 
+            return Get<GameProfileCustomItem>(
+                GameProfileCharacterItemKeys.profileCustomItem, "default");
+        }
+        
+        set {
+            Set(GameProfileCharacterItemKeys.profileCustomItem, value);
+        }
+    }
 
     public GameProfileCharacterItem() {
         Reset();
@@ -233,9 +312,8 @@ public class BaseGameProfileCharacter : Profile {
     // characters
  
     public virtual void SetCharacters(GameProfileCharacterItems obj) {
-        string dataText = JsonMapper.ToJson(obj);
-        //LogUtil.Log("SetCharacters: " + dataText);
-        SetAttributeStringValue(BaseGameProfileCharacterAttributes.ATT_CHARACTERS, dataText);
+
+        Set(BaseGameProfileCharacterAttributes.ATT_CHARACTERS, obj);
 
         Messenger.Broadcast(BaseGameProfileMessages.ProfileShouldBeSaved);
     }
@@ -249,19 +327,11 @@ public class BaseGameProfileCharacter : Profile {
 
             SetCharacters(obj);
         }
-
-        string json = GetAttributeStringValue(key);
+                
+        obj = Get<GameProfileCharacterItems>(key);
      
-        if(!string.IsNullOrEmpty(json)) {
-         
-            try {
-                //LogUtil.Log("GetCharacters: " + json);
-                obj = JsonMapper.ToObject<GameProfileCharacterItems>(json);
-            }
-            catch(Exception e) {
-                obj = new GameProfileCharacterItems();
-                LogUtil.Log(e);
-            }
+        if(obj == null) {
+            obj = new GameProfileCharacterItems();
         }
      
         if(obj.items.Count == 0) {

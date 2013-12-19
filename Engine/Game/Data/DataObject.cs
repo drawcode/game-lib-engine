@@ -11,7 +11,7 @@ using Engine.Data.Json;
 public class DataObject : BaseDataObject {  
 
     public DataObject() {
-        Reset();
+        //Reset();
     }
 }
 

@@ -18,8 +18,6 @@ public class DataKeyedObjectLeaf : DataKeyedObject {
     public string otherProperty = "";
 }
 
-
-
 public class TestsData {
 
     public static void Advance(string name) {
@@ -29,7 +27,6 @@ public class TestsData {
     public static void RunTest() {
 
         Advance("Running tests...");
-
         
         ContentsConfig.contentRootFolder = "drawlabs";
         ContentsConfig.contentAppFolder = "game-drawlabs-brainball";
@@ -56,14 +53,14 @@ public class TestsData {
         //Advance("TestGameProfileCharacter_GetCharacter");
         //TestGameProfileCharacter_GetCharacter();
         
-        //Advance("TestGameProfileCharacter_GetCurrentCharacter");
-        //TestGameProfileCharacter_GetCurrentCharacter();
+        Advance("TestGameProfileCharacter_GetCurrentCharacter");
+        TestGameProfileCharacter_GetCurrentCharacter();
         
         //Advance("TestGameProfileCharacter_currentCharacter");
         //TestGameProfileCharacter_currentCharacter();
                 
-        Advance("TestGameProfileCharacter_currentProgress");
-        TestGameProfileCharacter_currentProgress();
+        //Advance("TestGameProfileCharacter_currentProgress");
+        //TestGameProfileCharacter_currentProgress();
     }
 
     public static void DumpObj(string name, string oname, object o) {        
@@ -155,21 +152,30 @@ public class TestsData {
         Debug.Log(name);
         
         string characterCode = "default";
+
+        GameProfileCharacterItem item = GameProfileCharacters.Current.GetCurrentCharacter();
+
+        item.characterCode = "testercode";
+        DataAttribute d = new DataAttribute();
+        d.code = "ddd";
+        item.SetAttribute(d);
+
         
-        GameProfileCharacterItem characterItem = GameProfileCharacters.Current.GetCurrentCharacter();
-        
-        
-        if(characterItem == null) {
+        DataAttribute a = new DataAttribute();
+        a.code = "aaa";
+        item.SetAttribute(a);
+                
+        if(item == null) {
             
-            DumpObj(name, "characterItem:NULL", characterItem);
+            DumpObj(name, "item:NULL", item);
         }
         else {
             
-            DumpObj(name, "characterItem:EXISTS", characterItem);
+            DumpObj(name, "item:EXISTS", item.ToJson());
             
-            DumpObj(name, "characterItem:characterCode", characterItem.characterCode);
-            DumpObj(name, "characterItem:characterCostumeCode", characterItem.characterCostumeCode);
-            DumpObj(name, "characterItem:code", characterItem.code);
+            DumpObj(name, "item:characterCode", item.characterCode);
+            DumpObj(name, "item:characterCostumeCode", item.characterCostumeCode);
+            DumpObj(name, "item:code", item.code);
             
             //DumpObj(name, "characterItem:characterCode.profileCustomItem.code", 
             //        characterItem.profileCustomItem.code);
@@ -177,7 +183,7 @@ public class TestsData {
             //        characterItem.profileRPGItem.GetAttack());
         }
         
-        DumpObj(name, "characterItem", characterItem);
+        DumpObj(name, "item", item);
         
         //Debug.Break();        
     }    

@@ -618,8 +618,6 @@ public class GameProfileCustomItem : DataObject {
 
     public override void Reset() {
         base.Reset();
-
-        attributes = new Dictionary<string, DataAttribute>();
     }
 
     // ----------------------------------------------------------
