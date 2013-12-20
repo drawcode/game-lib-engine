@@ -6,6 +6,8 @@ using UnityEngine;
 // This is used by the ObjectPoolManager and is not meant to be used separately
 public class ObjectPool : System.Object {
 
+    public int maxPoolItems = 60;
+
     // The type of object this pool is handling
     public GameObject prefab;
 
@@ -23,6 +25,10 @@ public class ObjectPool : System.Object {
 
     public GameObject instantiate(Vector3 position, Quaternion rotation) {
         GameObject obj;
+
+        if(pool.Count > maxPoolItems) {
+            return null;
+        }
 
         // if we don't have any object already in the cache, create a new one
         if (pool.Count == 0) {
@@ -47,6 +53,10 @@ public class ObjectPool : System.Object {
 
     // put the object in the cache and deactivate it
     public void recycle(GameObject obj) {
+
+        if(obj == null || pool.Count > maxPoolItems) {
+            return;
+        }
 
         // deactivate the object
         obj.SetActive(false);

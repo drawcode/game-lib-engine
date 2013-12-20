@@ -4,8 +4,8 @@ using UnityEngine;
 
 namespace Engine.State {
 
-    public class ObjectPool : MonoBehaviour {
-        public static ObjectPool instance;
+    public class ObjectPoolItem : MonoBehaviour {
+        public static ObjectPoolItem instance;
 
         /// <summary>
         /// The object prefabs which the pool can handle.

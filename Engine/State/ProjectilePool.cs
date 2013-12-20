@@ -25,7 +25,7 @@ namespace Engine.State {
         /// </summary>
         public virtual void ResetEffect() {
             if (poolAfterComplete) {
-                ObjectPool.instance.PoolObject(gameObject);
+                ObjectPoolItem.instance.PoolObject(gameObject);
             }
             else {
                 Destroy(gameObject);

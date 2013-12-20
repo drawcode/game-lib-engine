@@ -42,11 +42,14 @@ public class ObjectPoolManager : MonoBehaviour {
 #if UNITY_EDITOR
 
 	// turn this on to activate debugging information
-	public bool debug = false;
+	public bool debug = true;
 
 	// the GUI block where the debugging info will be displayed
 	public Rect debugGuiRect = new Rect( 5, 200, 160, 400 );
+
 #endif
+
+    public int maxPerPool = 10;
 
     // This maps a prefab to its ObjectPool
     private Dictionary<GameObject, ObjectPool> prefab2pool;
@@ -85,17 +88,26 @@ public class ObjectPoolManager : MonoBehaviour {
 
     // Create a pooled object. This will either reuse an object from the cache or allocate a new one
     public static GameObject createPooled(GameObject prefab, Vector3 position, Quaternion rotation) {
+
         return instance.internalCreate(prefab, position, rotation);
     }
 
     // Destroy the object now
     public static void destroyPooled(GameObject obj) {
-        _instance.internalDestroy(obj);
+        instance.internalDestroy(obj);
     }
 
     // Destroy the object after <delay> seconds have elapsed
     public static void destroyPooled(GameObject obj, float delay) {
-        _instance.StartCoroutine(_instance.internalDestroy(obj, delay));
+        if(obj == null) { 
+            return;
+        }
+
+        if(instance == null) {
+            return;
+        }
+
+        instance.StartCoroutine(instance.internalDestroy(obj, delay));
     }
 
     #endregion
@@ -118,6 +130,7 @@ public class ObjectPoolManager : MonoBehaviour {
     private GameObject internalCreate(GameObject prefab, Vector3 position, Quaternion rotation) {
         ObjectPool pool;
 
+
         if (!prefab2pool.ContainsKey(prefab)) {
             pool = createPool(prefab);
             prefab2pool[prefab] = pool;
@@ -125,9 +138,19 @@ public class ObjectPoolManager : MonoBehaviour {
         else {
             pool = prefab2pool[prefab];
         }
+        
+        if(pool.Count > maxPerPool) {
+            Debug.Log("ObjectPool: Too many items in the pool!: " + prefab.name);
+            return null;
+        }
 
         // create a new object or reuse an existing one from the pool
         GameObject obj = pool.instantiate(position, rotation);
+
+        
+        if(obj == null) {
+            return null;
+        }
 
         // remember which pool this object was created from
         instance2pool[obj] = pool;
@@ -170,6 +193,9 @@ public class ObjectPoolManager : MonoBehaviour {
 
 			foreach( var pool in prefab2pool.Values )
 				GUILayout.Label( pool.prefab.name + ": " + pool.Count );
+            
+            //foreach( var pool in instance2pool.Values )
+            //    GUILayout.Label( "instance: " + pool.prefab.name + ": " + pool.Count );
 
 			GUILayout.EndVertical();
 			GUILayout.EndArea();
