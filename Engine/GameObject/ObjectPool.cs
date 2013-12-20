@@ -2,6 +2,12 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+public class ObjectPoolItem {
+    public GameObject parentObject;
+    public GameObject itemObject;
+
+}
+
 // The ObjectPool is the storage class for pooled objects of the same kind (e.g. "Pistol Bullet", or "Enemy A")
 // This is used by the ObjectPoolManager and is not meant to be used separately
 public class ObjectPool : System.Object {
@@ -12,6 +18,8 @@ public class ObjectPool : System.Object {
     public GameObject prefab;
 
     // This stores the cached objects waiting to be reactivated
+    //public Dictionary<int, GameObject> pool;
+
     public Queue<GameObject> pool;
 
     // How many objects are currently sitting in the cache
@@ -54,17 +62,24 @@ public class ObjectPool : System.Object {
     // put the object in the cache and deactivate it
     public void recycle(GameObject obj) {
 
-        if(obj == null || pool.Count > maxPoolItems) {
+        if(obj == null) {
             return;
         }
-
+        
         // deactivate the object
         obj.SetActive(false);
+
+        if(pool.Count > maxPoolItems) {
+            return;            
+        }
 
         // put the recycled object in this ObjectPool's bucket
         obj.transform.parent = ObjectPoolManager.instance.gameObject.transform;
 
-        // put object back in cache for reuse later
-        pool.Enqueue(obj);
+
+        if(!pool.Contains(obj)) {
+            // put object back in cache for reuse later
+            pool.Enqueue(obj);
+        }
     }
 }

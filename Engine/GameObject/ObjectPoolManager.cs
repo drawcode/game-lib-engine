@@ -69,7 +69,7 @@ public class ObjectPoolManager : MonoBehaviour {
 
                 // nope, create a new one
                 if (!_instance) {
-                    var obj = new GameObject("ObjectPoolManager");
+                    var obj = new GameObject("_ObjectPoolManager");
                     _instance = obj.AddComponent<ObjectPoolManager>();
                 }
             }
