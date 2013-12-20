@@ -42,14 +42,12 @@ public class ObjectPoolManager : MonoBehaviour {
 #if UNITY_EDITOR
 
 	// turn this on to activate debugging information
-	public bool debug = true;
+	public bool debug = false;
 
 	// the GUI block where the debugging info will be displayed
 	public Rect debugGuiRect = new Rect( 5, 200, 160, 400 );
 
 #endif
-
-    public int maxPerPool = 10;
 
     // This maps a prefab to its ObjectPool
     private Dictionary<GameObject, ObjectPool> prefab2pool;
@@ -139,10 +137,10 @@ public class ObjectPoolManager : MonoBehaviour {
             pool = prefab2pool[prefab];
         }
         
-        if(pool.Count > maxPerPool) {
-            Debug.Log("ObjectPool: Too many items in the pool!: " + prefab.name);
-            return null;
-        }
+        //if(pool.Count > maxPerPool) {
+        //    Debug.Log("ObjectPool: Too many items in the pool!: " + prefab.name);
+        //   return null;
+        //}
 
         // create a new object or reuse an existing one from the pool
         GameObject obj = pool.instantiate(position, rotation);
