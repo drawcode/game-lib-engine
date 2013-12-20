@@ -507,6 +507,7 @@ public class AppContentChoiceData : DataObject {
 }
 
 public class BaseAppContentChoiceKeys {
+    public static string tags = "tags";
     public static string appStates = "appStates";
     public static string appContentStates = "appContentStates";
     public static string requiredAssets = "requiredAssets";
@@ -515,7 +516,17 @@ public class BaseAppContentChoiceKeys {
     public static string choices = "choices";
 }
 
-public class BaseAppContentChoice : GameDataObject {
+public class BaseAppContentChoice : GameDataObject {    
+    
+    public virtual List<string> tags {
+        get {
+            return Get<List<string>>(BaseAppContentChoiceKeys.tags);
+        }
+        
+        set {
+            Set(BaseAppContentChoiceKeys.tags, value);
+        }
+    }
     
     public virtual List<string> appStates {
         get {
