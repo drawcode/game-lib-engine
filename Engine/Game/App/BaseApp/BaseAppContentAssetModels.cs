@@ -2,12 +2,12 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 
-public class BaseGameAssetTextures<T> : DataObjects<T> where T : new() {
+public class BaseAppContentAssetModels<T> : DataObjects<T> where T : new() {
     private static T current;
-    private static volatile BaseGameAssetTextures<T> instance;
+    private static volatile BaseAppContentAssetModels<T> instance;
     private static object syncRoot = new Object();
 
-    private string BASE_DATA_KEY = "game-asset-texture-data";
+    private string BASE_DATA_KEY = "app-content-asset-model-data";
 
     public static T BaseCurrent {
         get {
@@ -25,12 +25,12 @@ public class BaseGameAssetTextures<T> : DataObjects<T> where T : new() {
         }
     }
 
-    public static BaseGameAssetTextures<T> BaseInstance {
+    public static BaseAppContentAssetModels<T> BaseInstance {
         get {
             if (instance == null) {
                 lock (syncRoot) {
                     if (instance == null)
-                        instance = new BaseGameAssetTextures<T>(true);
+                        instance = new BaseAppContentAssetModels<T>(true);
                 }
             }
 
@@ -41,11 +41,11 @@ public class BaseGameAssetTextures<T> : DataObjects<T> where T : new() {
         }
     }
 
-    public BaseGameAssetTextures() {
+    public BaseAppContentAssetModels() {
         Reset();
     }
 
-    public BaseGameAssetTextures(bool loadData) {
+    public BaseAppContentAssetModels(bool loadData) {
         Reset();
         path = "data/" + BASE_DATA_KEY + ".json";
         pathKey = BASE_DATA_KEY;
@@ -53,12 +53,12 @@ public class BaseGameAssetTextures<T> : DataObjects<T> where T : new() {
     }
 }
 
-public class BaseGameAssetTexture : GameDataObject {
+public class BaseAppContentAssetModel : GameDataObject {
 
     // Attributes that are added or changed after launch should be like this to prevent
     // profile conversions.
 
-    public BaseGameAssetTexture() {
+    public BaseAppContentAssetModel() {
         Reset();
     }
 
@@ -66,7 +66,7 @@ public class BaseGameAssetTexture : GameDataObject {
         base.Reset();
     }
 
-    public void Clone(BaseGameAssetTexture toCopy) {
+    public void Clone(BaseAppContentAssetModel toCopy) {
         base.Clone(toCopy);
     }
 

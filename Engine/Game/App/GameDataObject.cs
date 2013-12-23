@@ -278,6 +278,18 @@ public class GameDataObject : DataObject {
         }
     }
 
+    // game
+
+    public virtual string asset {
+        get {
+            return Get<string>(BaseDataObjectKeys.asset);
+        }
+        
+        set {
+            Set<string>(BaseDataObjectKeys.asset, value);
+        }
+    }
+
     public GameDataObject() {
         Reset();
     }

@@ -39,6 +39,31 @@ public class BaseDataObjectKeys {
     public static string file_path = "file_path";
     public static string file_full_path = "file_full_path";
 
+
+    public static string keys = "keys";
+
+    
+    public static string character = "character";
+    public static string character_skin = "character_skin";
+    public static string character_skin_variation = "character_skin_variation";
+
+    public static string model = "model";
+    public static string models = "models";
+
+    public static string presets = "presets";
+
+    public static string color = "color";
+    public static string colors = "colors";
+
+    public static string asset = "asset";
+    public static string assets = "assets";
+
+    public static string texture = "texture";
+    public static string textures = "textures";
+
+    public static string material = "material";
+    public static string materials = "materials";
+
 }
 
 public class BaseDataObject : Dictionary<string, object> {  

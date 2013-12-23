@@ -2,12 +2,12 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 
-public class BaseGameAssetMaterials<T> : DataObjects<T> where T : new() {
+public class BaseGameCharacterSkinVariations<T> : DataObjects<T> where T : new() {
     private static T current;
-    private static volatile BaseGameAssetMaterials<T> instance;
+    private static volatile BaseGameCharacterSkinVariations<T> instance;
     private static object syncRoot = new Object();
 
-    private string BASE_DATA_KEY = "game-asset-material-data";
+    private string BASE_DATA_KEY = "game-character-skin-variation-data";
 
     public static T BaseCurrent {
         get {
@@ -25,12 +25,12 @@ public class BaseGameAssetMaterials<T> : DataObjects<T> where T : new() {
         }
     }
 
-    public static BaseGameAssetMaterials<T> BaseInstance {
+    public static BaseGameCharacterSkinVariations<T> BaseInstance {
         get {
             if (instance == null) {
                 lock (syncRoot) {
                     if (instance == null)
-                        instance = new BaseGameAssetMaterials<T>(true);
+                        instance = new BaseGameCharacterSkinVariations<T>(true);
                 }
             }
 
@@ -41,11 +41,11 @@ public class BaseGameAssetMaterials<T> : DataObjects<T> where T : new() {
         }
     }
 
-    public BaseGameAssetMaterials() {
+    public BaseGameCharacterSkinVariations() {
         Reset();
     }
 
-    public BaseGameAssetMaterials(bool loadData) {
+    public BaseGameCharacterSkinVariations(bool loadData) {
         Reset();
         path = "data/" + BASE_DATA_KEY + ".json";
         pathKey = BASE_DATA_KEY;
@@ -53,12 +53,12 @@ public class BaseGameAssetMaterials<T> : DataObjects<T> where T : new() {
     }
 }
 
-public class BaseGameAssetMaterial : GameDataObject {
+public class BaseGameCharacterSkinVariation : GameDataObject {
 
     // Attributes that are added or changed after launch should be like this to prevent
     // profile conversions.
 
-    public BaseGameAssetMaterial() {
+    public BaseGameCharacterSkinVariation() {
         Reset();
     }
 
@@ -66,7 +66,7 @@ public class BaseGameAssetMaterial : GameDataObject {
         base.Reset();
     }
 
-    public void Clone(BaseGameAssetMaterial toCopy) {
+    public void Clone(BaseGameCharacterSkinVariation toCopy) {
         base.Clone(toCopy);
     }
 
