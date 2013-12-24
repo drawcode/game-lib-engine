@@ -54,7 +54,7 @@ public class BaseAppContentAssetCustomItems<T> : DataObjects<T> where T : new() 
 }
 
 
-public class AppContentAssetCustomItemProperty : DataObjectItem {
+public class AppContentAssetCustomItemProperty {
     public List<string> types = new List<string>();
     public string code = "";
     /*
@@ -70,9 +70,9 @@ public class AppContentAssetCustomItemProperty : DataObjectItem {
     */
 }
 
-public class AppContentAssetCustomItemData : GameDataObject {
+public class AppContentAssetCustomItemData {
 
-    public List<AppContentAssetCustomItemProperty> properties = new List<AppContentAssetCustomItemProperty>();
+   public List<AppContentAssetCustomItemProperty> properties = new List<AppContentAssetCustomItemProperty>();
 
     /*
     public virtual List<AppContentAssetCustomItemProperty> properties {
@@ -92,13 +92,13 @@ public class BaseAppContentAssetCustomItem : GameDataObject {
     // Attributes that are added or changed after launch should be like this to prevent
     // profile conversions.    
     
-    public virtual AppContentAssetCustomItemData data {
+    public virtual List<AppContentAssetCustomItemProperty> properties {
         get {
-            return Get<AppContentAssetCustomItemData>(BaseDataObjectKeys.data);
+            return Get<List<AppContentAssetCustomItemProperty>>(BaseDataObjectKeys.properties);
         }
         
         set {
-            Set<AppContentAssetCustomItemData>(BaseDataObjectKeys.data, value);
+            Set<List<AppContentAssetCustomItemProperty>>(BaseDataObjectKeys.properties, value);
         }
     }  
 

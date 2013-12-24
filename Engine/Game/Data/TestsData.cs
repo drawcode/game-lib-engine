@@ -120,12 +120,12 @@ public class TestsData {
             Debug.Log("item:code:" + item.code);         
             Debug.Log("item:type:" + item.type);
 
-            if(item.data != null) {         
+            if(item.properties != null) {         
                 
-                Debug.Log("item.data.properties.Count:" + item.data.properties.Count);
+                Debug.Log("item.data.properties.Count:" + item.properties.Count);
 
                 foreach(AppContentAssetCustomItemProperty prop 
-                        in item.data.properties) {
+                        in item.properties) {
                     
                     Debug.Log("prop:code:" + prop.code);  
                     foreach(string type in prop.types) {

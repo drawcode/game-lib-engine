@@ -86,6 +86,7 @@ public class GameDataObject : DataObject {
     }
     
     //[JsonIgnore(JsonIgnoreWhen.Deserializing)]
+    /*
     public virtual object data {
         get {
             return Get<object>(BaseDataObjectKeys.data);
@@ -95,6 +96,7 @@ public class GameDataObject : DataObject {
             Set<object>(BaseDataObjectKeys.data, value);
         }
     }       
+    */
     
     //[JsonIgnore(JsonIgnoreWhen.Deserializing)]
     public virtual int sort_order {
