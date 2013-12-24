@@ -68,8 +68,12 @@ public class TestsData {
         //Advance("TestGameColors_List");
         //TestGameColors_List();
         
-        Advance("TestGameColors_Code");
-        TestGameColors_Code();
+        //Advance("TestGameColors_Code");
+        //TestGameColors_Code();
+
+        
+        Advance("TestAppContentAssetModels_List");
+        TestAppContentAssetModels_List();
     }
 
     public static void DumpObj(string name, string oname, object o) {        
@@ -92,6 +96,29 @@ public class TestsData {
         DumpObj(name, "dataB", dataB);
 
         return equal;
+    }
+
+    
+    
+    public static void TestAppContentAssetModels_List() {
+        
+        string name = "TestAppContentAssetModels_List";
+        
+        Debug.Log(name);
+        
+        GameState.LoadProfile();
+        
+        List<AppContentAssetModel> models = AppContentAssetModels.Instance.GetAll();
+        DumpObj(name, "models", models);
+        
+        //AssertEquals(name, username, "Player");
+        
+        foreach(AppContentAssetModel model in models) {            
+            Debug.Log("model:code:" + model.code);         
+            Debug.Log("model:display_name:" + model.display_name);
+        }
+        
+        DumpObj(name, "models.Count", models.Count);
     }
     
     public static void TestGameColors_List() {

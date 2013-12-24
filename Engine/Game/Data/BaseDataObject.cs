@@ -31,7 +31,6 @@ public class BaseDataObjectKeys {
     public static string pack_sort = "pack_sort";
     public static string date_created = "date_created";
     public static string date_modified = "date_modified";
-
     
     public static string username = "username";
     public static string udid = "udid";
@@ -39,9 +38,8 @@ public class BaseDataObjectKeys {
     public static string file_path = "file_path";
     public static string file_full_path = "file_full_path";
 
-
     public static string keys = "keys";
-
+    public static string properties = "properties";
     
     public static string character = "character";
     public static string character_skin = "character_skin";

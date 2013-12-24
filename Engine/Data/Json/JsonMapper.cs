@@ -391,15 +391,47 @@ namespace Engine.Data.Json {
                     
                 AddArrayMetadata(inst_type);
                 ArrayMetadata t_data = array_metadata[inst_type];
-                    
-                if (! t_data.IsArray && ! t_data.IsList)
-                    throw new JsonException(String.Format(
-                            "Type {0} can't act as an array",
-                            inst_type));
-                    
-                IList list;
-                Type elem_type;
-                    
+                                               
+                IList list = null;
+                Type elem_type = null;
+                /*
+                bool found = false;
+
+                if (! t_data.IsArray && ! t_data.IsList) {
+                    //throw new JsonException(String.Format(
+                    //       "Type {0} can't act as an array",
+                    //        inst_type));
+
+                    try {
+                        list = new List<Dictionary<string, object>>();
+                        elem_type = t_data.ElementType;
+                        found = true;
+
+                        UnityEngine.Debug.Log(
+                            string.Format(
+                            "JSON:Array: List created dictionary: {0}", list));  
+                    }
+                    catch(Exception e) {                        
+                        try {                                 
+                            list = new List<object>();
+                            elem_type = t_data.ElementType;
+                            found = true;
+
+                            UnityEngine.Debug.Log(
+                                string.Format(
+                                "JSON:Array: List created object array: {0}", list)); 
+                        }
+                        catch(Exception ex) {
+                            
+                            UnityEngine.Debug.Log(
+                                string.Format(
+                                "JSON:Array: List failed: {0}", ex)); 
+                        }
+                    }
+                }
+                */
+
+                //if(!found) {                    
                 if (! t_data.IsArray) {
                     list = (IList)Activator.CreateInstance(inst_type);
                     elem_type = t_data.ElementType;
@@ -408,6 +440,7 @@ namespace Engine.Data.Json {
                     list = new ArrayList();
                     elem_type = inst_type.GetElementType();
                 }
+                //}
                     
                 while (true) {
                     object item = ReadValue(elem_type, reader);

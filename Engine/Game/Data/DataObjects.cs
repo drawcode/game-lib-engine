@@ -27,6 +27,46 @@ public class DataObjects<T> {
     public List<string> packPathsVersioned;
     public DataObjectsStorage dataStorage = DataObjectsStorage.PERSISTENT;
     public List<string> historyLevelItems = new List<string>();
+    //public static U inst;
+
+    //private static volatile U current;
+    //private static volatile U instance;
+    //private static object syncRoot = new System.Object();
+    /*
+    public static string DATA_KEY = "data-object";
+    
+    public static T Current {
+        get  {
+            if (current == null) {
+                lock (syncRoot)  {
+                    if (current == null) 
+                        current = new T();
+                }
+            }
+            
+            return current;
+        }
+        set {
+            current = value;
+        }
+    }
+    
+    public static AppContentActions Instance {
+        get  {
+            if (instance == null) {
+                lock (syncRoot)  {
+                    if (instance == null) 
+                        instance = new AppContentActions(true);
+                }
+            }
+            
+            return instance;
+        }
+        set {
+            instance = value;
+        }
+    }
+    */
 
     public DataObjects() {
         Reset();
