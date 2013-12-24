@@ -54,10 +54,10 @@ public class BaseAppContentAssetCustomItems<T> : DataObjects<T> where T : new() 
 }
 
 
-public class AppContentAssetCustomItemProperty {
-    public List<string> types = new List<string>();
-    public string code = "";
-    /*
+public class AppContentAssetCustomItemProperty : GameDataObject {
+    //public List<string> types = new List<string>();
+    //public string code = "";
+
     public virtual List<string> types {
         get {
             return Get<List<string>>(BaseDataObjectKeys.types);
@@ -67,14 +67,29 @@ public class AppContentAssetCustomItemProperty {
             Set<List<string>>(BaseDataObjectKeys.types, value);
         }
     }  
-    */
+
+    public bool IsType(string type) {
+        if(types.Contains(type)) {
+            return true;
+        }
+        return false;
+    }
+
+    public bool IsTypeTexture() {
+        return IsType("texture");
+    }
+    
+    public bool IsTypeColor() {
+        return IsType("color");
+    }
+
 }
 
-public class AppContentAssetCustomItemData {
+public class AppContentAssetCustomItemData : GameDataObject {
 
-   public List<AppContentAssetCustomItemProperty> properties = new List<AppContentAssetCustomItemProperty>();
+   //public List<AppContentAssetCustomItemProperty> properties = new List<AppContentAssetCustomItemProperty>();
 
-    /*
+
     public virtual List<AppContentAssetCustomItemProperty> properties {
         get {
             return Get<List<AppContentAssetCustomItemProperty>>(BaseDataObjectKeys.properties);
@@ -84,7 +99,7 @@ public class AppContentAssetCustomItemData {
             Set<List<AppContentAssetCustomItemProperty>>(BaseDataObjectKeys.properties, value);
         }
     } 
-    */
+
 }
 
 public class BaseAppContentAssetCustomItem : GameDataObject {  

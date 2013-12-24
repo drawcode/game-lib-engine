@@ -58,6 +58,27 @@ public class BaseAppContentAssetModel : GameDataObject {
     // Attributes that are added or changed after launch should be like this to prevent
     // profile conversions.
 
+    
+    public virtual List<AppContentAssetCustomItemProperty> custom_materials {
+        get {
+            return Get<List<AppContentAssetCustomItemProperty>>(BaseDataObjectKeys.custom_materials);
+        }
+        
+        set {
+            Set(BaseDataObjectKeys.custom_materials, value);
+        }
+    }
+        
+    public virtual string custom_items {
+        get {
+            return Get<string>(BaseDataObjectKeys.custom_items);
+        }
+        
+        set {
+            Set(BaseDataObjectKeys.custom_items, value);
+        }
+    }
+
     public BaseAppContentAssetModel() {
         Reset();
     }
@@ -68,6 +89,14 @@ public class BaseAppContentAssetModel : GameDataObject {
 
     public void Clone(BaseAppContentAssetModel toCopy) {
         base.Clone(toCopy);
+    }
+
+    public virtual List<AppContentAssetCustomItemProperty> GetCustomMaterials() {
+        return custom_materials;
+    }    
+    
+    public virtual AppContentAssetCustomItem GetCustomItems() {
+        return AppContentAssetCustomItems.Instance.GetByCode(custom_items);
     }
 
     // Attributes that are added or changed after launch should be like this to prevent

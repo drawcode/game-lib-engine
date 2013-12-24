@@ -45,6 +45,11 @@ public class BaseDataObjectKeys {
     public static string character = "character";
     public static string character_skin = "character_skin";
     public static string character_skin_variation = "character_skin_variation";
+    
+    public static string custom_items = "custom_items";
+    public static string custom_materials = "custom_materials";
+    public static string custom_textures = "custom_textures";
+    public static string custom_models = "custom_models";
 
     public static string model = "model";
     public static string models = "models";

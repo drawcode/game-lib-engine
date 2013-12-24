@@ -72,12 +72,12 @@ public class TestsData {
         //TestGameColors_Code();
 
         
-       // Advance("TestAppContentAssetModels_List");
-        //TestAppContentAssetModels_List();
+        Advance("TestAppContentAssetModels_List");
+        TestAppContentAssetModels_List();
 
         
-        Advance("TestAppContentAssetCustomItems_List");
-        TestAppContentAssetCustomItems_List();
+        //("TestAppContentAssetCustomItems_List");
+        //TestAppContentAssetCustomItems_List();
     }
 
     public static void DumpObj(string name, string oname, object o) {        
@@ -152,18 +152,49 @@ public class TestsData {
         
         GameState.LoadProfile();
         
-        List<AppContentAssetModel> models = AppContentAssetModels.Instance.GetAll();
-        DumpObj(name, "models", models);
+        List<AppContentAssetModel> items = AppContentAssetModels.Instance.GetAll();
+        DumpObj(name, "items", items);
         
         //AssertEquals(name, username, "Player");
         
-        foreach(AppContentAssetModel model in models) {            
-            Debug.Log("model:code:" + model.code);         
-            Debug.Log("model:display_name:" + model.display_name);
+        foreach(AppContentAssetModel item in items) {            
+            Debug.Log("item:code:" + item.code);         
+            Debug.Log("item:display_name:" + item.display_name);
+            
+            Debug.Log("item:json:" + item.ToJson());
 
+            if(item.custom_materials != null) {         
+                
+                Debug.Log("item.data.custom_materials.Count:" + item.custom_materials.Count);
+                
+                foreach(AppContentAssetCustomItemProperty prop 
+                        in item.custom_materials) {
+                    
+                    Debug.Log("prop:code:" + prop.code);  
+                    Debug.Log("prop:name:" + prop.name); 
+                    foreach(string type in prop.types) {
+                        Debug.Log("prop:type:s:" + type);
+                    }
+                }
+            }
+            else {                
+                Debug.Log("data was NULL" + item.ToJson());
+            }
+
+            AppContentAssetCustomItem customItem = item.GetCustomItems();
+            
+            Debug.Log("customItem:json:" + customItem.ToJson());
+
+            if(customItem != null) {
+                if(customItem.properties != null) {
+                    foreach(AppContentAssetCustomItemProperty prop in customItem.properties) {
+                        Debug.Log("prop:code:" + prop.code); 
+                    }
+                }
+            }
         }
         
-        DumpObj(name, "models.Count", models.Count);
+        DumpObj(name, "items.Count", items.Count);
     }
     
     public static void TestGameColors_List() {
