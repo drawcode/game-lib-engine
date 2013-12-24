@@ -53,10 +53,38 @@ public class BaseGameCharacters<T> : DataObjects<T> where T : new() {
     }
 }
 
+
+public class GameCharacterModel : GameDataObject {
+
+}
+
+public class GameCharacterPreset : GameDataObject {
+
+    public string textures { get; set; }
+    public string colors { get; set; }
+}
+
+public class GameCharacterData : GameDataObject {
+
+    public string character_role { get; set; }
+    public List<GameCharacterModel> models { get; set; }
+    public List<GameCharacterPreset> presets { get; set; }
+}
+
 public class BaseGameCharacter : GameDataObject {
 
     // Attributes that are added or changed after launch should be like this to prevent
     // profile conversions.
+
+    public virtual GameCharacterData character_data {
+        get {
+            return Get<GameCharacterData>(BaseDataObjectKeys.character_data);
+        }
+        
+        set {
+            Set<GameCharacterData>(BaseDataObjectKeys.character_data, value);
+        }
+    }  
 
     public BaseGameCharacter() {
         Reset();
