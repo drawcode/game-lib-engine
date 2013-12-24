@@ -56,6 +56,9 @@ public class BaseDataObjectKeys {
     public static string models = "models";
 
     public static string presets = "presets";
+    public static string roles = "roles";
+
+    //roles
 
     public static string color = "color";
     public static string colors = "colors";

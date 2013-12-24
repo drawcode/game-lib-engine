@@ -2,10 +2,12 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 
+using UnityEngine;
+
 public class BaseGameCharacters<T> : DataObjects<T> where T : new() {
     private static T current;
     private static volatile BaseGameCharacters<T> instance;
-    private static object syncRoot = new Object();
+    private static System.Object syncRoot = new System.Object();
 
     private string BASE_DATA_KEY = "game-character-data";
 
@@ -51,38 +53,85 @@ public class BaseGameCharacters<T> : DataObjects<T> where T : new() {
         pathKey = BASE_DATA_KEY;
         LoadData();
     }
+    
+    public static GameObject Load(string code) {
+        return AppContentAssetModels.LoadModel(code);
+    }
 }
 
-
-public class GameCharacterModel : GameDataObject {
-
+public class GameDataCharacterModel : GameDataObject {
+    
+    public virtual string textures {
+        get {
+            return Get<string>(BaseDataObjectKeys.textures);
+        }
+        
+        set {
+            Set<string>(BaseDataObjectKeys.textures, value);
+        }
+    } 
+    
+    public virtual string colors {
+        get {
+            return Get<string>(BaseDataObjectKeys.colors);
+        }
+        
+        set {
+            Set<string>(BaseDataObjectKeys.colors, value);
+        }
+    } 
 }
 
-public class GameCharacterPreset : GameDataObject {
+public class GameDataCharacter : GameDataObject {
 
-    public string textures { get; set; }
-    public string colors { get; set; }
+    public virtual List<string> roles {
+        get {
+            return Get<List<string>>(BaseDataObjectKeys.roles);
+        }
+        
+        set {
+            Set<List<string>>(BaseDataObjectKeys.roles, value);
+        }
+    } 
+    
+    public virtual List<GameDataCharacterModel> models {
+        get {
+            return Get<List<GameDataCharacterModel>>(BaseDataObjectKeys.models);
+        }
+        
+        set {
+            Set<List<GameDataCharacterModel>>(BaseDataObjectKeys.models, value);
+        }
+    } 
 }
 
-public class GameCharacterData : GameDataObject {
-
-    public string character_role { get; set; }
-    public List<GameCharacterModel> models { get; set; }
-    public List<GameCharacterPreset> presets { get; set; }
+/*
+"character_data": {
+            "roles": ["hero","enemy","sidekick"],
+            "models" : [
+                {
+                    "type": "character",
+                    "code": "character-boy-1",
+                    "textures": "character-boy1-default",
+                    "colors":"game-college-baylor-bears-home"
+                }
+            ]
+        }
 }
+*/
 
 public class BaseGameCharacter : GameDataObject {
 
     // Attributes that are added or changed after launch should be like this to prevent
     // profile conversions.
 
-    public virtual GameCharacterData character_data {
+    public virtual GameDataCharacter character_data {
         get {
-            return Get<GameCharacterData>(BaseDataObjectKeys.character_data);
+            return Get<GameDataCharacter>(BaseDataObjectKeys.character_data);
         }
         
         set {
-            Set<GameCharacterData>(BaseDataObjectKeys.character_data, value);
+            Set<GameDataCharacter>(BaseDataObjectKeys.character_data, value);
         }
     }  
 
@@ -96,6 +145,13 @@ public class BaseGameCharacter : GameDataObject {
 
     public void Clone(BaseGameCharacter toCopy) {
         base.Clone(toCopy);
+    }
+    
+    public GameObject Load() {
+        foreach(GameDataCharacterModel model in character_data.models) {
+            return GameCharacters.Load(model.code);
+        }
+        return null;
     }
 
     // Attributes that are added or changed after launch should be like this to prevent

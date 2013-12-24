@@ -51,8 +51,12 @@ public class BaseAppContentAssetCustomItems<T> : DataObjects<T> where T : new() 
         pathKey = BASE_DATA_KEY;
         LoadData();
     }
-}
 
+    public AppContentAssetCustomItem GetListByCodeAndType(string code, string type) {
+        return AppContentAssetCustomItems.Instance.GetAll().Find(
+            u => u.code == code && u.type == type);
+    }
+}
 
 public class AppContentAssetCustomItemProperty : GameDataObject {
     //public List<string> types = new List<string>();
