@@ -1008,6 +1008,10 @@ public static class GameObjectHelper {
             obj = ObjectPoolManager.createPooled(go, pos, rotate);
         }
 
+        if(!obj.Has<PoolGameObject>()) {
+            obj.AddComponent<PoolGameObject>();
+        }
+
         return obj;
     }
 
@@ -1016,7 +1020,7 @@ public static class GameObjectHelper {
     }
 
     public static void DestroyGameObject(GameObject go, float delay, bool pooled) {
-        if(!pooled) {
+        if(!pooled && !go.Has<PoolGameObject>()) {
             DestroyDelayed(go, delay);
         }
         else {

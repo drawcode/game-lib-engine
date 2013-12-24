@@ -16,7 +16,7 @@ public class PrefabsPool : MonoBehaviour {
                 _instance = FindObjectOfType(typeof(PrefabsPool)) as PrefabsPool;
 
                 if (!_instance) {
-                    var obj = new GameObject("PrefabsPool");
+                    var obj = new GameObject("_PrefabsPool");
                     _instance = obj.AddComponent<PrefabsPool>();
                 }
             }

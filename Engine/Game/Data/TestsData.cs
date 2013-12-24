@@ -39,6 +39,9 @@ public class TestsData {
         
         Advance("Creating Contents cache paths");
         ContentPaths.CreateCachePaths();
+        
+        Advance("Loading Profile");
+        GameState.LoadProfile();
 
         //Advance("TestGameCharacterSkin");
         //TestGameCharacterSkin();
@@ -72,8 +75,13 @@ public class TestsData {
         //TestGameColors_Code();
 
         
-        Advance("TestAppContentAssetModels_List");
-        TestAppContentAssetModels_List();
+        //Advance("TestAppContentAssetModels_List");
+        //TestAppContentAssetModels_List();
+
+        
+        Advance("TestAppContentAssetModels_Load");
+        TestAppContentAssetModels_Load();
+
 
         
         //("TestAppContentAssetCustomItems_List");
@@ -102,13 +110,67 @@ public class TestsData {
         return equal;
     }
 
+    
+    public static void TestAppContentAssetModels_Load() {
+        
+        string name = "TestAppContentAssetModels_Load";
+        
+        Debug.Log(name);
+
+        List<AppContentAssetModel> items = AppContentAssetModels.Instance.GetAll();
+        DumpObj(name, "items", items);
+        
+        //AssertEquals(name, username, "Player");
+        
+        foreach(AppContentAssetModel item in items) {            
+            Debug.Log("item:code:" + item.code);         
+            Debug.Log("item:display_name:" + item.display_name);
+            
+            Debug.Log("item:json:" + item.ToJson());
+            
+            if(item.custom_materials != null) {         
+                
+                Debug.Log("item.data.custom_materials.Count:" + item.custom_materials.Count);
+                
+                foreach(AppContentAssetCustomItemProperty prop 
+                        in item.custom_materials) {
+                    
+                    Debug.Log("prop:code:" + prop.code);  
+                    Debug.Log("prop:name:" + prop.name); 
+                    foreach(string type in prop.types) {
+                        Debug.Log("prop:type:s:" + type);
+                    }
+                }
+            }
+            else {                
+                Debug.Log("data was NULL" + item.ToJson());
+            }
+            
+            AppContentAssetCustomItem customItem = item.GetCustomItems();
+            
+            Debug.Log("customItem:json:" + customItem.ToJson());
+            
+            if(customItem != null) {
+                if(customItem.properties != null) {
+                    foreach(AppContentAssetCustomItemProperty prop in customItem.properties) {
+                        Debug.Log("prop:code:" + prop.code); 
+                    }
+                }
+            }
+
+            item.LoadModel();
+
+            break;
+        }
+        
+        DumpObj(name, "items.Count", items.Count);
+    }
+
     public static void TestAppContentAssetCustomItems_List() {
         
         string name = "TestAppContentAssetCustomItems_List";
         
         Debug.Log(name);
-        
-        GameState.LoadProfile();
         
         List<AppContentAssetCustomItem> items = AppContentAssetCustomItems.Instance.GetAll();
         DumpObj(name, "items", items);
@@ -149,8 +211,6 @@ public class TestsData {
         string name = "TestAppContentAssetModels_List";
         
         Debug.Log(name);
-        
-        GameState.LoadProfile();
         
         List<AppContentAssetModel> items = AppContentAssetModels.Instance.GetAll();
         DumpObj(name, "items", items);

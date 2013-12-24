@@ -2,10 +2,12 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 
+using UnityEngine;
+
 public class BaseAppContentAssetModels<T> : DataObjects<T> where T : new() {
     private static T current;
     private static volatile BaseAppContentAssetModels<T> instance;
-    private static object syncRoot = new Object();
+    private static System.Object syncRoot = new System.Object();
 
     private string BASE_DATA_KEY = "app-content-asset-model-data";
 
@@ -51,6 +53,15 @@ public class BaseAppContentAssetModels<T> : DataObjects<T> where T : new() {
         pathKey = BASE_DATA_KEY;
         LoadData();
     }
+
+    public static GameObject LoadModel(string code) {
+        AppContentAssetModel model = AppContentAssetModels.Instance.GetByCode(code);
+        if(model != null) {
+            string assetCode = model.asset;
+            return AppContentAssets.LoadAsset(assetCode);
+        }
+        return null;
+    }
 }
 
 public class BaseAppContentAssetModel : GameDataObject {
@@ -89,6 +100,11 @@ public class BaseAppContentAssetModel : GameDataObject {
 
     public void Clone(BaseAppContentAssetModel toCopy) {
         base.Clone(toCopy);
+    }
+    
+    
+    public GameObject LoadModel() {
+        return AppContentAssetModels.LoadModel(code);
     }
 
     public virtual List<AppContentAssetCustomItemProperty> GetCustomMaterials() {

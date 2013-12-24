@@ -3,10 +3,12 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 
+using UnityEngine;
+
 public class BaseAppContentAssets<T> : DataObjects<T> where T : new() {
     private static T current;
     private static volatile BaseAppContentAssets<T> instance;
-    private static object syncRoot = new Object();
+    private static System.Object syncRoot = new System.Object();
 
     private string BASE_DATA_KEY = "app-content-asset-data";
 
@@ -51,6 +53,58 @@ public class BaseAppContentAssets<T> : DataObjects<T> where T : new() {
         path = "data/" + BASE_DATA_KEY + ".json";
         pathKey = BASE_DATA_KEY;
         LoadData();
+    }
+
+    
+    public static GameObject LoadAsset(string code) {
+        return LoadAsset("", code);
+    }
+
+    public static GameObject LoadAsset(string key, string code) {
+
+        foreach(AppContentAsset asset in AppContentAssets.Instance.GetAll()) {
+
+            if(asset.code == code 
+               && (asset.key == key || string.IsNullOrEmpty(key))) {
+
+                if(asset != null) {
+
+                    string assetCode = asset.code;
+                    string path = "";
+
+                    if(asset.type == "resource") {
+                        // Load from resources
+
+                        if(asset.key.StartsWith("level")) {                    
+                            path = ContentPaths.appCacheVersionSharedPrefabLevelAssets;
+                        }
+                        else if(asset.key.StartsWith("character")) {                    
+                            path = ContentPaths.appCacheVersionSharedPrefabCharacters;
+                        }
+                        
+                        path += assetCode;
+                        
+                        GameObject prefabObject = PrefabsPool.PoolPrefab(path);
+                        GameObject go = GameObjectHelper.CreateGameObject(
+                            prefabObject, Vector3.zero, Quaternion.identity, 
+                             true) as GameObject;
+                        return go;
+
+                    }
+                    else if(asset.type == "streaming") {
+                        // Load from resources
+                    }
+                    else if(asset.type == "server") {
+                        // Load from resources
+                    }
+                    else {
+                        // Load from other
+                    }
+                }
+            }
+        }
+        
+        return null;
     }
 }
 
