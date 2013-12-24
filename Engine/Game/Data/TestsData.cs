@@ -86,8 +86,11 @@ public class TestsData {
         //TestAppContentAssetCustomItems_List();
 
         
+        Advance("TestGameColorPresets_List");
+        TestGameColorPresets_List();
+        
         Advance("TestGameCharacters_List");
-        TestGameCharacters_List();
+        //TestGameCharacters_List();
                 
         Advance("TestGameCharacters_Load");
         //TestGameCharacters_Load();
@@ -113,6 +116,37 @@ public class TestsData {
         DumpObj(name, "dataB", dataB);
 
         return equal;
+    }
+        
+    public static void TestGameColorPresets_List() {
+        
+        string name = "TestGameColorPresets_List";
+        
+        Debug.Log(name);
+        
+        List<GameColorPreset> items = GameColorPresets.Instance.GetAll();
+        DumpObj(name, "items", items);
+        
+        //AssertEquals(name, username, "Player");
+        
+        foreach(GameColorPreset item in items) {  
+            
+            Debug.Log("item:code:" + item.code);         
+            Debug.Log("item:type:" + item.type);
+            
+            Debug.Log("item:json:" + item.ToJson());  
+            
+            Dictionary<string, string> data = item.data;
+            
+            if(data != null) {
+                foreach(KeyValuePair<string, string> pair in data) {                    
+                    Debug.Log("pair:Key:" + pair.Key);
+                    Debug.Log("pair:Value:" + pair.Value);                    
+                }
+            }
+        }
+        
+        DumpObj(name, "items.Count", items.Count);
     }
 
     

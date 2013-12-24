@@ -58,6 +58,17 @@ public class BaseGameColorPreset : GameDataObject {
     // Attributes that are added or changed after launch should be like this to prevent
     // profile conversions.
 
+    
+    public virtual Dictionary<string, string> data {
+        get {
+            return Get<Dictionary<string, string>>(BaseDataObjectKeys.data);
+        }
+        
+        set {
+            Set(BaseDataObjectKeys.data, value);
+        }
+    }
+
     public BaseGameColorPreset() {
         Reset();
     }
@@ -66,9 +77,6 @@ public class BaseGameColorPreset : GameDataObject {
         base.Reset();
     }
 
-    public void Clone(BaseGameColorPreset toCopy) {
-        base.Clone(toCopy);
-    }
 
     // Attributes that are added or changed after launch should be like this to prevent
     // profile conversions.
