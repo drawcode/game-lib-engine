@@ -72,8 +72,12 @@ public class TestsData {
         //TestGameColors_Code();
 
         
-        Advance("TestAppContentAssetModels_List");
-        TestAppContentAssetModels_List();
+       // Advance("TestAppContentAssetModels_List");
+        //TestAppContentAssetModels_List();
+
+        
+        Advance("TestAppContentAssetCustomItems_List");
+        TestAppContentAssetCustomItems_List();
     }
 
     public static void DumpObj(string name, string oname, object o) {        
@@ -98,6 +102,46 @@ public class TestsData {
         return equal;
     }
 
+    public static void TestAppContentAssetCustomItems_List() {
+        
+        string name = "TestAppContentAssetCustomItems_List";
+        
+        Debug.Log(name);
+        
+        GameState.LoadProfile();
+        
+        List<AppContentAssetCustomItem> items = AppContentAssetCustomItems.Instance.GetAll();
+        DumpObj(name, "items", items);
+        
+        //AssertEquals(name, username, "Player");
+        
+        foreach(AppContentAssetCustomItem item in items) {  
+
+            Debug.Log("item:code:" + item.code);         
+            Debug.Log("item:type:" + item.type);
+
+            if(item.data != null) {         
+                
+                Debug.Log("item.data.properties.Count:" + item.data.properties.Count);
+
+                foreach(AppContentAssetCustomItemProperty prop 
+                        in item.data.properties) {
+                    
+                    Debug.Log("prop:code:" + prop.code);  
+                    foreach(string type in prop.types) {
+                        Debug.Log("prop:type:s:" + type);
+                    }
+                }
+            }
+            else {                
+                Debug.Log("data was NULL" + item.ToJson());
+            }
+
+        }
+        
+        DumpObj(name, "items.Count", items.Count);
+    }
+
     
     
     public static void TestAppContentAssetModels_List() {
@@ -116,6 +160,7 @@ public class TestsData {
         foreach(AppContentAssetModel model in models) {            
             Debug.Log("model:code:" + model.code);         
             Debug.Log("model:display_name:" + model.display_name);
+
         }
         
         DumpObj(name, "models.Count", models.Count);

@@ -139,10 +139,8 @@ public static class GameObjectHelper {
             }
         }
 
-        Renderer[] rendererComponents = inst.GetComponentsInChildren<Renderer>();
-
         // Enable rendering:
-        foreach (Renderer component in rendererComponents) {
+        foreach (Renderer component in inst.GetComponentsInChildren<Renderer>()) {
             if (component.enabled) {
                 if(inst.renderer != null) {
                     if(inst.renderer.isVisible) {
@@ -172,10 +170,8 @@ public static class GameObjectHelper {
             }
         }
 
-        Renderer[] rendererComponents = inst.GetComponentsInChildren<Renderer>();
-
         // Enable rendering:
-        foreach (Renderer component in rendererComponents) {
+        foreach (Renderer component in inst.GetComponentsInChildren<Renderer>()) {
             if (component.enabled) {
                 if(inst.renderer != null) {
                     if(inst.renderer.isVisible
@@ -199,10 +195,8 @@ public static class GameObjectHelper {
             }
         }
 
-        Renderer[] rendererComponents = inst.GetComponentsInChildren<Renderer>();
-
         // Enable rendering:
-        foreach (Renderer component in rendererComponents) {
+        foreach (Renderer component in inst.GetComponentsInChildren<Renderer>()) {
             if (component.enabled) {
                 return true;
             }
@@ -218,11 +212,9 @@ public static class GameObjectHelper {
         if (inst.renderer != null) {
             inst.renderer.enabled = true;
         }
-
-        Renderer[] rendererComponents = inst.GetComponentsInChildren<Renderer>();
-
+        
         // Enable rendering:
-        foreach (Renderer component in rendererComponents) {
+        foreach (Renderer component in inst.GetComponentsInChildren<Renderer>()) {
             component.enabled = true;
         }
     }
@@ -234,11 +226,9 @@ public static class GameObjectHelper {
         if (inst.renderer != null) {
             inst.renderer.enabled = false;
         }
-
-        Renderer[] rendererComponents = inst.GetComponentsInChildren<Renderer>();
-
+        
         // Enable rendering:
-        foreach (Renderer component in rendererComponents) {
+        foreach (Renderer component in inst.GetComponentsInChildren<Renderer>()) {
             component.enabled = false;
         }
     }
@@ -944,7 +934,7 @@ public static class GameObjectHelper {
 				//LogUtil.Log("SetMaterialColor m:" + m.name);
 				if(FilterMaterialName(m.name) == FilterMaterialName(name)) {
 					m.color = color;
-					LogUtil.Log("SetMaterialColor color:" + color);
+					//LogUtil.Log("SetMaterialColor color:" + color);
 					if(!all)
 						return true;
 				}
@@ -959,7 +949,7 @@ public static class GameObjectHelper {
 				//LogUtil.Log("SetMaterialColor m:" + m.name);
 				if(FilterMaterialName(m.name) == FilterMaterialName(name)) {
 					m.color = color;
-					LogUtil.Log("SetMaterialColor color:" + color);
+					//LogUtil.Log("SetMaterialColor color:" + color);
 					if(!all)
 						return true;
 				}
@@ -974,7 +964,7 @@ public static class GameObjectHelper {
 				//LogUtil.Log("SetMaterialColor m:" + m.name);
 				if(FilterMaterialName(m.name) == FilterMaterialName(name)) {
 					m.color = color;
-					LogUtil.Log("SetMaterialColor color:" + color);
+					//LogUtil.Log("SetMaterialColor color:" + color);
 					if(!all)
 						return true;
 				}
@@ -989,7 +979,7 @@ public static class GameObjectHelper {
 				//LogUtil.Log("SetMaterialColor m:" + m.name);
 				if(FilterMaterialName(m.name) == FilterMaterialName(name)) {
 					m.color = color;
-					LogUtil.Log("SetMaterialColor color:" + color);
+					//LogUtil.Log("SetMaterialColor color:" + color);
 					if(!all)
 						return true;
 				}

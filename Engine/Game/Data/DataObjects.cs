@@ -441,9 +441,6 @@ public class DataObjects<T> {
     }
 
     public T GetByCode(string code) {
-
-        LogUtil.Log("GetByCode:code:" + code);
-
         return GetByStringKey("code", code);
     }
 
@@ -571,8 +568,6 @@ public class DataObjects<T> {
 
 
     public object GetFieldValue(object obj, string fieldName) {
-        LogUtil.Log("GetFieldValue:obj.GetType():" + obj.GetType());
-
         bool hasGet = false;
 
         foreach (var prop in fieldName.Split('.').Select(s => obj.GetType().GetField(s))) {
@@ -596,8 +591,6 @@ public class DataObjects<T> {
     }
 
     public void SetFieldValue(object obj, string fieldName, object fieldValue) {
-        LogUtil.Log("SetFieldValue:obj.GetType():" + obj.GetType());
-
         //bool hasSet = false;
 
         foreach (System.Reflection.FieldInfo field in fieldName.Split('.').Select(s => obj.GetType().GetField(s))) {

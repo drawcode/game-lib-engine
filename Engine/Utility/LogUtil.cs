@@ -35,6 +35,8 @@ public class LogUtil {
     private static volatile LogUtil instance;
     private static System.Object syncRoot = new System.Object();
 
+    public static bool loggingEnabled = false;
+
     public static LogUtil Instance {
         get {
             if (instance == null) {
@@ -160,54 +162,93 @@ public class LogUtil {
     }
 
     public static void Log(string key, object message) {
+
+        if(!loggingEnabled) return;
+
         LogUtil.Instance.LogInternal(key + ":" + message);
     }
 
     public static void Log(object message) {
+        
+        if(!loggingEnabled) return;
+
         LogUtil.Instance.LogInternal(message);
     }
 
     public static void LogProduct(object message) {
+        
+        if(!loggingEnabled) return;
+
         LogUtil.Instance.LogProductKeyInternal(message);
     }
 
     public static void LogAudio(object message) {
+
+        if(!loggingEnabled) return;
+
         LogUtil.Instance.LogAudioKeyInternal(message);
     }
 
     public static void LogBikeAudio(object message) {
+        
+        if(!loggingEnabled) return;
+
         LogUtil.Instance.LogBikeAudioKeyInternal(message);
     }
 
     public static void LogDefault(object message) {
+        
+        if(!loggingEnabled) return;
+
         LogUtil.Instance.LogDefaultKeyInternal(message);
     }
 
     public static void LogStats(object message) {
+        
+        if(!loggingEnabled) return;
+
         LogUtil.Instance.LogStatsKeyInternal(message);
     }
 
     public static void LogAlways(object message) {
+        
+        if(!loggingEnabled) return;
+
         LogUtil.Instance.LogAlwaysKeyInternal(message);
     }
 
     public static void LogAds(object message) {
+        
+        if(!loggingEnabled) return;
+
         LogUtil.Instance.LogAdsKeyInternal(message);
     }
 
     public static void LogError(object message) {
+        
+        if(!loggingEnabled) return;
+
         LogUtil.Instance.LogErrorInternal(message);
     }
 
     public static void LogTools(object message) {
+        
+        if(!loggingEnabled) return;
+
         LogUtil.Instance.LogToolsKeyInternal(message);
     }
 
     public static void LogMode(object message) {
+        
+        if(!loggingEnabled) return;
+
         LogUtil.Instance.LogModeKeyInternal(message);
     }
 
     public static void LogAccess(object message) {
+        
+        if(!loggingEnabled) return;
+
         LogUtil.Instance.LogAccessKeyInternal(message);
     }
 

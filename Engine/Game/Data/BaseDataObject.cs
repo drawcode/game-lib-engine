@@ -40,6 +40,7 @@ public class BaseDataObjectKeys {
 
     public static string keys = "keys";
     public static string properties = "properties";
+    public static string types = "types";
     
     public static string character = "character";
     public static string character_skin = "character_skin";

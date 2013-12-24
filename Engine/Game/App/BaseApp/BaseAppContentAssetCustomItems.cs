@@ -53,16 +53,45 @@ public class BaseAppContentAssetCustomItems<T> : DataObjects<T> where T : new() 
     }
 }
 
+
 public class AppContentAssetCustomItemProperty : DataObjectItem {
-    public List<string> types { get; set; }
+    public List<string> types = new List<string>();
+    public string code = "";
+    /*
+    public virtual List<string> types {
+        get {
+            return Get<List<string>>(BaseDataObjectKeys.types);
+        }
+        
+        set {
+            Set<List<string>>(BaseDataObjectKeys.types, value);
+        }
+    }  
+    */
 }
 
-public class AppContentAssetCustomItemData {
-    public List<AppContentAssetCustomItemProperty> properties { get; set; }
+public class AppContentAssetCustomItemData : GameDataObject {
+
+    public List<AppContentAssetCustomItemProperty> properties = new List<AppContentAssetCustomItemProperty>();
+
+    /*
+    public virtual List<AppContentAssetCustomItemProperty> properties {
+        get {
+            return Get<List<AppContentAssetCustomItemProperty>>(BaseDataObjectKeys.properties);
+        }
+        
+        set {
+            Set<List<AppContentAssetCustomItemProperty>>(BaseDataObjectKeys.properties, value);
+        }
+    } 
+    */
 }
 
-public class BaseAppContentAssetCustomItem : GameDataObject {
+public class BaseAppContentAssetCustomItem : GameDataObject {  
 
+    // Attributes that are added or changed after launch should be like this to prevent
+    // profile conversions.    
+    
     public virtual AppContentAssetCustomItemData data {
         get {
             return Get<AppContentAssetCustomItemData>(BaseDataObjectKeys.data);
@@ -71,10 +100,7 @@ public class BaseAppContentAssetCustomItem : GameDataObject {
         set {
             Set<AppContentAssetCustomItemData>(BaseDataObjectKeys.data, value);
         }
-    }      
-
-    // Attributes that are added or changed after launch should be like this to prevent
-    // profile conversions.
+    }  
 
     public BaseAppContentAssetCustomItem() {
         Reset();
