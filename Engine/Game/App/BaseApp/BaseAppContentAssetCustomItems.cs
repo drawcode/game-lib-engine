@@ -52,7 +52,7 @@ public class BaseAppContentAssetCustomItems<T> : DataObjects<T> where T : new() 
         LoadData();
     }
 
-    public AppContentAssetCustomItem GetListByCodeAndType(string code, string type) {
+    public AppContentAssetCustomItem GetByCodeAndType(string code, string type) {
         return AppContentAssetCustomItems.Instance.GetAll().Find(
             u => u.code == code && u.type == type);
     }
