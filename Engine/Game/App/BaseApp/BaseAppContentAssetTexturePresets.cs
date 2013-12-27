@@ -2,12 +2,12 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 
-public class BaseGameColorPresets<T> : DataObjects<T> where T : new() {
+public class BaseAppContentAssetTexturePresets<T> : DataObjects<T> where T : new() {
     private static T current;
-    private static volatile BaseGameColorPresets<T> instance;
+    private static volatile BaseAppContentAssetTexturePresets<T> instance;
     private static object syncRoot = new Object();
 
-    private string BASE_DATA_KEY = "game-color-preset-data";
+    private string BASE_DATA_KEY = "app-content-asset-texture-preset-data";
 
     public static T BaseCurrent {
         get {
@@ -25,12 +25,12 @@ public class BaseGameColorPresets<T> : DataObjects<T> where T : new() {
         }
     }
 
-    public static BaseGameColorPresets<T> BaseInstance {
+    public static BaseAppContentAssetTexturePresets<T> BaseInstance {
         get {
             if (instance == null) {
                 lock (syncRoot) {
                     if (instance == null)
-                        instance = new BaseGameColorPresets<T>(true);
+                        instance = new BaseAppContentAssetTexturePresets<T>(true);
                 }
             }
 
@@ -41,11 +41,11 @@ public class BaseGameColorPresets<T> : DataObjects<T> where T : new() {
         }
     }
 
-    public BaseGameColorPresets() {
+    public BaseAppContentAssetTexturePresets() {
         Reset();
     }
 
-    public BaseGameColorPresets(bool loadData) {
+    public BaseAppContentAssetTexturePresets(bool loadData) {
         Reset();
         path = "data/" + BASE_DATA_KEY + ".json";
         pathKey = BASE_DATA_KEY;
@@ -53,7 +53,7 @@ public class BaseGameColorPresets<T> : DataObjects<T> where T : new() {
     }
 }
 
-public class BaseGameColorPreset : GameDataObject {
+public class BaseAppContentAssetTexturePreset : GameDataObject {
 
     // Attributes that are added or changed after launch should be like this to prevent
     // profile conversions.
@@ -69,7 +69,7 @@ public class BaseGameColorPreset : GameDataObject {
         }
     }
 
-    public BaseGameColorPreset() {
+    public BaseAppContentAssetTexturePreset() {
         Reset();
     }
 

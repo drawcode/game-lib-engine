@@ -68,11 +68,11 @@ public class TestsData {
         //Advance("TestGameProfileCharacter_currentProgress");
         //TestGameProfileCharacter_currentProgress();
         
-        //Advance("TestGameColors_List");
-        //TestGameColors_List();
+        //Advance("TestAppColors_List");
+        //TestAppColors_List();
         
-        //Advance("TestGameColors_Code");
-        //TestGameColors_Code();
+        //Advance("TestAppColors_Code");
+        //TestAppColors_Code();
 
         
         //Advance("TestAppContentAssetModels_List");
@@ -86,8 +86,8 @@ public class TestsData {
         //TestAppContentAssetCustomItems_List();
 
         
-        Advance("TestGameColorPresets_List");
-        TestGameColorPresets_List();
+        Advance("TestAppColorPresets_List");
+        TestAppColorPresets_List();
         
         Advance("TestGameCharacters_List");
         //TestGameCharacters_List();
@@ -118,18 +118,18 @@ public class TestsData {
         return equal;
     }
         
-    public static void TestGameColorPresets_List() {
+    public static void TestAppColorPresets_List() {
         
-        string name = "TestGameColorPresets_List";
+        string name = "TestAppColorPresets_List";
         
         Debug.Log(name);
         
-        List<GameColorPreset> items = GameColorPresets.Instance.GetAll();
+        List<AppColorPreset> items = AppColorPresets.Instance.GetAll();
         DumpObj(name, "items", items);
         
         //AssertEquals(name, username, "Player");
         
-        foreach(GameColorPreset item in items) {  
+        foreach(AppColorPreset item in items) {  
             
             Debug.Log("item:code:" + item.code);         
             Debug.Log("item:type:" + item.type);
@@ -181,7 +181,7 @@ public class TestsData {
 
                     GameProfileCustomItem profileCustomItem = GameProfileCharacters.currentCustom;
 
-                    GameColorPreset preset = GameColorPresets.Instance.GetByCode("game-college-baylor-bears-home");
+                    AppColorPreset preset = AppColorPresets.Instance.GetByCode("game-college-baylor-bears-home");
 
                     GameObject playerObject = item.Load();
 
@@ -402,15 +402,15 @@ public class TestsData {
         DumpObj(name, "items.Count", items.Count);
     }
     
-    public static void TestGameColors_List() {
+    public static void TestAppColors_List() {
         
-        string name = "TestGameColors_List";
+        string name = "TestAppColors_List";
         
         Debug.Log(name);
         
-        List<GameColor> colors = GameColors.Instance.GetAll();
+        List<AppColor> colors = AppColors.Instance.GetAll();
 
-        foreach(GameColor color in colors) {
+        foreach(AppColor color in colors) {
             Color colorTo = ColorHelper.FromRGB(color.color.rgba);
             
             Debug.Log("color:code:" + color.code);
@@ -423,13 +423,13 @@ public class TestsData {
 
     
     
-    public static void TestGameColors_Code() {
+    public static void TestAppColors_Code() {
         
-        string name = "TestGameColors_Code";
+        string name = "TestAppColors_Code";
         
         Debug.Log(name);
         
-        GameColor color = GameColors.Instance.GetByCode("game-ucf-knights-gold");
+        AppColor color = AppColors.Instance.GetByCode("game-ucf-knights-gold");
 
         if(color != null) {
         
