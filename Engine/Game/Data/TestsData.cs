@@ -30,6 +30,9 @@ public class TestsData {
     public static void RunTest() {
 
         Advance("Running tests...");
+
+        bool success = false;
+        string testName = "";
         
         ContentsConfig.contentRootFolder = "drawlabs";
         ContentsConfig.contentAppFolder = "game-drawlabs-brainball";
@@ -84,16 +87,43 @@ public class TestsData {
                 
         //("TestAppContentAssetCustomItems_List");
         //TestAppContentAssetCustomItems_List();
+        
+        //Advance("TestAppAssetTextures_List");
+        //TestAppAssetTextures_List();
 
+        testName = "TestAppAssetTexturePresets_List";
+        Advance(testName);
+        success = TestAppAssetTexturePresets_List(testName);
+
+        if(!CheckTest(success, testName)) { 
+            return;
+        }
+                
+        //Advance("TestAppColorPresets_List");
+        //success = TestAppColorPresets_List();
         
-        Advance("TestAppColorPresets_List");
-        TestAppColorPresets_List();
-        
-        Advance("TestGameCharacters_List");
+        //Advance("TestGameCharacters_List");
         //TestGameCharacters_List();
                 
-        Advance("TestGameCharacters_Load");
+        //Advance("TestGameCharacters_Load");
         //TestGameCharacters_Load();
+
+        if(success) {
+            Debug.Log("TESTS SUCCESSFUL");
+        }
+        else {
+            Debug.LogError("TESTS WERE IN ERROR!");
+        }
+        
+        Debug.Log("TESTS COMPLETED");
+    }
+
+    public static bool CheckTest(bool success, string name) {
+        if(!success) {            
+            Debug.LogError("TESTS WERE IN ERROR! " + name);
+            return success;
+        }
+        return success;
     }
 
     public static void DumpObj(string name, string oname, object o) {        
@@ -117,10 +147,81 @@ public class TestsData {
 
         return equal;
     }
+    
+    public static bool TestAppAssetTextures_List(string name) {
         
-    public static void TestAppColorPresets_List() {
+        bool success = false;
+
+        Debug.Log(name);
+        
+        List<AppContentAssetTexture> items = AppContentAssetTextures.Instance.GetAll();
+        DumpObj(name, "items", items);
+        
+        //AssertEquals(name, username, "Player");
+        
+        foreach(AppContentAssetTexture item in items) {  
+            
+            Debug.Log("item:code:" + item.code);         
+            Debug.Log("item:type:" + item.type);
+            
+            Debug.Log("item:json:" + item.ToJson());  
+            
+            Dictionary<string, string> data = item.data;
+            
+            if(data != null) {
+                foreach(KeyValuePair<string, string> pair in data) {                    
+                    Debug.Log("pair:Key:" + pair.Key);
+                    Debug.Log("pair:Value:" + pair.Value);    
+                    success = true;
+                }
+            }
+        }
+        
+        DumpObj(name, "items.Count", items.Count);
+
+        return success;
+    }
+        
+    public static bool TestAppAssetTexturePresets_List(string name) {
+
+        bool success = false;
+
+        Debug.Log(name);
+        
+        List<AppContentAssetTexturePreset> items = AppContentAssetTexturePresets.Instance.GetAll();
+        DumpObj(name, "items", items);
+        
+        //AssertEquals(name, username, "Player");
+        
+        foreach(AppContentAssetTexturePreset item in items) {  
+            
+            Debug.Log("item:code:" + item.code);         
+            Debug.Log("item:type:" + item.type);
+            
+            Debug.Log("item:json:" + item.ToJson());  
+            
+            Dictionary<string, string> data = item.data;
+            
+            if(data != null) {
+                foreach(KeyValuePair<string, string> pair in data) {                    
+                    Debug.Log("pair:Key:" + pair.Key);
+                    Debug.Log("pair:Value:" + pair.Value);
+                    success = true;
+                }
+            }
+        }
+        
+        DumpObj(name, "items.Count", items.Count);
+
+        return success;
+    }
+
+        
+    public static bool TestAppColorPresets_List() {
         
         string name = "TestAppColorPresets_List";
+
+        bool success = false;
         
         Debug.Log(name);
         
@@ -139,7 +240,8 @@ public class TestsData {
             Dictionary<string, string> data = item.data;
             
             if(data != null) {
-                foreach(KeyValuePair<string, string> pair in data) {                    
+                foreach(KeyValuePair<string, string> pair in data) { 
+                    success = true;
                     Debug.Log("pair:Key:" + pair.Key);
                     Debug.Log("pair:Value:" + pair.Value);                    
                 }
@@ -147,6 +249,8 @@ public class TestsData {
         }
         
         DumpObj(name, "items.Count", items.Count);
+
+        return success;
     }
 
     
