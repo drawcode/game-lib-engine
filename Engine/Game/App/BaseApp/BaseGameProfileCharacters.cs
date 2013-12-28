@@ -422,7 +422,7 @@ public class BaseGameProfileCharacter : Profile {
             //}
             if(item != null) {
                 if(item.profileCustomItem != null && GameCustomController.Instance != null) {
-                	item.profileCustomItem = GameCustomController.CheckCustomColorInit(item.profileCustomItem);
+                	item.profileCustomItem = GameCustomController.CheckCustomColorInit("character", item.profileCustomItem);
 				}
                 BaseGameProfileCharacters.currentCharacter = item;
             }
