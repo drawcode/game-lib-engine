@@ -445,6 +445,13 @@ public class ContentPaths {
                 + ContentsConfig.contentAppFolder + "/version/shared/prefab/";
         }
     }
+
+    public static string appCacheVersionSharedMaterials {
+        get {
+            return ContentsConfig.contentRootFolder + "/"
+                + ContentsConfig.contentAppFolder + "/version/shared/materials/";
+        }
+    }
     
     public static string appCacheVersionSharedPrefabCharacters {
         get {

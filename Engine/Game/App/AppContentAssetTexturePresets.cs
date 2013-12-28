@@ -49,6 +49,16 @@ public class AppContentAssetTexturePresets : BaseAppContentAssetTexturePresets<A
         pathKey = DATA_KEY;
         LoadData();
     }   
+    
+    public static List<AppContentAssetTexturePreset> All {
+        get {
+            return GetAllItems();
+        }
+    }
+    
+    public static List<AppContentAssetTexturePreset> GetAllItems() {
+        return Instance.GetAll();
+    }
 }
 
 public class AppContentAssetTexturePreset : BaseAppContentAssetTexturePreset {

@@ -467,6 +467,11 @@ public static class GameObjectExtensions {
 	public static List<Material> GetMaterials(this GameObject go, string name) {
         return GameObjectHelper.GetMaterials(go, name);    
 	}
+
+    public static void SetMaterialSwap(
+        this GameObject inst, string nameFind, string materialResourcesPath) {
+        GameObjectHelper.SetMaterialSwap(inst, nameFind, materialResourcesPath);
+    }
 	
 	public static void SetMaterialColor(this GameObject go, string name, Color color) {
         GameObjectHelper.SetMaterialColor(go, name, color);    
