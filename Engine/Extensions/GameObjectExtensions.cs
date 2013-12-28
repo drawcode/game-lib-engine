@@ -133,6 +133,50 @@ public static class GameObjectExtensions {
         return null;
     }
 
+    public static T FindTypeBelowRecursive<T>(this GameObject inst, string name)
+        where T : Component {
+        if (inst == null) {
+            return null;
+        }
+        
+        if (inst != null) {
+            
+            foreach (T instItem in inst.GetComponents<T>()) {
+                if (instItem != null && instItem.name == name) {
+                    return instItem;
+                }
+            }
+            
+            foreach (Transform t in inst.transform) {
+                return FindTypeAboveRecursive<T>(t.gameObject);
+            }
+        }
+        
+        return default(T);
+    }
+
+    public static GameObject FindTypeBelowObjectRecursive<T>(this GameObject inst, string name)
+        where T : Component {
+        if (inst == null) {
+            return null;
+        }
+        
+        if (inst != null) {
+            
+            foreach (T instItem in inst.GetComponents<T>()) {
+                if (instItem != null && instItem.name == name) {
+                    return inst;
+                }
+            }
+            
+            foreach (Transform t in inst.transform) {
+                return FindTypeAboveObjectRecursive<T>(t.gameObject);
+            }
+        }
+        
+        return null;
+    }
+
     public static T FindTypeAbove<T>(this GameObject inst)
         where T : Component {
         if (inst == null) {
@@ -149,9 +193,9 @@ public static class GameObjectExtensions {
         }
 
         if (inst != null) {
-         T instItem = inst.GetComponent<T>();
+            T instItem = inst.GetComponent<T>();
             if (instItem != null) {
-                return default(T);
+                return instItem;
             }
 
             if (inst.transform.parent != null) {
@@ -188,6 +232,13 @@ public static class GameObjectExtensions {
             return null;
 
         return GameObjectHelper.Get<T>(inst);
+    }
+
+    public static T Get<T>(this GameObject inst, string name) where T : Component {
+        if (inst == null)
+            return null;
+        
+        return GameObjectHelper.Get<T>(inst, name);
     }
 
     public static T[] GetList<T>(this GameObject inst) where T : Component {

@@ -618,21 +618,61 @@ public class GameProfileCustomItem : DataObjectItem {
 
     public override void Reset() {
         base.Reset();
+    }    
+
+    // PRESET CODES
+
+    public virtual void SetCustomTexturePreset(string texturePresetCode) {
+        SetAttributeStringValue(
+            BaseGameProfileAttributes.ATT_CUSTOM_TEXTURE_PRESET, texturePresetCode);
+    }
+    
+    public virtual void SetCustomColorPreset(string colorPresetCode) {
+        SetAttributeStringValue(
+            BaseGameProfileAttributes.ATT_CUSTOM_COLOR_PRESET, colorPresetCode);
+    }
+    
+    public virtual string GetCustomTexturePreset() {
+        return GetAttributeStringValue(
+            BaseGameProfileAttributes.ATT_CUSTOM_TEXTURE_PRESET);
+    }
+    
+    public virtual string GetCustomColorPreset() {
+        return GetAttributeStringValue(
+            BaseGameProfileAttributes.ATT_CUSTOM_COLOR_PRESET);
     }
 
-    // ----------------------------------------------------------
-    // color items
+    // ITEMS
 
     public virtual string GetCustomColorItemKey(string key) {
         string fullKey = BaseGameProfileAttributes.ATT_CUSTOM_COLOR_ITEM;
         fullKey = fullKey + "-" + key.ToLower().Trim().Replace(" ", "-");
         return fullKey;
     }
+    
+    public virtual string GetCustomTextureItemKey(string key) {
+        string fullKey = BaseGameProfileAttributes.ATT_CUSTOM_TEXTURE_ITEM;
+        fullKey = fullKey + "-" + key.ToLower().Trim().Replace(" ", "-");
+        return fullKey;
+    }
+
+    public virtual void SetCustomTexture(string textureKey, string textureName) {
+        CustomTextureItem item = GetCustomTextureItem(textureKey);
+        item.textureName = textureName;
+        SetCustomTextureItem(textureKey, item);
+    }
 
     public virtual void SetCustomColor(string colorKey, Color color) {
         CustomColorItem colorItem = GetCustomColorItem(colorKey);
         colorItem.FromColor(color);
         SetCustomColorItem(colorKey, colorItem);
+    }
+
+    public virtual void SetCustomTextureItem(string textureKey, CustomTextureItem textureItem) {
+        string key = GetCustomTextureItemKey(textureKey);
+        string textureItemText = JsonMapper.ToJson(textureItem);
+        //LogUtil.Log("SetCustomColorItem: " + colorItemText);
+        SetAttributeStringValue(key, textureItemText);
     }
 
     public virtual void SetCustomColorItem(string colorKey, CustomColorItem colorItem) {
@@ -642,12 +682,35 @@ public class GameProfileCustomItem : DataObjectItem {
         SetAttributeStringValue(key, colorItemText);
     }
 
+    public virtual string GetCustomTexture(string textureKey) {
+        return GetCustomTextureItem(textureKey).textureName;
+    }
+
     public virtual Color GetCustomColor(string colorKey) {
         return GetCustomColorItem(colorKey).GetColor();
     }
 
+    public virtual CustomTextureItem GetCustomTextureItem(string textureKey) {
+        CustomTextureItem item = new CustomTextureItem();
+        
+        string key = GetCustomTextureItemKey(textureKey);
+        
+        string json = GetAttributeStringValue(key);
+        if(!string.IsNullOrEmpty(json)) {
+            try {
+                //LogUtil.Log("GetCustomTextureItem: " + json);
+                item = JsonMapper.ToObject<CustomTextureItem>(json);
+            }
+            catch(Exception e) {
+                item = new CustomTextureItem();
+                LogUtil.Log(e);
+            }
+        }
+        return item;
+    }
+
     public virtual CustomColorItem GetCustomColorItem(string colorKey) {
-        CustomColorItem colorItem = new CustomColorItem();
+        CustomColorItem item = new CustomColorItem();
 
         string key = GetCustomColorItemKey(colorKey);
 
@@ -655,14 +718,14 @@ public class GameProfileCustomItem : DataObjectItem {
         if(!string.IsNullOrEmpty(json)) {
             try {
                 //LogUtil.Log("GetCustomColorItem: " + json);
-                colorItem = JsonMapper.ToObject<CustomColorItem>(json);
+                item = JsonMapper.ToObject<CustomColorItem>(json);
             }
             catch(Exception e) {
-                colorItem = new CustomColorItem();
+                item = new CustomColorItem();
                 LogUtil.Log(e);
             }
         }
-        return colorItem;
+        return item;
     }
 
     // ----------------------------------------------------------

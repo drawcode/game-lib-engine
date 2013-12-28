@@ -467,6 +467,27 @@ public static class GameObjectHelper {
         return null;
     }
 
+    public static T Get<T>(GameObject inst, string name) where T : Component {
+        if (inst == null) {
+            return null;
+        }
+        
+        foreach(T obj in inst.GetComponents<T>()) {
+            if(obj.name == name) {
+                return obj;
+            }
+        }
+        
+        
+        foreach(T obj in inst.GetComponentsInChildren<T>(true)) {
+            if(obj.name == name) {
+                return obj;
+            }
+        }
+        
+        return null;
+    }
+
     public static T[] GetList<T>(GameObject inst) where T : Component {
         if (inst == null) {
             return null;
@@ -1001,7 +1022,7 @@ public static class GameObjectHelper {
 		foreach(MeshRenderer mesh in renderers) {
 			foreach(Material m in mesh.materials) {
 				//LogUtil.Log("SetMaterialColor m:" + m.name);
-				if(FilterMaterialName(m.name) == FilterMaterialName(name)) {
+				if(FilterMaterialName(m.name).Contains(FilterMaterialName(name))) {
 					m.color = color;
 					//LogUtil.Log("SetMaterialColor color:" + color);
 					if(!all)
@@ -1016,7 +1037,7 @@ public static class GameObjectHelper {
 		foreach(MeshRenderer mesh in renderersChildren) {
 			foreach(Material m in mesh.materials) {
 				//LogUtil.Log("SetMaterialColor m:" + m.name);
-				if(FilterMaterialName(m.name) == FilterMaterialName(name)) {
+				if(FilterMaterialName(m.name).Contains(FilterMaterialName(name))) {
 					m.color = color;
 					//LogUtil.Log("SetMaterialColor color:" + color);
 					if(!all)
@@ -1031,7 +1052,7 @@ public static class GameObjectHelper {
 		foreach(SkinnedMeshRenderer mesh in skinnedRenderers) {
 			foreach(Material m in mesh.materials) {
 				//LogUtil.Log("SetMaterialColor m:" + m.name);
-				if(FilterMaterialName(m.name) == FilterMaterialName(name)) {
+				if(FilterMaterialName(m.name).Contains(FilterMaterialName(name))) {
 					m.color = color;
 					//LogUtil.Log("SetMaterialColor color:" + color);
 					if(!all)
@@ -1046,7 +1067,7 @@ public static class GameObjectHelper {
 		foreach(SkinnedMeshRenderer mesh in skinnedRenderersChildren) {
 			foreach(Material m in mesh.materials) {
 				//LogUtil.Log("SetMaterialColor m:" + m.name);
-				if(FilterMaterialName(m.name) == FilterMaterialName(name)) {
+				if(FilterMaterialName(m.name).Contains(FilterMaterialName(name))) {
 					m.color = color;
 					//LogUtil.Log("SetMaterialColor color:" + color);
 					if(!all)

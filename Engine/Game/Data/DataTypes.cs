@@ -328,6 +328,11 @@ public class CustomColors {
     }
 }
 
+public class CustomTextureItem : DataObjectItem {
+    public string textureCode;
+    public string textureName;
+}
+
 public class CustomColorItem : DataObjectItem {
     public string colorCode;
     public double r;
