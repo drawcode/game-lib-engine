@@ -953,7 +953,7 @@ public static class GameObjectHelper {
             return;
         }
 
-        Debug.Log("SetMaterialSwap:" + " materialTo:" + materialTo.name);
+        //Debug.Log("SetMaterialSwap:" + " materialTo:" + materialTo.name);
 
         MeshRenderer[] renderers = inst.GetComponents<MeshRenderer>();
         //LogUtil.Log("SetMaterialColor renderers:" + renderers.Length );
@@ -964,7 +964,7 @@ public static class GameObjectHelper {
                     Material[] materialsTo = renderers[i].materials;
                     materialsTo[j] = materialTo;
                     renderers[i].materials = materialsTo;
-                    Debug.Log("SetMaterialSwap:" + " materialTo2:" + materialTo.name);
+                    //Debug.Log("SetMaterialSwap:" + " materialTo2:" + materialTo.name);
                 }
             }
         }
@@ -978,7 +978,7 @@ public static class GameObjectHelper {
                     Material[] materialsTo = renderersChildren[i].materials;
                     materialsTo[j] = materialTo;
                     renderersChildren[i].materials = materialsTo;
-                    Debug.Log("SetMaterialSwap:" + " materialTo3:" + materialTo.name);
+                    //Debug.Log("SetMaterialSwap:" + " materialTo3:" + materialTo.name);
                 }
             }
         }
@@ -992,7 +992,7 @@ public static class GameObjectHelper {
                     Material[] materialsTo = skinnedRenderers[i].materials;
                     materialsTo[j] = materialTo;
                     skinnedRenderers[i].materials = materialsTo;
-                    Debug.Log("SetMaterialSwap:" + " materialTo4:" + materialTo.name);
+                    //Debug.Log("SetMaterialSwap:" + " materialTo4:" + materialTo.name);
                 }
             }
         }
@@ -1006,7 +1006,7 @@ public static class GameObjectHelper {
                     Material[] materialsTo = skinnedRenderersChildren[i].materials;
                     materialsTo[j] = materialTo;
                     skinnedRenderersChildren[i].materials = materialsTo;
-                    Debug.Log("SetMaterialSwap:" + " materialTo5:" + materialTo.name);
+                    //Debug.Log("SetMaterialSwap:" + " materialTo5:" + materialTo.name);
                 }
             }
         }
