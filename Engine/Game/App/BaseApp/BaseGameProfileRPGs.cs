@@ -620,6 +620,13 @@ public class GameProfileCustomItem : DataObjectItem {
         base.Reset();
     }    
 
+    public bool HasData() {
+        if(attributes.Count > 0) {
+            return true;
+        }
+        return false;
+    }
+
     // PRESET CODES
 
     public virtual void SetCustomTexturePreset(string texturePresetCode) {
