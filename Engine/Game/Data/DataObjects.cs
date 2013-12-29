@@ -628,6 +628,20 @@ public class DataObjects<T> {
                         return true;
                     }
                 }
+                
+                foreach (System.Reflection.PropertyInfo prop in obj.GetType().GetProperties()) {
+                    if (prop.Name == key) {
+                        found = true;
+                    }
+                }
+                if (found) {
+                    string codeValue = (string)GetFieldValue(obj, key);//(string)obj.GetType().GetProperties().GetValue(obj, null);
+                    if(!string.IsNullOrEmpty(codeValue)) {
+                        if (codeValue.ToLower() == keyValue.ToLower()) {
+                            return true;
+                        }
+                    }
+                }
             }
             catch (Exception e) {
                 LogUtil.Log("GetByStringKey warning no key:" + e);
