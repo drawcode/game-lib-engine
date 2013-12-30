@@ -665,6 +665,7 @@ public class GameProfileCustomItem : DataObjectItem {
 
     public virtual void SetCustomTexture(string textureKey, string textureName) {
         CustomTextureItem item = GetCustomTextureItem(textureKey);
+        item.textureCode = textureKey;
         item.textureName = textureName;
         SetCustomTextureItem(textureKey, item);
     }

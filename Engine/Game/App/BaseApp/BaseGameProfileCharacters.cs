@@ -310,25 +310,30 @@ public class BaseGameProfileCharacter : Profile {
     }
  
     // characters
+
+    public virtual GameProfileCharacterItems character_items {
+        get {
+            return Get<GameProfileCharacterItems>(BaseDataObjectKeys.character_items);
+        }
+        
+        set {
+            Set(BaseDataObjectKeys.character_items, value);
+        }
+    }
  
     public virtual void SetCharacters(GameProfileCharacterItems obj) {
 
-        Set(BaseGameProfileCharacterAttributes.ATT_CHARACTERS, obj);
+        character_items = obj;
 
         Messenger.Broadcast(BaseGameProfileMessages.ProfileShouldBeSaved);
     }
 
     public virtual GameProfileCharacterItems GetCharacters() {       
         GameProfileCharacterItems obj = new GameProfileCharacterItems();
-
-        string key = BaseGameProfileCharacterAttributes.ATT_CHARACTERS;
-
-        if(!CheckIfAttributeExists(key)) {
-
-            SetCharacters(obj);
-        }
                 
-        obj = Get<GameProfileCharacterItems>(key);
+        obj = character_items;
+
+        //UnityEngine.Debug.Log("GameProfileCharacterItems:obj:" + obj.ToJson());
      
         if(obj == null) {
             obj = new GameProfileCharacterItems();
