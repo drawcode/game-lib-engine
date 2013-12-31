@@ -3,65 +3,48 @@ using System.Collections.Generic;
 
 public static class DictionaryExtensions {
 
-    /*
-    // generics
-    
-    public virtual T Get<T>(this Dictionary<T, U> dict, string code) {
-        return Get<T>(code, default(T));
+    public static T Get<T>(this Dictionary<string, T> dict, string code) {
+        return dict.Get<string, T>(code, default(T));
+    }
+
+    public static object Get(this Dictionary<string, object> dict, string code) {
+        return dict.Get<string, object>(code, null);
     }
     
-    public virtual T Get<T>(this Dictionary<U, T> dict, string code, T defaultValue) {                
+    public static TVal Get<TKey, TVal>(this Dictionary<TKey, TVal> dict, TKey code) {
+        return dict.Get<TKey, TVal>(code, default(TVal));
+    }
+    
+    public static TVal Get<TKey, TVal>(this Dictionary<TKey, TVal> dict, TKey code, TVal defaultValue) {  
+        if(dict == null) {
+            return default(TVal);
+        }
+
         try {
-            if (ContainsKey(code)) {
-                return (T)this[code];
+            if (dict.ContainsKey(code)) {
+                return (TVal)dict[code];
             }
             return defaultValue;
         }
         catch (Exception e) {
-            return default(T);
+            return default(TVal);
         }
+    }    
+    
+    public static void Set(this Dictionary<string, object> dict, string code, object val) {
+        dict.Set<string, object>(code, val);
     }
 
-    
-    public virtual void Set<T>(string code, T val) {
-        if (ContainsKey(code)) {
-            this[code] = val;
-        }
-        else {
-            Add(code, val);
-        }
-    }
-    
-    public virtual void Set(string code, object val) {
-        if (ContainsKey(code)) {
-            this[code] = val;
-        }
-        else {
-            Add(code, val);
-        }
-    }
-    
-    public virtual void Set(string code, DataAttribute val) {
-        if (attributes == null) {
-            attributes = new Dictionary<string, DataAttribute>();                        
+    public static void Set<TKey, TVal>(this Dictionary<TKey, TVal> dict, TKey code, TVal val) {
+        if(dict == null) {
+            return;
         }
         
-        
-        if (attributes.ContainsKey(code)) {
-            attributes[code] = val;
+        if (dict.ContainsKey(code)) {
+            dict[code] = val;
         }
         else {
-            attributes.Add(code, val);
+            dict.Add(code, val);
         }
     }
-    */
-    /*
-    public static bool ContainsKey(this IList<T> list, string key) {
-        if(list == null) {
-            return false;
-        }
-
-        foreach
-    }
-    */
 }
