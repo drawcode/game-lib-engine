@@ -71,13 +71,13 @@ public class TestsData {
         //Advance("TestGameProfileCharacter_currentProgress");
         //TestGameProfileCharacter_currentProgress();
 
-        testName = "TestGameProfileCharacter_currentCustom";
-        Advance(testName);
-        success = TestGameProfileCharacter_currentCustom(testName);
+        //testName = "TestGameProfileCharacter_currentCustom";
+        //Advance(testName);
+        //success = TestGameProfileCharacter_currentCustom(testName);
         
-        if(!CheckTest(success, testName)) { 
-            return;
-        }
+        //if(!CheckTest(success, testName)) { 
+        //    return;
+        //}
 
         
         //Advance("TestAppColors_List");
@@ -117,6 +117,13 @@ public class TestsData {
         //Advance("TestGameCharacters_Load");
         //TestGameCharacters_Load();
 
+        testName = "TestGameTeams_List";
+        Advance(testName);
+        success = TestGameTeams_List(testName);
+        
+        if(!CheckTest(success, testName)) { 
+            return;
+        }
         if(success) {
             Debug.Log("TESTS SUCCESSFUL");
         }
@@ -155,6 +162,47 @@ public class TestsData {
         DumpObj(name, "dataB", dataB);
 
         return equal;
+    }
+    
+    public static bool TestGameTeams_List(string name) {
+        
+        bool success = false;
+        
+        Debug.Log(name);
+        
+        List<GameTeam> items = GameTeams.Instance.GetAll();
+        DumpObj(name, "items", items);
+        
+        //AssertEquals(name, username, "Player");
+        
+        foreach(GameTeam item in items) {  
+
+            Debug.Log("item:code:" + item.code);               
+            Debug.Log("item:json:" + item.ToJson());  
+            
+            GameTeamData data = item.data;
+            
+            if(data != null) {
+                foreach(GameTeamDataItem dataItem in data.models) {                    
+                    Debug.Log("dataItem:models:code:" + dataItem.code);
+                    success = true;
+                }
+                
+                foreach(GameTeamDataItem dataItem in data.color_presets) {                    
+                    Debug.Log("dataItem:color_presets:code:" + dataItem.code);
+                    success = true;
+                }
+                
+                foreach(GameTeamDataItem dataItem in data.texture_presets) {                    
+                    Debug.Log("dataItem:texture_presets:code:" + dataItem.code);
+                    success = true;
+                }
+            }
+        }
+        
+        DumpObj(name, "items.Count", items.Count);
+        
+        return success;
     }
         
     public static bool TestGameProfileCharacter_currentCustom(string name) {
