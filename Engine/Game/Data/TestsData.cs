@@ -70,6 +70,15 @@ public class TestsData {
                 
         //Advance("TestGameProfileCharacter_currentProgress");
         //TestGameProfileCharacter_currentProgress();
+
+        testName = "TestGameProfileCharacter_currentCustom";
+        Advance(testName);
+        success = TestGameProfileCharacter_currentCustom(testName);
+        
+        if(!CheckTest(success, testName)) { 
+            return;
+        }
+
         
         //Advance("TestAppColors_List");
         //TestAppColors_List();
@@ -91,13 +100,13 @@ public class TestsData {
         //Advance("TestAppAssetTextures_List");
         //TestAppAssetTextures_List();
 
-        testName = "TestAppAssetTexturePresets_List";
-        Advance(testName);
-        success = TestAppAssetTexturePresets_List(testName);
+        //testName = "TestAppAssetTexturePresets_List";
+        //Advance(testName);
+        //success = TestAppAssetTexturePresets_List(testName);
 
-        if(!CheckTest(success, testName)) { 
-            return;
-        }
+        //if(!CheckTest(success, testName)) { 
+        //    return;
+        //}
                 
         //Advance("TestAppColorPresets_List");
         //success = TestAppColorPresets_List();
@@ -146,6 +155,38 @@ public class TestsData {
         DumpObj(name, "dataB", dataB);
 
         return equal;
+    }
+        
+    public static bool TestGameProfileCharacter_currentCustom(string name) {
+        
+        bool success = false;
+        
+        Debug.Log(name);
+
+        
+        string characterCode = "default";
+        
+        GameProfileCustomItem customItem = GameProfileCharacters.currentCustom;
+        
+        
+        if(customItem == null) {
+            
+            DumpObj(name, "customItem:NULL", customItem);
+        }
+        else {
+
+            success = true;
+
+            DumpObj(name, "customItem:EXISTS", customItem);
+            
+            DumpObj(name, "customItem:attributes", customItem.attributes.ToJson());
+            DumpObj(name, "customItem:current_color_preset", customItem.current_color_preset);
+            DumpObj(name, "customItem:current_texture_preset", customItem.current_texture_preset);
+        }
+        
+        DumpObj(name, "customItem", customItem);
+        
+        return success;
     }
     
     public static bool TestAppAssetTextures_List(string name) {

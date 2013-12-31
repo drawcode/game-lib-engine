@@ -4,7 +4,7 @@ using System.IO;
 
 using UnityEngine;
 
-public class BaseAppContentAssetModels<T> : DataObjects<T> where T : new() {
+public class BaseAppContentAssetModels<T> : DataObjects<T> where T : DataObject, new() {
     private static T current;
     private static volatile BaseAppContentAssetModels<T> instance;
     private static System.Object syncRoot = new System.Object();

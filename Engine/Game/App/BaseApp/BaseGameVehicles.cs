@@ -4,7 +4,7 @@ using System.IO;
 using Engine.Data.Json;
 using Engine.Utility;
 
-public class BaseGameVehicles<T> : DataObjects<T> where T : new() {
+public class BaseGameVehicles<T> : DataObjects<T> where T : DataObject, new() {
     private static T current;
     private static volatile BaseGameVehicles<T> instance;
     private static object syncRoot = new Object();

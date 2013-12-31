@@ -53,6 +53,11 @@ public class BaseDataObjectKeys {
     public static string custom_textures = "custom_textures";
     public static string custom_models = "custom_models";
 
+    public static string current_texture_preset = "current_texture_preset";
+    public static string current_color_preset = "current_color_preset";
+    public static string color_presets = "color_presets";
+    public static string texture_presets = "texture_presets";
+
     public static string model = "model";
     public static string models = "models";
 
@@ -447,7 +452,21 @@ public class BaseDataObject : Dictionary<string, object> {
         att.otype = "attribute";
         SetAttribute(att);
     }
-    
+
+    public T GetAttributeObjectValue<T>(string code) {
+        object objectValue = GetAttribute(code).val;
+        if(objectValue != null) {
+            try {
+                return (T)objectValue;
+            }
+            catch(Exception e) {
+                Debug.Log("ERROR:GetAttributeObjectValue:code:" + code);
+            }
+        }
+        
+        return default(T);
+    }
+
     public object GetAttributeObjectValue(string code) {
         object objectValue = GetAttribute(code).val;
         return objectValue;

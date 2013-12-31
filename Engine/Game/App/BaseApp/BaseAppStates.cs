@@ -7,7 +7,7 @@ public class BaseAppStateMeta {
     public static string appStateGame = "app-state-game";
 }
 
-public class BaseAppStates<T> : DataObjects<T> where T : new() {
+public class BaseAppStates<T> : DataObjects<T> where T : DataObject, new() {
     private static T current;
     private static volatile BaseAppStates<T> instance;
     private static object syncRoot = new Object();

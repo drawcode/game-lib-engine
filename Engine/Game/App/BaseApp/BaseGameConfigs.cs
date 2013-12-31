@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.IO;
 
 
-public class BaseGameConfigs<T> : DataObjects<T> where T : new() {
+public class BaseGameConfigs<T> : DataObjects<T> where T : DataObject, new() {
     private static T current;
     private static volatile BaseGameConfigs<T> instance;
     private static object syncRoot = new Object();
@@ -23,6 +23,8 @@ public class BaseGameConfigs<T> : DataObjects<T> where T : new() {
 
     public static bool useCoinRewardsForAchievements = true;
     public static double coinRewardAchievementPoint = 50;
+
+    public static bool networkEnabled = false;
 
 	public static T BaseCurrent {
         get {

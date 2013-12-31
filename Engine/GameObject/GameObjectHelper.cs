@@ -896,8 +896,9 @@ public static class GameObjectHelper {
 			= inst.GetComponents<MeshRenderer>();
 		
 		foreach(MeshRenderer mesh in renderers) {
-			foreach(Material m in mesh.materials) {
-				if(FilterMaterialName(m.name) == FilterMaterialName(name)) {
+            foreach(Material m in mesh.materials) {
+                //if(FilterMaterialName(m.name) == FilterMaterialName(name)) {
+                if(m.name.Contains(name)) {
 					materials.Add(m);
 				}
 			}
@@ -907,8 +908,9 @@ public static class GameObjectHelper {
 			= inst.GetComponentsInChildren<MeshRenderer>(true);
 		
 		foreach(MeshRenderer mesh in renderersChildren) {
-			foreach(Material m in mesh.materials) {
-				if(FilterMaterialName(m.name) == FilterMaterialName(name)) {
+            foreach(Material m in mesh.materials) {
+                //if(FilterMaterialName(m.name) == FilterMaterialName(name)) {
+                if(m.name.Contains(name)) {
 					materials.Add(m);
 				}
 			}
@@ -918,8 +920,9 @@ public static class GameObjectHelper {
 			= inst.GetComponents<SkinnedMeshRenderer>();
 		
 		foreach(SkinnedMeshRenderer mesh in skinnedRenderers) {
-			foreach(Material m in mesh.materials) {
-				if(FilterMaterialName(m.name) == FilterMaterialName(name)) {
+            foreach(Material m in mesh.materials) {
+                //if(FilterMaterialName(m.name) == FilterMaterialName(name)) {
+                if(m.name.Contains(name)) {
 					materials.Add(m);
 				}
 			}
@@ -930,7 +933,8 @@ public static class GameObjectHelper {
 		
 		foreach(SkinnedMeshRenderer mesh in skinnedRenderersChildren) {
 			foreach(Material m in mesh.materials) {
-				if(FilterMaterialName(m.name) == FilterMaterialName(name)) {
+				//if(FilterMaterialName(m.name) == FilterMaterialName(name)) {
+                if(m.name.Contains(name)) {
 					materials.Add(m);
 				}
 			}
@@ -940,7 +944,8 @@ public static class GameObjectHelper {
 	}
 	
 	public static string FilterMaterialName(string name) {
-		return name.ToLower().Replace(" (instance)","").Replace(" (clone)","");
+		//return name.ToLower().Replace(" (instance)","").Replace(" (clone)","");
+        return name;
 	}
 
     public static void SetMaterialSwap(GameObject inst, string nameFind, string materialResourcesPath) {

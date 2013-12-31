@@ -610,7 +610,7 @@ public class GameProfileCustomPresets {
     }
 }
 
-public class GameProfileCustomItem : DataObjectItem {
+public class GameProfileCustomItem : DataObject {
 
     public GameProfileCustomItem() {
         Reset();
@@ -626,27 +626,43 @@ public class GameProfileCustomItem : DataObjectItem {
         }
         return false;
     }
+    
+    public virtual string current_texture_preset {
+        get {
+            return Get<string>(BaseDataObjectKeys.current_texture_preset);
+        }
+        
+        set {
+            Set(BaseDataObjectKeys.current_texture_preset, value);
+        }
+    }
+
+    public virtual string current_color_preset {
+        get {
+            return Get<string>(BaseDataObjectKeys.current_color_preset);
+        }
+        
+        set {
+            Set(BaseDataObjectKeys.current_color_preset, value);
+        }
+    }
 
     // PRESET CODES
 
     public virtual void SetCustomTexturePreset(string texturePresetCode) {
-        SetAttributeStringValue(
-            BaseGameProfileAttributes.ATT_CUSTOM_TEXTURE_PRESET, texturePresetCode);
+        current_texture_preset = texturePresetCode;
     }
     
     public virtual void SetCustomColorPreset(string colorPresetCode) {
-        SetAttributeStringValue(
-            BaseGameProfileAttributes.ATT_CUSTOM_COLOR_PRESET, colorPresetCode);
+        current_color_preset = colorPresetCode;
     }
     
     public virtual string GetCustomTexturePreset() {
-        return GetAttributeStringValue(
-            BaseGameProfileAttributes.ATT_CUSTOM_TEXTURE_PRESET);
+        return current_texture_preset;
     }
     
     public virtual string GetCustomColorPreset() {
-        return GetAttributeStringValue(
-            BaseGameProfileAttributes.ATT_CUSTOM_COLOR_PRESET);
+        return current_color_preset;
     }
 
     // ITEMS
@@ -678,16 +694,12 @@ public class GameProfileCustomItem : DataObjectItem {
 
     public virtual void SetCustomTextureItem(string textureKey, CustomTextureItem textureItem) {
         string key = GetCustomTextureItemKey(textureKey);
-        string textureItemText = JsonMapper.ToJson(textureItem);
-        //LogUtil.Log("SetCustomColorItem: " + colorItemText);
-        SetAttributeStringValue(key, textureItemText);
+        SetAttributeObjectValue(key, textureItem);
     }
 
     public virtual void SetCustomColorItem(string colorKey, CustomColorItem colorItem) {
         string key = GetCustomColorItemKey(colorKey);
-        string colorItemText = JsonMapper.ToJson(colorItem);
-        //LogUtil.Log("SetCustomColorItem: " + colorItemText);
-        SetAttributeStringValue(key, colorItemText);
+        SetAttributeObjectValue(key, colorItem);
     }
 
     public virtual string GetCustomTexture(string textureKey) {
@@ -702,18 +714,13 @@ public class GameProfileCustomItem : DataObjectItem {
         CustomTextureItem item = new CustomTextureItem();
         
         string key = GetCustomTextureItemKey(textureKey);
+
+        item = GetAttributeObjectValue<CustomTextureItem>(key);//Get<CustomTextureItem>(key);
         
-        string json = GetAttributeStringValue(key);
-        if(!string.IsNullOrEmpty(json)) {
-            try {
-                //LogUtil.Log("GetCustomTextureItem: " + json);
-                item = JsonMapper.ToObject<CustomTextureItem>(json);
-            }
-            catch(Exception e) {
-                item = new CustomTextureItem();
-                LogUtil.Log(e);
-            }
+        if(item == null) {
+            item = new CustomTextureItem();
         }
+
         return item;
     }
 
@@ -722,17 +729,12 @@ public class GameProfileCustomItem : DataObjectItem {
 
         string key = GetCustomColorItemKey(colorKey);
 
-        string json = GetAttributeStringValue(key);
-        if(!string.IsNullOrEmpty(json)) {
-            try {
-                //LogUtil.Log("GetCustomColorItem: " + json);
-                item = JsonMapper.ToObject<CustomColorItem>(json);
-            }
-            catch(Exception e) {
-                item = new CustomColorItem();
-                LogUtil.Log(e);
-            }
+        item = GetAttributeObjectValue<CustomColorItem>(key);//Get<CustomColorItem>(key);
+
+        if(item == null) {
+            item = new CustomColorItem();
         }
+
         return item;
     }
 

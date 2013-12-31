@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 
-public class BaseARDataSetTrackers<T> : DataObjects<T> where T : new() {
+public class BaseARDataSetTrackers<T> : DataObjects<T> where T : DataObject, new() {
     private static T current;
     private static volatile BaseARDataSetTrackers<T> instance;
     private static object syncRoot = new Object();

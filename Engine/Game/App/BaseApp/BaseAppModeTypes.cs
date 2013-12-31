@@ -22,7 +22,7 @@ public class BaseAppModeTypeMeta {
 }
 
 
-public class BaseAppModeTypes<T> : DataObjects<T> where T : new() {
+public class BaseAppModeTypes<T> : DataObjects<T> where T : DataObject, new() {
     private static T current;
     private static volatile BaseAppModeTypes<T> instance;
     private static object syncRoot = new Object();

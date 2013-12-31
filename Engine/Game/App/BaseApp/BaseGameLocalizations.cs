@@ -5,7 +5,7 @@ using Engine.Data.Json;
 using Engine.Utility;
 using UnityEngine;
 
-public class BaseGameLocalizations<T> : DataObjects<T> where T : new() {
+public class BaseGameLocalizations<T> : DataObjects<T> where T : DataObject, new() {
     private static T current;
     private static volatile BaseGameLocalizations<T> instance;
     private static System.Object syncRoot = new System.Object();

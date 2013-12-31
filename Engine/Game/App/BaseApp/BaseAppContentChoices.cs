@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 
-public class BaseAppContentChoices<T> : DataObjects<T> where T : new() {
+public class BaseAppContentChoices<T> : DataObjects<T> where T : DataObject, new() {
     private static T current;
     private static volatile BaseAppContentChoices<T> instance;
     private static object syncRoot = new Object();

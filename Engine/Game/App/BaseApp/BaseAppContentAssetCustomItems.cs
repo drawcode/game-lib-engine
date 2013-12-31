@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 
-public class BaseAppContentAssetCustomItems<T> : DataObjects<T> where T : new() {
+public class BaseAppContentAssetCustomItems<T> : DataObjects<T> where T : DataObject, new() {
     private static T current;
     private static volatile BaseAppContentAssetCustomItems<T> instance;
     private static object syncRoot = new Object();

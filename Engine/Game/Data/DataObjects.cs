@@ -19,7 +19,7 @@ public enum DataObjectsStorage {
     SERVER
 }
 
-public class DataObjects<T> {
+public class DataObjects<T> where T : DataObject, new() {
     public List<T> items;
     public string pathKey = "";
     public string path = "";
@@ -217,8 +217,8 @@ public class DataObjects<T> {
         path = PathUtil.Combine(ContentPaths.appCacheVersionPath, path.TrimStart('/'));
         string pathVersioned = Contents.GetFileVersioned(path);
 
-        LogUtil.Log("LoadDataFromPersistent:path:" + path);
-        LogUtil.Log("LoadDataFromPersistent:pathVersioned:" + pathVersioned + " " + pathKey);
+        //LogUtil.Log("LoadDataFromPersistent:path:" + path);
+        //LogUtil.Log("LoadDataFromPersistent:pathVersioned:" + pathVersioned + " " + pathKey);
 
         bool prepared = PreparePersistentFile(pathPart, pathVersioned);
 
@@ -229,7 +229,7 @@ public class DataObjects<T> {
 
         FileSystemUtil.WriteString(pathVersioned, fileData);
 
-        LogUtil.Log("SaveDataItemsToPersistent:fileData:" + fileData + " " + pathKey);
+        //LogUtil.Log("SaveDataItemsToPersistent:fileData:" + fileData + " " + pathKey);
 
         saved = true;
 
@@ -244,8 +244,8 @@ public class DataObjects<T> {
         path = PathUtil.Combine(ContentPaths.appCacheVersionPath, path.TrimStart('/'));
         string pathVersioned = Contents.GetFileVersioned(path);
 
-        LogUtil.Log("LoadDataFromPersistent:path:" + path);
-        LogUtil.Log("LoadDataFromPersistent:pathVersioned:" + pathVersioned + " " + pathKey);
+        //LogUtil.Log("LoadDataFromPersistent:path:" + path);
+        //LogUtil.Log("LoadDataFromPersistent:pathVersioned:" + pathVersioned + " " + pathKey);
 
         bool prepared = PreparePersistentFile(pathPart, pathVersioned);
 
@@ -256,7 +256,7 @@ public class DataObjects<T> {
 
         FileSystemUtil.WriteString(pathVersioned, fileData);
 
-        LogUtil.Log("SaveDataItemsToPersistent:fileData:" + fileData + " " + pathKey);
+        //LogUtil.Log("SaveDataItemsToPersistent:fileData:" + fileData + " " + pathKey);
 
         saved = true;
 
@@ -269,18 +269,18 @@ public class DataObjects<T> {
         if (!FileSystemUtil.CheckFileExists(pathVersioned)) {
             prepared = false;
 
-            LogUtil.Log("LoadDataFromPersistent:pathVersioned not exist:" + pathVersioned + " " + pathKey);
+            //LogUtil.Log("LoadDataFromPersistent:pathVersioned not exist:" + pathVersioned + " " + pathKey);
 
             // copy from streaming assets
             string pathToCopy = PathUtil.Combine(ContentPaths.appCacheVersionPath, pathPart.TrimStart('/'));
-            LogUtil.Log("LoadDataFromPersistent:pathToCopy:" + pathToCopy + " " + pathKey);
+            //LogUtil.Log("LoadDataFromPersistent:pathToCopy:" + pathToCopy + " " + pathKey);
             if (FileSystemUtil.CheckFileExists(pathToCopy)) {
                 FileSystemUtil.MoveFile(pathToCopy, pathVersioned);
-                LogUtil.Log("LoadDataFromPersistent:file moved:" + pathToCopy + " " + pathKey);
+                //LogUtil.Log("LoadDataFromPersistent:file moved:" + pathToCopy + " " + pathKey);
                 prepared = true;
             }
             else {
-                LogUtil.Log("LoadDataFromPersistent:move not exist:" + pathToCopy + " " + pathKey);
+                //LogUtil.Log("LoadDataFromPersistent:move not exist:" + pathToCopy + " " + pathKey);
                 prepared = false;
             }
         }
@@ -410,14 +410,14 @@ public class DataObjects<T> {
     public string LoadDataFromResources(string resourcesPath) {
         string fileData = "";
 
-        LogUtil.Log("LoadDataFromResources:string:resourcesPath:" + resourcesPath + " " + pathKey);
+        //LogUtil.Log("LoadDataFromResources:string:resourcesPath:" + resourcesPath + " " + pathKey);
         TextAsset textData = Resources.Load(resourcesPath, typeof(TextAsset)) as TextAsset;
         if (textData != null) {
             fileData = textData.text;
         }
         LoadDataFromString(fileData);
 
-        LogUtil.Log("LoadDataFromResources:fileData:" + fileData + " " + pathKey);
+        //LogUtil.Log("LoadDataFromResources:fileData:" + fileData + " " + pathKey);
         return fileData;
     }
 
@@ -476,41 +476,70 @@ public class DataObjects<T> {
         return CheckByStringKey("name", id);
     }
 
-    public T GetByStringKey(string key, string keyValue) {
-        foreach (T obj in GetAll()) {
-            try {
-                bool found = false;
-                foreach (System.Reflection.FieldInfo fieldInfo in obj.GetType().GetFields()) {
-                    if (fieldInfo.Name == key) {
-                        found = true;
-                        break;
-                    }
-                }
-                if (found) {
-                    string codeValue = (string)obj.GetType().GetField(key).GetValue(obj);
-                    if (codeValue.ToLower() == keyValue.ToLower()) {
-                        return obj;
-                    }
-                }
-                else {
+    public Dictionary<string, string> attributes;
 
-                    foreach (System.Reflection.PropertyInfo propInfo in obj.GetType().GetProperties()) {
-                        if (propInfo.Name == key) {
-                            found = true;
-                            break;
-                        }
-                    }
+    public void Inspect<T>(T obj) where T : BaseDataObject {
 
-                    if (found) {
-                        string codeValue = (string)obj.GetType().GetProperty(key).GetValue(obj, null);
-                        if (codeValue.ToLower() == keyValue.ToLower()) {
-                            return obj;
-                        }
+        // harvest the properties, fields and keys if not already done.
+
+        if(attributes == null) {
+
+            attributes = new Dictionary<string, string>();
+            
+            if (typeof(BaseDataObject).IsAssignableFrom(obj.GetType())) {
+
+                foreach(string key in ((BaseDataObject)obj).Keys) {
+                    
+                    if(attributes.ContainsKey(key)) {
+                        attributes[key] = "dict";
+                    }
+                    else {
+                        attributes.Add(key, "dict");
                     }
                 }
             }
-            catch (Exception e) {
-                LogUtil.Log("GetByStringKey warning no key:" + e);
+
+            // add fields
+            foreach (System.Reflection.FieldInfo fieldInfo in obj.GetType().GetFields()) {
+
+                string key = fieldInfo.Name;
+
+                if(attributes.ContainsKey(key)) {
+                    attributes[key] = "field";
+                }
+                else {
+                    attributes.Add(key, "field");
+                }
+            }
+
+            // add properties
+            foreach (System.Reflection.PropertyInfo propInfo in obj.GetType().GetProperties()) {
+                
+                string key = propInfo.Name;
+                
+                if(attributes.ContainsKey(key)) {
+                    attributes[key] = "property";
+                }
+                else {
+                    attributes.Add(key, "property");
+                }
+            }
+
+            // TODO dictionary keys...
+        }
+    }          
+
+    public T GetByStringKey(string key, string keyValue) {
+
+        foreach (T obj in GetAll()) {
+            
+            if(Has(obj, key)) {
+
+                if(keyValue == GetFieldValue<string>(obj, key)) {
+                    return obj;
+                }
+            }
+            else {
                 return default(T);
             }
         }
@@ -518,134 +547,94 @@ public class DataObjects<T> {
         return default(T);
     }
 
-    /*
-    public object GetFieldValue(object obj, string fieldName) {
-        ////Debug.Log("GetFieldValue:obj.GetType():" + obj.GetType());
-
-        bool hasGet = false;
-
-        foreach(var prop in fieldName.Split('.').Select(s => obj.GetType().GetField(s))) {
-            if(obj != null) {
-                obj = prop.GetValue(obj);
-                hasGet = true;
-            }
+    public bool Has(T obj, string key) {
+        
+        Inspect<T>(obj);
+        if(attributes.ContainsKey(key)) {
+            return true;
         }
+        return false;
+    }
 
-        if(!hasGet) {
-            foreach(PropertyInfo prop in obj.GetType().GetProperties()) {
-                if(prop.Name == fieldName) {
-                    obj = prop.GetValue(obj, null);
+    public U GetFieldValue<U>(T obj, string fieldName) {
+
+        object val = null;
+        
+        if(Has(obj, fieldName)) {
+
+            string type = attributes[fieldName];
+
+            if(type == "dict") {
+                if (typeof(BaseDataObject).IsAssignableFrom(obj.GetType())) {                                         
+                    if(((BaseDataObject)obj).ContainsKey(fieldName)) {                        
+                        val = ((BaseDataObject)obj)[fieldName];
+                    } 
                 }
             }
-        }
-
-        return obj;
-    }
-
-    public void SetFieldValue(object obj, string fieldName, object fieldValue) {
-        ////Debug.Log("SetFieldValue:obj.GetType():" + obj.GetType());
-
-        //bool hasSet = false;
-
-        foreach(FieldInfo field in fieldName.Split('.').Select(s => obj.GetType().GetField(s))) {
-            if(field != null) {
-                field.SetValue(obj, fieldValue);
-
-                //hasSet = true;
+            else if(type == "field") {
+                System.Reflection.FieldInfo field = obj.GetType().GetField(fieldName);
+                if (field != null) {
+                    val = field.GetValue(obj);
+                }
             }
-        }
-
-        //if(!hasSet) {
-        foreach(PropertyInfo prop in obj.GetType().GetProperties()) {
-            if(prop.Name == fieldName) {
-                prop.SetValue(obj, fieldValue, null);
-            }
-        }
-
-        //}
-    }
-    */
-
-
-    public object GetFieldValue(object obj, string fieldName) {
-        bool hasGet = false;
-
-        foreach (var prop in fieldName.Split('.').Select(s => obj.GetType().GetField(s))) {
-            if (obj != null && prop != null) {
-                obj = prop.GetValue(obj);
-                hasGet = true;
-            }
-        }
-
-        if (!hasGet) {
-            foreach (System.Reflection.PropertyInfo prop in obj.GetType().GetProperties()) {
-                if (obj != null && prop != null) {
+            else if(type == "property") {
+                System.Reflection.PropertyInfo prop = obj.GetType().GetProperty(fieldName);                
+                if (prop != null) {
                     if (prop.Name == fieldName) {
-                        obj = prop.GetValue(obj, null);
+                        val = prop.GetValue(obj, null);
                     }
                 }
             }
         }
 
-        return obj;
+        try { 
+            return (U)val;
+        }
+        catch(Exception e) {
+            return default(U);
+        }
     }
 
-    public void SetFieldValue(object obj, string fieldName, object fieldValue) {
+    public void SetFieldValue(T obj, string fieldName, object fieldValue) {
         //bool hasSet = false;
-
-        foreach (System.Reflection.FieldInfo field in fieldName.Split('.').Select(s => obj.GetType().GetField(s))) {
-            if (field != null) {
-                field.SetValue(obj, fieldValue);
-
-                //hasSet = true;
+        
+        if(Has(obj, fieldName)) {
+            string type = attributes[fieldName];
+            if(type == "dict") {
+                if (typeof(BaseDataObject).IsAssignableFrom(obj.GetType())) {                                         
+                    if(((BaseDataObject)obj).ContainsKey(fieldName)) {                        
+                        ((BaseDataObject)obj)[fieldName] = fieldValue;
+                    }   
+                }
+            }
+            else if(type == "field") {
+                System.Reflection.FieldInfo field = obj.GetType().GetField(fieldName);
+                if (field != null) {
+                    field.SetValue(obj, fieldValue);
+                }
+            }
+            else if(type == "property") {
+                 System.Reflection.PropertyInfo prop = obj.GetType().GetProperty(fieldName);                
+                if (prop != null) {
+                    if (prop.Name == fieldName) {
+                        prop.SetValue(obj, fieldValue, null);
+                    }
+                }
             }
         }
-
-        //if(!hasSet) {
-        foreach (System.Reflection.PropertyInfo prop in obj.GetType().GetProperties()) {
-            if (prop.Name == fieldName) {
-                prop.SetValue(obj, fieldValue, null);
-            }
-        }
-
-        //}
     }
 
     public bool CheckByStringKey(string key, string keyValue) {
 
         foreach (T obj in GetAll()) {
-            try {
-                bool found = false;
-                foreach (System.Reflection.FieldInfo fieldInfo in obj.GetType().GetFields()) {
-                    if (fieldInfo.Name == key) {
-                        found = true;
-                        break;
-                    }
+            
+            Inspect<T>(obj);
+            
+            if(attributes.ContainsKey(key)) {
+                string val = GetFieldValue<string>(obj, key);
+                if(val != keyValue && !string.IsNullOrEmpty(val)) {
+                    return true;
                 }
-                if (found) {
-                    string codeValue = (string)obj.GetType().GetField(key).GetValue(obj);
-                    if (codeValue.ToLower() == keyValue.ToLower()) {
-                        return true;
-                    }
-                }
-                
-                foreach (System.Reflection.PropertyInfo prop in obj.GetType().GetProperties()) {
-                    if (prop.Name == key) {
-                        found = true;
-                    }
-                }
-                if (found) {
-                    string codeValue = (string)GetFieldValue(obj, key);//(string)obj.GetType().GetProperties().GetValue(obj, null);
-                    if(!string.IsNullOrEmpty(codeValue)) {
-                        if (codeValue.ToLower() == keyValue.ToLower()) {
-                            return true;
-                        }
-                    }
-                }
-            }
-            catch (Exception e) {
-                LogUtil.Log("GetByStringKey warning no key:" + e);
-                return false;
             }
         }
 
@@ -656,7 +645,7 @@ public class DataObjects<T> {
         //Debug.Log("GetList:" + " key:" + key + " val:" + val);
         List<T> list = new List<T>();
         foreach (T t in GetAll()) {
-            object obj = GetFieldValue(t, key);
+            object obj = GetFieldValue<object>(t, key);
             //Debug.Log("GetList:" + " obj:" + obj);
             if (obj != null) {
                 if (obj.Equals(val)) {
@@ -672,7 +661,7 @@ public class DataObjects<T> {
         //Debug.Log("GetList:" + " key:" + key + " val:" + val);
         List<T> list = new List<T>();
         foreach (T t in GetAll()) {
-            object obj = GetFieldValue(t, key);
+            object obj = GetFieldValue<object>(t, key);
             string strObj = "";
             if (obj != null) { 
                 strObj = obj.ToString();
@@ -745,9 +734,9 @@ public class DataObjects<T> {
                 delegate(T c1, T c2) {
             //LogUtil.Log("sorting:c1:", c1);
             //LogUtil.Log("sorting:c2:", c2);
-            if (GetFieldValue(c1, "sort_order") != null) {
-                int sort1 = (int)GetFieldValue(c1, "sort_order");
-                int sort2 = (int)GetFieldValue(c2, "sort_order");
+            if (GetFieldValue<object>(c1, "sort_order") != null) {
+                int sort1 = (int)GetFieldValue<int>(c1, "sort_order");
+                int sort2 = (int)GetFieldValue<int>(c2, "sort_order");
                 //LogUtil.Log("sorting:sort1:", sort1);
                 //LogUtil.Log("sorting:sort2:", sort2);
                 return sort1.CompareTo(sort2);
@@ -768,9 +757,9 @@ public class DataObjects<T> {
             delegate(T c1, T c2) {
             //LogUtil.Log("sorting:c1:", c1);
             //LogUtil.Log("sorting:c2:", c2);
-            if (GetFieldValue(c1, "sort_order") != null) {
-                int sort1 = (int)GetFieldValue(c1, "sort_order");
-                int sort2 = (int)GetFieldValue(c2, "sort_order");
+            if (GetFieldValue<object>(c1, "sort_order") != null) {
+                int sort1 = (int)GetFieldValue<int>(c1, "sort_order");
+                int sort2 = (int)GetFieldValue<int>(c2, "sort_order");
                 //LogUtil.Log("sorting:sort1:", sort1);
                 //LogUtil.Log("sorting:sort2:", sort2);
                 return sort1.CompareTo(sort2);

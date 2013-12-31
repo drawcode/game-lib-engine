@@ -22,7 +22,7 @@ public class BaseAppModeMeta {
     public static string appModeGameCoop = "app-mode-game-coop";
 }
 
-public class BaseAppModes<T> : DataObjects<T> where T : new() {
+public class BaseAppModes<T> : DataObjects<T> where T : DataObject, new() {
     private static T current;
     private static volatile BaseAppModes<T> instance;
     private static object syncRoot = new Object();

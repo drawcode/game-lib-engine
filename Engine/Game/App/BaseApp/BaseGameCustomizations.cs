@@ -4,7 +4,7 @@ using System.IO;
 using Engine.Data.Json;
 using Engine.Utility;
 
-public class BaseGameCustomizations<T> : DataObjects<T> where T : new() {
+public class BaseGameCustomizations<T> : DataObjects<T> where T : DataObject, new() {
     private static T current;
     private static volatile BaseGameCustomizations<T> instance;
     private static object syncRoot = new Object();
@@ -55,7 +55,7 @@ public class BaseGameCustomizations<T> : DataObjects<T> where T : new() {
     }
 }
 
-public class BaseGameCustomization {
+public class BaseGameCustomization : DataObject {
     public List<CustomPlayerColors> colors;
 
     public BaseGameCustomization() {

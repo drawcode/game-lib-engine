@@ -27,7 +27,7 @@ public class BaseAppContentStateMeta {
     public static string appContentStateGameTips = "app-content-state-game-tips";
 }
 
-public class BaseAppContentStates<T> : DataObjects<T> where T : new() {
+public class BaseAppContentStates<T> : DataObjects<T> where T : DataObject, new() {
     private static T current;
     private static volatile BaseAppContentStates<T> instance;
     private static object syncRoot = new Object();

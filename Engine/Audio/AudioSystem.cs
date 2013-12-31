@@ -392,8 +392,12 @@ public class AudioSystem : MonoBehaviour {
         return null;
     }
 
+    AudioListener listener;
+
     public Transform FindAudioListenerPosition() {
-        AudioListener listener = ObjectUtil.FindObject<AudioListener>();
+        if(listener == null) {
+            listener = ObjectUtil.FindObject<AudioListener>();
+        }
         if (listener != null) {
             return listener.transform;
         }
