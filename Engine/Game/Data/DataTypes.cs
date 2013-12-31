@@ -341,12 +341,11 @@ public class CustomColorItem : DataObjectItem {
     public double a;
 
     public CustomColorItem() {
-        Reset();
+        //Reset();
     }
 
     public override void Reset() {
         base.Reset();
-        colorCode = "default";
         r = 1.0f;
         g = 1.0f;
         b = 1.0f;

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 
 public static class DictionaryExtensions {
 
+
     public static T Get<T>(this Dictionary<string, T> dict, string code) {
         return dict.Get<string, T>(code, default(T));
     }
@@ -10,7 +11,7 @@ public static class DictionaryExtensions {
     public static object Get(this Dictionary<string, object> dict, string code) {
         return dict.Get<string, object>(code, null);
     }
-    
+
     public static TVal Get<TKey, TVal>(this Dictionary<TKey, TVal> dict, TKey code) {
         return dict.Get<TKey, TVal>(code, default(TVal));
     }

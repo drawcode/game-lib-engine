@@ -610,6 +610,77 @@ public class GameProfileCustomPresets {
     }
 }
 
+public class CustomColorPresets {
+    public List<CustomColorItem> items = new List<CustomColorItem>();
+    
+    public bool Has(string code) {
+        return items.Exists(u => u.colorCode == code);
+    }
+
+    public CustomColorItem Get(string code) {
+        return items.Find(u => u.colorCode == code);
+    }
+
+    public void Set(CustomColorItem itemTo) {
+    
+        bool found = false;
+
+        for(int i = 0; i < items.Count; i++) {
+            if(items[i].colorCode == itemTo.colorCode) {
+                
+                items[i].a = itemTo.a;
+                items[i].attributes = itemTo.attributes;
+                items[i].b = itemTo.b;
+                items[i].colorCode = itemTo.colorCode;
+                items[i].g = itemTo.g;
+                items[i].r = itemTo.r;
+
+                found = true;
+                break;
+            }
+        }
+        
+        if(!found && itemTo.colorCode != "default") {
+            items.Add(itemTo);
+        }
+    }
+}
+
+
+public class CustomTexturePresets {
+    public List<CustomTextureItem> items = new List<CustomTextureItem>();
+    
+    
+    public bool Has(string code) {
+        return items.Exists(u => u.textureCode == code);
+    }
+    
+    public CustomTextureItem Get(string code) {
+        return items.Find(u => u.textureCode == code);
+    }
+    
+    public void Set(CustomTextureItem itemTo) {
+        
+        bool found = false;
+        
+        for(int i = 0; i < items.Count; i++) {
+            if(items[i].textureCode == itemTo.textureCode) {
+
+                items[i].attributes = itemTo.attributes;
+                items[i].textureCode = itemTo.textureCode;
+                items[i].textureName = itemTo.textureName;
+                
+                found = true;
+                break;
+            }
+        }
+        
+        if(!found && itemTo.textureCode != "default") {
+            items.Add(itemTo);
+        }
+    }
+}
+
 public class GameProfileCustomItem : DataObject {
 
     public GameProfileCustomItem() {
@@ -618,10 +689,15 @@ public class GameProfileCustomItem : DataObject {
 
     public override void Reset() {
         base.Reset();
+
+        color_presets = new CustomColorPresets();
+        texture_presets = new CustomTexturePresets();
     }    
 
     public bool HasData() {
-        if(attributes.Count > 0) {
+        if(attributes.Count > 0 
+           || color_presets.items.Count > 0
+           || texture_presets.items.Count > 0) {
             return true;
         }
         return false;
@@ -647,6 +723,26 @@ public class GameProfileCustomItem : DataObject {
         }
     }
 
+    public virtual CustomColorPresets color_presets {
+        get {
+            return Get<CustomColorPresets>(BaseDataObjectKeys.color_presets);
+        }
+        
+        set {
+            Set(BaseDataObjectKeys.color_presets, value);
+        }
+    }
+
+    public virtual CustomTexturePresets texture_presets {
+        get {
+            return Get<CustomTexturePresets>(BaseDataObjectKeys.texture_presets);
+        }
+        
+        set {
+            Set(BaseDataObjectKeys.texture_presets, value);
+        }
+    }
+
     // PRESET CODES
 
     public virtual void SetCustomTexturePreset(string texturePresetCode) {
@@ -667,74 +763,98 @@ public class GameProfileCustomItem : DataObject {
 
     // ITEMS
 
-    public virtual string GetCustomColorItemKey(string key) {
-        string fullKey = BaseGameProfileAttributes.ATT_CUSTOM_COLOR_ITEM;
-        fullKey = fullKey + "-" + key.ToLower().Trim().Replace(" ", "-");
-        return fullKey;
-    }
-    
-    public virtual string GetCustomTextureItemKey(string key) {
-        string fullKey = BaseGameProfileAttributes.ATT_CUSTOM_TEXTURE_ITEM;
-        fullKey = fullKey + "-" + key.ToLower().Trim().Replace(" ", "-");
-        return fullKey;
-    }
-
-    public virtual void SetCustomTexture(string textureKey, string textureName) {
-        CustomTextureItem item = GetCustomTextureItem(textureKey);
-        item.textureCode = textureKey;
+    public virtual void SetCustomTexture(string key, string textureName) {
+        CustomTextureItem item = GetCustomTextureItem(key);
+        item.textureCode = key;
         item.textureName = textureName;
-        SetCustomTextureItem(textureKey, item);
+        SetCustomTextureItem(key, item);
     }
 
-    public virtual void SetCustomColor(string colorKey, Color color) {
-        CustomColorItem colorItem = GetCustomColorItem(colorKey);
+    public virtual void SetCustomColor(string key, Color color) {
+        CustomColorItem colorItem = GetCustomColorItem(key);
         colorItem.FromColor(color);
-        SetCustomColorItem(colorKey, colorItem);
+        colorItem.colorCode = key;
+        SetCustomColorItem(key, colorItem);
     }
 
-    public virtual void SetCustomTextureItem(string textureKey, CustomTextureItem textureItem) {
-        string key = GetCustomTextureItemKey(textureKey);
-        SetAttributeObjectValue(key, textureItem);
+    public virtual void SetCustomTextureItem(string key, CustomTextureItem itemTo) {
+      
+        /*
+        DataObject item = texture_presets;
+        item.Set(key, itemTo);
+        texture_presets = item;
+        */
+        CustomTexturePresets items = texture_presets;        
+        if(items != null) {  
+            items.Set(itemTo);
+        }
+        texture_presets = items;
     }
 
-    public virtual void SetCustomColorItem(string colorKey, CustomColorItem colorItem) {
-        string key = GetCustomColorItemKey(colorKey);
-        SetAttributeObjectValue(key, colorItem);
+    public virtual void SetCustomColorItem(string key, CustomColorItem itemTo) {
+        /*
+        DataObject item = color_presets;
+        item.Set(key, itemTo);
+        color_presets = item;
+        */
+
+        CustomColorPresets items = color_presets;        
+        if(items != null) {  
+            items.Set(itemTo);
+        }
+        color_presets = items;
     }
 
-    public virtual string GetCustomTexture(string textureKey) {
-        return GetCustomTextureItem(textureKey).textureName;
+    public virtual string GetCustomTexture(string key) {
+        return GetCustomTextureItem(key).textureName;
     }
 
-    public virtual Color GetCustomColor(string colorKey) {
-        return GetCustomColorItem(colorKey).GetColor();
+    public virtual Color GetCustomColor(string key) {
+        return GetCustomColorItem(key).GetColor();
     }
 
-    public virtual CustomTextureItem GetCustomTextureItem(string textureKey) {
+    public virtual CustomTextureItem GetCustomTextureItem(string key) {
         CustomTextureItem item = new CustomTextureItem();
-        
-        string key = GetCustomTextureItemKey(textureKey);
 
-        item = GetAttributeObjectValue<CustomTextureItem>(key);//Get<CustomTextureItem>(key);
-        
+        /*
+        item = texture_presets.Get<CustomTextureItem>(key);
+
         if(item == null) {
             item = new CustomTextureItem();
+        }
+
+        */
+
+        CustomTexturePresets items = texture_presets;
+        
+        if(items != null) {            
+            if(items.Has(key)) {
+                item = items.Get(key);
+            }
         }
 
         return item;
     }
 
-    public virtual CustomColorItem GetCustomColorItem(string colorKey) {
+    public virtual CustomColorItem GetCustomColorItem(string key) {
         CustomColorItem item = new CustomColorItem();
 
-        string key = GetCustomColorItemKey(colorKey);
-
-        item = GetAttributeObjectValue<CustomColorItem>(key);//Get<CustomColorItem>(key);
-
+        /*
+        item = color_presets.Get<CustomColorItem>(key);
+        
         if(item == null) {
             item = new CustomColorItem();
         }
+        */
 
+        CustomColorPresets items = color_presets;
+
+        if(items != null) {            
+            if(items.Has(key)) {
+                item = items.Get(key);
+            }
+        }
+                
         return item;
     }
 
