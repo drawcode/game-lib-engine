@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 public static class ListExtensions {
 
-    public static void Shuffle<T>(this IList<T> list) {
+    public static IList<T> Shuffle<T>(this IList<T> list) {
         var randomNumber = new Random(DateTime.Now.Millisecond);
         var n = list.Count;
         while (n > 1) {
@@ -13,6 +13,7 @@ public static class ListExtensions {
             list[k] = list[n];
             list[n] = value;
         }
+        return list;
     }
 
     /*

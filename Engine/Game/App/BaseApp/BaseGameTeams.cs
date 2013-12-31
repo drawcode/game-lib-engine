@@ -2,6 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 
+using Engine.Events;
+
 public class BaseGameTeams<T> : DataObjects<T> where T : DataObject, new() {
     private static T current;
     private static volatile BaseGameTeams<T> instance;
@@ -50,6 +52,16 @@ public class BaseGameTeams<T> : DataObjects<T> where T : DataObject, new() {
         path = "data/" + BASE_DATA_KEY + ".json";
         pathKey = BASE_DATA_KEY;
         LoadData();
+    }
+
+    public void ChangeCurrent(string code) {
+        if(GameTeams.Current.code != code) {
+            GameTeam team = GameTeams.Instance.GetByCode(code);
+            if(team != null) {
+                GameTeams.Current = team;
+                Messenger<GameTeam>.Broadcast("game-team-changed", team);
+            }
+        }
     }
 }
 
