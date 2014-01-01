@@ -129,6 +129,51 @@ public class BaseGameTeam : GameDataObject {
     public void Clone(BaseGameTeam toCopy) {
         base.Clone(toCopy);
     }
+
+    public GameTeamDataItem GetModel() {
+        GameTeamDataItem item = null;
+        if(data != null) {
+            int randomIndex = UnityEngine.Random.Range(0, data.models.Count);
+            item = data.models[randomIndex];
+        }
+        return item;
+    }
+
+    public GameTeamDataItem GetColorPreset() {
+        GameTeamDataItem item = null;
+        if(data != null) {
+            int randomIndex = UnityEngine.Random.Range(0, data.color_presets.Count);
+            item = data.color_presets[randomIndex];
+        }
+        return item;
+    }
+
+    public string GetColorPresetCode() {
+        GameTeamDataItem item = null;
+        item = GetColorPreset();
+        if(item != null) {
+            return item.code;
+        }
+        return "";
+    }
+
+    public GameTeamDataItem GetTexturePreset() {
+        GameTeamDataItem item = null;
+        if(data != null) {
+            int randomIndex = UnityEngine.Random.Range(0, data.texture_presets.Count);
+            item = data.texture_presets[randomIndex];
+        }
+        return item;
+    }
+
+    public string GetTexturePresetCode() {
+        GameTeamDataItem item = null;
+        item = GetTexturePreset();
+        if(item != null) {
+            return item.code;
+        }
+        return "";
+    }
     
     // Attributes that are added or changed after launch should be like this to prevent
     // profile conversions.
