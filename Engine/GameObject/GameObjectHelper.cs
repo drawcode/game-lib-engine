@@ -1103,8 +1103,11 @@ public static class GameObjectHelper {
             obj = ObjectPoolManager.createPooled(go, pos, rotate);
         }
 
-        if(!obj.Has<PoolGameObject>()) {
-            obj.AddComponent<PoolGameObject>();
+        if(obj != null) {
+
+            if(!obj.Has<PoolGameObject>()) {
+                obj.AddComponent<PoolGameObject>();
+            }
         }
 
         return obj;
