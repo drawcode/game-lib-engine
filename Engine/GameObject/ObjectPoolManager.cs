@@ -128,6 +128,9 @@ public class ObjectPoolManager : MonoBehaviour {
     private GameObject internalCreate(GameObject prefab, Vector3 position, Quaternion rotation) {
         ObjectPool pool;
 
+        if(prefab2pool == null || prefab == null) {
+            return null;
+        }
 
         if (!prefab2pool.ContainsKey(prefab)) {
             pool = createPool(prefab);
