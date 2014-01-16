@@ -12,7 +12,7 @@ namespace Engine.Networking {
     public class NetworkController : BaseEngineBehavior {
 #if !UNITY_FLASH
 
-        public ThirdPersonController targetController;
+        public BaseThirdPersonController targetController;
         private bool jumpButton;
         private float verticalInput;
         private float horizontalInput;

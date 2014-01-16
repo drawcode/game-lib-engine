@@ -26,7 +26,7 @@ public class AuthServerPersonAnimation : BaseEngineBehavior {
     }
 
     private void Update() {
-        ThirdPersonController marioController = GetComponent<ThirdPersonController>();
+        BaseThirdPersonController marioController = GetComponent<BaseThirdPersonController>();
 
         float currentSpeed = marioController.GetSpeed();
 

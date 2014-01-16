@@ -19,8 +19,8 @@ namespace Engine.Networking {
             // This is just some remote controlled player
             else {
                 name += "Remote";
-                GetComponent<ThirdPersonController>().enabled = false;
-                GetComponent<ThirdPersonSimpleAnimation>().enabled = false;
+                GetComponent<BaseThirdPersonController>().enabled = false;
+                GetComponent<BaseThirdPersonSimpleAnimation>().enabled = false;
                 GetComponent<NetworkInterpolatedTransform>().enabled = true;
             }
         }

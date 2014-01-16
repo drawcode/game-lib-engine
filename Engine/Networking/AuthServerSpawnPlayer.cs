@@ -73,8 +73,8 @@ public class AuthServerSpawnPlayer : BaseEngineBehavior {
             Debug.Log("Enabling user input as this is the local player");
 
             // W are doing client prediction and thus enable the controller script + user input processing
-            instantiatedPlayer.GetComponent<ThirdPersonController>().enabled = true;
-            instantiatedPlayer.GetComponent<ThirdPersonController>().getUserInput = true;
+            instantiatedPlayer.GetComponent<BaseThirdPersonController>().enabled = true;
+            instantiatedPlayer.GetComponent<BaseThirdPersonController>().getUserInput = true;
 
             // Enable input network synchronization (server gets input)
             instantiatedPlayer.GetComponent<NetworkController>().enabled = true;
@@ -84,7 +84,7 @@ public class AuthServerSpawnPlayer : BaseEngineBehavior {
             // Initialize player on server
         }
         else if (Network.isServer) {
-            instantiatedPlayer.GetComponent<ThirdPersonController>().enabled = true;
+            instantiatedPlayer.GetComponent<BaseThirdPersonController>().enabled = true;
             instantiatedPlayer.GetComponent<AuthServerPersonAnimation>().enabled = true;
 
             // Record player info so he can be destroyed properly
