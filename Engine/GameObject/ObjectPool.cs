@@ -12,7 +12,7 @@ public class ObjectPoolItem {
 // This is used by the ObjectPoolManager and is not meant to be used separately
 public class ObjectPool : System.Object {
 
-    public int maxPoolItems = 60;
+    public int maxPoolItems = 1000;
 
     // The type of object this pool is handling
     public GameObject prefab;
