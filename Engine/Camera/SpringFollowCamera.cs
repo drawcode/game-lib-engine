@@ -24,7 +24,7 @@ namespace Engine.Cameras {
         private bool isSnapping = false;
         private Vector3 headOffset = Vector3.zero;
         private Vector3 centerOffset = Vector3.zero;
-        private ThirdPersonController controller;
+        private BaseThirdPersonController controller;
         private Vector3 velocity = Vector3.zero;
         private float targetHeight = 100000.0f;
 
@@ -42,7 +42,7 @@ namespace Engine.Cameras {
                 }
 
                 if (target) {
-                    controller = target.GetComponent<ThirdPersonController>();
+                    controller = target.GetComponent<BaseThirdPersonController>();
                 }
 
                 if (!controller)

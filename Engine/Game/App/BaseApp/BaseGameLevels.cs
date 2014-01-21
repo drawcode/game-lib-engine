@@ -9,7 +9,16 @@ public class BaseGameLevels<T> : DataObjects<T> where T : DataObject, new() {
     private static volatile BaseGameLevels<T> instance;
     private static object syncRoot = new Object();
 
-    public static string BASE_DATA_KEY = "game-level-data";
+    public static string BASE_DATA_KEY = "game-level-data";    
+    
+    public static float gridHeight = 1f;
+    public static float gridWidth = 90f;
+    public static float gridDepth = 90f;
+    public static float gridBoxSize = 4f;
+    
+    public static bool centeredX = true;
+    public static bool centeredY = false;
+    public static bool centeredZ = true;
 
     public static T BaseCurrent {
         get {

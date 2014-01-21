@@ -11,10 +11,10 @@ namespace Engine.Game.Controllers {
     public class ThirdPersonPushBodies : BaseEngineBehavior {
         public float pushPower = 0.5f;
         public LayerMask pushLayers = -1;
-        private ThirdPersonController controller;
+        private BaseThirdPersonController controller;
 
         private void Start() {
-            controller = GetComponent<ThirdPersonController>();
+            controller = GetComponent<BaseThirdPersonController>();
         }
 
         private void OnControllerColliderHit(ControllerColliderHit hit) {
