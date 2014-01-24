@@ -63,47 +63,10 @@ public class BaseGameLevels<T> : DataObjects<T> where T : DataObject, new() {
         LoadData();
     }
 
-    public virtual List<T> GetLevelsByPackId(string packId) {
-        List<T> packLevels = new List<T>();
-        foreach (T gameLevel in GetAll()) {
-            List<string> packs = (List<string>)GetType().GetProperty("pack").GetValue(gameLevel, null);
-            foreach (string pack in packs) {
-                if (pack.ToLower() == packId.ToLower()) {
-                    packLevels.Add(gameLevel);
-                }
-            }
-        }
-        return packLevels;
-    }
-
-    public virtual List<T> GetAllUnlocked() {
-        //List<T> gameLevels = GetAll();
-        List<T> gameLevelsFiltered = new List<T>();
-        //foreach (T gameLevel in gameLevels) {
-
-            //bool hasAccess = GameDatas.Instance.CheckIfHasAccessToLevel(gameLevel.code);
-            //if(hasAccess) {
-            //	gameLevelsFiltered.Add(gameLevel);
-            //}
-        //}
-        return gameLevelsFiltered;
-    }
-
     public virtual T GetDefaultLevel() {
         T levelReturn = new T();
         foreach (T level in GetAll()) {
             return level;
-        }
-        return levelReturn;
-    }
-
-    public virtual T GetDefaultLevelByPack(string packId) {
-        T levelReturn = new T();
-        foreach (T level in GetLevelsByPackId(packId)) {
-            string code = (string)GetType().GetProperty("code").GetValue(level, null);
-            if (code != "all") {
-                return level;
-            }
         }
         return levelReturn;
     }
