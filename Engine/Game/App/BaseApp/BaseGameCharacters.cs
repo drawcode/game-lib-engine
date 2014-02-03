@@ -59,29 +59,6 @@ public class BaseGameCharacters<T> : DataObjects<T> where T : DataObject, new() 
     }
 }
 
-public class GameDataCharacterModel : GameDataObject {
-    
-    public virtual string textures {
-        get {
-            return Get<string>(BaseDataObjectKeys.textures);
-        }
-        
-        set {
-            Set<string>(BaseDataObjectKeys.textures, value);
-        }
-    } 
-    
-    public virtual string colors {
-        get {
-            return Get<string>(BaseDataObjectKeys.colors);
-        }
-        
-        set {
-            Set<string>(BaseDataObjectKeys.colors, value);
-        }
-    } 
-}
-
 public class GameDataCharacter : GameDataObject {
 
     public virtual List<string> roles {
@@ -94,13 +71,13 @@ public class GameDataCharacter : GameDataObject {
         }
     } 
     
-    public virtual List<GameDataCharacterModel> models {
+    public virtual List<GameDataModel> models {
         get {
-            return Get<List<GameDataCharacterModel>>(BaseDataObjectKeys.models);
+            return Get<List<GameDataModel>>(BaseDataObjectKeys.models);
         }
         
         set {
-            Set<List<GameDataCharacterModel>>(BaseDataObjectKeys.models, value);
+            Set<List<GameDataModel>>(BaseDataObjectKeys.models, value);
         }
     } 
 }
@@ -125,13 +102,13 @@ public class BaseGameCharacter : GameDataObject {
     // Attributes that are added or changed after launch should be like this to prevent
     // profile conversions.
 
-    public virtual GameDataCharacter character_data {
+    public virtual GameDataCharacter data {
         get {
-            return Get<GameDataCharacter>(BaseDataObjectKeys.character_data);
+            return Get<GameDataCharacter>(BaseDataObjectKeys.data);
         }
         
         set {
-            Set<GameDataCharacter>(BaseDataObjectKeys.character_data, value);
+            Set<GameDataCharacter>(BaseDataObjectKeys.data, value);
         }
     }  
 
@@ -148,7 +125,7 @@ public class BaseGameCharacter : GameDataObject {
     }
     
     public GameObject Load() {
-        foreach(GameDataCharacterModel model in character_data.models) {
+        foreach(GameDataModel model in data.models) {
             return GameCharacters.Load(model.code);
         }
         return null;

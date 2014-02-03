@@ -59,23 +59,171 @@ public class BaseGameProfileRPGs {
     // TODO: Common profile actions, lookup, count, etc
 }
 
-public class GameItemRPG : DataObjectItem {
-    public double speed = 0.1;
-    public double attack = 0.1;
-    public double defense = 0.1;
-    public double health = 0.1;
-    public double energy = 0.1;
-    public double jump = 0.1;
-    public double fly = 0.1;
-    public double boost = 0.1;
-    public double attack_speed = 0.1;
-    public double recharge_speed = 0.1;
-    public double upgrades_applied = 0.0;
-    public double upgrades = 0.0;
-    public double xp = 10.0;
-    public double level = 1.0;
-    public double currency = 1.0;
-    public string data = ""; 
+public class GameItemRPG : GameDataObject {
+    
+    
+    // RPG
+    
+    
+    public virtual double speed {
+        get {
+            return Get<double>(BaseDataObjectKeys.speed);
+        }
+        
+        set {
+            Set<double>(BaseDataObjectKeys.speed, value);
+        }
+    }
+    
+    public virtual double attack {
+        get {
+            return Get<double>(BaseDataObjectKeys.attack);
+        }
+        
+        set {
+            Set<double>(BaseDataObjectKeys.attack, value);
+        }
+    }
+    
+    public virtual double defense {
+        get {
+            return Get<double>(BaseDataObjectKeys.defense);
+        }
+        
+        set {
+            Set<double>(BaseDataObjectKeys.defense, value);
+        }
+    }
+    
+    public virtual double health {
+        get {
+            return Get<double>(BaseDataObjectKeys.health);
+        }
+        
+        set {
+            Set<double>(BaseDataObjectKeys.health, value);
+        }
+    }
+    
+    public virtual double energy {
+        get {
+            return Get<double>(BaseDataObjectKeys.energy);
+        }
+        
+        set {
+            Set<double>(BaseDataObjectKeys.energy, value);
+        }
+    }
+    
+    public virtual double jump {
+        get {
+            return Get<double>(BaseDataObjectKeys.jump);
+        }
+        
+        set {
+            Set<double>(BaseDataObjectKeys.jump, value);
+        }
+    }
+    
+    public virtual double fly {
+        get {
+            return Get<double>(BaseDataObjectKeys.fly);
+        }
+        
+        set {
+            Set<double>(BaseDataObjectKeys.fly, value);
+        }
+    }    
+    
+    public virtual double boost {
+        get {
+            return Get<double>(BaseDataObjectKeys.boost);
+        }
+        
+        set {
+            Set<double>(BaseDataObjectKeys.boost, value);
+        }
+    }
+    
+    public virtual double attack_speed {
+        get {
+            return Get<double>(BaseDataObjectKeys.attack_speed);
+        }
+        
+        set {
+            Set<double>(BaseDataObjectKeys.attack_speed, value);
+        }
+    }
+    
+    public virtual double recharge_speed {
+        get {
+            return Get<double>(BaseDataObjectKeys.recharge_speed);
+        }
+        
+        set {
+            Set<double>(BaseDataObjectKeys.recharge_speed, value);
+        }
+    }
+    
+    public virtual double upgrades_applied {
+        get {
+            return Get<double>(BaseDataObjectKeys.upgrades_applied);
+        }
+        
+        set {
+            Set<double>(BaseDataObjectKeys.upgrades_applied, value);
+        }
+    }
+    
+    public virtual double upgrades {
+        get {
+            return Get<double>(BaseDataObjectKeys.upgrades);
+        }
+        
+        set {
+            Set<double>(BaseDataObjectKeys.upgrades, value);
+        }
+    }
+    
+    public virtual double xp {
+        get {
+            return Get<double>(BaseDataObjectKeys.xp);
+        }
+        
+        set {
+            Set<double>(BaseDataObjectKeys.xp, value);
+        }
+    }
+    
+    public virtual double level {
+        get {
+            return Get<double>(BaseDataObjectKeys.level);
+        }
+        
+        set {
+            Set<double>(BaseDataObjectKeys.level, value);
+        }
+    }
+    
+    public virtual double currency {
+        get {
+            return Get<double>(BaseDataObjectKeys.currency);
+        }
+        
+        set {
+            Set<double>(BaseDataObjectKeys.currency, value);
+        }
+    }
+        
+    public virtual string data {
+        get {
+            return Get<string>(BaseDataObjectKeys.data);
+        }
+        
+        set {
+            Set<string>(BaseDataObjectKeys.data, value);
+        }
+    }
 }
 
 public class GameItemRPGAttributes {

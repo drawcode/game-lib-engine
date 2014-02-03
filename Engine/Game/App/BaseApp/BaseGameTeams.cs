@@ -65,56 +65,18 @@ public class BaseGameTeams<T> : DataObjects<T> where T : DataObject, new() {
     }
 }
 
-public class GameTeamDataItem : GameDataObject {
-
-}
-
-public class GameTeamData : GameDataObject {
-
-
-    public virtual List<GameTeamDataItem> models {
-        get {
-            return Get<List<GameTeamDataItem>>(BaseDataObjectKeys.models);
-        }
-        
-        set {
-            Set<List<GameTeamDataItem>>(BaseDataObjectKeys.models, value);
-        }
-    } 
-
-    public virtual List<GameTeamDataItem> color_presets {
-        get {
-            return Get<List<GameTeamDataItem>>(BaseDataObjectKeys.color_presets);
-        }
-        
-        set {
-            Set<List<GameTeamDataItem>>(BaseDataObjectKeys.color_presets, value);
-        }
-    } 
-
-    public virtual List<GameTeamDataItem> texture_presets {
-        get {
-            return Get<List<GameTeamDataItem>>(BaseDataObjectKeys.texture_presets);
-        }
-        
-        set {
-            Set<List<GameTeamDataItem>>(BaseDataObjectKeys.texture_presets, value);
-        }
-    }  
-}
-
 public class BaseGameTeam : GameDataObject {
     
     // Attributes that are added or changed after launch should be like this to prevent
     // profile conversions.
 
-    public virtual GameTeamData data {
+    public virtual GameDataObjectItem data {
         get {
-            return Get<GameTeamData>(BaseDataObjectKeys.data);
+            return Get<GameDataObjectItem>(BaseDataObjectKeys.data);
         }
         
         set {
-            Set<GameTeamData>(BaseDataObjectKeys.data, value);
+            Set<GameDataObjectItem>(BaseDataObjectKeys.data, value);
         }
     }  
 
@@ -128,51 +90,6 @@ public class BaseGameTeam : GameDataObject {
     
     public void Clone(BaseGameTeam toCopy) {
         base.Clone(toCopy);
-    }
-
-    public GameTeamDataItem GetModel() {
-        GameTeamDataItem item = null;
-        if(data != null) {
-            int randomIndex = UnityEngine.Random.Range(0, data.models.Count);
-            item = data.models[randomIndex];
-        }
-        return item;
-    }
-
-    public GameTeamDataItem GetColorPreset() {
-        GameTeamDataItem item = null;
-        if(data != null) {
-            int randomIndex = UnityEngine.Random.Range(0, data.color_presets.Count);
-            item = data.color_presets[randomIndex];
-        }
-        return item;
-    }
-
-    public string GetColorPresetCode() {
-        GameTeamDataItem item = null;
-        item = GetColorPreset();
-        if(item != null) {
-            return item.code;
-        }
-        return "";
-    }
-
-    public GameTeamDataItem GetTexturePreset() {
-        GameTeamDataItem item = null;
-        if(data != null) {
-            int randomIndex = UnityEngine.Random.Range(0, data.texture_presets.Count);
-            item = data.texture_presets[randomIndex];
-        }
-        return item;
-    }
-
-    public string GetTexturePresetCode() {
-        GameTeamDataItem item = null;
-        item = GetTexturePreset();
-        if(item != null) {
-            return item.code;
-        }
-        return "";
     }
     
     // Attributes that are added or changed after launch should be like this to prevent

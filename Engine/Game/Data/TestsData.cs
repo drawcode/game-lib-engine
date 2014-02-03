@@ -33,12 +33,13 @@ public class TestsData {
 
         bool success = false;
         string testName = "";
+
         
-        ContentsConfig.contentRootFolder = "drawlabs";
-        ContentsConfig.contentAppFolder = "game-drawlabs-brainball";
-        ContentsConfig.contentDefaultPackFolder = "game-drawlabs-brainball-1";
-        ContentsConfig.contentVersion = "1.0";
-        ContentsConfig.contentIncrement = 2;
+        ContentsConfig.contentRootFolder = TestConfigs.contentRootFolder;
+        ContentsConfig.contentAppFolder = TestConfigs.contentAppFolder;
+        ContentsConfig.contentDefaultPackFolder = TestConfigs.contentDefaultPackFolder;
+        ContentsConfig.contentVersion = TestConfigs.contentVersion;
+        ContentsConfig.contentIncrement = TestConfigs.contentIncrement;
         
         Advance("Creating Contents cache paths");
         ContentPaths.CreateCachePaths();
@@ -117,9 +118,14 @@ public class TestsData {
         //Advance("TestGameCharacters_Load");
         //TestGameCharacters_Load();
 
-        testName = "TestGameTeams_List";
+        
+        testName = "TestGameWeapons_List";
         Advance(testName);
-        success = TestGameTeams_List(testName);
+        success = TestGameWeapons_List(testName);
+
+        //testName = "TestGameTeams_List";
+        //Advance(testName);
+        //success = TestGameTeams_List(testName);
         
         if(!CheckTest(success, testName)) { 
             return;
@@ -164,6 +170,60 @@ public class TestsData {
         return equal;
     }
     
+    public static bool TestGameWeapons_List(string name) {
+        
+        bool success = false;
+        
+        Debug.Log(name);
+        
+        List<GameWeapon> items = GameWeapons.Instance.GetAll();
+        DumpObj(name, "items", items);
+        
+        //AssertEquals(name, username, "Player");
+        
+        foreach(GameWeapon item in items) {  
+            
+            Debug.Log("item:code:" + item.code);               
+            Debug.Log("item:json:" + item.ToJson());  
+            
+            GameDataObjectItem data = item.data;
+            
+            if(data != null) {
+                foreach(GameDataModel dataItem in data.models) {                    
+                    Debug.Log("dataItem:models:code:" + dataItem.code);
+                    success = true;
+                }
+                
+                foreach(string dataItem in data.roles) {                    
+                    Debug.Log("dataItem:roles:code:" + dataItem);
+                    success = true;
+                }
+                
+                foreach(GameItemRPG dataItem in data.rpgs) {                    
+                    Debug.Log("dataItem:rpgs:code:" + dataItem.code);        
+                    Debug.Log("dataItem:rpgs:attack:" + dataItem.attack);
+                    Debug.Log("dataItem:rpgs:attack:" + dataItem.attack_speed);
+                    Debug.Log("dataItem:rpgs:boost:" + dataItem.boost);
+                    Debug.Log("dataItem:rpgs:energy:" + dataItem.energy);
+                    Debug.Log("dataItem:rpgs:fly:" + dataItem.fly);
+                    Debug.Log("dataItem:rpgs:health:" + dataItem.health);
+                    Debug.Log("dataItem:rpgs:jump:" + dataItem.jump);
+                    Debug.Log("dataItem:rpgs:level:" + dataItem.level);
+                    Debug.Log("dataItem:rpgs:recharge_speed:" + dataItem.recharge_speed);
+                    Debug.Log("dataItem:rpgs:speed:" + dataItem.speed);
+                    Debug.Log("dataItem:rpgs:upgrades:" + dataItem.upgrades);
+                    Debug.Log("dataItem:rpgs:xp:" + dataItem.upgrades_applied);
+                    Debug.Log("dataItem:rpgs:xp:" + dataItem.xp);
+                    success = true;
+                }
+            }
+        }
+        
+        DumpObj(name, "items.Count", items.Count);
+        
+        return success;
+    }
+    
     public static bool TestGameTeams_List(string name) {
         
         bool success = false;
@@ -180,20 +240,20 @@ public class TestsData {
             Debug.Log("item:code:" + item.code);               
             Debug.Log("item:json:" + item.ToJson());  
             
-            GameTeamData data = item.data;
+            GameDataObjectItem data = item.data;
             
             if(data != null) {
-                foreach(GameTeamDataItem dataItem in data.models) {                    
+                foreach(GameDataModel dataItem in data.models) {                    
                     Debug.Log("dataItem:models:code:" + dataItem.code);
                     success = true;
                 }
                 
-                foreach(GameTeamDataItem dataItem in data.color_presets) {                    
+                foreach(GameDataItemColorPreset dataItem in data.color_presets) {                    
                     Debug.Log("dataItem:color_presets:code:" + dataItem.code);
                     success = true;
                 }
                 
-                foreach(GameTeamDataItem dataItem in data.texture_presets) {                    
+                foreach(GameDataItemTexturePreset dataItem in data.texture_presets) {                    
                     Debug.Log("dataItem:texture_presets:code:" + dataItem.code);
                     success = true;
                 }
@@ -361,10 +421,10 @@ public class TestsData {
 
             Debug.Log("item:json:" + item.ToJson());  
 
-            GameDataCharacter data = item.character_data;
+            GameDataCharacter data = item.data;
 
             if(data != null) {
-                foreach(GameDataCharacterModel model in data.models) {
+                foreach(GameDataModel model in data.models) {
                     string modelCode = model.code;
                     
                     Debug.Log("model:code:" + model.code);
@@ -374,7 +434,7 @@ public class TestsData {
 
                     GameProfileCustomItem profileCustomItem = GameProfileCharacters.currentCustom;
 
-                    AppColorPreset preset = AppColorPresets.Instance.GetByCode("game-college-baylor-bears-home");
+                    AppColorPreset preset = AppColorPresets.Instance.GetByCode("game-default");
 
                     GameObject playerObject = item.Load();
 

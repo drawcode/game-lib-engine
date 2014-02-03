@@ -41,13 +41,33 @@ public class BaseDataObjectKeys {
     public static string keys = "keys";
     public static string properties = "properties";
     public static string types = "types";
-    
+
+    // characters
+
     public static string character = "character";
     public static string character_skin = "character_skin";
     public static string character_skin_variation = "character_skin_variation";
     public static string character_data = "character_data";
     public static string character_items = "character_items";
+
+    // weapons
+
+    public static string weapon = "weapon";
+    public static string weapon_skin = "weapon_skin";
+    public static string weapon_skin_variation = "weapon_skin_variation";
+    public static string weapon_data = "weapon_data";
+    public static string weapon_items = "weapon_items";
+
+    // items
     
+    public static string item = "item";
+    public static string item_skin = "item_skin";
+    public static string item_skin_variation = "item_skin_variation";
+    public static string item_data = "item_data";
+    public static string item_items = "item_items";
+
+    // custom
+
     public static string custom_items = "custom_items";
     public static string custom_materials = "custom_materials";
     public static string custom_textures = "custom_textures";
@@ -63,6 +83,9 @@ public class BaseDataObjectKeys {
 
     public static string presets = "presets";
     public static string roles = "roles";
+    
+    public static string sound = "sound";
+    public static string sounds = "sounds";
 
     //roles
 
@@ -77,6 +100,27 @@ public class BaseDataObjectKeys {
 
     public static string material = "material";
     public static string materials = "materials";
+
+    // RPG
+    
+    public static string rpg = "rpg";
+    public static string rpgs = "rpgs";
+    
+    public static string speed = "speed";
+    public static string attack = "attack";
+    public static string defense = "defense";
+    public static string health = "health";
+    public static string energy = "energy";
+    public static string jump = "jump";
+    public static string fly = "fly";
+    public static string boost = "boost";
+    public static string attack_speed = "attack_speed";
+    public static string recharge_speed = "recharge_speed";
+    public static string upgrades_applied = "upgrades_applied";
+    public static string upgrades = "upgrades";
+    public static string xp = "xp";
+    public static string level = "level";
+    public static string currency = "currency";
 
 }
 
