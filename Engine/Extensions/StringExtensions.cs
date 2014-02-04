@@ -25,9 +25,23 @@ public static class StringExtensions {
 
     public static int FromHex(string value) {
         // strip the leading 0x
-        if ( value.StartsWith("0x", StringComparison.OrdinalIgnoreCase)) {
+        if (value.StartsWith("0x", StringComparison.OrdinalIgnoreCase)) {
             value = value.Substring(2);
         }
         return Int32.Parse(value, NumberStyles.HexNumber);
+    }
+    
+    public static string UnescapeXML(this string s) {
+        if (string.IsNullOrEmpty(s))
+            return s;
+        
+        string returnString = s;
+        returnString = returnString.Replace("&apos;", "'");
+        returnString = returnString.Replace("&quot;", "\"");
+        returnString = returnString.Replace("&gt;", ">");
+        returnString = returnString.Replace("&lt;", "<");
+        returnString = returnString.Replace("&amp;", "&");
+        
+        return returnString;
     }
 }
