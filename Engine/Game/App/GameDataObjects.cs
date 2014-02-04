@@ -42,6 +42,14 @@ public class GameDataItemSound : GameDataObject {
     
 }
 
+public class GameDataItemTypeKeys {
+    public static string defaultType = "default";
+}
+
+public class GameDataItemSoundsKeys {
+    public static string shotType = "shot";
+    public static string loadType = "load";
+}
 
 public class GameDataObjectItem : GameDataObject {
     
@@ -105,10 +113,37 @@ public class GameDataObjectItem : GameDataObject {
         }
     } 
     
+    // sounds
+    
+    public GameDataItemSound GetSound() {
+        return GetSound(GameDataItemTypeKeys.defaultType);
+    }
+    
+    public GameDataItemSound GetSound(string code) {
+        return GetItem<GameDataItemSound>(sounds, code);
+    }
+
+    public List<GameDataItemSound> GetSoundsByType(string type) {
+        return GetItems<GameDataItemSound>(sounds, type);
+    }
+
+    public GameDataItemSound GetSoundByType(string type) {
+        // get random item
+        return GetItemRandomByType<GameDataItemSound>(sounds, type);
+    }
+
+    public GameDataItemSound GetSoundsByTypeShot() {
+        return GetSoundByType(GameDataItemSoundsKeys.shotType);
+    }
+    
+    public GameDataItemSound GetSoundsByTypeLoad() {
+        return GetSoundByType(GameDataItemSoundsKeys.loadType);
+    }
+
     // color presets
     
     public GameDataModel GetModel() {
-        return GetModel("default");
+        return GetModel(GameDataItemTypeKeys.defaultType);
     }
     
     public GameDataModel GetModel(string code) {
@@ -118,7 +153,7 @@ public class GameDataObjectItem : GameDataObject {
     // color presets
     
     public GameDataItemColorPreset GetColorPreset() {
-        return GetColorPreset("default");
+        return GetColorPreset(GameDataItemTypeKeys.defaultType);
     }
     
     public GameDataItemColorPreset GetColorPreset(string code) {
@@ -128,7 +163,7 @@ public class GameDataObjectItem : GameDataObject {
     // texture presets
     
     public GameDataItemTexturePreset GetTexturePreset() {
-        return GetTexturePreset("default");
+        return GetTexturePreset(GameDataItemTypeKeys.defaultType);
     }
     
     public GameDataItemTexturePreset GetTexturePreset(string code) {
@@ -138,11 +173,47 @@ public class GameDataObjectItem : GameDataObject {
     // rpgs
     
     public GameItemRPG GetRPG() {
-        return GetRPG("default");
+        return GetRPG(GameDataItemTypeKeys.defaultType);
     }
     
     public GameItemRPG GetRPG(string code) {
         return GetItem<GameItemRPG>(rpgs, code);
+    }
+
+    // helpers
+    
+    public T GetItemRandomByType<T>(List<T> list, string type) where T : GameDataObject {
+
+        T obj = default(T);
+
+        List<T> items = GetItems<T>(list, type);
+
+        if(items != null) {
+            if(items.Count > 0) {
+                int index = UnityEngine.Random.Range(0, items.Count);
+                obj = items[index];
+            }
+        }
+
+        return obj;
+    }
+
+    public List<T> GetItems<T>(List<T> list, string type) where T : GameDataObject {
+
+        List<T> filteredList = new List<T>();
+
+        if(list == null) 
+            return filteredList;
+        
+        if(list.Count > 0) {
+            foreach(T item in list) {
+                if(item.type == type) {
+                    filteredList.Add(item);
+                }
+            }
+        }
+        
+        return filteredList;
     }
     
     public T GetItem<T>(List<T> list, string code) where T : GameDataObject {
