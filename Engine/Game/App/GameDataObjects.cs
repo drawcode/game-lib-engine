@@ -56,6 +56,7 @@ public class GameDataItemKeys {
     public static string prepareType = "prepare";
     public static string postType = "post";
     public static string runType = "run";
+
     public static string shotType = "shot";
     public static string loadType = "load";
 }
@@ -143,6 +144,17 @@ public class GameDataObjectItem : GameDataObject {
     } 
 
     // projectiles
+
+    public bool HasProjectiles() {
+
+        if(projectiles != null) {
+            if(projectiles.Count > 0) {
+                return true;
+            }
+        }
+
+        return false;
+    }
     
     public GameDataItemProjectile GetProjectile() {
         return GetProjectile(GameDataItemTypeKeys.defaultType);
@@ -170,6 +182,17 @@ public class GameDataObjectItem : GameDataObject {
     }
         
     // effects
+    
+    public bool HasEffects() {
+        
+        if(effects != null) {
+            if(effects.Count > 0) {
+                return true;
+            }
+        }
+        
+        return false;
+    }
     
     public GameDataItemEffect GetEffect() {
         return GetEffect(GameDataItemTypeKeys.defaultType);
@@ -199,6 +222,17 @@ public class GameDataObjectItem : GameDataObject {
 
     // sounds
     
+    public bool HasSounds() {
+        
+        if(sounds != null) {
+            if(sounds.Count > 0) {
+                return true;
+            }
+        }
+        
+        return false;
+    }
+    
     public GameDataItemSound GetSound() {
         return GetSound(GameDataItemTypeKeys.defaultType);
     }
@@ -224,7 +258,18 @@ public class GameDataObjectItem : GameDataObject {
         return GetSoundByType(GameDataItemKeys.loadType);
     }
 
-    // color presets
+    // models
+        
+    public bool HasModels() {
+        
+        if(models != null) {
+            if(models.Count > 0) {
+                return true;
+            }
+        }
+        
+        return false;
+    }
     
     public GameDataModel GetModel() {
         return GetModel(GameDataItemTypeKeys.defaultType);
@@ -236,6 +281,17 @@ public class GameDataObjectItem : GameDataObject {
     
     // color presets
     
+    public bool HasColorPresets() {
+        
+        if(color_presets != null) {
+            if(color_presets.Count > 0) {
+                return true;
+            }
+        }
+        
+        return false;
+    }
+    
     public GameDataItemColorPreset GetColorPreset() {
         return GetColorPreset(GameDataItemTypeKeys.defaultType);
     }
@@ -246,6 +302,17 @@ public class GameDataObjectItem : GameDataObject {
     
     // texture presets
     
+    public bool HasTexturePresets() {
+        
+        if(texture_presets != null) {
+            if(texture_presets.Count > 0) {
+                return true;
+            }
+        }
+        
+        return false;
+    }
+    
     public GameDataItemTexturePreset GetTexturePreset() {
         return GetTexturePreset(GameDataItemTypeKeys.defaultType);
     }
@@ -255,6 +322,17 @@ public class GameDataObjectItem : GameDataObject {
     }
     
     // rpgs
+    
+    public bool HasRPGs() {
+        
+        if(rpgs != null) {
+            if(rpgs.Count > 0) {
+                return true;
+            }
+        }
+        
+        return false;
+    }
     
     public GameItemRPG GetRPG() {
         return GetRPG(GameDataItemTypeKeys.defaultType);
