@@ -28,8 +28,6 @@ public class GameDataModel : GameDataObject {
     }
 }
 
-
-
 public class GameDataItemColorPreset : GameDataObject {
     
 }
@@ -42,11 +40,22 @@ public class GameDataItemSound : GameDataObject {
     
 }
 
+public class GameDataItemEffect : GameDataObject {
+    
+}
+
+public class GameDataItemProjectile : GameDataObject {
+    
+}
+
 public class GameDataItemTypeKeys {
     public static string defaultType = "default";
 }
 
-public class GameDataItemSoundsKeys {
+public class GameDataItemKeys {
+    public static string prepareType = "prepare";
+    public static string postType = "post";
+    public static string runType = "run";
     public static string shotType = "shot";
     public static string loadType = "load";
 }
@@ -101,6 +110,26 @@ public class GameDataObjectItem : GameDataObject {
         set {
             Set<List<GameDataItemSound>>(BaseDataObjectKeys.sounds, value);
         }
+    }     
+    
+    public virtual List<GameDataItemProjectile> projectiles {
+        get {
+            return Get<List<GameDataItemProjectile>>(BaseDataObjectKeys.projectiles);
+        }
+        
+        set {
+            Set<List<GameDataItemProjectile>>(BaseDataObjectKeys.projectiles, value);
+        }
+    } 
+        
+    public virtual List<GameDataItemEffect> effects {
+        get {
+            return Get<List<GameDataItemEffect>>(BaseDataObjectKeys.effects);
+        }
+        
+        set {
+            Set<List<GameDataItemEffect>>(BaseDataObjectKeys.effects, value);
+        }
     } 
     
     public virtual List<GameItemRPG> rpgs {
@@ -112,7 +141,62 @@ public class GameDataObjectItem : GameDataObject {
             Set<List<GameItemRPG>>(BaseDataObjectKeys.rpgs, value);
         }
     } 
+
+    // projectiles
     
+    public GameDataItemProjectile GetProjectile() {
+        return GetProjectile(GameDataItemTypeKeys.defaultType);
+    }
+    
+    public GameDataItemProjectile GetProjectile(string code) {
+        return GetItem<GameDataItemProjectile>(projectiles, code);
+    }
+    
+    public List<GameDataItemProjectile> GetProjectileListByType(string type) {
+        return GetItems<GameDataItemProjectile>(projectiles, type);
+    }
+    
+    public GameDataItemProjectile GetProjectileByType(string type) {
+        // get random item
+        return GetItemRandomByType<GameDataItemProjectile>(projectiles, type);
+    }
+    
+    public GameDataItemProjectile GetProjectilesByTypeShot() {
+        return GetProjectileByType(GameDataItemKeys.shotType);
+    }
+    
+    public GameDataItemProjectile GetProjectilesByTypeLoad() {
+        return GetProjectileByType(GameDataItemKeys.loadType);
+    }
+        
+    // effects
+    
+    public GameDataItemEffect GetEffect() {
+        return GetEffect(GameDataItemTypeKeys.defaultType);
+    }
+    
+    public GameDataItemEffect GetEffect(string code) {
+        return GetItem<GameDataItemEffect>(effects, code);
+    }
+    
+    public List<GameDataItemEffect> GetEffectListByType(string type) {
+        return GetItems<GameDataItemEffect>(effects, type);
+    }
+    
+    public GameDataItemEffect GetEffectByType(string type) {
+        // get random item
+        return GetItemRandomByType<GameDataItemEffect>(effects, type);
+    }
+    
+    public GameDataItemEffect GetEffectsByTypeShot() {
+        return GetEffectByType(GameDataItemKeys.shotType);
+    }
+    
+    public GameDataItemEffect GetEffectsByTypeLoad() {
+        return GetEffectByType(GameDataItemKeys.loadType);
+    }
+
+
     // sounds
     
     public GameDataItemSound GetSound() {
@@ -123,7 +207,7 @@ public class GameDataObjectItem : GameDataObject {
         return GetItem<GameDataItemSound>(sounds, code);
     }
 
-    public List<GameDataItemSound> GetSoundsByType(string type) {
+    public List<GameDataItemSound> GetSoundListByType(string type) {
         return GetItems<GameDataItemSound>(sounds, type);
     }
 
@@ -133,11 +217,11 @@ public class GameDataObjectItem : GameDataObject {
     }
 
     public GameDataItemSound GetSoundsByTypeShot() {
-        return GetSoundByType(GameDataItemSoundsKeys.shotType);
+        return GetSoundByType(GameDataItemKeys.shotType);
     }
     
     public GameDataItemSound GetSoundsByTypeLoad() {
-        return GetSoundByType(GameDataItemSoundsKeys.loadType);
+        return GetSoundByType(GameDataItemKeys.loadType);
     }
 
     // color presets

@@ -86,6 +86,12 @@ public class BaseDataObjectKeys {
     
     public static string sound = "sound";
     public static string sounds = "sounds";
+    
+    public static string projectile = "projectile";
+    public static string projectiles = "projectiles";
+    
+    public static string effect = "effect";
+    public static string effects = "effects";
 
     //roles
 
