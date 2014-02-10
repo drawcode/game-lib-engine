@@ -8,7 +8,6 @@ using Engine.Utility;
 using UnityEngine;
 
 namespace Engine.Networking {
-
     public class NetworkController : BaseEngineBehavior {
 #if !UNITY_FLASH
 

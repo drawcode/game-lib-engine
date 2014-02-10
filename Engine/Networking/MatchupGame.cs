@@ -6,7 +6,6 @@ using UnityEngine;
 
 namespace Engine.Networking {
 #if !UNITY_FLASH
-
     public enum MatchupState {
         MATCHUP_NOT_STARTED = 0,
         MATCHUP_FINDING,
@@ -43,7 +42,7 @@ namespace Engine.Networking {
             isLocal = true;
             localDeviceId = SystemInfo.deviceUniqueIdentifier;
             if (Application.platform == RuntimePlatform.Android
-               || Application.platform == RuntimePlatform.IPhonePlayer) {
+                || Application.platform == RuntimePlatform.IPhonePlayer) {
                 localDeviceId = SystemInfo.deviceUniqueIdentifier;
             }
             deviceId = localDeviceId;
@@ -68,7 +67,6 @@ namespace Engine.Networking {
         private bool autoJoinRunning = false;
         private HostData[] hostData = null;
         public string currentPlayerName;
-
         public int MAX_CONNECTIONS = 4;
         public Transform playerPrefab;
         public Transform spawnObject;
@@ -76,16 +74,11 @@ namespace Engine.Networking {
         public bool matchupStarted = false;
         public GUIStyle customGUIStyle;
         public Camera mainCamera;
-
         public bool useExistingTransforms = true;
-
         public string matchmakingStatus;
         public string debugMatchmakingStatus;
-
         public string localDeviceId;
-
         public MatchupState currentMatchupState = MatchupState.MATCHUP_NOT_STARTED;
-
         public bool pseudoMultiplayer = false; // multiplayer faked with AI
 
         public bool IsMatchupFilled {
@@ -102,7 +95,7 @@ namespace Engine.Networking {
             //localDeviceId = Puid.New();
 
             if (Application.platform == RuntimePlatform.Android
-               || Application.platform == RuntimePlatform.IPhonePlayer) {
+                || Application.platform == RuntimePlatform.IPhonePlayer) {
                 localDeviceId = SystemInfo.deviceUniqueIdentifier;
             }
 

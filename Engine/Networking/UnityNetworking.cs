@@ -5,7 +5,6 @@ using Engine.Utility;
 using UnityEngine;
 
 namespace Engine.Networking {
-
     public class NetworkMessages {
         public static string NetworkConnected = "networkConnected";
         public static string NetworkDisconnected = "networkDisconnected";
@@ -17,7 +16,6 @@ namespace Engine.Networking {
 
         // TODO move to downloadable config.
         public string masterserverGameName = "defaultgame";
-
         public int defaultServerPort = 50666;
         public int connectTimeoutValue = 30;
         public int connectTestTimeValue = 9;
@@ -25,7 +23,6 @@ namespace Engine.Networking {
         public int connectionTesterPort = 25011;
         public int natFacilitatorPort = 25011;
         public string masterserveriPAddressOrDns = "matchup.drawlabs.com";
-
         private bool awaitingHostList = false;
 
         // CONNECTING
@@ -40,7 +37,6 @@ namespace Engine.Networking {
         private VoidDelegate lastConnectionFailDelegate;
         private bool lastConnectMayRetry = true;
         private NetworkConnectionError lastConnectionError;
-
         private static bool hasTestedNAT = false;
         private static bool testedUseNat = false;
 
@@ -217,11 +213,11 @@ namespace Engine.Networking {
 
             if (lastConnectIP != null) {
                 LogUtil.Log("Failed to connect ["
-                          + lastConnectIP[0]
-                          + ":"
-                          + lastConnectPort
-                          + " ] info:"
-                          + info);
+                    + lastConnectIP[0]
+                    + ":"
+                    + lastConnectPort
+                    + " ] info:"
+                    + info);
                 StartCoroutine(FailedConnectRetry(info));
             }
             else {
@@ -333,40 +329,41 @@ namespace Engine.Networking {
             LogUtil.Log(Time.realtimeSinceStartup + " OnMasterEvent: " + msEvent);
 
             switch (msEvent) {
-                case MasterServerEvent.HostListReceived:
+            case MasterServerEvent.HostListReceived:
 
                     //WARNING: It does 1 call per item in the full host list!
                     //A list of 100 items generates 100 calls. The 34th call contains 34 items total etc.
-                    LogUtil.Log("UnityNetworking: OnMasterServerEvent - HostListReceived: ");
-                    StartCoroutine(WaitForAllHostData());
-                    break;
+                LogUtil.Log("UnityNetworking: OnMasterServerEvent - HostListReceived: ");
+                StartCoroutine(WaitForAllHostData());
+                break;
 
-                case MasterServerEvent.RegistrationFailedGameName:
-                    LogUtil.Log("UnityNetworking: OnMasterServerEvent - RegistrationFailedGameName: ");
-                    break;
+            case MasterServerEvent.RegistrationFailedGameName:
+                LogUtil.Log("UnityNetworking: OnMasterServerEvent - RegistrationFailedGameName: ");
+                break;
 
-                case MasterServerEvent.RegistrationFailedGameType:
-                    LogUtil.Log("UnityNetworking: OnMasterServerEvent - RegistrationFailedGameType: ");
-                    break;
+            case MasterServerEvent.RegistrationFailedGameType:
+                LogUtil.Log("UnityNetworking: OnMasterServerEvent - RegistrationFailedGameType: ");
+                break;
 
-                case MasterServerEvent.RegistrationFailedNoServer:
-                    LogUtil.Log("Masterserver error: " + msEvent);
-                    LogUtil.Log("UnityNetworking: OnMasterServerEvent - RegistrationFailedNoServer: ");
-                    break;
+            case MasterServerEvent.RegistrationFailedNoServer:
+                LogUtil.Log("Masterserver error: " + msEvent);
+                LogUtil.Log("UnityNetworking: OnMasterServerEvent - RegistrationFailedNoServer: ");
+                break;
 
-                case MasterServerEvent.RegistrationSucceeded:
-                    LogUtil.Log("UnityNetworking: OnMasterServerEvent - RegistrationSucceeded: ");
-                    break;
+            case MasterServerEvent.RegistrationSucceeded:
+                LogUtil.Log("UnityNetworking: OnMasterServerEvent - RegistrationSucceeded: ");
+                break;
 
-                default:
-                    break;
+            default:
+                break;
             }
         }
 
         private IEnumerator WaitForAllHostData() {
             LogUtil.Log("MasterServer polling...");
 
-            if (awaitingHostList) yield break;
+            if (awaitingHostList)
+                yield break;
 
             LogUtil.Log("MasterServer awaitingHostList...");
 
@@ -399,7 +396,9 @@ namespace Engine.Networking {
                 LogUtil.Log("MasterServer poll loop...");
             }
 
-            if (currentHostListDelegate != null) { currentHostListDelegate(); }
+            if (currentHostListDelegate != null) {
+                currentHostListDelegate();
+            }
 
             hasReceivedHostListResponse = true;
             awaitingHostList = false;
@@ -435,7 +434,8 @@ namespace Engine.Networking {
                 return;
             }
 
-            if (!ReadyLoading()) LogUtil.Log("RegisterHost; wasn't ready loading network settings yet though!");
+            if (!ReadyLoading())
+                LogUtil.Log("RegisterHost; wasn't ready loading network settings yet though!");
 
             MasterServer.RegisterHost(masterserverGameName, serverTitle, comment);
         }
@@ -491,70 +491,70 @@ namespace Engine.Networking {
                 }
                 connectionTestResult = Network.TestConnection();
                 switch (connectionTestResult) {
-                    case ConnectionTesterStatus.Error:
-                        testMessage = "Problem determining NAT capabilities";
-                        hasTestedNAT = false;
-                        break;
+                case ConnectionTesterStatus.Error:
+                    testMessage = "Problem determining NAT capabilities";
+                    hasTestedNAT = false;
+                    break;
 
-                    case ConnectionTesterStatus.Undetermined:
-                        testMessage = "Undetermined NAT capabilities";
-                        hasTestedNAT = false;
-                        break;
+                case ConnectionTesterStatus.Undetermined:
+                    testMessage = "Undetermined NAT capabilities";
+                    hasTestedNAT = false;
+                    break;
 
-                    case ConnectionTesterStatus.PublicIPIsConnectable:
-                        testMessage = "Directly connectable public IP address.";
-                        testedUseNat = false;
-                        hasTestedNAT = true;
-                        break;
+                case ConnectionTesterStatus.PublicIPIsConnectable:
+                    testMessage = "Directly connectable public IP address.";
+                    testedUseNat = false;
+                    hasTestedNAT = true;
+                    break;
 
-                    // This case is a bit special as we now need to check if we can
-                    // circumvent the blocking by using NAT punchthrough
-                    case ConnectionTesterStatus.PublicIPPortBlocked:
-                        testMessage = "Non-connectble public IP address (port " + defaultServerPort + " blocked), running a server is impossible.";
-                        hasTestedNAT = false;
+                // This case is a bit special as we now need to check if we can
+                // circumvent the blocking by using NAT punchthrough
+                case ConnectionTesterStatus.PublicIPPortBlocked:
+                    testMessage = "Non-connectble public IP address (port " + defaultServerPort + " blocked), running a server is impossible.";
+                    hasTestedNAT = false;
 
                         // If no NAT punchthrough test has been performed on this public IP, force a test
-                        if (!probingPublicIP) {
-                            LogUtil.Log("Testing if firewall can be circumvented");
-                            connectionTestResult = Network.TestConnectionNAT();
-                            probingPublicIP = true;
-                            timer = Time.time + 10;
-                        }
+                    if (!probingPublicIP) {
+                        LogUtil.Log("Testing if firewall can be circumvented");
+                        connectionTestResult = Network.TestConnectionNAT();
+                        probingPublicIP = true;
+                        timer = Time.time + 10;
+                    }
 
                         // NAT punchthrough test was performed but we still get blocked
                         else if (Time.time > timer) {
-                            probingPublicIP = false; 		// reset
-                            testedUseNat = true;
-                            hasTestedNAT = true;
-                        }
-                        break;
-
-                    case ConnectionTesterStatus.PublicIPNoServerStarted:
-                        testMessage = "Public IP address but server not initialized, it must be started to check server accessibility. Restart connection test when ready.";
-                        break;
-
-                    case ConnectionTesterStatus.LimitedNATPunchthroughPortRestricted:
-                        testMessage = "Limited NAT punchthrough capabilities. Cannot connect to all types of NAT servers. Running a server is ill adviced as not everyone can connect.";
+                        probingPublicIP = false;        // reset
                         testedUseNat = true;
                         hasTestedNAT = true;
-                        break;
+                    }
+                    break;
 
-                    case ConnectionTesterStatus.LimitedNATPunchthroughSymmetric:
-                        testMessage = "Limited NAT punchthrough capabilities. Cannot connect to all types of NAT servers. Running a server is ill adviced as not everyone can connect.";
-                        testedUseNat = true;
-                        hasTestedNAT = true;
-                        break;
+                case ConnectionTesterStatus.PublicIPNoServerStarted:
+                    testMessage = "Public IP address but server not initialized, it must be started to check server accessibility. Restart connection test when ready.";
+                    break;
 
-                    case ConnectionTesterStatus.NATpunchthroughAddressRestrictedCone:
-                    case ConnectionTesterStatus.NATpunchthroughFullCone:
-                        testMessage = "NAT punchthrough capable. Can connect to all servers and receive connections from all clients. Enabling NAT punchthrough functionality.";
-                        testedUseNat = true;
-                        hasTestedNAT = true;
-                        break;
+                case ConnectionTesterStatus.LimitedNATPunchthroughPortRestricted:
+                    testMessage = "Limited NAT punchthrough capabilities. Cannot connect to all types of NAT servers. Running a server is ill adviced as not everyone can connect.";
+                    testedUseNat = true;
+                    hasTestedNAT = true;
+                    break;
 
-                    default:
-                        testMessage = "Error in test routine, got " + connectionTestResult;
-                        break;
+                case ConnectionTesterStatus.LimitedNATPunchthroughSymmetric:
+                    testMessage = "Limited NAT punchthrough capabilities. Cannot connect to all types of NAT servers. Running a server is ill adviced as not everyone can connect.";
+                    testedUseNat = true;
+                    hasTestedNAT = true;
+                    break;
+
+                case ConnectionTesterStatus.NATpunchthroughAddressRestrictedCone:
+                case ConnectionTesterStatus.NATpunchthroughFullCone:
+                    testMessage = "NAT punchthrough capable. Can connect to all servers and receive connections from all clients. Enabling NAT punchthrough functionality.";
+                    testedUseNat = true;
+                    hasTestedNAT = true;
+                    break;
+
+                default:
+                    testMessage = "Error in test routine, got " + connectionTestResult;
+                    break;
                 }
             }
             hasTestedNAT = true;

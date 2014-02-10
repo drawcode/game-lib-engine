@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using UnityEngine;
 
 namespace Engine.State {
-
     public class ObjectPoolItem : MonoBehaviour {
         public static ObjectPoolItem instance;
 
@@ -21,7 +20,6 @@ namespace Engine.State {
         /// The amount of objects of each type to buffer.
         /// </summary>
         public int[] amountToBuffer;
-
         public int defaultBufferAmount = 3;
 
         /// <summary>
@@ -48,7 +46,8 @@ namespace Engine.State {
 
                 int bufferAmount;
 
-                if (i < amountToBuffer.Length) bufferAmount = amountToBuffer[i];
+                if (i < amountToBuffer.Length)
+                    bufferAmount = amountToBuffer[i];
                 else
                     bufferAmount = defaultBufferAmount;
 

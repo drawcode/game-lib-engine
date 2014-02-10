@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using UnityEngine;
 
 namespace Engine.State {
-
     public class GameObjectPoolItemMeta {
         public GameObject go;
         public int amountToBuffer = 3;
@@ -27,7 +26,6 @@ namespace Engine.State {
         /// The amount of objects of each type to buffer.
         /// </summary>
         public int[] amountToBuffer;
-
         public int defaultBufferAmount = 3;
 
         /// <summary>
@@ -54,13 +52,13 @@ namespace Engine.State {
             int i = 0;
             foreach (GameObjectPoolItemMeta item in objectPrefabs.Values) {
 
-               // pooledObjects[item.name][i] = new Dictionary<string, List<GameObject>>();
+                // pooledObjects[item.name][i] = new Dictionary<string, List<GameObject>>();
 
                 for (int n = 0; n < bufferAmount; n++) {
                     GameObject newObj = Instantiate(Resources.Load(prefabName)) as GameObject;
                     newObj.name = prefabName;
                     PoolObject(newObj);
-					Debug.Log("item:" + item.name);
+                    Debug.Log("item:" + item.name);
                 }
 
                 i++;

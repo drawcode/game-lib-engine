@@ -4,7 +4,6 @@ using Engine.Game.Controllers;
 using UnityEngine;
 
 namespace Engine.Networking {
-
     public class ThirdPersonNetworkInit : BaseEngineBehavior {
 #if !UNITY_FLASH
 

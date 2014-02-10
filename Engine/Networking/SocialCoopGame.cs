@@ -4,7 +4,6 @@ using Engine.Utility;
 using UnityEngine;
 
 namespace Engine.Networking {
-
     public enum CoopState {
         NOT_STARTED = 0,
         FINDING,
@@ -29,9 +28,7 @@ namespace Engine.Networking {
         public Transform transform;
         public string uuid;
         public string deviceId;
-
         public bool isLocal;
-
         public Dictionary<string, string> attributes;
         private string localDeviceId;
 
@@ -46,7 +43,7 @@ namespace Engine.Networking {
             isLocal = true;
             localDeviceId = SystemInfo.deviceUniqueIdentifier;
             if (Application.platform == RuntimePlatform.Android
-               || Application.platform == RuntimePlatform.IPhonePlayer) {
+                || Application.platform == RuntimePlatform.IPhonePlayer) {
                 localDeviceId = SystemInfo.deviceUniqueIdentifier;
             }
             deviceId = localDeviceId;
@@ -70,29 +67,20 @@ namespace Engine.Networking {
     public class SocialCoopGame : MonoBehaviour {
         public static SocialCoopGame Instance;
         public int MAX_CONNECTIONS = 4;
-
         private Transform localTransform;
         public Transform playerPrefab;
         public Transform spawnObject;
-
         private List<NetworkPlayerInfoCoop> playerList;
-
         private bool autoJoinRunning = false;
         private HostData[] hostData = null;
         public string currentPlayerName;
-
         public bool coopStarted = false;
         public Camera mainCamera;
-
         public bool useExistingTransforms = true;
-
         public string matchmakingStatus;
         public string debugMatchmakingStatus;
-
         public string localDeviceId;
-
         public CoopState currentCoopState = CoopState.NOT_STARTED;
-
         public bool pseudoMultiplayer = false; // multiplayer faked with AI
 
         public bool IscoopFilled {
@@ -109,7 +97,7 @@ namespace Engine.Networking {
             //localDeviceId = Puid.New();
 
             if (Application.platform == RuntimePlatform.Android
-               || Application.platform == RuntimePlatform.IPhonePlayer) {
+                || Application.platform == RuntimePlatform.IPhonePlayer) {
                 localDeviceId = SystemInfo.deviceUniqueIdentifier;
             }
 

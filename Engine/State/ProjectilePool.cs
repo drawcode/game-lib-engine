@@ -2,7 +2,6 @@ using System.Collections;
 using UnityEngine;
 
 namespace Engine.State {
-
     public class ProjectilePool : MonoBehaviour {
 
         /// <summary>
