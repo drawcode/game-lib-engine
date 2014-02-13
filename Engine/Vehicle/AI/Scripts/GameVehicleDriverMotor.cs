@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System;
 
-public class AIDriverMotor : MonoBehaviour {
+public class GameVehicleAIDriverMotor : MonoBehaviour {
     
     public float maxSpeed = 200.0f;
     public float torque = 150.0f;
@@ -54,7 +54,7 @@ public class AIDriverMotor : MonoBehaviour {
     public WheelCollider rrWheelCollider;
 
     //Event 1
-    public delegate void LastWaypointHandler(AIEventArgs e);
+    public delegate void LastWaypointHandler(GameVehicleEventArgs e);
 
     public static LastWaypointHandler onLastWaypoint;
     

@@ -23,10 +23,10 @@ public class SetStartPosition : MonoBehaviour {
     void SetNewPosition() {
         if (startWaypoint > 0) {
             Vector3 startPos;           
-            AIDriverController aiDriverController;
+            GameVehicleAIDriverController aiDriverController;
             SplinePathWaypoints splinePathWaypoints; //2012-07-29
             
-            aiDriverController = gameObject.GetComponent("AIDriverController") as AIDriverController;           
+            aiDriverController = gameObject.GetComponent("GameVehicleAIDriverController") as GameVehicleAIDriverController;           
             
             //2012-07-29 -B
             splinePathWaypoints = gameObject.GetComponent("SplinePathWaypoints") as SplinePathWaypoints; //2012-07-29

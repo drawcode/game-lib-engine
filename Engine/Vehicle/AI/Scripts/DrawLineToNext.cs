@@ -11,7 +11,7 @@ public class DrawLineToNext : MonoBehaviour {
     
     //private bool active = true;
     private Color color = Color.cyan;
-    private AIDriverController aiDriverController;
+    private GameVehicleAIDriverController aiDriverController;
 
     public void OnDrawGizmos() {
         

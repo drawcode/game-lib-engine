@@ -9,22 +9,22 @@ public class EventListenerExample : MonoBehaviour {
     private string message;
     
     void OnEnable() {
-        AIDriverController.onLastWaypoint += onLastWaypoint;        
-        AIRespawnController.onRespawnWaypoint += onRespawnWaypoint;
+        GameVehicleAIDriverController.onLastWaypoint += onLastWaypoint;        
+        GameVehicleRespawnController.onRespawnWaypoint += onRespawnWaypoint;
     }
 
     void OnDisable() {       
-        AIDriverController.onLastWaypoint -= onLastWaypoint;        
-        AIRespawnController.onRespawnWaypoint -= onRespawnWaypoint;
+        GameVehicleAIDriverController.onLastWaypoint -= onLastWaypoint;        
+        GameVehicleRespawnController.onRespawnWaypoint -= onRespawnWaypoint;
     }
 
-    void onLastWaypoint(AIEventArgs e) {
+    void onLastWaypoint(GameVehicleEventArgs e) {
         //Example:
         //message = e.name + " reached last Waypoint '" + e.currentWaypointName + "' (" + e.currentWaypointIndex +").";     
         //StartCoroutine(ShowMessage(message,1));
     }
 
-    void onRespawnWaypoint(AIEventArgs e) {
+    void onRespawnWaypoint(GameVehicleEventArgs e) {
         Instantiate(respawnEffect, e.position, e.rotation);     
         //Example:
         //message = e.name + " was respawned at '" + e.position.x + ";" + e.position.x + ";" + e.position.x +"'.";

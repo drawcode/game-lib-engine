@@ -1,7 +1,7 @@
 using UnityEngine;
 using System.Collections;
  
-public class CarSmoothFollow : MonoBehaviour {
+public class GameVehicleSmoothFollow : MonoBehaviour {
  
 	public Transform target;
 	public float distance = 20.0f;

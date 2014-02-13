@@ -78,7 +78,7 @@ public class SplinePathWaypoints : SplinePath {
     void CreateNewWaypoints() {
         
         int counter = 0;        
-        //GameObject prefab = Resources.LoadAssetAtPath("Assets/AIDriverToolkit/Prefabs/Waypoint.prefab", typeof(GameObject)) as GameObject; //2012-07-29       
+        //GameObject prefab = Resources.LoadAssetAtPath("Assets/GameVehicleAIDriverToolkit/Prefabs/Waypoint.prefab", typeof(GameObject)) as GameObject; //2012-07-29       
         GameObject go;                      
         string currentName;     
         currentName = "/" + m_waypointFolder + "/" + m_waypointPreName + 1;            
@@ -95,7 +95,7 @@ public class SplinePathWaypoints : SplinePath {
                 waypoint.transform.position = point;
                 waypoint.name = m_waypointPreName + counter.ToString();
                 waypoint.transform.parent = parent;
-                AIWaypoint aiwaypointScript = waypoint.GetComponent("AIWaypoint") as AIWaypoint;    
+                GameVehicleAIWaypoint aiwaypointScript = waypoint.GetComponent("GameVehicleAIWaypoint") as GameVehicleAIWaypoint;    
                             
                 CopyParameters(ref waypoint, counter);
             }
@@ -120,9 +120,9 @@ public class SplinePathWaypoints : SplinePath {
         }
         
         
-        AIWaypoint oldAiWaypointScript = path[intOldIndex - 1].GetComponent("AIWaypoint") as AIWaypoint;
+        GameVehicleAIWaypoint oldAiWaypointScript = path[intOldIndex - 1].GetComponent("GameVehicleAIWaypoint") as GameVehicleAIWaypoint;
         
-        AIWaypoint aiWaypointScript = waypoint.GetComponent("AIWaypoint") as AIWaypoint;
+        GameVehicleAIWaypoint aiWaypointScript = waypoint.GetComponent("GameVehicleAIWaypoint") as GameVehicleAIWaypoint;
         
         aiWaypointScript.speed = oldAiWaypointScript.speed;
         aiWaypointScript.useTrigger = oldAiWaypointScript.useTrigger;
@@ -193,9 +193,9 @@ public class SplinePathWaypoints : SplinePath {
     }
     
     void GetWaypointNames() {
-        AIWaypointEditor aiWaypointEditor;
+        GameVehicleAIWaypointEditor aiWaypointEditor;
 
-        aiWaypointEditor = GetComponent("AIWaypointEditor") as AIWaypointEditor;
+        aiWaypointEditor = GetComponent("GameVehicleAIWaypointEditor") as GameVehicleAIWaypointEditor;
         if (aiWaypointEditor != null) {
             m_waypointPreName = aiWaypointEditor.preName + "_";
             m_waypointFolder = aiWaypointEditor.folderName;

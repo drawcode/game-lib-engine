@@ -7,10 +7,10 @@ public class LevelSpawner : MonoBehaviour {
     public Transform spawnPointHill;
     public Transform playerCar;
     public Transform hillyAICar;
-    private CarSmoothFollow carSmoothFollow;
+    private GameVehicleSmoothFollow carSmoothFollow;
 
     void Awake() {
-        carSmoothFollow = GetComponent<CarSmoothFollow>();
+        carSmoothFollow = GetComponent<GameVehicleSmoothFollow>();
     }
     // Use this for initialization
     void Start() {

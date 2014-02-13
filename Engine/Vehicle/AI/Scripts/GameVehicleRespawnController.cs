@@ -2,7 +2,7 @@ using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 
-public class AIRespawnController : MonoBehaviour {
+public class GameVehicleRespawnController : MonoBehaviour {
     
     public float heightOffset = 0;
     private Transform currentRespawnPoint;
@@ -11,7 +11,7 @@ public class AIRespawnController : MonoBehaviour {
         currentRespawnPointInt;
     //public List<WheelCollider> myWcs;
     private bool isStartingRespawn = false;
-    private AIDriverController aiDriverControllerScript;
+    private GameVehicleAIDriverController aiDriverControllerScript;
     private List<Transform> waypoints;
     //private Vector3 lastPosition;
     public float timeTillRespawn = 5;
@@ -20,7 +20,7 @@ public class AIRespawnController : MonoBehaviour {
         lastTimeToReachNextWP;
 
     //Event 2
-    public delegate void RespawnHandler(AIEventArgs e);
+    public delegate void RespawnHandler(GameVehicleEventArgs e);
 
     public static RespawnHandler onRespawnWaypoint;
 
@@ -30,10 +30,10 @@ public class AIRespawnController : MonoBehaviour {
     }
     
     void Start() {
-        //wir machen dies in der Start-Routine, weil wir im AIDriver-Skript erst in der Awake-Fkt die Waypoints zuweisen
+        //wir machen dies in der Start-Routine, weil wir im GameVehicleAIDriver-Skript erst in der Awake-Fkt die Waypoints zuweisen
         //Um sicherzugehen, dass die Waypoints auch gefunden und der List zugewiesen wurde, weisen wir dies deshalb erst hier zu!
 
-        aiDriverControllerScript = gameObject.GetComponent("AIDriverController") as AIDriverController;
+        aiDriverControllerScript = gameObject.GetComponent("GameVehicleAIDriverController") as GameVehicleAIDriverController;
         waypoints = aiDriverControllerScript.waypoints;
     }
 
@@ -76,7 +76,7 @@ public class AIRespawnController : MonoBehaviour {
         
         //fire event BEGIN
         if (onRespawnWaypoint != null) {            
-            AIEventArgs e = new AIEventArgs();
+            GameVehicleEventArgs e = new GameVehicleEventArgs();
             e.name = gameObject.name;
             e.currentWaypointIndex = currentWaypoint;
             e.currentWaypointName = waypoints[currentWaypoint].name;

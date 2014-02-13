@@ -3,8 +3,8 @@ using System.Collections;
 using System;
 using UnityEditor;
 
-[CustomEditor(typeof(AIWaypointEditor))]
-public class AIWaypointEditorEditor : Editor
+[CustomEditor(typeof(GameVehicleAIWaypointEditor))]
+public class GameVehicleAIWaypointEditorEditor : Editor
 {
     private static bool m_editMode = false;
     private static string m_preName = "wp";
@@ -18,7 +18,7 @@ public class AIWaypointEditorEditor : Editor
     //[MenuItem("GameObject/AI Driver Toolkit/AI Driver")]
     //static void CreateAIDPrototype()
     //{
-    //    GameObject prefab = Resources.LoadAssetAtPath("Assets/AIDriverToolkit/Prefabs/AIDriverPrototype.prefab", typeof(GameObject)) as GameObject;                    
+    //    GameObject prefab = Resources.LoadAssetAtPath("Assets/GameVehicleAIDriverToolkit/Prefabs/GameVehicleAIDriverPrototype.prefab", typeof(GameObject)) as GameObject;                    
     //    GameObject newObject = Instantiate(prefab,Vector3.zero,Quaternion.identity) as GameObject;
     //    newObject.name = "AI Driver";
 
@@ -39,7 +39,7 @@ public class AIWaypointEditorEditor : Editor
     //[MenuItem("GameObject/AI Driver Toolkit/Buggy")]
     //static void CreateAIDBuggy()
     //{
-    //    GameObject prefab = Resources.LoadAssetAtPath("Assets/AIDriverToolkit/Prefabs/AIBuggy.prefab", typeof(GameObject)) as GameObject;
+    //    GameObject prefab = Resources.LoadAssetAtPath("Assets/GameVehicleAIDriverToolkit/Prefabs/AIBuggy.prefab", typeof(GameObject)) as GameObject;
     //    GameObject newObject = Instantiate(prefab, Vector3.zero, Quaternion.identity) as GameObject;
     //    newObject.name = "Buggy";
 
@@ -60,7 +60,7 @@ public class AIWaypointEditorEditor : Editor
     //[MenuItem("GameObject/AI Driver Toolkit/Components/AI Controller")]
     //static void AddAIController()
     //{
-    //    //GameObject prefab = Resources.LoadAssetAtPath("Assets/AIDriverToolkit/Prefabs/AIDriverPrototype.prefab", typeof(GameObject)) as GameObject;
+    //    //GameObject prefab = Resources.LoadAssetAtPath("Assets/GameVehicleAIDriverToolkit/Prefabs/GameVehicleAIDriverPrototype.prefab", typeof(GameObject)) as GameObject;
     //    //GameObject newObject = Instantiate(prefab, Vector3.zero, Quaternion.identity) as GameObject;
     //    //newObject.name = "AI Driver";
 
@@ -113,7 +113,7 @@ public class AIWaypointEditorEditor : Editor
 	                        }
 	
 	                        Undo.RegisterSceneUndo("Create new Waypoint");
-	                        GameObject prefab = Resources.LoadAssetAtPath("Assets/AIDriverToolkit/Prefabs/Waypoint.prefab", typeof(GameObject)) as GameObject;
+	                        GameObject prefab = Resources.LoadAssetAtPath("Assets/GameVehicleAIDriverToolkit/Prefabs/Waypoint.prefab", typeof(GameObject)) as GameObject;
 	                        GameObject waypoint = Instantiate(prefab) as GameObject;
 	                        Vector3 myPosition;
 	                        myPosition = hit.point;
@@ -122,7 +122,7 @@ public class AIWaypointEditorEditor : Editor
 	                        waypoint.transform.position = myPosition;
 	                        waypoint.name = m_preName + "_" + counter.ToString();
 	                        waypoint.transform.parent = m_container.transform;
-	                        AIWaypoint aiwaypointScript = waypoint.GetComponent("AIWaypoint") as AIWaypoint;
+	                        GameVehicleAIWaypoint aiwaypointScript = waypoint.GetComponent("GameVehicleAIWaypoint") as GameVehicleAIWaypoint;
 	                        aiwaypointScript.speed = m_speed;
 	                        EditorUtility.SetDirty(waypoint);
 	
@@ -146,7 +146,7 @@ public class AIWaypointEditorEditor : Editor
     public override void OnInspectorGUI()
     {
         
-        AIWaypointEditor script = (AIWaypointEditor)target;
+        GameVehicleAIWaypointEditor script = (GameVehicleAIWaypointEditor)target;
 
         script.folderName = EditorGUILayout.TextField("WP Parent", script.folderName);
         script.preName = EditorGUILayout.TextField("WP Prefix", script.preName);

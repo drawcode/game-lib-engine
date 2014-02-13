@@ -5,11 +5,11 @@ using System.Collections;
 public class ShowRaycasts : MonoBehaviour {
 
     public bool show = false;
-    private AIDriver aiDriver;
+    private GameVehicleAIDriver aiDriver;
 
     public void OnDrawGizmos() {
         if (!Application.isPlaying || show) {
-            aiDriver = gameObject.GetComponent("AIDriver") as AIDriver;
+            aiDriver = gameObject.GetComponent("GameVehicleAIDriver") as GameVehicleAIDriver;
 
             if (aiDriver.useObstacleAvoidance) {
                 Vector3 viewPointLeft;
@@ -47,7 +47,7 @@ public class ShowRaycasts : MonoBehaviour {
 
     void Update() {
         if (!Application.isPlaying) {
-            aiDriver = gameObject.GetComponent("AIDriver") as AIDriver;
+            aiDriver = gameObject.GetComponent("GameVehicleAIDriver") as GameVehicleAIDriver;
             Transform colliderBottom = transform.FindChild("Colliders/ColliderBottom");
             aiDriver.oASideOffset = Mathf.Abs(colliderBottom.localPosition.x) + colliderBottom.localScale.x / 2 + 0.1f;
             Vector3 vpPos = aiDriver.viewPoint.localPosition;

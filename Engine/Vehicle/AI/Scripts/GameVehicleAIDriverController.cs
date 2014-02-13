@@ -5,7 +5,7 @@ using System;
 
 [RequireComponent(typeof(SplinePathWaypoints))]
 //2012-06-22
-public class AIDriverController : MonoBehaviour {
+public class GameVehicleAIDriverController : MonoBehaviour {
       
     
     private float m_calcMaxSpeed = 200.0f;
@@ -42,7 +42,7 @@ public class AIDriverController : MonoBehaviour {
 
     //IA
     [HideInInspector]
-    public AIMotorMapping
+    public GameVehicleMotorMapping
         aiPreMotor;
     public DriveMode driveMode = DriveMode.Laps;
     public bool steerAbsolute = false;
@@ -56,7 +56,7 @@ public class AIDriverController : MonoBehaviour {
         currentAngle;
     private float m_targetAngle;
     //private float wheelRadius;
-    private AIRespawnController aiRespawnControllerScript;
+    private GameVehicleRespawnController aiRespawnControllerScript;
     [HideInInspector]
     public int
         currentWaypoint = 0;
@@ -183,7 +183,7 @@ public class AIDriverController : MonoBehaviour {
     Vector3 m_leftRearSidePos;
     Vector3 m_rightRearSidePos;
     //Event 1
-    public delegate void LastWaypointHandler(AIEventArgs e);
+    public delegate void LastWaypointHandler(GameVehicleEventArgs e);
 
     public static LastWaypointHandler onLastWaypoint;
     private float currentWaitTimeToSwitchBackToWpMode = 0;
@@ -207,8 +207,8 @@ public class AIDriverController : MonoBehaviour {
         //FillWaypointList();
         //2011-12-27-E      
         
-        aiRespawnControllerScript = gameObject.GetComponent<AIRespawnController>();
-        aiPreMotor = GetComponent<AIMotorMapping>();
+        aiRespawnControllerScript = gameObject.GetComponent<GameVehicleRespawnController>();
+        aiPreMotor = GetComponent<GameVehicleMotorMapping>();
         flWheel = aiPreMotor.flWheelMesh;
         frWheel = aiPreMotor.frWheelMesh;
     }
@@ -501,8 +501,8 @@ public class AIDriverController : MonoBehaviour {
                   
                 NextWaypoint();
                     
-                //AIWaypoint aiWaypoint;
-                //aiWaypoint = waypoints[currentWaypoint].GetComponent("AIWaypoint") as AIWaypoint;
+                //GameVehicleAIWaypoint aiWaypoint;
+                //aiWaypoint = waypoints[currentWaypoint].GetComponent("GameVehicleAIWaypoint") as GameVehicleAIWaypoint;
                 
                 //if (aiWaypoint != null)
                 //{
@@ -522,7 +522,7 @@ public class AIDriverController : MonoBehaviour {
                 //    //fire event BEGIN
                 //    if (onLastWaypoint != null)
                 //    {
-                //        AIEventArgs e = new AIEventArgs();
+                //        GameVehicleEventArgs e = new GameVehicleEventArgs();
                 //        e.name = gameObject.name;
                 //        e.currentWaypointIndex = currentWaypoint;
                 //        e.currentWaypointName = waypoints[currentWaypoint -1].name;
@@ -783,8 +783,8 @@ public class AIDriverController : MonoBehaviour {
     }
     
     public void NextWaypoint() {
-        AIWaypoint aiWaypoint;
-        aiWaypoint = waypoints[currentWaypoint].GetComponent("AIWaypoint") as AIWaypoint;
+        GameVehicleAIWaypoint aiWaypoint;
+        aiWaypoint = waypoints[currentWaypoint].GetComponent("GameVehicleAIWaypoint") as GameVehicleAIWaypoint;
         
         if (aiWaypoint != null) {
             //m_maxSpeed = aiWaypoint.speed;//2012-07-09
@@ -802,7 +802,7 @@ public class AIDriverController : MonoBehaviour {
             //currentWaypoint = waypoints.Count -1; //2011-12-27
             //fire event BEGIN
             if (onLastWaypoint != null) {
-                AIEventArgs e = new AIEventArgs();
+                GameVehicleEventArgs e = new GameVehicleEventArgs();
                 e.name = gameObject.name;
                 e.currentWaypointIndex = currentWaypoint;
                 e.currentWaypointName = waypoints[currentWaypoint - 1].name; //2011-12-27-B
@@ -873,9 +873,9 @@ public class AIDriverController : MonoBehaviour {
     }
     
     void GetWaypointNames() {
-        AIWaypointEditor aiWaypointEditor;
+        GameVehicleAIWaypointEditor aiWaypointEditor;
 
-        aiWaypointEditor = GetComponent("AIWaypointEditor") as AIWaypointEditor;
+        aiWaypointEditor = GetComponent("GameVehicleAIWaypointEditor") as GameVehicleAIWaypointEditor;
         if (aiWaypointEditor != null) {
             m_waypointPreName = aiWaypointEditor.preName + "_";
             m_waypointFolder = aiWaypointEditor.folderName;
@@ -1326,9 +1326,9 @@ public class AIDriverController : MonoBehaviour {
     /// </param>
     public void SetNewWaypointSet(string folderName, string preName, float maxSpeed, int nextWaypointNo) {
         
-        AIWaypointEditor aiWaypointEditor;
+        GameVehicleAIWaypointEditor aiWaypointEditor;
 
-        aiWaypointEditor = GetComponent("AIWaypointEditor") as AIWaypointEditor;
+        aiWaypointEditor = GetComponent("GameVehicleAIWaypointEditor") as GameVehicleAIWaypointEditor;
         if (aiWaypointEditor != null) {
             aiWaypointEditor.folderName = folderName;
             aiWaypointEditor.preName = preName;           

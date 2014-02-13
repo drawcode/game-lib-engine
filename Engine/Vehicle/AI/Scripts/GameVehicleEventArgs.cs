@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System;
 
-public class AIEventArgs {
+public class GameVehicleEventArgs {
     public string name;
     public Vector3 position;
     public Quaternion rotation;

@@ -3,8 +3,8 @@ using System.Collections;
 using System;
 using UnityEditor;
 
-[CustomEditor(typeof(AIRespawn))]
-public class AIRespawnEditor : Editor
+[CustomEditor(typeof(GameVehicleRespawn))]
+public class GameVehicleRespawnEditor : Editor
 {
     SerializedObject m_soTarget;
     SerializedProperty m_soTimeTillRespawn;

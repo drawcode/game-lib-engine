@@ -4,7 +4,7 @@ using System;
 using UnityEditor;
 using System.Diagnostics;
 
-public class AIDriverMenu : MonoBehaviour
+public class GameVehicleAIDriverMenu : MonoBehaviour
 {
     
     private GameObject m_container;
@@ -13,7 +13,7 @@ public class AIDriverMenu : MonoBehaviour
     //[MenuItem("GameObject/AI Driver Toolkit/AI Driver")]
     //static void CreateAIDPrototype()
     //{
-    //    GameObject prefab = Resources.LoadAssetAtPath("Assets/AIDriverToolkit/Prefabs/AIDriverPrototype.prefab", typeof(GameObject)) as GameObject;
+    //    GameObject prefab = Resources.LoadAssetAtPath("Assets/GameVehicleAIDriverToolkit/Prefabs/GameVehicleAIDriverPrototype.prefab", typeof(GameObject)) as GameObject;
     //    GameObject newObject = Instantiate(prefab, Vector3.zero, Quaternion.identity) as GameObject;
     //    newObject.name = "AI Driver";
 
@@ -34,7 +34,7 @@ public class AIDriverMenu : MonoBehaviour
     //[MenuItem("GameObject/AI Driver Toolkit/Buggy")]
     //static void CreateAIDBuggy()
     //{
-    //    GameObject prefab = Resources.LoadAssetAtPath("Assets/AIDriverToolkit/Prefabs/AIBuggy.prefab", typeof(GameObject)) as GameObject;
+    //    GameObject prefab = Resources.LoadAssetAtPath("Assets/GameVehicleAIDriverToolkit/Prefabs/AIBuggy.prefab", typeof(GameObject)) as GameObject;
     //    GameObject newObject = Instantiate(prefab, Vector3.zero, Quaternion.identity) as GameObject;
     //    newObject.name = "Buggy";
 
@@ -55,7 +55,7 @@ public class AIDriverMenu : MonoBehaviour
     [MenuItem("Component/AI/GameObject/AI Driver")]
     static void CreateAIDPrototypeNew()
     {
-        GameObject prefab = Resources.LoadAssetAtPath("Assets/AIDriverToolkit/Prefabs/AIDriverPrototypeNew.prefab", typeof(GameObject)) as GameObject;
+        GameObject prefab = Resources.LoadAssetAtPath("Assets/GameVehicleAIDriverToolkit/Prefabs/GameVehicleAIDriverPrototypeNew.prefab", typeof(GameObject)) as GameObject;
         GameObject newObject = Instantiate(prefab, Vector3.zero, Quaternion.identity) as GameObject;
         newObject.name = "AI Driver";
 
@@ -76,7 +76,7 @@ public class AIDriverMenu : MonoBehaviour
     [MenuItem("Component/AI/GameObject/Buggy Example")]
     static void CreateAIDBuggyNew()
     {
-        GameObject prefab = Resources.LoadAssetAtPath("Assets/AIDriverToolkit/Prefabs/AIBuggyNew.prefab", typeof(GameObject)) as GameObject;
+        GameObject prefab = Resources.LoadAssetAtPath("Assets/GameVehicleAIDriverToolkit/Prefabs/AIBuggyNew.prefab", typeof(GameObject)) as GameObject;
         GameObject newObject = Instantiate(prefab, Vector3.zero, Quaternion.identity) as GameObject;
         newObject.name = "Buggy Example";
 
@@ -164,7 +164,7 @@ public class AIDriverMenu : MonoBehaviour
 		newObject.transform.localScale = new Vector3(10, 1, 1);
         newObject.name = "Waypoint Set Changer";
 		
-		newObject.AddComponent<ChangeWaypointSet>();
+		newObject.AddComponent<GameAIWaypointChangeSet>();
 		
         // positioned new object
         Ray ray = SceneView.lastActiveSceneView.camera.ViewportPointToRay(new Vector3(0.5F, 0.5F, 0));		
@@ -192,15 +192,15 @@ public class AIDriverMenu : MonoBehaviour
     
     static void AddAIControllerItems()
     {
-        Selection.activeGameObject.AddComponent<AIWaypointEditor>();
-        Selection.activeGameObject.AddComponent<AIRespawnController>();
-        Selection.activeGameObject.AddComponent<AIDriverController>();
-        Selection.activeGameObject.AddComponent<AIMotorMapping>();
+        Selection.activeGameObject.AddComponent<GameVehicleAIWaypointEditor>();
+        Selection.activeGameObject.AddComponent<GameVehicleRespawnController>();
+        Selection.activeGameObject.AddComponent<GameVehicleAIDriverController>();
+        Selection.activeGameObject.AddComponent<GameVehicleMotorMapping>();
         Selection.activeGameObject.AddComponent<ShowControllerRaycasts>();            
 		
-		AIMotorMapping aIMotorMapping;
-		aIMotorMapping = Selection.activeGameObject.GetComponent("AIMotorMapping")as AIMotorMapping;
-		aIMotorMapping.usingAIDriverMotor = false;
+		GameVehicleMotorMapping aIMotorMapping;
+		aIMotorMapping = Selection.activeGameObject.GetComponent("GameVehicleMotorMapping")as GameVehicleMotorMapping;
+		aIMotorMapping.usingGameVehicleAIDriverMotor = false;
 		
         GameObject viewPoint = new GameObject();		
         viewPoint.name = "ViewPoint";
@@ -222,8 +222,8 @@ public class AIDriverMenu : MonoBehaviour
         viewPointCollider.transform.localRotation = Quaternion.identity;
         viewPointCollider.transform.renderer.enabled = false;
 
-        AIDriverController aiDriverController;
-        aiDriverController = Selection.activeGameObject.GetComponent("AIDriverController") as AIDriverController;
+        GameVehicleAIDriverController aiDriverController;
+        aiDriverController = Selection.activeGameObject.GetComponent("GameVehicleAIDriverController") as GameVehicleAIDriverController;
         aiDriverController.viewPoint = viewPoint.transform;
         
     }	

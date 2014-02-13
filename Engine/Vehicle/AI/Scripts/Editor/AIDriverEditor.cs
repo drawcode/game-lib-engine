@@ -3,8 +3,8 @@ using System.Collections;
 using System;
 using UnityEditor;
 
-[CustomEditor(typeof(AIDriver))]
-public class AIDriverEditor : Editor
+[CustomEditor(typeof(GameVehicleAIDriver))]
+public class GameVehicleAIDriverEditor : Editor
 {
     SerializedObject m_soTarget;
     SerializedProperty m_soCalcMaxSpeed;

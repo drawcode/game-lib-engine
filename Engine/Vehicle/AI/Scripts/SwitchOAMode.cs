@@ -19,8 +19,8 @@ public class SwitchOAMode : MonoBehaviour {
         
         //if (other.gameObject.transform.root.gameObject.tag == tagName)    //2013-08-02
         if (other.gameObject.transform.root.gameObject.CompareTag(tagName)) { //2013-08-02
-            AIDriverController aIDriverController = 
-                other.gameObject.transform.root.gameObject.GetComponentInChildren<AIDriverController>();
+            GameVehicleAIDriverController aIDriverController = 
+                other.gameObject.transform.root.gameObject.GetComponentInChildren<GameVehicleAIDriverController>();
             if (aIDriverController != null) {
                 //aIDriverController.useObstacleAvoidance = switchUseOaTo;
                 aIDriverController.SwitchOaMode(switchUseOaTo);

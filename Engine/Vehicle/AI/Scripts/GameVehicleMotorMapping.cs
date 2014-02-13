@@ -1,7 +1,7 @@
 using UnityEngine;
 using System.Collections;
 
-public class AIMotorMapping : MonoBehaviour {
+public class GameVehicleMotorMapping : MonoBehaviour {
     [HideInInspector]
     public float
         steerInput;
@@ -22,8 +22,8 @@ public class AIMotorMapping : MonoBehaviour {
         speedMax;
     public Transform flWheelMesh;
     public Transform frWheelMesh;
-    public bool usingAIDriverMotor = true;
-    private AIDriverMotor aIDriverMotor;
+    public bool usingGameVehicleAIDriverMotor = true;
+    private GameVehicleAIDriverMotor aIDriverMotor;
     
     ////Edy's -B
     //private CarControl carControl;
@@ -34,8 +34,8 @@ public class AIMotorMapping : MonoBehaviour {
     ////Unity Car Tutorial -E
     
     void Awake() {
-        if (usingAIDriverMotor) {
-            aIDriverMotor = this.GetComponent<AIDriverMotor>();
+        if (usingGameVehicleAIDriverMotor) {
+            aIDriverMotor = this.GetComponent<GameVehicleAIDriverMotor>();
             steerMax = aIDriverMotor.maxSteerAngle;
             speedMax = aIDriverMotor.maxSpeed;
         }
@@ -57,7 +57,7 @@ public class AIMotorMapping : MonoBehaviour {
     // Update is called once per frame
     void Update() {
 
-        if (usingAIDriverMotor) {            
+        if (usingGameVehicleAIDriverMotor) {            
             aIDriverMotor.aiSteerAngle = steerInput;
             aIDriverMotor.aiSpeedPedal = motorInput;
             aIDriverMotor.aiBrakePedal = brakeInput;

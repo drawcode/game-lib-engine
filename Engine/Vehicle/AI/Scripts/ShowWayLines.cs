@@ -7,11 +7,11 @@ public class ShowWayLines : MonoBehaviour {
 
     public bool show = false;
     public Color color = Color.magenta;
-    private AIDriverController aiDriverController;
+    private GameVehicleAIDriverController aiDriverController;
 
     public void OnDrawGizmos() {
         if (!Application.isPlaying || show) {
-            aiDriverController = gameObject.GetComponent("AIDriverController") as AIDriverController;
+            aiDriverController = gameObject.GetComponent("GameVehicleAIDriverController") as GameVehicleAIDriverController;
                       
             List<Transform> waypoints = aiDriverController.waypoints;
             

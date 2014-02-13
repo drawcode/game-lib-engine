@@ -5,12 +5,12 @@ using System.Collections;
 
 [ExecuteInEditMode]
 public class ViewPointBehaviour : MonoBehaviour {
-    AIDriver aiDriver;
-    AIDriverController aiDriverController;
+    GameVehicleAIDriver aiDriver;
+    GameVehicleAIDriverController aiDriverController;
 
     public void OnDrawGizmos() {
         if (!Application.isPlaying) {
-            AIDriver aiDriver = gameObject.transform.parent.GetComponent<AIDriver>() as AIDriver;
+            GameVehicleAIDriver aiDriver = gameObject.transform.parent.GetComponent<GameVehicleAIDriver>() as GameVehicleAIDriver;
             if (aiDriver != null) {
                 if (aiDriver.useObstacleAvoidance) {
                     Gizmos.color = Color.green;
@@ -18,8 +18,8 @@ public class ViewPointBehaviour : MonoBehaviour {
                 }
             }
             else {
-                AIDriverController aiDriverController = 
-                    gameObject.transform.parent.GetComponent<AIDriverController>() as AIDriverController;
+                GameVehicleAIDriverController aiDriverController = 
+                    gameObject.transform.parent.GetComponent<GameVehicleAIDriverController>() as GameVehicleAIDriverController;
                 if (aiDriverController != null) {                    
                     if (aiDriverController.useObstacleAvoidance) {
                         Gizmos.color = Color.cyan;

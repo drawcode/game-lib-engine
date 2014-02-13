@@ -5,13 +5,13 @@ using System.Collections;
 public class ShowControllerRaycasts : MonoBehaviour {
 
     public bool show = false;
-    private AIDriverController aiDriverController;
-    private AIMotorMapping aIMotorMapping;
+    private GameVehicleAIDriverController aiDriverController;
+    private GameVehicleMotorMapping aIMotorMapping;
 
     public void OnDrawGizmos() {
         if (!Application.isPlaying || show) {
-            aiDriverController = gameObject.GetComponent("AIDriverController") as AIDriverController;
-            aIMotorMapping = gameObject.GetComponent("AIMotorMapping") as AIMotorMapping;
+            aiDriverController = gameObject.GetComponent("GameVehicleAIDriverController") as GameVehicleAIDriverController;
+            aIMotorMapping = gameObject.GetComponent("GameVehicleMotorMapping") as GameVehicleMotorMapping;
             if (aiDriverController.useObstacleAvoidance && aIMotorMapping.flWheelMesh != null) {
                 Vector3 viewPointLeft;
                 Vector3 viewPointRight;
@@ -74,7 +74,7 @@ public class ShowControllerRaycasts : MonoBehaviour {
 
     void Update() {
         if (!Application.isPlaying) {
-            aiDriverController = gameObject.GetComponent("AIDriverController") as AIDriverController;
+            aiDriverController = gameObject.GetComponent("GameVehicleAIDriverController") as GameVehicleAIDriverController;
             Transform colliderBottom = transform.FindChild("Colliders/ColliderBottom");
             if (colliderBottom != null) {
                 aiDriverController.oASideOffset = Mathf.Abs(colliderBottom.localPosition.x) + colliderBottom.localScale.x / 2 + 0.1f;
