@@ -164,7 +164,12 @@ public class GameVehicleDrive : MonoBehaviour {
 
     }
 
-    void FixedUpdate() {
+    void FixedUpdate() {        
+        
+        if(!GameConfigs.isGameRunning) {
+
+            return;
+        }
 
         currentSpeed = (Mathf.PI * 2 * flWheelCollider.radius) * flWheelCollider.rpm * 60 / 1000;
         currentSpeed = Mathf.Round(currentSpeed);
@@ -209,7 +214,7 @@ public class GameVehicleDrive : MonoBehaviour {
         FullBraking();
             
         SetCurrentGear();
-        GearSound();    
+        HandleGearSound();    
     
     }
 
@@ -369,6 +374,10 @@ public class GameVehicleDrive : MonoBehaviour {
     }
   
     void Update() {
+        
+        if(!GameConfigs.isGameRunning) {            
+            return;
+        }
 
         RotateWheels();
         SteelWheels();
@@ -400,7 +409,17 @@ public class GameVehicleDrive : MonoBehaviour {
         }
     }
 
-    void GearSound() {
+    public void HandleGearSound() {
+
+        if(!GameConfigs.isGameRunning) {
+            
+            motorAudioSource.volume = 0;
+            motorAudioSourceLow.volume = 0;
+            motorAudioSourceMid.volume = 0;
+
+            return;
+        }
+
         float tempMinSpeed = 0.00f;
         float tempMaxSpeed = 0.00f;
         float currentPitch = 0.00f;
