@@ -1,7 +1,7 @@
 using UnityEngine;
 using System.Collections;
 
-public class NewWheelPosition : MonoBehaviour {
+public class GameVehicleWheelPosition : MonoBehaviour {
     public WheelCollider WheelCol;
     public bool isHittingGround = false; //2013-06-18
     private Vector3 newPos;
