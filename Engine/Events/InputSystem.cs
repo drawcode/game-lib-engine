@@ -30,8 +30,11 @@ namespace Engine.Events {
         public Vector2 lastNormalizedTouch2 = new Vector2(0f, 0f);
         public Vector3 lastTargetDirection = new Vector3(0f, 0f, 0f);
         public Vector3 lastTargetDirection2 = new Vector3(0f, 0f, 0f);
+
+        public Vector3 lastAccelerometer = Vector3.zero;
 		
-		public bool mousePressed = false;			
+        public bool mousePressed = false;	
+        public bool touchPressed = false;   		
 		public bool leftPressed = false;
 		public bool rightPressed = false;
 		public bool upPressed = false;
@@ -42,21 +45,26 @@ namespace Engine.Events {
 
         private InputTouchInfo touchInfo;
 
+        private static InputSystem _instance = null;
+        
         public static InputSystem Instance {
             get {
-                if (instance == null) {
-                    lock (syncRoot) {
-                        if (instance == null)
-                            instance = new InputSystem();
+                if (!_instance) {
+                    
+                    _instance = FindObjectOfType(typeof(InputSystem)) as InputSystem;
+                    
+                    if (!_instance) {
+                        var obj = new GameObject("_InputSystem");
+                        _instance = obj.AddComponent<InputSystem>();
                     }
                 }
-
-                return instance;
+                
+                return _instance;
             }
         }
-
-        public void Awake() {
-            instance = this;
+        
+        private void OnApplicationQuit() {
+            _instance = null;
         }
 
         public void Start() {
@@ -64,6 +72,46 @@ namespace Engine.Events {
             touchInfo = new InputTouchInfo();
             touchesList = new List<InputTouchInfo>();
         }
+
+        //
+
+        public static bool isMousePressed {
+            get {
+                return Instance.mousePressed;
+            }
+        }
+                
+        public static bool isTouchPressed {
+            get {
+                return Instance.touchPressed;
+            }
+        }
+        
+        public static bool isLeftPressed {
+            get {
+                return Instance.leftPressed;
+            }
+        }
+        
+        public static bool isRightPressed {
+            get {
+                return Instance.rightPressed;
+            }
+        }
+        
+        public static bool isUpPressed {
+            get {
+                return Instance.upPressed;
+            }
+        }
+        
+        public static bool isDownPressed {
+            get {
+                return Instance.downPressed;
+            }
+        }
+
+        //
 
         public bool IsInputTouching() {
 
@@ -279,16 +327,21 @@ namespace Engine.Events {
         }
 
         private void Update() {
+
             if (inputEnabled) {
+
+                lastAccelerometer = GetAccelerationAxis();
+
                 IsInputTouchUp();
                 IsInputTouchDown();
-				
-				mousePressed = Input.GetMouseButton(0);
-				
-				leftPressed = Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.LeftArrow);
-				rightPressed = Input.GetKey(KeyCode.D) || Input.GetKey(KeyCode.RightArrow);
-				upPressed = Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.UpArrow);
-				downPressed = Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.DownArrow);
+				                
+                mousePressed = Input.GetMouseButton(0);
+                touchPressed = Input.touchCount > 0 ? true : false;
+                
+                leftPressed = Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.LeftArrow);
+                rightPressed = Input.GetKey(KeyCode.D) || Input.GetKey(KeyCode.RightArrow);
+                upPressed = Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.UpArrow);
+                downPressed = Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.DownArrow);
 
                 //LogUtil.Log("InputSystem::Update");
             }

@@ -2,7 +2,21 @@ using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 
+public class GameVehicleDriveData {
+    public float inputAxisVertical = 0;
+    public float inputAxisHorizontal = 0;
+    public bool inputUse = false;
+    public bool inputBrake = false;
+    public bool inputGas = true;
+
+}
+
 public class GameVehicleDrive : MonoBehaviour {
+
+    public GameVehicleDriveData vehicleDriveData;
+    
+    public GameObjectMountVehicle mountPrimary;
+    public GameObjectMountVehicle mountSecondary;
 
     public AudioClip collisionSound;   
 
@@ -86,6 +100,8 @@ public class GameVehicleDrive : MonoBehaviour {
 
     void Awake() {
   
+        vehicleDriveData = new GameVehicleDriveData();
+
         if (inverseWheelTurning) {
             wheelTurningParameter = -1;
         }
@@ -102,8 +118,7 @@ public class GameVehicleDrive : MonoBehaviour {
         
     }
 
-    void Start() {
-        
+    void Start() {        
 
         frForwardFriction = frWheelCollider.forwardFriction;
         flForwardFriction = flWheelCollider.forwardFriction;
@@ -113,9 +128,7 @@ public class GameVehicleDrive : MonoBehaviour {
         frSidewaysFriction = frWheelCollider.sidewaysFriction;
         flSidewaysFriction = flWheelCollider.sidewaysFriction;
         rrSidewaysFriction = rrWheelCollider.sidewaysFriction;
-        rlSidewaysFriction = rlWheelCollider.sidewaysFriction;
-
-        
+        rlSidewaysFriction = rlWheelCollider.sidewaysFriction;        
     }
 
     void InitSound() {
@@ -174,7 +187,8 @@ public class GameVehicleDrive : MonoBehaviour {
         currentSpeed = (Mathf.PI * 2 * flWheelCollider.radius) * flWheelCollider.rpm * 60 / 1000;
         currentSpeed = Mathf.Round(currentSpeed);
 
-        if (((currentSpeed > 0) && (Input.GetAxis("Vertical") < 0)) || ((currentSpeed < 0) && (Input.GetAxis("Vertical") > 0))) {
+        if (((currentSpeed > 0) && (vehicleDriveData.inputAxisVertical < 0)) 
+            || ((currentSpeed < 0) && (vehicleDriveData.inputAxisVertical > 0))) {
             isBraking = true;
         }
         else {
@@ -187,8 +201,8 @@ public class GameVehicleDrive : MonoBehaviour {
         if (isBraking == false) {
             if ((currentSpeed < maxSpeed) && (currentSpeed > (maxBackwardSpeed * -1))) {
                     
-                flWheelCollider.motorTorque = maxTorque * Input.GetAxis("Vertical");
-                frWheelCollider.motorTorque = maxTorque * Input.GetAxis("Vertical");                    
+                flWheelCollider.motorTorque = maxTorque * vehicleDriveData.inputAxisVertical;
+                frWheelCollider.motorTorque = maxTorque * vehicleDriveData.inputAxisVertical;                    
                     
             }
             else {
@@ -208,8 +222,8 @@ public class GameVehicleDrive : MonoBehaviour {
         speedProcent = Mathf.Clamp(speedProcent, 0, 1);
         float speedControlledMaxSteerAngle;
         speedControlledMaxSteerAngle = maxSteerAngle - ((maxSteerAngle - maxSpeedSteerAngle) * speedProcent);
-        flWheelCollider.steerAngle = speedControlledMaxSteerAngle * Input.GetAxis("Horizontal");
-        frWheelCollider.steerAngle = speedControlledMaxSteerAngle * Input.GetAxis("Horizontal");
+        flWheelCollider.steerAngle = speedControlledMaxSteerAngle * vehicleDriveData.inputAxisHorizontal;
+        frWheelCollider.steerAngle = speedControlledMaxSteerAngle * vehicleDriveData.inputAxisHorizontal;
 
         FullBraking();
             
@@ -219,7 +233,7 @@ public class GameVehicleDrive : MonoBehaviour {
     }
 
     void FullBraking() {
-        if (Input.GetKey("space")) {    
+        if (vehicleDriveData.inputBrake) {    
         
             rlWheelCollider.brakeTorque = FullBrakeTorque;
             rrWheelCollider.brakeTorque = FullBrakeTorque;
@@ -369,8 +383,7 @@ public class GameVehicleDrive : MonoBehaviour {
             DustR.particleEmitter.emit = false; 
             lastSkidmarkPosL = Vector3.zero;    
             lastSkidmarkPosR = Vector3.zero;    
-        }
-        
+        }        
     }
   
     void Update() {
@@ -380,8 +393,7 @@ public class GameVehicleDrive : MonoBehaviour {
         }
 
         RotateWheels();
-        SteelWheels();
-        
+        SteelWheels();       
     }
 
     void RotateWheels() {
@@ -392,8 +404,16 @@ public class GameVehicleDrive : MonoBehaviour {
     }
 
     void SteelWheels() {
-        flWheel.localEulerAngles = new Vector3(flWheel.localEulerAngles.x, flWheelCollider.steerAngle - flWheel.localEulerAngles.z, flWheel.localEulerAngles.z);
-        frWheel.localEulerAngles = new Vector3(frWheel.localEulerAngles.x, frWheelCollider.steerAngle - frWheel.localEulerAngles.z, frWheel.localEulerAngles.z);
+
+        flWheel.localEulerAngles = 
+            new Vector3(flWheel.localEulerAngles.x, 
+                        flWheelCollider.steerAngle - flWheel.localEulerAngles.z, 
+                        flWheel.localEulerAngles.z);
+
+        frWheel.localEulerAngles = new Vector3(
+            frWheel.localEulerAngles.x, 
+            frWheelCollider.steerAngle - frWheel.localEulerAngles.z, 
+            frWheel.localEulerAngles.z);
     }
 
     void SetCurrentGear() {

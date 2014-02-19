@@ -12,14 +12,13 @@ public class CoroutineUtil : MonoBehaviour {
                 instance = ObjectUtil.FindObject<CoroutineUtil>();
                 if (instance == null) {
                     instance =
-                        new GameObject("CoroutineUtil", typeof(CoroutineUtil))
+                        new GameObject("_CoroutineUtil", typeof(CoroutineUtil))
                             .GetComponent<CoroutineUtil>();
                 }
             }
             return instance;
         }
     }
-
     /// <summary>
     /// Start the specified coroutine.
     /// </summary>
