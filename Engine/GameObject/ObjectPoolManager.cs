@@ -2,21 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-// ObjectPoolManager
-// Author: William Ravaine - spk02@hotmail.com (Spk on Unity forums)
-// Date: 15-11-09
-//
-// <LEGAL BLABLA>
-// This code package is provided "as is" with no express or implied warranty of any kind. You may use this code for both
-// commercial and non-commercial use without any restrictions. Any modification and/or redistribution of this code should
-// include the original author's name, contact information and also this paragraph.
-// </LEGAL BLABLA>
-//
-// The goal of this class is to avoid costly runtime memory allocation for objects that are created and destroyed very often during
-// gameplay (e.g. projectile, enemies, etc). It achieves this by recycling "destroyed" objects from an internal cache instead of physically
-// removing them from memory via Object.Destroy().
-//
-// To use the ObjectPoolManager, you simply need to replace your regular object creation & destruction calls by ObjectPoolManager.createPooled()
+// To use the ObjectPoolManager, you simply need to replace your regular object 
+// creation & destruction calls by ObjectPoolManager.createPooled()
 // and ObjectPoolManager.destroyPooled(). Here's an exemple:
 //
 // 1) Without using the ObjectPoolManager:
@@ -27,25 +14,31 @@ using UnityEngine;
 // Projectile bullet = ObjectPoolManager.createPooled( bulletPrefab.gameObject, position, rotation ).GetComponent<Bullet>();
 // ObjectPoolManager.destroyPooled( bullet.gameObject );
 //
-// When a recycled object is revived from the cache, the ObjectPoolManager calls its Start() method again, so this object can reset itself as
+// When a recycled object is revived from the cache, the ObjectPoolManager calls 
+// its Start() method again, so this object can reset itself as
 // if it just got newly created.
 //
-// When using the ObjectPoolManager with your objects, you need to keep several things in mind:
-// 1. You need to be in full control of the creation and destruction of the object (so they go through ObjectPoolManager). This means you shouldn't
-//	  use it on objects that use exotic destruction methods (e.g. auto-destroy option on particle effects) because the ObjectPoolManager will
-//	  not be able to recycle the object
-// 2. When they get revived from the ObjectPoolManager cache, the pooled objects are responsible for re-initializing themselves as if they had
-//	  just been newly created via a regular call Instantiate(). So look out for any dynamic component additions and modifications of the initial
-//	  object public fields during gameplay
+// When using the ObjectPoolManager with your objects, you need to keep several 
+// things in mind:
+// 1. You need to be in full control of the creation and destruction of the object 
+//    (so they go through ObjectPoolManager). This means you shouldn't
+//    use it on objects that use exotic destruction methods (e.g. auto-destroy option on 
+//    particle effects) because the ObjectPoolManager will
+//    not be able to recycle the object
+// 2. When they get revived from the ObjectPoolManager cache, the pooled objects are 
+//    responsible for re-initializing themselves as if they had
+//    just been newly created via a regular call Instantiate(). So look out for any 
+//    dynamic component additions and modifications of the initial
+//    object public fields during gameplay
 
 public class ObjectPoolManager : MonoBehaviour {
 #if UNITY_EDITOR
 
-	// turn this on to activate debugging information
-	public bool debug = false;
+    // turn this on to activate debugging information
+    public bool debug = false;
 
-	// the GUI block where the debugging info will be displayed
-	public Rect debugGuiRect = new Rect( 5, 200, 160, 400 );
+    // the GUI block where the debugging info will be displayed
+    public Rect debugGuiRect = new Rect( 5, 200, 160, 400 );
 
 #endif
 
@@ -97,11 +90,11 @@ public class ObjectPoolManager : MonoBehaviour {
 
     // Destroy the object after <delay> seconds have elapsed
     public static void destroyPooled(GameObject obj, float delay) {
-        if(obj == null) { 
+        if (obj == null) { 
             return;
         }
 
-        if(instance == null) {
+        if (instance == null) {
             return;
         }
 
@@ -128,7 +121,7 @@ public class ObjectPoolManager : MonoBehaviour {
     private GameObject internalCreate(GameObject prefab, Vector3 position, Quaternion rotation) {
         ObjectPool pool;
 
-        if(prefab2pool == null || prefab == null) {
+        if (prefab2pool == null || prefab == null) {
             return null;
         }
 
@@ -149,7 +142,7 @@ public class ObjectPoolManager : MonoBehaviour {
         GameObject obj = pool.instantiate(position, rotation);
 
         
-        if(obj == null) {
+        if (obj == null) {
             return null;
         }
 
@@ -183,24 +176,22 @@ public class ObjectPoolManager : MonoBehaviour {
     #endregion
 
 #if UNITY_EDITOR
-	void OnGUI()
-	{
-		if( debug )
-		{
-			GUILayout.BeginArea( debugGuiRect );
-			GUILayout.BeginVertical();
+    void OnGUI() {
+        if( debug ) {
+            GUILayout.BeginArea( debugGuiRect );
+            GUILayout.BeginVertical();
 
-			GUILayout.Label( "Pools: " + prefab2pool.Count );
+            GUILayout.Label( "Pools: " + prefab2pool.Count );
 
-			foreach( var pool in prefab2pool.Values )
-				GUILayout.Label( pool.prefab.name + ": " + pool.Count );
+            foreach( var pool in prefab2pool.Values )
+                GUILayout.Label( pool.prefab.name + ": " + pool.Count );
             
             //foreach( var pool in instance2pool.Values )
             //    GUILayout.Label( "instance: " + pool.prefab.name + ": " + pool.Count );
 
-			GUILayout.EndVertical();
-			GUILayout.EndArea();
-		}
-	}
+            GUILayout.EndVertical();
+            GUILayout.EndArea();
+        }
+    }
 #endif
 }
