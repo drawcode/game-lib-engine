@@ -20,6 +20,9 @@ public class BaseAppContentStateMeta {
     //public static string appModeTypeGameDefault = "app-mode-game-default";
     public static string appContentStateGameArcade = "app-content-state-game-arcade";
     public static string appContentStateGameChallenge = "app-content-state-game-challenge";
+    public static string appContentStateGameMissions = "app-content-state-game-missions";
+    public static string appContentStateGameCoop = "app-content-state-game-coop";
+    public static string appContentStateGameMatchup = "app-content-state-game-matchup";
     public static string appContentStateGameTraining = "app-content-state-game-training";
     public static string appContentStateGameTrainingChoice = "app-content-state-game-training-choice";
     public static string appContentStateGameTrainingCollection = "app-content-state-game-training-collection";
@@ -81,6 +84,18 @@ public class BaseAppContentStates<T> : DataObjects<T> where T : DataObject, new(
     public bool isAppContentStateGameArcade {
         get {
             return IsAppContentState(AppContentStateMeta.appContentStateGameArcade);
+        }
+    }
+
+    public bool isAppContentStateGameCoop {
+        get {
+            return IsAppContentState(AppContentStateMeta.appContentStateGameCoop);
+        }
+    }
+        
+    public bool isAppContentStateGameMissions {
+        get {
+            return IsAppContentState(AppContentStateMeta.appContentStateGameMissions);
         }
     }
 
