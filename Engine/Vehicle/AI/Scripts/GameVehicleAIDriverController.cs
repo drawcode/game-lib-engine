@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System;
 
 [RequireComponent(typeof(SplinePathWaypoints))]
-//2012-06-22
+
 public class GameVehicleAIDriverController : MonoBehaviour {
       
     
@@ -21,7 +21,7 @@ public class GameVehicleAIDriverController : MonoBehaviour {
     private float m_currentSpeed = 0.0f;
     private bool m_isBraking = false;
     private float m_leftRightDistanceLength = 0;
-    private float m_frontDistanceLength = 0;
+    public float m_frontDistanceLength = 0;
     private float m_leftRightSideDistanceLength = 0;
     private bool optimizedWpTargeting = true; //Use the next waypoint when it's better //2013-06-17
     
@@ -89,7 +89,7 @@ public class GameVehicleAIDriverController : MonoBehaviour {
         viewPoint;
     public bool useObstacleAvoidance = true;
     public bool ignoreWaypointsForObstacleAvoidanceControl = false;
-    public bool onlyStoppingWhileOa = false; //2012-08-05
+    public bool onlyStoppingWhileOa = false; 
     //public bool ignoreWaypointsForObstacleAvoidanceControl = false;
     public float oADistance = 10;
     public float oAWidth = 4;
@@ -126,8 +126,8 @@ public class GameVehicleAIDriverController : MonoBehaviour {
     private bool m_backwardDriving = false;
     private bool m_isBackwardDriving = false;
     private float m_currentMaxSteerAngle = 0;
-    private float m_lastSqrDistanceNextWp;//2011-12-25
-    private float m_lastSqrDistanceAfterNextWp;//2011-12-25
+    private float m_lastSqrDistanceNextWp;
+    private float m_lastSqrDistanceAfterNextWp;
     
     [HideInInspector]
     public GameObject
@@ -202,10 +202,10 @@ public class GameVehicleAIDriverController : MonoBehaviour {
 
     void Awake() {
                 
-        //2011-12-27-B
+        //2011-12-27
         //GetWaypointNames();
         //FillWaypointList();
-        //2011-12-27-E      
+        //2011-12-27      
         
         aiRespawnControllerScript = gameObject.GetComponent<GameVehicleRespawnController>();
         aiPreMotor = GetComponent<GameVehicleMotorMapping>();
@@ -215,10 +215,10 @@ public class GameVehicleAIDriverController : MonoBehaviour {
 
     void Start() {      
         m_sqrDistanceToWpNoOa = wpContactAreaRadius * wpContactAreaRadius;
-        //2011-12-27-B
+        //2011-12-27
         GetWaypointNames();
         FillWaypointList();
-        //2011-12-27-E
+        //2011-12-27
         steerAngle = aiPreMotor.steerMax;
         m_calcMaxSpeed = aiPreMotor.speedMax;
         m_maxSpeed = m_calcMaxSpeed; 
@@ -229,14 +229,14 @@ public class GameVehicleAIDriverController : MonoBehaviour {
         }
         //ObstacleAvoidance
         if (useObstacleAvoidance) {
-            //2012-07-10 -B
+            //2012-07-10 
             if (ignoreWaypointsForObstacleAvoidanceControl) {                                                   
                 m_sqrDistanceToWaypoint = m_sqrDistanceToWpOa; 
             }
             else {
                 m_sqrDistanceToWaypoint = m_sqrDistanceToWpNoOa; //2012-06-24
             }
-            //2012-07-10 -E
+            //2012-07-10 
             
             ////unnoetig
             //if (viewPoint == null)
@@ -465,7 +465,7 @@ public class GameVehicleAIDriverController : MonoBehaviour {
             }
             else {
                 //ObstacleAvoidance
-                //2012-06-22
+                
                 //m_targetAngle = ObstacleAvoidanceSteering();  
                 bool dummy = false;
                 m_targetAngle = ObstacleAvoidanceSteering(ref dummy);
@@ -488,7 +488,7 @@ public class GameVehicleAIDriverController : MonoBehaviour {
 
             aiPreMotor.steerInput = (aiSteerAngle / m_currentMaxSteerAngle);
             
-            //2011-12-25-B  
+              
             //Noch Performance pruefen und ggf. verbessern!!!
             //Vector3 afterNextPos  = waypoints[AfterNextWaypointIndex()].position;
             //Vector3 moveDirectionAfter  = afterNextPos - transform.position;
@@ -497,7 +497,7 @@ public class GameVehicleAIDriverController : MonoBehaviour {
             
             
             //if (moveDirection.sqrMagnitude < m_sqrDistanceToWaypoint)
-            if (sqrMagnitude < m_sqrDistanceToWaypoint) { //2011-12-25-E                
+            if (sqrMagnitude < m_sqrDistanceToWaypoint) {                 
                   
                 NextWaypoint();
                     
@@ -534,7 +534,7 @@ public class GameVehicleAIDriverController : MonoBehaviour {
                 //    //fire event END
                 //}
                 
-                //2011-12-25-B
+                
                 //afterNextPos  = waypoints[AfterNextWaypointIndex()].position;
                 //moveDirectionAfter  = afterNextPos - transform.position;
                 //afterNextSqrDistance =  moveDirectionAfter.sqrMagnitude;
@@ -561,7 +561,7 @@ public class GameVehicleAIDriverController : MonoBehaviour {
             //} 
             
             //m_lastSqrDistanceNextWp = sqrMagnitude; 
-            //m_lastSqrDistanceAfterNextWp = afterNextSqrDistance;//2011-12-25-B
+            //m_lastSqrDistanceAfterNextWp = afterNextSqrDistance;
             
         }
         else {
@@ -587,8 +587,7 @@ public class GameVehicleAIDriverController : MonoBehaviour {
             Vector3 target = waypoints[currentWaypoint].position;
             Vector3 moveDirection = target - transform.position;                
             Vector3 localTarget = transform.InverseTransformPoint(waypoints[currentWaypoint].position);
-            
-            //2013-06-17 -B
+
             Vector3 localTargetNext; 
             float targetAngleNext;
             
@@ -598,8 +597,7 @@ public class GameVehicleAIDriverController : MonoBehaviour {
             else {
                 localTargetNext = transform.InverseTransformPoint(waypoints[currentWaypoint + 2 - waypoints.Count].position);
             }   
-            //2013-06-17 -E
-            
+
             //je hoeher die Geschwindigkeit,  desto geringer der maximale Einschlagwinkel.
 
             float speedProcent = m_currentSpeed / m_calcMaxSpeed;
@@ -610,26 +608,22 @@ public class GameVehicleAIDriverController : MonoBehaviour {
             if (!useObstacleAvoidance) {
                 m_targetAngle = Mathf.Atan2(localTarget.x, localTarget.z) * Mathf.Rad2Deg;
                 
-                //2013-06-17 -B
                 //targetAngleNext = Mathf.Atan2(localTargetNext.x, localTargetNext.z) * Mathf.Rad2Deg;
                 //if (Mathf.Abs(m_targetAngle) > Mathf.Abs (targetAngleNext))
                 //  m_targetAngle = targetAngleNext;
-                //2013-06-17 -E
-                
+
             }
             else {
-                //2012-08-05 -B
+                 
                 if (onlyStoppingWhileOa) {
                     bool hitFront = ObstacleAvoidanceFrontDetection();                  
                     //float targetAngleWp   = Mathf.Atan2(localTarget.x, localTarget.z) * Mathf.Rad2Deg; //2012-08-06
                     m_targetAngle = Mathf.Atan2(localTarget.x, localTarget.z) * Mathf.Rad2Deg;      //2012-08-06
-                    
-                    //2013-06-17 -B
+
                     targetAngleNext = Mathf.Atan2(localTargetNext.x, localTargetNext.z) * Mathf.Rad2Deg;
                     if (Mathf.Abs(m_targetAngle) > Mathf.Abs(targetAngleNext))
                         m_targetAngle = targetAngleNext;
-                    //2013-06-17 -E
-                    
+
                     if (hitFront) {
                         m_isBraking = true;
                         aiPreMotor.motorInput = 0;
@@ -639,15 +633,14 @@ public class GameVehicleAIDriverController : MonoBehaviour {
                         m_isBraking = false;
                     }
                     
-                }//2012-08-05 -E
+                }
                 else {
-                    //2012-06-22 -B
+                     
                     //ObstacleAvoidance
                     //m_targetAngle = ObstacleAvoidanceSteering();  
                     float targetAngleOa = ObstacleAvoidanceSteering(ref linecastsHitsObject);                   
                     float targetAngleWp = Mathf.Atan2(localTarget.x, localTarget.z) * Mathf.Rad2Deg;
-                    
-                    //2013-06-17 -B
+
                     if (optimizedWpTargeting) {
                         
                         //Debug.Log("doublewptest");                    
@@ -656,7 +649,6 @@ public class GameVehicleAIDriverController : MonoBehaviour {
                             targetAngleWp = targetAngleNext;
                         
                     }
-                    //2013-06-17 -E
                     
                     targetAngleWp = Mathf.Clamp(targetAngleWp, (-1) * m_currentMaxSteerAngle, m_currentMaxSteerAngle);//2012-06-30
                     //Debug.Log("targetAngleOa: " + targetAngleOa + "; targetAngleWp: " + targetAngleWp);
@@ -671,12 +663,10 @@ public class GameVehicleAIDriverController : MonoBehaviour {
                         else {
                             
                             //m_targetAngle = targetAngleOa;
-                            
-                            //2012-06-30 -B
+
                             //m_targetAngle = (targetAngleWp + targetAngleOa) / 2;                      
                             m_targetAngle = GetTimeDependendSteeringAngle(targetAngleOa, targetAngleWp);
-                            //2012-06-30 -E
-                            
+
                             m_sqrDistanceToWaypoint = m_sqrDistanceToWpOa;
                             
                         }
@@ -688,11 +678,9 @@ public class GameVehicleAIDriverController : MonoBehaviour {
                         if ((targetAngleOa > 0.5 && targetAngleWp > 0.5) || (targetAngleOa < -0.5 && targetAngleWp < -0.5)) { //0.5 nehme ich, um nicht bei kleinen Differenzen auf die Nase zu fallen.
                             
                             //m_targetAngle = targetAngleWp;
-                            //2012-06-30 -B
                             //m_targetAngle = (targetAngleWp + targetAngleOa) / 2;                      
                             m_targetAngle = GetTimeDependendSteeringAngle(targetAngleOa, targetAngleWp);
-                            //2012-06-30 -E
-                            
+
                         }
                         else {
                             m_targetAngle = targetAngleOa;
@@ -708,7 +696,6 @@ public class GameVehicleAIDriverController : MonoBehaviour {
                         }
                         
                     }
-                    //2012-06-22 -E
                 }
                 
             }
@@ -730,7 +717,7 @@ public class GameVehicleAIDriverController : MonoBehaviour {
 
             aiPreMotor.steerInput = (aiSteerAngle / m_currentMaxSteerAngle);
             
-            //2011-12-25-B  
+              
             //Noch Performance pruefen und ggf. verbessern!!!
             //Vector3 afterNextPos  = waypoints[AfterNextWaypointIndex()].position;
             //Vector3 moveDirectionAfter  = afterNextPos - transform.position;
@@ -739,7 +726,7 @@ public class GameVehicleAIDriverController : MonoBehaviour {
             
             
             //if (moveDirection.sqrMagnitude < m_sqrDistanceToWaypoint)
-            if (sqrMagnitude < m_sqrDistanceToWaypoint) { //2011-12-25-E                
+            if (sqrMagnitude < m_sqrDistanceToWaypoint) {                 
                   
                 NextWaypoint();
                                     
@@ -805,8 +792,8 @@ public class GameVehicleAIDriverController : MonoBehaviour {
                 GameVehicleEventArgs e = new GameVehicleEventArgs();
                 e.name = gameObject.name;
                 e.currentWaypointIndex = currentWaypoint;
-                e.currentWaypointName = waypoints[currentWaypoint - 1].name; //2011-12-27-B
-                //e.currentWaypointName = waypoints[currentWaypoint].name;  //2011-12-27-E
+                e.currentWaypointName = waypoints[currentWaypoint - 1].name; //2011-12-27
+                //e.currentWaypointName = waypoints[currentWaypoint].name;  //2011-12-27
                 e.position = gameObject.transform.position;
                 e.rotation = gameObject.transform.rotation;
                 e.tag = gameObject.tag;
@@ -816,7 +803,7 @@ public class GameVehicleAIDriverController : MonoBehaviour {
         }
     }
     
-    //2011-12-25-B
+    
     //private int AfterNextWaypointIndex()
     //{                     
     //  int nextWaypoint = currentWaypoint +1;       
@@ -827,7 +814,7 @@ public class GameVehicleAIDriverController : MonoBehaviour {
     //    }
     //  return nextWaypoint;
     //}
-    //2011-12-25-E
+    
     
     void FillWaypointList() {               
         waypoints.Clear(); //2012-06-23
@@ -911,7 +898,7 @@ public class GameVehicleAIDriverController : MonoBehaviour {
         RaycastHit hitRSide;
         RaycastHit hitLSide;
         
-        hitsObject = false; //2012-06-22
+        hitsObject = false; 
         //Vector3 forwardDirection = viewPoint.TransformDirection(Vector3.forward * oADistance);      
 
         //front raycasts BEGIN ------------------------------------     
@@ -919,7 +906,7 @@ public class GameVehicleAIDriverController : MonoBehaviour {
         if (Physics.Linecast(viewPoint.position, viewPointEndGO.transform.position, out hitFrontMid, visibleLayers)) {
             
             frontContact = true;
-            hitsObject = true; //2012-06-22
+            hitsObject = true; 
             frontMinDistance = hitFrontMid.distance;
             frontMaxDistance = hitFrontMid.distance; 
             
@@ -928,7 +915,7 @@ public class GameVehicleAIDriverController : MonoBehaviour {
        
         if (Physics.Linecast(viewPointLeftGO.transform.position, viewPointLeftEndGO.transform.position, out hitFrontLeft, visibleLayers)) {
             frontContact = true;
-            hitsObject = true; //2012-06-22
+            hitsObject = true; 
             if (frontMinDistance == 0 || frontMinDistance > hitFrontLeft.distance) {
                 frontMinDistance = hitFrontLeft.distance;
             }
@@ -944,7 +931,7 @@ public class GameVehicleAIDriverController : MonoBehaviour {
        
         if (Physics.Linecast(viewPointRightGO.transform.position, viewPointRightEndGO.transform.position, out hitFrontRight, visibleLayers)) {
             frontContact = true;
-            hitsObject = true; //2012-06-22
+            hitsObject = true; 
             if (frontMinDistance == 0 || frontMinDistance > hitFrontRight.distance) {
                 frontMinDistance = hitFrontRight.distance;
             }
@@ -960,13 +947,13 @@ public class GameVehicleAIDriverController : MonoBehaviour {
 
         //cast forward sideways BEGIN ------------------------------------        
         if (Physics.Linecast(viewPointLeftGO.transform.position, leftDirectionGO.transform.position, out hitL, visibleLayers)) {
-            hitsObject = true; //2012-06-22
+            hitsObject = true; 
             leftDistance = hitL.distance;  
             
         }
                 
         if (Physics.Linecast(viewPointRightGO.transform.position, rightDirectionGO.transform.position, out hitR, visibleLayers)) {
-            hitsObject = true; //2012-06-22
+            hitsObject = true; 
             rightDistance = hitR.distance;
         }
         //cast forward sideways END ------------------------------------ 
@@ -979,7 +966,7 @@ public class GameVehicleAIDriverController : MonoBehaviour {
         //    //Debug.Log("center left: " + hitLSide.collider.gameObject.name);
         //}        
         if (Physics.Linecast(leftFrontSideGO.transform.position, leftFrontSideEndGO.transform.position, out hitLSide, visibleLayers)) {
-            hitsObject = true; //2012-06-22
+            hitsObject = true; 
             leftSideDistance = hitLSide.distance;            
             //weil wir gleich und auch spaeter auf 0 pruefen und annehmen, dass bei 0 keine Detektion stattfindet.
             if (leftSideDistance == 0) {
@@ -990,7 +977,7 @@ public class GameVehicleAIDriverController : MonoBehaviour {
 
         if (Physics.Linecast(leftRearSideGO.transform.position, leftRearSideEndGO.transform.position, out hitLSide, visibleLayers)) {
             
-            hitsObject = true; //2012-06-22
+            hitsObject = true; 
             if (leftSideDistance == 0 || leftSideDistance > hitLSide.distance) {
                 leftSideDistance = hitLSide.distance;
             }
@@ -1006,7 +993,7 @@ public class GameVehicleAIDriverController : MonoBehaviour {
         //    rightSideDistance = hitRSide.distance;
         //}
         if (Physics.Linecast(rightFrontSideGO.transform.position, rightFrontSideEndGO.transform.position, out hitRSide, visibleLayers)) {
-            hitsObject = true; //2012-06-22
+            hitsObject = true; 
             rightSideDistance = hitRSide.distance;
             //weil wir gleich und auch spaeter auf 0 pruefen und annehmen, dass bei 0 keine Detektion stattfindet.
             if (rightSideDistance == 0) {
@@ -1015,7 +1002,7 @@ public class GameVehicleAIDriverController : MonoBehaviour {
         }
 
         if (Physics.Linecast(rightRearSideGO.transform.position, rightRearSideEndGO.transform.position, out hitRSide, visibleLayers)) {
-            hitsObject = true; //2012-06-22
+            hitsObject = true; 
             if (rightSideDistance == 0 || rightSideDistance > hitRSide.distance) {
                 rightSideDistance = hitRSide.distance;
             }
@@ -1058,36 +1045,36 @@ public class GameVehicleAIDriverController : MonoBehaviour {
         return newSteerAngle;
     }
     
-    //2012-08-05 -B
-    bool ObstacleAvoidanceFrontDetection() {
-        float newSteerAngle;
-        bool frontContact = false;
+     
+    public bool ObstacleAvoidanceFrontDetection() {
+        //float newSteerAngle;
+        //bool frontContact = false;
         float frontMinDistance = 0;
         float frontMaxDistance = -1;
-        float leftDistance = 0;
-        float rightDistance = 0;
-        float leftSideDistance = 0;
-        float rightSideDistance = 0;
+        //float leftDistance = 0;
+        //float rightDistance = 0;
+       // float leftSideDistance = 0;
+       // float rightSideDistance = 0;
         //float localSteeringAngle = steerAngle;
         //bool doSteering = false;
         RaycastHit hitFrontMid;
         RaycastHit hitFrontLeft;
         RaycastHit hitFrontRight;
-        RaycastHit hitR;
-        RaycastHit hitL;
-        RaycastHit hitRSide;
-        RaycastHit hitLSide;
+        //RaycastHit hitR;
+        //RaycastHit hitL;
+        //RaycastHit hitRSide;
+        //RaycastHit hitLSide;
         bool hitsObject = false;
         
-        hitsObject = false; //2012-06-22
+        hitsObject = false; 
         //Vector3 forwardDirection = viewPoint.TransformDirection(Vector3.forward * oADistance);      
 
         //front raycasts BEGIN ------------------------------------     
 
         if (Physics.Linecast(viewPoint.position, viewPointEndGO.transform.position, out hitFrontMid, visibleLayers)) {
             
-            frontContact = true;
-            hitsObject = true; //2012-06-22
+            //frontContact = true;
+            hitsObject = true; 
             frontMinDistance = hitFrontMid.distance;
             frontMaxDistance = hitFrontMid.distance; 
             
@@ -1095,8 +1082,8 @@ public class GameVehicleAIDriverController : MonoBehaviour {
         }        
        
         if (Physics.Linecast(viewPointLeftGO.transform.position, viewPointLeftEndGO.transform.position, out hitFrontLeft, visibleLayers)) {
-            frontContact = true;
-            hitsObject = true; //2012-06-22
+            //frontContact = true;
+            hitsObject = true; 
             if (frontMinDistance == 0 || frontMinDistance > hitFrontLeft.distance) {
                 frontMinDistance = hitFrontLeft.distance;
             }
@@ -1111,8 +1098,8 @@ public class GameVehicleAIDriverController : MonoBehaviour {
         }
        
         if (Physics.Linecast(viewPointRightGO.transform.position, viewPointRightEndGO.transform.position, out hitFrontRight, visibleLayers)) {
-            frontContact = true;
-            hitsObject = true; //2012-06-22
+            //frontContact = true;
+            hitsObject = true; 
             if (frontMinDistance == 0 || frontMinDistance > hitFrontRight.distance) {
                 frontMinDistance = hitFrontRight.distance;
             }
@@ -1124,13 +1111,11 @@ public class GameVehicleAIDriverController : MonoBehaviour {
         else {
             frontMaxDistance = -1;
         }
-        //front raycasts END ------------------------------------         
+
         
         return hitsObject;
     }
 
-    //2012-08-05 -E
-    
     private float SteeringDecision(float leftSideDistance, float rightSideDistance, float leftDistance, float rightDistance, float frontMinDistance, bool frontContact, SteeringMode style) {
         //float localSteeringAngle = steerAngle;
         float localSteeringAngle = m_currentMaxSteerAngle;
@@ -1151,7 +1136,7 @@ public class GameVehicleAIDriverController : MonoBehaviour {
                 //steer left
             if (leftSideDistance == 0 && ((leftDistance == 0 && rightDistance > 0) || (rightDistance != 0 && leftDistance != 0 && leftDistance > rightDistance)                 
                 || (leftDistance == 0 && frontMinDistance > 0) || (rightDistance < leftDistance && frontMinDistance > 0 && rightDistance != 0) || (frontContact == false && rightSideDistance > 0))) {
-                                          //|| (leftDistance == 0 && frontMinDistance > 0) || (rightDistance > leftDistance && frontMinDistance > 0) || (frontContact==false && rightSideDistance > 0)))
+                //|| (leftDistance == 0 && frontMinDistance > 0) || (rightDistance > leftDistance && frontMinDistance > 0) || (frontContact==false && rightSideDistance > 0)))
                 if (!steerAbsolute) {
                     //result = (-1) * localSteeringAngle; old
                     if (frontMinDistance > 0) {
@@ -1188,7 +1173,7 @@ public class GameVehicleAIDriverController : MonoBehaviour {
                 //No "(leftSideDistance > 0) ||" because pushing away should not be possible
             if (rightSideDistance == 0 && ((rightDistance == 0 && leftDistance > 0) || (rightDistance != 0 && leftDistance != 0 && rightDistance > leftDistance)    
                 || (rightDistance == 0 && frontMinDistance > 0) || (leftDistance < rightDistance && frontMinDistance > 0 && leftDistance != 0) || (frontContact == false && leftSideDistance > 0))) {
-                    //|| (rightDistance == 0 && frontMinDistance > 0) || (leftDistance > rightDistance && frontMinDistance > 0) || (frontContact == false && leftSideDistance > 0)))
+                //|| (rightDistance == 0 && frontMinDistance > 0) || (leftDistance > rightDistance && frontMinDistance > 0) || (frontContact == false && leftSideDistance > 0)))
                 if (!steerAbsolute) {
                     if (frontMinDistance > 0) {
                         result = localSteeringAngle;
@@ -1309,21 +1294,6 @@ public class GameVehicleAIDriverController : MonoBehaviour {
         }
     }
     
-    /// <summary>
-    /// Sets the new waypoint set.
-    /// </summary>
-    /// <param name='folderName'>
-    /// New Folder name.
-    /// </param>
-    /// <param name='preName'>
-    /// New Pre name.
-    /// </param>
-    /// <param name='maxSpeed'>
-    /// New max speed.
-    /// </param>
-    /// <param name='nextWaypointNo'>
-    /// New next waypoint no. First Waypoint has No. 1
-    /// </param>
     public void SetNewWaypointSet(string folderName, string preName, float maxSpeed, int nextWaypointNo) {
         
         GameVehicleAIWaypointEditor aiWaypointEditor;

@@ -28,6 +28,7 @@ public static class DictionaryExtensions {
             return defaultValue;
         }
         catch (Exception e) {
+            UnityEngine.Debug.Log(e);
             return default(TVal);
         }
     }    

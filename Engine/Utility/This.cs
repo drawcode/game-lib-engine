@@ -67,6 +67,7 @@ public class ThisTime {
         float timeCurrent = 0f;
         if(times.ContainsKey(key)) {
             timeCurrent = times[key];
+            Debug.Log("timeCurrent" + timeCurrent);
         }
 
         return false;

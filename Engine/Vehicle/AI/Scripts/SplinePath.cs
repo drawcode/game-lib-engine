@@ -14,7 +14,7 @@ public class SplinePath : MonoBehaviour {
     [HideInInspector]
     public List<Vector3>
         sequence;
-    private bool isLoaded = false;
+    //private bool isLoaded = false;
     
     protected virtual void Awake() {
         
@@ -31,10 +31,10 @@ public class SplinePath : MonoBehaviour {
     protected void DrawGizmos() {
         if (sequence != null) {         
                     
-            int i, count;
+            int count;
             int c = 0;
             count = sequence.Count;
-            for (i=0; c < count; c++) {
+            for (c = 0; c < count; c++) {
                 if (c < count - 1) {
                     Debug.DrawLine(sequence[c], sequence[c + 1], color);
                 }

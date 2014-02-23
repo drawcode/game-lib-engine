@@ -62,7 +62,8 @@ public class BaseGameCustomization : DataObject {
         Reset();
     }
 
-    public virtual void Reset() {
+    public override void Reset() {
+        base.Reset();
         colors = new List<CustomPlayerColors>();
     }
 

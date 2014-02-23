@@ -1,8 +1,9 @@
+#pragma warning disable 0414
 using UnityEngine;
 using System.IO;
 using System.Collections;
 
-public class GameVehicleDrive {
+public class GameVehicleDriveWheel {
     public static string DriveFWD = "FWD";
     public static string DriveRWD = "RWD";
     public static string Drive4WD = "4WD";
@@ -73,7 +74,7 @@ public class BaseGameVehicleController : MonoBehaviour {
         colliderFL.steerAngle = MaxSteeringAngle * Input.GetAxis("Horizontal");
         colliderFR.steerAngle = MaxSteeringAngle * Input.GetAxis("Horizontal");
         
-        if (Drive == GameVehicleDrive.DriveFWD || Drive == GameVehicleDrive.Drive4WD) {
+        if (Drive == GameVehicleDriveWheel.DriveFWD || Drive == GameVehicleDriveWheel.Drive4WD) {
             colliderFL.motorTorque = MaxEngineSpeed * Input.GetAxis("Vertical");
             colliderFR.motorTorque = MaxEngineSpeed * Input.GetAxis("Vertical");
         }

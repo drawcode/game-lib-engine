@@ -23,9 +23,6 @@ namespace Engine.Events {
         public static string EVENT_INPUT_DOWN = "EventInputDown";
         public static string EVENT_INPUT_MOVE = "EventInputMove";
 
-        private static volatile InputSystem instance;
-        private static System.Object syncRoot = new System.Object();
-
         public Vector2 lastNormalizedTouch = new Vector2(0f, 0f);
         public Vector2 lastNormalizedTouch2 = new Vector2(0f, 0f);
         public Vector3 lastTargetDirection = new Vector3(0f, 0f, 0f);

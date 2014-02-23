@@ -3,7 +3,7 @@ using System.Collections;
 
 public class SplinePathWaypoints : SplinePath {
     
-    public bool active = true;
+    public bool waypointActive = true;
     public bool show = false;
     //public GameObject waypointPrefab;
     private string m_waypointPreName = "MyWaypoint";
@@ -13,7 +13,7 @@ public class SplinePathWaypoints : SplinePath {
     protected override void Awake() {
         
         //2012-08-05 -B
-        if (active)
+        if (waypointActive)
             Init();
         //2012-08-05 -E
         
@@ -23,16 +23,16 @@ public class SplinePathWaypoints : SplinePath {
     void Start() {
         
         //2012-08-05 -B
-        //if(active)
+        //if(waypointActive)
         //  Init();
         //2012-08-05 -E     
         
-        if (show && active) {           
+        if (show && waypointActive) {           
             SetRenderer(true);
         }
         
         //2013-07-25 -B     
-        if (active && show && Application.isEditor && Application.isPlaying) {
+        if (waypointActive && show && Application.isEditor && Application.isPlaying) {
             GetWaypointNames();
             FillPath();
             FillSequence();         
@@ -43,15 +43,15 @@ public class SplinePathWaypoints : SplinePath {
     
     //protected virtual void OnDrawGizmos() { //2013-08-02
     protected override void OnDrawGizmos() {  //2013-08-02
-        //if (active && (!Application.isPlaying || show)) //2013-07-25
-        if (active && (!Application.isPlaying)) { //2013-07-25
+        //if (waypointActive && (!Application.isPlaying || show)) //2013-07-25
+        if (waypointActive && (!Application.isPlaying)) { //2013-07-25
             GetWaypointNames();
             FillPath();
             FillSequence();
             //DrawGizmos(); //2013-07-25
         }
         //2013-07-25 -B
-        if (active && (!Application.isPlaying || show)) {
+        if (waypointActive && (!Application.isPlaying || show)) {
             DrawGizmos();
         }       
         //2013-07-25 -E
@@ -95,7 +95,7 @@ public class SplinePathWaypoints : SplinePath {
                 waypoint.transform.position = point;
                 waypoint.name = m_waypointPreName + counter.ToString();
                 waypoint.transform.parent = parent;
-                GameVehicleAIWaypoint aiwaypointScript = waypoint.GetComponent("GameVehicleAIWaypoint") as GameVehicleAIWaypoint;    
+                //GameVehicleAIWaypoint aiwaypointScript = waypoint.GetComponent("GameVehicleAIWaypoint") as GameVehicleAIWaypoint;    
                             
                 CopyParameters(ref waypoint, counter);
             }
@@ -106,7 +106,7 @@ public class SplinePathWaypoints : SplinePath {
     
     void CopyParameters(ref GameObject waypoint, int newIndex) {
         
-        float fltOldIndex = newIndex / (steps + 1);
+        //float fltOldIndex = newIndex / (steps + 1);
         
         int intOldIndex;
         
@@ -128,9 +128,9 @@ public class SplinePathWaypoints : SplinePath {
         aiWaypointScript.useTrigger = oldAiWaypointScript.useTrigger;
         
         
-        //if (aiWaypointScript.useTrigger)//2013-08-02
-        //{                                 //2013-08-02
-        //2012-08-05 -E
+        //if (aiWaypointScript.useTrigger)
+        //{                                 
+
         //BoxCollider bc = waypoint.AddComponent<BoxCollider>();    
         //bc.isTrigger = true;
         //waypoint.layer = path[intOldIndex - 1].gameObject.layer; Die automatische Zuweisung geschieht erst spaeter
@@ -151,11 +151,8 @@ public class SplinePathWaypoints : SplinePath {
                 gameObject.layer = 2;
             } 
             */
-        //2013-08-02 -E
-        
-        //2012-08-05 -E
             
-        //} //2013-08-02
+        //}
         
         waypoint.transform.localScale = path[intOldIndex - 1].localScale;       
         waypoint.tag = path[intOldIndex - 1].gameObject.tag;        
@@ -202,7 +199,7 @@ public class SplinePathWaypoints : SplinePath {
         }
     }
 
-    void SetRenderer(bool active) {
+    void SetRenderer(bool waypointActive) {
                 
         bool found = true;
         int counter = 1;
@@ -216,7 +213,7 @@ public class SplinePathWaypoints : SplinePath {
             go = GameObject.Find(currentName);
             
             if (go != null) {                               
-                go.renderer.enabled = active;
+                go.renderer.enabled = waypointActive;
                 counter++;
             }
             else {
@@ -228,7 +225,7 @@ public class SplinePathWaypoints : SplinePath {
     }
     
     void SetDrawLineToNext() {
-        if (active) {
+        if (waypointActive) {
             
         }
         bool found = true;
@@ -245,11 +242,11 @@ public class SplinePathWaypoints : SplinePath {
             if (go != null) {                               
                 DrawLineToNext drawLineToNext = go.GetComponent<DrawLineToNext>() as DrawLineToNext;
                 if (drawLineToNext != null) {
-                    if (active) {
-                        drawLineToNext.active = false;
+                    if (waypointActive) {
+                        drawLineToNext.gameObject.SetActive(false);
                     }
                     else {
-                        drawLineToNext.active = true;
+                        drawLineToNext.gameObject.SetActive(true);
                     }
                 }
                 

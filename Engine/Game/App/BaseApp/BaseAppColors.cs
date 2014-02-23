@@ -104,7 +104,9 @@ public class AppColorValue : DataObject {
         return ColorHelper.FromRGB(rgba);
     }
     
-    public void Reset() {
+    public override void Reset() {
+        base.Reset();
+
         float r = 1;
         float g = 1;
         float b = 1;

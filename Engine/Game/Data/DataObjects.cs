@@ -478,7 +478,7 @@ public class DataObjects<T> where T : DataObject, new() {
 
     public Dictionary<string, string> attributes;
 
-    public void Inspect<T>(T obj) where T : BaseDataObject {
+    public void Inspect<U>(U obj) where U : BaseDataObject {
 
         // harvest the properties, fields and keys if not already done.
 
@@ -591,6 +591,7 @@ public class DataObjects<T> where T : DataObject, new() {
             return (U)val;
         }
         catch(Exception e) {
+            Debug.Log(e);
             return default(U);
         }
     }

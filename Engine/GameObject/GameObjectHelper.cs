@@ -812,12 +812,12 @@ public static class GameObjectHelper {
         if (inst == null)
             return;
         
-        TrailRenderer trailRendererCurrent = inst.GetComponent<TrailRenderer>();
-        if (trailRendererCurrent != null) {
-            foreach (Color color in colors) {
+        //TrailRenderer trailRendererCurrent = inst.GetComponent<TrailRenderer>();
+        //if (trailRendererCurrent != null) {
+           // foreach (Color color in colors) {
                 //trailRendererCurrent..color = color;
-            }
-        }
+            //}
+        //}
         
         if (!includeChildren) {
             return;

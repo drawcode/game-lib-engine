@@ -170,6 +170,7 @@ public class BaseDataObject : Dictionary<string, object> {
             return defaultValue;
         }
         catch (Exception e) {
+            Debug.Log(e);
             return default(T);
         }
     }
@@ -510,6 +511,7 @@ public class BaseDataObject : Dictionary<string, object> {
                 return (T)objectValue;
             }
             catch(Exception e) {
+                Debug.Log(e);
                 Debug.Log("ERROR:GetAttributeObjectValue:code:" + code);
             }
         }
