@@ -524,17 +524,19 @@ public static class GameObjectHelper {
         //LogUtil.Log("Show:" + inst.name);
         if (inst != null) {
             if (!inst.activeSelf) {
-                inst.SetActive(true);
+                inst.SetActive(true);                
+                ShowRenderers(inst);
             }
-            ShowRenderers(inst);
         }
     }
     
     public static void Hide(GameObject inst) {
         //LogUtil.Log("Hide:" + inst.name);
         if (inst != null) {
-            HideRenderers(inst);
-            inst.SetActive(false);
+            if(inst.activeSelf || inst.activeInHierarchy) {
+                HideRenderers(inst);
+                inst.SetActive(false);
+            }
         }
     }
     

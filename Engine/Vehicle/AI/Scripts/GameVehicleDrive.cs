@@ -462,9 +462,17 @@ public class GameVehicleDrive : MonoBehaviour {
             currentPitch = 2;
         }
 
-        motorAudioSource.volume = (float)GameProfiles.Current.GetAudioEffectsVolume();
-        motorAudioSourceLow.volume = (float)GameProfiles.Current.GetAudioEffectsVolume();
-        motorAudioSourceMid.volume = (float)GameProfiles.Current.GetAudioEffectsVolume();
+
+        if(currentSpeed < 0.1f) {
+            motorAudioSource.volume = 0;
+            motorAudioSourceLow.volume = 0;
+            motorAudioSourceMid.volume = 0;
+        }
+        else {
+            motorAudioSource.volume = (float)GameProfiles.Current.GetAudioEffectsVolume();
+            motorAudioSourceLow.volume = (float)GameProfiles.Current.GetAudioEffectsVolume();
+            motorAudioSourceMid.volume = (float)GameProfiles.Current.GetAudioEffectsVolume();
+        }
 
         motorAudioSource.pitch = currentPitch;
 
