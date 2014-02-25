@@ -109,13 +109,13 @@ public class DataObjects<T> where T : DataObject, new() {
         
         string pathResources = path;
 
-        LogUtil.Log("LoadDataFromResources:pathResources:" + pathResources);
-        LogUtil.Log("LoadDataFromResources:ContentsConfig.contentRootFolder:" + ContentsConfig.contentRootFolder);
-        LogUtil.Log("LoadDataFromResources:ContentsConfig.contentAppFolder:" + ContentsConfig.contentAppFolder);
-        LogUtil.Log("LoadDataFromResources:Application.persistentDataPath:" + Application.persistentDataPath);
-        LogUtil.Log("LoadDataFromResources:Application.dataPath:" + Application.dataPath);
-
-        if (!path.Contains(ContentsConfig.contentAppFolder)) {            
+        if (!path.Contains(ContentsConfig.contentAppFolder)) {        
+            
+            LogUtil.Log("LoadDataFromResources:pathResources:" + pathResources);
+            LogUtil.Log("LoadDataFromResources:ContentsConfig.contentRootFolder:" + ContentsConfig.contentRootFolder);
+            LogUtil.Log("LoadDataFromResources:ContentsConfig.contentAppFolder:" + ContentsConfig.contentAppFolder);
+            LogUtil.Log("LoadDataFromResources:Application.persistentDataPath:" + Application.persistentDataPath);
+            LogUtil.Log("LoadDataFromResources:Application.dataPath:" + Application.dataPath);
 
             if (Application.isWebPlayer) {
 

@@ -472,6 +472,10 @@ public static class GameObjectExtensions {
         GameObjectHelper.RotateObject(go, rotateBy);    
     }
     
+    public static void TrackObject(this GameObject go, GameObject target) {
+        GameObjectHelper.TrackObject(go, target);    
+    }
+    
     public static Material GetMaterial(this GameObject go, string name) {
         return GameObjectHelper.GetMaterial(go, name);    
     }

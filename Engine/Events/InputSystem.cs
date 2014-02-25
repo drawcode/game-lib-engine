@@ -35,7 +35,8 @@ namespace Engine.Events {
 		public bool leftPressed = false;
 		public bool rightPressed = false;
 		public bool upPressed = false;
-		public bool downPressed = false;
+        public bool downPressed = false;
+        public bool usePressed = false;
 
         public InputTouchInfo lastTouch;
         public List<InputTouchInfo> touchesList;
@@ -105,6 +106,12 @@ namespace Engine.Events {
         public static bool isDownPressed {
             get {
                 return Instance.downPressed;
+            }
+        }
+
+        public static bool isUsePressed {
+            get {
+                return Instance.usePressed;
             }
         }
 
@@ -339,6 +346,8 @@ namespace Engine.Events {
                 rightPressed = Input.GetKey(KeyCode.D) || Input.GetKey(KeyCode.RightArrow);
                 upPressed = Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.UpArrow);
                 downPressed = Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.DownArrow);
+                
+                usePressed = Input.GetKey(KeyCode.E);
 
                 //LogUtil.Log("InputSystem::Update");
             }

@@ -412,6 +412,16 @@ public static class GameObjectHelper {
             }
         }
     }
+
+    public static void TrackObject(GameObject go, GameObject target) {
+        if (go != null && target != null) {
+            go.transform.localPosition = Vector3.zero;
+            go.transform.position = target.transform.position;
+            
+            go.transform.localRotation = Quaternion.identity;
+            go.transform.rotation = target.transform.rotation;
+        }
+    }
     
     public static void RotateObjectX(GameObject go, float val) {
         RotateObject(go, Vector3.zero.WithX(val));
