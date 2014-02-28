@@ -9,6 +9,7 @@ using Engine.Data.Json;
 
 public class BaseDataObjectKeys { 
     
+    public static string id = "id";
     public static string uuid = "uuid";
     public static string code = "code";
     public static string name = "name";
@@ -17,11 +18,20 @@ public class BaseDataObjectKeys {
     public static string attributes = "attributes";
     public static string url = "url";
     public static string host = "host";
-    public static string data = "data";
+    public static string data = "data";  
+    public static string data_platform = "data_platform";
     public static string sort_order = "sort_order";
     public static string sort_order_type = "sort_order_type";
     public static string active = "active";
     public static string key = "key";
+    public static string meta = "meta";
+    public static string locale = "locale";
+    public static string symbol = "symbol";
+    public static string price = "price";
+    public static string cost = "cost";
+    public static string platform = "platform";
+    public static string platforms = "platforms";
+    public static string product_id = "product_id";
     public static string game_id = "game_id";
     public static string type = "type";
     public static string order_by = "order_by";
@@ -65,6 +75,19 @@ public class BaseDataObjectKeys {
     public static string item_skin_variation = "item_skin_variation";
     public static string item_data = "item_data";
     public static string item_items = "item_items";
+
+    // locales
+    
+    public static string any = "any";
+    public static string all = "all";
+    public static string en = "en";
+    public static string sp = "sp";
+    public static string de = "de";
+    public static string it = "it";
+    public static string fr = "fr";
+    public static string jp = "jp";
+    public static string cn = "cn";
+    public static string ko = "ko";
 
     // custom
 

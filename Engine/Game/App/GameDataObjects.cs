@@ -457,7 +457,7 @@ public class GameDataObject : DataObject {
         set {
             Set<string>(BaseDataObjectKeys.description, value);
         }
-    }     
+    }   
 
     //[JsonIgnore(JsonIgnoreWhen.Deserializing)]
     public virtual string url {
