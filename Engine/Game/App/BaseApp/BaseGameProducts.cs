@@ -55,6 +55,15 @@ public class BaseGameProducts<T> : DataObjects<T> where T : DataObject, new() {
         BaseCurrent = GetById(code);
         LogUtil.Log("Changing Product: code:" + code);
     }
+
+    public GameProduct GetProductByInfoProductId(string productId) {
+        foreach(GameProduct product in GameProducts.Instance.GetAll()) {
+            if(product.GetCurrentProductInfoByLocale().productId == productId) {
+                return product;
+            }
+        }
+        return null;
+    }
 }
 
 public class BaseGameProductInfo {
