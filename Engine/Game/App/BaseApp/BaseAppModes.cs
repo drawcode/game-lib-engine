@@ -17,6 +17,7 @@ public class BaseAppModeMeta {
     public static string appModeGameDefault = "app-mode-game-default";
     public static string appModeGameArcade = "app-mode-game-arcade";
     public static string appModeGameChallenge = "app-mode-game-challenge";
+    public static string appModeGameMission = "app-mode-game-mission";
     public static string appModeGameTraining = "app-mode-game-training";
     public static string appModeGameMatchup = "app-mode-game-matchup";
     public static string appModeGameCoop = "app-mode-game-coop";

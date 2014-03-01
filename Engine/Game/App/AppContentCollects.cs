@@ -15,7 +15,7 @@ public class AppContentCollects : BaseAppContentCollects<AppContentCollect>
 	public static string APP_STATE_TROPHIES = "app-state-trophies";
 	*/
 	
-	public static string DATA_KEY = "app-content-collect-data";
+	public static string DATA_KEY = "app-content-collection-data";
 		
 	public static AppContentCollect Current {
 		get  {

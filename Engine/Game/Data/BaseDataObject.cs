@@ -151,6 +151,19 @@ public class BaseDataObjectKeys {
     public static string level = "level";
     public static string currency = "currency";
 
+    // content
+    
+    public static string tags = "tags";
+    public static string appStates = "appStates";
+    public static string appContentStates = "appContentStates";
+    public static string requiredAssets = "requiredAssets";
+    public static string contentAttributes = "contentAttributes";
+    public static string choices = "choices";
+
+    // missions
+
+    public static string amount = "amount";
+
 }
 
 public class BaseDataObject : Dictionary<string, object> {  
