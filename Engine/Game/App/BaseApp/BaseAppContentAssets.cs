@@ -89,6 +89,12 @@ public class BaseAppContentAssets<T> : DataObjects<T> where T : DataObject, new(
                         else if (asset.key.StartsWith("weapon")) {                    
                             path = ContentPaths.appCacheVersionSharedPrefabWeapons;
                         }
+                        else if (asset.key.StartsWith("world")) {                    
+                            path = ContentPaths.appCacheVersionSharedPrefabWorlds;
+                        }
+                        else if (asset.key.StartsWith("vehicle")) {                    
+                            path = ContentPaths.appCacheVersionSharedPrefabVehicles;
+                        }
                         
                         path += assetCode;
                                                 

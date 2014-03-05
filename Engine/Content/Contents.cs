@@ -489,6 +489,18 @@ public class ContentPaths {
         }
     }
     
+    public static string appCacheVersionSharedPrefabWorlds {
+        get {
+            return appCacheVersionSharedPrefab + "worlds/";
+        }
+    }
+    
+    public static string appCacheVersionSharedPrefabVehicles {
+        get {
+            return appCacheVersionSharedPrefab + "vehicles/";
+        }
+    }
+    
     public static string GetCurrentPlatformCode() {
 
         #if UNITY_IPHONE
