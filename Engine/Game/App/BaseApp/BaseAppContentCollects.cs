@@ -87,14 +87,14 @@ public class BaseAppContentCollects<T> : DataObjects<T> where T : DataObject, ne
         AppContentCollect collect = AppContentCollects.Instance.GetByCode(code);
 
         if(collect != null) {
-            foreach(AppContentCollectItem collectItem in collect.data) {
+            //foreach(AppContentCollectItem collectItem in collect.data) {
 
                 // TODO ensure collections are completed.
 
                 ///if(!CheckChoiceUser(choiceItem.code, choices)) {
                 //    return false;
                 //}
-            }
+            //}
         }
         else {
             return false;

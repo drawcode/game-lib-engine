@@ -122,7 +122,7 @@ public class BaseGameProductInfo : GameDataObject {
         Reset();
     }
 
-    public void Reset() {
+    public override void Reset() {
         cost = "5000";
         symbol = "$";
         display_name = "";
@@ -185,16 +185,6 @@ public class GameProductPlatformData : GameDataObject {
             Set<string>(BaseDataObjectKeys.platform, value);
         }
     }
-
-    public virtual string code {
-        get { 
-            return Get<string>(BaseDataObjectKeys.code, "");
-        }
-        
-        set {
-            Set<string>(BaseDataObjectKeys.code, value);
-        }
-    }
 }
 
 public class GameProductInfo : BaseGameProductInfo {
@@ -252,7 +242,7 @@ public class BaseGameProduct : GameDataObject {
     }
 
     public string GetPlatformProductCode(string platform) {
-        string productId = "";
+        //string productId = "";
 
         GameProductPlatformData val = data.GetByPlatform(platform);
         if (val != null) {
