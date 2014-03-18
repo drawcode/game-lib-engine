@@ -66,7 +66,10 @@ public class AppColors : BaseAppColors<AppColor> {
                 colorTo = color.GetColor();
             }
 
-            cachedColors.Add(code, colorTo);
+            if(colorTo != Color.white) {
+                cachedColors.Add(code, colorTo);            
+            }
+
         }
         else {
             colorTo = cachedColors[code];
