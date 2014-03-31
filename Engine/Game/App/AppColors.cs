@@ -59,15 +59,18 @@ public class AppColors : BaseAppColors<AppColor> {
         Color colorTo = Color.white;
                 
         if(!cachedColors.ContainsKey(code)) {
+
+            if(GameGlobal.Instance != null) {
          
-            AppColor color = AppColors.Instance.GetByCode(code);
+                AppColor color = AppColors.Instance.GetByCode(code);
 
-            if(color != null) {
-                colorTo = color.GetColor();
-            }
+                if(color != null) {
+                    colorTo = color.GetColor();
+                }
 
-            if(colorTo != Color.white) {
-                cachedColors.Add(code, colorTo);            
+                if(colorTo != Color.white) {
+                    cachedColors.Add(code, colorTo);            
+                }
             }
 
         }
