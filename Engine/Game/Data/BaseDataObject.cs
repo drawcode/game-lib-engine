@@ -123,6 +123,9 @@ public class BaseDataObjectKeys {
 
     public static string asset = "asset";
     public static string assets = "assets";
+        
+    public static string val = "val";
+    public static string vals = "vals";
 
     public static string texture = "texture";
     public static string textures = "textures";
@@ -134,7 +137,10 @@ public class BaseDataObjectKeys {
     
     public static string rpg = "rpg";
     public static string rpgs = "rpgs";
-    
+        
+    public static string reward = "reward";
+    public static string rewards = "rewards";
+
     public static string speed = "speed";
     public static string attack = "attack";
     public static string defense = "defense";

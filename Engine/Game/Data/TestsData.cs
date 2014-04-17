@@ -119,10 +119,14 @@ public class TestsData {
         //Advance("TestGameCharacters_Load");
         //TestGameCharacters_Load();
 
-        
-        testName = "TestGameWeapons_List";
+        //testName = "TestGameWeapons_List";
+        //Advance(testName);
+        //success = TestGameWeapons_List(testName);
+
+        testName = "TestGameItems_List";
         Advance(testName);
-        success = TestGameWeapons_List(testName);
+        success = TestGameItems_List(testName);
+
 
         //testName = "TestGameTeams_List";
         //Advance(testName);
@@ -169,6 +173,65 @@ public class TestsData {
         DumpObj(name, "dataB", dataB);
 
         return equal;
+    }
+    
+    public static bool TestGameItems_List(string name) {
+        
+        bool success = false;
+        
+        Debug.Log(name);
+        
+        List<GameItem> items = GameItems.Instance.GetAll();
+        DumpObj(name, "items", items);
+        
+        //AssertEquals(name, username, "Player");
+        
+        foreach(GameItem item in items) {  
+            
+            Debug.Log("item:code:" + item.code);               
+            Debug.Log("item:json:" + item.ToJson());  
+            
+            GameDataObjectItem data = item.data;
+            
+            if(data != null) {
+                foreach(GameDataModel dataItem in data.models) {                    
+                    Debug.Log("dataItem:models:code:" + dataItem.code);
+                    success = true;
+                }
+                
+                foreach(string dataItem in data.roles) {                    
+                    Debug.Log("dataItem:roles:code:" + dataItem);
+                    success = true;
+                }
+                
+                foreach(GameItemRPG dataItem in data.rpgs) {                    
+                    Debug.Log("dataItem:rpgs:code:" + dataItem.code);        
+                    Debug.Log("dataItem:rpgs:attack:" + dataItem.attack);
+                    Debug.Log("dataItem:rpgs:attack:" + dataItem.attack_speed);
+                    Debug.Log("dataItem:rpgs:boost:" + dataItem.boost);
+                    Debug.Log("dataItem:rpgs:energy:" + dataItem.energy);
+                    Debug.Log("dataItem:rpgs:fly:" + dataItem.fly);
+                    Debug.Log("dataItem:rpgs:health:" + dataItem.health);
+                    Debug.Log("dataItem:rpgs:jump:" + dataItem.jump);
+                    Debug.Log("dataItem:rpgs:level:" + dataItem.level);
+                    Debug.Log("dataItem:rpgs:recharge_speed:" + dataItem.recharge_speed);
+                    Debug.Log("dataItem:rpgs:speed:" + dataItem.speed);
+                    Debug.Log("dataItem:rpgs:upgrades:" + dataItem.upgrades);
+                    Debug.Log("dataItem:rpgs:xp:" + dataItem.upgrades_applied);
+                    Debug.Log("dataItem:rpgs:xp:" + dataItem.xp);
+                    success = true;
+                }                
+                
+                foreach(GameDataItemReward dataItem in data.rewards) {                    
+                    Debug.Log("dataItem:rewards:code:" + dataItem.ToJson());
+                    success = true;
+                }
+            }
+        }
+        
+        DumpObj(name, "items.Count", items.Count);
+        
+        return success;
     }
     
     public static bool TestGameWeapons_List(string name) {

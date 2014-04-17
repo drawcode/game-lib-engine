@@ -48,6 +48,21 @@ public class GameDataItemProjectile : GameDataObject {
     
 }
 
+public class GameDataItemReward : GameDataObject {
+
+    public static string xp = "xp";
+    public static string currency = "currency";
+
+    public void ProcessReward() {
+        if(code == xp) {
+            double xpValue = valInt;            
+            GamePlayerProgress.SetStatXP(xpValue);            
+            GameProfileCharacters.Current.CurrentCharacterAddGamePlayerProgressXP(xpValue);
+        }
+    }
+    
+}
+
 public class GameDataItemTypeKeys {
     public static string defaultType = "default";
 }
@@ -140,6 +155,17 @@ public class GameDataObjectItem : GameDataObject {
         
         set {
             Set<List<GameItemRPG>>(BaseDataObjectKeys.rpgs, value);
+        }
+    } 
+
+    
+    public virtual List<GameDataItemReward> rewards {
+        get {
+            return Get<List<GameDataItemReward>>(BaseDataObjectKeys.rewards);
+        }
+        
+        set {
+            Set<List<GameDataItemReward>>(BaseDataObjectKeys.rewards, value);
         }
     } 
 
@@ -398,7 +424,6 @@ public class GameDataObjectItem : GameDataObject {
         return null;
     }
 }
-
 
 public class GameDataObject : DataObject {
 
@@ -685,6 +710,46 @@ public class GameDataObject : DataObject {
         
         set {
             Set<string>(BaseDataObjectKeys.asset, value);
+        }
+    }
+        
+    public virtual object val {
+        get {
+            return Get<object>(BaseDataObjectKeys.val);
+        }
+        
+        set {
+            Set<object>(BaseDataObjectKeys.val, value);
+        }
+    }
+        
+    public virtual string valString {
+        get {
+            return Get<string>(BaseDataObjectKeys.val);
+        }
+        
+        set {
+            Set<string>(BaseDataObjectKeys.val, value);
+        }
+    }
+    
+    public virtual int valInt {
+        get {
+            return Get<int>(BaseDataObjectKeys.val);
+        }
+        
+        set {
+            Set<int>(BaseDataObjectKeys.val, value);
+        }
+    }
+        
+    public virtual double valDouble {
+        get {
+            return Get<double>(BaseDataObjectKeys.val);
+        }
+        
+        set {
+            Set<double>(BaseDataObjectKeys.val, value);
         }
     }
 
