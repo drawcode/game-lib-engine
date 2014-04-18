@@ -37,7 +37,36 @@ public class GameDataItemTexturePreset : GameDataObject {
 }
 
 public class GameDataItemSound : GameDataObject {
+    public static string load = "load";
+    public static string reward = "reward";
+
+    public void PlaySound() {
+        
+    }
     
+    public void PlaySoundType(string playType, double modifier = 1.0) {
+        // TODO modifier
+        
+        if(playType == load) {
+
+        }
+        else if(playType == reward) {
+
+        }
+    }
+    
+    public void PlaySoundCode(string playCode, double modifier = 1.0) {
+        // TODO modifier
+
+        GameAudio.PlayEffect(playCode);
+
+        if(playCode == load) {
+            
+        }
+        else if(playCode == reward) {
+            
+        }
+    }
 }
 
 public class GameDataItemEffect : GameDataObject {
@@ -52,15 +81,8 @@ public class GameDataItemReward : GameDataObject {
 
     public static string xp = "xp";
     public static string currency = "currency";
-
-    public void ProcessReward() {
-        if(code == xp) {
-            double xpValue = valInt;            
-            GamePlayerProgress.SetStatXP(xpValue);            
-            GameProfileCharacters.Current.CurrentCharacterAddGamePlayerProgressXP(xpValue);
-        }
-    }
-    
+    public static string currencyDouble = "currency-double";
+    public static string health = "health";    
 }
 
 public class GameDataItemTypeKeys {
@@ -148,13 +170,13 @@ public class GameDataObjectItem : GameDataObject {
         }
     } 
     
-    public virtual List<GameItemRPG> rpgs {
+    public virtual List<GameDataItemRPG> rpgs {
         get {
-            return Get<List<GameItemRPG>>(BaseDataObjectKeys.rpgs);
+            return Get<List<GameDataItemRPG>>(BaseDataObjectKeys.rpgs);
         }
         
         set {
-            Set<List<GameItemRPG>>(BaseDataObjectKeys.rpgs, value);
+            Set<List<GameDataItemRPG>>(BaseDataObjectKeys.rpgs, value);
         }
     } 
 
@@ -360,69 +382,62 @@ public class GameDataObjectItem : GameDataObject {
         return false;
     }
     
-    public GameItemRPG GetRPG() {
+    public GameDataItemRPG GetRPG() {
         return GetRPG(GameDataItemTypeKeys.defaultType);
     }
     
-    public GameItemRPG GetRPG(string code) {
-        return GetItem<GameItemRPG>(rpgs, code);
+    public GameDataItemRPG GetRPG(string code) {
+        return GetItem<GameDataItemRPG>(rpgs, code);
     }
 
-    // helpers
     
-    public T GetItemRandomByType<T>(List<T> list, string type) where T : GameDataObject {
-
-        T obj = default(T);
-
-        List<T> items = GetItems<T>(list, type);
-
-        if(items != null) {
-            if(items.Count > 0) {
-                int index = UnityEngine.Random.Range(0, items.Count);
-                obj = items[index];
-            }
-        }
-
-        return obj;
-    }
-
-    public List<T> GetItems<T>(List<T> list, string type) where T : GameDataObject {
-
-        List<T> filteredList = new List<T>();
-
-        if(list == null) 
-            return filteredList;
+    // rewards
+    
+    public bool HasRewards() {
         
-        if(list.Count > 0) {
-            foreach(T item in list) {
-                if(item.type == type) {
-                    filteredList.Add(item);
-                }
+        if(rewards != null) {
+            if(rewards.Count > 0) {
+                return true;
             }
         }
         
-        return filteredList;
+        return false;
     }
     
-    public T GetItem<T>(List<T> list, string code) where T : GameDataObject {
-        
-        if(list == null) 
-            return default(T);
-        
-        if(list.Count > 0) {
-            foreach(T item in list) {
-                if(item.code == code) {
-                    return item;
-                }
-            }
-            
-            foreach(T item in list) {
-                return item;
-            }
-        }
-        
-        return null;
+    public GameDataItemReward GetReward() {
+        return GetReward(GameDataItemTypeKeys.defaultType);
     }
+    
+    public GameDataItemReward GetReward(string code) {
+        return GetItem<GameDataItemReward>(rewards, code);
+    }
+    
+    public List<GameDataItemReward> GetRewardListByType(string type) {
+        return GetItems<GameDataItemReward>(rewards, type);
+    }
+    
+    public GameDataItemReward GetRewardByType(string type) {
+        // get random item
+        return GetItemRandomByType<GameDataItemReward>(rewards, type);
+    }
+    
+    public GameDataItemReward GetRewardsByTypeCurrency() {
+        return GetRewardByType(GameDataItemReward.currency);
+    }
+    
+    public GameDataItemReward GetRewardsByTypeXP() {
+        return GetRewardByType(GameDataItemReward.xp);
+    }
+    
+    public GameDataItemReward GetRewardsByTypeHealth() {
+        return GetRewardByType(GameDataItemReward.health);
+    }
+    
+    public GameDataItemReward GetRewardsByTypeCurrencyDouble() {
+        return GetRewardByType(GameDataItemReward.currencyDouble);
+    }
+
+
 }
 
 public class GameDataObject : DataObject {
@@ -752,6 +767,16 @@ public class GameDataObject : DataObject {
             Set<double>(BaseDataObjectKeys.val, value);
         }
     }
+    
+    public virtual float valFloat {
+        get {
+            return Get<float>(BaseDataObjectKeys.val);
+        }
+        
+        set {
+            Set<float>(BaseDataObjectKeys.val, value);
+        }
+    }
 
     public GameDataObject() {
         Reset();
@@ -759,5 +784,61 @@ public class GameDataObject : DataObject {
 
     public override void Reset() {
         base.Reset();
+    }
+    
+    // helpers
+    
+    public T GetItemRandomByType<T>(List<T> list, string type) where T : GameDataObject {
+        
+        T obj = default(T);
+        
+        List<T> items = GetItems<T>(list, type);
+        
+        if(items != null) {
+            if(items.Count > 0) {
+                int index = UnityEngine.Random.Range(0, items.Count);
+                obj = items[index];
+            }
+        }
+        
+        return obj;
+    }
+    
+    public List<T> GetItems<T>(List<T> list, string type) where T : GameDataObject {
+        
+        List<T> filteredList = new List<T>();
+        
+        if(list == null) 
+            return filteredList;
+        
+        if(list.Count > 0) {
+            foreach(T item in list) {
+                if(item.type == type) {
+                    filteredList.Add(item);
+                }
+            }
+        }
+        
+        return filteredList;
+    }
+    
+    public T GetItem<T>(List<T> list, string code) where T : GameDataObject {
+        
+        if(list == null) 
+            return default(T);
+        
+        if(list.Count > 0) {
+            foreach(T item in list) {
+                if(item.code == code) {
+                    return item;
+                }
+            }
+            
+            foreach(T item in list) {
+                return item;
+            }
+        }
+        
+        return null;
     }
 }

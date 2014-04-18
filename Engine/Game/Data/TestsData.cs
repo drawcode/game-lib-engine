@@ -204,7 +204,7 @@ public class TestsData {
                     success = true;
                 }
                 
-                foreach(GameItemRPG dataItem in data.rpgs) {                    
+                foreach(GameDataItemRPG dataItem in data.rpgs) {                    
                     Debug.Log("dataItem:rpgs:code:" + dataItem.code);        
                     Debug.Log("dataItem:rpgs:attack:" + dataItem.attack);
                     Debug.Log("dataItem:rpgs:attack:" + dataItem.attack_speed);
@@ -263,7 +263,7 @@ public class TestsData {
                     success = true;
                 }
                 
-                foreach(GameItemRPG dataItem in data.rpgs) {                    
+                foreach(GameDataItemRPG dataItem in data.rpgs) {                    
                     Debug.Log("dataItem:rpgs:code:" + dataItem.code);        
                     Debug.Log("dataItem:rpgs:attack:" + dataItem.attack);
                     Debug.Log("dataItem:rpgs:attack:" + dataItem.attack_speed);

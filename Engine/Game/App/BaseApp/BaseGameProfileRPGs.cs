@@ -59,15 +59,25 @@ public class BaseGameProfileRPGs {
     // TODO: Common profile actions, lookup, count, etc
 }
 
-public class GameItemRPG : GameDataObject {
+public class GameDataItemRPG : GameDataObject {
     
     
     // RPG
     
+    public virtual double duration {
+        get {
+            return Get<double>(BaseDataObjectKeys.duration, 0.0);
+        }
+        
+        set {
+            Set<double>(BaseDataObjectKeys.duration, value);
+        }
+    }
+    
     
     public virtual double speed {
         get {
-            return Get<double>(BaseDataObjectKeys.speed);
+            return Get<double>(BaseDataObjectKeys.speed, 1.0);
         }
         
         set {
@@ -77,7 +87,7 @@ public class GameItemRPG : GameDataObject {
     
     public virtual double attack {
         get {
-            return Get<double>(BaseDataObjectKeys.attack);
+            return Get<double>(BaseDataObjectKeys.attack, 1.0);
         }
         
         set {
@@ -87,7 +97,7 @@ public class GameItemRPG : GameDataObject {
     
     public virtual double defense {
         get {
-            return Get<double>(BaseDataObjectKeys.defense);
+            return Get<double>(BaseDataObjectKeys.defense, 1.0);
         }
         
         set {
@@ -97,7 +107,7 @@ public class GameItemRPG : GameDataObject {
     
     public virtual double health {
         get {
-            return Get<double>(BaseDataObjectKeys.health);
+            return Get<double>(BaseDataObjectKeys.health, 1.0);
         }
         
         set {
@@ -107,7 +117,7 @@ public class GameItemRPG : GameDataObject {
     
     public virtual double energy {
         get {
-            return Get<double>(BaseDataObjectKeys.energy);
+            return Get<double>(BaseDataObjectKeys.energy, 1.0);
         }
         
         set {
@@ -117,7 +127,7 @@ public class GameItemRPG : GameDataObject {
     
     public virtual double jump {
         get {
-            return Get<double>(BaseDataObjectKeys.jump);
+            return Get<double>(BaseDataObjectKeys.jump, 1.0);
         }
         
         set {
@@ -127,7 +137,7 @@ public class GameItemRPG : GameDataObject {
     
     public virtual double fly {
         get {
-            return Get<double>(BaseDataObjectKeys.fly);
+            return Get<double>(BaseDataObjectKeys.fly, 1.0);
         }
         
         set {
@@ -137,7 +147,7 @@ public class GameItemRPG : GameDataObject {
     
     public virtual double boost {
         get {
-            return Get<double>(BaseDataObjectKeys.boost);
+            return Get<double>(BaseDataObjectKeys.boost, 1.0);
         }
         
         set {
@@ -147,7 +157,7 @@ public class GameItemRPG : GameDataObject {
     
     public virtual double attack_speed {
         get {
-            return Get<double>(BaseDataObjectKeys.attack_speed);
+            return Get<double>(BaseDataObjectKeys.attack_speed, 1.0);
         }
         
         set {
@@ -157,7 +167,7 @@ public class GameItemRPG : GameDataObject {
     
     public virtual double recharge_speed {
         get {
-            return Get<double>(BaseDataObjectKeys.recharge_speed);
+            return Get<double>(BaseDataObjectKeys.recharge_speed, 1.0);
         }
         
         set {
@@ -167,7 +177,7 @@ public class GameItemRPG : GameDataObject {
     
     public virtual double upgrades_applied {
         get {
-            return Get<double>(BaseDataObjectKeys.upgrades_applied);
+            return Get<double>(BaseDataObjectKeys.upgrades_applied, 0.0);
         }
         
         set {
@@ -177,7 +187,7 @@ public class GameItemRPG : GameDataObject {
     
     public virtual double upgrades {
         get {
-            return Get<double>(BaseDataObjectKeys.upgrades);
+            return Get<double>(BaseDataObjectKeys.upgrades, 0.0);
         }
         
         set {
@@ -187,7 +197,7 @@ public class GameItemRPG : GameDataObject {
     
     public virtual double xp {
         get {
-            return Get<double>(BaseDataObjectKeys.xp);
+            return Get<double>(BaseDataObjectKeys.xp, 0.0);
         }
         
         set {
@@ -197,7 +207,7 @@ public class GameItemRPG : GameDataObject {
     
     public virtual double level {
         get {
-            return Get<double>(BaseDataObjectKeys.level);
+            return Get<double>(BaseDataObjectKeys.level, 1.0);
         }
         
         set {
@@ -207,7 +217,7 @@ public class GameItemRPG : GameDataObject {
     
     public virtual double currency {
         get {
-            return Get<double>(BaseDataObjectKeys.currency);
+            return Get<double>(BaseDataObjectKeys.currency, 0.0);
         }
         
         set {
@@ -226,7 +236,7 @@ public class GameItemRPG : GameDataObject {
     }
 }
 
-public class GameItemRPGAttributes {
+public class GameDataItemRPGAttributes {
     public static string prefix = "game-item-rpg-";
     public static string upgrades_applied = prefix + "upgrades_applied";
     public static string upgrades = prefix + "upgrades";
@@ -400,7 +410,7 @@ public class GameProfileRPGItem : DataObjectItem {
       attributes = new Dictionary<string, DataAttribute>();
     }
  
-    public void LoadFromGameItemRPG(GameItemRPG itemRPG) {
+    public void LoadFromGameDataItemRPG(GameDataItemRPG itemRPG) {
         SetSpeed(itemRPG.speed);
         SetAttack(itemRPG.attack);
         SetDefense(itemRPG.defense);
@@ -418,8 +428,8 @@ public class GameProfileRPGItem : DataObjectItem {
         SetData(itemRPG.data);
     }
  
-    public GameItemRPG GetGameItemRPG() {
-        GameItemRPG itemRPG = new GameItemRPG();
+    public GameDataItemRPG GetGameDataItemRPG() {
+        GameDataItemRPG itemRPG = new GameDataItemRPG();
         itemRPG.speed = GetSpeed();
         itemRPG.attack = GetAttack();
         itemRPG.defense = GetDefense();
@@ -448,13 +458,13 @@ public class GameProfileRPGItem : DataObjectItem {
 
     public double GetXP(double defaultValue) {
         double attValue = defaultValue;
-        if(CheckIfAttributeExists(GameItemRPGAttributes.xp))
-            attValue = GetAttributeDoubleValue(GameItemRPGAttributes.xp);
+        if(CheckIfAttributeExists(GameDataItemRPGAttributes.xp))
+            attValue = GetAttributeDoubleValue(GameDataItemRPGAttributes.xp);
         return attValue;
     }
 
     public void SetXP(double val) {
-        SetAttributeDoubleValue(GameItemRPGAttributes.xp, val);
+        SetAttributeDoubleValue(GameDataItemRPGAttributes.xp, val);
     }
 
     // level
@@ -465,13 +475,13 @@ public class GameProfileRPGItem : DataObjectItem {
 
     public double GetLevel(double defaultValue) {
         double attValue = defaultValue;
-        if(CheckIfAttributeExists(GameItemRPGAttributes.level))
-            attValue = GetAttributeDoubleValue(GameItemRPGAttributes.level);
+        if(CheckIfAttributeExists(GameDataItemRPGAttributes.level))
+            attValue = GetAttributeDoubleValue(GameDataItemRPGAttributes.level);
         return attValue;
     }
 
     public void SetLevel(double val) {
-        SetAttributeDoubleValue(GameItemRPGAttributes.level, val);
+        SetAttributeDoubleValue(GameDataItemRPGAttributes.level, val);
     }
 
     // currency
@@ -482,13 +492,13 @@ public class GameProfileRPGItem : DataObjectItem {
 
     public double GetCurrency(double defaultValue) {
         double attValue = defaultValue;
-        if(CheckIfAttributeExists(GameItemRPGAttributes.xp))
-            attValue = GetAttributeDoubleValue(GameItemRPGAttributes.xp);
+        if(CheckIfAttributeExists(GameDataItemRPGAttributes.xp))
+            attValue = GetAttributeDoubleValue(GameDataItemRPGAttributes.xp);
         return attValue;
     }
 
     public void SetCurrency(double val) {
-        SetAttributeDoubleValue(GameItemRPGAttributes.xp, val);
+        SetAttributeDoubleValue(GameDataItemRPGAttributes.xp, val);
     }
  
     // upgrades_applied
@@ -499,13 +509,13 @@ public class GameProfileRPGItem : DataObjectItem {
  
     public double GetUpgradesApplied(double defaultValue) {      
         double attValue = defaultValue;
-        if(CheckIfAttributeExists(GameItemRPGAttributes.upgrades_applied))
-            attValue = GetAttributeDoubleValue(GameItemRPGAttributes.upgrades_applied);
+        if(CheckIfAttributeExists(GameDataItemRPGAttributes.upgrades_applied))
+            attValue = GetAttributeDoubleValue(GameDataItemRPGAttributes.upgrades_applied);
         return attValue;
     }
      
     public void SetUpgradesApplied(double val) {
-        SetAttributeDoubleValue(GameItemRPGAttributes.upgrades_applied, val);
+        SetAttributeDoubleValue(GameDataItemRPGAttributes.upgrades_applied, val);
     }
  
     // upgrades
@@ -516,13 +526,13 @@ public class GameProfileRPGItem : DataObjectItem {
  
     public double GetUpgrades(double defaultValue) {     
         double attValue = defaultValue;
-        if(CheckIfAttributeExists(GameItemRPGAttributes.upgrades))
-            attValue = GetAttributeDoubleValue(GameItemRPGAttributes.upgrades);
+        if(CheckIfAttributeExists(GameDataItemRPGAttributes.upgrades))
+            attValue = GetAttributeDoubleValue(GameDataItemRPGAttributes.upgrades);
         return attValue;
     }
      
     public void SetUpgrades(double val) {
-        SetAttributeDoubleValue(GameItemRPGAttributes.upgrades, val);
+        SetAttributeDoubleValue(GameDataItemRPGAttributes.upgrades, val);
     }
 
     // jump
@@ -533,13 +543,13 @@ public class GameProfileRPGItem : DataObjectItem {
 
     public double GetJump(double defaultValue) {
         double attValue = defaultValue;
-        if(CheckIfAttributeExists(GameItemRPGAttributes.jump))
-            attValue = GetAttributeDoubleValue(GameItemRPGAttributes.jump);
+        if(CheckIfAttributeExists(GameDataItemRPGAttributes.jump))
+            attValue = GetAttributeDoubleValue(GameDataItemRPGAttributes.jump);
         return attValue;
     }
 
     public void SetJump(double val) {
-        SetAttributeDoubleValue(GameItemRPGAttributes.jump, val);
+        SetAttributeDoubleValue(GameDataItemRPGAttributes.jump, val);
     }
 
     // fly
@@ -550,13 +560,13 @@ public class GameProfileRPGItem : DataObjectItem {
 
     public double GetFly(double defaultValue) {
         double attValue = defaultValue;
-        if(CheckIfAttributeExists(GameItemRPGAttributes.fly))
-            attValue = GetAttributeDoubleValue(GameItemRPGAttributes.fly);
+        if(CheckIfAttributeExists(GameDataItemRPGAttributes.fly))
+            attValue = GetAttributeDoubleValue(GameDataItemRPGAttributes.fly);
         return attValue;
     }
 
     public void SetFly(double val) {
-        SetAttributeDoubleValue(GameItemRPGAttributes.fly, val);
+        SetAttributeDoubleValue(GameDataItemRPGAttributes.fly, val);
     }
  
     // speed
@@ -567,13 +577,13 @@ public class GameProfileRPGItem : DataObjectItem {
  
     public double GetSpeed(double defaultValue) {        
         double attValue = defaultValue;
-        if(CheckIfAttributeExists(GameItemRPGAttributes.speed))
-            attValue = GetAttributeDoubleValue(GameItemRPGAttributes.speed);
+        if(CheckIfAttributeExists(GameDataItemRPGAttributes.speed))
+            attValue = GetAttributeDoubleValue(GameDataItemRPGAttributes.speed);
         return attValue;
     }
      
     public void SetSpeed(double val) {
-        SetAttributeDoubleValue(GameItemRPGAttributes.speed, val);
+        SetAttributeDoubleValue(GameDataItemRPGAttributes.speed, val);
     }
  
     // attack
@@ -584,13 +594,13 @@ public class GameProfileRPGItem : DataObjectItem {
  
     public double GetAttack(double defaultValue) {       
         double attValue = defaultValue;
-        if(CheckIfAttributeExists(GameItemRPGAttributes.attack))
-            attValue = GetAttributeDoubleValue(GameItemRPGAttributes.attack);
+        if(CheckIfAttributeExists(GameDataItemRPGAttributes.attack))
+            attValue = GetAttributeDoubleValue(GameDataItemRPGAttributes.attack);
         return attValue;
     }
      
     public void SetAttack(double val) {
-        SetAttributeDoubleValue(GameItemRPGAttributes.attack, val);
+        SetAttributeDoubleValue(GameDataItemRPGAttributes.attack, val);
     }    
  
     // defense
@@ -601,13 +611,13 @@ public class GameProfileRPGItem : DataObjectItem {
  
     public double GetDefense(double defaultValue) {      
         double attValue = defaultValue;
-        if(CheckIfAttributeExists(GameItemRPGAttributes.defense))
-            attValue = GetAttributeDoubleValue(GameItemRPGAttributes.defense);
+        if(CheckIfAttributeExists(GameDataItemRPGAttributes.defense))
+            attValue = GetAttributeDoubleValue(GameDataItemRPGAttributes.defense);
         return attValue;
     }
      
     public void SetDefense(double val) {
-        SetAttributeDoubleValue(GameItemRPGAttributes.defense, val);
+        SetAttributeDoubleValue(GameDataItemRPGAttributes.defense, val);
     }
  
     // health
@@ -618,13 +628,13 @@ public class GameProfileRPGItem : DataObjectItem {
  
     public double GetHealth(double defaultValue) {       
         double attValue = defaultValue;
-        if(CheckIfAttributeExists(GameItemRPGAttributes.health))
-            attValue = GetAttributeDoubleValue(GameItemRPGAttributes.health);
+        if(CheckIfAttributeExists(GameDataItemRPGAttributes.health))
+            attValue = GetAttributeDoubleValue(GameDataItemRPGAttributes.health);
         return attValue;
     }
      
     public void SetHealth(double val) {
-        SetAttributeDoubleValue(GameItemRPGAttributes.health, val);
+        SetAttributeDoubleValue(GameDataItemRPGAttributes.health, val);
     }
  
     // energy
@@ -635,13 +645,13 @@ public class GameProfileRPGItem : DataObjectItem {
  
     public double GetEnergy(double defaultValue) {       
         double attValue = defaultValue;
-        if(CheckIfAttributeExists(GameItemRPGAttributes.energy))
-            attValue = GetAttributeDoubleValue(GameItemRPGAttributes.energy);
+        if(CheckIfAttributeExists(GameDataItemRPGAttributes.energy))
+            attValue = GetAttributeDoubleValue(GameDataItemRPGAttributes.energy);
         return attValue;
     }
      
     public void SetEnergy(double val) {
-        SetAttributeDoubleValue(GameItemRPGAttributes.energy, val);
+        SetAttributeDoubleValue(GameDataItemRPGAttributes.energy, val);
     }
  
     // attack_speed
@@ -652,13 +662,13 @@ public class GameProfileRPGItem : DataObjectItem {
  
     public double GetAttackSpeed(double defaultValue) {      
         double attValue = defaultValue;
-        if(CheckIfAttributeExists(GameItemRPGAttributes.attack_speed))
-            attValue = GetAttributeDoubleValue(GameItemRPGAttributes.attack_speed);
+        if(CheckIfAttributeExists(GameDataItemRPGAttributes.attack_speed))
+            attValue = GetAttributeDoubleValue(GameDataItemRPGAttributes.attack_speed);
         return attValue;
     }
  
     public void SetAttackSpeed(double val) {
-        SetAttributeDoubleValue(GameItemRPGAttributes.attack_speed, val);
+        SetAttributeDoubleValue(GameDataItemRPGAttributes.attack_speed, val);
     }
  
     // recharge_speed
@@ -669,13 +679,13 @@ public class GameProfileRPGItem : DataObjectItem {
  
     public double GetRechargeSpeed(double defaultValue) {        
         double attValue = defaultValue;
-        if(CheckIfAttributeExists(GameItemRPGAttributes.recharge_speed))
-            attValue = GetAttributeDoubleValue(GameItemRPGAttributes.recharge_speed);
+        if(CheckIfAttributeExists(GameDataItemRPGAttributes.recharge_speed))
+            attValue = GetAttributeDoubleValue(GameDataItemRPGAttributes.recharge_speed);
         return attValue;
     }
      
     public void SetRechargeSpeed(double val) {
-        SetAttributeDoubleValue(GameItemRPGAttributes.recharge_speed, val);
+        SetAttributeDoubleValue(GameDataItemRPGAttributes.recharge_speed, val);
     }
  
     // data
@@ -686,13 +696,13 @@ public class GameProfileRPGItem : DataObjectItem {
  
     public string GetData(string defaultValue) {     
         string attValue = defaultValue;
-        if(CheckIfAttributeExists(GameItemRPGAttributes.data))
-            attValue = GetAttributeStringValue(GameItemRPGAttributes.data);
+        if(CheckIfAttributeExists(GameDataItemRPGAttributes.data))
+            attValue = GetAttributeStringValue(GameDataItemRPGAttributes.data);
         return attValue;
     }
          
     public void SetData(string val) {
-        SetAttributeStringValue(GameItemRPGAttributes.data, val);
+        SetAttributeStringValue(GameDataItemRPGAttributes.data, val);
     }    
 }
 
@@ -1111,13 +1121,13 @@ public class BaseGameProfileRPG : Profile {
  
     public virtual double GetUpgradesApplied(double defaultValue) {
         double attValue = defaultValue;
-        if(CheckIfAttributeExists(GameItemRPGAttributes.upgrades_applied))
-            attValue = GetAttributeDoubleValue(GameItemRPGAttributes.upgrades_applied);
+        if(CheckIfAttributeExists(GameDataItemRPGAttributes.upgrades_applied))
+            attValue = GetAttributeDoubleValue(GameDataItemRPGAttributes.upgrades_applied);
         return attValue;
     }
      
     public virtual void SetUpgradesApplied(double val) {
-        SetAttributeDoubleValue(GameItemRPGAttributes.upgrades_applied, val);
+        SetAttributeDoubleValue(GameDataItemRPGAttributes.upgrades_applied, val);
     }
 
     // ----------------------------------------------------------
@@ -1146,13 +1156,13 @@ public class BaseGameProfileRPG : Profile {
  
     public virtual double GetUpgrades(double defaultValue) {     
         double attValue = defaultValue;
-        if(CheckIfAttributeExists(GameItemRPGAttributes.upgrades))
-            attValue = GetAttributeDoubleValue(GameItemRPGAttributes.upgrades);
+        if(CheckIfAttributeExists(GameDataItemRPGAttributes.upgrades))
+            attValue = GetAttributeDoubleValue(GameDataItemRPGAttributes.upgrades);
         return attValue;
     }
      
     public virtual void SetUpgrades(double val) {
-        SetAttributeDoubleValue(GameItemRPGAttributes.upgrades, val);
+        SetAttributeDoubleValue(GameDataItemRPGAttributes.upgrades, val);
     }
 
     // ----------------------------------------------------------

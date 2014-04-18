@@ -140,7 +140,9 @@ public class BaseDataObjectKeys {
         
     public static string reward = "reward";
     public static string rewards = "rewards";
-
+    
+    public static string duration = "duration";
+    public static string limit = "limit";
     public static string speed = "speed";
     public static string attack = "attack";
     public static string defense = "defense";
