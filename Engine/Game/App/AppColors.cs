@@ -57,10 +57,10 @@ public class AppColors : BaseAppColors<AppColor> {
     public static Color GetColor(string code) {
 
         Color colorTo = Color.white;
-                
+                        
         if(!cachedColors.ContainsKey(code)) {
 
-            if(GameGlobal.Instance != null) {
+            //if(GameGlobal.Instance != null) {
          
                 AppColor color = AppColors.Instance.GetByCode(code);
 
@@ -71,7 +71,7 @@ public class AppColors : BaseAppColors<AppColor> {
                 if(colorTo != Color.white) {
                     cachedColors.Add(code, colorTo);            
                 }
-            }
+            //}
 
         }
         else {
