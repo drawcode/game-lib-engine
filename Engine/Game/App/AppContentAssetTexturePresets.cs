@@ -5,9 +5,11 @@ using Engine.Data.Json;
 using Engine.Utility;
 
 public class AppContentAssetTexturePresets : BaseAppContentAssetTexturePresets<AppContentAssetTexturePreset> {
+
     private static volatile AppContentAssetTexturePreset current;
     private static volatile AppContentAssetTexturePresets instance;
     private static System.Object syncRoot = new System.Object();
+
     private string DATA_KEY = "app-content-asset-texture-preset-data";
     
     public static AppContentAssetTexturePreset Current {

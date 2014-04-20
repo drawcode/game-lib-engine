@@ -71,6 +71,7 @@ public class BaseDataObjectKeys {
     // items
     
     public static string item = "item";
+    public static string items = "items";
     public static string item_skin = "item_skin";
     public static string item_skin_variation = "item_skin_variation";
     public static string item_data = "item_data";
@@ -143,6 +144,9 @@ public class BaseDataObjectKeys {
     
     public static string duration = "duration";
     public static string limit = "limit";
+    public static string max = "max";
+    public static string min = "min";
+    public static string frequency = "frequency";
     public static string speed = "speed";
     public static string attack = "attack";
     public static string defense = "defense";

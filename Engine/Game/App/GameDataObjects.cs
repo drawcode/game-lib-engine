@@ -728,6 +728,46 @@ public class GameDataObject : DataObject {
         }
     }
         
+    public virtual double limit {
+        get {
+            return Get<double>(BaseDataObjectKeys.limit);
+        }
+        
+        set {
+            Set<double>(BaseDataObjectKeys.limit, value);
+        }
+    }
+        
+    public virtual double max {
+        get {
+            return Get<double>(BaseDataObjectKeys.max);
+        }
+        
+        set {
+            Set<double>(BaseDataObjectKeys.max, value);
+        }
+    }
+    
+    public virtual double min {
+        get {
+            return Get<double>(BaseDataObjectKeys.min);
+        }
+        
+        set {
+            Set<double>(BaseDataObjectKeys.min, value);
+        }
+    }
+
+    public virtual double frequency {
+        get {
+            return Get<double>(BaseDataObjectKeys.frequency);
+        }
+        
+        set {
+            Set<double>(BaseDataObjectKeys.frequency, value);
+        }
+    }
+        
     public virtual object val {
         get {
             return Get<object>(BaseDataObjectKeys.val);

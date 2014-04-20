@@ -11,7 +11,7 @@ public class AppColors : BaseAppColors<AppColor> {
     private static volatile AppColors instance;
     private static System.Object syncRoot = new System.Object();
     private string DATA_KEY = "app-color-data";
-    
+
     public static AppColor Current {
         get {
             if (current == null) {

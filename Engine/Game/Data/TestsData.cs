@@ -56,7 +56,6 @@ public class TestsData {
         
         //Advance("TestGameState_LoadProfile");
         //TestGameState_LoadProfile();
-
         
         //Advance("TestGameState_SaveProfile");
         //TestGameState_SaveProfile();
@@ -80,18 +79,15 @@ public class TestsData {
         //if(!CheckTest(success, testName)) { 
         //    return;
         //}
-
         
         //Advance("TestAppColors_List");
         //TestAppColors_List();
         
         //Advance("TestAppColors_Code");
         //TestAppColors_Code();
-
         
         //Advance("TestAppContentAssetModels_List");
         //TestAppContentAssetModels_List();
-
         
         //Advance("TestAppContentAssetModels_Load");
         //TestAppContentAssetModels_Load();
@@ -122,15 +118,20 @@ public class TestsData {
         //testName = "TestGameWeapons_List";
         //Advance(testName);
         //success = TestGameWeapons_List(testName);
-
-        testName = "TestGameItems_List";
-        Advance(testName);
-        success = TestGameItems_List(testName);
-
-
+        
+        //testName = "TestGameItems_List";
+        //Advance(testName);
+        //success = TestGameItems_List(testName);
+                
         //testName = "TestGameTeams_List";
         //Advance(testName);
         //success = TestGameTeams_List(testName);
+        
+        testName = "TestGameItemPresets_List";
+        Advance(testName);
+        success = TestGameItemPresets_List(testName);
+
+        //
         
         if(!CheckTest(success, testName)) { 
             return;
@@ -173,6 +174,39 @@ public class TestsData {
         DumpObj(name, "dataB", dataB);
 
         return equal;
+    }
+    
+    public static bool TestGameItemPresets_List(string name) {
+        
+        bool success = false;
+        
+        Debug.Log(name);
+        
+        List<GameItemPreset> items = GameItemPresets.Instance.GetAll();
+        DumpObj(name, "items", items);
+        
+        //AssertEquals(name, username, "Player");
+        
+        foreach(GameItemPreset item in items) {  
+            
+            Debug.Log("item:code:" + item.code);               
+            Debug.Log("item:json:" + item.ToJson());  
+            
+            GameItemPresetItems data = item.data;
+
+            if(data != null) {
+
+                foreach(GameItemPresetItem preset in data.items) {          
+                    Debug.Log("preset:code:" + preset.code);         
+                    Debug.Log("preset:json:" + preset.ToJson());
+                    success = true;                    
+                }
+            }
+        }
+        
+        DumpObj(name, "items.Count", items.Count);
+        
+        return success;
     }
     
     public static bool TestGameItems_List(string name) {
