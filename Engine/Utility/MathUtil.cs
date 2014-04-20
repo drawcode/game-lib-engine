@@ -7,6 +7,106 @@ using UnityEngine;
 
 public class MathUtil {
 
+    // http://docs.unity3d.com/Documentation/Manual/RandomNumbers.html
+
+    public static Vector3 RandomVector3() {
+        return new Vector3(UnityEngine.Random.value, UnityEngine.Random.value, UnityEngine.Random.value);
+    }
+    
+    // This gives a point inside a cube with sides one unit long. 
+    // The cube can be scaled simply by multiplying the X, Y and Z 
+    // components of the vector by the desired side lengths. If one of 
+    // the axes is set to zero, the point will always lie within a single 
+    // plane. For example, picking a random point on the "ground" is usually 
+    // a matter of setting the X and Z components randomly and setting the Y 
+    // component to zero.
+        
+    // When the volume is a sphere (ie, when you want a random point
+    // within a given radius from a point of origin), you can use 
+    // Random.insideUnitSphere multiplied by the desired radius:-
+
+    public static Vector3 RandomVector3InSphere(float radius) {
+        return UnityEngine.Random.insideUnitSphere * radius;
+    }
+                
+    // Note that if you set one of the resulting vector's components to zero, 
+    // you will *not* get a correct random point within a circle. 
+    // Although the point is indeed random and lies within the right radius, 
+    // the probability is heavily biased toward the edge of the circle and so 
+    // points will be spread very unevenly. You should use Random.insideUnitCircle
+    // for this task instead:-
+
+    
+    public static Vector3 RandomVector3InCircle(float radius) {
+        return UnityEngine.Random.insideUnitSphere * radius;
+    }
+
+    // Add items that add up to 1 and choose probabilistically
+
+    public static T ChooseProbability<T>(List<T> items, List<float> probs) {
+        int index = ChooseProbability(probs);
+        if(items != null) {
+            if(items.Count > index) {
+                return items[index];
+            }
+            if(items.Count > 1)
+                return items[0];
+        }
+
+        return default(T);
+    }
+
+    public static int ChooseProbability(List<float> probs) {
+        float total = 0;
+        
+        foreach (float elem in probs) {
+            total += elem;
+        }
+        
+        float randomPoint = UnityEngine.Random.value * total;
+        
+        for (int i = 0; i < probs.Count; i++) {
+            if (randomPoint < probs[i])
+                return i;
+            else
+                randomPoint -= probs[i];
+        }
+        
+        return probs.Count - 1;
+    }
+
+    public static List<T> Shuffle<T>(List<T> deck) {
+        for (int i = 0; i < deck.Count; i++) {
+            var temp = deck[i];
+            var randomIndex = UnityEngine.Random.Range(0, deck.Count);
+            deck[i] = deck[randomIndex];
+            deck[randomIndex] = temp;
+        }
+        return deck;
+    }
+
+    public static T ChooseSet<T>(List<T> points, int numRequired) {
+        List<T> result = new List<T>(numRequired);
+        
+        int numToChoose = numRequired;
+        
+        for (int numLeft = points.Count; numLeft > 0; numLeft--) {
+            // Adding 0.0 is simply to cast the integers to float for the division.
+            float prob = numToChoose + 0.0f / numLeft + 0.0f;
+            
+            if (UnityEngine.Random.value <= prob) {
+                numToChoose--;
+                result[numToChoose] = points[numLeft - 1];
+                
+                if (numToChoose == 0)
+                    break;
+            }
+        }
+        
+        return default(T);
+    }
+
+
     public static float Hermite(float start, float end, float value) {
         return Mathf.Lerp(start, end, value * value * (3.0f - 2.0f * value));
     }
@@ -186,57 +286,56 @@ public class MathUtil {
             else
                 return min;
         }
-
         else
             return a;
     }
-		
-	public static Vector3 CardinalAngles(Vector3 pos1, Vector3 pos2) {
-		
-		// Adjust both positions to be relative to our origin point (pos1)
-		pos2 -= pos1;
-		pos1 -= pos1;
-	
-		Vector3 angles = Vector3.zero;
-	
-		// Rotation to get from World +Z to pos2, rotated around World X (degrees up from Z axis)
-		angles.x = Vector3.Angle( Vector3.forward, pos2 - Vector3.right * pos2.x );
-	
-		// Rotation to get from World +Z to pos2, rotated around World Y (degrees right? from Z axis)
-		angles.y = Vector3.Angle( Vector3.forward, pos2 - Vector3.up * pos2.y );
-	
-		// Rotation to get from World +X to pos2, rotated around World Z (degrees up from X axis)
-		angles.z = Vector3.Angle( Vector3.right, pos2 - Vector3.forward * pos2.z );
-		
-		return angles;
-	}
-	
-	public static float ContAngle(Vector3 fwd, Vector3 targetDir, Vector3 upDir) {	
-	    var angle = Vector3.Angle(fwd, targetDir);	
-	    
-		if (AngleDir(fwd, targetDir, upDir) == -1) {	
-	        return 360 - angle;	
-	    } 
-		else {	
-	        return angle;	
-	    }	
-	}
-	
-	//returns -1 when to the left, 1 to the right, and 0 for forward/backward
-	public static float AngleDir(Vector3 fwd, Vector3 targetDir, Vector3 up) {
-	
-	    Vector3 perp = Vector3.Cross(fwd, targetDir);
-	    
-		float dir = Vector3.Dot(perp, up);
-	
-	    if (dir > 0.0) {
-	        return 1.0f;
-	    } 
-		else if (dir < 0.0) {
-	        return -1.0f;
-	    } 
-		else {
-	        return 0.0f;
-	    }	
-	}
+        
+    public static Vector3 CardinalAngles(Vector3 pos1, Vector3 pos2) {
+        
+        // Adjust both positions to be relative to our origin point (pos1)
+        pos2 -= pos1;
+        pos1 -= pos1;
+    
+        Vector3 angles = Vector3.zero;
+    
+        // Rotation to get from World +Z to pos2, rotated around World X (degrees up from Z axis)
+        angles.x = Vector3.Angle(Vector3.forward, pos2 - Vector3.right * pos2.x);
+    
+        // Rotation to get from World +Z to pos2, rotated around World Y (degrees right? from Z axis)
+        angles.y = Vector3.Angle(Vector3.forward, pos2 - Vector3.up * pos2.y);
+    
+        // Rotation to get from World +X to pos2, rotated around World Z (degrees up from X axis)
+        angles.z = Vector3.Angle(Vector3.right, pos2 - Vector3.forward * pos2.z);
+        
+        return angles;
+    }
+    
+    public static float ContAngle(Vector3 fwd, Vector3 targetDir, Vector3 upDir) {  
+        var angle = Vector3.Angle(fwd, targetDir);  
+        
+        if (AngleDir(fwd, targetDir, upDir) == -1) {    
+            return 360 - angle; 
+        }
+        else {  
+            return angle;   
+        }   
+    }
+    
+    //returns -1 when to the left, 1 to the right, and 0 for forward/backward
+    public static float AngleDir(Vector3 fwd, Vector3 targetDir, Vector3 up) {
+    
+        Vector3 perp = Vector3.Cross(fwd, targetDir);
+        
+        float dir = Vector3.Dot(perp, up);
+    
+        if (dir > 0.0) {
+            return 1.0f;
+        }
+        else if (dir < 0.0) {
+            return -1.0f;
+        }
+        else {
+            return 0.0f;
+        }   
+    }
 }

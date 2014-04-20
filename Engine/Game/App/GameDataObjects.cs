@@ -766,6 +766,16 @@ public class GameDataObject : DataObject {
         set {
             Set<double>(BaseDataObjectKeys.frequency, value);
         }
+    }    
+    
+    public virtual double probability {
+        get {
+            return Get<double>(BaseDataObjectKeys.probability);
+        }
+        
+        set {
+            Set<double>(BaseDataObjectKeys.probability, value);
+        }
     }
         
     public virtual object val {
