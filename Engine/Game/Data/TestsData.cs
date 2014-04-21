@@ -127,9 +127,17 @@ public class TestsData {
         //Advance(testName);
         //success = TestGameTeams_List(testName);
         
-        testName = "TestGameItemPresets_List";
+        //testName = "TestGameItemPresets_List";
+        //Advance(testName);
+        //success = TestGameItemPresets_List(testName);
+        
+        //testName = "TestGameTerrainPresets_List";
+        //Advance(testName);
+        //success = TestGameTerrainPresets_List(testName);
+                
+        testName = "TestGamePresets_List";
         Advance(testName);
-        success = TestGameItemPresets_List(testName);
+        success = TestGamePresets_List(testName);
 
         //
         
@@ -176,6 +184,72 @@ public class TestsData {
         return equal;
     }
     
+    public static bool TestGamePresets_List(string name) {
+        
+        bool success = false;
+        
+        Debug.Log(name);
+        
+        List<GamePreset> items = GamePresets.Instance.GetAll();
+        DumpObj(name, "items", items);
+        
+        //AssertEquals(name, username, "Player");
+        
+        foreach(GamePreset item in items) {  
+            
+            Debug.Log("item:code:" + item.code);               
+            Debug.Log("item:json:" + item.ToJson());  
+            
+            GamePresetItems data = item.data;
+            
+            if(data != null) {
+                
+                foreach(GamePresetItem preset in data.items) {          
+                    Debug.Log("preset:code:" + preset.code);         
+                    Debug.Log("preset:json:" + preset.ToJson());
+                    success = true;                    
+                }
+            }
+        }
+        
+        DumpObj(name, "items.Count", items.Count);
+        
+        return success;
+    }
+    
+    public static bool TestGameTerrainPresets_List(string name) {
+        
+        bool success = false;
+        
+        Debug.Log(name);
+        
+        List<GamePreset> items = GamePresets.Instance.GetListByType("terrain");
+        DumpObj(name, "items", items);
+        
+        //AssertEquals(name, username, "Player");
+        
+        foreach(GamePreset item in items) {  
+            
+            Debug.Log("item:code:" + item.code);               
+            Debug.Log("item:json:" + item.ToJson());  
+            
+            GamePresetItems data = item.data;
+            
+            if(data != null) {
+                
+                foreach(GamePresetItem preset in data.items) {          
+                    Debug.Log("preset:code:" + preset.code);         
+                    Debug.Log("preset:json:" + preset.ToJson());
+                    success = true;                    
+                }
+            }
+        }
+        
+        DumpObj(name, "items.Count", items.Count);
+        
+        return success;
+    }
+
     public static bool TestGameItemPresets_List(string name) {
         
         bool success = false;
@@ -346,12 +420,12 @@ public class TestsData {
                     success = true;
                 }
                 
-                foreach(GameDataItemColorPreset dataItem in data.color_presets) {                    
+                foreach(GameDataColorPreset dataItem in data.color_presets) {                    
                     Debug.Log("dataItem:color_presets:code:" + dataItem.code);
                     success = true;
                 }
                 
-                foreach(GameDataItemTexturePreset dataItem in data.texture_presets) {                    
+                foreach(GameDataTexturePreset dataItem in data.texture_presets) {                    
                     Debug.Log("dataItem:texture_presets:code:" + dataItem.code);
                     success = true;
                 }

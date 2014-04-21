@@ -28,15 +28,23 @@ public class GameDataModel : GameDataObject {
     }
 }
 
-public class GameDataItemColorPreset : GameDataObject {
+public class GameDataColorPreset : GameDataObject {
     
 }
 
-public class GameDataItemTexturePreset : GameDataObject {
+public class GameDataTexturePreset : GameDataObject {
     
 }
 
-public class GameDataItemSound : GameDataObject {
+public class GameDataItemPreset : GameDataObject {
+    
+}
+
+public class GameDataTerrainPreset : GameDataObject {
+    
+}
+
+public class GameDataSound : GameDataObject {
     public static string load = "load";
     public static string reward = "reward";
 
@@ -120,33 +128,53 @@ public class GameDataObjectItem : GameDataObject {
         }
     } 
     
-    public virtual List<GameDataItemColorPreset> color_presets {
+    public virtual List<GameDataColorPreset> color_presets {
         get {
-            return Get<List<GameDataItemColorPreset>>(BaseDataObjectKeys.color_presets);
+            return Get<List<GameDataColorPreset>>(BaseDataObjectKeys.color_presets);
         }
         
         set {
-            Set<List<GameDataItemColorPreset>>(BaseDataObjectKeys.color_presets, value);
+            Set<List<GameDataColorPreset>>(BaseDataObjectKeys.color_presets, value);
         }
     } 
     
-    public virtual List<GameDataItemTexturePreset> texture_presets {
+    public virtual List<GameDataTexturePreset> texture_presets {
         get {
-            return Get<List<GameDataItemTexturePreset>>(BaseDataObjectKeys.texture_presets);
+            return Get<List<GameDataTexturePreset>>(BaseDataObjectKeys.texture_presets);
         }
         
         set {
-            Set<List<GameDataItemTexturePreset>>(BaseDataObjectKeys.texture_presets, value);
+            Set<List<GameDataTexturePreset>>(BaseDataObjectKeys.texture_presets, value);
         }
     } 
     
-    public virtual List<GameDataItemSound> sounds {
+    public virtual List<GameDataItemPreset> item_presets {
         get {
-            return Get<List<GameDataItemSound>>(BaseDataObjectKeys.sounds);
+            return Get<List<GameDataItemPreset>>(BaseDataObjectKeys.item_presets);
         }
         
         set {
-            Set<List<GameDataItemSound>>(BaseDataObjectKeys.sounds, value);
+            Set<List<GameDataItemPreset>>(BaseDataObjectKeys.item_presets, value);
+        }
+    } 
+        
+    public virtual List<GameDataTerrainPreset> terrain_presets {
+        get {
+            return Get<List<GameDataTerrainPreset>>(BaseDataObjectKeys.terrain_presets);
+        }
+        
+        set {
+            Set<List<GameDataTerrainPreset>>(BaseDataObjectKeys.terrain_presets, value);
+        }
+    } 
+    
+    public virtual List<GameDataSound> sounds {
+        get {
+            return Get<List<GameDataSound>>(BaseDataObjectKeys.sounds);
+        }
+        
+        set {
+            Set<List<GameDataSound>>(BaseDataObjectKeys.sounds, value);
         }
     }     
     
@@ -281,28 +309,28 @@ public class GameDataObjectItem : GameDataObject {
         return false;
     }
     
-    public GameDataItemSound GetSound() {
+    public GameDataSound GetSound() {
         return GetSound(GameDataItemTypeKeys.defaultType);
     }
     
-    public GameDataItemSound GetSound(string code) {
-        return GetItem<GameDataItemSound>(sounds, code);
+    public GameDataSound GetSound(string code) {
+        return GetItem<GameDataSound>(sounds, code);
     }
 
-    public List<GameDataItemSound> GetSoundListByType(string type) {
-        return GetItems<GameDataItemSound>(sounds, type);
+    public List<GameDataSound> GetSoundListByType(string type) {
+        return GetItems<GameDataSound>(sounds, type);
     }
 
-    public GameDataItemSound GetSoundByType(string type) {
+    public GameDataSound GetSoundByType(string type) {
         // get random item
-        return GetItemRandomByType<GameDataItemSound>(sounds, type);
+        return GetItemRandomByType<GameDataSound>(sounds, type);
     }
 
-    public GameDataItemSound GetSoundsByTypeShot() {
+    public GameDataSound GetSoundsByTypeShot() {
         return GetSoundByType(GameDataItemKeys.shotType);
     }
     
-    public GameDataItemSound GetSoundsByTypeLoad() {
+    public GameDataSound GetSoundsByTypeLoad() {
         return GetSoundByType(GameDataItemKeys.loadType);
     }
 
@@ -340,12 +368,12 @@ public class GameDataObjectItem : GameDataObject {
         return false;
     }
     
-    public GameDataItemColorPreset GetColorPreset() {
+    public GameDataColorPreset GetColorPreset() {
         return GetColorPreset(GameDataItemTypeKeys.defaultType);
     }
     
-    public GameDataItemColorPreset GetColorPreset(string code) {
-        return GetItem<GameDataItemColorPreset>(color_presets, code);
+    public GameDataColorPreset GetColorPreset(string code) {
+        return GetItem<GameDataColorPreset>(color_presets, code);
     }
     
     // texture presets
@@ -361,12 +389,33 @@ public class GameDataObjectItem : GameDataObject {
         return false;
     }
     
-    public GameDataItemTexturePreset GetTexturePreset() {
+    public GameDataTexturePreset GetTexturePreset() {
         return GetTexturePreset(GameDataItemTypeKeys.defaultType);
     }
     
-    public GameDataItemTexturePreset GetTexturePreset(string code) {
-        return GetItem<GameDataItemTexturePreset>(texture_presets, code);
+    public GameDataTexturePreset GetTexturePreset(string code) {
+        return GetItem<GameDataTexturePreset>(texture_presets, code);
+    }
+
+    // terrain presets
+    
+    public bool HasTerrainPresets() {
+        
+        if(terrain_presets != null) {
+            if(terrain_presets.Count > 0) {
+                return true;
+            }
+        }
+        
+        return false;
+    }
+    
+    public GameDataTexturePreset GetTerrainPreset() {
+        return GetTexturePreset(GameDataItemTypeKeys.defaultType);
+    }
+    
+    public GameDataTerrainPreset GetTerrainPreset(string code) {
+        return GetItem<GameDataTerrainPreset>(terrain_presets, code);
     }
     
     // rpgs
@@ -436,8 +485,41 @@ public class GameDataObjectItem : GameDataObject {
     public GameDataItemReward GetRewardsByTypeCurrencyDouble() {
         return GetRewardByType(GameDataItemReward.currencyDouble);
     }
+}
 
+public class GameDataPresetsObject<T> : GameDataObject where T : GameDataObject, new() {
+    
+    public virtual List<T> items {
+        get {
+            return Get<List<T>>(BaseDataObjectKeys.items);
+        }
+        
+        set {
+            Set<List<T>>(BaseDataObjectKeys.items, value);
+        }
+    }
+    
+    public T ChooseProbabilistic() {
+                
+        List<float> probs = new List<float>();
+        
+        foreach(T item in items) {
+            probs.Add((float)item.probability);
+        }
+        
+        T selectByProbabilityItem = 
+            MathUtil.ChooseProbability<T>(items, probs); 
+        
+        return selectByProbabilityItem;
+    }
+}
 
+public class GamePresetItems : GameDataPresetsObject<GamePresetItem> {
+    
+}
+
+public class GamePresetItem : GameDataObject {
+    
 }
 
 public class GameDataObject : DataObject {
