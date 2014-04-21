@@ -53,33 +53,23 @@ public class BaseGameTerrainPresets<T> : DataObjects<T> where T : DataObject, ne
     }
 }
 
-public class GameTerrainPresetItems : GameDataObject {
-    
-    public virtual List<GameTerrainPresetItem> items {
-        get {
-            return Get<List<GameTerrainPresetItem>>(BaseDataObjectKeys.items);
-        }
-        
-        set {
-            Set<List<GameTerrainPresetItem>>(BaseDataObjectKeys.items, value);
-        }
-    }
+public class GameTerrainPresetItems : GamePresetItems {
+
 }
 
-
-public class GameTerrainPresetItem : GameDataObject {
-
+public class GameTerrainPresetItem : GamePresetItem {
+    
 }
 
 public class BaseGameTerrainPreset : GameDataObject {
 
     // Attributes that are added or changed after launch should be like this to prevent
     // profile conversions.
-
+      
     
-    public virtual GameTerrainPresetItems data {
+    public virtual GamePresetItems data {
         get {
-            return Get<GameTerrainPresetItems>(BaseDataObjectKeys.data);
+            return Get<GamePresetItems>(BaseDataObjectKeys.data);
         }
         
         set {

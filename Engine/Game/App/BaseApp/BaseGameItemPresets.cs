@@ -53,6 +53,16 @@ public class BaseGameItemPresets<T> : DataObjects<T> where T : DataObject, new()
     }
 }
 
+
+public class GameItemPresetItems : GamePresetItems {
+    
+}
+
+public class GameItemPresetItem : GamePresetItem {
+    
+}
+
+/*
 public class GameItemPresetItems : GameDataObject {
     
     public virtual List<GameItemPresetItem> items {
@@ -70,6 +80,7 @@ public class GameItemPresetItems : GameDataObject {
 public class GameItemPresetItem : GameDataObject {
 
 }
+*/
 
 public class BaseGameItemPreset : GameDataObject {
 
