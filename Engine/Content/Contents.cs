@@ -471,7 +471,7 @@ public class ContentPaths {
         }
     }
     
-    public static string appCacheVersionSharedPrefabLevelNetwork {
+    public static string appCacheVersionSharedPrefabNetwork {
         get {
             return appCacheVersionSharedPrefab + "network/";
         }
