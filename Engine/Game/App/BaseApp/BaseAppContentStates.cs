@@ -22,6 +22,9 @@ public class BaseAppContentStateMeta {
     public static string appContentStateGameChallenge = "app-content-state-game-challenge";
     public static string appContentStateGameMissions = "app-content-state-game-missions";
     public static string appContentStateGameCoop = "app-content-state-game-coop";
+    public static string appContentStateGameMultiplayerCoop = "app-content-state-game-mulitiplayer-coop";
+    public static string appContentStateGameMultiplayerMatchup = "app-content-state-game-mulitiplayer-matchup";
+    public static string appContentStateGameMultiplayer = "app-content-state-game-mulitiplayer";
     public static string appContentStateGameMatchup = "app-content-state-game-matchup";
     public static string appContentStateGameTraining = "app-content-state-game-training";
     public static string appContentStateGameTrainingChoice = "app-content-state-game-training-choice";
