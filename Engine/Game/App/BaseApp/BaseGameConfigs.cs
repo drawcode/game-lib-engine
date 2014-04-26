@@ -24,8 +24,6 @@ public class BaseGameConfigs<T> : DataObjects<T> where T : DataObject, new() {
     public static bool useCoinRewardsForAchievements = true;
     public static double coinRewardAchievementPoint = 50;
 
-    public static bool networkEnabled = false;
-
 	public static T BaseCurrent {
         get {
             if (current == null) {

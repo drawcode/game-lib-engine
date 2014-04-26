@@ -35,7 +35,7 @@ public class LogUtil {
     private static volatile LogUtil instance;
     private static System.Object syncRoot = new System.Object();
 
-    public static bool loggingEnabled = false;
+    public static bool loggingEnabled = true;
 
     public static LogUtil Instance {
         get {
@@ -129,7 +129,8 @@ public class LogUtil {
 
     public void LogInternal(string key, object message) {
         if (IsKeyActive(key)) {
-            Debug.Log(message + "\r\n\r\n\r\n");
+            //Debug.Log(key + "::" + "\r\n\r\n" + message + "\r\n\r\n\r\n");
+            Debug.Log(message);
 
             // Output to Firebug or inspectors as avail in the browser.
             if (Application.platform == RuntimePlatform.OSXWebPlayer
