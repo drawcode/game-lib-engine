@@ -29,7 +29,7 @@ public class Sound {
     public void destroySelf() {
         _manager.removeSound(this);
 
-        MonoBehaviour.Destroy(gameObject);
+        GameObjectBehavior.Destroy(gameObject);
     }
 
     public void stop() {

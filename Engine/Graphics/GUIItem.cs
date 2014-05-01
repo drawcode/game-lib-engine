@@ -8,7 +8,7 @@ namespace Engine.Graphics {
     /// </summary>
     ///
     [ExecuteInEditMode()]
-    public class GUIItem : MonoBehaviour {
+    public class GUIItem : GameObjectBehavior {
         public Color color = Color.gray;
         public Rect pixelOffset;
         public Vector2 pixelScale = new Vector2(1, 1);

@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 using UnityEngine;
 
-public class DraggableItemContainer : MonoBehaviour {
+public class DraggableItemContainer : GameObjectBehavior {
     public GameObject dragColliderObject;
     public GameObject gameLevelItemObject;
 

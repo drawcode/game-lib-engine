@@ -22,7 +22,7 @@ public class ContentBundleDownloadHandle {
 	}
 }
 
-public class ContentBundleLoader : MonoBehaviour
+public class ContentBundleLoader : GameObjectBehavior
 {
 	string cachePath;
 	ContentBundleLoader instance;

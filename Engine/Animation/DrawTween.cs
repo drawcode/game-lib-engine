@@ -49,7 +49,7 @@ using UnityEngine;
 
 namespace Engine.Animation { // custom version in case of others using iTween to prevent collision
 
-    public class DrawTween : MonoBehaviour {
+    public class DrawTween : GameObjectBehavior {
         #region Variables
 
         //repository of all living DrawTweens:

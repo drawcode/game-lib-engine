@@ -5,7 +5,7 @@ using UnityEngine;
 namespace Engine.Graphics.Vector {
 
     [AddComponentMenu("Vectrosity/VisibilityControl")]
-    public class VisibilityControl : MonoBehaviour {
+    public class VisibilityControl : GameObjectBehavior {
         private RefInt m_objectNumber;
         private VectorLine vectorLine;
         private bool destroyed = false;

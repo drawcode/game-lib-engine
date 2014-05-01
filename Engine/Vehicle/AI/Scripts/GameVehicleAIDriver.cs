@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System;
 
-public class GameVehicleAIDriver : MonoBehaviour {
+public class GameVehicleAIDriver : GameObjectBehavior {
     
     public float calcMaxSpeed = 200.0f;
     public float torque = 150.0f;
@@ -587,7 +587,7 @@ public class GameVehicleAIDriver : MonoBehaviour {
         
         ////steering
         ////nach links lenken
-        ////Kein "(rightSideDistance > 0) ||" weil kein Abdrengeln möglich sein soll
+        ////Kein "(rightSideDistance > 0) ||" weil kein Abdrengeln mï¿½glich sein soll
         //if (leftSideDistance == 0 && ((leftDistance == 0 && rightDistance > 0) || (rightDistance != 0 && leftDistance != 0 && leftDistance > rightDistance)
         //    || (leftDistance == 0 && frontMinDistance > 0) || (rightDistance > leftDistance && frontMinDistance > 0)))
         //{
@@ -596,7 +596,7 @@ public class GameVehicleAIDriver : MonoBehaviour {
         //}
 
         ////nach rechts lenken
-        ////Kein "(leftSideDistance > 0) ||" weil kein Abdrengeln möglich sein soll
+        ////Kein "(leftSideDistance > 0) ||" weil kein Abdrengeln mï¿½glich sein soll
         //if (rightSideDistance == 0 && ((rightDistance == 0 && leftDistance > 0) || (rightDistance != 0 && leftDistance != 0 && rightDistance > leftDistance)
         //    || (rightDistance == 0 && frontMinDistance > 0) || (leftDistance > rightDistance && frontMinDistance > 0)))
         //{
@@ -670,7 +670,7 @@ public class GameVehicleAIDriver : MonoBehaviour {
             }
 
                 //nach rechts lenken
-                //Kein "(leftSideDistance > 0) ||" weil kein Abdrengeln möglich sein soll
+                //Kein "(leftSideDistance > 0) ||" weil kein Abdrengeln mï¿½glich sein soll
             if (rightSideDistance == 0 
                 && ((rightDistance == 0 && leftDistance > 0) 
                 || (rightDistance != 0 && leftDistance != 0 && rightDistance > leftDistance)
@@ -684,7 +684,7 @@ public class GameVehicleAIDriver : MonoBehaviour {
         case GameVehicleSteeringMode.Tough:
                 //steering
                 //nach links lenken
-                //Kein "(rightSideDistance > 0) ||" weil kein Abdrengeln möglich sein soll
+                //Kein "(rightSideDistance > 0) ||" weil kein Abdrengeln mï¿½glich sein soll
             if (leftSideDistance == 0 
                 && ((leftDistance == 0 && rightDistance > 0) 
                 || (rightDistance != 0 && leftDistance != 0 && leftDistance > rightDistance)
@@ -695,7 +695,7 @@ public class GameVehicleAIDriver : MonoBehaviour {
             }
 
                 //nach rechts lenken
-                //Kein "(leftSideDistance > 0) ||" weil kein Abdrengeln möglich sein soll
+                //Kein "(leftSideDistance > 0) ||" weil kein Abdrengeln mï¿½glich sein soll
             if (rightSideDistance == 0 
                 && ((rightDistance == 0 && leftDistance > 0) 
                 || (rightDistance != 0 && leftDistance != 0 && rightDistance > leftDistance)

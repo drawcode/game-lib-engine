@@ -4,7 +4,7 @@ using UnityEngine;
 namespace Engine.UI {
 
     //[ExecuteInEditMode]
-    public class RelativeObjectScaler : MonoBehaviour {
+    public class RelativeObjectScaler : GameObjectBehavior {
         public Vector2 originalSize = new Vector2(960f, 640f);
         public bool realtime = false;
         public bool broadcast = true;

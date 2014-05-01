@@ -4,7 +4,7 @@ using System;
 using UnityEditor;
 using System.Diagnostics;
 
-public class GameVehicleAIDriverMenu : MonoBehaviour
+public class GameVehicleAIDriverMenu : GameObjectBehavior
 {
     
     private GameObject m_container;

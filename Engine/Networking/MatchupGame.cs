@@ -61,7 +61,7 @@ namespace Engine.Networking {
         }
     }
 
-    public class MatchupGame : MonoBehaviour {
+    public class MatchupGame : GameObjectBehavior {
         private Transform localTransform;
         private List<NetworkPlayerInfo> playerList;
         private bool autoJoinRunning = false;

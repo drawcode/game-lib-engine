@@ -2,7 +2,7 @@
 using UnityEngine;
 
 [RequireComponent(typeof(Rigidbody))]
-public class SetCenterOfMass : MonoBehaviour {
+public class SetCenterOfMass : GameObjectBehavior {
     public bool overrideWithBelow = true;
     public Vector3 centerOfMassOverride = Vector3.zero;
 

@@ -3,7 +3,7 @@ using System.Collections;
 using Engine.Utility;
 using UnityEngine;
 
-public class AudioDestroy : MonoBehaviour {
+public class AudioDestroy : GameObjectBehavior {
     public float afterTimeDefault = 5.5f;
     public float clipLength = 5.5f;
 

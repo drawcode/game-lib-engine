@@ -1,7 +1,7 @@
 using UnityEngine;
 using System.Collections;
 
-public class SwitchOAMode : MonoBehaviour {
+public class SwitchOAMode : GameObjectBehavior {
     public string tagName = "Untagged";
     public bool switchUseOaTo = false;
     

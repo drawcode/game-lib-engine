@@ -2,7 +2,7 @@ using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 
-public class SetForces : MonoBehaviour {
+public class SetForces : GameObjectBehavior {
            
     public bool relativeForce = true;
     public float x = 0f;

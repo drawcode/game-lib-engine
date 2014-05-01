@@ -11,7 +11,7 @@ public class GameVehicleDriveData {
 
 }
 
-public class GameVehicleDrive : MonoBehaviour {
+public class GameVehicleDrive : GameObjectBehavior {
 
     public GameVehicleDriveData vehicleDriveData;
     

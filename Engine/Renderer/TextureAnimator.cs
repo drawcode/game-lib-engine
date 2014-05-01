@@ -2,7 +2,7 @@ using System.Collections;
 using UnityEngine;
 
 [RequireComponent(typeof(Renderer))]
-public class TextureAnimator : MonoBehaviour {
+public class TextureAnimator : GameObjectBehavior {
     public float scrollSpeed = 0.5f;
     public string properyName = "_MainTex.offset.y";
 

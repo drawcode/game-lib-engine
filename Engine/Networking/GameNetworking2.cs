@@ -12,7 +12,7 @@ namespace Engine.Networking {
         public static string NetworkNatTestComplete = "networkNatTestComplete";
     }
 
-    public class GameNetworking2 : MonoBehaviour {
+    public class GameNetworking2 : GameObjectBehavior {
 #if !UNITY_FLASH
 
         // TODO move to downloadable config.

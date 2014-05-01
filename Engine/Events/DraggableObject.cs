@@ -5,7 +5,7 @@ using UnityEngine;
 namespace Engine.Events {
 
     [RequireComponent(typeof(Rigidbody))]
-    public class DraggableObject : MonoBehaviour {
+    public class DraggableObject : GameObjectBehavior {
         public int normalCollisionCount = 1;
         public float moveLimit = .5f;
         public float collisionMoveFactor = .01f;

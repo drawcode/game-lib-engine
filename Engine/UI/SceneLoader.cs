@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace Engine.UI {
 
-    public class SceneLoader : MonoBehaviour {
+    public class SceneLoader : GameObjectBehavior {
         public bool sceneTransitionStarted = false;
         public string currentSceneName = "";
 

@@ -1,7 +1,7 @@
 using System.Collections;
 using UnityEngine;
 
-public class CarCamera : MonoBehaviour {
+public class CarCamera : GameObjectBehavior {
     public Transform target = null;
     public float height = 1f;
     public float positionDamping = 3f;

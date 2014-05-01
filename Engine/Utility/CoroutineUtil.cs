@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class CoroutineUtil : MonoBehaviour {
+public class CoroutineUtil : GameObjectBehavior {
     private static CoroutineUtil instance;
 
     private static CoroutineUtil Instance {

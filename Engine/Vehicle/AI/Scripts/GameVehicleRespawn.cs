@@ -2,7 +2,7 @@ using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 
-public class GameVehicleRespawn : MonoBehaviour {
+public class GameVehicleRespawn : GameObjectBehavior {
     
     private Transform currentRespawnPoint;
     //[HideInInspector]

@@ -1,7 +1,7 @@
 using System.Collections;
 using UnityEngine;
 
-public class FPSHUD : MonoBehaviour {
+public class FPSHUD : GameObjectBehavior {
 
     // Attach this to a GUIText to make a frames/second indicator.
     //

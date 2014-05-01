@@ -31,7 +31,7 @@ using UnityEngine;
 //    dynamic component additions and modifications of the initial
 //    object public fields during gameplay
 
-public class ObjectPoolManager : MonoBehaviour {
+public class ObjectPoolManager : GameObjectBehavior {
 #if UNITY_EDITOR
 
     // turn this on to activate debugging information

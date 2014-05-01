@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace Engine.UI {
 
-    public class ScrollablConstrained : MonoBehaviour {
+    public class ScrollablConstrained : GameObjectBehavior {
 
         //boundary coordinates
         public float eastBoundary;

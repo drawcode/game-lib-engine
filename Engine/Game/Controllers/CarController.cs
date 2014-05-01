@@ -7,7 +7,7 @@ using UnityEngine;
 //namespace Engine.Game.Controllers {
 [RequireComponent(typeof(Rigidbody))]
 [RequireComponent(typeof(AudioSource))]
-public class CarController : MonoBehaviour {
+public class CarController : GameObjectBehavior {
 
     //maximal corner and braking acceleration capabilities
     public float maxCornerAccel = 10.0f;

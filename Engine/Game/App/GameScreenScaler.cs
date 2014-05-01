@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 
-public class GameScreenScaler : MonoBehaviour {
+public class GameScreenScaler : GameObjectBehavior {
     public static GameScreenScaler Instance;
     public Vector2 originalSize = new Vector2(960f, 640f);
     public Vector2 scaledSize = new Vector2(960f, 640f);

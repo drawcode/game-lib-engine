@@ -4,7 +4,7 @@ using UnityEngine;
 namespace Engine.Graphics {
 
     [RequireComponent(typeof(Renderer))]
-    public class UVTileAnimator : MonoBehaviour {
+    public class UVTileAnimator : GameObjectBehavior {
         public int tileCount;
         public int tileColumns;
         public float framesPerSecond = 10;

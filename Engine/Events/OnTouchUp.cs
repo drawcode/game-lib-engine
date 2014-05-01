@@ -8,7 +8,7 @@ using System.Collections.Generic;
 using Engine.Utility;
 
 namespace Engine.Events {
-    public class OnTouchUp : MonoBehaviour {
+    public class OnTouchUp : GameObjectBehavior {
         void Start() {
         }
 

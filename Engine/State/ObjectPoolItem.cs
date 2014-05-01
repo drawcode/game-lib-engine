@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 namespace Engine.State {
-    public class ObjectPoolItem : MonoBehaviour {
+    public class ObjectPoolItem : GameObjectBehavior {
         public static ObjectPoolItem instance;
 
         /// <summary>

@@ -1,7 +1,7 @@
 using UnityEngine;
 using System.Collections;
 
-public class GameBaseCameraSmoothFollow : MonoBehaviour {
+public class GameBaseCameraSmoothFollow : GameObjectBehavior {
 	public Transform target;
 	public float smoothTime= 0.3f;
 	private Transform thisTransform;

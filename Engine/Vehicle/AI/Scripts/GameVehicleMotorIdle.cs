@@ -1,7 +1,7 @@
 using UnityEngine;
 using System.Collections;
  
-public class GameVehicleMotorIdle : MonoBehaviour {
+public class GameVehicleMotorIdle : GameObjectBehavior {
 
     public void FixedUpdate () {
     	IdleSound();

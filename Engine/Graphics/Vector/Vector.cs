@@ -54,7 +54,7 @@ namespace Engine.Graphics.Vector {
                     var lineManagerGO = new GameObject("LineManager");
                     _lineManager = lineManagerGO.AddComponent(typeof(LineManager)) as LineManager;
                     _lineManager.enabled = false;
-                    MonoBehaviour.DontDestroyOnLoad(_lineManager);
+                    GameObjectBehavior.DontDestroyOnLoad(_lineManager);
                 }
                 return _lineManager;
             }
@@ -121,7 +121,7 @@ namespace Engine.Graphics.Vector {
         public static Camera SetCamera(Camera thisCamera, CameraClearFlags clearFlags, bool useOrtho) {
             if (!cam) {
                 cam = new GameObject("VectorCam", typeof(Camera)).camera;
-                MonoBehaviour.DontDestroyOnLoad(cam);
+                GameObjectBehavior.DontDestroyOnLoad(cam);
             }
             cam.depth = thisCamera.depth + 1;
             cam.clearFlags = clearFlags;
@@ -1258,9 +1258,9 @@ namespace Engine.Graphics.Vector {
 
         public static void DestroyLine(ref VectorLine line) {
             if (line != null) {
-                MonoBehaviour.Destroy(line.vectorObject);
-                MonoBehaviour.Destroy(line.mesh);
-                MonoBehaviour.Destroy(line.meshFilter);
+                GameObjectBehavior.Destroy(line.vectorObject);
+                GameObjectBehavior.Destroy(line.mesh);
+                GameObjectBehavior.Destroy(line.meshFilter);
                 line = null;
             }
         }
@@ -1268,7 +1268,7 @@ namespace Engine.Graphics.Vector {
         public static void DestroyObject(ref VectorLine line, GameObject go) {
             DestroyLine(ref line);
             if (go != null) {
-                MonoBehaviour.Destroy(go);
+                GameObjectBehavior.Destroy(go);
             }
         }
 

@@ -1,7 +1,7 @@
 using System.Collections;
 using UnityEngine;
 
-public class TextureQuality : MonoBehaviour {
+public class TextureQuality : GameObjectBehavior {
 
     // Used to set the texture mipmap level based on device
     private void Awake() {

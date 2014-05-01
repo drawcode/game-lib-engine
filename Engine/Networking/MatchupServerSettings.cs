@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace Engine.Networking {
 
-    public class MatchupServerSettings : MonoBehaviour {
+    public class MatchupServerSettings : GameObjectBehavior {
 #if !UNITY_FLASH
 
         public static void Clear() {

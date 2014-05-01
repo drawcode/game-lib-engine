@@ -6,7 +6,7 @@ using UnityEngine;
 namespace Engine.Graphics.Vector {
 
     [AddComponentMenu("Vectrosity/VisibilityControlStatic")]
-    public class VisibilityControlStatic : MonoBehaviour {
+    public class VisibilityControlStatic : GameObjectBehavior {
         private RefInt m_objectNumber;
         private VectorLine vectorLine;
         private bool destroyed = false;

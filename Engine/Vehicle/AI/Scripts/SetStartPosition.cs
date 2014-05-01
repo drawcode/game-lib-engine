@@ -2,7 +2,7 @@ using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 
-public class SetStartPosition : MonoBehaviour {
+public class SetStartPosition : GameObjectBehavior {
 
     public int startWaypoint = 0;
     public int heightOffset = 2;

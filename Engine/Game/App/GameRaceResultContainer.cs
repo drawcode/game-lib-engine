@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class GameRaceResultContainer : MonoBehaviour {
+public class GameRaceResultContainer : GameObjectBehavior {
 
     //public List<Race.RaceResults> results;
     //public List<Race.RaceResults.LapDetails> lapDetails;

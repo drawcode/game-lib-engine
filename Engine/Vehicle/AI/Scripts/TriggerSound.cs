@@ -1,7 +1,7 @@
 using UnityEngine;
 using System.Collections;
 
-public class TriggerSound : MonoBehaviour {
+public class TriggerSound : GameObjectBehavior {
     public string tagName1 = "";
     public string tagName2 = "";
     public AudioClip triggerSound;

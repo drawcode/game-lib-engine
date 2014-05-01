@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PoolGameObject : MonoBehaviour {    
+public class PoolGameObject : GameObjectBehavior {    
 
     public bool pooled = true;
 

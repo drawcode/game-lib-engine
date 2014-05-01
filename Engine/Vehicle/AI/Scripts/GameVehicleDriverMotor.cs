@@ -4,7 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System;
 
-public class GameVehicleAIDriverMotor : MonoBehaviour {
+public class GameVehicleAIDriverMotor : GameObjectBehavior {
     
     public float maxSpeed = 200.0f;
     public float torque = 150.0f;

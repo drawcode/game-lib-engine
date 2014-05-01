@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace Engine.UI {
 
-    public class DraggableRigidbodyConstrained : MonoBehaviour {
+    public class DraggableRigidbodyConstrained : GameObjectBehavior {
         public float spring = 50.0f;
         public float damper = 5.0f;
         public float drag = 5.0f;

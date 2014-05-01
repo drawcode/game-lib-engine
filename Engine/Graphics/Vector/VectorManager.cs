@@ -44,13 +44,13 @@ namespace Engine.Graphics.Vector {
 
             if (visibility == Visibility.None) {
                 if (vc) {
-                    MonoBehaviour.Destroy(vc);
+                    GameObjectBehavior.Destroy(vc);
                 }
                 if (vcs) {
-                    MonoBehaviour.Destroy(vcs);
+                    GameObjectBehavior.Destroy(vcs);
                 }
                 if (vca) {
-                    MonoBehaviour.Destroy(vca);
+                    GameObjectBehavior.Destroy(vca);
                 }
             }
             if (visibility == Visibility.Dynamic) {
@@ -93,7 +93,7 @@ namespace Engine.Graphics.Vector {
             }
             else {
                 if (bc) {
-                    MonoBehaviour.Destroy(bc);
+                    GameObjectBehavior.Destroy(bc);
                 }
             }
         }

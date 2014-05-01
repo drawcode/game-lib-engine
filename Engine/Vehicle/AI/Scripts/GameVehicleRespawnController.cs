@@ -2,7 +2,7 @@ using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 
-public class GameVehicleRespawnController : MonoBehaviour {
+public class GameVehicleRespawnController : GameObjectBehavior {
     
     public float heightOffset = 0;
     private Transform currentRespawnPoint;

@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 namespace Engine.Game.Actor {
-    public class ActorShadow : MonoBehaviour {
+    public class ActorShadow : GameObjectBehavior {
         public GameObject objectShadow;
         public GameObject objectParent;
         private Vector3 surfaceNormal;

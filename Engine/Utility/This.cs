@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class This : MonoBehaviour {
+public class This : GameObjectBehavior {
 
     // Only one ObjectPoolManager can exist. We use a singleton pattern to enforce this.
 

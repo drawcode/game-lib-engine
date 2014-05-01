@@ -5,7 +5,7 @@ namespace Engine.Graphics {
 
     [AddComponentMenu("Engine/Graphics/Screen Scaler")]
     [ExecuteInEditMode]
-    public class ScreenScaler : MonoBehaviour {
+    public class ScreenScaler : GameObjectBehavior {
         public Vector2 originalSize = new Vector2(960f, 640f);
         public bool realtime = false;
         public bool broadcast = true;

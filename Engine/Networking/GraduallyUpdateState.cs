@@ -19,7 +19,7 @@ namespace Engine.Networking {
     // the correct values. This is played back with a 100 ms delay to elminate
     // choppyness. The delay needs to be higher is the ping time between the server
     // and client is larger than 100 ms.
-    public class GraduallyUpdateState : MonoBehaviour {
+    public class GraduallyUpdateState : GameObjectBehavior {
 #if !UNITY_FLASH
         private Component targetController;
         private FieldInfo isMovingFieldInfo;

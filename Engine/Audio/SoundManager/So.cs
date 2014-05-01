@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class So : MonoBehaviour {
+public class So : GameObjectBehavior {
     public static So und = null;
     public int initialCapacity = 10;
 

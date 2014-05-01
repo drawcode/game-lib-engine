@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 
 [ExecuteInEditMode]
-public class ShowWayLines : MonoBehaviour {
+public class ShowWayLines : GameObjectBehavior {
 
     public bool show = false;
     public Color color = Color.magenta;

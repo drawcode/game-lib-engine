@@ -1,7 +1,7 @@
 using UnityEngine;
 using System.Collections;
 
-public class LevelSpawner : MonoBehaviour {
+public class LevelSpawner : GameObjectBehavior {
     
     public Transform spawnPointRoad;
     public Transform spawnPointHill;

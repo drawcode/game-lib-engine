@@ -1,7 +1,7 @@
 using UnityEngine;
 using System.Collections;
 
-public class GameVehicleDrivingSpeed : MonoBehaviour {
+public class GameVehicleDrivingSpeed : GameObjectBehavior {
     public WheelCollider myWheelCollider;
     
     //public int textBoxMarginSide;

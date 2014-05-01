@@ -9,7 +9,7 @@ public class GameVehicleDriveWheel {
     public static string Drive4WD = "4WD";
 }
 
-public class BaseGameVehicleController : MonoBehaviour {
+public class BaseGameVehicleController : GameObjectBehavior {
 
     public WheelCollider colliderFL;
     public WheelCollider colliderFR;

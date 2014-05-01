@@ -64,7 +64,7 @@ namespace Engine.Networking {
         }
     }
 
-    public class SocialCoopGame : MonoBehaviour {
+    public class SocialCoopGame : GameObjectBehavior {
         public static SocialCoopGame Instance;
         public int MAX_CONNECTIONS = 4;
         private Transform localTransform;

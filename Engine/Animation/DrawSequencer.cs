@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace Engine.Animation {
 
-    public class DrawSequencer : MonoBehaviour {
+    public class DrawSequencer : GameObjectBehavior {
         public static string SEQUENCE_SCENE_LOAD = "SequenceSceneLoad";
         public static string SEQUENCE_SCENE_UNLOAD = "SequenceSceneUnload";
 

@@ -5,7 +5,7 @@ using System.Collections;
 // Anti roll bars transfer suspension compressions forces from one wheel to another.
 // This is used to minimize body roll in corners, and improve grip by balancing the wheel loads.
 // Typical modern cars have one anti-roll bar per axle.
-public class GameVehicleAntiRollBar : MonoBehaviour {
+public class GameVehicleAntiRollBar : GameObjectBehavior {
 
     // The two wheels connected by the anti-roll bar. These should be on the same axle.
     public WheelCollider wheelL;

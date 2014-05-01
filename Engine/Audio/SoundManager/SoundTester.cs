@@ -1,7 +1,7 @@
 using System.Collections;
 using UnityEngine;
 
-public class SoundTester : MonoBehaviour {
+public class SoundTester : GameObjectBehavior {
     public AudioClip explosionSound;
     public AudioClip rocketSound;
     public AudioClip bgSound;

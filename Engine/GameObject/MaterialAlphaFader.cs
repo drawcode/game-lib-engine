@@ -1,7 +1,7 @@
 using UnityEngine;
 using System.Collections;
 
-public class MaterialAlphaFader : MonoBehaviour {
+public class MaterialAlphaFader : GameObjectBehavior {
     public float fadeSpeed = 1f;
     public float beginTintAlpha = 0.5f;
     public Color colorTo;

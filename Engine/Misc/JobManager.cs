@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 // JobManager is just a proxy object so we have a launcher for the coroutines
-public class JobManager : MonoBehaviour {
+public class JobManager : GameObjectBehavior {
 
     // only one JobManager can exist. We use a singleton pattern to enforce this.
     private static JobManager _instance = null;

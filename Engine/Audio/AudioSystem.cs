@@ -11,7 +11,7 @@ public class AudioSetItem {
 	public string file = "";
 }
 
-public class AudioSystem : MonoBehaviour {
+public class AudioSystem : GameObjectBehavior {
     public static AudioSystem Instance;
 
     public GameObject globalTranform;

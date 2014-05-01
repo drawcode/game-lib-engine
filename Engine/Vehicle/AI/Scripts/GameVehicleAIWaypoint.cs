@@ -1,7 +1,7 @@
 using UnityEngine;
 using System.Collections;
 
-public class GameVehicleAIWaypoint : MonoBehaviour {
+public class GameVehicleAIWaypoint : GameObjectBehavior {
 
     public int speed = 100;
     public bool useTrigger = false;

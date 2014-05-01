@@ -12,7 +12,7 @@ using Engine.Events;
 
 namespace Engine.Networking {
 
-public class WebRequests : MonoBehaviour {
+public class WebRequests : GameObjectBehavior {
 	
 	public static WebRequests Instance;
 

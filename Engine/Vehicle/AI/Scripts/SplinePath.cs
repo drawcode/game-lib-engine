@@ -2,7 +2,7 @@ using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 
-public class SplinePath : MonoBehaviour {   
+public class SplinePath : GameObjectBehavior {   
 
     public int steps = 5;
     public bool loop = true;

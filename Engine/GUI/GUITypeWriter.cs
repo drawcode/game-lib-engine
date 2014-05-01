@@ -3,7 +3,7 @@ using System.Text;
 using UnityEngine;
 
 [RequireComponent(typeof(GUIText))]
-internal class GUITypeWriter : MonoBehaviour {
+internal class GUITypeWriter : GameObjectBehavior {
     public float delay = 0.03f;
     public StringBuilder currentText;
     public AudioClip sound = null;

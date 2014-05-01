@@ -55,10 +55,58 @@ public class BaseGameLeaderboards<T> : DataObjects<T> where T : DataObject, new(
     }
 }
 
+public class GameNetworkData : GameDataObject {
+    
+}
+
+public class GameLeaderboardData : GameDataObject {
+
+    public virtual string datatype {
+        get {
+            return Get<string>(BaseDataObjectKeys.datatype);
+        }
+        
+        set {
+            Set(BaseDataObjectKeys.datatype, value);
+        }
+    }
+
+    public virtual string direction {
+        get {
+            return Get<string>(BaseDataObjectKeys.direction);
+        }
+        
+        set {
+            Set(BaseDataObjectKeys.direction, value);
+        }
+    }
+    
+    public virtual List<GameNetworkData> networks {
+        get {
+            return Get<List<GameNetworkData>>(BaseDataObjectKeys.direction);
+        }
+        
+        set {
+            Set(BaseDataObjectKeys.direction, value);
+        }
+    }
+}
+
 public class BaseGameLeaderboard : GameDataObject {
 
     // Attributes that are added or changed after launch should be like this to prevent
     // profile conversions.
+    
+    public virtual GameLeaderboardData data {
+        get {
+            return Get<GameLeaderboardData>(BaseDataObjectKeys.data);
+        }
+        
+        set {
+            Set(BaseDataObjectKeys.data, value);
+        }
+    }
+
 
     public BaseGameLeaderboard() {
         Reset();

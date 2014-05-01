@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace Engine.Game.Racing {
 
-    public class NetworkVehicleProxy : MonoBehaviour {
+    public class NetworkVehicleProxy : GameObjectBehavior {
         /*
         public int competitorIndex;
         public GameObject source;

@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class DeviceUtil : MonoBehaviour {
+public class DeviceUtil : GameObjectBehavior {
     private static DeviceUtil instance;
 
     private static DeviceUtil Instance {

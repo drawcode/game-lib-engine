@@ -3,7 +3,7 @@ using System.Collections;
 using Engine.Events;
 using UnityEngine;
 
-public class DraggableEditing : MonoBehaviour {
+public class DraggableEditing : GameObjectBehavior {
     public static DraggableEditing Instance;
 
     public Transform grabbed;

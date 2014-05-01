@@ -3,7 +3,7 @@ using UnityEngine;
 namespace Engine.Graphics.Vector {
 
     [AddComponentMenu("Vectrosity/BrightnessControl")]
-    public class BrightnessControl : MonoBehaviour {
+    public class BrightnessControl : GameObjectBehavior {
         private RefInt m_objectNumber;
         private VectorLine vectorLine;
         private bool useLine = false;	// Normally false, since Visibility scripts take care of this

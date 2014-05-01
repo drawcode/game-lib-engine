@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using Engine.Networking;
 using UnityEngine;
 
-public class MatchupContainer : MonoBehaviour {
+public class MatchupContainer : GameObjectBehavior {
 #if !UNITY_FLASH
     public string trackName;
     public UnityNetworking unityNetworkingComponent;

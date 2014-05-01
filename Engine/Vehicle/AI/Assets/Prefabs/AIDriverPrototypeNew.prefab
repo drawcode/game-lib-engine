@@ -757,7 +757,7 @@ BoxCollider:
 EditorExtensionImpl:
   serializedVersion: 6
 --- !u!114 &11400000
-MonoBehaviour:
+GameObjectBehavior:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
@@ -773,7 +773,7 @@ MonoBehaviour:
 EditorExtensionImpl:
   serializedVersion: 6
 --- !u!114 &11400002
-MonoBehaviour:
+GameObjectBehavior:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
@@ -789,7 +789,7 @@ MonoBehaviour:
 EditorExtensionImpl:
   serializedVersion: 6
 --- !u!114 &11400004
-MonoBehaviour:
+GameObjectBehavior:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
@@ -805,7 +805,7 @@ MonoBehaviour:
 EditorExtensionImpl:
   serializedVersion: 6
 --- !u!114 &11400006
-MonoBehaviour:
+GameObjectBehavior:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
@@ -821,7 +821,7 @@ MonoBehaviour:
 EditorExtensionImpl:
   serializedVersion: 6
 --- !u!114 &11400008
-MonoBehaviour:
+GameObjectBehavior:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
@@ -835,7 +835,7 @@ MonoBehaviour:
 EditorExtensionImpl:
   serializedVersion: 6
 --- !u!114 &11400010
-MonoBehaviour:
+GameObjectBehavior:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
@@ -850,7 +850,7 @@ MonoBehaviour:
 EditorExtensionImpl:
   serializedVersion: 6
 --- !u!114 &11400012
-MonoBehaviour:
+GameObjectBehavior:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
@@ -865,7 +865,7 @@ MonoBehaviour:
 EditorExtensionImpl:
   serializedVersion: 6
 --- !u!114 &11400014
-MonoBehaviour:
+GameObjectBehavior:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
@@ -880,7 +880,7 @@ MonoBehaviour:
 EditorExtensionImpl:
   serializedVersion: 6
 --- !u!114 &11400016
-MonoBehaviour:
+GameObjectBehavior:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
@@ -899,7 +899,7 @@ MonoBehaviour:
 EditorExtensionImpl:
   serializedVersion: 6
 --- !u!114 &11400018
-MonoBehaviour:
+GameObjectBehavior:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
@@ -924,7 +924,7 @@ MonoBehaviour:
 EditorExtensionImpl:
   serializedVersion: 6
 --- !u!114 &11400020
-MonoBehaviour:
+GameObjectBehavior:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
@@ -959,7 +959,7 @@ MonoBehaviour:
 EditorExtensionImpl:
   serializedVersion: 6
 --- !u!114 &11400022
-MonoBehaviour:
+GameObjectBehavior:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
@@ -982,7 +982,7 @@ MonoBehaviour:
 EditorExtensionImpl:
   serializedVersion: 6
 --- !u!114 &11400024
-MonoBehaviour:
+GameObjectBehavior:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
@@ -1043,7 +1043,7 @@ MonoBehaviour:
 EditorExtensionImpl:
   serializedVersion: 6
 --- !u!114 &11400026
-MonoBehaviour:
+GameObjectBehavior:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
@@ -1061,7 +1061,7 @@ MonoBehaviour:
 EditorExtensionImpl:
   serializedVersion: 6
 --- !u!114 &11400028
-MonoBehaviour:
+GameObjectBehavior:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
@@ -1252,7 +1252,7 @@ MonoBehaviour:
   active: 1
   show: 0
 --- !u!114 &11400030
-MonoBehaviour:
+GameObjectBehavior:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
@@ -1266,7 +1266,7 @@ MonoBehaviour:
   wheelR: {fileID: 14600004}
   antiRoll: 5000
 --- !u!114 &11400032
-MonoBehaviour:
+GameObjectBehavior:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}

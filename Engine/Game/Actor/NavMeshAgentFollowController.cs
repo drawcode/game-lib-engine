@@ -6,7 +6,7 @@ using UnityEngine;
 
 namespace Engine.Game.Actor {
 
-    public class NavMeshAgentFollowController : MonoBehaviour {
+    public class NavMeshAgentFollowController : GameObjectBehavior {
         public NavMeshAgent agent;
         public Transform targetFollow;
 

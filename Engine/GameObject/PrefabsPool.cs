@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PrefabsPool : MonoBehaviour {    
+public class PrefabsPool : GameObjectBehavior {    
     
     public Dictionary<string, GameObject> prefabs;
 

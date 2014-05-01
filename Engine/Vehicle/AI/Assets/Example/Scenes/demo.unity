@@ -2185,7 +2185,7 @@ GameObject:
   m_StaticEditorFlags: 4294967295
   m_IsActive: 1
 --- !u!114 &340
-MonoBehaviour:
+GameObjectBehavior:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 11400018, guid: cd1d58ecefe9f3b4f9f7e1629ccd0027,
     type: 2}
@@ -2200,7 +2200,7 @@ MonoBehaviour:
   wheelR: {fileID: 1491}
   antiRoll: 5000
 --- !u!114 &341
-MonoBehaviour:
+GameObjectBehavior:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 11400020, guid: cd1d58ecefe9f3b4f9f7e1629ccd0027,
     type: 2}
@@ -2585,7 +2585,7 @@ Transform:
   m_Children: []
   m_Father: {fileID: 435}
 --- !u!114 &460
-MonoBehaviour:
+GameObjectBehavior:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
@@ -7457,7 +7457,7 @@ TerrainCollider:
   m_TerrainData: {fileID: 15600000, guid: c7318c59fc42b404090a1a6840932882, type: 2}
   m_CreateTreeColliders: 1
 --- !u!114 &1493
-MonoBehaviour:
+GameObjectBehavior:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
@@ -7472,7 +7472,7 @@ MonoBehaviour:
   playerCar: {fileID: 717}
   hillyAICar: {fileID: 339766099}
 --- !u!114 &1494
-MonoBehaviour:
+GameObjectBehavior:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
@@ -7484,7 +7484,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   show: 0
 --- !u!114 &1495
-MonoBehaviour:
+GameObjectBehavior:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
@@ -7497,7 +7497,7 @@ MonoBehaviour:
   speed: 80
   useTrigger: 1
 --- !u!114 &1499
-MonoBehaviour:
+GameObjectBehavior:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
@@ -7510,7 +7510,7 @@ MonoBehaviour:
   speed: 150
   useTrigger: 0
 --- !u!114 &1500
-MonoBehaviour:
+GameObjectBehavior:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
@@ -7522,7 +7522,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   show: 0
 --- !u!114 &1501
-MonoBehaviour:
+GameObjectBehavior:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
@@ -7535,7 +7535,7 @@ MonoBehaviour:
   speed: 150
   useTrigger: 0
 --- !u!114 &1502
-MonoBehaviour:
+GameObjectBehavior:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
@@ -7547,7 +7547,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   show: 0
 --- !u!114 &1503
-MonoBehaviour:
+GameObjectBehavior:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
@@ -7560,7 +7560,7 @@ MonoBehaviour:
   speed: 150
   useTrigger: 0
 --- !u!114 &1504
-MonoBehaviour:
+GameObjectBehavior:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
@@ -7572,7 +7572,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   show: 0
 --- !u!114 &1505
-MonoBehaviour:
+GameObjectBehavior:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
@@ -7585,7 +7585,7 @@ MonoBehaviour:
   speed: 130
   useTrigger: 0
 --- !u!114 &1506
-MonoBehaviour:
+GameObjectBehavior:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
@@ -7597,7 +7597,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   show: 0
 --- !u!114 &1507
-MonoBehaviour:
+GameObjectBehavior:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
@@ -7610,7 +7610,7 @@ MonoBehaviour:
   speed: 130
   useTrigger: 0
 --- !u!114 &1508
-MonoBehaviour:
+GameObjectBehavior:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
@@ -7622,7 +7622,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   show: 0
 --- !u!114 &1509
-MonoBehaviour:
+GameObjectBehavior:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
@@ -7635,7 +7635,7 @@ MonoBehaviour:
   speed: 130
   useTrigger: 0
 --- !u!114 &1510
-MonoBehaviour:
+GameObjectBehavior:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
@@ -7647,7 +7647,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   show: 0
 --- !u!114 &1511
-MonoBehaviour:
+GameObjectBehavior:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
@@ -7660,7 +7660,7 @@ MonoBehaviour:
   speed: 150
   useTrigger: 0
 --- !u!114 &1512
-MonoBehaviour:
+GameObjectBehavior:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
@@ -7672,7 +7672,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   show: 0
 --- !u!114 &1513
-MonoBehaviour:
+GameObjectBehavior:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
@@ -7685,7 +7685,7 @@ MonoBehaviour:
   speed: 150
   useTrigger: 0
 --- !u!114 &1514
-MonoBehaviour:
+GameObjectBehavior:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
@@ -7697,7 +7697,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   show: 0
 --- !u!114 &1515
-MonoBehaviour:
+GameObjectBehavior:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
@@ -7710,7 +7710,7 @@ MonoBehaviour:
   speed: 130
   useTrigger: 0
 --- !u!114 &1516
-MonoBehaviour:
+GameObjectBehavior:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
@@ -7722,7 +7722,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   show: 0
 --- !u!114 &1517
-MonoBehaviour:
+GameObjectBehavior:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
@@ -7735,7 +7735,7 @@ MonoBehaviour:
   speed: 130
   useTrigger: 0
 --- !u!114 &1518
-MonoBehaviour:
+GameObjectBehavior:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
@@ -7747,7 +7747,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   show: 0
 --- !u!114 &1519
-MonoBehaviour:
+GameObjectBehavior:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
@@ -7760,7 +7760,7 @@ MonoBehaviour:
   speed: 130
   useTrigger: 0
 --- !u!114 &1520
-MonoBehaviour:
+GameObjectBehavior:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
@@ -7772,7 +7772,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   show: 0
 --- !u!114 &1521
-MonoBehaviour:
+GameObjectBehavior:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
@@ -7785,7 +7785,7 @@ MonoBehaviour:
   speed: 130
   useTrigger: 0
 --- !u!114 &1522
-MonoBehaviour:
+GameObjectBehavior:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
@@ -7797,7 +7797,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   show: 0
 --- !u!114 &1523
-MonoBehaviour:
+GameObjectBehavior:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
@@ -7810,7 +7810,7 @@ MonoBehaviour:
   speed: 150
   useTrigger: 0
 --- !u!114 &1524
-MonoBehaviour:
+GameObjectBehavior:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
@@ -7822,7 +7822,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   show: 0
 --- !u!114 &1525
-MonoBehaviour:
+GameObjectBehavior:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
@@ -7835,7 +7835,7 @@ MonoBehaviour:
   speed: 150
   useTrigger: 0
 --- !u!114 &1526
-MonoBehaviour:
+GameObjectBehavior:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
@@ -7847,7 +7847,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   show: 0
 --- !u!114 &1527
-MonoBehaviour:
+GameObjectBehavior:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
@@ -7860,7 +7860,7 @@ MonoBehaviour:
   speed: 130
   useTrigger: 0
 --- !u!114 &1528
-MonoBehaviour:
+GameObjectBehavior:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
@@ -7872,7 +7872,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   show: 0
 --- !u!114 &1529
-MonoBehaviour:
+GameObjectBehavior:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
@@ -7885,7 +7885,7 @@ MonoBehaviour:
   speed: 130
   useTrigger: 0
 --- !u!114 &1530
-MonoBehaviour:
+GameObjectBehavior:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
@@ -7897,7 +7897,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   show: 0
 --- !u!114 &1531
-MonoBehaviour:
+GameObjectBehavior:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
@@ -7910,7 +7910,7 @@ MonoBehaviour:
   speed: 150
   useTrigger: 0
 --- !u!114 &1532
-MonoBehaviour:
+GameObjectBehavior:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
@@ -7922,7 +7922,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   show: 0
 --- !u!114 &1533
-MonoBehaviour:
+GameObjectBehavior:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
@@ -7935,7 +7935,7 @@ MonoBehaviour:
   speed: 130
   useTrigger: 0
 --- !u!114 &1534
-MonoBehaviour:
+GameObjectBehavior:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
@@ -7947,7 +7947,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   show: 0
 --- !u!114 &1535
-MonoBehaviour:
+GameObjectBehavior:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
@@ -7960,7 +7960,7 @@ MonoBehaviour:
   speed: 130
   useTrigger: 0
 --- !u!114 &1536
-MonoBehaviour:
+GameObjectBehavior:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
@@ -7972,7 +7972,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   show: 0
 --- !u!114 &1537
-MonoBehaviour:
+GameObjectBehavior:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
@@ -7985,7 +7985,7 @@ MonoBehaviour:
   speed: 150
   useTrigger: 0
 --- !u!114 &1538
-MonoBehaviour:
+GameObjectBehavior:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
@@ -7997,7 +7997,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   show: 0
 --- !u!114 &1539
-MonoBehaviour:
+GameObjectBehavior:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
@@ -8010,7 +8010,7 @@ MonoBehaviour:
   speed: 150
   useTrigger: 0
 --- !u!114 &1540
-MonoBehaviour:
+GameObjectBehavior:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
@@ -8022,7 +8022,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   show: 0
 --- !u!114 &1541
-MonoBehaviour:
+GameObjectBehavior:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
@@ -8035,7 +8035,7 @@ MonoBehaviour:
   speed: 150
   useTrigger: 0
 --- !u!114 &1542
-MonoBehaviour:
+GameObjectBehavior:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
@@ -8047,7 +8047,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   show: 0
 --- !u!114 &1543
-MonoBehaviour:
+GameObjectBehavior:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
@@ -8060,7 +8060,7 @@ MonoBehaviour:
   speed: 180
   useTrigger: 0
 --- !u!114 &1544
-MonoBehaviour:
+GameObjectBehavior:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
@@ -8072,7 +8072,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   show: 0
 --- !u!114 &1545
-MonoBehaviour:
+GameObjectBehavior:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
@@ -8085,7 +8085,7 @@ MonoBehaviour:
   speed: 180
   useTrigger: 0
 --- !u!114 &1546
-MonoBehaviour:
+GameObjectBehavior:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
@@ -8097,7 +8097,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   show: 0
 --- !u!114 &1561
-MonoBehaviour:
+GameObjectBehavior:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
@@ -8109,7 +8109,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   show: 0
 --- !u!114 &1562
-MonoBehaviour:
+GameObjectBehavior:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
@@ -8122,7 +8122,7 @@ MonoBehaviour:
   speed: 200
   useTrigger: 0
 --- !u!114 &1563
-MonoBehaviour:
+GameObjectBehavior:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
@@ -8134,7 +8134,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   show: 0
 --- !u!114 &1564
-MonoBehaviour:
+GameObjectBehavior:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
@@ -8147,7 +8147,7 @@ MonoBehaviour:
   speed: 180
   useTrigger: 0
 --- !u!114 &1565
-MonoBehaviour:
+GameObjectBehavior:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
@@ -8159,7 +8159,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   show: 0
 --- !u!114 &1566
-MonoBehaviour:
+GameObjectBehavior:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
@@ -8172,7 +8172,7 @@ MonoBehaviour:
   speed: 150
   useTrigger: 0
 --- !u!114 &1567
-MonoBehaviour:
+GameObjectBehavior:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
@@ -8184,7 +8184,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   show: 0
 --- !u!114 &1568
-MonoBehaviour:
+GameObjectBehavior:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
@@ -8197,7 +8197,7 @@ MonoBehaviour:
   speed: 150
   useTrigger: 0
 --- !u!114 &1569
-MonoBehaviour:
+GameObjectBehavior:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
@@ -8209,7 +8209,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   show: 0
 --- !u!114 &1570
-MonoBehaviour:
+GameObjectBehavior:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
@@ -8222,7 +8222,7 @@ MonoBehaviour:
   speed: 150
   useTrigger: 0
 --- !u!114 &1571
-MonoBehaviour:
+GameObjectBehavior:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
@@ -8234,7 +8234,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   show: 0
 --- !u!114 &1572
-MonoBehaviour:
+GameObjectBehavior:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
@@ -8247,7 +8247,7 @@ MonoBehaviour:
   speed: 130
   useTrigger: 0
 --- !u!114 &1573
-MonoBehaviour:
+GameObjectBehavior:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
@@ -8259,7 +8259,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   show: 0
 --- !u!114 &1574
-MonoBehaviour:
+GameObjectBehavior:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
@@ -8272,7 +8272,7 @@ MonoBehaviour:
   speed: 130
   useTrigger: 0
 --- !u!114 &1575
-MonoBehaviour:
+GameObjectBehavior:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
@@ -8284,7 +8284,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   show: 0
 --- !u!114 &1576
-MonoBehaviour:
+GameObjectBehavior:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
@@ -8297,7 +8297,7 @@ MonoBehaviour:
   speed: 150
   useTrigger: 0
 --- !u!114 &1577
-MonoBehaviour:
+GameObjectBehavior:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
@@ -8309,7 +8309,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   show: 0
 --- !u!114 &1578
-MonoBehaviour:
+GameObjectBehavior:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
@@ -8322,7 +8322,7 @@ MonoBehaviour:
   speed: 150
   useTrigger: 0
 --- !u!114 &1579
-MonoBehaviour:
+GameObjectBehavior:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
@@ -8334,7 +8334,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   show: 0
 --- !u!114 &1580
-MonoBehaviour:
+GameObjectBehavior:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
@@ -8347,7 +8347,7 @@ MonoBehaviour:
   speed: 150
   useTrigger: 0
 --- !u!114 &1581
-MonoBehaviour:
+GameObjectBehavior:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
@@ -8359,7 +8359,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   show: 0
 --- !u!114 &1582
-MonoBehaviour:
+GameObjectBehavior:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
@@ -8372,7 +8372,7 @@ MonoBehaviour:
   speed: 150
   useTrigger: 0
 --- !u!114 &1583
-MonoBehaviour:
+GameObjectBehavior:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
@@ -8384,7 +8384,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   show: 0
 --- !u!114 &1584
-MonoBehaviour:
+GameObjectBehavior:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
@@ -8397,7 +8397,7 @@ MonoBehaviour:
   speed: 150
   useTrigger: 0
 --- !u!114 &1585
-MonoBehaviour:
+GameObjectBehavior:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
@@ -8409,7 +8409,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   show: 0
 --- !u!114 &1586
-MonoBehaviour:
+GameObjectBehavior:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
@@ -8422,7 +8422,7 @@ MonoBehaviour:
   speed: 150
   useTrigger: 0
 --- !u!114 &1587
-MonoBehaviour:
+GameObjectBehavior:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
@@ -8434,7 +8434,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   show: 0
 --- !u!114 &1588
-MonoBehaviour:
+GameObjectBehavior:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
@@ -8447,7 +8447,7 @@ MonoBehaviour:
   speed: 150
   useTrigger: 0
 --- !u!114 &1589
-MonoBehaviour:
+GameObjectBehavior:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
@@ -8459,7 +8459,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   show: 0
 --- !u!114 &1590
-MonoBehaviour:
+GameObjectBehavior:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
@@ -8472,7 +8472,7 @@ MonoBehaviour:
   speed: 150
   useTrigger: 0
 --- !u!114 &1591
-MonoBehaviour:
+GameObjectBehavior:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
@@ -8484,7 +8484,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   show: 0
 --- !u!114 &1592
-MonoBehaviour:
+GameObjectBehavior:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
@@ -8497,7 +8497,7 @@ MonoBehaviour:
   speed: 150
   useTrigger: 0
 --- !u!114 &1593
-MonoBehaviour:
+GameObjectBehavior:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
@@ -8509,7 +8509,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   show: 0
 --- !u!114 &1594
-MonoBehaviour:
+GameObjectBehavior:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
@@ -8522,7 +8522,7 @@ MonoBehaviour:
   speed: 200
   useTrigger: 0
 --- !u!114 &1595
-MonoBehaviour:
+GameObjectBehavior:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
@@ -8534,7 +8534,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   show: 0
 --- !u!114 &1596
-MonoBehaviour:
+GameObjectBehavior:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
@@ -8547,7 +8547,7 @@ MonoBehaviour:
   speed: 180
   useTrigger: 0
 --- !u!114 &1597
-MonoBehaviour:
+GameObjectBehavior:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
@@ -8559,7 +8559,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   show: 0
 --- !u!114 &1598
-MonoBehaviour:
+GameObjectBehavior:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
@@ -8572,7 +8572,7 @@ MonoBehaviour:
   speed: 150
   useTrigger: 0
 --- !u!114 &1599
-MonoBehaviour:
+GameObjectBehavior:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
@@ -8584,7 +8584,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   show: 0
 --- !u!114 &1600
-MonoBehaviour:
+GameObjectBehavior:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
@@ -8597,7 +8597,7 @@ MonoBehaviour:
   speed: 150
   useTrigger: 0
 --- !u!114 &1601
-MonoBehaviour:
+GameObjectBehavior:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
@@ -8609,7 +8609,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   show: 0
 --- !u!114 &1602
-MonoBehaviour:
+GameObjectBehavior:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
@@ -8622,7 +8622,7 @@ MonoBehaviour:
   speed: 150
   useTrigger: 0
 --- !u!114 &1603
-MonoBehaviour:
+GameObjectBehavior:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
@@ -8634,7 +8634,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   show: 0
 --- !u!114 &1604
-MonoBehaviour:
+GameObjectBehavior:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
@@ -8647,7 +8647,7 @@ MonoBehaviour:
   speed: 150
   useTrigger: 0
 --- !u!114 &1605
-MonoBehaviour:
+GameObjectBehavior:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
@@ -8659,7 +8659,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   show: 0
 --- !u!114 &1606
-MonoBehaviour:
+GameObjectBehavior:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
@@ -8672,7 +8672,7 @@ MonoBehaviour:
   speed: 180
   useTrigger: 0
 --- !u!114 &1607
-MonoBehaviour:
+GameObjectBehavior:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
@@ -8684,7 +8684,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   show: 0
 --- !u!114 &1608
-MonoBehaviour:
+GameObjectBehavior:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
@@ -8697,7 +8697,7 @@ MonoBehaviour:
   speed: 200
   useTrigger: 0
 --- !u!114 &1609
-MonoBehaviour:
+GameObjectBehavior:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
@@ -8709,7 +8709,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   show: 0
 --- !u!114 &1610
-MonoBehaviour:
+GameObjectBehavior:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
@@ -8722,7 +8722,7 @@ MonoBehaviour:
   speed: 70
   useTrigger: 1
 --- !u!114 &1611
-MonoBehaviour:
+GameObjectBehavior:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
@@ -8734,7 +8734,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   show: 0
 --- !u!114 &1612
-MonoBehaviour:
+GameObjectBehavior:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
@@ -8747,7 +8747,7 @@ MonoBehaviour:
   speed: 70
   useTrigger: 1
 --- !u!114 &1613
-MonoBehaviour:
+GameObjectBehavior:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
@@ -8759,7 +8759,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   show: 0
 --- !u!114 &1614
-MonoBehaviour:
+GameObjectBehavior:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
@@ -8772,7 +8772,7 @@ MonoBehaviour:
   speed: 60
   useTrigger: 1
 --- !u!114 &1615
-MonoBehaviour:
+GameObjectBehavior:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
@@ -8784,7 +8784,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   show: 0
 --- !u!114 &1616
-MonoBehaviour:
+GameObjectBehavior:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
@@ -8797,7 +8797,7 @@ MonoBehaviour:
   speed: 60
   useTrigger: 1
 --- !u!114 &1617
-MonoBehaviour:
+GameObjectBehavior:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
@@ -8809,7 +8809,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   show: 0
 --- !u!114 &1618
-MonoBehaviour:
+GameObjectBehavior:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
@@ -8822,7 +8822,7 @@ MonoBehaviour:
   speed: 60
   useTrigger: 1
 --- !u!114 &1619
-MonoBehaviour:
+GameObjectBehavior:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
@@ -8834,7 +8834,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   show: 0
 --- !u!114 &1620
-MonoBehaviour:
+GameObjectBehavior:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
@@ -8847,7 +8847,7 @@ MonoBehaviour:
   speed: 60
   useTrigger: 1
 --- !u!114 &1621
-MonoBehaviour:
+GameObjectBehavior:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
@@ -8859,7 +8859,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   show: 0
 --- !u!114 &1622
-MonoBehaviour:
+GameObjectBehavior:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
@@ -8872,7 +8872,7 @@ MonoBehaviour:
   speed: 60
   useTrigger: 1
 --- !u!114 &1623
-MonoBehaviour:
+GameObjectBehavior:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
@@ -8884,7 +8884,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   show: 0
 --- !u!114 &1624
-MonoBehaviour:
+GameObjectBehavior:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
@@ -8897,7 +8897,7 @@ MonoBehaviour:
   speed: 60
   useTrigger: 1
 --- !u!114 &1625
-MonoBehaviour:
+GameObjectBehavior:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
@@ -8909,7 +8909,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   show: 0
 --- !u!114 &1626
-MonoBehaviour:
+GameObjectBehavior:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
@@ -8922,7 +8922,7 @@ MonoBehaviour:
   speed: 80
   useTrigger: 1
 --- !u!114 &1758
-MonoBehaviour:
+GameObjectBehavior:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 11400006, guid: cd1d58ecefe9f3b4f9f7e1629ccd0027,
     type: 2}
@@ -8936,7 +8936,7 @@ MonoBehaviour:
   WheelCol: {fileID: 1490}
   isHittingGround: 0
 --- !u!114 &1759
-MonoBehaviour:
+GameObjectBehavior:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 11400012, guid: cd1d58ecefe9f3b4f9f7e1629ccd0027,
     type: 2}
@@ -8950,7 +8950,7 @@ MonoBehaviour:
   WheelCol: {fileID: 1488}
   isHittingGround: 0
 --- !u!114 &1760
-MonoBehaviour:
+GameObjectBehavior:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 11400014, guid: cd1d58ecefe9f3b4f9f7e1629ccd0027,
     type: 2}
@@ -8964,7 +8964,7 @@ MonoBehaviour:
   WheelCol: {fileID: 1491}
   isHittingGround: 0
 --- !u!114 &1761
-MonoBehaviour:
+GameObjectBehavior:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 11400016, guid: cd1d58ecefe9f3b4f9f7e1629ccd0027,
     type: 2}
@@ -8978,7 +8978,7 @@ MonoBehaviour:
   WheelCol: {fileID: 1489}
   isHittingGround: 0
 --- !u!114 &1762
-MonoBehaviour:
+GameObjectBehavior:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
@@ -8990,7 +8990,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   respawnEffect: {fileID: 100000, guid: 79e1ae082f829a74dac04c93028cd169, type: 2}
 --- !u!114 &1763
-MonoBehaviour:
+GameObjectBehavior:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 11400024, guid: cd1d58ecefe9f3b4f9f7e1629ccd0027,
     type: 2}
@@ -9002,7 +9002,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!114 &1764
-MonoBehaviour:
+GameObjectBehavior:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 11400010, guid: cd1d58ecefe9f3b4f9f7e1629ccd0027,
     type: 2}
@@ -9015,7 +9015,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   frictionValue: 0
 --- !u!114 &1765
-MonoBehaviour:
+GameObjectBehavior:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 11400008, guid: cd1d58ecefe9f3b4f9f7e1629ccd0027,
     type: 2}
@@ -9028,7 +9028,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   frictionValue: 1
 --- !u!114 &1766
-MonoBehaviour:
+GameObjectBehavior:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 11400004, guid: cd1d58ecefe9f3b4f9f7e1629ccd0027,
     type: 2}
@@ -9071,7 +9071,7 @@ MonoBehaviour:
   centerOfMassY: 0
   skidmark: {fileID: 400000, guid: c9b98d5df4c56d54cbd9e75d2de00202, type: 2}
 --- !u!114 &1767
-MonoBehaviour:
+GameObjectBehavior:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 11400002, guid: cd1d58ecefe9f3b4f9f7e1629ccd0027,
     type: 2}
@@ -9087,7 +9087,7 @@ MonoBehaviour:
   triggerSound: {fileID: 8300000, guid: 59b3c3b7529fb90408f33e9576560e11, type: 3}
   soundVolume: 1
 --- !u!114 &1768
-MonoBehaviour:
+GameObjectBehavior:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 11400000, guid: cd1d58ecefe9f3b4f9f7e1629ccd0027,
     type: 2}
@@ -9103,7 +9103,7 @@ MonoBehaviour:
   triggerSound: {fileID: 8300000, guid: 59b3c3b7529fb90408f33e9576560e11, type: 3}
   soundVolume: 1
 --- !u!114 &1770
-MonoBehaviour:
+GameObjectBehavior:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
@@ -9374,7 +9374,7 @@ Transform:
   - {fileID: 144998705}
   m_Father: {fileID: 1234818437}
 --- !u!114 &33473236
-MonoBehaviour:
+GameObjectBehavior:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
@@ -9710,7 +9710,7 @@ Transform:
   - {fileID: 2114188196}
   m_Father: {fileID: 1223739110}
 --- !u!114 &92826888
-MonoBehaviour:
+GameObjectBehavior:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
@@ -9751,7 +9751,7 @@ Transform:
   - {fileID: 674626628}
   m_Father: {fileID: 1583971932}
 --- !u!114 &94112343
-MonoBehaviour:
+GameObjectBehavior:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
@@ -9792,7 +9792,7 @@ Transform:
   - {fileID: 616236214}
   m_Father: {fileID: 1234818437}
 --- !u!114 &94348887
-MonoBehaviour:
+GameObjectBehavior:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
@@ -9981,7 +9981,7 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1643557564}
 --- !u!114 &117721719
-MonoBehaviour:
+GameObjectBehavior:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 11400002, guid: b2b320a5eb99d4159a6d808aace4ec74,
     type: 2}
@@ -10249,7 +10249,7 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1440962981}
 --- !u!114 &141068940
-MonoBehaviour:
+GameObjectBehavior:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
@@ -10496,7 +10496,7 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1228413924}
 --- !u!114 &171798411
-MonoBehaviour:
+GameObjectBehavior:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
@@ -10649,7 +10649,7 @@ Transform:
   m_Children: []
   m_Father: {fileID: 974532027}
 --- !u!114 &233501642
-MonoBehaviour:
+GameObjectBehavior:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
@@ -10731,7 +10731,7 @@ Transform:
   m_Children: []
   m_Father: {fileID: 991833234}
 --- !u!114 &239138404
-MonoBehaviour:
+GameObjectBehavior:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 11400000, guid: b2b320a5eb99d4159a6d808aace4ec74,
     type: 2}
@@ -10871,7 +10871,7 @@ Transform:
   - {fileID: 609754325}
   m_Father: {fileID: 266483275}
 --- !u!114 &251231367
-MonoBehaviour:
+GameObjectBehavior:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
@@ -11212,7 +11212,7 @@ Transform:
   - {fileID: 266483275}
   m_Father: {fileID: 0}
 --- !u!114 &339766100
-MonoBehaviour:
+GameObjectBehavior:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
@@ -11226,7 +11226,7 @@ MonoBehaviour:
   wheelR: {fileID: 1455066572}
   antiRoll: 5000
 --- !u!114 &339766101
-MonoBehaviour:
+GameObjectBehavior:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
@@ -11240,7 +11240,7 @@ MonoBehaviour:
   wheelR: {fileID: 1644926272}
   antiRoll: 5000
 --- !u!114 &339766102
-MonoBehaviour:
+GameObjectBehavior:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
@@ -11329,7 +11329,7 @@ MonoBehaviour:
   active: 1
   show: 0
 --- !u!114 &339766103
-MonoBehaviour:
+GameObjectBehavior:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
@@ -11341,7 +11341,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   show: 1
 --- !u!114 &339766104
-MonoBehaviour:
+GameObjectBehavior:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
@@ -11373,7 +11373,7 @@ MonoBehaviour:
   rlWheelCollider: {fileID: 509158516}
   rrWheelCollider: {fileID: 1455066572}
 --- !u!114 &339766105
-MonoBehaviour:
+GameObjectBehavior:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
@@ -11393,7 +11393,7 @@ MonoBehaviour:
   frWheelMesh: {fileID: 648189172}
   usingAIDriverMotor: 1
 --- !u!114 &339766106
-MonoBehaviour:
+GameObjectBehavior:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
@@ -11453,7 +11453,7 @@ MonoBehaviour:
   leftRearSideEndGO: {fileID: 0}
   rightRearSideEndGO: {fileID: 0}
 --- !u!114 &339766107
-MonoBehaviour:
+GameObjectBehavior:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
@@ -11468,7 +11468,7 @@ MonoBehaviour:
   timeTillRespawn: 5
   lastTimeToReachNextWP: 0
 --- !u!114 &339766108
-MonoBehaviour:
+GameObjectBehavior:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
@@ -11484,7 +11484,7 @@ MonoBehaviour:
   waypointMaterial: {fileID: 0}
   batchCreating: 0
 --- !u!114 &339766109
-MonoBehaviour:
+GameObjectBehavior:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
@@ -11831,7 +11831,7 @@ Transform:
   m_Children: []
   m_Father: {fileID: 991833234}
 --- !u!114 &401448776
-MonoBehaviour:
+GameObjectBehavior:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 11400032, guid: b2b320a5eb99d4159a6d808aace4ec74,
     type: 2}
@@ -12098,7 +12098,7 @@ Transform:
   m_Children: []
   m_Father: {fileID: 2042568711}
 --- !u!114 &437813698
-MonoBehaviour:
+GameObjectBehavior:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
@@ -12178,7 +12178,7 @@ Transform:
   - {fileID: 169460425}
   m_Father: {fileID: 1234818437}
 --- !u!114 &438865564
-MonoBehaviour:
+GameObjectBehavior:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
@@ -12503,7 +12503,7 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1440962981}
 --- !u!114 &501658829
-MonoBehaviour:
+GameObjectBehavior:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
@@ -12779,7 +12779,7 @@ Transform:
   m_Children: []
   m_Father: {fileID: 109075857}
 --- !u!114 &565271411
-MonoBehaviour:
+GameObjectBehavior:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
@@ -13083,7 +13083,7 @@ Transform:
   - {fileID: 708908015}
   m_Father: {fileID: 266483275}
 --- !u!114 &601758039
-MonoBehaviour:
+GameObjectBehavior:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
@@ -13352,7 +13352,7 @@ Transform:
   - {fileID: 1491731412}
   m_Father: {fileID: 266483275}
 --- !u!114 &648189173
-MonoBehaviour:
+GameObjectBehavior:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
@@ -13691,7 +13691,7 @@ Transform:
   - {fileID: 134933737}
   m_Father: {fileID: 2068095277}
 --- !u!114 &707284978
-MonoBehaviour:
+GameObjectBehavior:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 11400006, guid: b2b320a5eb99d4159a6d808aace4ec74,
     type: 2}
@@ -13871,7 +13871,7 @@ Transform:
   m_Children: []
   m_Father: {fileID: 109075857}
 --- !u!114 &730099920
-MonoBehaviour:
+GameObjectBehavior:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
@@ -14121,7 +14121,7 @@ Transform:
   - {fileID: 1461046295}
   m_Father: {fileID: 1223739110}
 --- !u!114 &776363719
-MonoBehaviour:
+GameObjectBehavior:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
@@ -14218,7 +14218,7 @@ Transform:
   - {fileID: 1930882598}
   m_Father: {fileID: 266483275}
 --- !u!114 &817815117
-MonoBehaviour:
+GameObjectBehavior:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
@@ -14431,7 +14431,7 @@ Transform:
   - {fileID: 1152497243}
   m_Father: {fileID: 1234818437}
 --- !u!114 &868494981
-MonoBehaviour:
+GameObjectBehavior:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
@@ -14917,7 +14917,7 @@ Transform:
   - {fileID: 1615821768}
   m_Father: {fileID: 1223739110}
 --- !u!114 &990234096
-MonoBehaviour:
+GameObjectBehavior:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
@@ -15651,7 +15651,7 @@ Transform:
   - {fileID: 739472023}
   m_Father: {fileID: 1583971932}
 --- !u!114 &1131678758
-MonoBehaviour:
+GameObjectBehavior:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
@@ -15891,7 +15891,7 @@ Transform:
   m_Children: []
   m_Father: {fileID: 339766099}
 --- !u!114 &1194943526
-MonoBehaviour:
+GameObjectBehavior:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
@@ -16234,7 +16234,7 @@ Transform:
   - {fileID: 1583971932}
   m_Father: {fileID: 0}
 --- !u!114 &1228413925
-MonoBehaviour:
+GameObjectBehavior:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
@@ -16248,7 +16248,7 @@ MonoBehaviour:
   wheelR: {fileID: 952588002}
   antiRoll: 5000
 --- !u!114 &1228413926
-MonoBehaviour:
+GameObjectBehavior:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
@@ -16262,7 +16262,7 @@ MonoBehaviour:
   wheelR: {fileID: 571175172}
   antiRoll: 5000
 --- !u!114 &1228413927
-MonoBehaviour:
+GameObjectBehavior:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
@@ -16521,7 +16521,7 @@ MonoBehaviour:
   active: 1
   show: 1
 --- !u!114 &1228413928
-MonoBehaviour:
+GameObjectBehavior:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
@@ -16533,7 +16533,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   show: 0
 --- !u!114 &1228413929
-MonoBehaviour:
+GameObjectBehavior:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
@@ -16565,7 +16565,7 @@ MonoBehaviour:
   rlWheelCollider: {fileID: 1702647488}
   rrWheelCollider: {fileID: 952588002}
 --- !u!114 &1228413930
-MonoBehaviour:
+GameObjectBehavior:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
@@ -16585,7 +16585,7 @@ MonoBehaviour:
   frWheelMesh: {fileID: 94112342}
   usingAIDriverMotor: 1
 --- !u!114 &1228413931
-MonoBehaviour:
+GameObjectBehavior:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
@@ -16645,7 +16645,7 @@ MonoBehaviour:
   leftRearSideEndGO: {fileID: 0}
   rightRearSideEndGO: {fileID: 0}
 --- !u!114 &1228413932
-MonoBehaviour:
+GameObjectBehavior:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
@@ -16660,7 +16660,7 @@ MonoBehaviour:
   timeTillRespawn: 5
   lastTimeToReachNextWP: 0
 --- !u!114 &1228413933
-MonoBehaviour:
+GameObjectBehavior:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
@@ -16676,7 +16676,7 @@ MonoBehaviour:
   waypointMaterial: {fileID: 0}
   batchCreating: 0
 --- !u!114 &1228413934
-MonoBehaviour:
+GameObjectBehavior:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
@@ -16995,7 +16995,7 @@ Transform:
   - {fileID: 1672494655}
   m_Father: {fileID: 1583971932}
 --- !u!114 &1256772970
-MonoBehaviour:
+GameObjectBehavior:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
@@ -17329,7 +17329,7 @@ Transform:
   - {fileID: 1784180782}
   m_Father: {fileID: 1583971932}
 --- !u!114 &1317437972
-MonoBehaviour:
+GameObjectBehavior:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
@@ -17722,7 +17722,7 @@ Transform:
   - {fileID: 737215655}
   m_Father: {fileID: 2068095277}
 --- !u!114 &1376396441
-MonoBehaviour:
+GameObjectBehavior:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 11400004, guid: b2b320a5eb99d4159a6d808aace4ec74,
     type: 2}
@@ -17764,7 +17764,7 @@ Transform:
   - {fileID: 1571204085}
   m_Father: {fileID: 2068095277}
 --- !u!114 &1378637676
-MonoBehaviour:
+GameObjectBehavior:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 11400008, guid: b2b320a5eb99d4159a6d808aace4ec74,
     type: 2}
@@ -18290,7 +18290,7 @@ Transform:
   - {fileID: 1223739110}
   m_Father: {fileID: 0}
 --- !u!114 &1490348721
-MonoBehaviour:
+GameObjectBehavior:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
@@ -18304,7 +18304,7 @@ MonoBehaviour:
   wheelR: {fileID: 1031794406}
   antiRoll: 5000
 --- !u!114 &1490348722
-MonoBehaviour:
+GameObjectBehavior:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
@@ -18318,7 +18318,7 @@ MonoBehaviour:
   wheelR: {fileID: 724862331}
   antiRoll: 5000
 --- !u!114 &1490348723
-MonoBehaviour:
+GameObjectBehavior:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
@@ -18505,7 +18505,7 @@ MonoBehaviour:
   active: 0
   show: 0
 --- !u!114 &1490348724
-MonoBehaviour:
+GameObjectBehavior:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
@@ -18517,7 +18517,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   show: 0
 --- !u!114 &1490348725
-MonoBehaviour:
+GameObjectBehavior:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
@@ -18549,7 +18549,7 @@ MonoBehaviour:
   rlWheelCollider: {fileID: 528899983}
   rrWheelCollider: {fileID: 1031794406}
 --- !u!114 &1490348726
-MonoBehaviour:
+GameObjectBehavior:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
@@ -18569,7 +18569,7 @@ MonoBehaviour:
   frWheelMesh: {fileID: 92826887}
   usingAIDriverMotor: 1
 --- !u!114 &1490348727
-MonoBehaviour:
+GameObjectBehavior:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
@@ -18629,7 +18629,7 @@ MonoBehaviour:
   leftRearSideEndGO: {fileID: 0}
   rightRearSideEndGO: {fileID: 0}
 --- !u!114 &1490348728
-MonoBehaviour:
+GameObjectBehavior:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
@@ -18644,7 +18644,7 @@ MonoBehaviour:
   timeTillRespawn: 5
   lastTimeToReachNextWP: 0
 --- !u!114 &1490348729
-MonoBehaviour:
+GameObjectBehavior:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
@@ -18660,7 +18660,7 @@ MonoBehaviour:
   waypointMaterial: {fileID: 0}
   batchCreating: 0
 --- !u!114 &1490348730
-MonoBehaviour:
+GameObjectBehavior:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
@@ -18893,7 +18893,7 @@ Transform:
   - {fileID: 1732445413}
   m_Father: {fileID: 1223739110}
 --- !u!114 &1519751545
-MonoBehaviour:
+GameObjectBehavior:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
@@ -19374,7 +19374,7 @@ Transform:
   - {fileID: 2068095277}
   m_Father: {fileID: 0}
 --- !u!114 &1643557565
-MonoBehaviour:
+GameObjectBehavior:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 11400028, guid: b2b320a5eb99d4159a6d808aace4ec74,
     type: 2}
@@ -19389,7 +19389,7 @@ MonoBehaviour:
   wheelR: {fileID: 1655548081}
   antiRoll: 5000
 --- !u!114 &1643557566
-MonoBehaviour:
+GameObjectBehavior:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 11400026, guid: b2b320a5eb99d4159a6d808aace4ec74,
     type: 2}
@@ -19404,7 +19404,7 @@ MonoBehaviour:
   wheelR: {fileID: 1707788065}
   antiRoll: 5000
 --- !u!114 &1643557567
-MonoBehaviour:
+GameObjectBehavior:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 11400024, guid: b2b320a5eb99d4159a6d808aace4ec74,
     type: 2}
@@ -19494,7 +19494,7 @@ MonoBehaviour:
   active: 1
   show: 0
 --- !u!114 &1643557568
-MonoBehaviour:
+GameObjectBehavior:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 11400022, guid: b2b320a5eb99d4159a6d808aace4ec74,
     type: 2}
@@ -19507,7 +19507,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   show: 1
 --- !u!114 &1643557569
-MonoBehaviour:
+GameObjectBehavior:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 11400020, guid: b2b320a5eb99d4159a6d808aace4ec74,
     type: 2}
@@ -19540,7 +19540,7 @@ MonoBehaviour:
   rlWheelCollider: {fileID: 1081250589}
   rrWheelCollider: {fileID: 1655548081}
 --- !u!114 &1643557570
-MonoBehaviour:
+GameObjectBehavior:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 11400018, guid: b2b320a5eb99d4159a6d808aace4ec74,
     type: 2}
@@ -19561,7 +19561,7 @@ MonoBehaviour:
   frWheelMesh: {fileID: 707284977}
   usingAIDriverMotor: 1
 --- !u!114 &1643557571
-MonoBehaviour:
+GameObjectBehavior:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 11400016, guid: b2b320a5eb99d4159a6d808aace4ec74,
     type: 2}
@@ -19622,7 +19622,7 @@ MonoBehaviour:
   leftRearSideEndGO: {fileID: 0}
   rightRearSideEndGO: {fileID: 0}
 --- !u!114 &1643557572
-MonoBehaviour:
+GameObjectBehavior:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 11400014, guid: b2b320a5eb99d4159a6d808aace4ec74,
     type: 2}
@@ -19638,7 +19638,7 @@ MonoBehaviour:
   timeTillRespawn: 5
   lastTimeToReachNextWP: 0
 --- !u!114 &1643557573
-MonoBehaviour:
+GameObjectBehavior:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 11400012, guid: b2b320a5eb99d4159a6d808aace4ec74,
     type: 2}
@@ -19655,7 +19655,7 @@ MonoBehaviour:
   waypointMaterial: {fileID: 0}
   batchCreating: 0
 --- !u!114 &1643557574
-MonoBehaviour:
+GameObjectBehavior:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 11400010, guid: b2b320a5eb99d4159a6d808aace4ec74,
     type: 2}
@@ -19953,7 +19953,7 @@ Transform:
   m_Children: []
   m_Father: {fileID: 974532027}
 --- !u!114 &1665036755
-MonoBehaviour:
+GameObjectBehavior:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
@@ -21113,7 +21113,7 @@ Transform:
   - {fileID: 282952353}
   m_Father: {fileID: 2068095277}
 --- !u!114 &1866191532
-MonoBehaviour:
+GameObjectBehavior:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 11400030, guid: b2b320a5eb99d4159a6d808aace4ec74,
     type: 2}
@@ -21821,7 +21821,7 @@ Transform:
   - {fileID: 1234818437}
   m_Father: {fileID: 0}
 --- !u!114 &1972454225
-MonoBehaviour:
+GameObjectBehavior:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
@@ -21835,7 +21835,7 @@ MonoBehaviour:
   wheelR: {fileID: 1429943818}
   antiRoll: 5000
 --- !u!114 &1972454226
-MonoBehaviour:
+GameObjectBehavior:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
@@ -21849,7 +21849,7 @@ MonoBehaviour:
   wheelR: {fileID: 1534497305}
   antiRoll: 5000
 --- !u!114 &1972454227
-MonoBehaviour:
+GameObjectBehavior:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
@@ -22108,7 +22108,7 @@ MonoBehaviour:
   active: 1
   show: 0
 --- !u!114 &1972454228
-MonoBehaviour:
+GameObjectBehavior:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
@@ -22120,7 +22120,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   show: 0
 --- !u!114 &1972454229
-MonoBehaviour:
+GameObjectBehavior:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
@@ -22152,7 +22152,7 @@ MonoBehaviour:
   rlWheelCollider: {fileID: 1040611526}
   rrWheelCollider: {fileID: 1429943818}
 --- !u!114 &1972454230
-MonoBehaviour:
+GameObjectBehavior:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
@@ -22172,7 +22172,7 @@ MonoBehaviour:
   frWheelMesh: {fileID: 33473235}
   usingAIDriverMotor: 1
 --- !u!114 &1972454231
-MonoBehaviour:
+GameObjectBehavior:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
@@ -22232,7 +22232,7 @@ MonoBehaviour:
   leftRearSideEndGO: {fileID: 0}
   rightRearSideEndGO: {fileID: 0}
 --- !u!114 &1972454232
-MonoBehaviour:
+GameObjectBehavior:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
@@ -22247,7 +22247,7 @@ MonoBehaviour:
   timeTillRespawn: 5
   lastTimeToReachNextWP: 0
 --- !u!114 &1972454233
-MonoBehaviour:
+GameObjectBehavior:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
@@ -22263,7 +22263,7 @@ MonoBehaviour:
   waypointMaterial: {fileID: 0}
   batchCreating: 0
 --- !u!114 &1972454234
-MonoBehaviour:
+GameObjectBehavior:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
@@ -22388,7 +22388,7 @@ Transform:
   m_Children: []
   m_Father: {fileID: 2042568711}
 --- !u!114 &2010136512
-MonoBehaviour:
+GameObjectBehavior:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
@@ -22467,7 +22467,7 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1490348720}
 --- !u!114 &2015430223
-MonoBehaviour:
+GameObjectBehavior:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
@@ -22645,7 +22645,7 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1972454224}
 --- !u!114 &2058771643
-MonoBehaviour:
+GameObjectBehavior:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}

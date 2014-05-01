@@ -3,7 +3,7 @@ using System.Collections;
 
 //using EnemyAI;
 
-public class EventListenerExample : MonoBehaviour {
+public class EventListenerExample : GameObjectBehavior {
    
     public GameObject respawnEffect;
     private string message;

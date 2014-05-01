@@ -2,7 +2,7 @@ using UnityEngine;
 using System.Collections;
 
 [ExecuteInEditMode]
-public class ShowRaycasts : MonoBehaviour {
+public class ShowRaycasts : GameObjectBehavior {
 
     public bool show = false;
     private GameVehicleAIDriver aiDriver;

@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace Engine.Audio {
 
-    public class Sounds : MonoBehaviour {
+    public class Sounds : GameObjectBehavior {
         private AudioSource loop;
         private AudioSource intro;
         private AudioSource[] effects;

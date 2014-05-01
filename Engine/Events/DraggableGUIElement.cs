@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace Engine.Events {
 
-    public class DraggableGUIElement : MonoBehaviour {
+    public class DraggableGUIElement : GameObjectBehavior {
 
         [System.Serializable]
         public class Border {

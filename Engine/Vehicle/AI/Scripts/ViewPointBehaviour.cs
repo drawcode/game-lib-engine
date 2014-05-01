@@ -4,7 +4,7 @@ using System.Collections;
 //using EnemyAI;
 
 [ExecuteInEditMode]
-public class ViewPointBehaviour : MonoBehaviour {
+public class ViewPointBehaviour : GameObjectBehavior {
     GameVehicleAIDriver aiDriver;
     GameVehicleAIDriverController aiDriverController;
 

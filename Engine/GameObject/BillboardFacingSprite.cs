@@ -2,7 +2,7 @@ using System.Collections;
 using UnityEngine;
 
 [ExecuteInEditMode]
-public class BillboardFacingSprite : MonoBehaviour {
+public class BillboardFacingSprite : GameObjectBehavior {
     public Transform cameraTransform;
 
     // Use this for initialization

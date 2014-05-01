@@ -1,7 +1,7 @@
 using UnityEngine;
 using System.Collections;
 
-public class GameVehicleMotorMapping : MonoBehaviour {
+public class GameVehicleMotorMapping : GameObjectBehavior {
     [HideInInspector]
     public float
         steerInput;

@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace Engine.Graphics {
 
-    public class ProjectorAimController : MonoBehaviour {
+    public class ProjectorAimController : GameObjectBehavior {
         public string sourceName;
         public Transform target;
         public float targetOffset;

@@ -2,7 +2,7 @@ using UnityEngine;
 using System.Collections;
 using System;
 
-public class GameVehicleAIWaypointEditor : MonoBehaviour {
+public class GameVehicleAIWaypointEditor : GameObjectBehavior {
 
     public string folderName = "Waypoints";
     public string preName = "Waypoint";

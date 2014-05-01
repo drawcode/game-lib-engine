@@ -2,7 +2,7 @@ using System.Collections;
 using UnityEngine;
 
 namespace Engine.State {
-    public class ProjectilePool : MonoBehaviour {
+    public class ProjectilePool : GameObjectBehavior {
 
         /// <summary>
         /// The array of emitters to fire when the effect starts.

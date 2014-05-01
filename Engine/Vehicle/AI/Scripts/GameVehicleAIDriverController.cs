@@ -5,7 +5,7 @@ using System;
 
 [RequireComponent(typeof(SplinePathWaypoints))]
 
-public class GameVehicleAIDriverController : MonoBehaviour {
+public class GameVehicleAIDriverController : GameObjectBehavior {
       
     
     private float m_calcMaxSpeed = 200.0f;

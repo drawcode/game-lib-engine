@@ -2,7 +2,7 @@ using UnityEngine;
 using System.Collections;
 
 [ExecuteInEditMode]
-public class SetWheelColliderSettings : MonoBehaviour {
+public class SetWheelColliderSettings : GameObjectBehavior {
     public WheelCollider flWheelCollider;
     public WheelCollider frWheelCollider;
     public WheelCollider rlWheelCollider;

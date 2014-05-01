@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 
 [ExecuteInEditMode]
-public class DrawLineToNext : MonoBehaviour {
+public class DrawLineToNext : GameObjectBehavior {
     
     
     //[HideInInspector]

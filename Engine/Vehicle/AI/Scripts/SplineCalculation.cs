@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class SplineCalculation {
-//public class SplineCalculation : MonoBehaviour{
+//public class SplineCalculation : GameObjectBehavior{
         
     public static List<Vector3> NewCatmullRom(List<Transform> nodes, int slices, bool loop) {
             

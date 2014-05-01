@@ -15,7 +15,7 @@ namespace Engine.Events {
         }
     }
 
-    public class InputSystem : MonoBehaviour {
+    public class InputSystem : GameObjectBehavior {
         private bool inputEnabled = true;
         public bool useAcceleration = false;
 

@@ -1,7 +1,7 @@
 using UnityEngine;
 using System.Collections;
 
-public class ColliderFriction : MonoBehaviour {
+public class ColliderFriction : GameObjectBehavior {
 
     public float frictionValue=0;
     

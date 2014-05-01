@@ -5,6 +5,6 @@ using UnityEngine;
 
 namespace Engine {
 
-    public class BaseEngineBehavior : MonoBehaviour {
+    public class BaseEngineBehavior : GameObjectBehavior {
     }
 }

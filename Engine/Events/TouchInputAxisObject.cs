@@ -6,7 +6,7 @@ using Engine.Utility;
 using UnityEngine;
 
 namespace Engine.Events {
-    public class TouchInputAxisObject : MonoBehaviour {
+    public class TouchInputAxisObject : GameObjectBehavior {
         public Camera collisionCamera;
         public Transform pad;// = gameObject.transform.FindChild("Pad");
         public string axisName = "main";

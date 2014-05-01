@@ -130,7 +130,7 @@ public class BaseGameAudioRecorder2 {
     public virtual void ClearLoadedClips() {
         if (loadedClips != null) {
             foreach (KeyValuePair<string, AudioClip> pair in loadedClips) {
-                MonoBehaviour.Destroy(pair.Value);
+                GameObjectBehavior.Destroy(pair.Value);
             }
 
             loadedClips.Clear();

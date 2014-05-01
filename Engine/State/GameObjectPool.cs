@@ -9,7 +9,7 @@ namespace Engine.State {
         public string name = "";
     }
 
-    public class GameObjectPool : MonoBehaviour {
+    public class GameObjectPool : GameObjectBehavior {
         public static GameObjectPool instance;
 
         /// <summary>

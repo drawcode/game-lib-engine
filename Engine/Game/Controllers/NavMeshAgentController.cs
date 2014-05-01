@@ -6,7 +6,7 @@ using UnityEngine;
 
 namespace Engine.Game.Controllers {
 
-    public class NavMeshAgentController : MonoBehaviour {
+    public class NavMeshAgentController : GameObjectBehavior {
         public NavMeshAgent agent;
         public Vector3 nextDestination;
 

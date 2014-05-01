@@ -3,7 +3,7 @@
 using System;
 using UnityEngine;
 
-public class Container : MonoBehaviour {
+public class Container : GameObjectBehavior {
     public object contained;
 
     private void Awake() {
@@ -11,7 +11,7 @@ public class Container : MonoBehaviour {
     }
 }
 
-public class Destroyer : MonoBehaviour {
+public class Destroyer : GameObjectBehavior {
     public UnityEngine.Object target;
 
     public void OnDestroy() {

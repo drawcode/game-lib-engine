@@ -1,7 +1,7 @@
 using UnityEngine;
 using System.Collections;
 
-public class GameObjectMove : MonoBehaviour {
+public class GameObjectMove : GameObjectBehavior {
 
     public float translationSpeedX = 0f;
     public float translationSpeedY = 1f;

@@ -8,7 +8,7 @@ public enum AnimationType {
 }
 
 [RequireComponent(typeof(Renderer))]
-public class SharedTextureAnimator : MonoBehaviour {
+public class SharedTextureAnimator : GameObjectBehavior {
     public float scrollSpeed = 0.7f;
     public bool animateX = false;
     public bool animateY = true;

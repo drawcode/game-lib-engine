@@ -8,7 +8,7 @@ using UnityEngine;
 namespace Engine.Graphics.Vector {
 
     [AddComponentMenu("Vectrosity/LineManager")]
-    public class LineManager : MonoBehaviour {
+    public class LineManager : GameObjectBehavior {
         private static List<VectorLine> lines;
         private static List<Transform> transforms;
         private static int lineCount = 0;

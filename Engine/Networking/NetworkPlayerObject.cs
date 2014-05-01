@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace Engine.Networking {
 
-    public class NetworkPlayerObject : MonoBehaviour {
+    public class NetworkPlayerObject : GameObjectBehavior {
 #if !UNITY_FLASH
         public bool isMe = false;
 

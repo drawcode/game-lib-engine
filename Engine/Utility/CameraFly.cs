@@ -2,7 +2,7 @@ using System;
 using System.Collections;
 using UnityEngine;
 
-public class CameraFly : MonoBehaviour {
+public class CameraFly : GameObjectBehavior {
     /*
     8-4-6-5 : basic movement
     shift : Makes camera accelerate

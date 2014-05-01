@@ -1,7 +1,7 @@
 using UnityEngine;
 using System.Collections;
 
-public class DestroyObjectTimed : MonoBehaviour {
+public class DestroyObjectTimed : GameObjectBehavior {
     
     public float delay = 5.0f;
     

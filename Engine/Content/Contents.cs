@@ -749,7 +749,7 @@ public class ContentPaths {
 
 }
 
-public class Contents : MonoBehaviour {
+public class Contents : GameObjectBehavior {
 	
 	/*
 	private static volatile Contents instance;

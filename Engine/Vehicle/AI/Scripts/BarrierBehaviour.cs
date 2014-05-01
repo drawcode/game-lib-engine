@@ -1,7 +1,7 @@
 using UnityEngine;
 using System.Collections;
 
-public class BarrierBehaviour : MonoBehaviour {
+public class BarrierBehaviour : GameObjectBehavior {
     
     public bool show = false;
     public bool triggerCollider = true;

@@ -2563,7 +2563,7 @@ Animation:
 EditorExtensionImpl:
   serializedVersion: 6
 --- !u!114 &11400000
-MonoBehaviour:
+GameObjectBehavior:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
@@ -2578,7 +2578,7 @@ MonoBehaviour:
 EditorExtensionImpl:
   serializedVersion: 6
 --- !u!114 &11400002
-MonoBehaviour:
+GameObjectBehavior:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
@@ -2593,7 +2593,7 @@ MonoBehaviour:
 EditorExtensionImpl:
   serializedVersion: 6
 --- !u!114 &11400004
-MonoBehaviour:
+GameObjectBehavior:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
@@ -2608,7 +2608,7 @@ MonoBehaviour:
 EditorExtensionImpl:
   serializedVersion: 6
 --- !u!114 &11400006
-MonoBehaviour:
+GameObjectBehavior:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
@@ -2623,7 +2623,7 @@ MonoBehaviour:
 EditorExtensionImpl:
   serializedVersion: 6
 --- !u!114 &11400008
-MonoBehaviour:
+GameObjectBehavior:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
@@ -2637,7 +2637,7 @@ MonoBehaviour:
 EditorExtensionImpl:
   serializedVersion: 6
 --- !u!114 &11400010
-MonoBehaviour:
+GameObjectBehavior:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
@@ -2652,7 +2652,7 @@ MonoBehaviour:
 EditorExtensionImpl:
   serializedVersion: 6
 --- !u!114 &11400012
-MonoBehaviour:
+GameObjectBehavior:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
@@ -2670,7 +2670,7 @@ MonoBehaviour:
 EditorExtensionImpl:
   serializedVersion: 6
 --- !u!114 &11400014
-MonoBehaviour:
+GameObjectBehavior:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
@@ -2695,7 +2695,7 @@ MonoBehaviour:
 EditorExtensionImpl:
   serializedVersion: 6
 --- !u!114 &11400016
-MonoBehaviour:
+GameObjectBehavior:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
@@ -2755,7 +2755,7 @@ MonoBehaviour:
 EditorExtensionImpl:
   serializedVersion: 6
 --- !u!114 &11400018
-MonoBehaviour:
+GameObjectBehavior:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}

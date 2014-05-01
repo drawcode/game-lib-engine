@@ -1,7 +1,7 @@
 using UnityEngine;
 using System.Collections;
 
-public class GameAIWaypointChangeSet : MonoBehaviour {
+public class GameAIWaypointChangeSet : GameObjectBehavior {
 
     public string tagName = "Untagged";
     public string folderName = "Waypoints";
