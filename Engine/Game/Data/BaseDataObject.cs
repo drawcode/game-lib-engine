@@ -21,6 +21,8 @@ public class BaseDataObjectKeys {
     public static string data = "data";  
     public static string datatype = "datatype";  
     public static string direction = "direction";
+    public static string network = "network";
+    public static string networks = "networks";
     public static string data_platform = "data_platform";
     public static string sort_order = "sort_order";
     public static string sort_order_type = "sort_order_type";

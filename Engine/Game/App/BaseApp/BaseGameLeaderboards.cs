@@ -83,11 +83,11 @@ public class GameLeaderboardData : GameDataObject {
     
     public virtual List<GameNetworkData> networks {
         get {
-            return Get<List<GameNetworkData>>(BaseDataObjectKeys.direction);
+            return Get<List<GameNetworkData>>(BaseDataObjectKeys.networks);
         }
         
         set {
-            Set(BaseDataObjectKeys.direction, value);
+            Set(BaseDataObjectKeys.networks, value);
         }
     }
 }
