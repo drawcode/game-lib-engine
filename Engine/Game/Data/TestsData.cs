@@ -135,9 +135,17 @@ public class TestsData {
         //Advance(testName);
         //success = TestGameTerrainPresets_List(testName);
                 
-        testName = "TestGamePresets_List";
+        //testName = "TestGamePresets_List";
+        //Advance(testName);
+        //success = TestGamePresets_List(testName);
+                
+        //testName = "TestGameAchievements_List";
+        //Advance(testName);
+        //success = TestGameAchievements_List(testName);
+                
+        testName = "TestGameLeaderboards_List";
         Advance(testName);
-        success = TestGamePresets_List(testName);
+        success = TestGameLeaderboards_List(testName);
 
         //
         
@@ -182,6 +190,78 @@ public class TestsData {
         DumpObj(name, "dataB", dataB);
 
         return equal;
+    }
+    public static bool TestGameLeaderboards_List(string name) {
+        
+        bool success = false;
+        
+        Debug.Log(name);
+        
+        List<GameLeaderboard> items = GameLeaderboards.Instance.GetAll();
+        DumpObj(name, "items", items);
+        
+        //AssertEquals(name, username, "Player");
+        
+        foreach(GameLeaderboard item in items) {  
+            
+            Debug.Log("item:code:" + item.code);               
+            Debug.Log("item:json:" + item.ToJson());  
+            
+            GameLeaderboardData data = item.data;
+            
+            if(data != null) {
+                
+                foreach(GameNetworkData dataItem in data.networks) {          
+                    Debug.Log("dataItem:code:" + dataItem.code);         
+                    Debug.Log("dataItem:json:" + dataItem.ToJson());
+                    success = true;                    
+                }
+            }
+        }
+        
+        DumpObj(name, "items.Count", items.Count);
+        
+        return success;
+    }
+    
+    public static bool TestGameAchievements_List(string name) {
+        
+        bool success = false;
+        
+        Debug.Log(name);
+        
+        List<GameAchievement> items = GameAchievements.Instance.GetAll();
+        DumpObj(name, "items", items);
+        
+        //AssertEquals(name, username, "Player");
+        
+        foreach(GameAchievement item in items) {  
+            
+            Debug.Log("item:code:" + item.code);               
+            Debug.Log("item:json:" + item.ToJson());  
+            
+            GameAchievementData data = item.data;
+            
+            if(data != null) {
+                
+                foreach(GameNetworkData dataItem in data.networks) {          
+                    Debug.Log("dataItem:code:" + dataItem.code);         
+                    Debug.Log("dataItem:json:" + dataItem.ToJson());
+                    success = true;                    
+                }
+                                
+                foreach(GameFilter dataItem in data.filters) {          
+                    Debug.Log("dataItem:type:" + dataItem.type);            
+                    Debug.Log("dataItem:data:" + dataItem.data);       
+                    Debug.Log("dataItem:json:" + dataItem.ToJson());
+                    success = true;                    
+                }
+            }
+        }
+        
+        DumpObj(name, "items.Count", items.Count);
+        
+        return success;
     }
     
     public static bool TestGamePresets_List(string name) {

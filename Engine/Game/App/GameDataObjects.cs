@@ -522,6 +522,172 @@ public class GamePresetItem : GameDataObject {
     
 }
 
+public class GameFilterType {
+    public static string statisticSingle = "statistic-single";
+    public static string statisticAll = "statistic-all";
+    public static string statisticLike = "statistic-like";
+    public static string statisticCompare = "statistic-compare";
+    public static string statisticSet = "statistic-set";
+    public static string achievementSet = "achievement-set";
+}
+
+public class GameFilterIncludeType {
+    public static string none = "none";
+    public static string current = "current";
+    public static string all = "all";
+}
+
+public class GameCompareType {
+    public static string like = "like";
+    public static string equal = "equal";
+    public static string startsWith = "startsWith";
+    public static string endsWith = "endsWith";
+    public static string all = "all";
+}
+
+public class GameFilterIncludeKeys : GameDataObject {
+    
+    public GameFilterIncludeKeys() {
+        Reset();
+    }
+    
+    public override void Reset() {
+        base.Reset();
+        
+        defaultKey = GameFilterIncludeType.none;
+        pack = GameFilterIncludeType.none;
+        tracker = GameFilterIncludeType.none;
+        action = GameFilterIncludeType.none;
+        appState = GameFilterIncludeType.none;
+        appContentState = GameFilterIncludeType.none;
+        custom = GameFilterIncludeType.none;
+    }
+}
+
+
+public class GameFilterBase : GameDataObject {    
+    
+    public GameFilterBase() {
+        Reset();
+    }
+    
+    public virtual void Reset() {
+        codeType = GameCompareType.equal;
+        compareType = StatEqualityTypeString.STAT_GREATER_THAN;
+        compareValue = 1.0;
+        includeKeys = new GameFilterIncludeKeys();
+    }
+    
+    public virtual GameFilterIncludeKeys includeKeys {
+        get {
+            return Get<GameFilterIncludeKeys>(BaseDataObjectKeys.includeKeys);
+        }
+        
+        set {
+            Set(BaseDataObjectKeys.includeKeys, value);
+        }
+    }
+    
+    public virtual List<string> codes {
+        get {
+            return Get<List<string>>(BaseDataObjectKeys.codes);
+        }
+        
+        set {
+            Set(BaseDataObjectKeys.codes, value);
+        }
+    }
+    
+    public virtual string codeType {
+        get {
+            return Get<string>(BaseDataObjectKeys.codeType);
+        }
+        
+        set {
+            Set(BaseDataObjectKeys.codeType, value);
+        }
+    }
+    
+    public virtual string compareType {
+        get {
+            return Get<string>(BaseDataObjectKeys.compareType);
+        }
+        
+        set {
+            Set(BaseDataObjectKeys.compareType, value);
+        }
+    }
+    
+    public virtual double compareValue {
+        get {
+            return Get<double>(BaseDataObjectKeys.compareValue);
+        }
+        
+        set {
+            Set(BaseDataObjectKeys.compareValue, value);
+        }
+    }
+    
+    
+    public virtual string codeCompareTo {
+        get {
+            return Get<string>(BaseDataObjectKeys.codeCompareTo);
+        }
+        
+        set {
+            Set<string>(BaseDataObjectKeys.codeCompareTo, value);
+        }
+    }
+    
+    public virtual string codeLike {
+        get {
+            return Get<string>(BaseDataObjectKeys.codeLike);
+        }
+        
+        set {
+            Set<string>(BaseDataObjectKeys.codeLike, value);
+        }
+    }
+    
+}
+
+public class GameFilterStatisticSingle : GameFilterBase {
+    
+}
+
+public class GameFilterStatisticSet : GameFilterBase {
+    
+}
+
+public class GameFilterStatisticLike : GameFilterBase {
+    
+}
+
+public class GameFilterStatisticCompare : GameFilterBase {
+    
+}
+
+public class GameFilterStatisticAll : GameFilterBase {
+    
+}
+
+public class GameFilterAchievementSet : GameFilterBase {
+    
+}
+
+public class GameFilter : GameDataObject {
+    
+    public virtual GameFilterBase data {
+        get {
+            return Get<GameFilterBase>(BaseDataObjectKeys.data);
+        }
+        
+        set {
+            Set(BaseDataObjectKeys.data, value);
+        }
+    }
+}
+
 public class GameDataObject : DataObject {
 
     // Dataobject handles keys
@@ -909,6 +1075,84 @@ public class GameDataObject : DataObject {
             Set<float>(BaseDataObjectKeys.val, value);
         }
     }
+
+    // achievements
+
+    
+    
+    public virtual string defaultKey {
+        get {
+            return Get<string>(BaseDataObjectKeys.defaultKey);
+        }
+        
+        set {
+            Set(BaseDataObjectKeys.defaultKey, value);
+        }
+    }
+    
+    public virtual string pack {
+        get {
+            return Get<string>(BaseDataObjectKeys.pack);
+        }
+        
+        set {
+            Set(BaseDataObjectKeys.pack, value);
+        }
+    }
+    
+    
+    public virtual string tracker {
+        get {
+            return Get<string>(BaseDataObjectKeys.tracker);
+        }
+        
+        set {
+            Set(BaseDataObjectKeys.tracker, value);
+        }
+    }
+    
+    public virtual string action {
+        get {
+            return Get<string>(BaseDataObjectKeys.action);
+        }
+        
+        set {
+            Set(BaseDataObjectKeys.action, value);
+        }
+    }
+    
+    public virtual string appState {
+        get {
+            return Get<string>(BaseDataObjectKeys.appState);
+        }
+        
+        set {
+            Set(BaseDataObjectKeys.appState, value);
+        }
+    }
+    
+    public virtual string appContentState {
+        get {
+            return Get<string>(BaseDataObjectKeys.appContentState);
+        }
+        
+        set {
+            Set(BaseDataObjectKeys.appContentState, value);
+        }
+    }
+    
+    public virtual string custom {
+        get {
+            return Get<string>(BaseDataObjectKeys.custom);
+        }
+        
+        set {
+            Set(BaseDataObjectKeys.custom, value);
+        }
+    }
+
+
+    //
 
     public GameDataObject() {
         Reset();

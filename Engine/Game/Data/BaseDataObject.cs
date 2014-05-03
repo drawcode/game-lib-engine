@@ -183,6 +183,32 @@ public class BaseDataObjectKeys {
 
     public static string amount = "amount";
 
+    // achievements
+    
+    public static string filter = "filter";
+    public static string filters = "filters";
+    public static string defaultKey = "defaultKey";
+    public static string pack = "pack";
+    public static string tracker = "tracker";
+    public static string action = "action";
+    public static string appState = "appState";
+    public static string appContentState = "appContentState";
+    public static string custom = "custom";
+    public static string codes = "codes";
+    
+    public static string codeType = "codeType";
+    public static string compareType = "compareType";
+    public static string compareValue = "compareValue";
+    public static string includeKeys = "includeKeys";
+    
+    public static string codeCompareTo = "codeCompareTo";
+    public static string codeLike = "codeLike";
+
+    public static string points = "points";
+    public static string leaderboard = "leaderboard";
+    public static string game_stat = "game_stat";
+    public static string global = "global";
+
 }
 
 public class BaseDataObject : Dictionary<string, object> {  
