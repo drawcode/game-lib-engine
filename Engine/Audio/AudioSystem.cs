@@ -649,7 +649,9 @@ public class AudioSystem : GameObjectBehavior {
 				//if(currentIntro.clip != null) { 
 	            	yield return new WaitForSeconds(currentIntro.clip.length - 1f);
 				//}
-	            currentIntro.gameObject.AudioTo(0f, 1f, 1f, 0f);
+                if(currentIntro.gameObject != null) {
+	                currentIntro.gameObject.AudioTo(0f, 1f, 1f, 0f);
+                }
 			}
 			
 			ambienceActive = true;
