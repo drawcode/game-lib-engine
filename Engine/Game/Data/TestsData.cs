@@ -139,13 +139,13 @@ public class TestsData {
         //Advance(testName);
         //success = TestGamePresets_List(testName);
                 
-        //testName = "TestGameAchievements_List";
-        //Advance(testName);
-        //success = TestGameAchievements_List(testName);
-                
-        testName = "TestGameLeaderboards_List";
+        testName = "TestGameAchievements_List";
         Advance(testName);
-        success = TestGameLeaderboards_List(testName);
+        success = TestGameAchievements_List(testName);
+                
+        //testName = "TestGameLeaderboards_List";
+        //Advance(testName);
+        //success = TestGameLeaderboards_List(testName);
 
         //
         
@@ -254,9 +254,16 @@ public class TestsData {
                     Debug.Log("dataItem:type:" + dataItem.type);            
                     Debug.Log("dataItem:data:" + dataItem.data);       
                     Debug.Log("dataItem:json:" + dataItem.ToJson());
+
                     success = true;                    
                 }
             }
+
+            List<GameFilterBase> statisticSingles = item.GetFilterStatisticSingle();        
+            Debug.Log("item:statisticSingles:" + statisticSingles);
+                        
+            List<GameFilterBase> statisticAll = item.GetFilterStatisticAll();        
+            Debug.Log("item:statisticAll:" + statisticAll);
         }
         
         DumpObj(name, "items.Count", items.Count);

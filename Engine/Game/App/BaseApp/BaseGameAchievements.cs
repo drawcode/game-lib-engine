@@ -158,9 +158,9 @@ public class BaseGameAchievement : GameDataObject {
     }
 
     
-    public object GameFilterData(GameFilter filter) {
+    public GameFilterBase GameFilterData(GameFilter filter) {
         if (filter != null) {
-            object obj = filter.data;
+            GameFilterBase obj = filter.data;
             if (obj != null) {
                 return obj;
             }
@@ -168,12 +168,12 @@ public class BaseGameAchievement : GameDataObject {
         return null;
     }
 
-    public List<GameFilter> GameFilters(string filterType) {
+    public List<GameFilter> GetGameFilters(string filterType) {
         List<GameFilter> filterList = new List<GameFilter>();
         if (data.filters != null) {
-            foreach (GameFilter o in GameFilters()) {
+            foreach (GameFilter o in GetGameFilters()) {
                 
-                object val = GetFieldValue(o, "type");
+                object val = o.type;//GetFieldValue(o, "type");
                 if (val != null) {
                     if ((string)val == filterType) {
                         filterList.Add(o);
@@ -185,47 +185,47 @@ public class BaseGameAchievement : GameDataObject {
         return null;
     }
     
-    public List<GameFilter> GameFilters() {
+    public List<GameFilter> GetGameFilters() {
         if (data.filters != null) {
             return data.filters;
         }
         return null;
     }
     
-    public List<T> GameFilter<T>(string filterType) where T : GameFilterBase {
-        List<GameFilter> objs = GameFilters(filterType);
-        List<T> ts = new List<T>();
+    public List<GameFilterBase> GetGameFilter(string filterType) {
+        List<GameFilter> objs = GetGameFilters(filterType);
+        List<GameFilterBase> ts = new List<GameFilterBase>();
         if (objs != null) {
-            ts = new List<T>();
+            ts = new List<GameFilterBase>();
             foreach (GameFilter o in objs) {
-                ts.Add((T)o.data);
+                ts.Add(o.data);
             }
         }
         return ts;
     }
     
-    public List<GameFilterStatisticSingle> GetFilterStatisticSingle() {
-        return GameFilter<GameFilterStatisticSingle>(GameFilterType.statisticSingle);
+    public List<GameFilterBase> GetFilterStatisticSingle() {
+        return GetGameFilter(GameFilterType.statisticSingle);
     }
     
-    public List<GameFilterStatisticSet> GetFilterStatisticSet() {
-        return GameFilter<GameFilterStatisticSet>(GameFilterType.statisticSet);
+    public List<GameFilterBase> GetFilterStatisticSet() {
+        return GetGameFilter(GameFilterType.statisticSet);
     }
     
-    public List<GameFilterStatisticAll> GetFilterStatisticAll() {
-        return GameFilter<GameFilterStatisticAll>(GameFilterType.statisticAll);
+    public List<GameFilterBase> GetFilterStatisticAll() {
+        return GetGameFilter(GameFilterType.statisticAll);
     }
     
-    public List<GameFilterStatisticLike> GetFilterStatisticLike() {
-        return GameFilter<GameFilterStatisticLike>(GameFilterType.statisticLike);
+    public List<GameFilterBase> GetFilterStatisticLike() {
+        return GetGameFilter(GameFilterType.statisticLike);
     }
     
-    public List<GameFilterStatisticCompare> GetFilterStatisticCompare() {
-        return GameFilter<GameFilterStatisticCompare>(GameFilterType.statisticCompare);
+    public List<GameFilterBase> GetFilterStatisticCompare() {
+        return GetGameFilter(GameFilterType.statisticCompare);
     }
     //GameFilterStatisticCompare
     
-    public List<GameFilterAchievementSet> GetFilterAchievementSet() {
-        return GameFilter<GameFilterAchievementSet>(GameFilterType.achievementSet);
+    public List<GameFilterBase> GetFilterAchievementSet() {
+        return GetGameFilter(GameFilterType.achievementSet);
     }
 }
