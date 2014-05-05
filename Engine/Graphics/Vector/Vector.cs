@@ -63,7 +63,7 @@ namespace Engine.Graphics.Vector {
         private static int widthIdxAdd;
 
         public static void LogError(string errorString) {
-            Debug.LogError(errorString);
+            LogUtil.LogError(errorString);
             error = true;
         }
 

@@ -27,7 +27,7 @@ namespace Engine.Networking {
                 ipepServer = new IPEndPoint(IPAddress.Parse(host), 0);
             }
             catch (Exception e) {
-                Debug.Log("Error parsing IP address: " + e.ToString());
+                LogUtil.Log("Error parsing IP address: " + e.ToString());
                 return -1;
             }
             EndPoint epServer = (ipepServer);
@@ -55,7 +55,7 @@ namespace Engine.Networking {
             // Generate checksum
             UInt16[] checksum = new UInt16[(int)((float)packetSize / 2)];
 
-            //Debug.Log("Checksum length is " + checksum.Length);
+            //LogUtil.Log("Checksum length is " + checksum.Length);
             int icmpPacketIndex = 0;
             for (int i = 0; i < checksum.Length; i++) {
                 checksum[i] = BitConverter.ToUInt16(icmpPacket, icmpPacketIndex);
@@ -70,7 +70,7 @@ namespace Engine.Networking {
             // Send the ping packet
             startTime = Network.time;
             if (socket.SendTo(sendBuffer, packetSize, 0, epServer) == 0) {
-                Debug.Log("Socket Error cannot Send Packet");
+                LogUtil.Log("Socket Error cannot Send Packet");
             }
 
             // Receive ping response
@@ -82,13 +82,13 @@ namespace Engine.Networking {
                 double stopTime = Network.time;
                 pingTime = (int)((stopTime - startTime) * 1000);
 
-                //Debug.Log("Reply from "+epServer.ToString()+" containing "+rcvBytes+" bytes in "+pingTime+" ms");
+                //LogUtil.Log("Reply from "+epServer.ToString()+" containing "+rcvBytes+" bytes in "+pingTime+" ms");
             }
             catch (SocketException e) {
-                Debug.Log("Socket error: " + e.ToString());
+                LogUtil.Log("Socket error: " + e.ToString());
             }
             catch (Exception e) {
-                Debug.Log("Exception occured when receiving " + e.ToString());
+                LogUtil.Log("Exception occured when receiving " + e.ToString());
             }
 
             socket.Close();

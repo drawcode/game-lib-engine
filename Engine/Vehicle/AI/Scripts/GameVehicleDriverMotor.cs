@@ -168,7 +168,7 @@ public class GameVehicleAIDriverMotor : GameObjectBehavior {
         float delta = tempMaxSpeed - tempMinSpeed;
         currentPitch = (float)((((m_currentSpeed - tempMinSpeed) / delta)) / 2 + 0.8);
 
-        //Debug.Log(currentPitch + ";" + currentSpeed + ";" + tempMinSpeed + ";" + delta +";" + currentGear);
+        //LogUtil.Log(currentPitch + ";" + currentSpeed + ";" + tempMinSpeed + ";" + delta +";" + currentGear);
         if (currentPitch > 2) {
             currentPitch = 2;
         }

@@ -139,9 +139,9 @@ public class CarController : GameObjectBehavior {
 
         foreach (WheelData w in wheels) {
             if (w.graphic == null)
-                Debug.Log("You need to assign all four wheels for the car script!");
+                LogUtil.Log("You need to assign all four wheels for the car script!");
             if (!w.graphic.transform.IsChildOf(transform))
-                Debug.Log("Wheels need to be children of the Object with the car script");
+                LogUtil.Log("Wheels need to be children of the Object with the car script");
 
             w.originalRotation = w.graphic.localRotation;
 

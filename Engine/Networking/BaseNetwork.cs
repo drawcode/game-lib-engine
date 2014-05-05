@@ -221,7 +221,7 @@ namespace Engine.Networking {
         }
 
         private void OnPlayerConnected(NetworkPlayer player) {
-            Debug.Log("BaseNetwork::OnPlayerConnected Player " + playerCount++ + " connected from " + player.ipAddress + ":" + player.port);
+            LogUtil.Log("BaseNetwork::OnPlayerConnected Player " + playerCount++ + " connected from " + player.ipAddress + ":" + player.port);
         }
 
         private void OnPlayerDisconnected(NetworkPlayer player) {

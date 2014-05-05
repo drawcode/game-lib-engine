@@ -231,11 +231,11 @@ public class AppContentActions : BaseAppContentActions<AppContentAction>
 	
 	public List<string> GetListTrackerCodesByPackAndAppState(string packCode, string appState) {
 		
-		//Debug.Log("GetListTrackerCodesByPackAndState:" + " packCode:" + packCode + " appState:" + appState);
+		//LogUtil.Log("GetListTrackerCodesByPackAndState:" + " packCode:" + packCode + " appState:" + appState);
 		
 		List<string> filteredList = new List<string>();
 		foreach(AppContentAction obj in GetListByPackAndState(packCode, appState)) {
-			//Debug.Log("GetListTrackerCodesByPackAndState:" + " obj.code:" + obj.code + " objGetAppTrackers:" + obj.GetAppTrackers()[0]);
+			//LogUtil.Log("GetListTrackerCodesByPackAndState:" + " obj.code:" + obj.code + " objGetAppTrackers:" + obj.GetAppTrackers()[0]);
 			
 			AppContentSet contentSet = GetContentSet(obj, appState);
 			
@@ -254,12 +254,12 @@ public class AppContentActions : BaseAppContentActions<AppContentAction>
 	public List<string> GetListTrackerCodesByPackAndAppContentState(
 		string packCode, string appState, string appContentState) {
 		
-		//Debug.Log("GetListTrackerCodesByPackAndState:" + " packCode:" + packCode + " appState:" + appState);
+		//LogUtil.Log("GetListTrackerCodesByPackAndState:" + " packCode:" + packCode + " appState:" + appState);
 		
 		List<string> filteredList = new List<string>();
 		foreach(AppContentAction obj in GetListByPackAndStateAndContentState(
 			packCode, appState, appContentState)) {
-			//Debug.Log("GetListTrackerCodesByPackAndState:" + " obj.code:" + obj.code + " objGetAppTrackers:" + obj.GetAppTrackers()[0]);
+			//LogUtil.Log("GetListTrackerCodesByPackAndState:" + " obj.code:" + obj.code + " objGetAppTrackers:" + obj.GetAppTrackers()[0]);
 			
 			AppContentSet contentSet = GetContentSet(obj, appState);
 			
@@ -278,11 +278,11 @@ public class AppContentActions : BaseAppContentActions<AppContentAction>
 	/*
 	public List<string> GetListTrackerCodesByPackAndAppContentState(string packCode, string appContentState) {
 		
-		//Debug.Log("GetListTrackerCodesByPackAndState:" + " packCode:" + packCode + " appState:" + appState);
+		//LogUtil.Log("GetListTrackerCodesByPackAndState:" + " packCode:" + packCode + " appState:" + appState);
 		
 		List<string> filteredList = new List<string>();
 		foreach(AppContentAction obj in GetListByPackAndContentState(packCode, appContentState)) {
-			//Debug.Log("GetListTrackerCodesByPackAndState:" + " obj.code:" + obj.code + " objGetAppTrackers:" + obj.GetAppTrackers()[0]);
+			//LogUtil.Log("GetListTrackerCodesByPackAndState:" + " obj.code:" + obj.code + " objGetAppTrackers:" + obj.GetAppTrackers()[0]);
 			foreach(string s in obj.GetCurrentContentSet().GetAppTrackers()) {
 				filteredList.Add(s);
 			}
@@ -1468,7 +1468,7 @@ public class AppContentAction : BaseAppContentAction
 					ts.Add(JsonMapper.ToObject<T>(jsonData));
 				}
 				catch(Exception e) {
-					Debug.Log("ERROR converting achievement filter: " + e + " ::: " + jsonData);
+					LogUtil.Log("ERROR converting achievement filter: " + e + " ::: " + jsonData);
 				}
 			}
 		}
@@ -1675,7 +1675,7 @@ public class AppContentAction : BaseAppContentAction
 				requiredPacks = (List<string>)obj;
 			}
 			catch (Exception e) {
-				//Debug.Log("Attribute object conversion error:" + e);
+				//LogUtil.Log("Attribute object conversion error:" + e);
 			}
 		}
 		return requiredPacks;

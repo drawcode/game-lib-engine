@@ -77,7 +77,7 @@ namespace Engine.Networking {
                 // drop the out-of-order state. Nothing is done here
                 for (int i = 0; i < m_TimestampCount - 1; i++) {
                     if (m_BufferedState[i].timestamp < m_BufferedState[i + 1].timestamp)
-                        Debug.Log("State inconsistent");
+                        LogUtil.Log("State inconsistent");
                 }
             }
         }

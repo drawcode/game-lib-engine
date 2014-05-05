@@ -14,26 +14,26 @@ public class D {
     [System.Diagnostics.Conditional("DEBUG_LEVEL_ERROR")]
     public static void log(object format, params object[] paramList) {
         if (format is string)
-            Debug.Log(string.Format(format as string, paramList));
+            LogUtil.Log(string.Format(format as string, paramList));
         else
-            Debug.Log(format);
+            LogUtil.Log(format);
     }
 
     [System.Diagnostics.Conditional("DEBUG_LEVEL_WARN")]
     [System.Diagnostics.Conditional("DEBUG_LEVEL_ERROR")]
     public static void warn(object format, params object[] paramList) {
         if (format is string)
-            Debug.LogWarning(string.Format(format as string, paramList));
+            LogUtil.LogWarning(string.Format(format as string, paramList));
         else
-            Debug.LogWarning(format);
+            LogUtil.LogWarning(format);
     }
 
     [System.Diagnostics.Conditional("DEBUG_LEVEL_ERROR")]
     public static void error(object format, params object[] paramList) {
         if (format is string)
-            Debug.LogError(string.Format(format as string, paramList));
+            LogUtil.LogError(string.Format(format as string, paramList));
         else
-            Debug.LogError(format);
+            LogUtil.LogError(format);
     }
 
     [System.Diagnostics.Conditional("UNITY_EDITOR")]
@@ -52,7 +52,7 @@ public class D {
     [System.Diagnostics.Conditional("DEBUG_LEVEL_LOG")]
     public static void assert(bool condition, string assertString, bool pauseOnFail) {
         if (!condition) {
-            Debug.LogError("assert failed! " + assertString);
+            LogUtil.LogError("assert failed! " + assertString);
 
             if (pauseOnFail)
                 Debug.Break();

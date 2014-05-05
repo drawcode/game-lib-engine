@@ -52,7 +52,7 @@ public class SetStartPosition : GameObjectBehavior {
                 }
             }
             else {
-                Debug.LogError("StartWaypoint number is to high. Maximum is" + (aiDriverController.waypoints.Count - 1) + "). Please check the Execution Order of the scripts (see the documentation)."); //2012-07-29
+                LogUtil.LogError("StartWaypoint number is to high. Maximum is" + (aiDriverController.waypoints.Count - 1) + "). Please check the Execution Order of the scripts (see the documentation)."); //2012-07-29
             }
         }
     }

@@ -153,10 +153,10 @@ public class DataKeyedObjects<T> {
         //if(fileData.Length > 1000) {
         //      log = fileData.Substring(0, 990);
         //}
-        ////Debug.Log("LoadDataFromPersistent:fileData:" + log + " " + pathKey);
+        ////LogUtil.Log("LoadDataFromPersistent:fileData:" + log + " " + pathKey);
         //}
 
-        ////Debug.Log(">>>LoadDataFromPersistentPacks:" + path);
+        ////LogUtil.Log(">>>LoadDataFromPersistentPacks:" + path);
         LoadDataFromPersistentPacks(path);
 
         return fileData;
@@ -287,7 +287,7 @@ public class DataKeyedObjects<T> {
             }
         }
 
-        ////Debug.Log("!!!!!! PackPathsVersionShared:" + Contents.GetPackPathsVersionedShared().Count);
+        ////LogUtil.Log("!!!!!! PackPathsVersionShared:" + Contents.GetPackPathsVersionedShared().Count);
 
         foreach(string packPath in ContentPaths.GetPackPathsVersionedShared()) {
             string data = "";
@@ -344,9 +344,9 @@ public class DataKeyedObjects<T> {
             FileSystemUtil.EnsureDirectory(fileVersioned);
 
             if(FileSystemUtil.CheckFileExists(fileVersioned)) {
-                ////Debug.Log(">> PACK FILE EXISTS: " + pathData);
+                ////LogUtil.Log(">> PACK FILE EXISTS: " + pathData);
                 data = Contents.GetFileDataFromPersistentCache(pathData, true, true);
-                ////Debug.Log(">> PACK FILE DATA: " + data);
+                ////LogUtil.Log(">> PACK FILE DATA: " + data);
             }
 
             if(!string.IsNullOrEmpty(data)) {
@@ -493,7 +493,7 @@ public class DataKeyedObjects<T> {
 
     /*
     public object GetFieldValue(object obj, string fieldName) {
-        ////Debug.Log("GetFieldValue:obj.GetType():" + obj.GetType());
+        ////LogUtil.Log("GetFieldValue:obj.GetType():" + obj.GetType());
 
         bool hasGet = false;
 
@@ -516,7 +516,7 @@ public class DataKeyedObjects<T> {
     }
 
     public void SetFieldValue(object obj, string fieldName, object fieldValue) {
-        ////Debug.Log("SetFieldValue:obj.GetType():" + obj.GetType());
+        ////LogUtil.Log("SetFieldValue:obj.GetType():" + obj.GetType());
 
         //bool hasSet = false;
 
@@ -614,14 +614,14 @@ public class DataKeyedObjects<T> {
     }
 
     public List<T> GetList(string key, object val) {
-        //Debug.Log("GetList:" + " key:" + key + " val:" + val);
+        //LogUtil.Log("GetList:" + " key:" + key + " val:" + val);
         List<T> list = new List<T>();
         foreach(T t in GetAll()) {
             object obj = GetFieldValue(t, key);
-            //Debug.Log("GetList:" + " obj:" + obj);
+            //LogUtil.Log("GetList:" + " obj:" + obj);
             if(obj != null) {
                 if(obj.Equals(val)) {
-                    //Debug.Log("GetList: adding t:" + t);
+                    //LogUtil.Log("GetList: adding t:" + t);
                     list.Add(t);
                 }
             }
@@ -630,7 +630,7 @@ public class DataKeyedObjects<T> {
     }
      
     public List<T> GetListPack(string key, object val, bool all) {
-        //Debug.Log("GetList:" + " key:" + key + " val:" + val);
+        //LogUtil.Log("GetList:" + " key:" + key + " val:" + val);
         List<T> list = new List<T>();
         foreach(T t in GetAll()) {
             object obj = GetFieldValue(t, key);
@@ -648,7 +648,7 @@ public class DataKeyedObjects<T> {
                     strVal = strVal.ToLower();
                 }
             }
-            //Debug.Log("GetList:" + " obj:" + obj);
+            //LogUtil.Log("GetList:" + " obj:" + obj);
             if(obj != null) {
                 if((obj.Equals(val) 
                  || strObj == strVal)
@@ -662,7 +662,7 @@ public class DataKeyedObjects<T> {
                      )
                  )) {
                     
-                    //Debug.Log("GetList: adding t:" + t);
+                    //LogUtil.Log("GetList: adding t:" + t);
                     list.Add(t);
                 }
             }

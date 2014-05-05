@@ -14,7 +14,7 @@ namespace Engine.Networking {
         }
 
         private void OnPlayerDisconnected(NetworkPlayer player) {
-            Debug.Log("Server destroying player");
+            LogUtil.Log("Server destroying player");
             Network.RemoveRPCs(player, 0);
             Network.DestroyPlayerObjects(player);
         }

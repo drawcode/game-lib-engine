@@ -46,7 +46,7 @@ namespace Engine.Cameras {
                 }
 
                 if (!controller)
-                    Debug.Log("Please assign a target to the camera that has a super mario controller.");
+                    LogUtil.Log("Please assign a target to the camera that has a super mario controller.");
             }
         }
 

@@ -122,7 +122,7 @@ public class DraggableEditing : GameObjectBehavior {
                 grabbed.position = hit.point + grabOffset;
                 grabbed.position = grabbed.position.WithY(grabbedInitialY);
 
-                ///Debug.Log("pos:" + grabbed.position);
+                ///LogUtil.Log("pos:" + grabbed.position);
             }
         }
     }

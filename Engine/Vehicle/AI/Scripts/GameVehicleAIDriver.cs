@@ -325,7 +325,7 @@ public class GameVehicleAIDriver : GameObjectBehavior {
         float delta = tempMaxSpeed - tempMinSpeed;
         currentPitch = (float)((((currentSpeed - tempMinSpeed) / delta)) / 2 + 0.8);
         
-        //Debug.Log(currentPitch + ";" + currentSpeed + ";" + tempMinSpeed + ";" + delta +";" + currentGear);
+        //LogUtil.Log(currentPitch + ";" + currentSpeed + ";" + tempMinSpeed + ";" + delta +";" + currentGear);
         if (currentPitch > 2) {
             currentPitch = 2;
         }
@@ -378,7 +378,7 @@ public class GameVehicleAIDriver : GameObjectBehavior {
             if (moveDirection.sqrMagnitude < sqrDistanceToWaypoint) {
                 
 
-                //Debug.Log("currentWaypoint: " + currentWaypoint.ToString());                     
+                //LogUtil.Log("currentWaypoint: " + currentWaypoint.ToString());                     
                 GameVehicleAIWaypoint aiWaypoint;
                 aiWaypoint = waypoints[currentWaypoint].GetComponent("GameVehicleAIWaypoint") as GameVehicleAIWaypoint;
                 if (aiWaypoint != null) {
@@ -573,7 +573,7 @@ public class GameVehicleAIDriver : GameObjectBehavior {
             centerPointEndLGO.transform.position, 
             out hitLSide, visibleLayers)) {
             leftSideDistance = hitLSide.distance;
-            //Debug.Log("center left: " + hitLSide.collider.gameObject.name);
+            //LogUtil.Log("center left: " + hitLSide.collider.gameObject.name);
         }
         
         if (Physics.Linecast(
@@ -592,7 +592,7 @@ public class GameVehicleAIDriver : GameObjectBehavior {
         //    || (leftDistance == 0 && frontMinDistance > 0) || (rightDistance > leftDistance && frontMinDistance > 0)))
         //{
         //    currentAngle = (-1) * localSteeringAngle;
-        //    //Debug.Log(" 1 leftDistance: " + leftDistance + ";rightDistance: " + rightDistance);
+        //    //LogUtil.Log(" 1 leftDistance: " + leftDistance + ";rightDistance: " + rightDistance);
         //}
 
         ////nach rechts lenken
@@ -666,7 +666,7 @@ public class GameVehicleAIDriver : GameObjectBehavior {
                 || (rightDistance > leftDistance && frontMinDistance > 0) 
                 || (frontContact == false && rightSideDistance > 0))) {
                 result = (-1) * localSteeringAngle;
-                //Debug.Log(" 1 leftDistance: " + leftDistance + ";rightDistance: " + rightDistance);
+                //LogUtil.Log(" 1 leftDistance: " + leftDistance + ";rightDistance: " + rightDistance);
             }
 
                 //nach rechts lenken
@@ -691,7 +691,7 @@ public class GameVehicleAIDriver : GameObjectBehavior {
                 || (leftDistance == 0 && frontMinDistance > 0) 
                 || (rightDistance > leftDistance && frontMinDistance > 0))) {
                 result = (-1) * localSteeringAngle;
-                //Debug.Log(" 1 leftDistance: " + leftDistance + ";rightDistance: " + rightDistance);
+                //LogUtil.Log(" 1 leftDistance: " + leftDistance + ";rightDistance: " + rightDistance);
             }
 
                 //nach rechts lenken

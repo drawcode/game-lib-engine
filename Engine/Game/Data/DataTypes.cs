@@ -730,7 +730,7 @@ public class BaseSerializable<T> {
     public void Load(string fileName) {
 #if !UNITY_WEBPLAYER
         string objectString = FileSystemUtil.ReadString(fileName);
-        Debug.Log(objectString);
+        LogUtil.Log(objectString);
 
         //this = JsonMapper.ToObject<T>(objectString);
 #endif

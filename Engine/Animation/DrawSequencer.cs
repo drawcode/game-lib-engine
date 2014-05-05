@@ -45,7 +45,7 @@ namespace Engine.Animation {
                     if (sequenceItem.Value.type == "tween") {
                         SequenceTween tween = sequenceItem.Value as SequenceTween;
 
-                        Debug.Log(tween.type);
+                        LogUtil.Log(tween.type);
                     }
                     else if (sequenceItem.Value.type == "action") {
 

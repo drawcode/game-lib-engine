@@ -22,7 +22,7 @@ namespace Engine.Graphics {
                 //Find the source object
                 var sourceGO = GameObject.Find(sourceName);
                 if (!sourceGO) {
-                    Debug.Log("Unable to find projector aim source");
+                    LogUtil.Log("Unable to find projector aim source");
                     enabled = false;
                     return;
                 }

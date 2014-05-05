@@ -28,7 +28,7 @@ namespace Engine.Events {
                 cam = Camera.main;
             }
             if (!cam) {
-                Debug.LogError("Can't find camera tagged MainCamera");
+                LogUtil.LogError("Can't find camera tagged MainCamera");
                 return;
             }
 
@@ -53,7 +53,7 @@ namespace Engine.Events {
             if (!gameObject.rigidbody.useGravity) {
                 float _y = yPos - addHeightWhenClicked;
 
-                Debug.Log(_y);
+                LogUtil.Log(_y);
 
                 //gameObject.transform.position.y = _y;
             }

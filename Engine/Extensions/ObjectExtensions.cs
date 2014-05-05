@@ -13,7 +13,7 @@ public static class ObjectExtensions {
             return Engine.Data.Json.JsonMapper.ToJson(inst);
         }
         catch(Exception e) {
-            Debug.LogError("ToJson:FAILED:" + e);
+            LogUtil.LogError("ToJson:FAILED:" + e);
             return null;
         }
     }
@@ -27,7 +27,7 @@ public static class ObjectExtensions {
             return Engine.Data.Json.JsonMapper.ToJson(inst);
         }
         catch(Exception e) {
-            Debug.LogError("ToJson:FAILED:" + e);
+            LogUtil.LogError("ToJson:FAILED:" + e);
             return null;
         }
     }

@@ -17,17 +17,17 @@ namespace Engine.Networking {
                 // Connect to an existing match or attempt to
                 for (int i = 0; i < hostData.Length; i++) {
                     HostData hostDataItem = hostData[i];
-                    Debug.Log("BaseNetworkAutoMatch::FindMatch::");
-                    Debug.Log("Game name: " + hostDataItem.gameName);
-                    Debug.Log("Game comment: " + hostDataItem.comment);
-                    Debug.Log("Game connectedPlayers: " + hostDataItem.connectedPlayers);
-                    Debug.Log("Game gameType: " + hostDataItem.gameType);
-                    Debug.Log("Game guid: " + hostDataItem.guid);
-                    Debug.Log("Game ip: " + hostDataItem.ip);
-                    Debug.Log("Game passwordProtected: " + hostDataItem.passwordProtected);
-                    Debug.Log("Game playerLimit: " + hostDataItem.playerLimit);
-                    Debug.Log("Game port: " + hostDataItem.port);
-                    Debug.Log("Game useNat: " + hostDataItem.useNat);
+                    LogUtil.Log("BaseNetworkAutoMatch::FindMatch::");
+                    LogUtil.Log("Game name: " + hostDataItem.gameName);
+                    LogUtil.Log("Game comment: " + hostDataItem.comment);
+                    LogUtil.Log("Game connectedPlayers: " + hostDataItem.connectedPlayers);
+                    LogUtil.Log("Game gameType: " + hostDataItem.gameType);
+                    LogUtil.Log("Game guid: " + hostDataItem.guid);
+                    LogUtil.Log("Game ip: " + hostDataItem.ip);
+                    LogUtil.Log("Game passwordProtected: " + hostDataItem.passwordProtected);
+                    LogUtil.Log("Game playerLimit: " + hostDataItem.playerLimit);
+                    LogUtil.Log("Game port: " + hostDataItem.port);
+                    LogUtil.Log("Game useNat: " + hostDataItem.useNat);
 
                     if (hostDataItem.connectedPlayers < hostDataItem.playerLimit) {
 

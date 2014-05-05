@@ -200,10 +200,10 @@ public class DataObjects<T> where T : DataObject, new() {
         //if(fileData.Length > 1000) {
         //      log = fileData.Substring(0, 990);
         //}
-        ////Debug.Log("LoadDataFromPersistent:fileData:" + log + " " + pathKey);
+        ////LogUtil.Log("LoadDataFromPersistent:fileData:" + log + " " + pathKey);
         //}
 
-        ////Debug.Log(">>>LoadDataFromPersistentPacks:" + path);
+        ////LogUtil.Log(">>>LoadDataFromPersistentPacks:" + path);
         LoadDataFromPersistentPacks(path);
 
         return fileData;
@@ -328,7 +328,7 @@ public class DataObjects<T> where T : DataObject, new() {
             }
         }
 
-        ////Debug.Log("!!!!!! PackPathsVersionShared:" + Contents.GetPackPathsVersionedShared().Count);
+        ////LogUtil.Log("!!!!!! PackPathsVersionShared:" + Contents.GetPackPathsVersionedShared().Count);
 
         foreach (string packPath in ContentPaths.GetPackPathsVersionedShared()) {
             string data = "";
@@ -379,9 +379,9 @@ public class DataObjects<T> where T : DataObject, new() {
             FileSystemUtil.EnsureDirectory(fileVersioned);
 
             if (FileSystemUtil.CheckFileExists(fileVersioned)) {
-                ////Debug.Log(">> PACK FILE EXISTS: " + pathData);
+                ////LogUtil.Log(">> PACK FILE EXISTS: " + pathData);
                 data = Contents.GetFileDataFromPersistentCache(pathData, true, true);
-                ////Debug.Log(">> PACK FILE DATA: " + data);
+                ////LogUtil.Log(">> PACK FILE DATA: " + data);
             }
 
             if (!string.IsNullOrEmpty(data)) {
@@ -591,7 +591,7 @@ public class DataObjects<T> where T : DataObject, new() {
             return (U)val;
         }
         catch(Exception e) {
-            Debug.Log(e);
+            LogUtil.Log(e);
             return default(U);
         }
     }
@@ -643,14 +643,14 @@ public class DataObjects<T> where T : DataObject, new() {
     }
 
     public List<T> GetList(string key, object val) {
-        //Debug.Log("GetList:" + " key:" + key + " val:" + val);
+        //LogUtil.Log("GetList:" + " key:" + key + " val:" + val);
         List<T> list = new List<T>();
         foreach (T t in GetAll()) {
             object obj = GetFieldValue<object>(t, key);
-            //Debug.Log("GetList:" + " obj:" + obj);
+            //LogUtil.Log("GetList:" + " obj:" + obj);
             if (obj != null) {
                 if (obj.Equals(val)) {
-                    //Debug.Log("GetList: adding t:" + t);
+                    //LogUtil.Log("GetList: adding t:" + t);
                     list.Add(t);
                 }
             }
@@ -659,7 +659,7 @@ public class DataObjects<T> where T : DataObject, new() {
     }
      
     public List<T> GetListPack(string key, object val, bool all) {
-        //Debug.Log("GetList:" + " key:" + key + " val:" + val);
+        //LogUtil.Log("GetList:" + " key:" + key + " val:" + val);
         List<T> list = new List<T>();
         foreach (T t in GetAll()) {
             object obj = GetFieldValue<object>(t, key);
@@ -677,7 +677,7 @@ public class DataObjects<T> where T : DataObject, new() {
                     strVal = strVal.ToLower();
                 }
             }
-            //Debug.Log("GetList:" + " obj:" + obj);
+            //LogUtil.Log("GetList:" + " obj:" + obj);
             if (obj != null) {
                 if ((obj.Equals(val) 
                     || strObj == strVal)
@@ -691,7 +691,7 @@ public class DataObjects<T> where T : DataObject, new() {
                      )
                  )) {
                     
-                    //Debug.Log("GetList: adding t:" + t);
+                    //LogUtil.Log("GetList: adding t:" + t);
                     list.Add(t);
                 }
             }

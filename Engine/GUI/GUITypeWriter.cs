@@ -79,7 +79,7 @@ internal class GUITypeWriter : GameObjectBehavior {
 
         foreach (char letter in _text) {
 
-            //Debug.Log( guiText.GetScreenRect().height / numberOfLines );
+            //LogUtil.Log( guiText.GetScreenRect().height / numberOfLines );
 
             // Width check.  If the guiText gets too wide we need to backtrack to the previous word boundary and insert a newline
             if (guiText.GetScreenRect().width > maxWidth) {

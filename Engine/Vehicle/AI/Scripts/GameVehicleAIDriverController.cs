@@ -225,7 +225,7 @@ public class GameVehicleAIDriverController : GameObjectBehavior {
         m_sqrDistanceToWpOa = roadMaxWidth * roadMaxWidth;
         
         if (steerAngle < hsSteerAngle) {
-            Debug.LogError("hsSteerAngle is bigger then aiPreMotor.steerMax. It has to be lower or equal.");
+            LogUtil.LogError("hsSteerAngle is bigger then aiPreMotor.steerMax. It has to be lower or equal.");
         }
         //ObstacleAvoidance
         if (useObstacleAvoidance) {
@@ -392,8 +392,8 @@ public class GameVehicleAIDriverController : GameObjectBehavior {
             m_leftRightDistanceLength = Vector3.Distance(viewPointRightGO.transform.position, rightDirectionGO.transform.position);
             m_leftRightSideDistanceLength = Vector3.Distance(centerPointRGO.transform.position, centerPointEndRGO.transform.position);            
             m_frontDistanceLength = Vector3.Distance(viewPoint.transform.position, viewPointEndGO.transform.position);
-            //Debug.Log("leftRightDistanceLength: " + leftRightDistanceLength.ToString());
-            //Debug.Log("leftRightSideDistanceLength: " + leftRightSideDistanceLength.ToString());
+            //LogUtil.Log("leftRightDistanceLength: " + leftRightDistanceLength.ToString());
+            //LogUtil.Log("leftRightSideDistanceLength: " + leftRightSideDistanceLength.ToString());
             //frontCollider = GameObject.CreatePrimitive(PrimitiveType.Cube);
             frontCollider = transform.FindChild("ViewPointCollider");                  
             //frontCollider.transform.parent = transform;
@@ -545,7 +545,7 @@ public class GameVehicleAIDriverController : GameObjectBehavior {
             }
             //else if(sqrMagnitude > m_lastSqrDistanceNextWp) 
             //{
-            //  Debug.Log("afterNextSqrDistance: " + afterNextSqrDistance.ToString());
+            //  LogUtil.Log("afterNextSqrDistance: " + afterNextSqrDistance.ToString());
             //  if (m_lastSqrDistanceAfterNextWp > afterNextSqrDistance)
             //  {
             //if i drive aside my waypoint, but I'm on the right way, switch to the next waypoint! --> TESTEN!!!
@@ -643,7 +643,7 @@ public class GameVehicleAIDriverController : GameObjectBehavior {
 
                     if (optimizedWpTargeting) {
                         
-                        //Debug.Log("doublewptest");                    
+                        //LogUtil.Log("doublewptest");                    
                         targetAngleNext = Mathf.Atan2(localTargetNext.x, localTargetNext.z) * Mathf.Rad2Deg;
                         if (Mathf.Abs(targetAngleWp) > Mathf.Abs(targetAngleNext))
                             targetAngleWp = targetAngleNext;
@@ -651,7 +651,7 @@ public class GameVehicleAIDriverController : GameObjectBehavior {
                     }
                     
                     targetAngleWp = Mathf.Clamp(targetAngleWp, (-1) * m_currentMaxSteerAngle, m_currentMaxSteerAngle);//2012-06-30
-                    //Debug.Log("targetAngleOa: " + targetAngleOa + "; targetAngleWp: " + targetAngleWp);
+                    //LogUtil.Log("targetAngleOa: " + targetAngleOa + "; targetAngleWp: " + targetAngleWp);
                     
                     if (!linecastsHitsObject) {
                         
@@ -963,7 +963,7 @@ public class GameVehicleAIDriverController : GameObjectBehavior {
         //if (Physics.Linecast(centerPointLGO.transform.position, centerPointEndLGO.transform.position, out hitLSide, visibleLayers))
         //{
         //    leftSideDistance = hitLSide.distance;
-        //    //Debug.Log("center left: " + hitLSide.collider.gameObject.name);
+        //    //LogUtil.Log("center left: " + hitLSide.collider.gameObject.name);
         //}        
         if (Physics.Linecast(leftFrontSideGO.transform.position, leftFrontSideEndGO.transform.position, out hitLSide, visibleLayers)) {
             hitsObject = true; 

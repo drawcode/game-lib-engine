@@ -101,7 +101,7 @@ public class DataObject {
     }
     
     public object GetFieldValue(object obj, string fieldName) {
-        ////Debug.Log("GetFieldValue:obj.GetType():" + obj.GetType());
+        ////LogUtil.Log("GetFieldValue:obj.GetType():" + obj.GetType());
         
         bool hasGet = false;
         
@@ -124,7 +124,7 @@ public class DataObject {
     }
     
     public void SetFieldValue(object obj, string fieldName, object fieldValue) {
-        ////Debug.Log("SetFieldValue:obj.GetType():" + obj.GetType());
+        ////LogUtil.Log("SetFieldValue:obj.GetType():" + obj.GetType());
         
         //bool hasSet = false;
         

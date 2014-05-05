@@ -22,7 +22,7 @@ public class GameVehicleWheelPosition : GameObjectBehavior {
         else {
             isHittingGround = false; //2013-06-18
             newPos = WheelCol.transform.position - (WheelCol.transform.up * WheelCol.suspensionDistance);   
-            //Debug.Log(gameObject.name + " isHitting FALSE");
+            //LogUtil.Log(gameObject.name + " isHitting FALSE");
         }
         
         transform.position = newPos;

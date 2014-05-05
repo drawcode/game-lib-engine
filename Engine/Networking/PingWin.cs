@@ -53,12 +53,12 @@ namespace Engine.Networking {
                 IntPtr h = IcmpCreateFile();
                 uint retval = IcmpSendEcho(h, addr, ref req, 4, IntPtr.Zero, ref rep, 32, timeout * 1000);
                 if (retval == 0) {
-                    Debug.Log("Error sending ping");
+                    LogUtil.Log("Error sending ping");
                 }
                 IcmpCloseHandle(h);
             }
             catch (Exception e) {
-                Debug.Log("Error doing ping: " + e.ToString());
+                LogUtil.Log("Error doing ping: " + e.ToString());
                 return -1;
             }
             return (int)rep.RoundTripTime;

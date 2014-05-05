@@ -57,7 +57,7 @@ namespace Engine.Networking {
 
         [RPC]
         public IEnumerator LoadLevel(string level, int levelPrefix) {
-            Debug.Log("Loading level " + level + " with prefix " + levelPrefix);
+            LogUtil.Log("Loading level " + level + " with prefix " + levelPrefix);
             lastLevelPrefix = levelPrefix;
 
             // There is no reason to send any more data over the network on the default channel,

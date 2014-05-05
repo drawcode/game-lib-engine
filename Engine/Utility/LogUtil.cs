@@ -35,7 +35,7 @@ public class LogUtil {
     private static volatile LogUtil instance;
     private static System.Object syncRoot = new System.Object();
 
-    public static bool loggingEnabled = true;
+    public static bool loggingEnabled = false;
 
     public static LogUtil Instance {
         get {
@@ -129,7 +129,7 @@ public class LogUtil {
 
     public void LogInternal(string key, object message) {
         if (IsKeyActive(key)) {
-            //Debug.Log(key + "::" + "\r\n\r\n" + message + "\r\n\r\n\r\n");
+            //LogUtil.Log(key + "::" + "\r\n\r\n" + message + "\r\n\r\n\r\n");
             Debug.Log(message);
 
             // Output to Firebug or inspectors as avail in the browser.
@@ -152,6 +152,19 @@ public class LogUtil {
     public void LogErrorInternal(object message) {
         Debug.LogError(message + "\r\n\r\n\r\n");
 
+        // Output to Firebug or inspectors as avail in the browser.
+        if (Application.platform == RuntimePlatform.OSXWebPlayer
+            || Application.platform == RuntimePlatform.WindowsWebPlayer) {
+            if (message.GetType() == typeof(String))
+                Application.ExternalCall("if(console)console.error", message);
+            else
+                Application.ExternalCall("if(console)console.error", message);
+        }
+    }
+        
+    public void LogWarningInternal(object message) {
+        Debug.LogWarning(message + "\r\n\r\n\r\n");
+        
         // Output to Firebug or inspectors as avail in the browser.
         if (Application.platform == RuntimePlatform.OSXWebPlayer
             || Application.platform == RuntimePlatform.WindowsWebPlayer) {
@@ -224,6 +237,14 @@ public class LogUtil {
 
         LogUtil.Instance.LogAdsKeyInternal(message);
     }
+    
+    public static void LogWarning(object message) {
+        
+        if(!loggingEnabled) return;
+        
+        LogUtil.Instance.LogWarningInternal(message);
+    }
+
 
     public static void LogError(object message) {
         
@@ -266,12 +287,12 @@ public class LogUtil {
             list += (i.ToString() + ". " + textures[i].name + "\n");
 
             if (i == 500) {
-                Debug.Log(list);
+                LogUtil.Log(list);
                 list = string.Empty;
             }
         }
 
-        Debug.Log(list);
+        LogUtil.Log(list);
     }
 
     private void ListLoadedAudio() {
@@ -286,7 +307,7 @@ public class LogUtil {
             list += (i.ToString() + ". " + sounds[i].name + "\n");
         }
 
-        Debug.Log(list);
+        LogUtil.Log(list);
     }
 
     private void ListLoadedGameObjects() {
@@ -301,6 +322,6 @@ public class LogUtil {
             list += (i.ToString() + ". " + gos[i].name + "\n");
         }
 
-        Debug.Log(list);
+        LogUtil.Log(list);
     }
 }

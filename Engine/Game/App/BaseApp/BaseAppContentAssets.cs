@@ -60,22 +60,22 @@ public class BaseAppContentAssets<T> : DataObjects<T> where T : DataObject, new(
 
     public static GameObject LoadAsset(string key, string code) {
         
-        Debug.Log("LoadAsset:" + " key:" + key + " code:" + code);
-        //Debug.Log("LoadAsset:" + " code:" + code);
+        LogUtil.Log("LoadAsset:" + " key:" + key + " code:" + code);
+        //LogUtil.Log("LoadAsset:" + " code:" + code);
 
         foreach (AppContentAsset asset in AppContentAssets.Instance.GetAll()) {
 
             if (asset.code == code 
                 && (asset.key == key || string.IsNullOrEmpty(key))) {
                 
-                Debug.Log("LoadAsset2:" + " key:" + key + " code:" + code);
+                LogUtil.Log("LoadAsset2:" + " key:" + key + " code:" + code);
 
                 if (asset != null) {
 
                     string assetCode = asset.code;
                     string path = "";
                     
-                    Debug.Log("LoadAsset:" + " assetCode:" + assetCode + " asset.type:" + asset.type);
+                    LogUtil.Log("LoadAsset:" + " assetCode:" + assetCode + " asset.type:" + asset.type);
 
                     if (asset.type == "resource") {
                         // Load from resources
@@ -98,14 +98,14 @@ public class BaseAppContentAssets<T> : DataObjects<T> where T : DataObject, new(
                         
                         path += assetCode;
                                                 
-                        Debug.Log("LoadAsset:" + " path:" + path);
+                        LogUtil.Log("LoadAsset:" + " path:" + path);
                         
                         GameObject prefabObject = PrefabsPool.PoolPrefab(path);
                         GameObject go = GameObjectHelper.CreateGameObject(
                             prefabObject, Vector3.zero, Quaternion.identity, 
                              true) as GameObject;
                         
-                        Debug.Log("LoadAsset:" + " go:" + go != null);
+                        LogUtil.Log("LoadAsset:" + " go:" + go != null);
 
                         return go;
 

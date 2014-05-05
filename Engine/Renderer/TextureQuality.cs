@@ -11,7 +11,7 @@ public class TextureQuality : GameObjectBehavior {
         if( Application.isEditor )
         {
             QualitySettings.SetQualityLevel(QualitySettings.);
-            Debug.Log( "Texture quality in editor set to: " + QualitySettings.GetQualityLevel() );
+            LogUtil.Log( "Texture quality in editor set to: " + QualitySettings.GetQualityLevel() );
             return;
         }
 
@@ -21,7 +21,7 @@ public class TextureQuality : GameObjectBehavior {
         else
             QualitySettings.SetQualityLevel(QualityLevel.Good);
 
-        Debug.Log( "Texture quality set to: " + QualitySettings.GetQualityLevel() );
+        LogUtil.Log( "Texture quality set to: " + QualitySettings.GetQualityLevel() );
         */
 
         // disable ourself

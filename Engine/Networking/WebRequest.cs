@@ -232,7 +232,7 @@ public class WebRequests : GameObjectBehavior {
 		string urlAppend = paramValues.ToString();
 		url = url + urlAppend;
 		
-		//Debug.Log("url:" + url);
+		//LogUtil.Log("url:" + url);
 		
 		RequestStartCoroutineEnumerator(url, callback);
 	}
@@ -256,7 +256,7 @@ public class WebRequests : GameObjectBehavior {
 	public void RequestStartCoroutineEnumerator(string url, HandleResponseObjectCallback callback, WWWForm form) {
 		
 		if(Context.Current.hasNetworkAccess) {
-			//Debug.Log("WebRequests: url:" + url);
+			//LogUtil.Log("WebRequests: url:" + url);
 			StartCoroutine(WaitForResponse(url, form, callback));
 		}
 		else {			
@@ -305,7 +305,7 @@ public class WebRequests : GameObjectBehavior {
 			responseObject.validResponse = false;
 			responseObject.message = www.error;
 			responseObject.dataValueText = "";
-			Debug.Log("ERROR:" + e);
+			LogUtil.Log("ERROR:" + e);
 		}
 		// Call callback after yield
 		callback(responseObject);
@@ -358,7 +358,7 @@ public class WebRequests : GameObjectBehavior {
 		string urlAppend = paramValues.ToString();
 		url = url + urlAppend;
 		
-		//Debug.Log("url:" + url);
+		//LogUtil.Log("url:" + url);
 		
 		RequestStartBytesCoroutineEnumerator(url, callback);
 	}
@@ -381,7 +381,7 @@ public class WebRequests : GameObjectBehavior {
 	public void RequestStartBytesCoroutineEnumerator(string url, HandleResponseBytesCallback callback, WWWForm form) {
 		
 		if(Context.Current.hasNetworkAccess) {
-			//Debug.Log("WebRequests: url:" + url);
+			//LogUtil.Log("WebRequests: url:" + url);
 			StartCoroutine(WaitForResponseBytes(url, form, callback));
 		}
 		else {			
@@ -461,7 +461,7 @@ public class WebRequests : GameObjectBehavior {
 		string urlAppend = paramValues.ToString();
 		url = url + urlAppend;
 		
-		//Debug.Log("url:" + url);
+		//LogUtil.Log("url:" + url);
 		
 		RequestStartTextCoroutineEnumerator(url, callback);
 	}
@@ -484,7 +484,7 @@ public class WebRequests : GameObjectBehavior {
 	public void RequestStartTextCoroutineEnumerator(string url, HandleResponseTextCallback callback, WWWForm form) {
 		
 		if(Context.Current.hasNetworkAccess) {
-			//Debug.Log("WebRequests: url:" + url);
+			//LogUtil.Log("WebRequests: url:" + url);
 			StartCoroutine(WaitForResponseText(url, form, callback));
 		}
 		else {			

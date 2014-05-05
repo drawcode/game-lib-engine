@@ -26,7 +26,7 @@ public class FPSHUD : GameObjectBehavior {
 
     private void Start() {
         if (!guiText) {
-            Debug.Log("UtilityFramesPerSecond needs a GUIText component!");
+            LogUtil.Log("UtilityFramesPerSecond needs a GUIText component!");
             enabled = false;
             return;
         }

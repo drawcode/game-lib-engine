@@ -114,7 +114,7 @@ public class GoogleTracker
 			string url = UseSsl ? BeaconUrlSsl : BeaconUrl;
 			url += "?" + data;
 			
-			//Debug.Log("TrackPageView: url: " + url);
+			//LogUtil.Log("TrackPageView: url: " + url);
 			
 			Engine.Networking.WebRequests.Instance.RequestGet(url, null, HandleTrackPageViewCallback);
 		}
@@ -122,7 +122,7 @@ public class GoogleTracker
 	
 	void HandleTrackPageViewCallback(Engine.Networking.WebRequests.ResponseObject response) {
 		//string responseText = response.www.text;
-		//Debug.Log("HandleTrackPageViewCallback responseText:" + responseText);		
+		//LogUtil.Log("HandleTrackPageViewCallback responseText:" + responseText);		
 	}
 		
 	public void TrackEvent(string category, string action, string label, int val) {
@@ -152,7 +152,7 @@ public class GoogleTracker
 			string url = UseSsl ? BeaconUrlSsl : BeaconUrl;
 			url += "?" + data;
 			
-			//Debug.Log("TrackEvent: url: " + url);
+			//LogUtil.Log("TrackEvent: url: " + url);
 			
 			Engine.Networking.WebRequests.Instance.RequestGet(url, null, HandleTrackEventCallback);
 		}
@@ -160,7 +160,7 @@ public class GoogleTracker
 	
 	void HandleTrackEventCallback(Engine.Networking.WebRequests.ResponseObject response) {
 		//string responseText = response.www.text;
-		//Debug.Log("HandleTrackEventCallback responseText:" + responseText);		
+		//LogUtil.Log("HandleTrackEventCallback responseText:" + responseText);		
 	}
 		
 	public void TrackTransaction(
@@ -196,7 +196,7 @@ public class GoogleTracker
 			string url = UseSsl ? BeaconUrlSsl : BeaconUrl;
 			url += "?" + data;
 			
-			//Debug.Log("TrackTransaction: url: " + url);
+			//LogUtil.Log("TrackTransaction: url: " + url);
 			
 			Engine.Networking.WebRequests.Instance.RequestGet(url, null, HandleTrackTransactionCallback);
 		}
@@ -204,6 +204,6 @@ public class GoogleTracker
 	
 	void HandleTrackTransactionCallback(Engine.Networking.WebRequests.ResponseObject response) {
 		//string responseText = response.www.text;
-		//Debug.Log("HandleTrackTransactionCallback responseText:" + responseText);		
+		//LogUtil.Log("HandleTrackTransactionCallback responseText:" + responseText);		
 	}
 }

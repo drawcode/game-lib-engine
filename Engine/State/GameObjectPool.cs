@@ -58,7 +58,7 @@ namespace Engine.State {
                     GameObject newObj = Instantiate(Resources.Load(prefabName)) as GameObject;
                     newObj.name = prefabName;
                     PoolObject(newObj);
-                    Debug.Log("item:" + item.name);
+                    LogUtil.Log("item:" + item.name);
                 }
 
                 i++;

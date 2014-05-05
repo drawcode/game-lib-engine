@@ -17,7 +17,7 @@ public class SoundTester : GameObjectBehavior {
         bool hasTouchBegan = false;
         for (int i = 0; i < Input.touchCount; i++) {
             if (Input.GetTouch(i).phase == TouchPhase.Began) {
-                Debug.Log("playing sound");
+                LogUtil.Log("playing sound");
                 hasTouchBegan = true;
                 break;
             }

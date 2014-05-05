@@ -319,7 +319,7 @@ public class ImageJPGEncoder
 	{
 		if(!isDone)
 		{
-			Debug.LogError("ImageJPGEncoder not complete, cannot get bytes!");
+			LogUtil.LogError("ImageJPGEncoder not complete, cannot get bytes!");
 			return new byte[1];
 		}
 		

@@ -46,7 +46,7 @@ namespace Engine.UI {
                 return;
 
             if (!springJoint) {
-                Debug.Log("Adding rigidbody and joint for draggable");
+                LogUtil.Log("Adding rigidbody and joint for draggable");
                 var go = new GameObject("Rigidbody dragger");
                 var body = go.AddComponent("Rigidbody") as Rigidbody;
                 springJoint = go.AddComponent("SpringJoint") as SpringJoint;
@@ -103,7 +103,7 @@ namespace Engine.UI {
             currentPosition = gameObject.transform.position;
             Vector3 angularVelocityBody = gameObject.rigidbody.angularVelocity;
 
-            //Debug.Log("currentPosition:" + currentPosition);
+            //LogUtil.Log("currentPosition:" + currentPosition);
 
             if (currentPosition.x > boundaryXLeft) {
                 currentPosition.x = boundaryXLeft;

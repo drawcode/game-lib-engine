@@ -333,7 +333,7 @@ public class BaseGameProfileCharacter : Profile {
                 
         obj = character_items;
 
-        //UnityEngine.Debug.Log("GameProfileCharacterItems:obj:" + obj.ToJson());
+        //UnityEngine.LogUtil.Log("GameProfileCharacterItems:obj:" + obj.ToJson());
      
         if(obj == null) {
             obj = new GameProfileCharacterItems();

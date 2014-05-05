@@ -246,7 +246,7 @@ public static class GameObjectHelper {
     }
     
     public static void DumpGoToLog(GameObject go) {
-        Debug.Log("DUMP: go:" + go.name + "::::" + GameObjectHelper.DumpGo(go));
+        LogUtil.Log("DUMP: go:" + go.name + "::::" + GameObjectHelper.DumpGo(go));
     }
     
     public static string DumpGo(GameObject go) {
@@ -964,11 +964,11 @@ public static class GameObjectHelper {
         
         Material materialTo = MaterialUtil.LoadMaterialFromResources(materialResourcesPath);
         if (materialTo == null) {
-            Debug.Log("Material not found:" + materialResourcesPath);
+            LogUtil.Log("Material not found:" + materialResourcesPath);
             return;
         }
         
-        //Debug.Log("SetMaterialSwap:" + " materialTo:" + materialTo.name);
+        //LogUtil.Log("SetMaterialSwap:" + " materialTo:" + materialTo.name);
         
         MeshRenderer[] renderers = inst.GetComponents<MeshRenderer>();
         //LogUtil.Log("SetMaterialColor renderers:" + renderers.Length );
@@ -979,7 +979,7 @@ public static class GameObjectHelper {
                     Material[] materialsTo = renderers[i].materials;
                     materialsTo[j] = materialTo;
                     renderers[i].materials = materialsTo;
-                    //Debug.Log("SetMaterialSwap:" + " materialTo2:" + materialTo.name);
+                    //LogUtil.Log("SetMaterialSwap:" + " materialTo2:" + materialTo.name);
                 }
             }
         }
@@ -993,7 +993,7 @@ public static class GameObjectHelper {
                     Material[] materialsTo = renderersChildren[i].materials;
                     materialsTo[j] = materialTo;
                     renderersChildren[i].materials = materialsTo;
-                    //Debug.Log("SetMaterialSwap:" + " materialTo3:" + materialTo.name);
+                    //LogUtil.Log("SetMaterialSwap:" + " materialTo3:" + materialTo.name);
                 }
             }
         }
@@ -1007,7 +1007,7 @@ public static class GameObjectHelper {
                     Material[] materialsTo = skinnedRenderers[i].materials;
                     materialsTo[j] = materialTo;
                     skinnedRenderers[i].materials = materialsTo;
-                    //Debug.Log("SetMaterialSwap:" + " materialTo4:" + materialTo.name);
+                    //LogUtil.Log("SetMaterialSwap:" + " materialTo4:" + materialTo.name);
                 }
             }
         }
@@ -1021,7 +1021,7 @@ public static class GameObjectHelper {
                     Material[] materialsTo = skinnedRenderersChildren[i].materials;
                     materialsTo[j] = materialTo;
                     skinnedRenderersChildren[i].materials = materialsTo;
-                    //Debug.Log("SetMaterialSwap:" + " materialTo5:" + materialTo.name);
+                    //LogUtil.Log("SetMaterialSwap:" + " materialTo5:" + materialTo.name);
                 }
             }
         }

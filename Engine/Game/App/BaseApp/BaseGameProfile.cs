@@ -490,20 +490,20 @@ public class BaseGameProfile : Profile {
 
         attValue = BaseGameProfileDataState.currentMusicVolume;
 
-        //UnityEngine.//Debug.Log("GetAudioMusicVolume ");
-        //UnityEngine.//Debug.Log("GetAudioMusicVolume BaseGameProfileDataState.updatedMusicVolume:" + BaseGameProfileDataState.updatedMusicVolume);
+        //UnityEngine.//LogUtil.Log("GetAudioMusicVolume ");
+        //UnityEngine.//LogUtil.Log("GetAudioMusicVolume BaseGameProfileDataState.updatedMusicVolume:" + BaseGameProfileDataState.updatedMusicVolume);
 
         //if(BaseGameProfileDataState.updatedMusicVolume) {
         //   BaseGameProfileDataState.updatedMusicVolume = false;
-        //UnityEngine.//Debug.Log("GetAudioMusicVolume checking attribute exists:" + BaseGameProfileAttributes.ATT_AUDIO_MUSIC_VOLUME);
+        //UnityEngine.//LogUtil.Log("GetAudioMusicVolume checking attribute exists:" + BaseGameProfileAttributes.ATT_AUDIO_MUSIC_VOLUME);
 
         if (CheckIfAttributeExists(BaseGameProfileAttributes.ATT_AUDIO_MUSIC_VOLUME)) {
 
-            //UnityEngine.//Debug.Log("GetAudioMusicVolume attribute exists:" + BaseGameProfileAttributes.ATT_AUDIO_MUSIC_VOLUME);
+            //UnityEngine.//LogUtil.Log("GetAudioMusicVolume attribute exists:" + BaseGameProfileAttributes.ATT_AUDIO_MUSIC_VOLUME);
 
             attValue = GetAttributeDoubleValue(BaseGameProfileAttributes.ATT_AUDIO_MUSIC_VOLUME);
 
-            //UnityEngine.//Debug.Log("GetAudioMusicVolume attValue:" + attValue);
+            //UnityEngine.//LogUtil.Log("GetAudioMusicVolume attValue:" + attValue);
             BaseGameProfileDataState.currentMusicVolume = attValue;
         }
 

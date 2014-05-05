@@ -260,7 +260,7 @@ namespace Engine.Animation { // custom version in case of others using iTween to
                 CameraFadeFrom(Hash("amount", amount, "time", time));
             }
             else {
-                Debug.LogError("DrawTween Error: You must first add a camera fade object with CameraFadeAdd() before atttempting to use camera fading.");
+                LogUtil.LogError("DrawTween Error: You must first add a camera fade object with CameraFadeAdd() before atttempting to use camera fading.");
             }
         }
 
@@ -316,7 +316,7 @@ namespace Engine.Animation { // custom version in case of others using iTween to
                 ColorFrom(cameraFade, args);
             }
             else {
-                Debug.LogError("DrawTween Error: You must first add a camera fade object with CameraFadeAdd() before atttempting to use camera fading.");
+                LogUtil.LogError("DrawTween Error: You must first add a camera fade object with CameraFadeAdd() before atttempting to use camera fading.");
             }
         }
 
@@ -334,7 +334,7 @@ namespace Engine.Animation { // custom version in case of others using iTween to
                 CameraFadeTo(Hash("amount", amount, "time", time));
             }
             else {
-                Debug.LogError("DrawTween Error: You must first add a camera fade object with CameraFadeAdd() before atttempting to use camera fading.");
+                LogUtil.LogError("DrawTween Error: You must first add a camera fade object with CameraFadeAdd() before atttempting to use camera fading.");
             }
         }
 
@@ -397,7 +397,7 @@ namespace Engine.Animation { // custom version in case of others using iTween to
                 ColorTo(cameraFade, args);
             }
             else {
-                Debug.LogError("DrawTween Error: You must first add a camera fade object with CameraFadeAdd() before atttempting to use camera fading.");
+                LogUtil.LogError("DrawTween Error: You must first add a camera fade object with CameraFadeAdd() before atttempting to use camera fading.");
             }
         }
 
@@ -458,7 +458,7 @@ namespace Engine.Animation { // custom version in case of others using iTween to
             args = DrawTween.CleanArgs(args);
 
             if (!args.Contains("onupdate") || !args.Contains("from") || !args.Contains("to")) {
-                Debug.LogError("DrawTween Error: ValueTo() requires an 'onupdate' callback function and a 'from' and 'to' property.  The supplied 'onupdate' callback must accept a single argument that is the same type as the supplied 'from' and 'to' properties!");
+                LogUtil.LogError("DrawTween Error: ValueTo() requires an 'onupdate' callback function and a 'from' and 'to' property.  The supplied 'onupdate' callback must accept a single argument that is the same type as the supplied 'from' and 'to' properties!");
                 return;
             }
             else {
@@ -482,7 +482,7 @@ namespace Engine.Animation { // custom version in case of others using iTween to
                     args["method"] = "color";
                 }
                 else {
-                    Debug.LogError("DrawTween Error: ValueTo() only works with interpolating Vector3s, Vector2s, floats, ints, Rects and Colors!");
+                    LogUtil.LogError("DrawTween Error: ValueTo() only works with interpolating Vector3s, Vector2s, floats, ints, Rects and Colors!");
                     return;
                 }
 
@@ -897,7 +897,7 @@ namespace Engine.Animation { // custom version in case of others using iTween to
                     }
                 }
                 else {
-                    Debug.Log("NULL transform in DrawTween");
+                    LogUtil.Log("NULL transform in DrawTween");
                 }
             }
 
@@ -1001,7 +1001,7 @@ namespace Engine.Animation { // custom version in case of others using iTween to
                 else {
 
                     //throw error if no AudioSource is available:
-                    Debug.LogError("DrawTween Error: AudioFrom requires an AudioSource.");
+                    LogUtil.LogError("DrawTween Error: AudioFrom requires an AudioSource.");
                     return;
                 }
             }
@@ -3476,7 +3476,7 @@ namespace Engine.Animation { // custom version in case of others using iTween to
                         }
                     }
                     catch (Exception e) {
-                        Debug.Log(e);
+                        LogUtil.Log(e);
                     }
                 }
 
@@ -3562,7 +3562,7 @@ namespace Engine.Animation { // custom version in case of others using iTween to
                 else {
 
                     //throw error if no AudioSource is available:
-                    Debug.LogError("DrawTween Error: AudioTo requires an AudioSource.");
+                    LogUtil.LogError("DrawTween Error: AudioTo requires an AudioSource.");
                     Dispose();
                 }
             }
@@ -3635,7 +3635,7 @@ namespace Engine.Animation { // custom version in case of others using iTween to
                 }
             }
             else {
-                Debug.LogError("DrawTween Error: LookTo needs a 'looktarget' property!");
+                LogUtil.LogError("DrawTween Error: LookTo needs a 'looktarget' property!");
                 Dispose();
             }
 
@@ -3682,7 +3682,7 @@ namespace Engine.Animation { // custom version in case of others using iTween to
 
                 //if only one point is supplied fall back to MoveTo's traditional use since we can't have a curve with one value:
                 if (temp.Length == 1) {
-                    Debug.LogError("DrawTween Error: Attempting a path movement with MoveTo requires an array of more than 1 entry!");
+                    LogUtil.LogError("DrawTween Error: Attempting a path movement with MoveTo requires an array of more than 1 entry!");
                     Dispose();
                 }
                 suppliedPath = new Vector3[temp.Length];
@@ -3693,7 +3693,7 @@ namespace Engine.Animation { // custom version in case of others using iTween to
 
                 //if only one point is supplied fall back to MoveTo's traditional use since we can't have a curve with one value:
                 if (temp.Length == 1) {
-                    Debug.LogError("DrawTween Error: Attempting a path movement with MoveTo requires an array of more than 1 entry!");
+                    LogUtil.LogError("DrawTween Error: Attempting a path movement with MoveTo requires an array of more than 1 entry!");
                     Dispose();
                 }
                 suppliedPath = new Vector3[temp.Length];
@@ -5199,7 +5199,7 @@ namespace Engine.Animation { // custom version in case of others using iTween to
                 else {
 
                     //throw error if no AudioSource is available:
-                    Debug.LogError("DrawTween Error: AudioUpdate requires an AudioSource.");
+                    LogUtil.LogError("DrawTween Error: AudioUpdate requires an AudioSource.");
                     return;
                 }
             }
@@ -5611,7 +5611,7 @@ namespace Engine.Animation { // custom version in case of others using iTween to
                 }
             }
             else {
-                Debug.LogError("DrawTween Error: LookUpdate needs a 'looktarget' property!");
+                LogUtil.LogError("DrawTween Error: LookUpdate needs a 'looktarget' property!");
                 return;
             }
 
@@ -6832,7 +6832,7 @@ namespace Engine.Animation { // custom version in case of others using iTween to
         public static Hashtable Hash(params object[] args) {
             Hashtable hashTable = new Hashtable(args.Length / 2);
             if (args.Length % 2 != 0) {
-                Debug.LogError("Tween Error: Hash requires an even number of arguments!");
+                LogUtil.LogError("Tween Error: Hash requires an even number of arguments!");
                 return null;
             }
             else {
@@ -6945,7 +6945,7 @@ namespace Engine.Animation { // custom version in case of others using iTween to
                     Gizmos.DrawLine(line[i], line[i + 1]); ;
                 }
                 else if (method == "handles") {
-                    Debug.LogError("DrawTween Error: Drawing a line with Handles is temporarily disabled because of compatability issues with Unity 2.6!");
+                    LogUtil.LogError("DrawTween Error: Drawing a line with Handles is temporarily disabled because of compatability issues with Unity 2.6!");
 
                     //UnityEditor.Handles.DrawLine(line[i], line[i+1]);
                 }
@@ -6966,7 +6966,7 @@ namespace Engine.Animation { // custom version in case of others using iTween to
                     Gizmos.DrawLine(currPt, prevPt);
                 }
                 else if (method == "handles") {
-                    Debug.LogError("DrawTween Error: Drawing a path with Handles is temporarily disabled because of compatability issues with Unity 2.6!");
+                    LogUtil.LogError("DrawTween Error: Drawing a path with Handles is temporarily disabled because of compatability issues with Unity 2.6!");
 
                     //UnityEditor.Handles.DrawLine(currPt, prevPt);
                 }
@@ -7057,7 +7057,7 @@ namespace Engine.Animation { // custom version in case of others using iTween to
                 target.AddComponent("DrawTween");
             }
             else {
-                Debug.Log("NULL target in Tween:");
+                LogUtil.Log("NULL target in Tween:");
             }
         }
 
@@ -7152,7 +7152,7 @@ namespace Engine.Animation { // custom version in case of others using iTween to
                         namedcolorvalue = (NamedValueColor)Enum.Parse(typeof(NamedValueColor), (string)tweenArguments["namedcolorvalue"], true);
                     }
                     catch {
-                        Debug.LogWarning("DrawTween: Unsupported namedcolorvalue supplied! Default will be used.");
+                        LogUtil.LogWarning("DrawTween: Unsupported namedcolorvalue supplied! Default will be used.");
                         namedcolorvalue = DrawTween.NamedValueColor._Color;
                     }
                 }
@@ -7172,7 +7172,7 @@ namespace Engine.Animation { // custom version in case of others using iTween to
                         loopType = (LoopType)Enum.Parse(typeof(LoopType), (string)tweenArguments["looptype"], true);
                     }
                     catch {
-                        Debug.LogWarning("DrawTween: Unsupported loopType supplied! Default will be used.");
+                        LogUtil.LogWarning("DrawTween: Unsupported loopType supplied! Default will be used.");
                         loopType = DrawTween.LoopType.none;
                     }
                 }
@@ -7192,7 +7192,7 @@ namespace Engine.Animation { // custom version in case of others using iTween to
                         easeType = (EaseType)Enum.Parse(typeof(EaseType), (string)tweenArguments["easetype"], true);
                     }
                     catch {
-                        Debug.LogWarning("DrawTween: Unsupported easeType supplied! Default will be used.");
+                        LogUtil.LogWarning("DrawTween: Unsupported easeType supplied! Default will be used.");
                         easeType = Defaults.easeType;
                     }
                 }
@@ -7212,7 +7212,7 @@ namespace Engine.Animation { // custom version in case of others using iTween to
                         space = (Space)Enum.Parse(typeof(Space), (string)tweenArguments["space"], true);
                     }
                     catch {
-                        Debug.LogWarning("DrawTween: Unsupported space supplied! Default will be used.");
+                        LogUtil.LogWarning("DrawTween: Unsupported space supplied! Default will be used.");
                         space = Defaults.space;
                     }
                 }
@@ -7418,7 +7418,7 @@ namespace Engine.Animation { // custom version in case of others using iTween to
                     target.SendMessage((string)tweenArguments[callbackType], (object)tweenArguments[callbackType + "params"], SendMessageOptions.DontRequireReceiver);
                 }
                 else {
-                    Debug.LogError("DrawTween Error: Callback method references must be passed as a String!");
+                    LogUtil.LogError("DrawTween Error: Callback method references must be passed as a String!");
                     Destroy(this);
                 }
             }
@@ -7830,49 +7830,49 @@ namespace Engine.Animation { // custom version in case of others using iTween to
         #region Deprecated and Renamed
 
         /*
-	public static void audioFrom(GameObject target, Hashtable args){Debug.LogError("DrawTween Error: audioFrom() has been renamed to AudioFrom().");}
-	public static void audioTo(GameObject target, Hashtable args){Debug.LogError("DrawTween Error: audioTo() has been renamed to AudioTo().");}
-	public static void colorFrom(GameObject target, Hashtable args){Debug.LogError("DrawTween Error: colorFrom() has been renamed to ColorFrom().");}
-	public static void colorTo(GameObject target, Hashtable args){Debug.LogError("DrawTween Error: colorTo() has been renamed to ColorTo().");}
-	public static void fadeFrom(GameObject target, Hashtable args){Debug.LogError("DrawTween Error: fadeFrom() has been renamed to FadeFrom().");}
-	public static void fadeTo(GameObject target, Hashtable args){Debug.LogError("DrawTween Error: fadeTo() has been renamed to FadeTo().");}
-	public static void lookFrom(GameObject target, Hashtable args){Debug.LogError("DrawTween Error: lookFrom() has been renamed to LookFrom().");}
-	public static void lookFromWorld(GameObject target, Hashtable args){Debug.LogError("DrawTween Error: lookFromWorld() has been deprecated. Please investigate LookFrom().");}
-	public static void lookTo(GameObject target, Hashtable args){Debug.LogError("DrawTween Error: lookTo() has been renamed to LookTo().");}
-	public static void lookToUpdate(GameObject target, Hashtable args){Debug.LogError("DrawTween Error: lookToUpdate() has been renamed to LookUpdate().");}
-	public static void lookToUpdateWorld(GameObject target, Hashtable args){Debug.LogError("DrawTween Error: lookToUpdateWorld() has been deprecated. Please investigate LookUpdate().");}
-	public static void moveAdd(GameObject target, Hashtable args){Debug.LogError("DrawTween Error: moveAdd() has been renamed to MoveAdd().");}
-	public static void moveAddWorld(GameObject target, Hashtable args){Debug.LogError("DrawTween Error: moveAddWorld() has been deprecated. Please investigate MoveAdd().");}
-	public static void moveBy(GameObject target, Hashtable args){Debug.LogError("DrawTween Error: moveBy() has been renamed to MoveBy().");}
-	public static void moveByWorld(GameObject target, Hashtable args){Debug.LogError("DrawTween Error: moveAddWorld() has been deprecated. Please investigate MoveAdd().");}
-	public static void moveFrom(GameObject target, Hashtable args){Debug.LogError("DrawTween Error: moveFrom() has been renamed to MoveFrom().");}
-	public static void moveFromWorld(GameObject target, Hashtable args){Debug.LogError("DrawTween Error: moveFromWorld() has been deprecated. Please investigate MoveFrom().");}
-	public static void moveTo(GameObject target, Hashtable args){Debug.LogError("DrawTween Error: moveTo() has been renamed to MoveTo().");}
-	public static void moveToBezier(GameObject target, Hashtable args){Debug.LogError("DrawTween Error: moveToBezier() has been deprecated. Please investigate MoveTo() and the "path" property.");}
-	public static void moveToBezierWorld(GameObject target, Hashtable args){Debug.LogError("DrawTween Error: moveToBezierWorld() has been deprecated. Please investigate MoveTo() and the "path" property.");}
-	public static void moveToUpdate(GameObject target, Hashtable args){Debug.LogError("DrawTween Error: moveToUpdate() has been renamed to MoveUpdate().");}
-	public static void moveToUpdateWorld(GameObject target, Hashtable args){Debug.LogError("DrawTween Error: moveToUpdateWorld() has been deprecated. Please investigate MoveUpdate().");}
-	public static void moveToWorld(GameObject target, Hashtable args){Debug.LogError("DrawTween Error: moveToWorld() has been deprecated. Please investigate MoveTo().");}
-	public static void punchPosition(GameObject target, Hashtable args){Debug.LogError("DrawTween Error: punchPosition() has been renamed to PunchPosition().");}
-	public static void punchPositionWorld(GameObject target, Hashtable args){Debug.LogError("DrawTween Error: punchPositionWorld() has been deprecated. Please investigate PunchPosition().");}
-	public static void punchRotation(GameObject target, Hashtable args){Debug.LogError("DrawTween Error: punchPosition() has been renamed to PunchRotation().");}
-	public static void punchRotationWorld(GameObject target, Hashtable args){Debug.LogError("DrawTween Error: punchRotationWorld() has been deprecated. Please investigate PunchRotation().");}
-	public static void punchScale(GameObject target, Hashtable args){Debug.LogError("DrawTween Error: punchScale() has been renamed to PunchScale().");}
-	public static void rotateAdd(GameObject target, Hashtable args){Debug.LogError("DrawTween Error: rotateAdd() has been renamed to RotateAdd().");}
-	public static void rotateBy(GameObject target, Hashtable args){Debug.LogError("DrawTween Error: rotateBy() has been renamed to RotateBy().");}
-	public static void rotateByWorld(GameObject target, Hashtable args){Debug.LogError("DrawTween Error: rotateByWorld() has been deprecated. Please investigate RotateBy().");}
-	public static void rotateFrom(GameObject target, Hashtable args){Debug.LogError("DrawTween Error: rotateFrom() has been renamed to RotateFrom().");}
-	public static void rotateTo(GameObject target, Hashtable args){Debug.LogError("DrawTween Error: rotateTo() has been renamed to RotateTo().");}
-	public static void scaleAdd(GameObject target, Hashtable args){Debug.LogError("DrawTween Error: scaleAdd() has been renamed to ScaleAdd().");}
-	public static void scaleBy(GameObject target, Hashtable args){Debug.LogError("DrawTween Error: scaleBy() has been renamed to ScaleBy().");}
-	public static void scaleFrom(GameObject target, Hashtable args){Debug.LogError("DrawTween Error: scaleFrom() has been renamed to ScaleFrom().");}
-	public static void scaleTo(GameObject target, Hashtable args){Debug.LogError("DrawTween Error: scaleTo() has been renamed to ScaleTo().");}
-	public static void shake(GameObject target, Hashtable args){Debug.LogError("DrawTween Error: scale() has been deprecated. Please investigate ShakePosition(), ShakeRotation() and ShakeScale().");}
-	public static void shakeWorld(GameObject target, Hashtable args){Debug.LogError("DrawTween Error: shakeWorld() has been deprecated. Please investigate ShakePosition(), ShakeRotation() and ShakeScale().");}
-	public static void stab(GameObject target, Hashtable args){Debug.LogError("DrawTween Error: stab() has been renamed to Stab().");}
-	public static void stop(GameObject target, Hashtable args){Debug.LogError("DrawTween Error: stop() has been renamed to Stop().");}
-	public static void stopType(GameObject target, Hashtable args){Debug.LogError("DrawTween Error: stopType() has been deprecated. Please investigate Stop().");}
-	public static void tweenCount(GameObject target, Hashtable args){Debug.LogError("DrawTween Error: tweenCount() has been deprecated. Please investigate Count().");}
+	public static void audioFrom(GameObject target, Hashtable args){LogUtil.LogError("DrawTween Error: audioFrom() has been renamed to AudioFrom().");}
+	public static void audioTo(GameObject target, Hashtable args){LogUtil.LogError("DrawTween Error: audioTo() has been renamed to AudioTo().");}
+	public static void colorFrom(GameObject target, Hashtable args){LogUtil.LogError("DrawTween Error: colorFrom() has been renamed to ColorFrom().");}
+	public static void colorTo(GameObject target, Hashtable args){LogUtil.LogError("DrawTween Error: colorTo() has been renamed to ColorTo().");}
+	public static void fadeFrom(GameObject target, Hashtable args){LogUtil.LogError("DrawTween Error: fadeFrom() has been renamed to FadeFrom().");}
+	public static void fadeTo(GameObject target, Hashtable args){LogUtil.LogError("DrawTween Error: fadeTo() has been renamed to FadeTo().");}
+	public static void lookFrom(GameObject target, Hashtable args){LogUtil.LogError("DrawTween Error: lookFrom() has been renamed to LookFrom().");}
+	public static void lookFromWorld(GameObject target, Hashtable args){LogUtil.LogError("DrawTween Error: lookFromWorld() has been deprecated. Please investigate LookFrom().");}
+	public static void lookTo(GameObject target, Hashtable args){LogUtil.LogError("DrawTween Error: lookTo() has been renamed to LookTo().");}
+	public static void lookToUpdate(GameObject target, Hashtable args){LogUtil.LogError("DrawTween Error: lookToUpdate() has been renamed to LookUpdate().");}
+	public static void lookToUpdateWorld(GameObject target, Hashtable args){LogUtil.LogError("DrawTween Error: lookToUpdateWorld() has been deprecated. Please investigate LookUpdate().");}
+	public static void moveAdd(GameObject target, Hashtable args){LogUtil.LogError("DrawTween Error: moveAdd() has been renamed to MoveAdd().");}
+	public static void moveAddWorld(GameObject target, Hashtable args){LogUtil.LogError("DrawTween Error: moveAddWorld() has been deprecated. Please investigate MoveAdd().");}
+	public static void moveBy(GameObject target, Hashtable args){LogUtil.LogError("DrawTween Error: moveBy() has been renamed to MoveBy().");}
+	public static void moveByWorld(GameObject target, Hashtable args){LogUtil.LogError("DrawTween Error: moveAddWorld() has been deprecated. Please investigate MoveAdd().");}
+	public static void moveFrom(GameObject target, Hashtable args){LogUtil.LogError("DrawTween Error: moveFrom() has been renamed to MoveFrom().");}
+	public static void moveFromWorld(GameObject target, Hashtable args){LogUtil.LogError("DrawTween Error: moveFromWorld() has been deprecated. Please investigate MoveFrom().");}
+	public static void moveTo(GameObject target, Hashtable args){LogUtil.LogError("DrawTween Error: moveTo() has been renamed to MoveTo().");}
+	public static void moveToBezier(GameObject target, Hashtable args){LogUtil.LogError("DrawTween Error: moveToBezier() has been deprecated. Please investigate MoveTo() and the "path" property.");}
+	public static void moveToBezierWorld(GameObject target, Hashtable args){LogUtil.LogError("DrawTween Error: moveToBezierWorld() has been deprecated. Please investigate MoveTo() and the "path" property.");}
+	public static void moveToUpdate(GameObject target, Hashtable args){LogUtil.LogError("DrawTween Error: moveToUpdate() has been renamed to MoveUpdate().");}
+	public static void moveToUpdateWorld(GameObject target, Hashtable args){LogUtil.LogError("DrawTween Error: moveToUpdateWorld() has been deprecated. Please investigate MoveUpdate().");}
+	public static void moveToWorld(GameObject target, Hashtable args){LogUtil.LogError("DrawTween Error: moveToWorld() has been deprecated. Please investigate MoveTo().");}
+	public static void punchPosition(GameObject target, Hashtable args){LogUtil.LogError("DrawTween Error: punchPosition() has been renamed to PunchPosition().");}
+	public static void punchPositionWorld(GameObject target, Hashtable args){LogUtil.LogError("DrawTween Error: punchPositionWorld() has been deprecated. Please investigate PunchPosition().");}
+	public static void punchRotation(GameObject target, Hashtable args){LogUtil.LogError("DrawTween Error: punchPosition() has been renamed to PunchRotation().");}
+	public static void punchRotationWorld(GameObject target, Hashtable args){LogUtil.LogError("DrawTween Error: punchRotationWorld() has been deprecated. Please investigate PunchRotation().");}
+	public static void punchScale(GameObject target, Hashtable args){LogUtil.LogError("DrawTween Error: punchScale() has been renamed to PunchScale().");}
+	public static void rotateAdd(GameObject target, Hashtable args){LogUtil.LogError("DrawTween Error: rotateAdd() has been renamed to RotateAdd().");}
+	public static void rotateBy(GameObject target, Hashtable args){LogUtil.LogError("DrawTween Error: rotateBy() has been renamed to RotateBy().");}
+	public static void rotateByWorld(GameObject target, Hashtable args){LogUtil.LogError("DrawTween Error: rotateByWorld() has been deprecated. Please investigate RotateBy().");}
+	public static void rotateFrom(GameObject target, Hashtable args){LogUtil.LogError("DrawTween Error: rotateFrom() has been renamed to RotateFrom().");}
+	public static void rotateTo(GameObject target, Hashtable args){LogUtil.LogError("DrawTween Error: rotateTo() has been renamed to RotateTo().");}
+	public static void scaleAdd(GameObject target, Hashtable args){LogUtil.LogError("DrawTween Error: scaleAdd() has been renamed to ScaleAdd().");}
+	public static void scaleBy(GameObject target, Hashtable args){LogUtil.LogError("DrawTween Error: scaleBy() has been renamed to ScaleBy().");}
+	public static void scaleFrom(GameObject target, Hashtable args){LogUtil.LogError("DrawTween Error: scaleFrom() has been renamed to ScaleFrom().");}
+	public static void scaleTo(GameObject target, Hashtable args){LogUtil.LogError("DrawTween Error: scaleTo() has been renamed to ScaleTo().");}
+	public static void shake(GameObject target, Hashtable args){LogUtil.LogError("DrawTween Error: scale() has been deprecated. Please investigate ShakePosition(), ShakeRotation() and ShakeScale().");}
+	public static void shakeWorld(GameObject target, Hashtable args){LogUtil.LogError("DrawTween Error: shakeWorld() has been deprecated. Please investigate ShakePosition(), ShakeRotation() and ShakeScale().");}
+	public static void stab(GameObject target, Hashtable args){LogUtil.LogError("DrawTween Error: stab() has been renamed to Stab().");}
+	public static void stop(GameObject target, Hashtable args){LogUtil.LogError("DrawTween Error: stop() has been renamed to Stop().");}
+	public static void stopType(GameObject target, Hashtable args){LogUtil.LogError("DrawTween Error: stopType() has been deprecated. Please investigate Stop().");}
+	public static void tweenCount(GameObject target, Hashtable args){LogUtil.LogError("DrawTween Error: tweenCount() has been deprecated. Please investigate Count().");}
 	*/
 
         #endregion

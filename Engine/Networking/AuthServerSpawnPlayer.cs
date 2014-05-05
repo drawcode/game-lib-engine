@@ -42,7 +42,7 @@ public class AuthServerSpawnPlayer : BaseEngineBehavior {
     // Also record assigned view IDs so the server can synch the player correctly.
     [RPC]
     private void InitPlayer(NetworkPlayer player, NetworkViewID tViewID, NetworkViewID aViewID) {
-        Debug.Log("Received player init " + player + ". ViewIDs " + tViewID + " and " + aViewID);
+        LogUtil.Log("Received player init " + player + ". ViewIDs " + tViewID + " and " + aViewID);
         localPlayer = player;
         localTransformViewID = tViewID;
         localAnimationViewID = aViewID;
@@ -52,7 +52,7 @@ public class AuthServerSpawnPlayer : BaseEngineBehavior {
     // accordingly.
     [RPC]
     private void SpawnPlayer(NetworkPlayer playerIdentifier, NetworkViewID transformViewID, NetworkViewID animationViewID) {
-        Debug.Log("Instantiating player " + playerIdentifier);
+        LogUtil.Log("Instantiating player " + playerIdentifier);
 
         // TODO check this
         Transform instantiatedPlayer = (Transform)Instantiate(playerPrefab, transform.position, transform.rotation);
@@ -60,7 +60,7 @@ public class AuthServerSpawnPlayer : BaseEngineBehavior {
 
         // Assign view IDs to player object
         if (networkViews.Length != 2) {
-            Debug.Log("Error while spawning player, prefab should have 2 network views, has " + networkViews.Length);
+            LogUtil.Log("Error while spawning player, prefab should have 2 network views, has " + networkViews.Length);
             return;
         }
         else {
@@ -70,7 +70,7 @@ public class AuthServerSpawnPlayer : BaseEngineBehavior {
 
         // Initialize local player
         if (playerIdentifier == localPlayer) {
-            Debug.Log("Enabling user input as this is the local player");
+            LogUtil.Log("Enabling user input as this is the local player");
 
             // W are doing client prediction and thus enable the controller script + user input processing
             instantiatedPlayer.GetComponent<BaseThirdPersonController>().enabled = true;
@@ -93,7 +93,7 @@ public class AuthServerSpawnPlayer : BaseEngineBehavior {
             playerInstance.animationViewID = animationViewID;
             playerInstance.player = playerIdentifier;
             playerInfo.Add(playerInstance);
-            Debug.Log("There are now " + playerInfo.Count + " players active");
+            LogUtil.Log("There are now " + playerInfo.Count + " players active");
         }
     }
 
@@ -105,10 +105,10 @@ public class AuthServerSpawnPlayer : BaseEngineBehavior {
     private void OnNetworkLoadedLevel() {
         if (Network.isServer && Network.connections.Length > 0) {
             foreach (NetworkPlayer p in Network.connections) {
-                Debug.Log("Resending player init to " + p);
+                LogUtil.Log("Resending player init to " + p);
                 NetworkViewID transformViewID = Network.AllocateViewID();
                 NetworkViewID animationViewID = Network.AllocateViewID();
-                Debug.Log("Player given view IDs " + transformViewID + " and " + animationViewID);
+                LogUtil.Log("Player given view IDs " + transformViewID + " and " + animationViewID);
                 networkView.RPC("InitPlayer", p, p, transformViewID, animationViewID);
             }
         }
@@ -116,21 +116,21 @@ public class AuthServerSpawnPlayer : BaseEngineBehavior {
 
     // Send initalization info to the new player, before that he cannot spawn himself
     private void OnPlayerConnected(NetworkPlayer player) {
-        Debug.Log("Sending player init to " + player);
+        LogUtil.Log("Sending player init to " + player);
         NetworkViewID transformViewID = Network.AllocateViewID();
         NetworkViewID animationViewID = Network.AllocateViewID();
-        Debug.Log("Player given view IDs " + transformViewID + " and " + animationViewID);
+        LogUtil.Log("Player given view IDs " + transformViewID + " and " + animationViewID);
         networkView.RPC("InitPlayer", player, player, transformViewID, animationViewID);
     }
 
     private void OnPlayerDisconnected(NetworkPlayer player) {
-        Debug.Log("Cleaning up player " + player);
+        LogUtil.Log("Cleaning up player " + player);
 
         // Destroy the player object this network player spawned
         PlayerInfo deletePlayer = new PlayerInfo();
         foreach (PlayerInfo playerInstance in playerInfo) {
             if (player == playerInstance.player) {
-                Debug.Log("Destroying objects belonging to view ID " + playerInstance.transformViewID);
+                LogUtil.Log("Destroying objects belonging to view ID " + playerInstance.transformViewID);
                 Network.Destroy(playerInstance.transformViewID);
                 deletePlayer = playerInstance;
             }

@@ -19,11 +19,11 @@ namespace Engine.UI {
             // Make sure the user pressed the mouse down
             if (!Input.GetMouseButtonDown(0)) {
 
-                //Debug.Log("No input");
+                //LogUtil.Log("No input");
                 return;
             }
 
-            Debug.Log("Has input");
+            LogUtil.Log("Has input");
 
             Camera mainCamera = FindCamera();
 
@@ -39,7 +39,7 @@ namespace Engine.UI {
                 return;
 
             if (!springJoint) {
-                Debug.Log("Adding rigidbody and joint for draggable");
+                LogUtil.Log("Adding rigidbody and joint for draggable");
                 var go = new GameObject("Rigidbody dragger");
                 var body = go.AddComponent("Rigidbody") as Rigidbody;
                 springJoint = go.AddComponent("SpringJoint") as SpringJoint;

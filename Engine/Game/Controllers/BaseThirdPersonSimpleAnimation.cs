@@ -48,8 +48,8 @@ namespace Engine.Game.Controllers {
             if (isRunning) {
                 var currentSpeed = thirdPersonController.GetSpeed();
 
-                //Debug.Log("currentSpeed:" + currentSpeed);
-                Debug.Log("navAgent:" + navAgent);
+                //LogUtil.Log("currentSpeed:" + currentSpeed);
+                LogUtil.Log("navAgent:" + navAgent);
 
                 if (navAgent != null) {
                     if (navAgent.enabled) {
@@ -57,8 +57,8 @@ namespace Engine.Game.Controllers {
                     }
                 }
 
-                Debug.Log("currentSpeed:" + currentSpeed);
-                Debug.Log("currentSpeed:" + thirdPersonController.walkSpeed);
+                LogUtil.Log("currentSpeed:" + currentSpeed);
+                LogUtil.Log("currentSpeed:" + thirdPersonController.walkSpeed);
 
                 // Fade in run
                 if (currentSpeed > thirdPersonController.walkSpeed) {
@@ -132,7 +132,7 @@ namespace Engine.Game.Controllers {
         }
 
         public void DidAttack() {
-            Debug.Log("DidAttack:");
+            LogUtil.Log("DidAttack:");
             float currentSpeed = thirdPersonController.GetSpeed();
 
             // Fade in run
@@ -155,7 +155,7 @@ namespace Engine.Game.Controllers {
         }
 
         public void DidSkill() {
-            Debug.Log("DidSkill:");
+            LogUtil.Log("DidSkill:");
             float currentSpeed = thirdPersonController.GetSpeed();
 
             // Fade in run

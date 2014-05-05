@@ -93,7 +93,7 @@ public class GameVehicleAIWaypointEditorEditor : Editor
 	                //2011-04-11 cse -B
 	                if (m_container == null)
 	                {
-	                    Debug.LogError("No container found. Place waypoints in scenes directly after pressing the Waypoint Editor button.");
+	                    LogUtil.LogError("No container found. Place waypoints in scenes directly after pressing the Waypoint Editor button.");
 	                    m_editMode = false;
 	                    Repaint();
 	                }

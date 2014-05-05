@@ -134,7 +134,7 @@ public class ObjectPoolManager : GameObjectBehavior {
         }
         
         //if(pool.Count > maxPerPool) {
-        //    Debug.Log("ObjectPool: Too many items in the pool!: " + prefab.name);
+        //    LogUtil.Log("ObjectPool: Too many items in the pool!: " + prefab.name);
         //   return null;
         //}
 
@@ -155,14 +155,14 @@ public class ObjectPoolManager : GameObjectBehavior {
     private void internalDestroy(GameObject obj) {
         if (instance2pool.ContainsKey(obj)) {
 
-            //Debug.Log( "Recyling object " + obj.name );
+            //LogUtil.Log( "Recyling object " + obj.name );
             var pool = instance2pool[obj];
             pool.recycle(obj);
         }
         else {
 
             // This object was not created through the ObjectPoolManager, give a warning and destroy it the "old way"
-            // Debug.Log("Destroying non-pooled object " + obj.name);
+            // LogUtil.Log("Destroying non-pooled object " + obj.name);
             Object.Destroy(obj);
         }
     }

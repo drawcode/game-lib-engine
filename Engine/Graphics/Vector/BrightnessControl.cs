@@ -15,7 +15,7 @@ namespace Engine.Graphics.Vector {
 
         public void Setup(VectorLine line, bool useLine) {
             if (line.lineColors == null) {
-                Debug.LogError("In order to use Brightness.Fog, the line \"" + line.vectorObject.name + "\" must contain segment colors");
+                LogUtil.LogError("In order to use Brightness.Fog, the line \"" + line.vectorObject.name + "\" must contain segment colors");
                 return;
             }
             m_objectNumber = new RefInt(0);

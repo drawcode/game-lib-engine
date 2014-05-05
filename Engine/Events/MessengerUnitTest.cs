@@ -32,7 +32,7 @@ namespace Engine.Events {
 	            throw new Exception("Unit test failure - expected a ListenerException");
 	        } catch (MessengerInternal.ListenerException e) {
 	            // All good
-				Debug.Log(e);
+				LogUtil.Log(e);
 	        }
 	
 	        Messenger<float>.AddListener(eventType2, TestCallbackFloat);
@@ -57,7 +57,7 @@ namespace Engine.Events {
 	        }
 	        catch (MessengerInternal.BroadcastException e) {
 	            // All good
-				Debug.Log(e);
+				LogUtil.Log(e);
 	        }
 	
 	        try {
@@ -66,7 +66,7 @@ namespace Engine.Events {
 	            throw new Exception("Unit test failure - expected a BroadcastException");
 	        } catch (MessengerInternal.BroadcastException e) {
 	            // All good
-				Debug.Log(e);
+				LogUtil.Log(e);
 	        }
 	
 	        try {
@@ -75,7 +75,7 @@ namespace Engine.Events {
 	            throw new Exception("Unit test failure - expected a BroadcastException");
 	        } catch (MessengerInternal.BroadcastException e) {
 	            // All good
-				Debug.Log(e);
+				LogUtil.Log(e);
 	        }
 	
 	    }
@@ -90,7 +90,7 @@ namespace Engine.Events {
 	        }
 	        catch (MessengerInternal.ListenerException e) {
 	            // All good
-				Debug.Log(e);
+				LogUtil.Log(e);
 	        }
 	
 	        Messenger.RemoveListener(eventType1, TestCallback);
@@ -102,7 +102,7 @@ namespace Engine.Events {
 	        }
 	        catch (MessengerInternal.ListenerException e) {
 	            // All good
-				Debug.Log(e);
+				LogUtil.Log(e);
 	        }
 	
 	        
@@ -116,7 +116,7 @@ namespace Engine.Events {
 	        }
 	        catch (MessengerInternal.ListenerException e) {
 	            // All good
-				Debug.Log(e);
+				LogUtil.Log(e);
 	        }
 	    }
 	

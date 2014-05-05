@@ -299,16 +299,16 @@ public class BaseAppContentState : GameDataObject {
 
     public DataPlatformStoreMeta GetDataPlatformAttribute(string key) {
         key = GetPlatformAttributeKey(key);
-        //UnityEngine.Debug.LogWarning("key:" + key);
+        //UnityEngine.LogUtil.LogWarning("key:" + key);
         string json = GetAttributeStringValue(key);
-        //UnityEngine.Debug.LogWarning("json:" + json);
-        //UnityEngine.Debug.LogWarning("json:" + json.Replace("\\\"", "\""));
+        //UnityEngine.LogUtil.LogWarning("json:" + json);
+        //UnityEngine.LogUtil.LogWarning("json:" + json.Replace("\\\"", "\""));
         if(!string.IsNullOrEmpty(json)) {
             try {
                 return JsonMapper.ToObject<DataPlatformStoreMeta>(json);
             }
             catch (Exception e){
-                UnityEngine.Debug.LogWarning("Error parsing DataPlatformStoreMeta" + e);
+                LogUtil.LogWarning("Error parsing DataPlatformStoreMeta" + e);
             }
         }
         return null;

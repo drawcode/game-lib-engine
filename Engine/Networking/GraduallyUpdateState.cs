@@ -117,8 +117,8 @@ namespace Engine.Networking {
                 for (j = 0; j < m_LocalStateCount - 1; j++) {
                     if (m_BufferedState[0].timestamp <= m_LocalBufState[j].timestamp && m_LocalBufState[j].timestamp - m_BufferedState[0].timestamp <= m_TimeThreshold) {
 
-                        //Debug.Log("Comparing state " + j + "localtime: " + m_LocalBufState[j].timestamp  + " networktime: " + m_BufferedState[0].timestamp);
-                        //Debug.Log("Local: " + m_LocalBufState[j].pos + " Network: " + m_BufferedState[0].pos);
+                        //LogUtil.Log("Comparing state " + j + "localtime: " + m_LocalBufState[j].timestamp  + " networktime: " + m_BufferedState[0].timestamp);
+                        //LogUtil.Log("Local: " + m_LocalBufState[j].pos + " Network: " + m_BufferedState[0].pos);
                         m_TimeAccuracy = Mathf.Abs((float)m_LocalBufState[j].timestamp - (float)m_BufferedState[0].timestamp);
                         m_PredictionAccuracy = (Vector3.Distance(m_LocalBufState[j].pos, m_BufferedState[0].pos));
                         match = true;
@@ -127,14 +127,14 @@ namespace Engine.Networking {
                 }
                 if (!match) {
 
-                    //Debug.Log("No match!");
+                    //LogUtil.Log("No match!");
                 }
 
                 // If prediction is off, diverge current location by the amount of the offset
                 else if (m_PredictionAccuracy > m_PredictionThreshold) {
 
-                    //Debug.Log("Error in prediction("+m_PredictionAccuracy+"), local is " + m_LocalBufState[j].pos + " network is " + m_BufferedState[0].pos);
-                    //Debug.Log("Local time: " + m_LocalBufState[j].timestamp + " Network time: " + m_BufferedState[0].timestamp);
+                    //LogUtil.Log("Error in prediction("+m_PredictionAccuracy+"), local is " + m_LocalBufState[j].pos + " network is " + m_BufferedState[0].pos);
+                    //LogUtil.Log("Local time: " + m_LocalBufState[j].timestamp + " Network time: " + m_BufferedState[0].timestamp);
 
                     // Find how far we travelled since the prediction failed
                     Vector3 localMovement = m_LocalBufState[j].pos - m_LocalBufState[0].pos;
@@ -219,15 +219,15 @@ namespace Engine.Networking {
                 // Check integrity, lowest numbered state in the buffer is newest and so on
                 for (int i = 0; i < m_TimestampCount - 1; i++) {
                     if (m_BufferedState[i].timestamp < m_BufferedState[i + 1].timestamp)
-                        Debug.Log("State inconsistent");
+                        LogUtil.Log("State inconsistent");
                 }
 
-                //Debug.Log("stamp: " + info.timestamp + "my time: " + Network.time + "delta: " + (Network.time - info.timestamp));
+                //LogUtil.Log("stamp: " + info.timestamp + "my time: " + Network.time + "delta: " + (Network.time - info.timestamp));
             }
         }
 
         private void SetOwnership() {
-            Debug.Log("Setting ownership for local player");
+            LogUtil.Log("Setting ownership for local player");
             m_IsMine = true;
             StartCoroutine(MonitorLocalMovement());
         }
@@ -302,7 +302,7 @@ namespace Engine.Networking {
                     transform.localPosition = latest.pos;
                     transform.localRotation = latest.rot;
 
-                    //Debug.Log("Extrapolating " + latest.pos);
+                    //LogUtil.Log("Extrapolating " + latest.pos);
                 }
             }
         }

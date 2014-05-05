@@ -251,7 +251,7 @@ public class BaseDataObject : Dictionary<string, object> {
             return defaultValue;
         }
         catch (Exception e) {
-            Debug.Log(e);
+            LogUtil.Log(e);
             return default(T);
         }
     }
@@ -378,7 +378,7 @@ public class BaseDataObject : Dictionary<string, object> {
     // HELPERS, REFLECT
     
     public object GetFieldValue(object obj, string fieldName) {
-        ////Debug.Log("GetFieldValue:obj.GetType():" + obj.GetType());
+        ////LogUtil.Log("GetFieldValue:obj.GetType():" + obj.GetType());
         
         bool hasGet = false;
         
@@ -401,7 +401,7 @@ public class BaseDataObject : Dictionary<string, object> {
     }
     
     public void SetFieldValue(object obj, string fieldName, object fieldValue) {
-        ////Debug.Log("SetFieldValue:obj.GetType():" + obj.GetType());
+        ////LogUtil.Log("SetFieldValue:obj.GetType():" + obj.GetType());
         
         //bool hasSet = false;
         
@@ -592,8 +592,8 @@ public class BaseDataObject : Dictionary<string, object> {
                 return (T)objectValue;
             }
             catch(Exception e) {
-                Debug.Log(e);
-                Debug.Log("ERROR:GetAttributeObjectValue:code:" + code);
+                LogUtil.Log(e);
+                LogUtil.Log("ERROR:GetAttributeObjectValue:code:" + code);
             }
         }
         

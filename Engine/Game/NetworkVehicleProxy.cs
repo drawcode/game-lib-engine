@@ -507,7 +507,7 @@ namespace Engine.Game.Racing {
                             // drop the out-of-order state. Nothing is done here
                             for (int i = 0; i < timestampCount - 1; i++) {
                                 if (bufferedState[i].timestamp < bufferedState[i + 1].timestamp)
-                                    Debug.LogUtil.Log("State inconsistent");
+                                    LogUtil.LogUtil.Log("State inconsistent");
                             }
                         }
                     }
@@ -556,7 +556,7 @@ namespace Engine.Game.Racing {
                                 t = (float)((interpolationTime - lhs.timestamp) / length);
                             }
 
-                            //      Debug.Log(t);
+                            //      LogUtil.Log(t);
                             // if t=0 => lhs is used directly
                             target.transform.localPosition = Vector3.Lerp(lhs.pos, rhs.pos, t);
                             target.transform.localRotation = Quaternion.Slerp(lhs.rot, rhs.rot, t);

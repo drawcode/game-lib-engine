@@ -407,7 +407,7 @@ namespace Engine.Data.Json {
                         elem_type = t_data.ElementType;
                         found = true;
 
-                        UnityEngine.Debug.Log(
+                        UnityEngine.LogUtil.Log(
                             string.Format(
                             "JSON:Array: List created dictionary: {0}", list));  
                     }
@@ -417,13 +417,13 @@ namespace Engine.Data.Json {
                             elem_type = t_data.ElementType;
                             found = true;
 
-                            UnityEngine.Debug.Log(
+                            UnityEngine.LogUtil.Log(
                                 string.Format(
                                 "JSON:Array: List created object array: {0}", list)); 
                         }
                         catch(Exception ex) {
                             
-                            UnityEngine.Debug.Log(
+                            UnityEngine.LogUtil.Log(
                                 string.Format(
                                 "JSON:Array: List failed: {0}", ex)); 
                         }

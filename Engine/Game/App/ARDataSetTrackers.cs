@@ -112,7 +112,7 @@ public class ARDataSetTrackers : BaseARDataSetTrackers<ARDataSetTracker>
 			if(tracker.name.ToLower() == trackerName.ToLower() 
 				&& tracker.pack_code.ToLower() == packCode.ToLower()) {
 				SetTrackerFound(tracker);
-				////Debug.Log("SetTrackerLost: trackerName:" + trackerName);
+				////LogUtil.Log("SetTrackerLost: trackerName:" + trackerName);
 				//break;
 			}
 		}
@@ -149,7 +149,7 @@ public class ARDataSetTrackers : BaseARDataSetTrackers<ARDataSetTracker>
 			if(tracker.name.ToLower() == trackerName.ToLower() 
 				&& tracker.pack_code.ToLower() == packCode.ToLower()) {
 				SetTrackerLost(tracker);
-				////Debug.Log("SetTrackerLost: trackerName:" + trackerName);
+				////LogUtil.Log("SetTrackerLost: trackerName:" + trackerName);
 				//break;
 			}
 		}
@@ -199,11 +199,11 @@ public class ARDataSetTrackers : BaseARDataSetTrackers<ARDataSetTracker>
 		}
 		
 		
-		//Debug.Log("SetTrackerFound:trackerName:" + trackerTo.name);
-		//Debug.Log("SetTrackerFound:currentTrackers:" + currentTrackers.Count);
+		//LogUtil.Log("SetTrackerFound:trackerName:" + trackerTo.name);
+		//LogUtil.Log("SetTrackerFound:currentTrackers:" + currentTrackers.Count);
 		
 		//foreach(ARDataSetTracker tr in currentTrackers) {			
-			//Debug.Log("SetTrackerFound:tracker:" + tr.name + " trackerCode:" + tr.code);
+			//LogUtil.Log("SetTrackerFound:tracker:" + tr.name + " trackerCode:" + tr.code);
 		//}
 	}
 	
@@ -220,11 +220,11 @@ public class ARDataSetTrackers : BaseARDataSetTrackers<ARDataSetTracker>
 			currentSelectedTrackers.RemoveAll(item => item.code.ToLower() == tracker.code.ToLower());
 		}
 		
-		//Debug.Log("SetTrackerLost:trackerName:" + tracker.name);
-		//Debug.Log("SetTrackerLost:currentTrackers:" + currentTrackers.Count);
+		//LogUtil.Log("SetTrackerLost:trackerName:" + tracker.name);
+		//LogUtil.Log("SetTrackerLost:currentTrackers:" + currentTrackers.Count);
 		
 		//foreach(ARDataSetTracker tr in currentTrackers) {			
-			//Debug.Log("SetTrackerLost:tracker:" + tr.name + " trackerCode:" + tr.code);
+			//LogUtil.Log("SetTrackerLost:tracker:" + tr.name + " trackerCode:" + tr.code);
 		//}
 	}
 	

@@ -123,7 +123,7 @@ namespace Engine.Graphics.Vector {
 
         public static void VisibilityStaticRemove(int objectNumber) {
             if (objectNumber >= vectorLines.Count) {
-                Debug.LogError("VectorManager: object number exceeds array length in VisibilityStaticRemove");
+                LogUtil.LogError("VectorManager: object number exceeds array length in VisibilityStaticRemove");
                 return;
             }
 
@@ -162,7 +162,7 @@ namespace Engine.Graphics.Vector {
 
         public static void VisibilityRemove(int objectNumber) {
             if (objectNumber >= vectorLines2.Count) {
-                Debug.LogError("VectorManager: object number exceeds array length in VisibilityRemove");
+                LogUtil.LogError("VectorManager: object number exceeds array length in VisibilityRemove");
                 return;
             }
             for (int i = objectNumber + 1; i < _arrayCount2; i++) {
@@ -204,7 +204,7 @@ namespace Engine.Graphics.Vector {
 
         public static void DistanceRemove(int objectNumber) {
             if (objectNumber >= vectorLines3.Count) {
-                Debug.LogError("VectorManager: object number exceeds array length in DistanceRemove");
+                LogUtil.LogError("VectorManager: object number exceeds array length in DistanceRemove");
                 return;
             }
 
@@ -291,7 +291,7 @@ namespace Engine.Graphics.Vector {
 
         public static Bounds GetBounds(VectorLine line) {
             if (line.points3 == null) {
-                Debug.LogError("VectorManager: GetBounds can only be used with a Vector3 array");
+                LogUtil.LogError("VectorManager: GetBounds can only be used with a Vector3 array");
                 return new Bounds();
             }
             return GetBounds(line.points3);

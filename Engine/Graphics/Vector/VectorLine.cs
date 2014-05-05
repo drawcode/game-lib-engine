@@ -264,20 +264,20 @@ namespace Engine.Graphics.Vector {
             m_fillJoins = (joins == Joins.Fill ? true : false);
             m_continuousLine = (lineType == LineType.Continuous ? true : false);
             if (m_fillJoins && !continuousLine) {
-                Debug.LogError("VectorLine: Must use LineType.Continuous if using Joins.Fill for \"" + lineName + "\"");
+                LogUtil.LogError("VectorLine: Must use LineType.Continuous if using Joins.Fill for \"" + lineName + "\"");
                 return;
             }
             if ((use2Dlines && points2 == null) || (!use2Dlines && points3 == null)) {
-                Debug.LogError("VectorLine: the points array is null for \"" + lineName + "\"");
+                LogUtil.LogError("VectorLine: the points array is null for \"" + lineName + "\"");
                 return;
             }
             int pointsLength = use2Dlines ? points2.Length : points3.Length;
             if (!usePoints && pointsLength < 2) {
-                Debug.LogError("The points array must contain at least two points");
+                LogUtil.LogError("The points array must contain at least two points");
                 return;
             }
             if (!continuousLine && pointsLength % 2 != 0) {
-                Debug.LogError("VectorLine: Must have an even points array length for \"" + lineName + "\" when using LineType.Discrete");
+                LogUtil.LogError("VectorLine: Must have an even points array length for \"" + lineName + "\" when using LineType.Discrete");
                 return;
             }
 
@@ -290,20 +290,20 @@ namespace Engine.Graphics.Vector {
             if (!usePoints) {
                 if (continuousLine) {
                     if (useSegmentColors && colors.Length != pointsLength - 1) {
-                        Debug.LogWarning("VectorLine: Length of color array for \"" + lineName + "\" must be length of points array minus one...disabling segment colors");
+                        LogUtil.LogWarning("VectorLine: Length of color array for \"" + lineName + "\" must be length of points array minus one...disabling segment colors");
                         useSegmentColors = false;
                     }
                 }
                 else {
                     if (useSegmentColors && colors.Length != pointsLength / 2) {
-                        Debug.LogWarning("VectorLine: Length of color array for \"" + lineName + "\" must be exactly half the length of points array...disabling segment colors");
+                        LogUtil.LogWarning("VectorLine: Length of color array for \"" + lineName + "\" must be exactly half the length of points array...disabling segment colors");
                         useSegmentColors = false;
                     }
                 }
             }
             else {
                 if (useSegmentColors && colors.Length != pointsLength) {
-                    Debug.LogWarning("VectorLine: Length of color array for \"" + lineName + "\" must be the same length as the points array...disabling segment colors");
+                    LogUtil.LogWarning("VectorLine: Length of color array for \"" + lineName + "\" must be the same length as the points array...disabling segment colors");
                     useSegmentColors = false;
                 }
             }
@@ -327,7 +327,7 @@ namespace Engine.Graphics.Vector {
 
         public void Resize(Vector3[] linePoints) {
             if (points2 != null) {
-                Debug.LogError("Must supply a Vector2 array instead of a Vector3 array for this line");
+                LogUtil.LogError("Must supply a Vector2 array instead of a Vector3 array for this line");
                 return;
             }
             points3 = linePoints;
@@ -337,7 +337,7 @@ namespace Engine.Graphics.Vector {
 
         public void Resize(Vector2[] linePoints) {
             if (points3 != null) {
-                Debug.LogError("Must supply a Vector3 array instead of a Vector2 array for this line");
+                LogUtil.LogError("Must supply a Vector3 array instead of a Vector2 array for this line");
                 return;
             }
             points2 = linePoints;
@@ -358,7 +358,7 @@ namespace Engine.Graphics.Vector {
 
         private void RebuildMesh(bool use2Dlines, int pointsLength) {
             if (!continuousLine && pointsLength % 2 != 0) {
-                Debug.LogError("VectorLine.Resize: Must have an even points array length for \"" + vectorObject.name + "\" when using LineType.Discrete");
+                LogUtil.LogError("VectorLine.Resize: Must have an even points array length for \"" + vectorObject.name + "\" when using LineType.Discrete");
                 return;
             }
 
@@ -406,7 +406,7 @@ namespace Engine.Graphics.Vector {
                 triLength = pointsLength / 2 * 6;
             }
             if (vertLength > 65534) {
-                Debug.LogError("VectorLine: exceeded maximum vertex count of 65534 for \"" + vectorObject.name + "\"...use fewer points");
+                LogUtil.LogError("VectorLine: exceeded maximum vertex count of 65534 for \"" + vectorObject.name + "\"...use fewer points");
                 return;
             }
 
