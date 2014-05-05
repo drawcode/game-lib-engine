@@ -57,25 +57,28 @@ public class AppColors : BaseAppColors<AppColor> {
     public static Color GetColor(string code) {
 
         Color colorTo = Color.white;
+
+        if(GameConfigs.globalReady) {
                         
-        if(!cachedColors.ContainsKey(code)) {
+            if(!cachedColors.ContainsKey(code)) {
 
-            //if(GameGlobal.Instance != null) {
-         
-                AppColor color = AppColors.Instance.GetByCode(code);
+                //if(GameGlobal.Instance != null) {
+             
+                    AppColor color = AppColors.Instance.GetByCode(code);
 
-                if(color != null) {
-                    colorTo = color.GetColor();
-                }
+                    if(color != null) {
+                        colorTo = color.GetColor();
+                    }
 
-                if(colorTo != Color.white) {
-                    cachedColors.Add(code, colorTo);            
-                }
-            //}
+                    if(colorTo != Color.white) {
+                        cachedColors.Add(code, colorTo);            
+                    }
+                //}
 
-        }
-        else {
-            colorTo = cachedColors[code];
+            }
+            else {
+                colorTo = cachedColors[code];
+            }
         }
 
         return colorTo;

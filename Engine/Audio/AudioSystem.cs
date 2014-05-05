@@ -291,7 +291,12 @@ public class AudioSystem : GameObjectBehavior {
             DontDestroyOnLoad(goClip);
         }
         goClip.transform.parent = FindOrCreateSoundContainer().transform;
-        goClip.transform.position = Camera.main.transform.position;
+        if(Camera.main != null && Camera.main.transform != null) {
+            goClip.transform.position = Camera.main.transform.position;
+        }
+        else {
+            goClip.transform.position = Vector3.zero;
+        }
         goClip.audio.clip = currentIntroClip;
         goClip.audio.loop = loop;
         goClip.audio.volume = (float)volume;
@@ -330,7 +335,12 @@ public class AudioSystem : GameObjectBehavior {
             goClip.transform.parent = FindGameGlobal();
         }
         goClip.transform.parent = FindOrCreateDisposableSoundContainer().transform;
-        goClip.transform.position = Camera.main.transform.position;
+        if(Camera.main != null && Camera.main.transform != null) {
+            goClip.transform.position = Camera.main.transform.position;
+        }
+        else {
+            goClip.transform.position = Vector3.zero;
+        }
         goClip.audio.clip = currentGameLoopClip;
         goClip.audio.loop = loop;
         goClip.audio.volume = (float)volume;
@@ -350,7 +360,12 @@ public class AudioSystem : GameObjectBehavior {
             DontDestroyOnLoad(gameObject);
         }
         goClip.transform.parent = FindOrCreateSoundContainer().transform;
-        goClip.transform.position = Camera.main.transform.position;
+        if(Camera.main != null && Camera.main.transform != null) {
+            goClip.transform.position = Camera.main.transform.position;
+        }
+        else {
+            goClip.transform.position = Vector3.zero;
+        }
         goClip.audio.clip = currentLoopClip;
         goClip.audio.loop = loop;
         goClip.audio.volume = (float)volume;
@@ -370,7 +385,12 @@ public class AudioSystem : GameObjectBehavior {
             DontDestroyOnLoad(gameObject);
         }
         goClip.transform.parent = FindOrCreateSoundContainer().transform;
-        goClip.transform.position = Camera.main.transform.position;
+        if(Camera.main != null && Camera.main.transform != null) {
+            goClip.transform.position = Camera.main.transform.position;
+        }
+        else {
+            goClip.transform.position = Vector3.zero;
+        }
         goClip.audio.clip = currentGameClips[index];
         goClip.audio.loop = loop;
         goClip.audio.volume = (float)volume;
