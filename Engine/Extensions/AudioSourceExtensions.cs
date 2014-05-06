@@ -9,6 +9,10 @@ public static class AudioSourceExtensions {
             return;
         }
 
+        if(audioSource.audio == null) {
+            return;
+        }
+
         if(audioSource.isPlaying) {
             audioSource.Stop();
         }

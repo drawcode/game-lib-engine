@@ -57,6 +57,75 @@ public class BaseAppContentAssets<T> : DataObjects<T> where T : DataObject, new(
     public static GameObject LoadAsset(string code) {
         return LoadAsset("", code);
     }
+    
+    public static GameObject LoadAssetPrefab(string code) {
+        return LoadAssetPrefab("", code);
+    }
+
+    public static GameObject LoadAssetPrefab(string key, string code) {
+        
+        LogUtil.Log("LoadAsset:" + " key:" + key + " code:" + code);
+        //LogUtil.Log("LoadAsset:" + " code:" + code);
+        
+        foreach (AppContentAsset asset in AppContentAssets.Instance.GetAll()) {
+            
+            if (asset.code == code 
+                && (asset.key == key || string.IsNullOrEmpty(key))) {
+                
+                LogUtil.Log("LoadAsset2:" + " key:" + key + " code:" + code);
+                
+                if (asset != null) {
+                    
+                    string assetCode = asset.code;
+                    string path = "";
+                    
+                    LogUtil.Log("LoadAsset:" + " assetCode:" + assetCode + " asset.type:" + asset.type);
+                    
+                    if (asset.type == "resource") {
+                        // Load from resources
+                        
+                        if (asset.key.StartsWith("level")) {                    
+                            path = ContentPaths.appCacheVersionSharedPrefabLevelAssets;
+                        }
+                        else if (asset.key.StartsWith("character")) {                    
+                            path = ContentPaths.appCacheVersionSharedPrefabCharacters;
+                        }
+                        else if (asset.key.StartsWith("weapon")) {                    
+                            path = ContentPaths.appCacheVersionSharedPrefabWeapons;
+                        }
+                        else if (asset.key.StartsWith("world")) {                    
+                            path = ContentPaths.appCacheVersionSharedPrefabWorlds;
+                        }
+                        else if (asset.key.StartsWith("vehicle")) {                    
+                            path = ContentPaths.appCacheVersionSharedPrefabVehicles;
+                        }
+                        
+                        path += assetCode;
+                        
+                        LogUtil.Log("LoadAsset:" + " path:" + path);
+                        
+                        GameObject prefabObject = PrefabsPool.PoolPrefab(path);
+                        
+                        LogUtil.Log("LoadAsset:" + " prefabObject:" + prefabObject != null);
+                        
+                        return prefabObject;
+                        
+                    }
+                    else if (asset.type == "streaming") {
+                        // Load from resources
+                    }
+                    else if (asset.type == "server") {
+                        // Load from resources
+                    }
+                    else {
+                        // Load from other
+                    }
+                }
+            }
+        }
+        
+        return null;
+    }
 
     public static GameObject LoadAsset(string key, string code) {
         

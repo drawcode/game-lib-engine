@@ -1,7 +1,7 @@
 using UnityEngine;
 using System.Collections;
 
-public class DetchToWorld : GameObjectBehavior {
+public class DetachToWorld : GameObjectBehavior {
 
     public void Start() {
         transform.parent = null;

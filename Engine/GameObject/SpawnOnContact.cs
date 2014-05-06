@@ -14,9 +14,11 @@ public class SpawnOnContact : GameObjectBehavior {
 
         GameObject explosion = GameObjectHelper.CreateGameObject(objectToCreate, transform.position, transform.rotation, true);
 
-        explosion.transform.parent = null;
+        if(explosion != null) {
+            explosion.transform.parent = null;
 
-        GameObjectHelper.DestroyGameObject(explosion, 1f, true);        
+            GameObjectHelper.DestroyGameObject(explosion, 1f, true);  
+        }
         
     }
 }

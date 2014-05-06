@@ -703,6 +703,10 @@ public class AudioSystem : GameObjectBehavior {
 
     public void StartGameLoop(int loop) {
 
+        if(currentGameLoops == null) {
+            return;
+        }
+
         currentLoopIndex = loop - 1;
         
         LogUtil.Log("StartGameLoop:", " loop:" + loop.ToString());
@@ -719,24 +723,34 @@ public class AudioSystem : GameObjectBehavior {
                 currentVolumeLevel = volumeLevel;
             }
 
+            if(currentGameLoops.Count > i) {
 
-            if(isCurrent) {
-
-                if (!currentGameLoops[i].isPlaying) {
-                    currentGameLoops[i].Play();
-                    currentGameLoops[i].time = 0f; // TODO for laps or syned get time of last loop
-                    currentGameLoops[i].volume = 0f;
-                }
-                if(currentGameLoops[i].isPlaying) {
-                    currentGameLoops[i].gameObject.AudioTo(currentVolumeLevel, 1f, .1f, 0f);
+                if(currentGameLoops[i] == null) {
+                    return;
                 }
 
-                LogUtil.Log("StartGameLoop:", " i:play:" + currentGameLoops[i].name);
-            }
-            else  {
+                if(currentGameLoops[i].audio == null) {
+                    return;
+                }
 
-                currentGameLoops[i].gameObject.AudioTo(currentVolumeLevel, 0f, .1f, 0f);
-                currentGameLoops[i].StopIfPlaying();
+                if(isCurrent) {
+
+                    if (!currentGameLoops[i].isPlaying) {
+                        currentGameLoops[i].Play();
+                        currentGameLoops[i].time = 0f; // TODO for laps or syned get time of last loop
+                        currentGameLoops[i].volume = 0f;
+                    }
+                    if(currentGameLoops[i].isPlaying) {
+                        currentGameLoops[i].volume = currentVolumeLevel;//.gameObject.AudioTo(currentVolumeLevel, 1f, .1f, 0f);
+                    }
+
+                    LogUtil.Log("StartGameLoop:", " i:play:" + currentGameLoops[i].name);
+                }
+                else  {
+
+                    currentGameLoops[i].volume = currentVolumeLevel;//.gameObject.AudioTo(currentVolumeLevel, 0f, .1f, 0f);
+                    currentGameLoops[i].StopIfPlaying();
+                }
             }
         }
     }
