@@ -57,19 +57,22 @@ public class AppColorPresets : BaseAppColorPresets<AppColorPreset> {
     public static Color GetColor(string code) {
 
         Color colorTo = Color.white;
-                
-        if(!cachedColors.ContainsKey(code)) {
-         
-            AppColor color = AppColors.Instance.GetByCode(code);
 
-            if(color != null) {
-                colorTo = color.GetColor();
+        if(GameConfigs.globalReady) {
+
+            if(!cachedColors.ContainsKey(code)) {
+             
+                AppColor color = AppColors.Instance.GetByCode(code);
+
+                if(color != null) {
+                    colorTo = color.GetColor();
+                }
+
+                cachedColors.Add(code, colorTo);
             }
-
-            cachedColors.Add(code, colorTo);
-        }
-        else {
-            colorTo = cachedColors[code];
+            else {
+                colorTo = cachedColors[code];
+            }
         }
 
         return colorTo;
@@ -82,21 +85,22 @@ public class AppColorPresets : BaseAppColorPresets<AppColorPreset> {
     public static Color GetColorByItemCode(string customItemCode) { // helmet, jersey etc
         
         Color colorTo = Color.white;
-
-        //if(AppContentAssetCustomItems.
         
-        if(!cachedColors.ContainsKey(customItemCode)) {
+        if(GameConfigs.globalReady) {
             
-            AppColor color = AppColors.Instance.GetByCode(customItemCode);
-            
-            if(color != null) {
-                colorTo = color.GetColor();
+            if(!cachedColors.ContainsKey(customItemCode)) {
+                
+                AppColor color = AppColors.Instance.GetByCode(customItemCode);
+                
+                if(color != null) {
+                    colorTo = color.GetColor();
+                }
+                
+                cachedColors.Add(customItemCode, colorTo);
             }
-            
-            cachedColors.Add(customItemCode, colorTo);
-        }
-        else {
-            colorTo = cachedColors[customItemCode];
+            else {
+                colorTo = cachedColors[customItemCode];
+            }
         }
         
         return colorTo;

@@ -21,15 +21,21 @@ namespace Engine.Events {
             for (int i = 0; i < Input.touchCount; ++i) {
                 if (Input.GetTouch(i).phase.Equals(TouchPhase.Began)) {
 
-                // Construct a ray from the current touch coordinates
-                Ray ray = Camera.main.ScreenPointToRay(Input.GetTouch(i).position);
-                if (Physics.Raycast(ray, out hit)) {
-                    if(hit.transform != null) {
-                        if(hit.transform.gameObject != null) {
-                            hit.transform.gameObject.SendMessage("OnMouseDown", SendMessageOptions.DontRequireReceiver);
+                    if(Camera.main == null) 
+                        break;
+                    if(Camera.main.transform == null)
+                        break;
+
+                    // Construct a ray from the current touch coordinates
+                    Ray ray = Camera.main.ScreenPointToRay(Input.GetTouch(i).position);
+                    if (Physics.Raycast(ray, out hit)) {
+                        if(hit.transform != null) {
+                            if(hit.transform.gameObject != null) {
+                                hit.transform.gameObject.SendMessage(
+                                    "OnMouseDown", SendMessageOptions.DontRequireReceiver);
+                            }
                         }
                     }
-                  }
                }
            }
 #endif
