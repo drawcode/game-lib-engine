@@ -25,7 +25,7 @@ public class DataKeyedObjectLeaf : DataKeyedObject {
 public class TestsData {
 
     public static void Advance(string name) {
-        LogUtil.Log(name + "\r\n----------------------------------\r\n\r\n");
+        Debug.Log(name + "\r\n----------------------------------\r\n\r\n");
     }
 
     public static void RunTest() {
@@ -79,12 +79,14 @@ public class TestsData {
         //if(!CheckTest(success, testName)) { 
         //    return;
         //}
+
+        //testName = "TestAppColors_List";
+        //Advance(testName);
+        //TestAppColors_List(testName);
         
-        //Advance("TestAppColors_List");
-        //TestAppColors_List();
-        
-        //Advance("TestAppColors_Code");
-        //TestAppColors_Code();
+        testName = "TestAppColors_Code";
+        Advance(testName);
+        success = TestAppColors_Code(testName);
         
         //Advance("TestAppContentAssetModels_List");
         //TestAppContentAssetModels_List();
@@ -105,9 +107,10 @@ public class TestsData {
         //if(!CheckTest(success, testName)) { 
         //    return;
         //}
-                
-        //Advance("TestAppColorPresets_List");
-        //success = TestAppColorPresets_List();
+        
+        //testName = "TestAppColorPresets_List";
+        //Advance(testName);
+        //success = TestAppColorPresets_List(testName);
         
         //Advance("TestGameCharacters_List");
         //TestGameCharacters_List();
@@ -139,9 +142,9 @@ public class TestsData {
         //Advance(testName);
         //success = TestGamePresets_List(testName);
                 
-        testName = "TestGameAchievements_List";
-        Advance(testName);
-        success = TestGameAchievements_List(testName);
+        //testName = "TestGameAchievements_List";
+        //Advance(testName);
+        //success = TestGameAchievements_List(testName);
                 
         //testName = "TestGameLeaderboards_List";
         //Advance(testName);
@@ -153,25 +156,25 @@ public class TestsData {
             return;
         }
         if(success) {
-            LogUtil.Log("TESTS SUCCESSFUL");
+            Debug.Log("TESTS SUCCESSFUL");
         }
         else {
-            LogUtil.LogError("TESTS WERE IN ERROR!");
+            Debug.LogError("TESTS WERE IN ERROR!");
         }
         
-        LogUtil.Log("TESTS COMPLETED");
+        Debug.Log("TESTS COMPLETED");
     }
 
     public static bool CheckTest(bool success, string name) {
         if(!success) {            
-            LogUtil.LogError("TESTS WERE IN ERROR! " + name);
+            Debug.LogError("TESTS WERE IN ERROR! " + name);
             return success;
         }
         return success;
     }
 
     public static void DumpObj(string name, string oname, object o) {        
-        LogUtil.Log(string.Format("{0} : {1}  : {2} ", name, oname, o));
+        Debug.Log(string.Format("{0} : {1}  : {2} ", name, oname, o));
     }
 
     public static bool AssertEquals(string name, object a, object b) {
@@ -180,10 +183,10 @@ public class TestsData {
         bool equal = false;
         if(dataA == dataB) {            
             equal = true;
-            LogUtil.Log(name + ": SUCCESS :" + equal);
+            Debug.Log(name + ": SUCCESS :" + equal);
         }
         else {       
-            LogUtil.LogError(name + ": FAIL :" + equal);
+            Debug.LogError(name + ": FAIL :" + equal);
         }
 
         DumpObj(name, "dataA", dataA);
@@ -195,7 +198,7 @@ public class TestsData {
         
         bool success = false;
         
-        LogUtil.Log(name);
+        Debug.Log(name);
         
         List<GameLeaderboard> items = GameLeaderboards.Instance.GetAll();
         DumpObj(name, "items", items);
@@ -204,16 +207,16 @@ public class TestsData {
         
         foreach(GameLeaderboard item in items) {  
             
-            LogUtil.Log("item:code:" + item.code);               
-            LogUtil.Log("item:json:" + item.ToJson());  
+            Debug.Log("item:code:" + item.code);               
+            Debug.Log("item:json:" + item.ToJson());  
             
             GameLeaderboardData data = item.data;
             
             if(data != null) {
                 
                 foreach(GameNetworkData dataItem in data.networks) {          
-                    LogUtil.Log("dataItem:code:" + dataItem.code);         
-                    LogUtil.Log("dataItem:json:" + dataItem.ToJson());
+                    Debug.Log("dataItem:code:" + dataItem.code);         
+                    Debug.Log("dataItem:json:" + dataItem.ToJson());
                     success = true;                    
                 }
             }
@@ -228,7 +231,7 @@ public class TestsData {
         
         bool success = false;
         
-        LogUtil.Log(name);
+        Debug.Log(name);
         
         List<GameAchievement> items = GameAchievements.Instance.GetAll();
         DumpObj(name, "items", items);
@@ -237,33 +240,33 @@ public class TestsData {
         
         foreach(GameAchievement item in items) {  
             
-            LogUtil.Log("item:code:" + item.code);               
-            LogUtil.Log("item:json:" + item.ToJson());  
+            Debug.Log("item:code:" + item.code);               
+            Debug.Log("item:json:" + item.ToJson());  
             
             GameAchievementData data = item.data;
             
             if(data != null) {
                 
                 foreach(GameNetworkData dataItem in data.networks) {          
-                    LogUtil.Log("dataItem:code:" + dataItem.code);         
-                    LogUtil.Log("dataItem:json:" + dataItem.ToJson());
+                    Debug.Log("dataItem:code:" + dataItem.code);         
+                    Debug.Log("dataItem:json:" + dataItem.ToJson());
                     success = true;                    
                 }
                                 
                 foreach(GameFilter dataItem in data.filters) {          
-                    LogUtil.Log("dataItem:type:" + dataItem.type);            
-                    LogUtil.Log("dataItem:data:" + dataItem.data);       
-                    LogUtil.Log("dataItem:json:" + dataItem.ToJson());
+                    Debug.Log("dataItem:type:" + dataItem.type);            
+                    Debug.Log("dataItem:data:" + dataItem.data);       
+                    Debug.Log("dataItem:json:" + dataItem.ToJson());
 
                     success = true;                    
                 }
             }
 
             List<GameFilterBase> statisticSingles = item.GetFilterStatisticSingle();        
-            LogUtil.Log("item:statisticSingles:" + statisticSingles);
+            Debug.Log("item:statisticSingles:" + statisticSingles);
                         
             List<GameFilterBase> statisticAll = item.GetFilterStatisticAll();        
-            LogUtil.Log("item:statisticAll:" + statisticAll);
+            Debug.Log("item:statisticAll:" + statisticAll);
         }
         
         DumpObj(name, "items.Count", items.Count);
@@ -275,7 +278,7 @@ public class TestsData {
         
         bool success = false;
         
-        LogUtil.Log(name);
+        Debug.Log(name);
         
         List<GamePreset> items = GamePresets.Instance.GetAll();
         DumpObj(name, "items", items);
@@ -284,16 +287,16 @@ public class TestsData {
         
         foreach(GamePreset item in items) {  
             
-            LogUtil.Log("item:code:" + item.code);               
-            LogUtil.Log("item:json:" + item.ToJson());  
+            Debug.Log("item:code:" + item.code);               
+            Debug.Log("item:json:" + item.ToJson());  
             
             GamePresetItems data = item.data;
             
             if(data != null) {
                 
                 foreach(GamePresetItem preset in data.items) {          
-                    LogUtil.Log("preset:code:" + preset.code);         
-                    LogUtil.Log("preset:json:" + preset.ToJson());
+                    Debug.Log("preset:code:" + preset.code);         
+                    Debug.Log("preset:json:" + preset.ToJson());
                     success = true;                    
                 }
             }
@@ -308,7 +311,7 @@ public class TestsData {
         
         bool success = false;
         
-        LogUtil.Log(name);
+        Debug.Log(name);
         
         List<GamePreset> items = GamePresets.Instance.GetListByType("terrain");
         DumpObj(name, "items", items);
@@ -317,16 +320,16 @@ public class TestsData {
         
         foreach(GamePreset item in items) {  
             
-            LogUtil.Log("item:code:" + item.code);               
-            LogUtil.Log("item:json:" + item.ToJson());  
+            Debug.Log("item:code:" + item.code);               
+            Debug.Log("item:json:" + item.ToJson());  
             
             GamePresetItems data = item.data;
             
             if(data != null) {
                 
                 foreach(GamePresetItem preset in data.items) {          
-                    LogUtil.Log("preset:code:" + preset.code);         
-                    LogUtil.Log("preset:json:" + preset.ToJson());
+                    Debug.Log("preset:code:" + preset.code);         
+                    Debug.Log("preset:json:" + preset.ToJson());
                     success = true;                    
                 }
             }
@@ -341,7 +344,7 @@ public class TestsData {
         
         bool success = false;
         
-        LogUtil.Log(name);
+        Debug.Log(name);
         
         List<GameItemPreset> items = GameItemPresets.Instance.GetAll();
         DumpObj(name, "items", items);
@@ -350,16 +353,16 @@ public class TestsData {
         
         foreach(GameItemPreset item in items) {  
             
-            LogUtil.Log("item:code:" + item.code);               
-            LogUtil.Log("item:json:" + item.ToJson());  
+            Debug.Log("item:code:" + item.code);               
+            Debug.Log("item:json:" + item.ToJson());  
             
             GameItemPresetItems data = item.data;
 
             if(data != null) {
 
                 foreach(GameItemPresetItem preset in data.items) {          
-                    LogUtil.Log("preset:code:" + preset.code);         
-                    LogUtil.Log("preset:json:" + preset.ToJson());
+                    Debug.Log("preset:code:" + preset.code);         
+                    Debug.Log("preset:json:" + preset.ToJson());
                     success = true;                    
                 }
             }
@@ -374,7 +377,7 @@ public class TestsData {
         
         bool success = false;
         
-        LogUtil.Log(name);
+        Debug.Log(name);
         
         List<GameItem> items = GameItems.Instance.GetAll();
         DumpObj(name, "items", items);
@@ -383,42 +386,42 @@ public class TestsData {
         
         foreach(GameItem item in items) {  
             
-            LogUtil.Log("item:code:" + item.code);               
-            LogUtil.Log("item:json:" + item.ToJson());  
+            Debug.Log("item:code:" + item.code);               
+            Debug.Log("item:json:" + item.ToJson());  
             
             GameDataObjectItem data = item.data;
             
             if(data != null) {
                 foreach(GameDataModel dataItem in data.models) {                    
-                    LogUtil.Log("dataItem:models:code:" + dataItem.code);
+                    Debug.Log("dataItem:models:code:" + dataItem.code);
                     success = true;
                 }
                 
                 foreach(string dataItem in data.roles) {                    
-                    LogUtil.Log("dataItem:roles:code:" + dataItem);
+                    Debug.Log("dataItem:roles:code:" + dataItem);
                     success = true;
                 }
                 
                 foreach(GameDataItemRPG dataItem in data.rpgs) {                    
-                    LogUtil.Log("dataItem:rpgs:code:" + dataItem.code);        
-                    LogUtil.Log("dataItem:rpgs:attack:" + dataItem.attack);
-                    LogUtil.Log("dataItem:rpgs:attack:" + dataItem.attack_speed);
-                    LogUtil.Log("dataItem:rpgs:boost:" + dataItem.boost);
-                    LogUtil.Log("dataItem:rpgs:energy:" + dataItem.energy);
-                    LogUtil.Log("dataItem:rpgs:fly:" + dataItem.fly);
-                    LogUtil.Log("dataItem:rpgs:health:" + dataItem.health);
-                    LogUtil.Log("dataItem:rpgs:jump:" + dataItem.jump);
-                    LogUtil.Log("dataItem:rpgs:level:" + dataItem.level);
-                    LogUtil.Log("dataItem:rpgs:recharge_speed:" + dataItem.recharge_speed);
-                    LogUtil.Log("dataItem:rpgs:speed:" + dataItem.speed);
-                    LogUtil.Log("dataItem:rpgs:upgrades:" + dataItem.upgrades);
-                    LogUtil.Log("dataItem:rpgs:xp:" + dataItem.upgrades_applied);
-                    LogUtil.Log("dataItem:rpgs:xp:" + dataItem.xp);
+                    Debug.Log("dataItem:rpgs:code:" + dataItem.code);        
+                    Debug.Log("dataItem:rpgs:attack:" + dataItem.attack);
+                    Debug.Log("dataItem:rpgs:attack:" + dataItem.attack_speed);
+                    Debug.Log("dataItem:rpgs:boost:" + dataItem.boost);
+                    Debug.Log("dataItem:rpgs:energy:" + dataItem.energy);
+                    Debug.Log("dataItem:rpgs:fly:" + dataItem.fly);
+                    Debug.Log("dataItem:rpgs:health:" + dataItem.health);
+                    Debug.Log("dataItem:rpgs:jump:" + dataItem.jump);
+                    Debug.Log("dataItem:rpgs:level:" + dataItem.level);
+                    Debug.Log("dataItem:rpgs:recharge_speed:" + dataItem.recharge_speed);
+                    Debug.Log("dataItem:rpgs:speed:" + dataItem.speed);
+                    Debug.Log("dataItem:rpgs:upgrades:" + dataItem.upgrades);
+                    Debug.Log("dataItem:rpgs:xp:" + dataItem.upgrades_applied);
+                    Debug.Log("dataItem:rpgs:xp:" + dataItem.xp);
                     success = true;
                 }                
                 
                 foreach(GameDataItemReward dataItem in data.rewards) {                    
-                    LogUtil.Log("dataItem:rewards:code:" + dataItem.ToJson());
+                    Debug.Log("dataItem:rewards:code:" + dataItem.ToJson());
                     success = true;
                 }
             }
@@ -433,7 +436,7 @@ public class TestsData {
         
         bool success = false;
         
-        LogUtil.Log(name);
+        Debug.Log(name);
         
         List<GameWeapon> items = GameWeapons.Instance.GetAll();
         DumpObj(name, "items", items);
@@ -442,37 +445,37 @@ public class TestsData {
         
         foreach(GameWeapon item in items) {  
             
-            LogUtil.Log("item:code:" + item.code);               
-            LogUtil.Log("item:json:" + item.ToJson());  
+            Debug.Log("item:code:" + item.code);               
+            Debug.Log("item:json:" + item.ToJson());  
             
             GameDataObjectItem data = item.data;
             
             if(data != null) {
                 foreach(GameDataModel dataItem in data.models) {                    
-                    LogUtil.Log("dataItem:models:code:" + dataItem.code);
+                    Debug.Log("dataItem:models:code:" + dataItem.code);
                     success = true;
                 }
                 
                 foreach(string dataItem in data.roles) {                    
-                    LogUtil.Log("dataItem:roles:code:" + dataItem);
+                    Debug.Log("dataItem:roles:code:" + dataItem);
                     success = true;
                 }
                 
                 foreach(GameDataItemRPG dataItem in data.rpgs) {                    
-                    LogUtil.Log("dataItem:rpgs:code:" + dataItem.code);        
-                    LogUtil.Log("dataItem:rpgs:attack:" + dataItem.attack);
-                    LogUtil.Log("dataItem:rpgs:attack:" + dataItem.attack_speed);
-                    LogUtil.Log("dataItem:rpgs:boost:" + dataItem.boost);
-                    LogUtil.Log("dataItem:rpgs:energy:" + dataItem.energy);
-                    LogUtil.Log("dataItem:rpgs:fly:" + dataItem.fly);
-                    LogUtil.Log("dataItem:rpgs:health:" + dataItem.health);
-                    LogUtil.Log("dataItem:rpgs:jump:" + dataItem.jump);
-                    LogUtil.Log("dataItem:rpgs:level:" + dataItem.level);
-                    LogUtil.Log("dataItem:rpgs:recharge_speed:" + dataItem.recharge_speed);
-                    LogUtil.Log("dataItem:rpgs:speed:" + dataItem.speed);
-                    LogUtil.Log("dataItem:rpgs:upgrades:" + dataItem.upgrades);
-                    LogUtil.Log("dataItem:rpgs:xp:" + dataItem.upgrades_applied);
-                    LogUtil.Log("dataItem:rpgs:xp:" + dataItem.xp);
+                    Debug.Log("dataItem:rpgs:code:" + dataItem.code);        
+                    Debug.Log("dataItem:rpgs:attack:" + dataItem.attack);
+                    Debug.Log("dataItem:rpgs:attack:" + dataItem.attack_speed);
+                    Debug.Log("dataItem:rpgs:boost:" + dataItem.boost);
+                    Debug.Log("dataItem:rpgs:energy:" + dataItem.energy);
+                    Debug.Log("dataItem:rpgs:fly:" + dataItem.fly);
+                    Debug.Log("dataItem:rpgs:health:" + dataItem.health);
+                    Debug.Log("dataItem:rpgs:jump:" + dataItem.jump);
+                    Debug.Log("dataItem:rpgs:level:" + dataItem.level);
+                    Debug.Log("dataItem:rpgs:recharge_speed:" + dataItem.recharge_speed);
+                    Debug.Log("dataItem:rpgs:speed:" + dataItem.speed);
+                    Debug.Log("dataItem:rpgs:upgrades:" + dataItem.upgrades);
+                    Debug.Log("dataItem:rpgs:xp:" + dataItem.upgrades_applied);
+                    Debug.Log("dataItem:rpgs:xp:" + dataItem.xp);
                     success = true;
                 }
             }
@@ -487,7 +490,7 @@ public class TestsData {
         
         bool success = false;
         
-        LogUtil.Log(name);
+        Debug.Log(name);
         
         List<GameTeam> items = GameTeams.Instance.GetAll();
         DumpObj(name, "items", items);
@@ -496,24 +499,24 @@ public class TestsData {
         
         foreach(GameTeam item in items) {  
 
-            LogUtil.Log("item:code:" + item.code);               
-            LogUtil.Log("item:json:" + item.ToJson());  
+            Debug.Log("item:code:" + item.code);               
+            Debug.Log("item:json:" + item.ToJson());  
             
             GameDataObjectItem data = item.data;
             
             if(data != null) {
                 foreach(GameDataModel dataItem in data.models) {                    
-                    LogUtil.Log("dataItem:models:code:" + dataItem.code);
+                    Debug.Log("dataItem:models:code:" + dataItem.code);
                     success = true;
                 }
                 
                 foreach(GameDataColorPreset dataItem in data.color_presets) {                    
-                    LogUtil.Log("dataItem:color_presets:code:" + dataItem.code);
+                    Debug.Log("dataItem:color_presets:code:" + dataItem.code);
                     success = true;
                 }
                 
                 foreach(GameDataTexturePreset dataItem in data.texture_presets) {                    
-                    LogUtil.Log("dataItem:texture_presets:code:" + dataItem.code);
+                    Debug.Log("dataItem:texture_presets:code:" + dataItem.code);
                     success = true;
                 }
             }
@@ -528,7 +531,7 @@ public class TestsData {
         
         bool success = false;
         
-        LogUtil.Log(name);
+        Debug.Log(name);
         
         //string characterCode = "default";
         
@@ -559,7 +562,7 @@ public class TestsData {
         
         bool success = false;
 
-        LogUtil.Log(name);
+        Debug.Log(name);
         
         List<AppContentAssetTexture> items = AppContentAssetTextures.Instance.GetAll();
         DumpObj(name, "items", items);
@@ -568,17 +571,17 @@ public class TestsData {
         
         foreach(AppContentAssetTexture item in items) {  
             
-            LogUtil.Log("item:code:" + item.code);         
-            LogUtil.Log("item:type:" + item.type);
+            Debug.Log("item:code:" + item.code);         
+            Debug.Log("item:type:" + item.type);
             
-            LogUtil.Log("item:json:" + item.ToJson());  
+            Debug.Log("item:json:" + item.ToJson());  
             
             Dictionary<string, string> data = item.data;
             
             if(data != null) {
                 foreach(KeyValuePair<string, string> pair in data) {                    
-                    LogUtil.Log("pair:Key:" + pair.Key);
-                    LogUtil.Log("pair:Value:" + pair.Value);    
+                    Debug.Log("pair:Key:" + pair.Key);
+                    Debug.Log("pair:Value:" + pair.Value);    
                     success = true;
                 }
             }
@@ -593,7 +596,7 @@ public class TestsData {
 
         bool success = false;
 
-        LogUtil.Log(name);
+        Debug.Log(name);
         
         List<AppContentAssetTexturePreset> items = AppContentAssetTexturePresets.Instance.GetAll();
         DumpObj(name, "items", items);
@@ -602,17 +605,17 @@ public class TestsData {
         
         foreach(AppContentAssetTexturePreset item in items) {  
             
-            LogUtil.Log("item:code:" + item.code);         
-            LogUtil.Log("item:type:" + item.type);
+            Debug.Log("item:code:" + item.code);         
+            Debug.Log("item:type:" + item.type);
             
-            LogUtil.Log("item:json:" + item.ToJson());  
+            Debug.Log("item:json:" + item.ToJson());  
             
             Dictionary<string, string> data = item.data;
             
             if(data != null) {
                 foreach(KeyValuePair<string, string> pair in data) {                    
-                    LogUtil.Log("pair:Key:" + pair.Key);
-                    LogUtil.Log("pair:Value:" + pair.Value);
+                    Debug.Log("pair:Key:" + pair.Key);
+                    Debug.Log("pair:Value:" + pair.Value);
                     success = true;
                 }
             }
@@ -624,13 +627,11 @@ public class TestsData {
     }
 
         
-    public static bool TestAppColorPresets_List() {
-        
-        string name = "TestAppColorPresets_List";
+    public static bool TestAppColorPresets_List(string name) {
 
         bool success = false;
         
-        LogUtil.Log(name);
+        Debug.Log(name);
         
         List<AppColorPreset> items = AppColorPresets.Instance.GetAll();
         DumpObj(name, "items", items);
@@ -639,18 +640,18 @@ public class TestsData {
         
         foreach(AppColorPreset item in items) {  
             
-            LogUtil.Log("item:code:" + item.code);         
-            LogUtil.Log("item:type:" + item.type);
+            Debug.Log("item:code:" + item.code);         
+            Debug.Log("item:type:" + item.type);
             
-            LogUtil.Log("item:json:" + item.ToJson());  
+            Debug.Log("item:json:" + item.ToJson());  
             
             Dictionary<string, string> data = item.data;
             
             if(data != null) {
                 foreach(KeyValuePair<string, string> pair in data) { 
                     success = true;
-                    LogUtil.Log("pair:Key:" + pair.Key);
-                    LogUtil.Log("pair:Value:" + pair.Value);                    
+                    Debug.Log("pair:Key:" + pair.Key);
+                    Debug.Log("pair:Value:" + pair.Value);                    
                 }
             }
         }
@@ -665,7 +666,7 @@ public class TestsData {
         
         string name = "TestGameCharacters_List";
         
-        LogUtil.Log(name);
+        Debug.Log(name);
         
         List<GameCharacter> items = GameCharacters.Instance.GetAll();
         DumpObj(name, "items", items);
@@ -674,10 +675,10 @@ public class TestsData {
         
         foreach(GameCharacter item in items) {  
             
-            LogUtil.Log("item:code:" + item.code);         
-            LogUtil.Log("item:type:" + item.type);
+            Debug.Log("item:code:" + item.code);         
+            Debug.Log("item:type:" + item.type);
 
-            LogUtil.Log("item:json:" + item.ToJson());  
+            Debug.Log("item:json:" + item.ToJson());  
 
             GameDataCharacter data = item.data;
 
@@ -685,10 +686,10 @@ public class TestsData {
                 foreach(GameDataModel model in data.models) {
                     string modelCode = model.code;
                     
-                    LogUtil.Log("model:code:" + model.code);
-                    LogUtil.Log("model:type:" + model.type);
-                    LogUtil.Log("model:textures:" + model.textures);
-                    LogUtil.Log("model:colors:" + model.colors);
+                    Debug.Log("model:code:" + model.code);
+                    Debug.Log("model:type:" + model.type);
+                    Debug.Log("model:textures:" + model.textures);
+                    Debug.Log("model:colors:" + model.colors);
 
                     GameProfileCustomItem profileCustomItem = GameProfileCharacters.currentCustom;
 
@@ -714,7 +715,7 @@ public class TestsData {
         
         string name = "TestGameCharacters_Load";
         
-        LogUtil.Log(name);
+        Debug.Log(name);
         
         List<AppContentAssetModel> items = AppContentAssetModels.Instance.GetAll();
         DumpObj(name, "items", items);
@@ -722,37 +723,37 @@ public class TestsData {
         //AssertEquals(name, username, "Player");
         
         foreach(AppContentAssetModel item in items) {            
-            LogUtil.Log("item:code:" + item.code);         
-            LogUtil.Log("item:display_name:" + item.display_name);
+            Debug.Log("item:code:" + item.code);         
+            Debug.Log("item:display_name:" + item.display_name);
             
-            LogUtil.Log("item:json:" + item.ToJson());
+            Debug.Log("item:json:" + item.ToJson());
             
             if(item.custom_materials != null) {         
                 
-                LogUtil.Log("item.data.custom_materials.Count:" + item.custom_materials.Count);
+                Debug.Log("item.data.custom_materials.Count:" + item.custom_materials.Count);
                 
                 foreach(AppContentAssetCustomItemProperty prop 
                         in item.custom_materials) {
                     
-                    LogUtil.Log("prop:code:" + prop.code);  
-                    LogUtil.Log("prop:name:" + prop.name); 
+                    Debug.Log("prop:code:" + prop.code);  
+                    Debug.Log("prop:name:" + prop.name); 
                     foreach(string type in prop.types) {
-                        LogUtil.Log("prop:type:s:" + type);
+                        Debug.Log("prop:type:s:" + type);
                     }
                 }
             }
             else {                
-                LogUtil.Log("data was NULL" + item.ToJson());
+                Debug.Log("data was NULL" + item.ToJson());
             }
             
             AppContentAssetCustomItem customItem = item.GetCustomItems();
             
-            LogUtil.Log("customItem:json:" + customItem.ToJson());
+            Debug.Log("customItem:json:" + customItem.ToJson());
             
             if(customItem != null) {
                 if(customItem.properties != null) {
                     foreach(AppContentAssetCustomItemProperty prop in customItem.properties) {
-                        LogUtil.Log("prop:code:" + prop.code); 
+                        Debug.Log("prop:code:" + prop.code); 
                     }
                 }
             }
@@ -771,7 +772,7 @@ public class TestsData {
         
         string name = "TestAppContentAssetModels_Load";
         
-        LogUtil.Log(name);
+        Debug.Log(name);
 
         List<AppContentAssetModel> items = AppContentAssetModels.Instance.GetAll();
         DumpObj(name, "items", items);
@@ -779,37 +780,37 @@ public class TestsData {
         //AssertEquals(name, username, "Player");
         
         foreach(AppContentAssetModel item in items) {            
-            LogUtil.Log("item:code:" + item.code);         
-            LogUtil.Log("item:display_name:" + item.display_name);
+            Debug.Log("item:code:" + item.code);         
+            Debug.Log("item:display_name:" + item.display_name);
             
-            LogUtil.Log("item:json:" + item.ToJson());
+            Debug.Log("item:json:" + item.ToJson());
             
             if(item.custom_materials != null) {         
                 
-                LogUtil.Log("item.data.custom_materials.Count:" + item.custom_materials.Count);
+                Debug.Log("item.data.custom_materials.Count:" + item.custom_materials.Count);
                 
                 foreach(AppContentAssetCustomItemProperty prop 
                         in item.custom_materials) {
                     
-                    LogUtil.Log("prop:code:" + prop.code);  
-                    LogUtil.Log("prop:name:" + prop.name); 
+                    Debug.Log("prop:code:" + prop.code);  
+                    Debug.Log("prop:name:" + prop.name); 
                     foreach(string type in prop.types) {
-                        LogUtil.Log("prop:type:s:" + type);
+                        Debug.Log("prop:type:s:" + type);
                     }
                 }
             }
             else {                
-                LogUtil.Log("data was NULL" + item.ToJson());
+                Debug.Log("data was NULL" + item.ToJson());
             }
             
             AppContentAssetCustomItem customItem = item.GetCustomItems();
             
-            LogUtil.Log("customItem:json:" + customItem.ToJson());
+            Debug.Log("customItem:json:" + customItem.ToJson());
             
             if(customItem != null) {
                 if(customItem.properties != null) {
                     foreach(AppContentAssetCustomItemProperty prop in customItem.properties) {
-                        LogUtil.Log("prop:code:" + prop.code); 
+                        Debug.Log("prop:code:" + prop.code); 
                     }
                 }
             }
@@ -826,7 +827,7 @@ public class TestsData {
         
         string name = "TestAppContentAssetCustomItems_List";
         
-        LogUtil.Log(name);
+        Debug.Log(name);
         
         List<AppContentAssetCustomItem> items = AppContentAssetCustomItems.Instance.GetAll();
         DumpObj(name, "items", items);
@@ -835,24 +836,24 @@ public class TestsData {
         
         foreach(AppContentAssetCustomItem item in items) {  
 
-            LogUtil.Log("item:code:" + item.code);         
-            LogUtil.Log("item:type:" + item.type);
+            Debug.Log("item:code:" + item.code);         
+            Debug.Log("item:type:" + item.type);
 
             if(item.properties != null) {         
                 
-                LogUtil.Log("item.data.properties.Count:" + item.properties.Count);
+                Debug.Log("item.data.properties.Count:" + item.properties.Count);
 
                 foreach(AppContentAssetCustomItemProperty prop 
                         in item.properties) {
                     
-                    LogUtil.Log("prop:code:" + prop.code);  
+                    Debug.Log("prop:code:" + prop.code);  
                     foreach(string type in prop.types) {
-                        LogUtil.Log("prop:type:s:" + type);
+                        Debug.Log("prop:type:s:" + type);
                     }
                 }
             }
             else {                
-                LogUtil.Log("data was NULL" + item.ToJson());
+                Debug.Log("data was NULL" + item.ToJson());
             }
 
         }
@@ -866,7 +867,7 @@ public class TestsData {
         
         string name = "TestAppContentAssetModels_List";
         
-        LogUtil.Log(name);
+        Debug.Log(name);
         
         List<AppContentAssetModel> items = AppContentAssetModels.Instance.GetAll();
         DumpObj(name, "items", items);
@@ -874,37 +875,37 @@ public class TestsData {
         //AssertEquals(name, username, "Player");
         
         foreach(AppContentAssetModel item in items) {            
-            LogUtil.Log("item:code:" + item.code);         
-            LogUtil.Log("item:display_name:" + item.display_name);
+            Debug.Log("item:code:" + item.code);         
+            Debug.Log("item:display_name:" + item.display_name);
             
-            LogUtil.Log("item:json:" + item.ToJson());
+            Debug.Log("item:json:" + item.ToJson());
 
             if(item.custom_materials != null) {         
                 
-                LogUtil.Log("item.data.custom_materials.Count:" + item.custom_materials.Count);
+                Debug.Log("item.data.custom_materials.Count:" + item.custom_materials.Count);
                 
                 foreach(AppContentAssetCustomItemProperty prop 
                         in item.custom_materials) {
                     
-                    LogUtil.Log("prop:code:" + prop.code);  
-                    LogUtil.Log("prop:name:" + prop.name); 
+                    Debug.Log("prop:code:" + prop.code);  
+                    Debug.Log("prop:name:" + prop.name); 
                     foreach(string type in prop.types) {
-                        LogUtil.Log("prop:type:s:" + type);
+                        Debug.Log("prop:type:s:" + type);
                     }
                 }
             }
             else {                
-                LogUtil.Log("data was NULL" + item.ToJson());
+                Debug.Log("data was NULL" + item.ToJson());
             }
 
             AppContentAssetCustomItem customItem = item.GetCustomItems();
             
-            LogUtil.Log("customItem:json:" + customItem.ToJson());
+            Debug.Log("customItem:json:" + customItem.ToJson());
 
             if(customItem != null) {
                 if(customItem.properties != null) {
                     foreach(AppContentAssetCustomItemProperty prop in customItem.properties) {
-                        LogUtil.Log("prop:code:" + prop.code); 
+                        Debug.Log("prop:code:" + prop.code); 
                     }
                 }
             }
@@ -913,20 +914,18 @@ public class TestsData {
         DumpObj(name, "items.Count", items.Count);
     }
     
-    public static void TestAppColors_List() {
-        
-        string name = "TestAppColors_List";
-        
-        LogUtil.Log(name);
+    public static void TestAppColors_List(string name) {
+                
+        Debug.Log(name);
         
         List<AppColor> colors = AppColors.Instance.GetAll();
 
         foreach(AppColor color in colors) {
             Color colorTo = ColorHelper.FromRGB(color.color.rgba);
             
-            LogUtil.Log("color:code:" + color.code);
+            Debug.Log("color:code:" + color.code);
             
-            LogUtil.Log("color:color:" + colorTo);
+            Debug.Log("color:color:" + colorTo);
         }
                 
         DumpObj(name, "colors.Count", colors.Count);
@@ -934,32 +933,35 @@ public class TestsData {
 
     
     
-    public static void TestAppColors_Code() {
+    public static bool TestAppColors_Code(string name) {
         
-        string name = "TestAppColors_Code";
+        bool success = false;
+
+        Debug.Log(name);
         
-        LogUtil.Log(name);
-        
-        AppColor color = AppColors.Instance.GetByCode("game-ucf-knights-gold");
+        AppColor color = AppColors.Instance.GetByCode("game-college-ucf-knights-gold");
 
         if(color != null) {
         
-            LogUtil.Log("color:color:" + color.code);
-            LogUtil.Log("color:color:" + color.GetColor());
+            Debug.Log("color:color:" + color.code);
+            Debug.Log("color:color:" + color.GetColor());
+
+            success = true;
+
         }
         else {
             
-            LogUtil.Log("color:NOT FOUND:");
+            Debug.Log("color:NOT FOUND:");
         }
 
-
+        return success;
     }
 
     public static void TestGameState_LoadProfile() {
         
         string name = "TestGameState_LoadProfile";
         
-        LogUtil.Log(name);
+        Debug.Log(name);
 
         GameState.LoadProfile();
 
@@ -973,7 +975,7 @@ public class TestsData {
         
         string name = "TestGameState_SaveProfile";
         
-        LogUtil.Log(name);
+        Debug.Log(name);
         
         GameState.SaveProfile();
         
@@ -987,7 +989,7 @@ public class TestsData {
         
         string name = "TestGameProfileCharacter_GetCharacter";
         
-        LogUtil.Log(name);
+        Debug.Log(name);
 
         string characterCode = "default";
                 
@@ -1019,7 +1021,7 @@ public class TestsData {
         
         string name = "TestGameProfileCharacter_GetCurrentCharacter";
         
-        LogUtil.Log(name);
+        Debug.Log(name);
         
         //string characterCode = "default";
 
@@ -1062,7 +1064,7 @@ public class TestsData {
         
         string name = "TestGameProfileCharacter_currentCharacter";
         
-        LogUtil.Log(name);
+        Debug.Log(name);
         
         //string characterCode = "default";
         
@@ -1097,7 +1099,7 @@ public class TestsData {
         
         string name = "TestGameProfileCharacter_currentCharacter";
         
-        LogUtil.Log(name);
+        Debug.Log(name);
         
         string characterCode = "default";
         
@@ -1132,7 +1134,7 @@ public class TestsData {
 
         string name = "TestGameCharacterSkin";
         
-        LogUtil.Log(name);
+        Debug.Log(name);
         
         GameCharacterSkin obj1 = new GameCharacterSkin();
         GameCharacterSkin obj2 = new GameCharacterSkin();
@@ -1154,17 +1156,17 @@ public class TestsData {
         
         string name = "TestGameCharacterSkinLoadData";
         
-        LogUtil.Log(name);
+        Debug.Log(name);
 
         try {
             GameCharacterSkins.Instance.LoadData();
 
-            LogUtil.Log(name + ":GameCharacterSkins:" + GameCharacterSkins.Instance.items.Count);
-            LogUtil.Log(name + ":SUCCESS:" + true);
+            Debug.Log(name + ":GameCharacterSkins:" + GameCharacterSkins.Instance.items.Count);
+            Debug.Log(name + ":SUCCESS:" + true);
         }
         catch(Exception e) {
 
-            LogUtil.Log(e);
+            Debug.Log(e);
         }
     }
 
@@ -1184,22 +1186,22 @@ public class TestsData {
         
         leaf.display_name = "tester";
         
-        LogUtil.Log("DataKeyedObjectLeaf:leaf:display_name:" + leaf.display_name);
-        LogUtil.Log("DataKeyedObjectLeaf:leaf:display_name2:" + leaf.Get(BaseDataObjectKeys.display_name));
+        Debug.Log("DataKeyedObjectLeaf:leaf:display_name:" + leaf.display_name);
+        Debug.Log("DataKeyedObjectLeaf:leaf:display_name2:" + leaf.Get(BaseDataObjectKeys.display_name));
         
         string leafData = JsonMapper.ToJson(leaf);
         
-        LogUtil.Log("DataKeyedObjectLeaf:leafData:" + leafData);
+        Debug.Log("DataKeyedObjectLeaf:leafData:" + leafData);
         
         DataKeyedObjectLeaf leaf2 = new DataKeyedObjectLeaf();
         
         leaf2 = JsonMapper.ToObject<DataKeyedObjectLeaf>(leafData);
         
-        LogUtil.Log("DataKeyedObjectLeaf:display_name:" + leaf2.display_name);
+        Debug.Log("DataKeyedObjectLeaf:display_name:" + leaf2.display_name);
         
         string leaf2Data = JsonMapper.ToJson(leaf2);
         
-        LogUtil.Log("DataKeyedObjectLeaf:leaf2Data:" + leaf2Data);
+        Debug.Log("DataKeyedObjectLeaf:leaf2Data:" + leaf2Data);
         
         
         AssertEquals("DataKeyedObjectLeaf", leaf, leaf2);
