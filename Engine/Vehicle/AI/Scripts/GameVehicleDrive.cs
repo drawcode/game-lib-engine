@@ -387,6 +387,10 @@ public class GameVehicleDrive : GameObjectBehavior {
     }
   
     void Update() {
+
+        if(GameConfigs.isUIRunning) {
+            return;
+        }
         
         if(!GameConfigs.isGameRunning) {            
             return;

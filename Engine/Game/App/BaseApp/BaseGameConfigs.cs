@@ -71,7 +71,16 @@ public class BaseGameConfigs<T> : DataObjects<T> where T : DataObject, new() {
     public static bool isGameRunning {
         get {
             if (GameController.IsGameRunning
-                && !GameUIController.Instance.uiVisible) {
+                && !isUIRunning) {
+                return true;
+            }
+            return false;
+        }
+    }
+    
+    public static bool isUIRunning {
+        get {
+            if (GameUIController.Instance.uiVisible) {
                 return true;
             }
             return false;

@@ -18,6 +18,14 @@ public class GameVehicleAntiRollBar : GameObjectBehavior {
     float travelR = 1.0F;
     
     void FixedUpdate() {
+        
+        if(GameConfigs.isUIRunning) {
+            return;
+        }
+        
+        if(!GameConfigs.isGameRunning) {
+            return;
+        }
         /*
         float force = (wheelL.compression - wheelR.compression) * coefficient;
         wheelL.suspensionForceInput =+ force;

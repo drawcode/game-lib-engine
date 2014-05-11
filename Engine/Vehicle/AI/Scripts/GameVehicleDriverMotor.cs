@@ -116,10 +116,13 @@ public class GameVehicleAIDriverMotor : GameObjectBehavior {
     }
 
     void Update() {
+        
+        if(GameConfigs.isUIRunning) {
+            return;
+        }
 
         RotateWheels();
-        SteelWheels();
-        
+        SteelWheels();        
     }
 
     void RotateWheels() {

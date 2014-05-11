@@ -7,6 +7,15 @@ public class GameVehicleWheelPosition : GameObjectBehavior {
     private Vector3 newPos;
 
     void Update() {
+        
+        if(GameConfigs.isUIRunning) {
+            return;
+        }
+                
+        if(!GameConfigs.isGameRunning) {
+            return;
+        }
+
         RaycastHit hit;
 
         if (Physics.Raycast(WheelCol.transform.position, -WheelCol.transform.up, out hit, WheelCol.suspensionDistance + WheelCol.radius)) {   

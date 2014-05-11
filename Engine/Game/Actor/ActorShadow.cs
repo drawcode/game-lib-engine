@@ -18,6 +18,15 @@ namespace Engine.Game.Actor {
         }
 
         private void LateUpdate() {
+            
+            if(GameConfigs.isUIRunning) {
+                return;
+            }
+            
+            if(!GameConfigs.isGameRunning) {
+                return;
+            }
+
             if (objectParent != null && objectShadow != null) {
 
                 // Get location to put shadow at using parent normal and terrain mask
