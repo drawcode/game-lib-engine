@@ -52,6 +52,7 @@ public enum LoopType {
     pingPong
 }
 
+/*
 public static class iTweenExtensions {
 
     /// <summary>
@@ -1431,3 +1432,4 @@ public static class iTweenExtensions {
         iTween.Stab(go, iTween.Hash("audioClip", audioClip, "volume", volume, "pitch", pitch, "delay", delay));
     }
 }
+*/

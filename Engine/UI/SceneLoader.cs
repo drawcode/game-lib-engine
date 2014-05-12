@@ -192,10 +192,10 @@ namespace Engine.UI {
 
         public void SlideObject(GameObject obj, float distanceX, float distanceY, float distanceZ, float time, float delay) {
             if (obj != null) {
-                obj.MoveFrom(new Vector3(distanceX,
-                            distanceY,
-                            distanceZ),
-                            time, delay);
+                //obj.MoveFrom(new Vector3(distanceX,
+                //            distanceY,
+                //            distanceZ),
+                //            time, delay);
             }
         }
     }

@@ -307,14 +307,17 @@ public static class GameObjectHelper {
     public static void ScaleTweenObjectAbsolute(GameObject go, float absoluteValue) {
         if (go != null) {
             float valueTo = (absoluteValue / defaultScale) + .005f;
-            iTween.ScaleTo(go, Vector3.zero.WithX(valueTo).WithY(valueTo).WithZ(valueTo), .2f);
+            // TODO tween scale
+            //iTween.ScaleTo(go, Vector3.zero.WithX(valueTo).WithY(valueTo).WithZ(valueTo), .2f);
+
         }
     }
     
     public static void RotateTweenObjectAbsolute(GameObject go, float absoluteValue) {
         if (go != null) {
             float valueTo = absoluteValue * 360;
-            iTween.RotateTo(go, Vector3.zero.WithY(valueTo), .2f);
+            // TODO tween rotate
+            //UITweenerUtil.RotateTo(go, UITweener.Method.EaseIn, UITweener.Style.Once, .5f, 0f, .2f);
         }
     }
     
