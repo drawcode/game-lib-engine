@@ -767,13 +767,17 @@ public class AudioSystem : GameObjectBehavior {
 	        if (currentLoop != null) {
 	            if (currentLoop.audio.isPlaying) {
                     //currentLoop.gameObject.AudioTo(0f, 1f, 1.5f, 0f);
-                    currentIntro.volume = 0f;
+                    if(currentIntro.audio != null) {
+                        currentIntro.volume = 0f;
+                    }
 	            }
 	        }
 	
 	        if (currentIntro != null) {
-	            if (currentIntro.audio.isPlaying) {
-                    currentIntro.volume = 0f;
+                if (currentIntro.audio.isPlaying) {
+                    if(currentIntro.audio != null) {
+                        currentIntro.volume = 0f;
+                    }
 	                //currentIntro.gameObject.AudioTo(0f, 1f, 1.5f, 0f);
 	            }
 	        }
