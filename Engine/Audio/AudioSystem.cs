@@ -6,44 +6,34 @@ using Engine.Utility;
 using UnityEngine;
 
 public class AudioSetItem {
-	public AudioSource audioSource;
-	public AudioClip audioClip;
-	public string file = "";
+    public AudioSource audioSource;
+    public AudioClip audioClip;
+    public string file = "";
 }
 
 public class AudioSystem : GameObjectBehavior {
     public static AudioSystem Instance;
-
     public GameObject globalTranform;
-
     public AudioSource currentLoop;
     public AudioSource currentGameLoop;
     public AudioSource currentIntro;
-
-
     public AudioClip currentLoopClip;
     public AudioClip currentGameLoopClip;
     public AudioClip currentIntroClip;
-    
     public List<AudioSource> currentGameLoops;
     public List<AudioClip> currentGameClips;
-
     public Dictionary<string, AudioSetItem> clips;
-
     public double effectSoundVolume = 1.0;
     public double musicSoundVolume = 0.5;
-
     public bool ambienceActive = false;
-
     public int soundIncrement = 0;
-    
     int currentLoopIndex = 0;
-	
-	public string audioRootPath {
-		get {			
-			return ContentPaths.appCacheVersionSharedAudio; 
-		}
-	}
+    
+    public string audioRootPath {
+        get {           
+            return ContentPaths.appCacheVersionSharedAudio; 
+        }
+    }
 
     public bool isAudiocurrentLoopPlaying {
         get {
@@ -135,11 +125,11 @@ public class AudioSystem : GameObjectBehavior {
             currentGameLoop.volume = (float)musicSoundVolume;
         }
 
-        if(currentGameLoops != null) {
-            if(currentGameLoops.Count > 0 
-               && currentGameLoops.Count > currentLoopIndex
-               && currentLoopIndex > -1) {
-                if(currentGameLoops[currentLoopIndex] != null) {
+        if (currentGameLoops != null) {
+            if (currentGameLoops.Count > 0 
+                && currentGameLoops.Count > currentLoopIndex
+                && currentLoopIndex > -1) {
+                if (currentGameLoops[currentLoopIndex] != null) {
                     currentGameLoops[currentLoopIndex].volume = (float)musicSoundVolume;
                 }
             }
@@ -151,7 +141,7 @@ public class AudioSystem : GameObjectBehavior {
     }
 
     public GameObject PlayEffectObject(Transform parentTransform, string name, bool loop, float volume) {
-       return PlayFileFromResourcesObject(parentTransform, 
+        return PlayFileFromResourcesObject(parentTransform, 
                               audioRootPath + name, loop, soundIncrement, volume);
     }
 
@@ -159,22 +149,22 @@ public class AudioSystem : GameObjectBehavior {
         PlayEffect(name, 1f);
     }
 
-	public void PlayEffect(Transform parentTransform, string name, bool loop, float volume) {
-		PlayFileFromResources(parentTransform, 
-			audioRootPath + name, loop, soundIncrement, volume);
-	}
+    public void PlayEffect(Transform parentTransform, string name, bool loop, float volume) {
+        PlayFileFromResources(parentTransform, 
+            audioRootPath + name, loop, soundIncrement, volume);
+    }
 
-	public void PlayEffect(Transform parentTransform, string name, float volume) {
-		PlayFileFromResources(parentTransform, 
-			audioRootPath + name, false, soundIncrement, volume);
-	}
+    public void PlayEffect(Transform parentTransform, string name, float volume) {
+        PlayFileFromResources(parentTransform, 
+            audioRootPath + name, false, soundIncrement, volume);
+    }
 
     public void PlayEffect(string name, float volume) {
 
         // TODO, lookup filename from sound list...
         soundIncrement++;
         PlayFileFromResources(
-			audioRootPath + name, false, soundIncrement, volume);
+            audioRootPath + name, false, soundIncrement, volume);
     }
 
     public void PlayEffectIncrement(AudioClip clip, float volume, int increment) {
@@ -217,65 +207,65 @@ public class AudioSystem : GameObjectBehavior {
         PrepareIntroFileFromResources(name, true, volume);
         currentIntro.Play();
     }
-	
-	public void PlayAudioFile(string file) {
-		AudioSetItem item = GetAudioFile(file);
-		if(item != null) {
-			item.audioSource.Play();
-		}
-	}
-	
-	public AudioSetItem GetAudioFile(string file) {
-		if(clips.ContainsKey(file)) {
-			return clips[file];
-		}
-		return null;
-	}
-	
+    
+    public void PlayAudioFile(string file) {
+        AudioSetItem item = GetAudioFile(file);
+        if (item != null) {
+            item.audioSource.Play();
+        }
+    }
+    
+    public AudioSetItem GetAudioFile(string file) {
+        if (clips.ContainsKey(file)) {
+            return clips[file];
+        }
+        return null;
+    }
+    
     public AudioSetItem PrepareAudioFileFromResources(string file, bool loop, double volume, bool destroyOnComplete) { // file name without extension
         file = audioRootPath + file;
-		
+        
         AudioClip audioClip = LoadClipFromResources(file);
         GameObject goClip = GameObject.Find(file);
         if (goClip == null) {
-						
+                        
             goClip = new GameObject(file);
             AudioSource audioSource = goClip.AddComponent<AudioSource>();
             goClip.transform.parent = FindGameGlobal();
             DontDestroyOnLoad(goClip);
-			
-	        goClip.transform.parent = FindOrCreateSoundContainer().transform;
-	        goClip.transform.position = Camera.main.transform.position;
-	        goClip.audio.clip = audioClip;
-	        goClip.audio.loop = loop;
-	        goClip.audio.volume = (float)volume;
-	        goClip.audio.playOnAwake = false;
-			
-			if(destroyOnComplete) {
-	        	goClip.AddComponent<AudioDestroy>();
-			}
-			
-			if(clips == null) {
-				clips = new Dictionary<string, AudioSetItem>();
-			}
-			
-			AudioSetItem item = new AudioSetItem();			
-			item.audioClip = audioClip;
-			item.audioSource = audioSource;
-			item.file = file;
-							
-			if(clips.ContainsKey(file)) {
-				item = clips[file];
-				clips[file] = item;
-			}
-			else {
-				clips.Add(file, item);
-			}
-			
-			return item;
+            
+            goClip.transform.parent = FindOrCreateSoundContainer().transform;
+            goClip.transform.position = Camera.main.transform.position;
+            goClip.audio.clip = audioClip;
+            goClip.audio.loop = loop;
+            goClip.audio.volume = (float)volume;
+            goClip.audio.playOnAwake = false;
+            
+            if (destroyOnComplete) {
+                goClip.AddComponent<AudioDestroy>();
+            }
+            
+            if (clips == null) {
+                clips = new Dictionary<string, AudioSetItem>();
+            }
+            
+            AudioSetItem item = new AudioSetItem();         
+            item.audioClip = audioClip;
+            item.audioSource = audioSource;
+            item.file = file;
+                            
+            if (clips.ContainsKey(file)) {
+                item = clips[file];
+                clips[file] = item;
+            }
+            else {
+                clips.Add(file, item);
+            }
+            
+            return item;
         }
-		
-		return null;
+        
+        return null;
     }
 
     public void PrepareIntroFileFromResources(string file, bool loop, double volume) { // file name without extension
@@ -291,7 +281,7 @@ public class AudioSystem : GameObjectBehavior {
             DontDestroyOnLoad(goClip);
         }
         goClip.transform.parent = FindOrCreateSoundContainer().transform;
-        if(Camera.main != null && Camera.main.transform != null) {
+        if (Camera.main != null && Camera.main.transform != null) {
             goClip.transform.position = Camera.main.transform.position;
         }
         else {
@@ -335,7 +325,7 @@ public class AudioSystem : GameObjectBehavior {
             goClip.transform.parent = FindGameGlobal();
         }
         goClip.transform.parent = FindOrCreateDisposableSoundContainer().transform;
-        if(Camera.main != null && Camera.main.transform != null) {
+        if (Camera.main != null && Camera.main.transform != null) {
             goClip.transform.position = Camera.main.transform.position;
         }
         else {
@@ -360,7 +350,7 @@ public class AudioSystem : GameObjectBehavior {
             DontDestroyOnLoad(gameObject);
         }
         goClip.transform.parent = FindOrCreateSoundContainer().transform;
-        if(Camera.main != null && Camera.main.transform != null) {
+        if (Camera.main != null && Camera.main.transform != null) {
             goClip.transform.position = Camera.main.transform.position;
         }
         else {
@@ -373,7 +363,7 @@ public class AudioSystem : GameObjectBehavior {
     }
 
     public void PrepareGameLapLoopFileFromResources(int index, string file, bool loop, double volume) { // file name without extension
-        file = audioRootPath  + file;
+        file = audioRootPath + file;
         currentGameClips.Insert(index, LoadClipFromResources(file));
         GameObject goClip = GameObject.Find(file);
         if (goClip != null) {
@@ -385,7 +375,7 @@ public class AudioSystem : GameObjectBehavior {
             DontDestroyOnLoad(gameObject);
         }
         goClip.transform.parent = FindOrCreateSoundContainer().transform;
-        if(Camera.main != null && Camera.main.transform != null) {
+        if (Camera.main != null && Camera.main.transform != null) {
             goClip.transform.position = Camera.main.transform.position;
         }
         else {
@@ -416,7 +406,7 @@ public class AudioSystem : GameObjectBehavior {
     AudioListener listener;
 
     public Transform FindAudioListenerPosition() {
-        if(listener == null) {
+        if (listener == null) {
             listener = ObjectUtil.FindObject<AudioListener>();
         }
         if (listener != null) {
@@ -452,10 +442,10 @@ public class AudioSystem : GameObjectBehavior {
             }
         }
         goClip.transform.parent = parentTransform;
-		goClip.transform.position = parentTransform.position;
+        goClip.transform.position = parentTransform.position;
         goClip.audio.clip = clip;
         goClip.audio.loop = loop;
-		goClip.audio.minDistance = 5f;
+        goClip.audio.minDistance = 5f;
 
         goClip.audio.volume = volume;
         goClip.audio.playOnAwake = false;
@@ -654,38 +644,38 @@ public class AudioSystem : GameObjectBehavior {
 
     public IEnumerator StartAmbienceCoroutine() {
 
-		if(!ambienceActive) {
+        if (!ambienceActive) {
 
-	        if (currentGameLoop != null) {
-	            if (currentGameLoop.isPlaying) {
-	                currentGameLoop.volume = 0;
-	                currentGameLoop.Stop();
-	            }
-	        }
-	
-	        if (currentIntro != null) {
-		        currentIntro.volume = (float)musicSoundVolume;
-		        currentIntro.Play();
-				//if(currentIntro.clip != null) { 
-	            	yield return new WaitForSeconds(currentIntro.clip.length - 1f);
-				//}
-                if(currentIntro.gameObject != null) {
-	               // currentIntro.gameObject.AudioTo(0f, 1f, 1f, 0f);
+            if (currentGameLoop != null) {
+                if (currentGameLoop.isPlaying) {
+                    currentGameLoop.volume = 0;
+                    currentGameLoop.Stop();
                 }
-			}
-			
-			ambienceActive = true;
-	
-	        if (currentLoop != null && ambienceActive) {
+            }
+    
+            if (currentIntro != null) {
+                currentIntro.volume = (float)musicSoundVolume;
+                currentIntro.Play();
+                //if(currentIntro.clip != null) { 
+                yield return new WaitForSeconds(currentIntro.clip.length - 1f);
+                //}
+                if (currentIntro.gameObject != null) {
+                    // currentIntro.gameObject.AudioTo(0f, 1f, 1f, 0f);
+                }
+            }
+            
+            ambienceActive = true;
+    
+            if (currentLoop != null && ambienceActive) {
 
-	            currentLoop.volume = (float)musicSoundVolume;
-	            currentLoop.Play();
-	            //currentLoop.gameObject.AudioTo((float)musicSoundVolume, 1f, 1f, 0f);
-	        }			
-		}
-		else {
-			yield break;
-		}
+                currentLoop.volume = (float)musicSoundVolume;
+                currentLoop.Play();
+                //currentLoop.gameObject.AudioTo((float)musicSoundVolume, 1f, 1f, 0f);
+            }           
+        }
+        else {
+            yield break;
+        }
     }
 
     public IEnumerator StartGameLoopsForLapsCoroutine() {
@@ -703,7 +693,7 @@ public class AudioSystem : GameObjectBehavior {
 
     public void StartGameLoop(int loop) {
 
-        if(currentGameLoops == null) {
+        if (currentGameLoops == null) {
             return;
         }
 
@@ -714,39 +704,39 @@ public class AudioSystem : GameObjectBehavior {
 
         float volumeLevel = (float)musicSoundVolume;
 
-        for(int i = 0; i < currentGameLoops.Count; i++) {
+        for (int i = 0; i < currentGameLoops.Count; i++) {
 
             float currentVolumeLevel = 0f;
             bool isCurrent = currentLoopIndex == i ? true : false;
 
-            if(isCurrent) {
+            if (isCurrent) {
                 currentVolumeLevel = volumeLevel;
             }
 
-            if(currentGameLoops.Count > i) {
+            if (currentGameLoops.Count > i) {
 
-                if(currentGameLoops[i] == null) {
+                if (currentGameLoops[i] == null) {
                     return;
                 }
 
-                if(currentGameLoops[i].audio == null) {
+                if (currentGameLoops[i].audio == null) {
                     return;
                 }
 
-                if(isCurrent) {
+                if (isCurrent) {
 
                     if (!currentGameLoops[i].isPlaying) {
                         currentGameLoops[i].Play();
                         currentGameLoops[i].time = 0f; // TODO for laps or syned get time of last loop
                         currentGameLoops[i].volume = 0f;
                     }
-                    if(currentGameLoops[i].isPlaying) {
+                    if (currentGameLoops[i].isPlaying) {
                         currentGameLoops[i].volume = currentVolumeLevel;//.gameObject.AudioTo(currentVolumeLevel, 1f, .1f, 0f);
                     }
 
                     LogUtil.Log("StartGameLoop:", " i:play:" + currentGameLoops[i].name);
                 }
-                else  {
+                else {
 
                     currentGameLoops[i].volume = currentVolumeLevel;//.gameObject.AudioTo(currentVolumeLevel, 0f, .1f, 0f);
                     currentGameLoops[i].StopIfPlaying();
@@ -760,42 +750,44 @@ public class AudioSystem : GameObjectBehavior {
     }
 
     private IEnumerator StopAmbienceRoutine() {
-		if(ambienceActive) {
+        if (ambienceActive) {
 
-			ambienceActive = false;
+            ambienceActive = false;
 
-	        if (currentLoop != null) {
-	            if (currentLoop.audio.isPlaying) {
+            if (currentLoop != null) {
+                if (currentLoop.audio.isPlaying) {
                     //currentLoop.gameObject.AudioTo(0f, 1f, 1.5f, 0f);
-                    if(currentIntro.audio != null) {
+                    if (currentIntro != null) {
+                        if (currentIntro.audio != null) {
+                            currentIntro.volume = 0f;
+                        }
+                    }
+                }
+            }
+    
+            if (currentIntro != null) {
+                if (currentIntro.audio != null) {
+                    if (currentIntro.audio.isPlaying) {
                         currentIntro.volume = 0f;
                     }
-	            }
-	        }
-	
-	        if (currentIntro != null) {
-                if (currentIntro.audio.isPlaying) {
-                    if(currentIntro.audio != null) {
-                        currentIntro.volume = 0f;
-                    }
-	                //currentIntro.gameObject.AudioTo(0f, 1f, 1.5f, 0f);
-	            }
-	        }
+                    //currentIntro.gameObject.AudioTo(0f, 1f, 1.5f, 0f);
+                }
+            }
 
-	        yield return new WaitForSeconds(1.5f);
+            yield return new WaitForSeconds(1.5f);
 
-	        if (currentIntro != null) {
-	            currentIntro.Stop();
-			}
-	
-	        if (currentLoop != null) {
-	            currentLoop.Stop();
-			}
+            if (currentIntro != null) {
+                currentIntro.Stop();
+            }
+    
+            if (currentLoop != null) {
+                currentLoop.Stop();
+            }
 
-		}
-		else {
-			yield break;
-		}
+        }
+        else {
+            yield break;
+        }
     }
 
     // READING / WRITING
@@ -862,8 +854,7 @@ public class AudioSystem : GameObjectBehavior {
         var fileStream = new FileStream(filepath, FileMode.Create);
         byte emptyByte = new byte();
         
-        for(int i = 0; i < HEADER_SIZE; i++) //preparing the header
-        {
+        for (int i = 0; i < HEADER_SIZE; i++) { //preparing the header
             fileStream.WriteByte(emptyByte);
         }
         
@@ -886,7 +877,7 @@ public class AudioSystem : GameObjectBehavior {
         int rescaleFactor = 32767; //to convert float to Int16
         
         for (int i = 0; i<samples.Length; i++) {
-            intData[i] = (short) (samples[i] * rescaleFactor);
+            intData[i] = (short)(samples[i] * rescaleFactor);
             Byte[] byteArr = new Byte[2];
             byteArr = BitConverter.GetBytes(intData[i]);
             byteArr.CopyTo(bytesData, i * 2);
@@ -933,7 +924,7 @@ public class AudioSystem : GameObjectBehavior {
         Byte[] byteRate = BitConverter.GetBytes(hz * channels * 2); // sampleRate * bytesPerSample*number of channels, here 44100*2*2
         fileStream.Write(byteRate, 0, 4);
         
-        UInt16 blockAlign = (ushort) (channels * 2);
+        UInt16 blockAlign = (ushort)(channels * 2);
         fileStream.Write(BitConverter.GetBytes(blockAlign), 0, 2);
         
         UInt16 bps = 16;
