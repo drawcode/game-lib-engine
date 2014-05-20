@@ -16,6 +16,7 @@ public enum AppModeTypeChoiceFlowState {
 public enum AppOverviewFlowState {
     Mode,
     GameplayTips,
+    GeneralTips,
     Tutorial
 }
 
