@@ -74,6 +74,15 @@ public class GameDataItemRPG : GameDataObject {
         }
     }
     
+    public virtual double scale {
+        get {
+            return Get<double>(BaseDataObjectKeys.scale, 1.0);
+        }
+        
+        set {
+            Set<double>(BaseDataObjectKeys.scale, value);
+        }
+    }
     
     public virtual double speed {
         get {
@@ -241,6 +250,7 @@ public class GameDataItemRPGAttributes {
     public static string upgrades_applied = prefix + "upgrades_applied";
     public static string upgrades = prefix + "upgrades";
     public static string speed = prefix + "speed";
+    public static string scale = prefix + "scale";
     public static string attack = prefix + "attack";
     public static string defense = prefix + "defense";
     public static string health = prefix + "health";
@@ -584,6 +594,23 @@ public class GameProfileRPGItem : DataObjectItem {
      
     public void SetSpeed(double val) {
         SetAttributeDoubleValue(GameDataItemRPGAttributes.speed, val);
+    }
+
+    // scale
+    
+    public double GetScale() {
+        return GetScale(1.0);
+    }
+    
+    public double GetScale(double defaultValue) {        
+        double attValue = defaultValue;
+        if(CheckIfAttributeExists(GameDataItemRPGAttributes.scale))
+            attValue = GetAttributeDoubleValue(GameDataItemRPGAttributes.scale);
+        return attValue;
+    }
+    
+    public void SetScale(double val) {
+        SetAttributeDoubleValue(GameDataItemRPGAttributes.scale, val);
     }
  
     // attack

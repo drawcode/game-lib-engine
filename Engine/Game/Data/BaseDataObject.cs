@@ -154,6 +154,7 @@ public class BaseDataObjectKeys {
     public static string min = "min";
     public static string frequency = "frequency";
     public static string probability = "probability";
+    public static string scale = "scale";
     public static string speed = "speed";
     public static string attack = "attack";
     public static string defense = "defense";
