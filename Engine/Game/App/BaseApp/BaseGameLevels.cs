@@ -12,8 +12,8 @@ public class BaseGameLevels<T> : DataObjects<T> where T : DataObject, new() {
     public static string BASE_DATA_KEY = "game-level-data";    
     
     public static float gridHeight = 1f;
-    public static float gridWidth = 90f;
-    public static float gridDepth = 90f;
+    public static float gridWidth = 80f;
+    public static float gridDepth = 40f;
     public static float gridBoxSize = 4f;
     
     public static bool centeredX = true;
