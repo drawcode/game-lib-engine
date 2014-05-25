@@ -57,6 +57,10 @@ public class BaseGameCharacters<T> : DataObjects<T> where T : DataObject, new() 
     public static GameObject Load(string code) {
         return AppContentAssetModels.LoadModel(code);
     }
+    
+    public static GameObject LoadPrefab(string code) {
+        return AppContentAssetModels.LoadPrefab(code);
+    }
 }
 
 public class GameDataCharacter : GameDataObject {
@@ -97,18 +101,18 @@ public class GameDataCharacter : GameDataObject {
 }
 */
 
-public class BaseGameCharacter : GameDataObject {
+public class BaseGameCharacter : GameDataObjectMeta {
 
     // Attributes that are added or changed after launch should be like this to prevent
     // profile conversions.
 
-    public virtual GameDataCharacter data {
+    public virtual GameDataObjectItem data {
         get {
-            return Get<GameDataCharacter>(BaseDataObjectKeys.data);
+            return Get<GameDataObjectItem>(BaseDataObjectKeys.data);
         }
         
         set {
-            Set<GameDataCharacter>(BaseDataObjectKeys.data, value);
+            Set<GameDataObjectItem>(BaseDataObjectKeys.data, value);
         }
     }  
 
@@ -127,6 +131,14 @@ public class BaseGameCharacter : GameDataObject {
     public GameObject Load() {
         foreach(GameDataModel model in data.models) {
             return GameCharacters.Load(model.code);
+        }
+        return null;
+    }
+    
+    
+    public GameObject LoadPrefab() {
+        foreach(GameDataModel model in data.models) {
+            return GameCharacters.LoadPrefab(model.code);
         }
         return null;
     }

@@ -84,9 +84,9 @@ public class TestsData {
         //Advance(testName);
         //TestAppColors_List(testName);
         
-        testName = "TestAppColors_Code";
-        Advance(testName);
-        success = TestAppColors_Code(testName);
+        //testName = "TestAppColors_Code";
+        //Advance(testName);
+        //success = TestAppColors_Code(testName);
         
         //Advance("TestAppContentAssetModels_List");
         //TestAppContentAssetModels_List();
@@ -149,6 +149,11 @@ public class TestsData {
         //testName = "TestGameLeaderboards_List";
         //Advance(testName);
         //success = TestGameLeaderboards_List(testName);
+        
+        testName = "TestGameCharacterPresets_List";
+        Advance(testName);
+        success = TestGameCharacterPresets_List(testName);
+
 
         //
         
@@ -194,6 +199,40 @@ public class TestsData {
 
         return equal;
     }
+    
+    public static bool TestGameCharacterPresets_List(string name) {
+        
+        bool success = false;
+        
+        Debug.Log(name);
+        
+        List<GameCharacterPreset> items = GameCharacterPresets.Instance.GetAll();
+        DumpObj(name, "items", items);
+        
+        //AssertEquals(name, username, "Player");
+        
+        foreach(GameCharacterPreset item in items) {  
+            
+            Debug.Log("item:code:" + item.code);               
+            Debug.Log("item:json:" + item.ToJson());  
+            
+            GameCharacterPresetItems data = item.data;
+            
+            if(data != null) {
+                
+                foreach(GameCharacterPresetItem preset in data.items) {          
+                    Debug.Log("preset:code:" + preset.code);         
+                    Debug.Log("preset:json:" + preset.ToJson());
+                    success = true;                    
+                }
+            }
+        }
+        
+        DumpObj(name, "items.Count", items.Count);
+        
+        return success;
+    }
+
     public static bool TestGameLeaderboards_List(string name) {
         
         bool success = false;
@@ -290,7 +329,7 @@ public class TestsData {
             Debug.Log("item:code:" + item.code);               
             Debug.Log("item:json:" + item.ToJson());  
             
-            GamePresetItems data = item.data;
+            GamePresetItems<GamePresetItem> data = item.data;
             
             if(data != null) {
                 
@@ -323,7 +362,7 @@ public class TestsData {
             Debug.Log("item:code:" + item.code);               
             Debug.Log("item:json:" + item.ToJson());  
             
-            GamePresetItems data = item.data;
+            GamePresetItems<GamePresetItem> data = item.data;
             
             if(data != null) {
                 
@@ -680,7 +719,7 @@ public class TestsData {
 
             Debug.Log("item:json:" + item.ToJson());  
 
-            GameDataCharacter data = item.data;
+            GameDataObjectItem data = item.data;
 
             if(data != null) {
                 foreach(GameDataModel model in data.models) {

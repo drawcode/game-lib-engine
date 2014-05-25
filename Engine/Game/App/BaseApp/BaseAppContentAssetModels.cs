@@ -62,6 +62,15 @@ public class BaseAppContentAssetModels<T> : DataObjects<T> where T : DataObject,
         }
         return null;
     }
+    
+    public static GameObject LoadPrefab(string code) {
+        AppContentAssetModel model = AppContentAssetModels.Instance.GetByCode(code);
+        if(model != null) {
+            string assetCode = model.asset;
+            return AppContentAssets.LoadAssetPrefab(assetCode);
+        }
+        return null;
+    }
 }
 
 public class BaseAppContentAssetModel : GameDataObject {

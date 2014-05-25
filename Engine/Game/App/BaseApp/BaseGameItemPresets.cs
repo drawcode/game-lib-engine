@@ -54,7 +54,7 @@ public class BaseGameItemPresets<T> : DataObjects<T> where T : DataObject, new()
 }
 
 
-public class GameItemPresetItems : GamePresetItems {
+public class GameItemPresetItems : GamePresetItems<GameItemPresetItem> {
     
 }
 

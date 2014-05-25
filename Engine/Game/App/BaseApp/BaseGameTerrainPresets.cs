@@ -53,7 +53,7 @@ public class BaseGameTerrainPresets<T> : DataObjects<T> where T : DataObject, ne
     }
 }
 
-public class GameTerrainPresetItems : GamePresetItems {
+public class GameTerrainPresetItems : GamePresetItems<GameTerrainPresetItem> {
 
 }
 
@@ -67,9 +67,9 @@ public class BaseGameTerrainPreset : GameDataObject {
     // profile conversions.
       
     
-    public virtual GamePresetItems data {
+    public virtual GamePresetItems<GameTerrainPresetItems> data {
         get {
-            return Get<GamePresetItems>(BaseDataObjectKeys.data);
+            return Get<GamePresetItems<GameTerrainPresetItems>>(BaseDataObjectKeys.data);
         }
         
         set {

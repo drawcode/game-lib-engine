@@ -3,10 +3,17 @@ using System.Collections.Generic;
 using System.IO;
 
 public class GamePresetTypes {
-    public static string terrain = "terrain";
     public static string item = "item";
+    public static string character = "character";
+    public static string terrain = "terrain";
 }
 
+public class GamePresetTypeDefault {
+    public static string itemDefault = "item-default";
+    public static string characterDefault = "character-default";
+    public static string terrainDefault = "terrain-default";
+}
+//GamePresets.Instance.GetByCode("game-item-default");
 public class BaseGamePresets<T> : DataObjects<T> where T : DataObject, new() {
     private static T current;
     private static volatile BaseGamePresets<T> instance;
@@ -64,9 +71,9 @@ public class BaseGamePreset : GameDataObject {
     // profile conversions.
 
     
-    public virtual GamePresetItems data {
+    public virtual GamePresetItems<GamePresetItem> data {
         get {
-            return Get<GamePresetItems>(BaseDataObjectKeys.data);
+            return Get<GamePresetItems<GamePresetItem>>(BaseDataObjectKeys.data);
         }
         
         set {

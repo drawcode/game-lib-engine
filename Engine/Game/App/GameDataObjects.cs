@@ -219,6 +219,38 @@ public class GameDataObjectItem : GameDataObject {
         }
     } 
 
+    // roles
+
+    [JsonIgnore]
+    public bool isHero {
+        get {
+            return IsRole("hero");
+        }
+    }
+    
+    [JsonIgnore]
+    public bool isEnemy {
+        get {
+            return IsRole("enemy");
+        }
+    }
+    
+    [JsonIgnore]
+    public bool isSidekick {
+        get {
+            return IsRole("sidekick");
+        }
+    }
+
+    public bool IsRole(string roleTo) {
+        foreach(string role in roles) {
+            if(role == roleTo) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     // projectiles
 
     public bool HasProjectiles() {
@@ -508,14 +540,17 @@ public class GameDataPresetsObject<T> : GameDataObject where T : GameDataObject,
         }
         
         T selectByProbabilityItem = 
-            MathUtil.ChooseProbability<T>(items, probs); 
+            MathUtil.ChooseProbability<T>(items, probs);  
         
         return selectByProbabilityItem;
     }
 }
 
-public class GamePresetItems : GameDataPresetsObject<GamePresetItem> {
-    
+public class GamePresetItems<T> : GameDataPresetsObject<T> where T : GameDataObject, new() {
+
+    public GamePresetItems() {
+
+    }
 }
 
 public class GamePresetItem : GameDataObject {
@@ -686,6 +721,19 @@ public class GameFilter : GameDataObject {
             Set(BaseDataObjectKeys.data, value);
         }
     }
+}
+
+public class GameDataObjectMeta : GameDataObject {
+
+    public virtual GameDataObjectItem data {
+        get {
+            return Get<GameDataObjectItem>(BaseDataObjectKeys.data);
+        }
+        
+        set {
+            Set<GameDataObjectItem>(BaseDataObjectKeys.data, value);
+        }
+    } 
 }
 
 public class GameDataObject : DataObject {
@@ -1163,7 +1211,7 @@ public class GameDataObject : DataObject {
     }
     
     // helpers
-    
+
     public T GetItemRandomByType<T>(List<T> list, string type) where T : GameDataObject {
         
         T obj = default(T);

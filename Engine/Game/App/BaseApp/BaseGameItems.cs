@@ -53,7 +53,7 @@ public class BaseGameItems<T> : DataObjects<T> where T : DataObject, new() {
     }
 }
 
-public class BaseGameItem : GameDataObject {
+public class BaseGameItem : GameDataObjectMeta {
 
     // Attributes that are added or changed after launch should be like this to prevent
     // profile conversions.
