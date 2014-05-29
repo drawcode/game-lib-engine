@@ -20,6 +20,8 @@ public class BaseGamePresets<T> : DataObjects<T> where T : DataObject, new() {
     private static object syncRoot = new Object();
 
     private string BASE_DATA_KEY = "game-preset-data";
+    
+    public Dictionary<string,string> currentPresets;
 
     public static T BaseCurrent {
         get {
@@ -62,6 +64,73 @@ public class BaseGamePresets<T> : DataObjects<T> where T : DataObject, new() {
         path = "data/" + BASE_DATA_KEY + ".json";
         pathKey = BASE_DATA_KEY;
         LoadData();
+    }    
+    
+    public static List<GamePreset> GetAllItems() {
+        return GamePresets.Instance.GetAll();
+    }
+    
+    public static GamePreset Get(string code) {
+        return GamePresets.Instance.GetByCode(code);
+    }
+
+    public void LoadCurrentPresets() {
+    
+        if(currentPresets == null) {
+            currentPresets = new Dictionary<string,string>();
+        }
+
+        if(!currentPresets.ContainsKey(GamePresetTypes.character)) {
+            currentPresets.Set(GamePresetTypes.character, GamePresetTypeDefault.characterDefault);
+        }
+
+        if(!currentPresets.ContainsKey(GamePresetTypes.item)) {
+            currentPresets.Set(GamePresetTypes.item, GamePresetTypeDefault.itemDefault);
+        }
+
+        if(!currentPresets.ContainsKey(GamePresetTypes.terrain)) {
+            currentPresets.Set(GamePresetTypes.terrain, GamePresetTypeDefault.terrainDefault);
+        }
+    }
+        
+    public void ChangeCurrentPreset(string presetType, string presetCode) {
+
+        LoadCurrentPresets();
+        
+        currentPresets.Set(presetType, presetCode);
+    }
+
+    public string GetCurrentPreset(string presetType) {
+
+        LoadCurrentPresets();
+
+        if(currentPresets.ContainsKey(presetType)) {
+            return currentPresets[presetType];
+        }
+
+        return null;
+    }
+
+    public GamePreset GetCurrentPresetData(string presetType) {
+        string presetCode = GetCurrentPreset(presetType);
+
+        if(!string.IsNullOrEmpty(presetCode)) {
+            return GamePresets.Instance.GetById(presetCode); 
+        }
+
+        return null;
+    }
+    
+    public GamePreset GetCurrentPresetDataCharacter() {
+        return GetCurrentPresetData(GamePresetTypes.character);
+    }
+    
+    public GamePreset GetCurrentPresetDataItem() {
+        return GetCurrentPresetData(GamePresetTypes.item);
+    }
+    
+    public GamePreset GetCurrentPresetDataTerrain() {
+        return GetCurrentPresetData(GamePresetTypes.terrain);
     }
 }
 

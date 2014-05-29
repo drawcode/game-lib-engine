@@ -306,7 +306,7 @@ public static class GameObjectHelper {
     
     public static void ScaleTweenObjectAbsolute(GameObject go, float absoluteValue) {
         if (go != null) {
-            float valueTo = (absoluteValue / defaultScale) + .005f;
+            //float valueTo = (absoluteValue / defaultScale) + .005f;
             // TODO tween scale
             //iTween.ScaleTo(go, Vector3.zero.WithX(valueTo).WithY(valueTo).WithZ(valueTo), .2f);
 
@@ -315,7 +315,7 @@ public static class GameObjectHelper {
     
     public static void RotateTweenObjectAbsolute(GameObject go, float absoluteValue) {
         if (go != null) {
-            float valueTo = absoluteValue * 360;
+            //float valueTo = absoluteValue * 360;
             // TODO tween rotate
             //UITweenerUtil.RotateTo(go, UITweener.Method.EaseIn, UITweener.Style.Once, .5f, 0f, .2f);
         }
