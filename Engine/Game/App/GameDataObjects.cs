@@ -606,7 +606,8 @@ public class GameFilterBase : GameDataObject {
         Reset();
     }
     
-    public virtual void Reset() {
+    public override void Reset() {
+        base.Reset();
         codeType = GameCompareType.equal;
         compareType = StatEqualityTypeString.STAT_GREATER_THAN;
         compareValue = 1.0;

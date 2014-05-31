@@ -106,16 +106,6 @@ public class BaseGameCharacter : GameDataObjectMeta {
     // Attributes that are added or changed after launch should be like this to prevent
     // profile conversions.
 
-    public virtual GameDataObjectItem data {
-        get {
-            return Get<GameDataObjectItem>(BaseDataObjectKeys.data);
-        }
-        
-        set {
-            Set<GameDataObjectItem>(BaseDataObjectKeys.data, value);
-        }
-    }  
-
     public BaseGameCharacter() {
         Reset();
     }
