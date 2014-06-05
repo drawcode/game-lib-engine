@@ -44,37 +44,61 @@ public class GameDataTerrainPreset : GameDataObject {
     
 }
 
-public class GameDataSound : GameDataObject {
+public class GameDataActionKeys {
+
     public static string load = "load";
+    public static string collect = "collect";
     public static string reward = "reward";
+    public static string spin = "spin";
 
-    public void PlaySound() {
-        
-    }
     
-    public void PlaySoundType(string playType, double modifier = 1.0) {
-        // TODO modifier
-        
-        if(playType == load) {
+    public static string footsteps = "footsteps";
+    public static string speed = "speed";
+    public static string mount = "mount";
+    public static string use = "use";
+    public static string walk = "walk";
+    public static string run = "run";
+    public static string attack = "attack";
+    public static string attack_near = "attack_near";
+    public static string attack_far = "attack_far";
+    public static string attack_alt = "attack_alt";
+    public static string attack_left = "attack_left";
+    public static string attack_right = "attack_right";
+    public static string hit = "hit";
+    public static string death = "death";
+    public static string skill = "skill";
+    public static string idle = "idle";
+    public static string jump = "jump";
+    public static string win = "win";
+    public static string lose = "lost";
+    public static string fail = "fail";
+    public static string emote = "emote";
+    public static string strafe = "strafe";
+    public static string strafe_left = "strafe_left";
+    public static string strafe_right = "strafe_right";
+    public static string defend = "defend";
+    public static string defend_alt = "defend_alt";
+    public static string defend_left = "defend_left";
+    public static string defend_right = "defend_right";
+    public static string boost = "boost";
+    public static string pickup = "pickup";
 
-        }
-        else if(playType == reward) {
+    public static string punch = "punch";
+    public static string kick = "kick";
+    public static string slide = "slide";
+    public static string crouch = "crouch";
+    public static string crouch_run = "crouch_run";
+    public static string crouch_walk = "crouch_walk";
 
-        }
-    }
-    
-    public void PlaySoundCode(string playCode, double modifier = 1.0) {
-        // TODO modifier
+}
 
-        GameAudio.PlayEffect(playCode);
+public class GameDataAnimation : GameDataObject {
 
-        if(playCode == load) {
-            
-        }
-        else if(playCode == reward) {
-            
-        }
-    }
+}
+
+
+public class GameDataSound : GameDataObject {
+
 }
 
 public class GameDataItemEffect : GameDataObject {
@@ -176,7 +200,17 @@ public class GameDataObjectItem : GameDataObject {
         set {
             Set<List<GameDataSound>>(BaseDataObjectKeys.sounds, value);
         }
-    }     
+    }    
+
+    public virtual List<GameDataAnimation> animations {
+        get {
+            return Get<List<GameDataAnimation>>(BaseDataObjectKeys.animations);
+        }
+        
+        set {
+            Set<List<GameDataAnimation>>(BaseDataObjectKeys.animations, value);
+        }
+    }    
     
     public virtual List<GameDataItemProjectile> projectiles {
         get {
@@ -355,15 +389,106 @@ public class GameDataObjectItem : GameDataObject {
 
     public GameDataSound GetSoundByType(string type) {
         // get random item
-        return GetItemRandomByType<GameDataSound>(sounds, type);
+        return GetItemRandom<GameDataSound>(sounds, type);
     }
 
     public GameDataSound GetSoundsByTypeShot() {
-        return GetSoundByType(GameDataItemKeys.shotType);
+        return GetSoundByType(GameDataActionKeys.attack);
     }
     
     public GameDataSound GetSoundsByTypeLoad() {
-        return GetSoundByType(GameDataItemKeys.loadType);
+        return GetSoundByType(GameDataActionKeys.load);
+    }
+
+    public void PlaySoundType(string type) {
+        
+        GameDataSound gameDataSound = GetSoundByType(GameDataActionKeys.reward);
+
+        if(gameDataSound != null) {
+            GameAudio.PlayEffect(gameDataSound.code);
+        }
+    }
+
+    // animations
+    
+    public bool HasAnimations() {
+        
+        if(animations != null) {
+            if(animations.Count > 0) {
+                return true;
+            }
+        }
+        
+        return false;
+    }
+    
+    public GameDataAnimation GetAnimation() {
+        return GetAnimation(GameDataItemTypeKeys.defaultType);
+    }
+    
+    public GameDataAnimation GetAnimation(string code) {
+        return GetItem<GameDataAnimation>(animations, code);
+    }
+    
+    public List<GameDataAnimation> GetAnimationListByType(string type) {
+        return GetItems<GameDataAnimation>(animations, type);
+    }
+    
+    public GameDataAnimation GetAnimationByType(string type) {
+        // get random item
+        return GetItemRandom<GameDataAnimation>(animations, type);
+    }
+
+    public GameDataAnimation GetAnimationsByTypeIdle() {
+        return GetAnimationByType(GameDataActionKeys.idle);
+    }
+    
+    public GameDataAnimation GetAnimationsByTypeAttack() {
+        return GetAnimationByType(GameDataActionKeys.attack);
+    }       
+    
+    public GameDataAnimation GetAnimationsByTypeAttackNear() {
+        return GetAnimationByType(GameDataActionKeys.attack_near);
+    }
+    
+    public GameDataAnimation GetAnimationsByTypeAttackFar() {
+        return GetAnimationByType(GameDataActionKeys.attack_far);
+    }
+    
+    public GameDataAnimation GetAnimationsByTypeHit() {
+        return GetAnimationByType(GameDataActionKeys.hit);
+    }
+        
+    public GameDataAnimation GetAnimationsByTypeJump() {
+        return GetAnimationByType(GameDataActionKeys.jump);
+    }
+            
+    public GameDataAnimation GetAnimationsByTypeRun() {
+        return GetAnimationByType(GameDataActionKeys.run);
+    }
+    
+    public GameDataAnimation GetAnimationsByTypeWalk() {
+        return GetAnimationByType(GameDataActionKeys.walk);
+    }
+    
+    public GameDataAnimation GetAnimationsByTypeDeath() {
+        return GetAnimationByType(GameDataActionKeys.death);
+    }
+    
+    public GameDataAnimation GetAnimationsByTypeSkill() {
+        return GetAnimationByType(GameDataActionKeys.skill);
+    }
+    
+    public GameDataAnimation GetAnimationsByTypeWin() {
+        return GetAnimationByType(GameDataActionKeys.win);
+    }
+    
+    public GameDataAnimation GetAnimationsByTypeFail() {
+        return GetAnimationByType(GameDataActionKeys.fail);
+    }
+    
+    public GameDataAnimation GetAnimationsByTypeEmote() {
+        return GetAnimationByType(GameDataActionKeys.emote);
     }
 
     // models
@@ -896,6 +1021,16 @@ public class GameDataObject : DataObject {
             Set<string>(BaseDataObjectKeys.type, value);
         }
     }    
+
+    public virtual string data_type {
+        get {
+            return Get<string>(BaseDataObjectKeys.data_type, "");
+        }
+        
+        set {
+            Set<string>(BaseDataObjectKeys.data_type, value);
+        }
+    }
     
     //[JsonIgnore(JsonIgnoreWhen.Deserializing)]
     public virtual string order_by {
@@ -1212,6 +1347,52 @@ public class GameDataObject : DataObject {
     }
     
     // helpers
+
+    
+    public T GetItemRandom<T>(List<T> list, string type) where T : GameDataObject, new() {
+        
+        T obj = default(T);
+        
+        List<T> items = GetItems<T>(list, type);
+
+        foreach(T item in items) {
+            if(item.data_type == "preset") {
+                // lookup preset
+                GamePreset preset = GamePresets.Get(item.code);
+                if(preset != null) {
+                    GamePresetItem presetItem = GetItemRandomByProbability(preset.data.items, type);
+                    obj = new T();
+                    obj.type = presetItem.type;
+                    obj.code = presetItem.code;
+                    return obj;
+                }
+            }
+            else {
+                // randomly pick from sets
+                return GetItemRandomByType(list, type);
+            }
+        }
+        
+        return obj;
+
+    }
+
+    
+    public T GetItemRandomByProbability<T>(List<T> list, string type) where T : GameDataObject {
+        
+        T obj = default(T);
+        
+        List<T> items = GetItems<T>(list, type);
+        
+        List<float> probs = new List<float>();
+        foreach (T item in items) {
+            probs.Add((float)item.probability);
+        }
+
+        obj = MathUtil.ChooseProbability<T>(list, probs); 
+
+        return obj;
+    }
 
     public T GetItemRandomByType<T>(List<T> list, string type) where T : GameDataObject {
         

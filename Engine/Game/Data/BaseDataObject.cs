@@ -13,6 +13,7 @@ public class BaseDataObjectKeys {
     public static string uuid = "uuid";
     public static string code = "code";
     public static string name = "name";
+    public static string data_type = "data_type";
     public static string description = "description";
     public static string display_name = "display_name";
     public static string attributes = "attributes";
@@ -116,6 +117,9 @@ public class BaseDataObjectKeys {
     
     public static string sound = "sound";
     public static string sounds = "sounds";
+    
+    public static string animation = "animation";
+    public static string animations = "animations";
     
     public static string projectile = "projectile";
     public static string projectiles = "projectiles";
