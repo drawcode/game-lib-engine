@@ -1360,9 +1360,9 @@ public class GameDataObject : DataObject {
                 // lookup preset
                 GamePreset preset = GamePresets.Get(item.code);
                 if(preset != null) {
-                    GamePresetItem presetItem = GetItemRandomByProbability(preset.data.items, type);
+                    GamePresetItem presetItem = GetItemRandomByProbability(preset.data.items);
                     obj = new T();
-                    obj.type = presetItem.type;
+                    obj.type = item.type;
                     obj.code = presetItem.code;
                     return obj;
                 }
@@ -1375,6 +1375,20 @@ public class GameDataObject : DataObject {
         
         return obj;
 
+    }
+    
+    public T GetItemRandomByProbability<T>(List<T> list) where T : GameDataObject {
+        
+        T obj = default(T);
+                
+        List<float> probs = new List<float>();
+        foreach (T item in list) {
+            probs.Add((float)item.probability);
+        }
+        
+        obj = MathUtil.ChooseProbability<T>(list, probs); 
+        
+        return obj;
     }
 
     
@@ -1389,7 +1403,7 @@ public class GameDataObject : DataObject {
             probs.Add((float)item.probability);
         }
 
-        obj = MathUtil.ChooseProbability<T>(list, probs); 
+        obj = MathUtil.ChooseProbability<T>(items, probs); 
 
         return obj;
     }

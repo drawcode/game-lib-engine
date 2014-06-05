@@ -150,10 +150,14 @@ public class TestsData {
         //Advance(testName);
         //success = TestGameLeaderboards_List(testName);
         
-        testName = "TestGameCharacterPresets_List";
-        Advance(testName);
-        success = TestGameCharacterPresets_List(testName);
+        ////testName = "TestGameCharacterPresets_List";
+        ////Advance(testName);
+        ////success = TestGameCharacterPresets_List(testName);
 
+        
+        testName = "TestGameCharacterAnimations_List";
+        Advance(testName);
+        success = TestGameCharacterAnimations_List(testName);
 
         //
         
@@ -198,6 +202,45 @@ public class TestsData {
         DumpObj(name, "dataB", dataB);
 
         return equal;
+    }
+    
+    public static bool TestGameCharacterAnimations_List(string name) {
+        
+        bool success = false;
+        
+        Debug.Log(name);
+        
+        List<GameCharacter> items = GameCharacters.Instance.GetAll();
+        DumpObj(name, "items", items);
+        
+        //AssertEquals(name, username, "Player");
+        
+        foreach(GameCharacter item in items) {  
+            
+            Debug.Log("item:code:" + item.code);               
+            Debug.Log("item:json:" + item.ToJson());  
+            
+            GameDataObjectItem data = item.data;
+            
+            if(data != null) {
+
+                GameDataAnimation attackItem = data.GetAnimationByType(GameDataActionKeys.attack);    
+                Debug.Log("attackItem:json:" + attackItem.ToJson()); 
+                
+                GameDataAnimation runItem = data.GetAnimationByType(GameDataActionKeys.run);    
+                Debug.Log("runItem:json:" + runItem.ToJson()); 
+                
+                foreach(GameDataAnimation dataItem in data.animations) {          
+                    Debug.Log("dataItem:code:" + dataItem.code);         
+                    Debug.Log("dataItem:json:" + dataItem.ToJson());   
+                    success = true;                    
+                }
+            }
+        }
+        
+        DumpObj(name, "items.Count", items.Count);
+        
+        return success;
     }
     
     public static bool TestGameCharacterPresets_List(string name) {
