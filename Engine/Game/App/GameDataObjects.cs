@@ -61,6 +61,8 @@ public class GameDataActionKeys {
     
     public static string walk_back = "walk_back";
     public static string run_back = "run_back";
+    
+    public static string walljump = "walljump";
 
     public static string attack = "attack";
     public static string attack_near = "attack_near";
