@@ -122,9 +122,7 @@ public class ARDataSets : BaseARDataSets<ARDataSet>
 }
 
 public class ARDataSet : BaseARDataSet 
-{
-	public List<string> pack;
-	
+{	
 	// Attributes that are added or changed after launch should be like this to prevent
 	// profile conversions.
 			
@@ -134,6 +132,5 @@ public class ARDataSet : BaseARDataSet
 	
 	public override void Reset() {
 		base.Reset();
-		pack = new List<string>();
 	}
 }

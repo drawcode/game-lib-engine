@@ -46,7 +46,7 @@ public class BaseDataObjectKeys {
     public static string pack_sort = "pack_sort";
     public static string date_created = "date_created";
     public static string date_modified = "date_modified";
-    
+        
     public static string username = "username";
     public static string udid = "udid";
     public static string file_name = "file_name";
@@ -120,6 +120,10 @@ public class BaseDataObjectKeys {
     
     public static string animation = "animation";
     public static string animations = "animations";
+    public static string animator = "animator";
+    public static string animation_state = "animation_state";
+    public static string animation_type = "animation_type";
+    public static string layer = "layer";
     
     public static string projectile = "projectile";
     public static string projectiles = "projectiles";

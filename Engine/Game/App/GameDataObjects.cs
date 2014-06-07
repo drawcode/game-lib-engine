@@ -58,6 +58,10 @@ public class GameDataActionKeys {
     public static string use = "use";
     public static string walk = "walk";
     public static string run = "run";
+    
+    public static string walk_back = "walk_back";
+    public static string run_back = "run_back";
+
     public static string attack = "attack";
     public static string attack_near = "attack_near";
     public static string attack_far = "attack_far";
@@ -77,6 +81,8 @@ public class GameDataActionKeys {
     public static string strafe_left = "strafe_left";
     public static string strafe_right = "strafe_right";
     public static string defend = "defend";
+    public static string defend_far = "defend_far";
+    public static string defend_near = "defend_near";
     public static string defend_alt = "defend_alt";
     public static string defend_left = "defend_left";
     public static string defend_right = "defend_right";
@@ -1262,8 +1268,6 @@ public class GameDataObject : DataObject {
 
     // achievements
 
-    
-    
     public virtual string defaultKey {
         get {
             return Get<string>(BaseDataObjectKeys.defaultKey);
@@ -1334,7 +1338,17 @@ public class GameDataObject : DataObject {
             Set(BaseDataObjectKeys.custom, value);
         }
     }
-
+    
+    
+    public virtual int layer {
+        get { 
+            return Get<int>(BaseDataObjectKeys.layer, 1);
+        }
+        
+        set {
+            Set<int>(BaseDataObjectKeys.layer, value);
+        }
+    }
 
     //
 
