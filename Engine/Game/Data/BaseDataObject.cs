@@ -123,6 +123,7 @@ public class BaseDataObjectKeys {
     public static string animator = "animator";
     public static string animation_state = "animation_state";
     public static string animation_type = "animation_type";
+    public static string play_type = "play_type";
     public static string layer = "layer";
     
     public static string projectile = "projectile";
@@ -141,6 +142,9 @@ public class BaseDataObjectKeys {
         
     public static string val = "val";
     public static string vals = "vals";
+    
+    public static string last_update = "last_update";
+    //last_update
 
     public static string texture = "texture";
     public static string textures = "textures";

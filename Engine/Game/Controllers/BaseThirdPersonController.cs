@@ -242,7 +242,7 @@ namespace Engine.Game.Controllers {
 
             verticalSpeed = CalculateJumpVerticalSpeed(jumpHeight);
             DidJump();
-            SendMessage("DidWallJump", null, SendMessageOptions.DontRequireReceiver);
+            SendMessage("WallJump", null, SendMessageOptions.DontRequireReceiver);
         }
 
         public void ApplyJumping() {
@@ -273,7 +273,7 @@ namespace Engine.Game.Controllers {
             }
 
             if (doAttack) {
-                SendMessage("DidAttack", SendMessageOptions.DontRequireReceiver);
+                SendMessage("Attack", SendMessageOptions.DontRequireReceiver);
             }
         }
 

@@ -73,6 +73,7 @@ public class GameDataActionKeys {
     public static string hit = "hit";
     public static string death = "death";
     public static string skill = "skill";
+    public static string boost = "boost";
     public static string idle = "idle";
     public static string jump = "jump";
     public static string win = "win";
@@ -88,7 +89,6 @@ public class GameDataActionKeys {
     public static string defend_alt = "defend_alt";
     public static string defend_left = "defend_left";
     public static string defend_right = "defend_right";
-    public static string boost = "boost";
     public static string pickup = "pickup";
 
     public static string punch = "punch";
@@ -1267,6 +1267,16 @@ public class GameDataObject : DataObject {
             Set<float>(BaseDataObjectKeys.val, value);
         }
     }
+        
+    public virtual float last_update {
+        get {
+            return Get<float>(BaseDataObjectKeys.last_update);
+        }
+        
+        set {
+            Set<float>(BaseDataObjectKeys.last_update, value);
+        }
+    }
 
     // achievements
 
@@ -1352,6 +1362,16 @@ public class GameDataObject : DataObject {
         }
     }
 
+    public virtual string play_type {
+        get { 
+            return Get<string>(BaseDataObjectKeys.play_type);
+        }
+        
+        set {
+            Set<string>(BaseDataObjectKeys.play_type, value);
+        }
+    }
+
     //
 
     public GameDataObject() {
@@ -1380,6 +1400,7 @@ public class GameDataObject : DataObject {
                     obj = new T();
                     obj.type = item.type;
                     obj.code = presetItem.code;
+                    obj.layer = item.layer;
                     return obj;
                 }
             }
