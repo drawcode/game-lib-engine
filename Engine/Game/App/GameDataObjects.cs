@@ -4,7 +4,6 @@ using System.IO;
 using Engine.Data.Json;
 using Engine.Utility;
 
-
 public class GameDataModel : GameDataObject {
     
     public virtual string textures {
@@ -15,7 +14,7 @@ public class GameDataModel : GameDataObject {
         set {
             Set<string>(BaseDataObjectKeys.textures, value);
         }
-    } 
+    }
     
     public virtual string colors {
         get {
@@ -45,25 +44,25 @@ public class GameDataTerrainPreset : GameDataObject {
 }
 
 public class GameDataActionKeys {
-
+    
+    public static string music_ui_intro = "music_ui_intro";
+    public static string music_ui_loop = "music_ui_loop";
+    public static string music_game = "music_game";
+    public static string scores = "scores";
+    public static string score = "score";
     public static string load = "load";
     public static string collect = "collect";
     public static string reward = "reward";
     public static string spin = "spin";
-
-    
     public static string footsteps = "footsteps";
     public static string speed = "speed";
     public static string mount = "mount";
     public static string use = "use";
     public static string walk = "walk";
     public static string run = "run";
-    
     public static string walk_back = "walk_back";
     public static string run_back = "run_back";
-    
     public static string walljump = "walljump";
-
     public static string attack = "attack";
     public static string attack_near = "attack_near";
     public static string attack_far = "attack_far";
@@ -90,7 +89,6 @@ public class GameDataActionKeys {
     public static string defend_left = "defend_left";
     public static string defend_right = "defend_right";
     public static string pickup = "pickup";
-
     public static string punch = "punch";
     public static string kick = "kick";
     public static string slide = "slide";
@@ -104,8 +102,26 @@ public class GameDataAnimation : GameDataObject {
 
 }
 
-
 public class GameDataSound : GameDataObject {
+
+
+    [JsonIgnore]
+    public bool isPlayTypeLoop {
+        get {
+            return data_type == GameDataPlayType.loop
+                || data_type == GameDataPlayType.loop_reverse
+                    ? true : false;
+        }
+    }
+
+    [JsonIgnore]
+    public bool isPlayTypeOnce {
+        get {
+            return data_type == GameDataPlayType.once
+                || data_type == GameDataPlayType.once_reverse
+                    ? true : false;
+        }
+    }
 
 }
 
@@ -133,7 +149,6 @@ public class GameDataItemKeys {
     public static string prepareType = "prepare";
     public static string postType = "post";
     public static string runType = "run";
-
     public static string shotType = "shot";
     public static string loadType = "load";
 }
@@ -148,7 +163,7 @@ public class GameDataObjectItem : GameDataObject {
         set {
             Set<List<string>>(BaseDataObjectKeys.roles, value);
         }
-    } 
+    }
     
     public virtual List<GameDataModel> models {
         get {
@@ -158,7 +173,7 @@ public class GameDataObjectItem : GameDataObject {
         set {
             Set<List<GameDataModel>>(BaseDataObjectKeys.models, value);
         }
-    } 
+    }
     
     public virtual List<GameDataColorPreset> color_presets {
         get {
@@ -168,7 +183,7 @@ public class GameDataObjectItem : GameDataObject {
         set {
             Set<List<GameDataColorPreset>>(BaseDataObjectKeys.color_presets, value);
         }
-    } 
+    }
     
     public virtual List<GameDataTexturePreset> texture_presets {
         get {
@@ -178,7 +193,7 @@ public class GameDataObjectItem : GameDataObject {
         set {
             Set<List<GameDataTexturePreset>>(BaseDataObjectKeys.texture_presets, value);
         }
-    } 
+    }
     
     public virtual List<GameDataItemPreset> item_presets {
         get {
@@ -188,7 +203,7 @@ public class GameDataObjectItem : GameDataObject {
         set {
             Set<List<GameDataItemPreset>>(BaseDataObjectKeys.item_presets, value);
         }
-    } 
+    }
         
     public virtual List<GameDataTerrainPreset> terrain_presets {
         get {
@@ -198,7 +213,7 @@ public class GameDataObjectItem : GameDataObject {
         set {
             Set<List<GameDataTerrainPreset>>(BaseDataObjectKeys.terrain_presets, value);
         }
-    } 
+    }
     
     public virtual List<GameDataSound> sounds {
         get {
@@ -208,7 +223,7 @@ public class GameDataObjectItem : GameDataObject {
         set {
             Set<List<GameDataSound>>(BaseDataObjectKeys.sounds, value);
         }
-    }    
+    }
 
     public virtual List<GameDataAnimation> animations {
         get {
@@ -218,7 +233,7 @@ public class GameDataObjectItem : GameDataObject {
         set {
             Set<List<GameDataAnimation>>(BaseDataObjectKeys.animations, value);
         }
-    }    
+    }
     
     public virtual List<GameDataItemProjectile> projectiles {
         get {
@@ -228,7 +243,7 @@ public class GameDataObjectItem : GameDataObject {
         set {
             Set<List<GameDataItemProjectile>>(BaseDataObjectKeys.projectiles, value);
         }
-    } 
+    }
         
     public virtual List<GameDataItemEffect> effects {
         get {
@@ -238,7 +253,7 @@ public class GameDataObjectItem : GameDataObject {
         set {
             Set<List<GameDataItemEffect>>(BaseDataObjectKeys.effects, value);
         }
-    } 
+    }
     
     public virtual List<GameDataItemRPG> rpgs {
         get {
@@ -248,8 +263,7 @@ public class GameDataObjectItem : GameDataObject {
         set {
             Set<List<GameDataItemRPG>>(BaseDataObjectKeys.rpgs, value);
         }
-    } 
-
+    }
     
     public virtual List<GameDataItemReward> rewards {
         get {
@@ -285,8 +299,8 @@ public class GameDataObjectItem : GameDataObject {
     }
 
     public bool IsRole(string roleTo) {
-        foreach(string role in roles) {
-            if(role == roleTo) {
+        foreach (string role in roles) {
+            if (role == roleTo) {
                 return true;
             }
         }
@@ -297,8 +311,8 @@ public class GameDataObjectItem : GameDataObject {
 
     public bool HasProjectiles() {
 
-        if(projectiles != null) {
-            if(projectiles.Count > 0) {
+        if (projectiles != null) {
+            if (projectiles.Count > 0) {
                 return true;
             }
         }
@@ -335,8 +349,8 @@ public class GameDataObjectItem : GameDataObject {
     
     public bool HasEffects() {
         
-        if(effects != null) {
-            if(effects.Count > 0) {
+        if (effects != null) {
+            if (effects.Count > 0) {
                 return true;
             }
         }
@@ -374,8 +388,8 @@ public class GameDataObjectItem : GameDataObject {
     
     public bool HasSounds() {
         
-        if(sounds != null) {
-            if(sounds.Count > 0) {
+        if (sounds != null) {
+            if (sounds.Count > 0) {
                 return true;
             }
         }
@@ -392,7 +406,7 @@ public class GameDataObjectItem : GameDataObject {
     }
 
     public List<GameDataSound> GetSoundListByType(string type) {
-        return GetItems<GameDataSound>(sounds, type);
+        return GetItemsRandom<GameDataSound>(sounds, type);
     }
 
     public GameDataSound GetSoundByType(string type) {
@@ -412,7 +426,7 @@ public class GameDataObjectItem : GameDataObject {
         
         GameDataSound gameDataSound = GetSoundByType(GameDataActionKeys.reward);
 
-        if(gameDataSound != null) {
+        if (gameDataSound != null) {
             GameAudio.PlayEffect(gameDataSound.code);
         }
     }
@@ -421,8 +435,8 @@ public class GameDataObjectItem : GameDataObject {
     
     public bool HasAnimations() {
         
-        if(animations != null) {
-            if(animations.Count > 0) {
+        if (animations != null) {
+            if (animations.Count > 0) {
                 return true;
             }
         }
@@ -453,7 +467,7 @@ public class GameDataObjectItem : GameDataObject {
     
     public GameDataAnimation GetAnimationsByTypeAttack() {
         return GetAnimationByType(GameDataActionKeys.attack);
-    }       
+    }
     
     public GameDataAnimation GetAnimationsByTypeAttackNear() {
         return GetAnimationByType(GameDataActionKeys.attack_near);
@@ -503,8 +517,8 @@ public class GameDataObjectItem : GameDataObject {
         
     public bool HasModels() {
         
-        if(models != null) {
-            if(models.Count > 0) {
+        if (models != null) {
+            if (models.Count > 0) {
                 return true;
             }
         }
@@ -524,8 +538,8 @@ public class GameDataObjectItem : GameDataObject {
     
     public bool HasColorPresets() {
         
-        if(color_presets != null) {
-            if(color_presets.Count > 0) {
+        if (color_presets != null) {
+            if (color_presets.Count > 0) {
                 return true;
             }
         }
@@ -545,8 +559,8 @@ public class GameDataObjectItem : GameDataObject {
     
     public bool HasTexturePresets() {
         
-        if(texture_presets != null) {
-            if(texture_presets.Count > 0) {
+        if (texture_presets != null) {
+            if (texture_presets.Count > 0) {
                 return true;
             }
         }
@@ -566,8 +580,8 @@ public class GameDataObjectItem : GameDataObject {
     
     public bool HasTerrainPresets() {
         
-        if(terrain_presets != null) {
-            if(terrain_presets.Count > 0) {
+        if (terrain_presets != null) {
+            if (terrain_presets.Count > 0) {
                 return true;
             }
         }
@@ -587,8 +601,8 @@ public class GameDataObjectItem : GameDataObject {
     
     public bool HasRPGs() {
         
-        if(rpgs != null) {
-            if(rpgs.Count > 0) {
+        if (rpgs != null) {
+            if (rpgs.Count > 0) {
                 return true;
             }
         }
@@ -609,8 +623,8 @@ public class GameDataObjectItem : GameDataObject {
     
     public bool HasRewards() {
         
-        if(rewards != null) {
-            if(rewards.Count > 0) {
+        if (rewards != null) {
+            if (rewards.Count > 0) {
                 return true;
             }
         }
@@ -668,7 +682,7 @@ public class GameDataPresetsObject<T> : GameDataObject where T : GameDataObject,
                 
         List<float> probs = new List<float>();
         
-        foreach(T item in items) {
+        foreach (T item in items) {
             probs.Add((float)item.probability);
         }
         
@@ -731,7 +745,6 @@ public class GameFilterIncludeKeys : GameDataObject {
         custom = GameFilterIncludeType.none;
     }
 }
-
 
 public class GameFilterBase : GameDataObject {    
     
@@ -796,7 +809,6 @@ public class GameFilterBase : GameDataObject {
             Set(BaseDataObjectKeys.compareValue, value);
         }
     }
-    
     
     public virtual string codeCompareTo {
         get {
@@ -1028,7 +1040,7 @@ public class GameDataObject : DataObject {
         set {
             Set<string>(BaseDataObjectKeys.type, value);
         }
-    }    
+    }
 
     public virtual string data_type {
         get {
@@ -1206,7 +1218,7 @@ public class GameDataObject : DataObject {
         set {
             Set<double>(BaseDataObjectKeys.frequency, value);
         }
-    }    
+    }
     
     public virtual double probability {
         get {
@@ -1268,13 +1280,13 @@ public class GameDataObject : DataObject {
         }
     }
         
-    public virtual float last_update {
+    public virtual double last_update {
         get {
-            return Get<float>(BaseDataObjectKeys.last_update);
+            return Get<double>(BaseDataObjectKeys.last_update);
         }
         
         set {
-            Set<float>(BaseDataObjectKeys.last_update, value);
+            Set<double>(BaseDataObjectKeys.last_update, value);
         }
     }
 
@@ -1299,7 +1311,6 @@ public class GameDataObject : DataObject {
             Set(BaseDataObjectKeys.pack, value);
         }
     }
-    
     
     public virtual string tracker {
         get {
@@ -1351,7 +1362,6 @@ public class GameDataObject : DataObject {
         }
     }
     
-    
     public virtual int layer {
         get { 
             return Get<int>(BaseDataObjectKeys.layer, 1);
@@ -1384,6 +1394,33 @@ public class GameDataObject : DataObject {
     
     // helpers
 
+    public List<T> GetItemsRandom<T>(List<T> list, string type) where T : GameDataObject, new() {
+        
+        List<T> objs = new List<T>();
+        
+        List<T> items = GetItems<T>(list, type);
+        
+        foreach (T item in items) {
+            if (item.data_type == "preset") {
+                // lookup preset
+                GamePreset preset = GamePresets.Get(item.code);
+                if (preset != null) {
+                    GamePresetItem presetItem = GetItemRandomByProbability(preset.data.items);
+                    T obj = new T();
+                    obj.type = item.type;
+                    obj.code = presetItem.code;
+                    obj.layer = item.layer;
+                    objs.Add(obj);
+                }
+            }
+            else {
+                
+                objs.Add(GetItemRandomByType(list, type));
+            }
+        }
+        
+        return objs;
+    }
     
     public T GetItemRandom<T>(List<T> list, string type) where T : GameDataObject, new() {
         
@@ -1391,11 +1428,11 @@ public class GameDataObject : DataObject {
         
         List<T> items = GetItems<T>(list, type);
 
-        foreach(T item in items) {
-            if(item.data_type == "preset") {
+        foreach (T item in items) {
+            if (item.data_type == "preset") {
                 // lookup preset
                 GamePreset preset = GamePresets.Get(item.code);
-                if(preset != null) {
+                if (preset != null) {
                     GamePresetItem presetItem = GetItemRandomByProbability(preset.data.items);
                     obj = new T();
                     obj.type = item.type;
@@ -1411,7 +1448,6 @@ public class GameDataObject : DataObject {
         }
         
         return obj;
-
     }
     
     public T GetItemRandomByProbability<T>(List<T> list) where T : GameDataObject {
@@ -1427,7 +1463,6 @@ public class GameDataObject : DataObject {
         
         return obj;
     }
-
     
     public T GetItemRandomByProbability<T>(List<T> list, string type) where T : GameDataObject {
         
@@ -1451,8 +1486,8 @@ public class GameDataObject : DataObject {
         
         List<T> items = GetItems<T>(list, type);
         
-        if(items != null) {
-            if(items.Count > 0) {
+        if (items != null) {
+            if (items.Count > 0) {
                 int index = UnityEngine.Random.Range(0, items.Count);
                 obj = items[index];
             }
@@ -1465,12 +1500,12 @@ public class GameDataObject : DataObject {
         
         List<T> filteredList = new List<T>();
         
-        if(list == null) 
+        if (list == null) 
             return filteredList;
         
-        if(list.Count > 0) {
-            foreach(T item in list) {
-                if(item.type == type) {
+        if (list.Count > 0) {
+            foreach (T item in list) {
+                if (item.type == type) {
                     filteredList.Add(item);
                 }
             }
@@ -1481,17 +1516,17 @@ public class GameDataObject : DataObject {
     
     public T GetItem<T>(List<T> list, string code) where T : GameDataObject {
         
-        if(list == null) 
+        if (list == null) 
             return default(T);
         
-        if(list.Count > 0) {
-            foreach(T item in list) {
-                if(item.code == code) {
+        if (list.Count > 0) {
+            foreach (T item in list) {
+                if (item.code == code) {
                     return item;
                 }
             }
             
-            foreach(T item in list) {
+            foreach (T item in list) {
                 return item;
             }
         }

@@ -9,10 +9,13 @@ public class AudioSetItem {
     public AudioSource audioSource;
     public AudioClip audioClip;
     public string file = "";
+    public string type = "";
 }
 
 public class AudioSystem : GameObjectBehavior {
+
     public static AudioSystem Instance;
+
     public GameObject globalTranform;
     public AudioSource currentLoop;
     public AudioSource currentGameLoop;
@@ -28,7 +31,11 @@ public class AudioSystem : GameObjectBehavior {
     public bool ambienceActive = false;
     public int soundIncrement = 0;
     int currentLoopIndex = 0;
-    
+
+    public Dictionary<string, AudioSetItem> audioClips;
+
+    public bool dataDrivenLoad = true;
+
     public string audioRootPath {
         get {           
             return ContentPaths.appCacheVersionSharedAudio; 
@@ -69,17 +76,35 @@ public class AudioSystem : GameObjectBehavior {
 
         Instance = this;
 
-        ambienceActive = false;
-        DontDestroyOnLoad(gameObject);
+        //if(!dataDrivenLoad) {
+            ambienceActive = false;
+            DontDestroyOnLoad(gameObject);
 
-        currentGameClips = new List<AudioClip>();
-        currentGameLoops = new List<AudioSource>();
+            currentGameClips = new List<AudioClip>();
+            currentGameLoops = new List<AudioSource>();
+        //}
     }
 
     public void Start() {
 
         //
     }
+
+    
+    
+    // AMBIENCE / GAME NEW
+    
+    public void PlaySoundByPreset(string presetCode) {
+        
+        GamePreset preset = GamePresets.Get(presetCode);
+        if(preset != null) {
+            //preset.getI
+        }
+            
+            
+    }
+    
+    // AMBIENCE OLD
 
     public void CheckAmbiencePlaying() {
         if (currentLoop != null) {
@@ -161,10 +186,15 @@ public class AudioSystem : GameObjectBehavior {
 
     public void PlayEffect(string name, float volume) {
 
+        PlayEffect(name, volume, false);
+    }
+    
+    public void PlayEffect(string name, float volume, bool loop) {
+        
         // TODO, lookup filename from sound list...
         soundIncrement++;
         PlayFileFromResources(
-            audioRootPath + name, false, soundIncrement, volume);
+            audioRootPath + name, loop, soundIncrement, volume);
     }
 
     public void PlayEffectIncrement(AudioClip clip, float volume, int increment) {
@@ -204,7 +234,7 @@ public class AudioSystem : GameObjectBehavior {
     public void PlayIntro(string name, float volume) {
 
         // TODO, lookup filename from sound list...
-        PrepareIntroFileFromResources(name, true, volume);
+        PrepareIntroFileFromResources(name, false, volume);
         currentIntro.Play();
     }
     
@@ -269,6 +299,7 @@ public class AudioSystem : GameObjectBehavior {
     }
 
     public void PrepareIntroFileFromResources(string file, bool loop, double volume) { // file name without extension
+        string code = file;
         file = audioRootPath + file;
         currentIntroClip = LoadClipFromResources(file);
         GameObject goClip = GameObject.Find(file);
@@ -277,6 +308,8 @@ public class AudioSystem : GameObjectBehavior {
         else {
             goClip = new GameObject(file);
             currentIntro = goClip.AddComponent<AudioSource>();
+            GameObjectInactive obj = goClip.AddComponent<GameObjectInactive>();
+            obj.code = code;
             goClip.transform.parent = FindGameGlobal();
             DontDestroyOnLoad(goClip);
         }
@@ -295,7 +328,7 @@ public class AudioSystem : GameObjectBehavior {
     }
 
     public GameObject FindOrCreateDisposableSoundContainer() { // disposable sounds
-        string nameSoundRootName = "SoundContainerDisposable";
+        string nameSoundRootName = "_SoundContainerDisposable";
         GameObject goSoundRoot = GameObject.Find(nameSoundRootName);
         if (goSoundRoot == null) {
             goSoundRoot = new GameObject(nameSoundRootName);
@@ -304,7 +337,7 @@ public class AudioSystem : GameObjectBehavior {
     }
 
     public GameObject FindOrCreateSoundContainer() {
-        string nameSoundRootName = "SoundContainer";
+        string nameSoundRootName = "_SoundContainer";
         GameObject goSoundRoot = GameObject.Find(nameSoundRootName);
         if (goSoundRoot == null) {
             goSoundRoot = new GameObject(nameSoundRootName);
@@ -314,6 +347,7 @@ public class AudioSystem : GameObjectBehavior {
     }
 
     public void PrepareGameLoopFileFromResources(string file, bool loop, double volume) { // file name without extension
+        string code = file;
         file = audioRootPath + file;
         currentGameLoopClip = LoadClipFromResources(file);
         GameObject goClip = GameObject.Find(file);
@@ -322,6 +356,8 @@ public class AudioSystem : GameObjectBehavior {
         else {
             goClip = new GameObject(file);
             currentGameLoop = goClip.AddComponent<AudioSource>();
+            GameObjectInactive obj = goClip.AddComponent<GameObjectInactive>();
+            obj.code = code;
             goClip.transform.parent = FindGameGlobal();
         }
         goClip.transform.parent = FindOrCreateDisposableSoundContainer().transform;
@@ -338,6 +374,7 @@ public class AudioSystem : GameObjectBehavior {
     }
 
     public void PrepareLoopFileFromResources(string file, bool loop, float volume) { // file name without extension
+        string code = file;
         file = audioRootPath + file;
         currentLoopClip = LoadClipFromResources(file);
         GameObject goClip = GameObject.Find(file);
@@ -346,6 +383,8 @@ public class AudioSystem : GameObjectBehavior {
         else {
             goClip = new GameObject(file);
             currentLoop = goClip.AddComponent<AudioSource>();
+            GameObjectInactive obj = goClip.AddComponent<GameObjectInactive>();
+            obj.code = code;
             goClip.transform.parent = FindGameGlobal();
             DontDestroyOnLoad(gameObject);
         }
@@ -363,6 +402,7 @@ public class AudioSystem : GameObjectBehavior {
     }
 
     public void PrepareGameLapLoopFileFromResources(int index, string file, bool loop, double volume) { // file name without extension
+        string code = file;
         file = audioRootPath + file;
         currentGameClips.Insert(index, LoadClipFromResources(file));
         GameObject goClip = GameObject.Find(file);
@@ -371,6 +411,8 @@ public class AudioSystem : GameObjectBehavior {
         else {
             goClip = new GameObject(file);
             currentGameLoops.Insert(index, goClip.AddComponent<AudioSource>());
+            GameObjectInactive obj = goClip.AddComponent<GameObjectInactive>();
+            obj.code = code;
             goClip.transform.parent = FindGameGlobal();
             DontDestroyOnLoad(gameObject);
         }
@@ -663,8 +705,6 @@ public class AudioSystem : GameObjectBehavior {
                     // currentIntro.gameObject.AudioTo(0f, 1f, 1f, 0f);
                 }
             }
-            
-            ambienceActive = true;
     
             if (currentLoop != null && ambienceActive) {
 
@@ -672,6 +712,8 @@ public class AudioSystem : GameObjectBehavior {
                 currentLoop.Play();
                 //currentLoop.gameObject.AudioTo((float)musicSoundVolume, 1f, 1f, 0f);
             }           
+            
+            ambienceActive = true;
         }
         else {
             yield break;
@@ -752,8 +794,6 @@ public class AudioSystem : GameObjectBehavior {
     private IEnumerator StopAmbienceRoutine() {
         if (ambienceActive) {
 
-            ambienceActive = false;
-
             if (currentLoop != null) {
                 if (currentLoop.audio.isPlaying) {
                     //currentLoop.gameObject.AudioTo(0f, 1f, 1.5f, 0f);
@@ -774,7 +814,7 @@ public class AudioSystem : GameObjectBehavior {
                 }
             }
 
-            yield return new WaitForSeconds(1.5f);
+            yield return new WaitForSeconds(0.5f);
 
             if (currentIntro != null) {
                 currentIntro.Stop();
@@ -783,7 +823,8 @@ public class AudioSystem : GameObjectBehavior {
             if (currentLoop != null) {
                 currentLoop.Stop();
             }
-
+            
+            ambienceActive = false;
         }
         else {
             yield break;

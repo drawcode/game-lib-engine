@@ -135,7 +135,7 @@ public class Context {
 	
 	public bool isConsole {
 		get {
-			return isConsolePS3  || isConsoleXbox360 || isConsoleWii;
+			return isConsolePS3  || isConsoleXbox360;
 		}
 	}
 	
@@ -148,12 +148,6 @@ public class Context {
 	public bool isConsoleXbox360 {
 		get {
 			return Application.platform == RuntimePlatform.XBOX360;
-		}
-	}
-	
-	public bool isConsoleWii {
-		get {
-			return Application.platform == RuntimePlatform.WiiPlayer;
 		}
 	}
 
