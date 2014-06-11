@@ -45,6 +45,17 @@ public class GameDataTerrainPreset : GameDataObject {
 
 public class GameDataActionKeys {
     
+    public static string goal_range_1 = "goal_range_1";
+    public static string goal_range_2 = "goal_range_2";
+    public static string goal_range_3 = "goal_range_3";
+    public static string goal_range_4 = "goal_range_4";
+    public static string player_out_of_bounds = "player_out_of_bounds";
+    public static string player_action_good = "player_action_good";
+    public static string player_action_bad = "player_action_bad";
+    public static string player_start = "player_start";
+    public static string player_end = "player_end";
+    public static string level_start = "level_start";
+    public static string level_end = "level_end";
     public static string music_ui_intro = "music_ui_intro";
     public static string music_ui_loop = "music_ui_loop";
     public static string music_game = "music_game";
@@ -1287,6 +1298,16 @@ public class GameDataObject : DataObject {
         
         set {
             Set<double>(BaseDataObjectKeys.last_update, value);
+        }
+    }
+        
+    public virtual double modifier {
+        get {
+            return Get<double>(BaseDataObjectKeys.modifier, 1.0);
+        }
+        
+        set {
+            Set<double>(BaseDataObjectKeys.modifier, value);
         }
     }
 

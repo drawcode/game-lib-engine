@@ -144,7 +144,7 @@ public class BaseDataObjectKeys {
     public static string vals = "vals";
     
     public static string last_update = "last_update";
-    //last_update
+    public static string modifier = "modifier";
 
     public static string texture = "texture";
     public static string textures = "textures";
