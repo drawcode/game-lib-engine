@@ -121,6 +121,8 @@ public class GameDataSound : GameDataObject {
         get {
             return data_type == GameDataPlayType.loop
                 || data_type == GameDataPlayType.loop_reverse
+                    || play_type == GameDataPlayType.loop
+                    || play_type == GameDataPlayType.loop_reverse
                     ? true : false;
         }
     }
@@ -130,6 +132,8 @@ public class GameDataSound : GameDataObject {
         get {
             return data_type == GameDataPlayType.once
                 || data_type == GameDataPlayType.once_reverse
+                    || play_type == GameDataPlayType.once
+                    || play_type == GameDataPlayType.once_reverse
                     ? true : false;
         }
     }
@@ -1400,6 +1404,16 @@ public class GameDataObject : DataObject {
         
         set {
             Set<string>(BaseDataObjectKeys.play_type, value);
+        }
+    }
+    
+    public virtual double play_delay {
+        get { 
+            return Get<double>(BaseDataObjectKeys.play_delay, 1.0);
+        }
+        
+        set {
+            Set<double>(BaseDataObjectKeys.play_delay, value);
         }
     }
 

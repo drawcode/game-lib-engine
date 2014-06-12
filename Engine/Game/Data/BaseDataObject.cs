@@ -124,6 +124,7 @@ public class BaseDataObjectKeys {
     public static string animation_state = "animation_state";
     public static string animation_type = "animation_type";
     public static string play_type = "play_type";
+    public static string play_delay = "play_delay";
     public static string layer = "layer";
     
     public static string projectile = "projectile";
