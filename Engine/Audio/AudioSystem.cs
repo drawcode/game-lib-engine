@@ -298,7 +298,48 @@ public class AudioSystem : GameObjectBehavior {
         return null;
     }
 
-    public void PrepareIntroFileFromResources(string file, bool loop, double volume) { // file name without extension
+    public GameObject PrepareFromResources(string type, string file, bool loop, double volume) { // file name without extension
+
+        string path = audioRootPath + file;
+        string code = "game-" + type;
+
+        AudioClip clip = LoadClipFromResources(path);
+
+        GameObject goClip = GameObject.Find(code);
+
+        if (goClip != null) {
+        
+        }
+        else {
+            goClip = new GameObject(code);
+
+            goClip.AddComponent<AudioSource>();
+
+            GameObjectAudio obj = goClip.AddComponent<GameObjectAudio>();
+            obj.code = code;
+            obj.type = type;
+            obj.file = file;
+            obj.path = path;
+        }
+        goClip.transform.parent = FindOrCreateSoundContainer().transform;
+
+        if (Camera.main != null && Camera.main.transform != null) {
+            goClip.transform.position = Camera.main.transform.position;
+        }
+        else {
+            goClip.transform.position = Vector3.zero;
+        }
+
+        goClip.audio.clip = clip;
+        goClip.audio.loop = loop;
+        goClip.audio.volume = (float)volume;
+        goClip.audio.playOnAwake = false;
+
+        return goClip;
+    }
+
+
+    public GameObject PrepareIntroFileFromResources(string file, bool loop, double volume) { // file name without extension
         string code = file;
         file = audioRootPath + file;
         currentIntroClip = LoadClipFromResources(file);
@@ -308,7 +349,7 @@ public class AudioSystem : GameObjectBehavior {
         else {
             goClip = new GameObject(file);
             currentIntro = goClip.AddComponent<AudioSource>();
-            GameObjectInactive obj = goClip.AddComponent<GameObjectInactive>();
+            GameObjectAudio obj = goClip.AddComponent<GameObjectAudio>();
             obj.code = code;
             goClip.transform.parent = FindGameGlobal();
             DontDestroyOnLoad(goClip);
@@ -325,6 +366,8 @@ public class AudioSystem : GameObjectBehavior {
         goClip.audio.volume = (float)volume;
         goClip.audio.playOnAwake = false;
         goClip.AddComponent<AudioDestroy>();
+
+        return goClip;
     }
 
     public GameObject FindOrCreateDisposableSoundContainer() { // disposable sounds
@@ -346,7 +389,7 @@ public class AudioSystem : GameObjectBehavior {
         return goSoundRoot;
     }
 
-    public void PrepareGameLoopFileFromResources(string file, bool loop, double volume) { // file name without extension
+    public GameObject PrepareGameLoopFileFromResources(string file, bool loop, double volume) { // file name without extension
         string code = file;
         file = audioRootPath + file;
         currentGameLoopClip = LoadClipFromResources(file);
@@ -356,7 +399,7 @@ public class AudioSystem : GameObjectBehavior {
         else {
             goClip = new GameObject(file);
             currentGameLoop = goClip.AddComponent<AudioSource>();
-            GameObjectInactive obj = goClip.AddComponent<GameObjectInactive>();
+            GameObjectAudio obj = goClip.AddComponent<GameObjectAudio>();
             obj.code = code;
             goClip.transform.parent = FindGameGlobal();
         }
@@ -371,9 +414,11 @@ public class AudioSystem : GameObjectBehavior {
         goClip.audio.loop = loop;
         goClip.audio.volume = (float)volume;
         goClip.audio.playOnAwake = false;
+
+        return goClip;
     }
 
-    public void PrepareLoopFileFromResources(string file, bool loop, float volume) { // file name without extension
+    public GameObject PrepareLoopFileFromResources(string file, bool loop, float volume) { // file name without extension
         string code = file;
         file = audioRootPath + file;
         currentLoopClip = LoadClipFromResources(file);
@@ -383,7 +428,7 @@ public class AudioSystem : GameObjectBehavior {
         else {
             goClip = new GameObject(file);
             currentLoop = goClip.AddComponent<AudioSource>();
-            GameObjectInactive obj = goClip.AddComponent<GameObjectInactive>();
+            GameObjectAudio obj = goClip.AddComponent<GameObjectAudio>();
             obj.code = code;
             goClip.transform.parent = FindGameGlobal();
             DontDestroyOnLoad(gameObject);
@@ -399,9 +444,11 @@ public class AudioSystem : GameObjectBehavior {
         goClip.audio.loop = loop;
         goClip.audio.volume = (float)volume;
         goClip.audio.playOnAwake = false;
+
+        return goClip;
     }
 
-    public void PrepareGameLapLoopFileFromResources(int index, string file, bool loop, double volume) { // file name without extension
+    public GameObject PrepareGameLapLoopFileFromResources(int index, string file, bool loop, double volume) { // file name without extension
         string code = file;
         file = audioRootPath + file;
         currentGameClips.Insert(index, LoadClipFromResources(file));
@@ -411,7 +458,7 @@ public class AudioSystem : GameObjectBehavior {
         else {
             goClip = new GameObject(file);
             currentGameLoops.Insert(index, goClip.AddComponent<AudioSource>());
-            GameObjectInactive obj = goClip.AddComponent<GameObjectInactive>();
+            GameObjectAudio obj = goClip.AddComponent<GameObjectAudio>();
             obj.code = code;
             goClip.transform.parent = FindGameGlobal();
             DontDestroyOnLoad(gameObject);
@@ -428,6 +475,8 @@ public class AudioSystem : GameObjectBehavior {
         goClip.audio.volume = (float)volume;
         goClip.audio.playOnAwake = false;
         LogUtil.Log("AudioLoaded: index:" + index + " file: " + file);
+
+        return goClip;
     }
 
     public Transform FindGameGlobal() {
