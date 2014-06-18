@@ -1445,6 +1445,8 @@ public class GameDataObject : DataObject {
                     obj.type = item.type;
                     obj.code = presetItem.code;
                     obj.layer = item.layer;
+                    obj.play_delay = item.play_delay;
+                    obj.play_type = item.play_type;
                     objs.Add(obj);
                 }
             }
