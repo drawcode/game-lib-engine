@@ -6,7 +6,7 @@ using Engine.Utility;
 using UnityEngine;
 
 namespace Engine.Game.Controllers {
-
+#if NETWORK_PHOTON
     [RequireComponent(typeof(ThirdPersonController))]
     public class ThirdPersonPushBodies : BaseEngineBehavior {
         public float pushPower = 0.5f;
@@ -41,4 +41,5 @@ namespace Engine.Game.Controllers {
             body.velocity = pushDir * pushPower * Mathf.Min(controller.GetSpeed(), controller.walkSpeed);
         }
     }
+#endif
 }
