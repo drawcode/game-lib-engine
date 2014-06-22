@@ -51,8 +51,12 @@ public class Context {
 	
 	public bool isWeb {
 		get {
-			return isWebMac || isWebWindows;
-		}
+#if UNITY_WEBPLAYER
+            return true;
+#else
+            return false;
+#endif
+        }
 	}
 	
 	public bool isWebMac {
