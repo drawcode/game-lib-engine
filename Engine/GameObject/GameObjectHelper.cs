@@ -542,6 +542,38 @@ public static class GameObjectHelper {
             }
         }
     }
+        
+    public static void ShowObjectDelayed(GameObject inst, float delay) {
+        if (inst == null)
+            return;
+
+        CoroutineUtil.Start(ShowObjectDelayedCo(inst, delay));
+    }
+    
+    public static void HideObjectDelayed(GameObject inst, float delay) {
+        if (inst == null)
+            return;
+        
+        CoroutineUtil.Start(HideObjectDelayedCo(inst, delay));
+    }
+
+    public static IEnumerator ShowObjectDelayedCo(GameObject inst, float delay) {
+        if (inst == null)
+            yield break;
+
+        yield return new WaitForSeconds(delay);
+
+        inst.Show();
+    }
+    
+    public static IEnumerator HideObjectDelayedCo(GameObject inst, float delay) {
+        if (inst == null)
+            yield break;
+        
+        yield return new WaitForSeconds(delay);
+        
+        inst.Hide();
+    }
     
     public static void ShowObject(GameObject inst) {
         if (inst == null)

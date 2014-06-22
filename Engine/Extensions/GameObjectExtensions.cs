@@ -229,6 +229,20 @@ public static class GameObjectExtensions {
 
         GameObjectHelper.Hide(inst);
     }
+        
+    public static void ShowObjectDelayed(this GameObject inst, float delay) {
+        if (inst == null)
+            return;
+        
+        GameObjectHelper.ShowObjectDelayed(inst, delay);
+    }
+    
+    public static void HideObjectDelayed(this GameObject inst, float delay) {
+        if (inst == null)
+            return;
+        
+        GameObjectHelper.HideObjectDelayed(inst, delay);
+    }
 
     public static bool IsReady(this UnityEngine.Object inst) {
         return inst != null ? true : false;
