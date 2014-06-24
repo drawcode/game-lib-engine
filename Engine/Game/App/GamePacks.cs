@@ -29,8 +29,8 @@ public class GamePacks : DataObjects<GamePack>
 #endif
 	
 	public static string currentPacksVersion = "1.1"; // used for actual version and on dlc storage
-	public static string currentPacksGame = "game-supasupacross";
-	public static string currentGameBundle = "com.supasupagames.supasupacross";
+    public static string currentPacksGame = "game-[app]";
+    public static string currentGameBundle = "com.[app].[app]";
 		
 	public static GamePack Current
 	{

@@ -174,7 +174,7 @@ public class ContentItemAccessDictionary : DataObjectItem {
 // RESPONSES
 
 //{"info": "", "status": "", "error": 0, "action": "sx-2012-pack-1", "message": "Success!", "data": 
-// {"download_urls": ["https://s3.amazonaws.com/game-supasupacross/1.1/ios/sx-2012-pack-1.unity3d?Signature=rJ%2Fe863up9wgAutleNY%2F%2B7OSy%2BU%3D&Expires=1332496714&AWSAccessKeyId=0YAPDVPCN85QV96YR382"], "access_allowed": true, "date_modified": "2012-03-21T10:58:34.919000", "udid": "[udid]", "tags": ["test", "fun"], "content": "this is \"real\"...", "url": "ffff", "version": "1.1", "increment": 1, "active": true, "date_created": "2012-03-21T10:58:34.919000", "type": "application/octet-stream"}}
+// {"download_urls": ["https://s3.amazonaws.com/game-ssc/1.1/ios/sx-2012-pack-1.unity3d?Signature=rJ%2Fe863up9wgAutleNY%2F%2B7OSy%2BU%3D&Expires=1332496714&AWSAccessKeyId=0YAPDVPCN85QV96YR382"], "access_allowed": true, "date_modified": "2012-03-21T10:58:34.919000", "udid": "[udid]", "tags": ["test", "fun"], "content": "this is \"real\"...", "url": "ffff", "version": "1.1", "increment": 1, "active": true, "date_created": "2012-03-21T10:58:34.919000", "type": "application/octet-stream"}}
 
 public class DownloadableContentItem {
 	public List<string> download_urls = new List<string>();
@@ -254,7 +254,7 @@ public class BaseObjectResponse {
 
 // CONTENT SYSTEM
 
-//"info": "ssg_ssc_1_1", "status": "", "code": "0", "action": "sx-2012-pack-1", "message": "Success!", "data": {"download_urls": ["http://s3.amazonaws.com/game-supasupacross/1.1/ios/sx-2012-pack-1.unity3d?Signature=9VJYzvaLZjeVcakz4DBDDg51Fwo%3D&Expires=1332704684&AWSAccessKeyId=0YAPDVPCN85QV96YR382"]}
+//"info": "ssg_ssc_1_1", "status": "", "code": "0", "action": "pack-1", "message": "Success!", "data": {"download_urls": ["http://s3.amazonaws.com/game-[app]/1.1/ios/sx-2012-pack-1.unity3d?Signature=9VJYzvaLZjeVcakz4DBDDg51Fwo%3D&Expires=1332704684&AWSAccessKeyId=0YAPDVPCN85QV96YR382"]}
 
 public class ContentMessages {
 	public static string ContentFileDownloadSuccess = "content-file-download-success";
@@ -339,7 +339,7 @@ public class ContentEndpoints {
 	public static string contentDownloadFileAsset = ContentsConfig.contentEndpoint + "api/v1/en/file/{0}/{1}/{2}/{3}"; // 0 = game, version, platform, pack;
 	public static string contentSyncContentSet = ContentsConfig.contentEndpoint + "api/v1/sync/en/content-list/{0}/{1}/{2}/{3}"; // 0 = game, version, platform, pack;
 	public static string contentDownloadAppContentListFiles = ContentsConfig.contentEndpoint + "api/v1/en/app-content-list/file/{0}/{1}/{2}/"; // 0 = game, version, platform, pack;
-	//http://content1.vidari.com/api/v1/en/app-content-list/file/app-vidari-viewer/1.0/ios/?paths=1.0/data/app-content-list-item-data-1-0-5.json&app_id=85366ecb7429c19839e6900a1cfcedc18342f775
+	//http://content1.host.com/api/v1/en/app-content-list/file/app-viewer/1.0/ios/?paths=1.0/data/app-content-list-item-data-1-0-5.json&app_id=85366ecb7429c19839e6900a1cfcedc18342f775
 	
 }
 
@@ -3895,7 +3895,7 @@ public class Contents : GameObjectBehavior {
 	string packName, string sceneName) {
 		
 		int version = GamePacks.currentPacksIncrement;
-		string url = "https://s3.amazonaws.com/game-supasupacross/1.1/ios/" + packName + ".unity3d";
+		string url = "https://s3.amazonaws.com/game-[app]/1.1/ios/" + packName + ".unity3d";
 	    
 		LogUtil.Log("SceneLoadFromCacheOrDownloadCo: " + url);
 		
