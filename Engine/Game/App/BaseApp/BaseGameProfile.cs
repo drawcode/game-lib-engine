@@ -42,6 +42,10 @@ public class BaseGameProfileAttributes {
     public static string ATT_HELP_TIPS_SHOWN_DAY = "ui-help-tips-shown-day";
     public static string ATT_HELP_TIPS_SHOWN_DATE = "ui-help-tips-shown-date";
 
+    // GAME
+    
+    public static string ATT_CURRENT_GAME_CHARACTER_CODE = "app-current-game-character-code";
+
     // CUSTOM
 
     public static string ATT_CUSTOM_AUDIO = "custom-audio";

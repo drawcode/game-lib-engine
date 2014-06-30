@@ -1087,7 +1087,7 @@ public class TestsData {
             DumpObj(name, "characterItem:EXISTS", characterItem);
             
             DumpObj(name, "characterItem:characterCode", characterItem.characterCode);
-            DumpObj(name, "characterItem:characterCostumeCode", characterItem.characterCostumeCode);
+            //DumpObj(name, "characterItem:characterCostumeCode", characterItem.characterCostumeCode);
             DumpObj(name, "characterItem:code", characterItem.code);
 
             DumpObj(name, "characterItem:characterCode.profileRPGItem.GetAttack()", 
@@ -1128,7 +1128,7 @@ public class TestsData {
             DumpObj(name, "item:EXISTS", item.ToJson());
             
             DumpObj(name, "item:characterCode", item.characterCode);
-            DumpObj(name, "item:characterCostumeCode", item.characterCostumeCode);
+            //DumpObj(name, "item:characterCostumeCode", item.characterCostumeCode);
             DumpObj(name, "item:code", item.code);
             
             //DumpObj(name, "characterItem:characterCode.profileCustomItem.code", 
@@ -1162,7 +1162,7 @@ public class TestsData {
             DumpObj(name, "characterItem:EXISTS", characterItem);
             
             DumpObj(name, "characterItem:characterCode", characterItem.characterCode);
-            DumpObj(name, "characterItem:characterCostumeCode", characterItem.characterCostumeCode);
+            //DumpObj(name, "characterItem:characterCostumeCode", characterItem.characterCostumeCode);
             DumpObj(name, "characterItem:code", characterItem.code);
             
             //DumpObj(name, "characterItem:characterCode.profileCustomItem.code", 
