@@ -777,7 +777,26 @@ public class DataObjects<T> where T : DataObject, new() {
         //LogUtil.Log("GetAll:IsLoaded:", IsLoaded);
         if (!IsLoaded) {
             LoadData();
+
+            List<T> itemsActive = new List<T>();
+
+            foreach(T t in items) {
+                bool active = GetFieldValue<bool>(t, "active");
+                if(active) {
+                    itemsActive.Add(t);
+                }
+            }
+
+            items.Clear();
+
+            foreach(T t in itemsActive) {
+                items.Add(t);
+            }
+
             items = SortList();
+
+            itemsActive.Clear();
+            itemsActive = null;
         }
         return items;
     }
