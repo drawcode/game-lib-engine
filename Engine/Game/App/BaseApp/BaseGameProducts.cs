@@ -153,6 +153,16 @@ public class GameProductPlatformDatas : GameDataObject {
         }
     }
 
+    public virtual List<GameDataObject> items {
+        get {
+            return Get<List<GameDataObject>>(BaseDataObjectKeys.items, new List<GameDataObject>());
+        }
+        
+        set {
+            Set<List<GameDataObject>>(BaseDataObjectKeys.items, value);
+        }
+    }
+
     public virtual List<GameProductPlatformData> platforms {
         get { 
             return Get<List<GameProductPlatformData>>(
@@ -203,8 +213,10 @@ public class GameProductCurrencyType {
 public class BaseGameProductType {
     public static string pickup = "pickup";
     public static string powerup = "powerup";
+    public static string item = "item";
     public static string rpgUpgrade = "rpg-upgrade";
     public static string feature = "feature";
+    public static string character = "character";
     public static string characterSkin = "character-skin";
     public static string currency = "currency";
 }

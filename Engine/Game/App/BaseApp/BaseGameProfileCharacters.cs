@@ -437,7 +437,7 @@ public class BaseGameProfileCharacter : Profile {
             if(item != null) {
                 if(item.profileCustomItem != null && GameCustomController.Instance != null) {
                     item.profileCustomItem = 
-                        GameCustomController.CheckCustomColorInit(item.profileCustomItem, "character");
+                        GameCustomController.CheckCustomColorInit(item.profileCustomItem, BaseDataObjectKeys.character);
 				}
                 BaseGameProfileCharacters.currentCharacter = item;
             }
@@ -445,10 +445,26 @@ public class BaseGameProfileCharacter : Profile {
 
         return BaseGameProfileCharacters.currentCharacter;
     }
- 
+
+    public void AddCharacter(string characterCode) {
+        GameProfileCharacterItem item = new GameProfileCharacterItem();
+        item.characterCode = characterCode;
+        item.code = UniqueUtil.Instance.CreateUUID4(); // allows multiple of same type
+        SetCharacter(item.code, item);
+    }
+    
     public void SetCharacter(string code, GameProfileCharacterItem item) {
+        SetCharacter(code, item, true);
+    }
+ 
+    public void SetCharacter(string code, GameProfileCharacterItem item, bool setAsCurrent) {
+
         GameProfileCharacterItems characters = GetCharacters();
-        BaseGameProfileCharacters.currentCharacter = item;
+
+        if(setAsCurrent) {
+            BaseGameProfileCharacters.currentCharacter = item;
+        }
+
         characters.SetCharacter(code, item);
         SetCharacters(characters);
     }
