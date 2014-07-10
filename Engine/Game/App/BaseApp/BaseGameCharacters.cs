@@ -55,11 +55,13 @@ public class BaseGameCharacters<T> : DataObjects<T> where T : DataObject, new() 
     }
     
     public static GameObject Load(string code) {
-        return AppContentAssetModels.LoadModel(code);
+        return AppContentAssets.LoadAsset(code);
+        //return AppContentAssetModels.LoadModel(code);
     }
     
     public static GameObject LoadPrefab(string code) {
-        return AppContentAssetModels.LoadPrefab(code);
+        return AppContentAssets.LoadAssetPrefab(code);
+        //return AppContentAssetModels.LoadPrefab(code);
     }
 }
 

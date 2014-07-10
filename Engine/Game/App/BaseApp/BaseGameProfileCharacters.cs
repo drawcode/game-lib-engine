@@ -193,6 +193,7 @@ public class GameProfileCharacterItemKeys {
     public static string code = "code";
     public static string current = "current";
     public static string characterCode = "characterCode";
+    public static string characterDisplayName = "characterDisplayName";
     public static string characterCostumeCode = "characterCostumeCode";
     public static string profileRPGItem = "profileRPGItem";
     public static string profilePlayerProgress = "profilePlayerProgress";
@@ -226,6 +227,20 @@ public class GameProfileCharacterItem : DataObject {
         
         set {
             Set(GameProfileCharacterItemKeys.characterCode, value);
+        }
+    }
+
+    // user visible name
+    
+    public virtual string characterDisplayName {
+        get { 
+            return Get<string>(
+                GameProfileCharacterItemKeys.characterDisplayName, 
+                ProfileConfigs.defaultGameCharacterDisplayName);
+        }
+        
+        set {
+            Set(GameProfileCharacterItemKeys.characterDisplayName, value);
         }
     }
     
@@ -447,10 +462,28 @@ public class BaseGameProfileCharacter : Profile {
     }
 
     public void AddCharacter(string characterCode) {
-        GameProfileCharacterItem item = new GameProfileCharacterItem();
-        item.characterCode = characterCode;
-        item.code = UniqueUtil.Instance.CreateUUID4(); // allows multiple of same type
-        SetCharacter(item.code, item);
+        GameCharacter gameCharacter = GameCharacters.Instance.GetById(characterCode);
+
+        if(gameCharacter != null) {
+
+            int countSameType = 0;
+
+            string characterNameTemp = "";
+
+            foreach(GameProfileCharacterItem _item in GetCharacters().items) {
+                if(_item.characterDisplayName.Contains(gameCharacter.display_name)) {
+                    countSameType = countSameType + 1;
+                }
+            }
+
+            characterNameTemp = gameCharacter.display_name + " #" + (countSameType + 1);
+
+            GameProfileCharacterItem item = new GameProfileCharacterItem();
+            item.characterCode = characterCode;
+            item.characterDisplayName = characterNameTemp;
+            item.code = UniqueUtil.Instance.CreateUUID4(); // allows multiple of same type
+            SetCharacter(item.code, item);
+        }
     }
     
     public void SetCharacter(string code, GameProfileCharacterItem item) {
@@ -463,6 +496,7 @@ public class BaseGameProfileCharacter : Profile {
 
         if(setAsCurrent) {
             BaseGameProfileCharacters.currentCharacter = item;
+            GameProfileCharacters.Current.SetCurrentCharacterProfileCode(code);
         }
 
         characters.SetCharacter(code, item);
