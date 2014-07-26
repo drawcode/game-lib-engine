@@ -922,6 +922,16 @@ public class GameDataObject : DataObject {
             Set<string>(BaseDataObjectKeys.code, value);
         }
     }
+        
+    public virtual string email {
+        get {
+            return Get<string>(BaseDataObjectKeys.email);
+        }
+        
+        set {
+            Set<string>(BaseDataObjectKeys.email, value);
+        }
+    } 
     
     //[JsonIgnore(JsonIgnoreWhen.Deserializing)]
     public virtual string display_name {
@@ -965,7 +975,27 @@ public class GameDataObject : DataObject {
         set {
             Set<string>(BaseDataObjectKeys.url, value);
         }
-    }
+    }    
+    
+    public virtual string path {
+        get {
+            return Get<string>(BaseDataObjectKeys.path);
+        }
+        
+        set {
+            Set<string>(BaseDataObjectKeys.path, value);
+        }
+    } 
+    
+    public virtual string content {
+        get {
+            return Get<string>(BaseDataObjectKeys.content);
+        }
+        
+        set {
+            Set<string>(BaseDataObjectKeys.content, value);
+        }
+    } 
 
     //[JsonIgnore(JsonIgnoreWhen.Deserializing)]
     public virtual string host {
@@ -1044,7 +1074,17 @@ public class GameDataObject : DataObject {
         set {
             Set<string>(BaseDataObjectKeys.game_id, value);
         }
-    }    
+    }  
+
+    public virtual string network_id {
+        get {
+            return Get<string>(BaseDataObjectKeys.network_id);
+        }
+        
+        set {
+            Set<string>(BaseDataObjectKeys.network_id, value);
+        }
+    }  
     
     //[JsonIgnore(JsonIgnoreWhen.Deserializing)]
     public virtual string type {

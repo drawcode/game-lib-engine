@@ -17,7 +17,7 @@ public class Profile : DataObject {
         set {
             Set(ProfileKeys.login_count, value);
         }
-    }   
+    }
     
     public virtual string username {
         get {

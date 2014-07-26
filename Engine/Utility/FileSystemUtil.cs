@@ -6,38 +6,38 @@ using System.Text;
 using UnityEngine;
 
 public class FileSystemUtil {
-	
-	public static void CreateDirectoryIfNeededAndAllowed(string path) {
+    
+    public static void CreateDirectoryIfNeededAndAllowed(string path) {
 #if !UNITY_WEBPLAYER
-		if (!Directory.Exists(path)) {
-			if(DirectoryAllowed(path)) {
-				LogUtil.Log("CreateDirectoryIfNeededAndAllowed:" + path);
-				Directory.CreateDirectory(path);
-			}
+        if (!Directory.Exists(path)) {
+            if (DirectoryAllowed(path)) {
+                LogUtil.Log("CreateDirectoryIfNeededAndAllowed:" + path);
+                Directory.CreateDirectory(path);
+            }
         }
 #endif
-	}
-	
-	public static bool DirectoryAllowed(string path) {
-		bool allowCreate = true;
+    }
+    
+    public static bool DirectoryAllowed(string path) {
+        bool allowCreate = true;
 
 #if !UNITY_WEBPLAYER
-		if(path.IndexOf(Application.persistentDataPath) == -1
-			&& !Application.isEditor) {
-			allowCreate = false;
-		}
+        if (path.IndexOf(Application.persistentDataPath) == -1
+            && !Application.isEditor) {
+            allowCreate = false;
+        }
 #endif
-		return allowCreate;
-	}
-	    
+        return allowCreate;
+    }
+        
     public static void DirectoryCopy(string sourceDirName, string destDirName, bool copySubDirs, bool versioned) {
 
 #if !UNITY_WEBPLAYER
-		FileSystemUtil.EnsureDirectory(sourceDirName, false);
-		FileSystemUtil.EnsureDirectory(destDirName, false);
-		
-		CreateDirectoryIfNeededAndAllowed(sourceDirName);
-				
+        FileSystemUtil.EnsureDirectory(sourceDirName, false);
+        FileSystemUtil.EnsureDirectory(destDirName, false);
+        
+        CreateDirectoryIfNeededAndAllowed(sourceDirName);
+                
         DirectoryInfo dir = new DirectoryInfo(sourceDirName);
         DirectoryInfo[] dirs = dir.GetDirectories();
 
@@ -48,200 +48,201 @@ public class FileSystemUtil {
         }
 
         CreateDirectoryIfNeededAndAllowed(destDirName);
-		
+        
         FileInfo[] files = dir.GetFiles();
-				
-		LogUtil.Log("Directory Files: directory: " + destDirName);
-		LogUtil.Log("files.Count:", files.Count());
-		
-		//int curr = 0;
-		
+                
+        LogUtil.Log("Directory Files: directory: " + destDirName);
+        LogUtil.Log("files.Count:", files.Count());
+        
+        //int curr = 0;
+        
         foreach (FileInfo file in files) {
-			if(file.Extension != ".meta"
-		        && file.Extension != ".DS_Store") {
-				
-				string temppath = PathUtil.Combine(destDirName, file.Name);
-				
-				
-				if(!CheckFileExists(temppath) || Application.isEditor) {
-					
-					LogUtil.Log("copying ship file: " + file.FullName);
-					LogUtil.Log("copying ship file to cache: " + temppath);
-					
-					file.CopyTo(temppath, true);
-					////SystemHelper.SetNoBackupFlag(temppath);
-		        }
-			}
+            if (file.Extension != ".meta"
+                && file.Extension != ".DS_Store") {
+                
+                string temppath = PathUtil.Combine(destDirName, file.Name);
+                
+                
+                if (!CheckFileExists(temppath) || Application.isEditor) {
+                    
+                    LogUtil.Log("copying ship file: " + file.FullName);
+                    LogUtil.Log("copying ship file to cache: " + temppath);
+                    
+                    file.CopyTo(temppath, true);
+                    ////SystemHelper.SetNoBackupFlag(temppath);
+                }
+            }
         }
 
-        if (copySubDirs)  {
-			
+        if (copySubDirs) {
+            
             foreach (DirectoryInfo subdir in dirs) {
                 string temppath = PathUtil.Combine(destDirName, subdir.Name);
                 LogUtil.Log("Copying Directory: " + temppath);
                 DirectoryCopy(subdir.FullName, temppath, copySubDirs, versioned);
             }
         }
-#endif		
+#endif      
     }
-	
-	public static void EnsureDirectory(string filePath) {
-		EnsureDirectory(filePath, true);
-	}
-	
-	public static void EnsureDirectory(string filePath, bool filterFileName) {
-		
-		//LogUtil.Log("filePath:" + filePath);
-		
-		string directory = filePath;
-		if(filePath.IndexOf('.') > -1 && filterFileName) {
-			directory = filePath.Replace(Path.GetFileName(filePath), "");
-		}
-		//LogUtil.Log("directory:" + directory);
-		CreateDirectoryIfNeededAndAllowed(directory);
-	}
+    
+    public static void EnsureDirectory(string filePath) {
+        EnsureDirectory(filePath, true);
+    }
+    
+    public static void EnsureDirectory(string filePath, bool filterFileName) {
+        
+        //LogUtil.Log("filePath:" + filePath);
+        
+        string directory = filePath;
+        if (filePath.IndexOf('.') > -1 && filterFileName) {
+            directory = filePath.Replace(Path.GetFileName(filePath), "");
+        }
+        //LogUtil.Log("directory:" + directory);
+        CreateDirectoryIfNeededAndAllowed(directory);
+    }
 
     public static bool CheckFileExists(string path) {
-		
-		bool exists =  false;
-		
-		
-#if UNITY_ANDROID	
-		if(!exists && path.Contains(Application.streamingAssetsPath)) {
-			// android stores streamingassets in a compressed file, 
-			// must use WWW to check if you can access it
-			
-			if(!path.Contains("file://")){
-				path = "file://" + path;
-			}
-			
-			WWW file = new WWW(path);
-			
-			float currentTime = Time.time;
-			float endTime = currentTime + 6f; // only allow some seconds for file check
-			while(!file.isDone && currentTime < endTime) {
-				currentTime = Time.time;
-			};
-			
-			int length = file.bytes.Length;
-			
-			LogUtil.Log("CheckFileExists: Android: path:" + path);
-			LogUtil.Log("CheckFileExists: Android: file.bytes.length:" + length);
-			
-			if(file.bytes.Length > 0) {
-				exists = true;
-			}
-		}
+        
+        bool exists = false;
+        
+        
+#if UNITY_ANDROID   
+        if(!exists && path.Contains(Application.streamingAssetsPath)) {
+            // android stores streamingassets in a compressed file, 
+            // must use WWW to check if you can access it
+            
+            if(!path.Contains("file://")){
+                path = "file://" + path;
+            }
+            
+            WWW file = new WWW(path);
+            
+            float currentTime = Time.time;
+            float endTime = currentTime + 6f; // only allow some seconds for file check
+            while(!file.isDone && currentTime < endTime) {
+                currentTime = Time.time;
+            };
+            
+            int length = file.bytes.Length;
+            
+            LogUtil.Log("CheckFileExists: Android: path:" + path);
+            LogUtil.Log("CheckFileExists: Android: file.bytes.length:" + length);
+            
+            if(file.bytes.Length > 0) {
+                exists = true;
+            }
+        }
 #elif UNITY_WEBPLAYER
-		if(SystemPrefUtil.HasLocalSetting(path)) {
-			exists = true;
-		}
+        if(SystemPrefUtil.HasLocalSetting(path)) {
+            exists = true;
+        }
 #else
-		exists = File.Exists(path);
-#endif	
-		
-		return exists;
+        exists = File.Exists(path);
+#endif  
+        
+        return exists;
     }
-	
+    
     public static void CopyFile(string dataFilePath, string persistenceFilePath) {
-		CopyFile(dataFilePath, persistenceFilePath, false);
-	}
+        CopyFile(dataFilePath, persistenceFilePath, false);
+    }
 
     public static void CopyFile(string dataFilePath, string persistenceFilePath, bool force) {
 
 #if !UNITY_WEBPLAYER
-		EnsureDirectory(dataFilePath);
-		EnsureDirectory(persistenceFilePath);
+        EnsureDirectory(dataFilePath);
+        EnsureDirectory(persistenceFilePath);
         LogUtil.Log("dataFilePath: " + dataFilePath);
         LogUtil.Log("persistenceFilePath: " + persistenceFilePath);
         if (CheckFileExists(dataFilePath) && (!CheckFileExists(persistenceFilePath) || force)) {
-			
-#if UNITY_ANDROID		
-			if(dataFilePath.Contains(Application.streamingAssetsPath)) {
-				// android stores streamingassets in a compressed file, 
-				// must use WWW to copy contents if you can access it
-				
-				if(!dataFilePath.Contains("file://")){
-					dataFilePath = "file://" + dataFilePath;
-				}
-				
-				WWW file = new WWW(dataFilePath);
-				
-				float currentTime = Time.time;
-				float endTime = currentTime + 6f; // only allow some seconds for file check
-				while(!file.isDone && currentTime < endTime) {
-					currentTime = Time.time;
-				};
-				
-				int length = file.bytes.Length;
-				
-				LogUtil.Log("CopyFile: Android: dataFilePath:" + dataFilePath);
-				LogUtil.Log("CopyFile: Android: persistenceFilePath:" + persistenceFilePath);
-				LogUtil.Log("CopyFile: Android: file.bytes.length:" + length);
-				
-				if(file.bytes.Length > 0) {		
-					// Save file contents to new location					
-					FileSystemUtil.WriteAllBytes(persistenceFilePath, file.bytes);					
-				}
-			}
-			else {
-				File.Copy(dataFilePath, persistenceFilePath, true);
-			}
+            
+#if UNITY_ANDROID       
+            if(dataFilePath.Contains(Application.streamingAssetsPath)) {
+                // android stores streamingassets in a compressed file, 
+                // must use WWW to copy contents if you can access it
+                
+                if(!dataFilePath.Contains("file://")){
+                    dataFilePath = "file://" + dataFilePath;
+                }
+                
+                WWW file = new WWW(dataFilePath);
+                
+                float currentTime = Time.time;
+                float endTime = currentTime + 6f; // only allow some seconds for file check
+                while(!file.isDone && currentTime < endTime) {
+                    currentTime = Time.time;
+                };
+                
+                int length = file.bytes.Length;
+                
+                LogUtil.Log("CopyFile: Android: dataFilePath:" + dataFilePath);
+                LogUtil.Log("CopyFile: Android: persistenceFilePath:" + persistenceFilePath);
+                LogUtil.Log("CopyFile: Android: file.bytes.length:" + length);
+                
+                if(file.bytes.Length > 0) {     
+                    // Save file contents to new location                   
+                    FileSystemUtil.WriteAllBytes(persistenceFilePath, file.bytes);                  
+                }
+            }
+            else {
+                File.Copy(dataFilePath, persistenceFilePath, true);
+            }
 #else
-        	File.Copy(dataFilePath, persistenceFilePath, true);
-#endif	
-			////SystemHelper.SetNoBackupFlag(persistenceFilePath);
+            File.Copy(dataFilePath, persistenceFilePath, true);
+#endif  
+            ////SystemHelper.SetNoBackupFlag(persistenceFilePath);
         }
 #endif
     }
+
     public static void MoveFile(string dataFilePath, string persistenceFilePath) {
-		MoveFile(dataFilePath, persistenceFilePath, false);
-	}
+        MoveFile(dataFilePath, persistenceFilePath, false);
+    }
 
     public static void MoveFile(string dataFilePath, string persistenceFilePath, bool force) {
 
 #if !UNITY_WEBPLAYER
-		EnsureDirectory(dataFilePath);
-		EnsureDirectory(persistenceFilePath);
+        EnsureDirectory(dataFilePath);
+        EnsureDirectory(persistenceFilePath);
         //LogUtil.Log("dataFilePath: " + dataFilePath);
         //LogUtil.Log("persistenceFilePath: " + persistenceFilePath);
         if (CheckFileExists(dataFilePath) && (!CheckFileExists(persistenceFilePath) || force)) {
 
             //LogUtil.Log("fileMoved: " + persistenceFilePath);
-#if UNITY_ANDROID		
-			if(dataFilePath.Contains(Application.streamingAssetsPath)) {
-				// android stores streamingassets in a compressed file, 
-				// must use WWW to copy contents if you can access it
-				
-				if(!dataFilePath.Contains("file://")){
-					dataFilePath = "file://" + dataFilePath;
-				}
-				
-				WWW file = new WWW(dataFilePath);
-				
-				float currentTime = Time.time;
-				float endTime = currentTime + 6f; // only allow some seconds for file check
-				while(!file.isDone && currentTime < endTime) {
-					currentTime = Time.time;
-				};
-				
-				int length = file.bytes.Length;
-				
-				LogUtil.Log("CopyFile: Android: dataFilePath:" + dataFilePath);
-				LogUtil.Log("CopyFile: Android: persistenceFilePath:" + persistenceFilePath);
-				LogUtil.Log("CopyFile: Android: file.bytes.length:" + length);
-				
-				if(file.bytes.Length > 0) {		
-					// Save file contents to new location					
-					FileSystemUtil.WriteAllBytes(persistenceFilePath, file.bytes);					
-				}
-			}
-			else {
-				File.Move(dataFilePath, persistenceFilePath);
-			}
+#if UNITY_ANDROID       
+            if(dataFilePath.Contains(Application.streamingAssetsPath)) {
+                // android stores streamingassets in a compressed file, 
+                // must use WWW to copy contents if you can access it
+                
+                if(!dataFilePath.Contains("file://")){
+                    dataFilePath = "file://" + dataFilePath;
+                }
+                
+                WWW file = new WWW(dataFilePath);
+                
+                float currentTime = Time.time;
+                float endTime = currentTime + 6f; // only allow some seconds for file check
+                while(!file.isDone && currentTime < endTime) {
+                    currentTime = Time.time;
+                };
+                
+                int length = file.bytes.Length;
+                
+                LogUtil.Log("CopyFile: Android: dataFilePath:" + dataFilePath);
+                LogUtil.Log("CopyFile: Android: persistenceFilePath:" + persistenceFilePath);
+                LogUtil.Log("CopyFile: Android: file.bytes.length:" + length);
+                
+                if(file.bytes.Length > 0) {     
+                    // Save file contents to new location                   
+                    FileSystemUtil.WriteAllBytes(persistenceFilePath, file.bytes);                  
+                }
+            }
+            else {
+                File.Move(dataFilePath, persistenceFilePath);
+            }
 #else
-        	File.Move(dataFilePath, persistenceFilePath);
-#endif	
+            File.Move(dataFilePath, persistenceFilePath);
+#endif  
 
             //SystemHelper.SetNoBackupFlag(persistenceFilePath);
         }
@@ -250,27 +251,27 @@ public class FileSystemUtil {
 
     public static byte[] ReadAllBytes(string fileName) {
 
-#if !UNITY_WEBPLAYER		
+#if !UNITY_WEBPLAYER        
         return File.ReadAllBytes(fileName);
 #else
-		return System.Text.Encoding.UTF8.GetBytes(SystemPrefUtil.GetLocalSettingString(fileName));
+        return System.Text.Encoding.UTF8.GetBytes(SystemPrefUtil.GetLocalSettingString(fileName));
 #endif
     }
 
     public static void WriteAllBytes(string fileName, byte[] buffer) {
 
-#if !UNITY_WEBPLAYER				
-		EnsureDirectory(fileName);
+#if !UNITY_WEBPLAYER                
+        EnsureDirectory(fileName);
         File.WriteAllBytes(fileName, buffer);
-		////SystemHelper.SetNoBackupFlag(fileName);
+        ////SystemHelper.SetNoBackupFlag(fileName);
 #else
-		SystemPrefUtil.SetLocalSettingString(fileName, System.Text.Encoding.UTF8.GetString(buffer));		
-		SystemPrefUtil.Save();
+        SystemPrefUtil.SetLocalSettingString(fileName, System.Text.Encoding.UTF8.GetString(buffer));        
+        SystemPrefUtil.Save();
 #endif
     }
 
     public static byte[] ReadStream(string fileName) {
-#if !UNITY_WEBPLAYER	
+#if !UNITY_WEBPLAYER    
         
         byte[] buffer = null;
         if (CheckFileExists(fileName)) {
@@ -283,21 +284,21 @@ public class FileSystemUtil {
         }
         return buffer;
 #else
-		return System.Text.Encoding.UTF8.GetBytes(SystemPrefUtil.GetLocalSettingString(fileName));
-#endif		
+        return System.Text.Encoding.UTF8.GetBytes(SystemPrefUtil.GetLocalSettingString(fileName));
+#endif      
     }
 
     public static void WriteStream(string fileName, byte[] data) {
-#if !UNITY_WEBPLAYER			
-		EnsureDirectory(fileName);
+#if !UNITY_WEBPLAYER            
+        EnsureDirectory(fileName);
         StreamWriter sw = new StreamWriter(fileName, false, Encoding.ASCII);
         sw.Write(data);
         sw.Flush();
         sw.Close();
-		////SystemHelper.SetNoBackupFlag(fileName);
+        ////SystemHelper.SetNoBackupFlag(fileName);
 #else
-		SystemPrefUtil.SetLocalSettingString(fileName, System.Text.Encoding.UTF8.GetString(data));
-		SystemPrefUtil.Save();
+        SystemPrefUtil.SetLocalSettingString(fileName, System.Text.Encoding.UTF8.GetString(data));
+        SystemPrefUtil.Save();
 #endif
     }
 
@@ -305,11 +306,11 @@ public class FileSystemUtil {
         string contents = "";
         if (CheckFileExists(fileName)) {
 #if UNITY_WEBPLAYER
-		contents = SystemPrefUtil.GetLocalSettingString(fileName);
+        contents = SystemPrefUtil.GetLocalSettingString(fileName);
 #else
-        StreamReader sr = new StreamReader(fileName, true);
-        contents = sr.ReadToEnd();
-        sr.Close();
+            StreamReader sr = new StreamReader(fileName, true);
+            contents = sr.ReadToEnd();
+            sr.Close();
 #endif
         }
         return contents;
@@ -321,31 +322,31 @@ public class FileSystemUtil {
 
     public static void WriteString(string fileName, string data, bool append) {
 #if UNITY_WEBPLAYER
-		SystemPrefUtil.SetLocalSettingString(fileName, data);
-		SystemPrefUtil.Save();
+        SystemPrefUtil.SetLocalSettingString(fileName, data);
+        SystemPrefUtil.Save();
 #else
-		EnsureDirectory(fileName);
+        EnsureDirectory(fileName);
         StreamWriter sw = new StreamWriter(fileName, append);
         sw.Write(data);
         sw.Flush();
-        sw.Close();		
-		////SystemHelper.SetNoBackupFlag(fileName);
+        sw.Close();     
+        ////SystemHelper.SetNoBackupFlag(fileName);
 #endif
     }
-	
-	public static void RemoveFile(string file) {
-		if(CheckFileExists(file)) {
+    
+    public static void RemoveFile(string file) {
+        if (CheckFileExists(file)) {
 #if UNITY_WEBPLAYER
-		SystemPrefUtil.SetLocalSettingString(file, "");
-		SystemPrefUtil.Save();
-#else			
-			File.Delete(file);
+        SystemPrefUtil.SetLocalSettingString(file, "");
+        SystemPrefUtil.Save();
+#else           
+            File.Delete(file);
 #endif
-		}
-	}
+        }
+    }
 
     public static void RemoveFilesLikeRecursive(DirectoryInfo dirInfo, string fileKey) {
-		
+        
 #if !UNITY_WEBPLAYER
         foreach (FileInfo fileInfo in dirInfo.GetFiles()) {
             if (fileInfo.FullName.Contains(fileKey)) {
@@ -365,7 +366,7 @@ public class FileSystemUtil {
         DirectoryInfo dirInfoTo,
         string filter,
         List<string> excludeExts) {
-		
+        
 #if !UNITY_WEBPLAYER
         foreach (FileInfo fileInfo in dirInfoCurrent.GetFiles()) {
             if (fileInfo.FullName.Contains(filter)) {
@@ -435,7 +436,7 @@ public class FileSystemUtil {
         DirectoryInfo dirInfoCurrent,
         string filterLike,
         string filterNotLike) {
-		
+        
 #if !UNITY_WEBPLAYER
         foreach (DirectoryInfo dirInfoItem in dirInfoCurrent.GetDirectories()) {
             RemoveDirectoriesLikeRecursive(dirInfoItem, filterLike, filterNotLike);
@@ -447,5 +448,61 @@ public class FileSystemUtil {
         }
 #endif
     }
+    
+    public static bool CheckSignatureFile(string filepath, int signatureSize, string expectedSignature) {
+        
+#if !UNITY_WEBPLAYER
+        if (String.IsNullOrEmpty(filepath))
+            throw new ArgumentException("Must specify a filepath");
+        if (String.IsNullOrEmpty(expectedSignature))
+            throw new ArgumentException("Must specify a value for the expected file signature");
+        using (FileStream fs = new FileStream(filepath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite)) {
+            if (fs.Length < signatureSize)
+                return false;
+            byte[] signature = new byte[signatureSize];
+            int bytesRequired = signatureSize;
+            int index = 0;
+            while (bytesRequired > 0) {
+                int bytesRead = fs.Read(signature, index, bytesRequired);
+                bytesRequired -= bytesRead;
+                index += bytesRead;
+            }
+            string actualSignature = BitConverter.ToString(signature);
+            if (actualSignature == expectedSignature)
+                return true;
+            else
+                return false;
+        }
+#else 
+        return false;
+        
+#endif
+    }
+    
+    public static bool CheckSignatureString(string data, int signatureSize, string expectedSignature) {
+        
+#if !UNITY_WEBPLAYER
+        byte[] datas = Encoding.ASCII.GetBytes(data);
+        using (MemoryStream ms = new MemoryStream(datas)) {
+            if (ms.Length < signatureSize)
+                return false;
+            byte[] signature = new byte[signatureSize];
+            int bytesRequired = signatureSize;
+            int index = 0;
+            while (bytesRequired > 0) {
+                int bytesRead = ms.Read(signature, index, bytesRequired);
+                bytesRequired -= bytesRead;
+                index += bytesRead;
+            }
+            string actualSignature = BitConverter.ToString(signature);
+            if (actualSignature == expectedSignature)
+                return true;
+            else
+                return false;
+        }
+#else 
+        return false;
 
+#endif
+    }
 }

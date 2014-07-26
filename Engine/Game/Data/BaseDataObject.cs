@@ -18,10 +18,19 @@ public class BaseDataObjectKeys {
     public static string display_name = "display_name";
     public static string attributes = "attributes";
     public static string url = "url";
+    public static string path = "path";
+    public static string content = "content";
+    public static string contents = "contents";
+    public static string upload = "upload";
+    public static string file = "file";
+    public static string files = "files";
     public static string host = "host";
     public static string data = "data";  
+    public static string info = "info";  
+    public static string error = "error";  
     public static string datatype = "datatype";  
     public static string direction = "direction";
+    public static string network_id = "network_id";
     public static string network = "network";
     public static string networks = "networks";
     public static string data_platform = "data_platform";
@@ -39,6 +48,8 @@ public class BaseDataObjectKeys {
     public static string product_id = "product_id";
     public static string game_id = "game_id";
     public static string type = "type";
+    public static string game = "game";
+    public static string games = "games";
     public static string order_by = "order_by";
     public static string status = "status";
     public static string data_items = "data_items";
@@ -46,6 +57,7 @@ public class BaseDataObjectKeys {
     public static string pack_sort = "pack_sort";
     public static string date_created = "date_created";
     public static string date_modified = "date_modified";
+    public static string email = "email";
         
     public static string username = "username";
     public static string udid = "udid";
