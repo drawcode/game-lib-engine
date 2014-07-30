@@ -53,7 +53,6 @@ public class BaseGameProfileAttributes {
     public static string ATT_CUSTOM_COLORS_RUNNER = "custom-colors-runner";
     public static string ATT_CUSTOM_COLOR_ITEM = "custom-color-item";
     public static string ATT_CUSTOM_TEXTURE_ITEM = "custom-texture-item";
-     
     public static string ATT_CUSTOM_COLOR_PRESET = "custom-color-preset";
     public static string ATT_CUSTOM_TEXTURE_PRESET = "custom-texture-preset";
 

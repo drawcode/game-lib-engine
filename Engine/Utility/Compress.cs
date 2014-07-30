@@ -6,6 +6,11 @@ using System.Text;
 public static class Compress {
         
     public static string ToCompressed(this string val) {
+
+        if(string.IsNullOrEmpty(val)) {
+            return val;
+        }
+
         if (!IsStringCompressed(val)) {
             return CompressString(val);
         }
@@ -13,6 +18,11 @@ public static class Compress {
     }
         
     public static string ToDecompressed(this string val) {
+        
+        if(string.IsNullOrEmpty(val)) {
+            return val;
+        }
+
         if (IsStringCompressed(val)) {
             return DecompressString(val);
         }
@@ -55,12 +65,41 @@ public static class Compress {
     }
         
     public static bool IsStringCompressed(string data) {
-        if (IsStringCompressedGZip(data) || IsStringCompressedPKZip(data)) {
+
+        try {
+            if(IsBase64(data)) {
+                byte[] data64 = Convert.FromBase64String(data);
+                data = Encoding.ASCII.GetString(data64, 0, data64.Length);
+            }
+        }
+        catch(Exception e) {
+
+        }
+
+        if (IsStringCompressedGZip(data) 
+            || IsStringCompressedPKZip(data)) {
+            data = null;
             return true;
+        }
+        data = null;
+        return false;
+    }
+
+    public static bool IsBase64(string base64String) {
+        if(base64String.Replace(" ","").Length % 4 != 0) {
+            return false;
+        }
+        
+        try{
+            Convert.FromBase64String(base64String);
+            return true;
+        }
+        catch(Exception exception){
+            // Handle the exception
         }
         return false;
     }
-        
+
     public static bool IsStringCompressedGZip(string data) {
         return FileSystemUtil.CheckSignatureString(data, 3, "1F-8B-08");
     }
