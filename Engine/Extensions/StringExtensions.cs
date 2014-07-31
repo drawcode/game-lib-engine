@@ -44,4 +44,26 @@ public static class StringExtensions {
         
         return returnString;
     }
+
+    public static bool IsBase64(this string val) {
+        return FormatUtil.IsStringBase64(val);
+    }
+
+    public static string ToBase64(this string val) {
+        if(string.IsNullOrEmpty(val)) {
+            return val;
+        }
+        return FormatUtil.StringToBase64(val);
+    }
+        
+    public static string FromBase64(this string val) {
+        if(string.IsNullOrEmpty(val)) {
+            return val;
+        }
+        return FormatUtil.StringFromBase64(val);
+    }
+
+    public static byte[] FromBase64Bytes(this string val) {
+        return FormatUtil.BytesFromBase64(val);
+    }
 }

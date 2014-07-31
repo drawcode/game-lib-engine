@@ -32,10 +32,9 @@ public class TestsData {
 
         Advance("Running tests...");
 
-        bool success = false;
+        bool success = true;
         string testName = "";
-
-        
+                
         ContentsConfig.contentRootFolder = TestConfigs.contentRootFolder;
         ContentsConfig.contentAppFolder = TestConfigs.contentAppFolder;
         ContentsConfig.contentDefaultPackFolder = TestConfigs.contentDefaultPackFolder;
@@ -155,11 +154,21 @@ public class TestsData {
         ////success = TestGameCharacterPresets_List(testName);
 
         
-        testName = "TestGameCharacterAnimations_List";
+        //testName = "TestGameCharacterAnimations_List";
+        //Advance(testName);
+        //success = TestGameCharacterAnimations_List(testName);
+                
+        testName = "TestCompress";
         Advance(testName);
-        success = TestGameCharacterAnimations_List(testName);
+        success = TestCompress(testName);
+                
+        //testName = "TestBase64";
+        //Advance(testName);
+        //success = TestBase64(testName);
 
         //
+
+        //Compress
         
         if(!CheckTest(success, testName)) { 
             return;
@@ -202,6 +211,55 @@ public class TestsData {
         DumpObj(name, "dataB", dataB);
 
         return equal;
+    }
+        
+    public static bool TestCompress(string name) {
+        
+        bool success = false;
+        
+        Debug.Log(name);
+
+        string data = "This is a test of the data system!";
+        
+        Debug.Log("item:data:" + data); 
+
+        string dataCompressed = data.ToCompressed();
+
+        Debug.Log("item:dataCompressed:" + dataCompressed); 
+
+        string dataUncompressed = dataCompressed.ToDecompressed();
+        
+        Debug.Log("item:dataUncompressed:" + dataUncompressed); 
+        
+        string dataCompressedUn64 = dataCompressed.FromBase64();
+        
+        Debug.Log("item:dataCompressedUn64:" + dataCompressedUn64); 
+
+
+        success = AssertEquals(name, dataUncompressed, data);
+                        
+        return success;
+    }
+
+    public static bool TestBase64(string name) {
+        
+        bool success = false;
+        
+        Debug.Log(name);
+        
+        string data = "This is a test of the data system!";
+        
+        string data64 = data.ToBase64();
+        
+        Debug.Log("item:data64:" + data64); 
+        
+        string dataPlain = data.FromBase64();
+        
+        Debug.Log("item:dataPlain:" + dataPlain); 
+        
+        success = AssertEquals(name, data, dataPlain);
+        
+        return success;
     }
     
     public static bool TestGameCharacterAnimations_List(string name) {

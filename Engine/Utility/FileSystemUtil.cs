@@ -483,6 +483,17 @@ public class FileSystemUtil {
         
 #if !UNITY_WEBPLAYER
         byte[] datas = Encoding.ASCII.GetBytes(data);
+        return CheckSignature(datas, signatureSize, expectedSignature);
+#else 
+        return false;
+
+#endif
+    }
+
+    
+    public static bool CheckSignature(byte[] datas, int signatureSize, string expectedSignature) {
+        
+        #if !UNITY_WEBPLAYER
         using (MemoryStream ms = new MemoryStream(datas)) {
             if (ms.Length < signatureSize)
                 return false;
@@ -500,9 +511,9 @@ public class FileSystemUtil {
             else
                 return false;
         }
-#else 
+        #else 
         return false;
-
-#endif
+        
+        #endif
     }
 }

@@ -99,4 +99,48 @@ public class FormatUtil {
 
         return lines;
     }
+
+    // BASE 64
+        
+    public static bool IsStringBase64(string base64String) {
+        if (base64String.Replace(" ", "").Length % 4 != 0) {
+            return false;
+        }
+        
+        try {
+            Convert.FromBase64String(base64String);
+            return true;
+        }
+        catch (Exception exception) {
+            // Handle the exception
+        }
+        return false;
+    }
+    
+    public static string StringToBase64(string plainText) {
+        if (string.IsNullOrEmpty(plainText)) {
+            return plainText;
+        }
+        
+        var plainTextBytes = System.Text.Encoding.UTF8.GetBytes(plainText);
+        return System.Convert.ToBase64String(plainTextBytes);
+    }
+
+    public static string StringFromBase64(string base64String) {
+        if (string.IsNullOrEmpty(base64String) || !IsStringBase64(base64String)) {
+            return base64String;
+        }
+
+        var base64EncodedBytes = System.Convert.FromBase64String(base64String);
+        return System.Text.Encoding.UTF8.GetString(base64EncodedBytes);
+    }
+
+    public static byte[] BytesFromBase64(string base64String) {
+        if (string.IsNullOrEmpty(base64String) || !IsStringBase64(base64String)) {
+            return System.Text.Encoding.UTF8.GetBytes(base64String);
+        }
+        
+        var base64EncodedBytes = System.Convert.FromBase64String(base64String);
+        return base64EncodedBytes;
+    }
 }
