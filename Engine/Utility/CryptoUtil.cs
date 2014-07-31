@@ -97,7 +97,7 @@ public class CryptoUtil {
         if (string.IsNullOrEmpty(sharedSecret))
             throw new ArgumentNullException("sharedSecret");
             
-        string outStr = null;                       // Encrypted string to return
+        string outStr = plainText;                       // Encrypted string to return
         RijndaelManaged aesAlg = null;              // RijndaelManaged object used to encrypt the data.
             
         try {
@@ -142,6 +142,11 @@ public class CryptoUtil {
     /// <param name="cipherText">The text to decrypt.</param>
     /// <param name="sharedSecret">A password used to generate a key for decryption.</param>
     public static string DecryptStringAES(string cipherText, string sharedSecret) {
+        
+        if(!cipherText.IsBase64()) {
+            return cipherText;
+        }
+
         if (string.IsNullOrEmpty(cipherText))
             throw new ArgumentNullException("cipherText");
         if (string.IsNullOrEmpty(sharedSecret))
@@ -153,14 +158,15 @@ public class CryptoUtil {
             
         // Declare the string used to hold
         // the decrypted text.
-        string plaintext = null;
+        string plaintext = cipherText;
             
         try {
             // generate the key from the shared secret and the salt
             Rfc2898DeriveBytes key = new Rfc2898DeriveBytes(sharedSecret, _salt);
-                
+
             // Create the streams used for decryption.                
             byte[] bytes = Convert.FromBase64String(cipherText);
+
             using (MemoryStream msDecrypt = new MemoryStream(bytes)) {
                 // Create a RijndaelManaged object
                 // with the specified key and IV.

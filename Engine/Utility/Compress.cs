@@ -83,6 +83,14 @@ public static class Compress {
         byte[] bytes = new byte[4096];
         
         int cnt;
+
+        if(src == null) {
+            return;
+        }
+
+        if(!src.CanRead) {
+            return;
+        }
         
         while ((cnt = src.Read(bytes, 0, bytes.Length)) != 0) {
             dest.Write(bytes, 0, cnt);

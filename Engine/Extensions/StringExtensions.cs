@@ -81,7 +81,7 @@ public static class StringExtensions {
             return val;
         }
 
-        if (val.IsCompressed()) {
+        if (!val.IsCompressed()) {
             return Compress.CompressString(val);
         }
         
@@ -94,7 +94,7 @@ public static class StringExtensions {
             return val;
         }
         
-        if (val.IsCompressed() || val.IsBase64()) {
+        if (val.IsCompressed()) {
             return Compress.DecompressString(val);
         }
         
