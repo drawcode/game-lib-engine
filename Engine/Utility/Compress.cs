@@ -5,6 +5,7 @@ using System.Text;
     
 public static class Compress {
         
+    /*
     public static string ToCompressed(this string val) {
 
         if (string.IsNullOrEmpty(val)) {
@@ -30,6 +31,7 @@ public static class Compress {
 
         return val;
     }
+    */
         
     /*
     public static string CompressString(string text) {

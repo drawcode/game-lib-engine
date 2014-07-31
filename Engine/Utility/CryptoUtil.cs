@@ -81,7 +81,7 @@ public class CryptoUtil {
         return EncryptStringAES(plainText, _sharedSecret);
     }
     
-    public static string DencryptStringAES(string cipher) {
+    public static string DecryptStringAES(string cipher) {
         return DecryptStringAES(cipher, _sharedSecret);
     }
         

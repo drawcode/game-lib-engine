@@ -74,4 +74,50 @@ public static class StringExtensions {
     public static byte[] FromBase64Bytes(this string val) {
         return FormatUtil.BytesFromBase64(val);
     }
+
+    public static string ToCompressed(this string val) {
+        
+        if (string.IsNullOrEmpty(val)) {
+            return val;
+        }
+
+        if (val.IsCompressed()) {
+            return Compress.CompressString(val);
+        }
+        
+        return val;
+    }
+    
+    public static string ToDecompressed(this string val) {
+        
+        if (string.IsNullOrEmpty(val)) {
+            return val;
+        }
+        
+        if (val.IsCompressed() || val.IsBase64()) {
+            return Compress.DecompressString(val);
+        }
+        
+        return val;
+    }
+
+    // ENCRYPT
+
+    public static string ToEncrypted(this string val) {
+        
+        if (string.IsNullOrEmpty(val)) {
+            return val;
+        }
+
+        return CryptoUtil.EncryptStringAES(val);
+    }
+    
+    public static string ToDecrypted(this string val) {
+        
+        if (string.IsNullOrEmpty(val)) {
+            return val;
+        }
+        
+        return CryptoUtil.DecryptStringAES(val);
+    }
 }

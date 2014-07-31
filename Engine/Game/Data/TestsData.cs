@@ -158,13 +158,18 @@ public class TestsData {
         //Advance(testName);
         //success = TestGameCharacterAnimations_List(testName);
                 
-        testName = "TestCompress";
-        Advance(testName);
-        success = TestCompress(testName);
+        //testName = "TestCompress";
+        //Advance(testName);
+        //success = TestCompress(testName);
                 
         //testName = "TestBase64";
         //Advance(testName);
         //success = TestBase64(testName);
+                
+
+        testName = "TestEncrypt";
+        Advance(testName);
+        success = TestEncrypt(testName);
 
         //
 
@@ -211,6 +216,29 @@ public class TestsData {
         DumpObj(name, "dataB", dataB);
 
         return equal;
+    }
+
+    public static bool TestEncrypt(string name) {
+        
+        bool success = false;
+        
+        Debug.Log(name);
+        
+        string data = "This is a test of the data system!";
+        
+        Debug.Log("item:data:" + data); 
+        
+        string dataEncrypted = data.ToEncrypted();
+        
+        Debug.Log("item:dataEncrypted:" + dataEncrypted); 
+        
+        string dataDecrypted = dataEncrypted.ToDecrypted();
+        
+        Debug.Log("item:dataDecrypted:" + dataDecrypted);      
+        
+        success = AssertEquals(name, dataDecrypted, data);
+        
+        return success;
     }
         
     public static bool TestCompress(string name) {
