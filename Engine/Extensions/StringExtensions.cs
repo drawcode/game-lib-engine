@@ -44,6 +44,14 @@ public static class StringExtensions {
         
         return returnString;
     }
+    
+    public static bool IsCompressed(this string val) {
+        if(string.IsNullOrEmpty(val)) {
+            return false;
+        }
+
+        return Compress.IsStringCompressed(val);
+    }
 
     public static bool IsBase64(this string val) {
         return FormatUtil.IsStringBase64(val);
