@@ -79,15 +79,19 @@ public class WWWs : GameObjectBehavior {
         public string code = ""; // message name
         public string url = ""; // url to request
         public string channel = ""; // request channel - maps to new www class
-
+        
+        [JsonIgnore]
         public string status = StatusMessages.notStarted;
         public string dataType = DataType.text;
 
         public string requestType = RequestType.get;
 
         public Dictionary<string, object> paramHash = null;
-        public WWWForm form = null;
 
+        [JsonIgnore]
+        public WWWForm form = null;
+        
+        [JsonIgnore]
         public bool processing = false;
 
         public object content = null;
@@ -99,7 +103,8 @@ public class WWWs : GameObjectBehavior {
         public void Reset() {
             uuid = UniqueUtil.Instance.CreateUUID4();
             url = "";
-            channel = "";
+            code = "profile";
+            channel = "default";
             status = StatusMessages.notStarted;
             dataType = DataType.text;
             requestType = RequestType.get;
@@ -120,7 +125,8 @@ public class WWWs : GameObjectBehavior {
         }
 
         //
-
+        
+        [JsonIgnore]
         public bool POST {
 
             get {
@@ -134,6 +140,7 @@ public class WWWs : GameObjectBehavior {
             }
         }
         
+        [JsonIgnore]
         public bool GET {
             
             get {
@@ -172,6 +179,11 @@ public class WWWs : GameObjectBehavior {
         }
 
         public void PrepareParamsPost() {
+            
+            if (paramHash == null) {
+                return;
+            }
+
             form = new WWWForm();
 
             if (paramHash != null) {
@@ -300,6 +312,10 @@ public class WWWs : GameObjectBehavior {
         requestItem.status = StatusMessages.error;
         Messenger<RequestItem,string>.Broadcast(StatusMessages.error, requestItem, error);        
     }
+    
+    public static void Request(RequestItem requestItem) {
+        Instance.request(requestItem);
+    }
 
     public void Request(
         string requestType, 
@@ -310,10 +326,10 @@ public class WWWs : GameObjectBehavior {
         requestItem.url = url;
         requestItem.requestType = requestType;
         requestItem.paramHash = paramHash;
-        Request(requestItem);
+        request(requestItem);
     }
 
-    public void Request(RequestItem requestItem) {
+    public void request(RequestItem requestItem) {
     
         if(requestItem == null) {
             return;
@@ -351,10 +367,14 @@ public class WWWs : GameObjectBehavior {
         requestItem.processing = true;
     
         yield return www;    
-                
+                                
         if (www.error != null) {
-            LogUtil.LogError("WWW Error:" + www.error + " requestItem.url:" + requestItem.url);
+            Debug.LogError("WWW Error:" + www.error + " requestItem.url:" + requestItem.url);
+            requestItem.content = www.error;
+            requestItem.content += www.text;
+            requestItem.processing = false;
             BroadcastError(requestItem, "Error on sync");
+            yield break;
         }
 
         if(requestItem.dataType == DataType.text) {

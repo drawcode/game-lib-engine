@@ -922,6 +922,18 @@ public class GameDataObject : DataObject {
             Set<string>(BaseDataObjectKeys.code, value);
         }
     }
+    
+    
+    //[JsonIgnore(JsonIgnoreWhen.Deserializing)]
+    public virtual string hash {
+        get {
+            return Get<string>(BaseDataObjectKeys.hash, "");
+        }
+        
+        set {
+            Set<string>(BaseDataObjectKeys.hash, value);
+        }
+    }
         
     public virtual string email {
         get {
@@ -991,9 +1003,11 @@ public class GameDataObject : DataObject {
         get {
             return Get<string>(BaseDataObjectKeys.content);
         }
-        
+
         set {
             Set<string>(BaseDataObjectKeys.content, value);
+
+            hash = CryptoUtil.CalculateBase64SHA1ASCII(value);
         }
     } 
 

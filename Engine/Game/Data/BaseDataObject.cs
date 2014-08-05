@@ -22,6 +22,7 @@ public class BaseDataObjectKeys {
     public static string content = "content";
     public static string contents = "contents";
     public static string upload = "upload";
+    public static string hash = "hash";
     public static string file = "file";
     public static string files = "files";
     public static string host = "host";

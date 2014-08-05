@@ -165,11 +165,14 @@ public class TestsData {
         //testName = "TestBase64";
         //Advance(testName);
         //success = TestBase64(testName);
-                
-
-        testName = "TestEncrypt";
+          
+        //testName = "TestEncrypt";
+        //Advance(testName);
+        //success = TestEncrypt(testName);
+        
+        testName = "TestGameStateProfileSync";
         Advance(testName);
-        success = TestEncrypt(testName);
+        success = TestGameStateProfileSync(testName);
 
         //
 
@@ -216,6 +219,19 @@ public class TestsData {
         DumpObj(name, "dataB", dataB);
 
         return equal;
+    }
+    
+    public static bool TestGameStateProfileSync(string name) {
+        
+        bool success = true;
+        
+        Debug.Log(name);
+
+        GameState.SyncProfile();
+
+        //success = AssertEquals(name, dataDecrypted, data);
+        
+        return success;
     }
 
     public static bool TestEncrypt(string name) {
