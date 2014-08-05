@@ -316,7 +316,7 @@ public class BaseGameState {
         #else
         data = readProfileFile(key);//.ToDecompressed();
         #endif
-        
+                
         if (ProfileConfigs.useStorageCompression || data.IsCompressed()) {
             data = data.ToDecompressed();
         }

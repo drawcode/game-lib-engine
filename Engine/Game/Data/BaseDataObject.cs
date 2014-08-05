@@ -337,16 +337,44 @@ public class BaseDataObject : Dictionary<string, object> {
     
     // -----------------------------------------------------------------------
     // LOADING/SAVING
-    
+
+    public string DataPrepareSave(string data) {
+                
+        if (AppConfigs.useStorageEncryption) {
+            data = data.ToEncrypted();
+        }
+        
+        if (AppConfigs.useStorageCompression) {
+            data = data.ToCompressed();
+        }
+
+        return data;
+    }
+
+    public string DataPrepareLoad(string data) {
+        if (AppConfigs.useStorageCompression || data.IsCompressed()) {
+            data = data.ToDecompressed();
+        }
+        
+        if (AppConfigs.useStorageEncryption) {
+            data = data.ToDecrypted();
+        }
+
+        return data;
+    }
+
+
     public string LoadDataFromResources(string resourcesFilePath) {
-        string fileData = "";
+        string data = "";
         
         TextAsset textData = Resources.Load(resourcesFilePath, typeof(TextAsset)) as TextAsset;          
         if (textData != null) {
-            fileData = textData.text;
+            data = textData.text;
         }
         
-        return fileData;
+        //data = DataPrepareLoad(data);
+
+        return data;
     }
     
     public string LoadDataFromPrefs(string key) {
@@ -355,30 +383,38 @@ public class BaseDataObject : Dictionary<string, object> {
         if (!SystemPrefUtil.HasLocalSetting(key)) {
             data = SystemPrefUtil.GetLocalSettingString(key);
         }
+        
+        //data = DataPrepareLoad(data);
+
         return data;
     }
     
     public string LoadData(string fileFullPath) {
-        string fileData = "";
+        string data = "";
         
         #if !UNITY_WEBPLAYER 
         if (FileSystemUtil.CheckFileExists(fileFullPath)) {       
-            fileData = FileSystemUtil.ReadString(fileFullPath);
+            data = FileSystemUtil.ReadString(fileFullPath);
         }        
         #endif       
-        return fileData;
+        
+        //data = DataPrepareLoad(data);
+
+        return data;
     }
     
     public T LoadData<T>(string folderPath, string fileKey) {
-        string fileData = "";
+        string data = "";
         #if !UNITY_WEBPLAYER
         string path = PathUtil.Combine(folderPath, (fileKey + ".json").TrimStart('/'));
         if (FileSystemUtil.CheckFileExists(path)) {       
-            fileData = FileSystemUtil.ReadString(path);
+            data = FileSystemUtil.ReadString(path);
         }        
         #endif   
-        if (!string.IsNullOrEmpty(fileData)) {
-            return JsonMapper.ToObject<T>(fileData);
+
+        if (!string.IsNullOrEmpty(data)) {
+            //data = DataPrepareLoad(data);
+            return JsonMapper.ToObject<T>(data);
         }
         
         return default(T);
@@ -395,7 +431,9 @@ public class BaseDataObject : Dictionary<string, object> {
         
         if (fileFullPath.Contains(Application.dataPath)
             || fileFullPath.Contains(Application.persistentDataPath)) {
-            
+
+            //data = DataPrepareSave(data);
+
             FileSystemUtil.WriteString(fileFullPath, data);
         }
         #endif
