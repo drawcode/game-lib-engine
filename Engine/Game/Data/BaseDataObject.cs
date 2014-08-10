@@ -338,103 +338,107 @@ public class BaseDataObject : Dictionary<string, object> {
     // -----------------------------------------------------------------------
     // LOADING/SAVING
 
-    public string DataPrepareSave(string data) {
+    public string DataPrepareSave(string dataValue) {
                 
         if (AppConfigs.useStorageEncryption) {
-            data = data.ToEncrypted();
+            dataValue = dataValue.ToEncrypted();
         }
         
         if (AppConfigs.useStorageCompression) {
-            data = data.ToCompressed();
+            dataValue = dataValue.ToCompressed();
         }
 
-        return data;
+        return dataValue;
     }
 
-    public string DataPrepareLoad(string data) {
-        if (AppConfigs.useStorageCompression || data.IsCompressed()) {
-            data = data.ToDecompressed();
+    public string DataPrepareLoad(string dataValue) {
+
+        if (AppConfigs.useStorageCompression) { /// || data.IsCompressed()) {
+            dataValue = dataValue.ToDecompressed();
         }
         
         if (AppConfigs.useStorageEncryption) {
-            data = data.ToDecrypted();
+            dataValue = dataValue.ToDecrypted();
         }
 
-        return data;
+        return dataValue;
     }
 
 
     public string LoadDataFromResources(string resourcesFilePath) {
-        string data = "";
+
+        string dataValue = "";
         
         TextAsset textData = Resources.Load(resourcesFilePath, typeof(TextAsset)) as TextAsset;          
         if (textData != null) {
-            data = textData.text;
+            dataValue = textData.text;
         }
         
-        //data = DataPrepareLoad(data);
+        dataValue = DataPrepareLoad(dataValue);
 
-        return data;
+        return dataValue;
     }
     
     public string LoadDataFromPrefs(string key) {
-        string data = "";
+
+        string dataValue = "";
         
         if (!SystemPrefUtil.HasLocalSetting(key)) {
-            data = SystemPrefUtil.GetLocalSettingString(key);
+            dataValue = SystemPrefUtil.GetLocalSettingString(key);
         }
         
-        //data = DataPrepareLoad(data);
+        dataValue = DataPrepareLoad(dataValue);
 
-        return data;
+        return dataValue;
     }
     
     public string LoadData(string fileFullPath) {
-        string data = "";
+
+        string dataValue = "";
         
         #if !UNITY_WEBPLAYER 
         if (FileSystemUtil.CheckFileExists(fileFullPath)) {       
-            data = FileSystemUtil.ReadString(fileFullPath);
+            dataValue = FileSystemUtil.ReadString(fileFullPath);
         }        
         #endif       
         
-        //data = DataPrepareLoad(data);
+        dataValue = DataPrepareLoad(dataValue);
 
-        return data;
+        return dataValue;
     }
     
     public T LoadData<T>(string folderPath, string fileKey) {
-        string data = "";
+        string dataValue = "";
         #if !UNITY_WEBPLAYER
         string path = PathUtil.Combine(folderPath, (fileKey + ".json").TrimStart('/'));
         if (FileSystemUtil.CheckFileExists(path)) {       
-            data = FileSystemUtil.ReadString(path);
+            dataValue = FileSystemUtil.ReadString(path);
         }        
         #endif   
 
-        if (!string.IsNullOrEmpty(data)) {
-            //data = DataPrepareLoad(data);
-            return JsonMapper.ToObject<T>(data);
+        if (!string.IsNullOrEmpty(dataValue)) {
+            dataValue = DataPrepareLoad(dataValue);
+            return JsonMapper.ToObject<T>(dataValue);
         }
         
         return default(T);
     }
     
     public void SaveData(string folderPath, string fileKey, object obj) {
-        string data = JsonMapper.ToJson(obj);
+        string dataValue = JsonMapper.ToJson(obj);
         string path = PathUtil.Combine(folderPath, (fileKey + ".json").TrimStart('/'));
-        SaveData(path, data);
+        SaveData(path, dataValue);
     }
     
-    public void SaveData(string fileFullPath, string data) {
+    public void SaveData(string fileFullPath, string dataValue) {
         #if !UNITY_WEBPLAYER
         
         if (fileFullPath.Contains(Application.dataPath)
             || fileFullPath.Contains(Application.persistentDataPath)) {
 
-            //data = DataPrepareSave(data);
+            dataValue = DataPrepareSave(dataValue);
 
-            FileSystemUtil.WriteString(fileFullPath, data);
+            FileSystemUtil.WriteString(fileFullPath, dataValue);
         }
         #endif
     }
@@ -446,12 +450,14 @@ public class BaseDataObject : Dictionary<string, object> {
         ////LogUtil.Log("GetFieldValue:obj.GetType():" + obj.GetType());
         
         bool hasGet = false;
+
+        if(obj == null) {
+            return obj;
+        }
         
         foreach (var prop in fieldName.Split('.').Select(s => obj.GetType().GetField(s))) {
-            if (obj != null) {
-                obj = prop.GetValue(obj);
-                hasGet = true;
-            }
+            obj = prop.GetValue(obj);
+            hasGet = true;
         }
         
         if (!hasGet) {
@@ -469,6 +475,10 @@ public class BaseDataObject : Dictionary<string, object> {
         ////LogUtil.Log("SetFieldValue:obj.GetType():" + obj.GetType());
         
         //bool hasSet = false;
+                
+        if(obj == null) {
+            return;
+        }
         
         foreach (System.Reflection.FieldInfo field in fieldName.Split('.').Select(s => obj.GetType().GetField(s))) {
             if (field != null) {

@@ -317,7 +317,7 @@ public class BaseGameState {
         data = readProfileFile(key);//.ToDecompressed();
         #endif
                 
-        if (ProfileConfigs.useStorageCompression || data.IsCompressed()) {
+        if (ProfileConfigs.useStorageCompression) {// || data.IsCompressed()) {
             data = data.ToDecompressed();
         }
         
@@ -443,15 +443,15 @@ public class BaseGameState {
             profile.login_count++;
             profile.SyncAccessPermissions();
             
-            profileAchievement = contentLoad<GameProfileAchievement>(key, profileAchievement);
-            profileStatistic = contentLoad<GameProfileStatistic>(key, profileStatistic);
-            profileCharacter = contentLoad<GameProfileCharacter>(key, profileCharacter);
-            profileCustomization = contentLoad<GameProfileCustomization>(key, profileCustomization);
-            profileMode = contentLoad<GameProfileMode>(key, profileMode);
-            profileProduct = contentLoad<GameProfileProduct>(key, profileProduct);
-            profileRPG = contentLoad<GameProfileRPG>(key, profileRPG);
-            profileTeam = contentLoad<GameProfileTeam>(key, profileTeam);
-            profileVehicle = contentLoad<GameProfileVehicle>(key, profileVehicle);
+            profileAchievement = contentLoad<GameProfileAchievement>(keyAchievement, profileAchievement);
+            profileStatistic = contentLoad<GameProfileStatistic>(keyStatistic, profileStatistic);
+            profileCharacter = contentLoad<GameProfileCharacter>(keyCharacter, profileCharacter);
+            profileCustomization = contentLoad<GameProfileCustomization>(keyCustomization, profileCustomization);
+            profileMode = contentLoad<GameProfileMode>(keyMode, profileMode);
+            profileProduct = contentLoad<GameProfileProduct>(keyProduct, profileProduct);
+            profileRPG = contentLoad<GameProfileRPG>(keyRPG, profileRPG);
+            profileTeam = contentLoad<GameProfileTeam>(keyTeam, profileTeam);
+            profileVehicle = contentLoad<GameProfileVehicle>(keyVehicle, profileVehicle);
             
             GameProfiles.Current = profile;
             GameProfileAchievements.Current = profileAchievement;

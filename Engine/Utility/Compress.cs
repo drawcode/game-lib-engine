@@ -1,7 +1,21 @@
+//#define ZIP_USE_SYSTEM
+//#define ZIP_USE_IONIC
+#define ZIP_USE_SHARPZIPLIB
+
 using System;
 using System.IO;
-using System.IO.Compression;
+#if ZIP_USE_SYSTEM
+//using System.IO.Compression;
+#elif ZIP_USE_IONIC
+using Ionic.Zlib;
+#elif ZIP_USE_SHARPZIPLIB
+using ICSharpCode.SharpZipLib.GZip;
+#endif
 using System.Text;
+
+#if !ZIP_USE_SHARPZIPLIB
+
+#endif
     
 public static class Compress {
         
@@ -96,7 +110,116 @@ public static class Compress {
             dest.Write(bytes, 0, cnt);
         }
     }
+
+#if ZIP_USE_SHARPZIPLIB
+
+    /*
+    public static string ZipString(string sBuffer)
+    {
+        MemoryStream mso = null;
+        GZipOutputStream gzipOutout = null;
+        string result;
+        try
+        {
+            mso = new MemoryStream();
+            //Int32 size = sBuffer.Length;
+            // Prepend the compressed data with the length of the uncompressed data (firs 4 bytes)
+            //
+            using (BinaryWriter writer = new BinaryWriter(mso, System.Text.Encoding.ASCII))
+            {
+                //writer.Write( size );
+                
+                gzipOutout = new GZipOutputStream(mso);
+                gzipOutout.Write(Encoding.ASCII.GetBytes(sBuffer), 0, sBuffer.Length);
+                
+                gzipOutout.Close();
+                result = Convert.ToBase64String(mso.ToArray());
+                gzipOutout.Close();
+                
+                writer.Close();
+            }
+        }
+        finally
+        {
+            if (gzipOutout != null)
+            {
+                gzipOutout.Dispose();
+            }
+            if (mso != null)
+            {
+                mso.Dispose();
+            }
+        }
+        return result;
+    }
     
+    public static string UnzipString(string compbytes)
+    {
+        string result;
+        MemoryStream msi = null;
+        GZipInputStream gzipInput = null;
+        try
+        {
+            msi = new MemoryStream(Convert.FromBase64String(compbytes));
+            // read final uncompressed string size stored in first 4 bytes
+            //
+            using (BinaryReader reader = new BinaryReader(msi, System.Text.Encoding.ASCII))
+            {
+               // Int32 size = reader.ReadInt32();
+                
+                gzipInput = new BZip2InputStream(msi);
+                byte[] bytesUncompressed = new byte[size];
+                gzipInput.Read(bytesUncompressed, 0, bytesUncompressed.Length);
+                gzipInput.Close();
+                gzipInput.Close();
+                
+                result = Encoding.ASCII.GetString(bytesUncompressed);
+                
+                reader.Close();
+            }
+        }
+        finally
+        {
+            if (m_isBZip2 != null)
+            {
+                m_isBZip2.Dispose();
+            }
+            if (m_msBZip2 != null)
+            {
+                m_msBZip2.Dispose();
+            }
+        }
+        return result;
+    }
+    */
+    
+    public static byte[] Zip(string str) {
+        var bytes = Encoding.UTF8.GetBytes(str);
+        
+        using (var msi = new MemoryStream(bytes))
+        using (var mso = new MemoryStream()) {
+            using (var gs = new GZipOutputStream(mso)) {
+                //msi.CopyTo(gs);
+                CopyTo(msi, gs);
+            }
+            
+            return mso.ToArray();
+        }
+    }
+    
+    public static string Unzip(byte[] bytes) {
+        using (var msi = new MemoryStream(bytes))
+        using (var mso = new MemoryStream()) {
+            using (var gs = new GZipInputStream(msi)) {
+                //gs.CopyTo(mso);
+                CopyTo(gs, mso);
+            }
+            
+            return Encoding.UTF8.GetString(mso.ToArray());
+        }
+    }
+
+#else
     public static byte[] Zip(string str) {
         var bytes = Encoding.UTF8.GetBytes(str);
         
@@ -122,6 +245,8 @@ public static class Compress {
             return Encoding.UTF8.GetString(mso.ToArray());
         }
     }
+
+#endif
         
     public static bool IsStringCompressed(string data) {
 
