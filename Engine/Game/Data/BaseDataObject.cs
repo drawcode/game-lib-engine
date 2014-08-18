@@ -365,11 +365,11 @@ public class BaseDataObject : Dictionary<string, object> {
     }
 
 
-    public string LoadDataFromResources(string resourcesFilePath) {
+    public string LoadDataFromResources(string path) {
 
         string dataValue = "";
         
-        TextAsset textData = Resources.Load(resourcesFilePath, typeof(TextAsset)) as TextAsset;          
+        TextAsset textData = AssetUtil.LoadAsset<TextAsset>(path);      
         if (textData != null) {
             dataValue = textData.text;
         }

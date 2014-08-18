@@ -31,8 +31,14 @@ public class Profile : DataObject {
     
     public virtual string uuid {
         get {
-            return Get<string>(BaseDataObjectKeys.uuid, 
-                               UniqueUtil.Instance.CreateUUID4());
+
+            string val = Get<string>(BaseDataObjectKeys.uuid);
+            if(string.IsNullOrEmpty(val)) {
+                val = UniqueUtil.Instance.CreateUUID4();
+                Set(BaseDataObjectKeys.uuid, val);
+            }
+
+            return val;
         }
         
         set {

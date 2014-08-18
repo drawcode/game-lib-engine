@@ -20,10 +20,10 @@ public class DataObjectItem {
         attributes = toCopy.attributes;
     }
     
-    public string LoadDataFromResources(string resourcesFilePath) {
+    public string LoadDataFromResources(string path) {
         string fileData = "";
-        
-        TextAsset textData = Resources.Load(resourcesFilePath, typeof(TextAsset)) as TextAsset;          
+
+        TextAsset textData = AssetUtil.LoadAsset<TextAsset>(path); 
         if(textData != null) {
             fileData = textData.text;
         }

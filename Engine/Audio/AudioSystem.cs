@@ -721,8 +721,9 @@ public class AudioSystem : GameObjectBehavior {
         return clip;
     }
 
-    public AudioClip LoadClipFromResources(string fileName) {
-        AudioClip clip = Resources.Load(fileName) as AudioClip;
+    public AudioClip LoadClipFromResources(string path) {
+
+        AudioClip clip = AssetUtil.LoadAsset<AudioClip>(path);
         return clip;
     }
 

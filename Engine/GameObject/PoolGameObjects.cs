@@ -52,7 +52,8 @@ public class PoolGameObjects : GameObjectBehavior {
         string key = CryptoUtil.CalculateSHA1ASCII(path);
         
         if(!instance.prefabs.ContainsKey(key)) {
-            GameObject prefab = Resources.Load(path) as GameObject;
+
+            GameObject prefab = AssetUtil.LoadAsset<GameObject>(path); 
             if(prefab != null) {
                 instance.prefabs.Add(key, Resources.Load(path) as GameObject);
             }

@@ -381,7 +381,8 @@ public class DataKeyedObjects<T> {
         string fileData = "";
 
         LogUtil.Log("LoadDataFromResources:string:resourcesPath:" + resourcesPath + " " + pathKey);
-        TextAsset textData = Resources.Load(resourcesPath, typeof(TextAsset)) as TextAsset;
+                
+        TextAsset textData = AssetUtil.LoadAsset<TextAsset>(path); 
         if(textData != null) {
             fileData = textData.text;
         }

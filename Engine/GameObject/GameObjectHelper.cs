@@ -1228,8 +1228,9 @@ public static class GameObjectHelper {
     public static GameObject LoadFromResources(string path) {
         
         LogUtil.Log("LoadFromResources: path:" + path);
-        
-        UnityEngine.Object prefabObject = Resources.Load(path);
+                
+        UnityEngine.Object prefabObject = AssetUtil.LoadAsset<UnityEngine.Object>(path);
+
         if (prefabObject != null) {
             GameObject go = UnityEngine.GameObject.Instantiate(prefabObject) as GameObject;
             if (go != null) {

@@ -194,6 +194,7 @@ public class GameProfileCharacterItemKeys {
     public static string current = "current";
     public static string characterCode = "characterCode";
     public static string characterDisplayName = "characterDisplayName";
+    public static string characterDisplayCode = "characterDisplayCode";
     public static string characterCostumeCode = "characterCostumeCode";
     public static string profileRPGItem = "profileRPGItem";
     public static string profilePlayerProgress = "profilePlayerProgress";
@@ -241,6 +242,20 @@ public class GameProfileCharacterItem : DataObject {
         
         set {
             Set(GameProfileCharacterItemKeys.characterDisplayName, value);
+        }
+    }
+
+    // user visible number
+    
+    public virtual string characterDisplayCode {
+        get { 
+            return Get<string>(
+                GameProfileCharacterItemKeys.characterDisplayCode, 
+                ProfileConfigs.defaultGameCharacterDisplayCode);
+        }
+        
+        set {
+            Set(GameProfileCharacterItemKeys.characterDisplayCode, value);
         }
     }
     
