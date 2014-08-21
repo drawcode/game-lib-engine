@@ -262,7 +262,7 @@ public class GameProfileCharacterItem : DataObject {
     public virtual GameProfileRPGItem profileRPGItem {
         get { 
             return Get<GameProfileRPGItem>(
-                GameProfileCharacterItemKeys.profileRPGItem);
+                GameProfileCharacterItemKeys.profileRPGItem, new GameProfileRPGItem());
         }
         
         set {
@@ -273,7 +273,7 @@ public class GameProfileCharacterItem : DataObject {
     public virtual GameProfilePlayerProgressItem profilePlayerProgress {
         get { 
             return Get<GameProfilePlayerProgressItem>(
-                GameProfileCharacterItemKeys.profilePlayerProgress);
+                GameProfileCharacterItemKeys.profilePlayerProgress, new GameProfilePlayerProgressItem());
         }
         
         set {
@@ -284,7 +284,7 @@ public class GameProfileCharacterItem : DataObject {
     public virtual GameProfileCustomItem profileCustomItem {
         get { 
             return Get<GameProfileCustomItem>(
-                GameProfileCharacterItemKeys.profileCustomItem);
+                GameProfileCharacterItemKeys.profileCustomItem, new GameProfileCustomItem());
         }
         
         set {
@@ -460,10 +460,12 @@ public class BaseGameProfileCharacter : Profile {
         if(BaseGameProfileCharacters.currentCharacter == null) {
             GameProfileCharacterItem item = GetCharacters().GetCharacter(code);
     
-            //if(item == null) {
-            //   item = new GameProfileCharacterItem();
-            //   GetCharacters().SetCharacter(code, item);
-            //}
+            // TODO check this to be sure initing is no problem in sync
+            if(item == null && code != "default") {
+               item = new GameProfileCharacterItem();
+               GetCharacters().SetCharacter(code, item);
+            }
+
             if(item != null) {
                 if(item.profileCustomItem != null && GameCustomController.Instance != null) {
                     item.profileCustomItem = 
@@ -496,6 +498,7 @@ public class BaseGameProfileCharacter : Profile {
             GameProfileCharacterItem item = new GameProfileCharacterItem();
             item.characterCode = characterCode;
             item.characterDisplayName = characterNameTemp;
+            item.characterDisplayCode = "";
             item.code = UniqueUtil.Instance.CreateUUID4(); // allows multiple of same type
             SetCharacter(item.code, item);
         }
