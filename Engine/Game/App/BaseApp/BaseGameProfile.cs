@@ -58,7 +58,9 @@ public class BaseGameProfileAttributes {
 
     // SOCIAL
  
-    public static string ATT_AUTH_SOCIAL_NETWORK_TYPE = "auth-social-network-type";
+    
+    public static string ATT_AUTH_SOCIAL_NETWORK_DATA = "auth-social-network-data";
+    public static string ATT_AUTH_SOCIAL_NETWORK_CURRENT_TYPE = "auth-social-network-current-type";
     public static string ATT_AUTH_SOCIAL_NETWORK_USERNAME = "auth-social-network-username";
     public static string ATT_AUTH_SOCIAL_NETWORK_NAME = "auth-social-network-name";
     public static string ATT_AUTH_SOCIAL_NETWORK_FNAME = "auth-social-network-fname";
@@ -118,6 +120,59 @@ public class BaseGameProfiles {
     }
 
     // TODO: Common profile actions, lookup, count, etc
+}
+
+public class GameProfileNetworkItem : GameDataObject {
+    
+}
+
+public class GameProfileNetworkItems {
+    
+    public List<GameProfileNetworkItem> items;
+    
+    public GameProfileNetworkItems() {
+        Reset();
+    }
+    
+    public void Reset() {
+        items = new List<GameProfileNetworkItem>();
+    }
+    
+    public GameProfileNetworkItem GetItem(string networkType) {
+        //if(items == null) {
+        //     items = new List<GameProfileCharacterItem>();
+        //
+        //    GameProfileCharacterItem item = new GameProfileCharacterItem();
+        //    items.Add(item);
+        //}
+        
+        if (items == null) {
+            return null;
+        }
+        
+        foreach (GameProfileNetworkItem item in items) {
+            if (item.network_type.ToLower() == networkType.ToLower()) {
+                return item;
+            }
+        }
+        return null;
+    }
+    
+    public void SetItem(string networkType, GameProfileNetworkItem item) {
+        bool found = false;
+        
+        for (int i = 0; i < items.Count; i++) {
+            if (items[i].network_type.ToLower() == networkType.ToLower()) {
+                items[i] = item;
+                found = true;
+                break;
+            }
+        }
+        
+        if (!found) {
+            items.Add(item);
+        }
+    }
 }
 
 public class BaseGameProfile : Profile {
@@ -647,6 +702,165 @@ public class BaseGameProfile : Profile {
     // SOCIAL
  
     // auth/social
+
+    
+    public virtual GameProfileNetworkItems network_items {
+        get {
+            return Get<GameProfileNetworkItems>(BaseDataObjectKeys.network_items);
+        }
+        
+        set {
+            Set(BaseDataObjectKeys.network_items, value);
+        }
+    }
+    
+    public virtual void SetNetworks(GameProfileNetworkItems obj) {
+        
+        network_items = obj;
+        
+        Messenger.Broadcast(BaseGameProfileMessages.ProfileShouldBeSaved);
+    }
+    
+    public virtual GameProfileNetworkItems GetNetworks() {       
+        GameProfileNetworkItems obj = new GameProfileNetworkItems();
+        
+        obj = network_items;
+
+        if (obj == null) {
+            obj = new GameProfileNetworkItems();
+        }
+
+        return obj;
+    }
+
+    public T GetNetworkValue<T>(string networkType, string key) {
+        
+        GameProfileNetworkItem item = GetNetwork(networkType);
+
+        if(item == null) {
+            return default(T);
+        }
+        
+        return item.Get<T>(key);
+    }
+
+    public string GetNetworkValue(string networkType, string key) {
+
+        return GetNetworkValue<string>(networkType, key);
+    }
+
+    public void SetNetworkValue(string networkType, string key, object val) {
+        
+        GameProfileNetworkItem item = GetNetwork(networkType);
+
+        if(item == null) {
+            return;
+        }
+
+        item.Set(key, val);
+
+        SetNetwork(networkType, item);
+    }
+    
+    public void SetNetworkValueToken(string networkType, string val) {        
+        GameProfiles.Current.SetNetworkValue(
+            networkType, BaseDataObjectKeys.network_token, val);
+    }
+
+    public void SetNetworkValueId(string networkType, string val) {        
+        GameProfiles.Current.SetNetworkValue(
+            networkType, BaseDataObjectKeys.network_id, val);
+    }
+    
+    public void SetNetworkValueName(string networkType, string val) {        
+        GameProfiles.Current.SetNetworkValue(
+            networkType, BaseDataObjectKeys.network_name, val);
+    }
+    
+    public void SetNetworkValueUsername(string networkType, string val) {        
+        GameProfiles.Current.SetNetworkValue(
+            networkType, BaseDataObjectKeys.network_username, val);
+    }
+        
+    public void SetNetworkValueFirstName(string networkType, string val) {        
+        GameProfiles.Current.SetNetworkValue(
+            networkType, BaseDataObjectKeys.network_first_name, val);
+    }
+    
+    public void SetNetworkValueLastName(string networkType, string val) {        
+        GameProfiles.Current.SetNetworkValue(
+            networkType, BaseDataObjectKeys.network_last_name, val);
+    }
+    
+    public void SetNetworkValueType(string networkType, string val) {        
+        GameProfiles.Current.SetNetworkValue(
+            networkType, BaseDataObjectKeys.network_type, val);
+    }
+
+    public GameProfileNetworkItem GetNetwork(string networkType) {
+      
+        GameProfileNetworkItem item = GetNetworks().GetItem(networkType);
+
+        return item;
+    }
+    
+    public void SetNetwork(string networkType, GameProfileNetworkItem item) {
+        SetNetwork(networkType, item, true);
+    }
+    
+    public void SetNetwork(string networkType, GameProfileNetworkItem item, bool setAsCurrent) {
+        
+        GameProfileNetworkItems items = GetNetworks();
+        
+        if (setAsCurrent) {
+            //BaseGameProfileCharacters.currentCharacter = item;
+            //GameProfileCharacters.Current.SetCurrentCharacterProfileCode(code);
+        }
+        
+        items.SetItem(networkType, item);
+        SetNetworks(items);
+    }
+
+    //
+
+    public string GetNetworkValueId(string networkType) {        
+        return GameProfiles.Current.GetNetworkValue(
+            networkType, BaseDataObjectKeys.network_id);
+    }
+    
+    public string GetNetworkValueUsername(string networkType) {        
+        return GameProfiles.Current.GetNetworkValue(
+            networkType, BaseDataObjectKeys.network_username);
+    }
+
+    public string GetNetworkValueToken(string networkType) {        
+       return GameProfiles.Current.GetNetworkValue(
+            networkType, BaseDataObjectKeys.network_token);
+    }
+
+    public string GetNetworkValueName(string networkType) {        
+        return GameProfiles.Current.GetNetworkValue(
+            networkType, BaseDataObjectKeys.network_name);
+    }
+    
+    public string GetNetworkValueFirstName(string networkType) {        
+        return GameProfiles.Current.GetNetworkValue(
+            networkType, BaseDataObjectKeys.network_first_name);
+    }
+    
+    public string GetNetworkValueLastName(string networkType) {        
+        return GameProfiles.Current.GetNetworkValue(
+            networkType, BaseDataObjectKeys.network_last_name);
+    }
+
+    public string GetNetworkValueType(string networkType) {        
+        return GameProfiles.Current.GetNetworkValue(
+            networkType, BaseDataObjectKeys.network_type);
+    }
+
+
+
+    /*
         
     public string GetSocialNetworkKey(string type, string val) {
         return val + "-" + type;
@@ -661,7 +875,7 @@ public class BaseGameProfile : Profile {
     }
         
     public string GetSocialNetworkType() {
-        return GetAttributeStringValue(BaseGameProfileAttributes.ATT_AUTH_SOCIAL_NETWORK_TYPE);
+        return GetAttributeStringValue(BaseGameProfileAttributes.ATT_AUTH_SOCIAL_NETWORK_CURRENT_TYPE);
     }
         
     public void SetSocialNetworkProfileState(string type, string userId) {
@@ -670,96 +884,97 @@ public class BaseGameProfile : Profile {
     }
         
     public void SetSocialNetworkType(string type) {
-        SetAttributeStringValue(BaseGameProfileAttributes.ATT_AUTH_SOCIAL_NETWORK_TYPE, type);
+        SetAttributeStringValue(BaseGameProfileAttributes.ATT_AUTH_SOCIAL_NETWORK_CURRENT_TYPE, type);
     }
         
     // user id
         
-    public string GetSocialNetworkUserId() {
-        string type = GetSocialNetworkType();
-        string userId = GetAttributeStringValue(
-                        GetSocialNetworkKey(
-                                type, 
-                                BaseGameProfileAttributes.ATT_AUTH_SOCIAL_NETWORK_USERID));         
-        return userId;
+    public string GetSocialNetworkUserId(string networkType) {
+        string key = GetSocialNetworkKey(
+            networkType, 
+            BaseGameProfileAttributes.ATT_AUTH_SOCIAL_NETWORK_USERID);
+        string val = GetAttributeStringValue(key);         
+        return val;
     }
         
-    public void SetSocialNetworkUserId(string userId) {
-        SetAttributeStringValue(
-                        GetSocialNetworkKey(
-                                GetSocialNetworkType(), 
-                                BaseGameProfileAttributes.ATT_AUTH_SOCIAL_NETWORK_USERID), userId);         
+    public void SetSocialNetworkUserId(string networkType, string userId) {
+        
+        string key = GetSocialNetworkKey(
+            networkType, 
+            BaseGameProfileAttributes.ATT_AUTH_SOCIAL_NETWORK_USERID);
+        SetAttributeStringValue(key, userId);         
     }
         
     // username
         
-    public string GetSocialNetworkUserName() {
-        string type = GetSocialNetworkType();
-        string val = GetAttributeStringValue(
-                        GetSocialNetworkKey(
-                                type, 
-                                BaseGameProfileAttributes.ATT_AUTH_SOCIAL_NETWORK_USERNAME));               
+    public string GetSocialNetworkUserName(string networkType) {
+        string key = GetSocialNetworkKey(
+            type, 
+            BaseGameProfileAttributes.ATT_AUTH_SOCIAL_NETWORK_USERNAME)
+        string val = GetAttributeStringValue(key);               
         return val;
     }
         
-    public void SetSocialNetworkUserName(string userName) {
-        SetAttributeStringValue(
-                        GetSocialNetworkKey(
-                                GetSocialNetworkType(), 
-                                BaseGameProfileAttributes.ATT_AUTH_SOCIAL_NETWORK_USERNAME), userName);             
+    public void SetSocialNetworkUserName(string networkType, string userName) {
+        string key = 
+            GetSocialNetworkKey(networkType, 
+                BaseGameProfileAttributes.ATT_AUTH_SOCIAL_NETWORK_USERNAME);
+        SetAttributeStringValue(key, userName);             
     }
         
     // Name
         
-    public string GetSocialNetworkName() {
-        string type = GetSocialNetworkType();
-        string val = GetAttributeStringValue(
-                        GetSocialNetworkKey(
-                                type, 
-                                BaseGameProfileAttributes.ATT_AUTH_SOCIAL_NETWORK_NAME));           
+    public string GetSocialNetworkName(string networkType) {
+        string key = 
+            GetSocialNetworkKey(
+                networkType, 
+                BaseGameProfileAttributes.ATT_AUTH_SOCIAL_NETWORK_NAME);
+        string val = GetAttributeStringValue(key);           
         return val;
     }
         
-    public void SetSocialNetworkName(string name) {
-        SetAttributeStringValue(
-                        GetSocialNetworkKey(
-                                GetSocialNetworkType(), 
-                                BaseGameProfileAttributes.ATT_AUTH_SOCIAL_NETWORK_NAME), name);             
+    public void SetSocialNetworkName(string networkType, string name) {
+        string key = 
+            GetSocialNetworkKey(
+                networkType, 
+                BaseGameProfileAttributes.ATT_AUTH_SOCIAL_NETWORK_NAME);
+        SetAttributeStringValue(key, name);             
     }
         
-    public string GetSocialNetworkFirstName() {
-        string type = GetSocialNetworkType();
-        string val = GetAttributeStringValue(
-                        GetSocialNetworkKey(
-                                type, 
-                                BaseGameProfileAttributes.ATT_AUTH_SOCIAL_NETWORK_FNAME));          
+    public string GetSocialNetworkFirstName(string networkType) {
+        string key = 
+            GetSocialNetworkKey(
+                networkType, 
+                BaseGameProfileAttributes.ATT_AUTH_SOCIAL_NETWORK_FNAME);
+        string val = GetAttributeStringValue(key);          
         return val;
     }
         
-    public void SetSocialNetworkFirstName(string name) {
-        SetAttributeStringValue(
-                        GetSocialNetworkKey(
-                                GetSocialNetworkType(), 
-                                BaseGameProfileAttributes.ATT_AUTH_SOCIAL_NETWORK_FNAME), name);            
+    public void SetSocialNetworkFirstName(string networkType, string name) {
+        string key = 
+            GetSocialNetworkKey(
+                networkType, 
+                BaseGameProfileAttributes.ATT_AUTH_SOCIAL_NETWORK_FNAME);
+        SetAttributeStringValue(key, name);            
     }
         
     // auth token user
         
-    public string GetSocialNetworkAuthTokenUser() {
-        string type = GetSocialNetworkType();
-        string val = GetAttributeStringValue(
-                        GetSocialNetworkKey(
-                                type, 
-                                BaseGameProfileAttributes.ATT_AUTH_SOCIAL_NETWORK_AUTHTOKEN_USER));         
+    public string GetSocialNetworkAuthTokenUser(string networkType) {
+        string key = GetSocialNetworkKey(
+            networkType, 
+            BaseGameProfileAttributes.ATT_AUTH_SOCIAL_NETWORK_AUTHTOKEN_USER);
+        string val = GetAttributeStringValue(key);         
         return val;
     }
         
-    public void SetSocialNetworkAuthTokenUser(string token) {
-        SetAttributeStringValue(
-                        GetSocialNetworkKey(
-                                GetSocialNetworkType(), 
-                                BaseGameProfileAttributes.ATT_AUTH_SOCIAL_NETWORK_AUTHTOKEN_USER), token);          
+    public void SetSocialNetworkAuthTokenUser(string networkType, string token) {
+        string key = GetSocialNetworkKey(
+            networkType, 
+            BaseGameProfileAttributes.ATT_AUTH_SOCIAL_NETWORK_AUTHTOKEN_USER);
+        SetAttributeStringValue(key, token);          
     }
+    */
 
     /*
 

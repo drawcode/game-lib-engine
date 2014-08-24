@@ -140,6 +140,10 @@ public class GameDataSound : GameDataObject {
 
 }
 
+public class GameDataSocial : GameDataObject {   
+
+}
+
 public class GameDataItemEffect : GameDataObject {
     
 }
@@ -1099,6 +1103,46 @@ public class GameDataObject : DataObject {
             Set<string>(BaseDataObjectKeys.network_id, value);
         }
     }  
+    
+    public virtual string network_username {
+        get {
+            return Get<string>(BaseDataObjectKeys.network_username, "");
+        }
+        
+        set {
+            Set<string>(BaseDataObjectKeys.network_username, value);
+        }
+    }
+    
+    public virtual string network_type {
+        get {
+            return Get<string>(BaseDataObjectKeys.network_type, "");
+        }
+        
+        set {
+            Set<string>(BaseDataObjectKeys.network_type, value);
+        }
+    }
+    
+    public virtual string network_token {
+        get {
+            return Get<string>(BaseDataObjectKeys.network_token, "");
+        }
+        
+        set {
+            Set<string>(BaseDataObjectKeys.network_token, value);
+        }
+    }
+    
+    public virtual object network_data {
+        get {
+            return Get<object>(BaseDataObjectKeys.network_data);
+        }
+        
+        set {
+            Set<object>(BaseDataObjectKeys.network_data, value);
+        }
+    }
     
     //[JsonIgnore(JsonIgnoreWhen.Deserializing)]
     public virtual string type {

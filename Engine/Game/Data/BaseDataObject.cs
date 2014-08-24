@@ -32,6 +32,14 @@ public class BaseDataObjectKeys {
     public static string datatype = "datatype";  
     public static string direction = "direction";
     public static string network_id = "network_id";
+    public static string network_username = "network_username";
+    public static string network_name = "network_name";
+    public static string network_first_name = "network_first_name";
+    public static string network_last_name = "network_last_name";
+    public static string network_type = "network_type";
+    public static string network_token = "network_token";
+    public static string network_data = "network_data";
+    public static string network_items = "network_items";
     public static string network = "network";
     public static string networks = "networks";
     public static string data_platform = "data_platform";
@@ -77,6 +85,10 @@ public class BaseDataObjectKeys {
     public static string character_skin_variation = "character_skin_variation";
     public static string character_data = "character_data";
     public static string character_items = "character_items";
+
+    
+    public static string social_data = "social_data";
+    public static string social_items = "social_items";
 
     // weapons
 
