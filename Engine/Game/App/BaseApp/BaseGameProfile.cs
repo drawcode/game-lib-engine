@@ -41,6 +41,9 @@ public class BaseGameProfileAttributes {
     public static string ATT_UI_HAS_SEEN_HELP = "ui-seen-help";
     public static string ATT_HELP_TIPS_SHOWN_DAY = "ui-help-tips-shown-day";
     public static string ATT_HELP_TIPS_SHOWN_DATE = "ui-help-tips-shown-date";
+    
+    public static string ATT_BROADCAST_RECORD_LEVELS = "broadcast-record-levels";
+
 
     // GAME
     
@@ -485,6 +488,23 @@ public class BaseGameProfile : Profile {
         SetAttributeBoolValue(BaseGameProfileAttributes.ATT_CONTROL_VIBRATE, attValue);
     }
 
+    // BROADCAST
+    
+    public virtual bool GetBroadcastRecordLevels() {
+        return GetBroadcastRecordLevels(true);
+    }
+    
+    public virtual bool GetBroadcastRecordLevels(bool defaultValue) {
+        bool attValue = defaultValue;
+        if (CheckIfAttributeExists(BaseGameProfileAttributes.ATT_BROADCAST_RECORD_LEVELS))
+            attValue = GetAttributeBoolValue(BaseGameProfileAttributes.ATT_BROADCAST_RECORD_LEVELS);
+        return attValue;
+    }
+    
+    public virtual void SetBroadcastRecordLevels(bool attValue) {
+        SetAttributeBoolValue(BaseGameProfileAttributes.ATT_BROADCAST_RECORD_LEVELS, attValue);
+    }
+
 
     // HELP/TIPS
 
@@ -698,6 +718,20 @@ public class BaseGameProfile : Profile {
 
         return currentValue;
     }
+
+    // BROADCAST
+       
+    /*
+    public virtual bool broadcast_networks_record_levels {
+        get {
+            return Get<bool>(BaseDataObjectKeys.broadcast_networks_record_levels, true);
+        }
+        
+        set {
+            Set(BaseDataObjectKeys.broadcast_networks_record_levels, value);
+        }
+    }
+    */
  
     // SOCIAL
  

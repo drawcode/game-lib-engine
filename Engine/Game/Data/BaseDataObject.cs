@@ -42,6 +42,9 @@ public class BaseDataObjectKeys {
     public static string network_items = "network_items";
     public static string network = "network";
     public static string networks = "networks";
+    
+    public static string broadcast_networks_record_levels = "broadcast_networks_record_levels";
+
     public static string data_platform = "data_platform";
     public static string sort_order = "sort_order";
     public static string sort_order_type = "sort_order_type";
