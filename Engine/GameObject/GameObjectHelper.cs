@@ -1289,5 +1289,39 @@ public static class GameObjectHelper {
             r.UnFreeze();
         }
     }
+
+    // ASPECT RATIO for textures
+
+    public static void ResizePreservingAspectToScreen(
+        GameObject inst, float desiredMaxWidth, float desiredMaxHeight) {
+        
+        if (inst == null) {
+            return;
+        }
+
+        // current size 250x250
+        
+        float currentWidth = Screen.width;
+        float currentHeight = Screen.height;
+        
+        float photoWidth = desiredMaxWidth;
+        float photoHeight = desiredMaxHeight;
+        
+        float currentRatioWidth = photoWidth / currentWidth;
+        float currentRatioHeight = photoHeight / currentHeight;
+        
+        if (currentRatioHeight < currentRatioWidth) {
+            currentWidth *= currentRatioHeight;
+            currentHeight *= currentRatioHeight;
+        }
+        else if (currentRatioWidth < currentRatioHeight) {
+            currentWidth *= currentRatioWidth;
+            currentHeight *= currentRatioWidth;
+        }
+        
+        inst.transform.localScale 
+            = inst.transform.localScale
+                .WithX(currentWidth).WithY(currentHeight);          
+    }
     
 }

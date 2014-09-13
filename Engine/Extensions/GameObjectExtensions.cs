@@ -536,5 +536,14 @@ public static class GameObjectExtensions {
     public static void UnFreezeRigidBodies(this GameObject go) {
         GameObjectHelper.UnFreezeRigidbodies(go);
     }
+
+    // ASPECT RATIO
+
+    public static void ResizePreservingAspectToScreen(
+        this GameObject go, float desiredMaxWidth, float desiredMaxHeight) {
+
+        GameObjectHelper.ResizePreservingAspectToScreen(
+            go, desiredMaxWidth, desiredMaxHeight); 
+    }
     
 }
