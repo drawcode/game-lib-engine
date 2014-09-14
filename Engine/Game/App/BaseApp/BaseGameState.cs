@@ -40,7 +40,7 @@ public class BaseGameState {
     public string KEY_CAREER_LEGACY;
     public string KEY_GAME_DATA;
     
-    public static BaseGameState Instance {
+    public static BaseGameState BaseInstance {
         get {
             if (instance == null) {
                 lock (syncRoot) {
@@ -106,8 +106,8 @@ public class BaseGameState {
     // CONFIG
     
     public static void SaveConfig() {
-        if (Instance != null) {
-            Instance.saveConfig();
+        if (GameState.Instance != null) {
+            GameState.Instance.saveConfig();
         }
     }
     
@@ -118,8 +118,8 @@ public class BaseGameState {
     }
     
     public static void LoadConfig() {
-        if (Instance != null) {
-            Instance.loadConfig();
+        if (GameState.Instance != null) {
+            GameState.Instance.loadConfig();
         }
     }
     
@@ -268,7 +268,7 @@ public class BaseGameState {
                 obj = JsonMapper.ToObject<T>(data);
             }
             catch (Exception e) {
-                Debug.Log("Error content load:" + key + " " + obj.ToJson());
+                Debug.Log("Error content load:" + key + " " + obj.ToJson() + " e:" + e.ToJson());
             }
         }
         
@@ -341,8 +341,8 @@ public class BaseGameState {
     }
 
     public static void SyncProfile() {
-        if (Instance != null) {
-            Instance.syncProfile();
+        if (GameState.Instance != null) {
+            GameState.Instance.syncProfile();
         }
     }
     
@@ -381,8 +381,8 @@ public class BaseGameState {
     }
     
     public static void SaveProfile() {
-        if (Instance != null) {
-            Instance.saveProfile();
+        if (GameState.Instance != null) {
+            GameState.Instance.saveProfile();
         }
     }
     
@@ -420,13 +420,13 @@ public class BaseGameState {
     public IEnumerator saveProfileCo(GameProfile profile) {        
         
         saveProfile(profile);
-        
+
         yield return null;
     }
     
     public static void LoadProfile() {
-        if (Instance != null) {
-            Instance.loadProfile();
+        if (GameState.Instance != null) {
+            GameState.Instance.loadProfile();
         }
     }
     
@@ -468,14 +468,14 @@ public class BaseGameState {
     }
     
     public static void ChangeUser(string username) {
-        if (Instance != null) {
-            Instance.changeUser(username);
+        if (GameState.Instance != null) {
+            GameState.Instance.changeUser(username);
         }
     }
     
     public static void ChangeUser(string username, bool keepExisting) {
-        if (Instance != null) {
-            Instance.changeUser(username, keepExisting);
+        if (GameState.Instance != null) {
+            GameState.Instance.changeUser(username, keepExisting);
         }
     }
     

@@ -113,6 +113,7 @@ public class FormatUtil {
         }
         catch (Exception exception) {
             // Handle the exception
+            UnityEngine.Debug.Log(exception.ToJson());
         }
         return false;
     }
