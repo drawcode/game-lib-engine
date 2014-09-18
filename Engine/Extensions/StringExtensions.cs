@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Globalization;
 using System.Text;
+using System.Text.RegularExpressions;
 using UnityEngine;
 
 public static class StringExtensions {
@@ -119,5 +120,23 @@ public static class StringExtensions {
         }
         
         return CryptoUtil.DecryptStringAES(val);
+    }
+
+    // REGEX
+
+    public static bool RegexIsMatch(this string val, string regex) {
+        
+        return RegexUtil.RegexIsMatch(val, regex);
+        
+    }
+
+    public static MatchCollection RegexMatches(this string val, string regex) {
+
+        return RegexUtil.RegexMatches(val, regex);
+
+    }
+
+    public static string RegexMatchesReplace(this string val, string regex, string replacement) {
+        return RegexUtil.RegexReplace(val, regex, replacement);
     }
 }

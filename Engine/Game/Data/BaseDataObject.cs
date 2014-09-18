@@ -26,7 +26,11 @@ public class BaseDataObjectKeys {
     public static string file = "file";
     public static string files = "files";
     public static string host = "host";
-    public static string data = "data";  
+    public static string data = "data"; 
+    
+    public static string strings = "strings";
+    public static string images = "images";
+
     public static string info = "info";  
     public static string error = "error";  
     public static string datatype = "datatype";  

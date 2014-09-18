@@ -93,7 +93,54 @@ public class BaseGameConfigs<T> : DataObjects<T> where T : DataObject, new() {
     }
 }
 
+
+/*
+public class GameStringsData : GameDataObject {
+    
+    public virtual string datatype {
+        get {
+            return Get<string>(BaseDataObjectKeys.datatype);
+        }
+        
+        set {
+            Set(BaseDataObjectKeys.datatype, value);
+        }
+    }
+    
+    public virtual string direction {
+        get {
+            return Get<string>(BaseDataObjectKeys.direction);
+        }
+        
+        set {
+            Set(BaseDataObjectKeys.direction, value);
+        }
+    }
+    
+    public virtual List<GameNetworkData> networks {
+        get {
+            return Get<List<GameNetworkData>>(BaseDataObjectKeys.networks);
+        }
+        
+        set {
+            Set(BaseDataObjectKeys.networks, value);
+        }
+    }
+}
+*/
+
+
 public class BaseGameConfig : Config {
+
+    public virtual GameLeaderboardData data {
+        get {
+            return Get<GameLeaderboardData>(BaseDataObjectKeys.data);
+        }
+        
+        set {
+            Set(BaseDataObjectKeys.data, value);
+        }
+    }
 
     public BaseGameConfig() {
         Reset();

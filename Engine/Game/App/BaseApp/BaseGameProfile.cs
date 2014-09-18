@@ -542,6 +542,7 @@ public class BaseGameProfile : Profile {
 
     // NETWORK USER STATE
 
+
     public virtual bool IsThirdPartyNetworkUser() {
         return GetThirdPartyNetworkUser(false);
     }
@@ -556,6 +557,7 @@ public class BaseGameProfile : Profile {
     public virtual void SetThirdPartyNetworkUser(bool attValue) {
         SetAttributeBoolValue(BaseGameProfileAttributes.ATT_THIRD_PARTY_NETWORK, attValue);
     }
+
 
     // AUDIO
 

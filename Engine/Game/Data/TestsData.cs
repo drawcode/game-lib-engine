@@ -170,9 +170,31 @@ public class TestsData {
         //Advance(testName);
         //success = TestEncrypt(testName);
         
-        testName = "TestGameStateProfileSync";
+        //testName = "TestGameStateProfileSync";
+        //Advance(testName);
+        //success = TestGameStateProfileSync(testName);
+
+
+        //
+
+        
+        testName = "TestGameLocalization_List";
         Advance(testName);
-        success = TestGameStateProfileSync(testName);
+        success = TestGameLocalization_List(testName);
+
+        
+        testName = "TestGameLocalization_Code";
+        Advance(testName);
+        success = TestGameLocalization_Code(testName);
+
+        testName = "TestGameLocalization_Get";
+        Advance(testName);
+        success = TestGameLocalization_Get(testName, "en", GameLocalizationKeys.app_display_code);
+                
+        testName = "TestGameLocalization_Get";
+        Advance(testName);
+        success = TestGameLocalization_Get(testName, "en", GameLocalizationKeys.social_facebook_post_message);
+
 
         //
 
@@ -219,6 +241,99 @@ public class TestsData {
         DumpObj(name, "dataB", dataB);
 
         return equal;
+    }
+
+
+    public static bool TestGameLocalization_Code(string name) {
+        
+        bool success = false;
+        
+        Debug.Log(name);
+        
+        GameLocalization item = GameLocalizations.Instance.GetByCode("en");
+        
+        if(item != null) {
+            
+            Debug.Log("item:code:" + item.code);
+            Debug.Log("item:data:" + item.data.ToJson());
+            
+            success = true;
+            
+        }
+        else {
+            
+            Debug.Log("code:NOT FOUND:");
+        }
+        
+        return success;
+    }
+
+    public static bool TestGameLocalization_Get(string name, string locale, string code) {
+        
+        bool success = false;
+        
+        Debug.Log(name + " : " + code);
+        
+        string val = GameLocalizations.GetString(locale, code);
+        
+        if(val != null) {
+            
+            Debug.Log("val:code:" + val);
+            
+            success = true;
+            
+        }
+        else {
+            
+            Debug.Log("item:NOT FOUND:");
+        }
+        
+        return success;
+    }
+    
+    public static bool TestGameLocalization_List(string name) {
+        
+        bool success = false;
+        
+        Debug.Log(name);
+        
+        List<GameLocalization> items = GameLocalizations.Instance.GetAll();
+        DumpObj(name, "items", items);
+        
+        //AssertEquals(name, username, "Player");
+        
+        foreach(GameLocalization item in items) {  
+            
+            Debug.Log("item:code:" + item.code);               
+            Debug.Log("item:json:" + item.ToJson());  
+            
+            GameLocalizationData data = item.data;
+            
+            if(data != null) {
+
+                if(data.strings != null) {
+
+                    foreach(KeyValuePair<string,GameLocalizationDataItem> dataItem in data.strings) {   
+                        Debug.Log("strings:dataItem:code:" + dataItem.Value.code);         
+                        Debug.Log("strings:dataItem:json:" + dataItem.Value.ToJson());   
+                        success = true;                      
+                    }
+                }
+
+                if(data.images != null) {
+
+                    foreach(KeyValuePair<string,GameLocalizationDataItem> dataItem in data.images) {   
+                        Debug.Log("images:dataItem:code:" + dataItem.Value.code);         
+                        Debug.Log("images:dataItem:json:" + dataItem.Value.ToJson());   
+                        success = true;                          
+                    }
+                }
+            }
+        }
+        
+        DumpObj(name, "items.Count", items.Count);
+        
+        return success;
     }
     
     public static bool TestGameStateProfileSync(string name) {
