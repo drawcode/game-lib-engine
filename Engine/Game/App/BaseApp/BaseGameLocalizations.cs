@@ -123,7 +123,7 @@ public class BaseGameLocalizations<T> : DataObjects<T> where T : DataObject, new
         // If string contains mustache/handlebars {{ [code] }} then get all 
         // matches and replace with localized content
 
-        string regexTemplate = @"\{\{\s+(.*?)\s+\}\}";
+        string regexTemplate = @"\{\{[ ]*(.*?)[ ]*\}\}";
         
         if (content.RegexIsMatch(regexTemplate)) {
             
@@ -139,23 +139,37 @@ public class BaseGameLocalizations<T> : DataObjects<T> where T : DataObject, new
 
                 if(data != null) {
 
-                    GameLocalizationDataItem dataItem = data.strings[valCode];
+                    GameLocalizationDataItem dataItem = null;
 
-                    if(dataItem != null) {
+                    // TODO fix regex
 
-                        string regexCode = @"\{\{\s+" + valCode + @"\s+\}\}";
+                    if(valCode.Contains("{{") || valCode.Contains("}}")) {
+                        valCode = valCode.Replace("{{", "").Replace("}}","");
+                    }
 
-                        if (!string.IsNullOrEmpty(dataItem.valString)) { 
-                            content = content.RegexMatchesReplace(regexCode, dataItem.valString);
-
+                    if(data.strings != null) {
+                        if(data.strings.ContainsKey(valCode)) {
+                            dataItem = data.strings.Get(valCode);
                         }
                     }
+                    
+                    string regexCode = @"(\{\{[ ]*" + valCode + @"[ ]*\}\})"; //{{[ ]*(.*?)[ ]*}} //({{[ ]*app_display_name[ ]*}}.)
+                    string replaceText = valCode; // replace it if not found to prevent recursion
+
+                    if(dataItem != null) {
+                        if (!string.IsNullOrEmpty(dataItem.valString)) { 
+                            replaceText = dataItem.valString;
+                        }
+                    }                                        
+                    
+                    content = content.RegexMatchesReplace(regexCode, replaceText);
+
                 }
             }
+            
+            // recurse
+            content = ReplaceLocalized(content);
         }
-        
-        // recurse
-        content = ReplaceLocalized(content);
         
         return content;
 
@@ -177,7 +191,7 @@ public class BaseGameLocalizations<T> : DataObjects<T> where T : DataObject, new
             GameLocalizationDataItemType.strings, locale, key);
 
         if(item != null) {
-            return item.valString;
+            return GameLocalizations.Instance.ReplaceLocalized(item.valString);
         }
 
         return null;
