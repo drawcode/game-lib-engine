@@ -44,7 +44,6 @@ public class BaseGameLocalizationKeys {
 
 }
 
-
 public enum GameLocalizationDataItemType {
     strings,
     images
@@ -131,32 +130,31 @@ public class BaseGameLocalizations<T> : DataObjects<T> where T : DataObject, new
             
             foreach (Match match in matches) {
 
-                string valCode = match.Value;
+                string valCodeMatch = match.Value;
+                string valCodeGroup = match.Value;
+
+                foreach (Group group in match.Groups) {
+                    valCodeGroup = group.Value;
+                }
 
                 GameLocalization localization = GameLocalizations.Current;
 
                 GameLocalizationData data = localization.data;
 
-                if(data != null) {
+                if (data != null) {
 
                     GameLocalizationDataItem dataItem = null;
 
-                    // TODO fix regex
-
-                    if(valCode.Contains("{{") || valCode.Contains("}}")) {
-                        valCode = valCode.Replace("{{", "").Replace("}}","");
-                    }
-
-                    if(data.strings != null) {
-                        if(data.strings.ContainsKey(valCode)) {
-                            dataItem = data.strings.Get(valCode);
+                    if (data.strings != null) {
+                        if (data.strings.ContainsKey(valCodeGroup)) {
+                            dataItem = data.strings.Get(valCodeGroup);
                         }
                     }
                     
-                    string regexCode = @"(\{\{[ ]*" + valCode + @"[ ]*\}\})"; //{{[ ]*(.*?)[ ]*}} //({{[ ]*app_display_name[ ]*}}.)
-                    string replaceText = valCode; // replace it if not found to prevent recursion
+                    string regexCode = @"(\{\{[ ]*" + valCodeGroup + @"[ ]*\}\})"; //{{[ ]*(.*?)[ ]*}} //({{[ ]*app_display_name[ ]*}}.)
+                    string replaceText = valCodeMatch; // replace it if not found to prevent recursion
 
-                    if(dataItem != null) {
+                    if (dataItem != null) {
                         if (!string.IsNullOrEmpty(dataItem.valString)) { 
                             replaceText = dataItem.valString;
                         }
@@ -190,7 +188,7 @@ public class BaseGameLocalizations<T> : DataObjects<T> where T : DataObject, new
         GameLocalizationDataItem item = GetDataItem(
             GameLocalizationDataItemType.strings, locale, key);
 
-        if(item != null) {
+        if (item != null) {
             return GameLocalizations.Instance.ReplaceLocalized(item.valString);
         }
 
@@ -202,7 +200,7 @@ public class BaseGameLocalizations<T> : DataObjects<T> where T : DataObject, new
         GameLocalizationDataItem item = GetDataItem(
             GameLocalizationDataItemType.images, locale, key);
         
-        if(item != null) {
+        if (item != null) {
             return item.valString;
         }
         
@@ -215,23 +213,23 @@ public class BaseGameLocalizations<T> : DataObjects<T> where T : DataObject, new
         if (GameLocalizations.Instance != null) {
             
             //if(locale != currentLocale) {
-                // check locale
-                GameLocalizations.Instance.ChangeCurrent(locale);
+            // check locale
+            GameLocalizations.Instance.ChangeCurrent(locale);
             //}
             
             GameLocalization localeObject = GameLocalizations.Current;
             
-            if(localeObject != null) {
+            if (localeObject != null) {
                 
                 GameLocalizationData localeData = localeObject.data;
                 
-                if(localeData != null) {
+                if (localeData != null) {
 
-                    if(itemType == GameLocalizationDataItemType.strings) {
+                    if (itemType == GameLocalizationDataItemType.strings) {
 
                         return localeData.GetItemString(key);
                     }
-                    else if(itemType == GameLocalizationDataItemType.images) {
+                    else if (itemType == GameLocalizationDataItemType.images) {
                         return localeData.GetItemImage(key);
                     }
                 }
@@ -243,22 +241,17 @@ public class BaseGameLocalizations<T> : DataObjects<T> where T : DataObject, new
 
     public void ChangeCurrent(string code) {
 
-
         if (GameLocalizations.Current.code != code 
             || code != currentLocale) {
+
+            LoadLocale(code);
 
             GameLocalization obj = GameLocalizations.Instance.GetById(code);
 
             if (obj != null) {
                 
                 GameLocalizations.Current = obj;
-
-                if (code != currentLocale) {
-                    LoadLocale(code);
-                    
-                    LogUtil.Log("Changing Locales: code:" + code);  
-                }
-            
+                LogUtil.Log("Changing Locales: code:" + code);  
             }  
         } 
     }
@@ -299,7 +292,7 @@ public class GameLocalizationData : GameDataObject {
     }
 
     public GameLocalizationDataItem GetItemString(string key) {
-        if(strings != null) {
+        if (strings != null) {
             return strings.Get(key);
         }
 
@@ -307,7 +300,7 @@ public class GameLocalizationData : GameDataObject {
     }
 
     public GameLocalizationDataItem GetItemImage(string key) {
-        if(images != null) {
+        if (images != null) {
             return images.Get(key);
         }
         

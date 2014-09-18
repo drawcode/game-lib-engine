@@ -194,6 +194,10 @@ public class TestsData {
         testName = "TestGameLocalization_Get";
         Advance(testName);
         success = TestGameLocalization_Get(testName, "en", GameLocalizationKeys.social_facebook_post_message);
+                
+        testName = "TestGameLocalization_Get";
+        Advance(testName);
+        success = TestGameLocalization_Get(testName, "sp", GameLocalizationKeys.social_facebook_post_message);
 
 
         //
