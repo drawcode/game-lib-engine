@@ -111,12 +111,13 @@ public class DataObjects<T> where T : DataObject, new() {
 
         if (!path.Contains(ContentsConfig.contentAppFolder)) {        
             
-            LogUtil.Log("LoadDataFromResources:pathResources:" + pathResources);
-            LogUtil.Log("LoadDataFromResources:ContentsConfig.contentRootFolder:" + ContentsConfig.contentRootFolder);
-            LogUtil.Log("LoadDataFromResources:ContentsConfig.contentAppFolder:" + ContentsConfig.contentAppFolder);
-            LogUtil.Log("LoadDataFromResources:Application.persistentDataPath:" + Application.persistentDataPath);
-            LogUtil.Log("LoadDataFromResources:Application.dataPath:" + Application.dataPath);
+            //Debug.Log("LoadDataFromResources:pathResources:" + pathResources);
+            //Debug.Log("LoadDataFromResources:ContentsConfig.contentRootFolder:" + ContentsConfig.contentRootFolder);
+            //Debug.Log("LoadDataFromResources:ContentsConfig.contentAppFolder:" + ContentsConfig.contentAppFolder);
+            //Debug.Log("LoadDataFromResources:Application.persistentDataPath:" + Application.persistentDataPath);
+            //Debug.Log("LoadDataFromResources:Application.dataPath:" + Application.dataPath);
 
+            /*
             if (Application.isWebPlayer) {
 
                 System.Text.StringBuilder sbPath = new System.Text.StringBuilder();
@@ -129,10 +130,18 @@ public class DataObjects<T> where T : DataObject, new() {
 
                 pathResources = sbPath.ToString();
 
-                LogUtil.Log("LoadDataFromResources:web:pathResources:" + pathResources);
+                Debug.Log("LoadDataFromResources:web:pathResources:" + pathResources);
             }
             else {
 
+                
+                sbPath.Append(ContentsConfig.contentRootFolder);
+                sbPath.Append("/");
+                sbPath.Append(ContentsConfig.contentAppFolder);
+                sbPath.Append("/version/");
+                sbPath.Append(pathResources);
+                
+                pathResources = sbPath.ToString();
                 pathResources = pathResources.Replace("data/", "");
 
                 pathResources =
@@ -151,10 +160,23 @@ public class DataObjects<T> where T : DataObject, new() {
                 if (pathResources.Contains("/" + ContentsConfig.contentVersion + "/")) {
                     pathResources = pathResources.Replace("/" + ContentsConfig.contentVersion + "/", "/version/");
                 }
+
             }
+            */
+
+            
+            System.Text.StringBuilder sbPath = new System.Text.StringBuilder();
+            
+            sbPath.Append(ContentsConfig.contentRootFolder);
+            sbPath.Append("/");
+            sbPath.Append(ContentsConfig.contentAppFolder);
+            sbPath.Append("/version/");
+            sbPath.Append(pathResources);
+            
+            pathResources = sbPath.ToString();
         }
      
-        LogUtil.Log("LoadDataFromResources:void:" + pathResources);
+        LogUtil.Log("LoadDataFromResources:pathResources:" + pathResources);
      
         string data = LoadDataFromResources(pathResources);
         LoadDataFromString(data);
@@ -411,6 +433,7 @@ public class DataObjects<T> where T : DataObject, new() {
         string fileData = "";
 
         //LogUtil.Log("LoadDataFromResources:string:resourcesPath:" + resourcesPath + " " + pathKey);
+
         TextAsset textData = Resources.Load(resourcesPath, typeof(TextAsset)) as TextAsset;
         if (textData != null) {
             fileData = textData.text;
@@ -418,6 +441,7 @@ public class DataObjects<T> where T : DataObject, new() {
         LoadDataFromString(fileData);
 
         //LogUtil.Log("LoadDataFromResources:fileData:" + fileData + " " + pathKey);
+
         return fileData;
     }
 
@@ -482,15 +506,15 @@ public class DataObjects<T> where T : DataObject, new() {
 
         // harvest the properties, fields and keys if not already done.
 
-        if(attributes == null) {
+        if (attributes == null) {
 
             attributes = new Dictionary<string, string>();
             
             if (typeof(BaseDataObject).IsAssignableFrom(obj.GetType())) {
 
-                foreach(string key in ((BaseDataObject)obj).Keys) {
+                foreach (string key in ((BaseDataObject)obj).Keys) {
                     
-                    if(attributes.ContainsKey(key)) {
+                    if (attributes.ContainsKey(key)) {
                         attributes[key] = "dict";
                     }
                     else {
@@ -504,7 +528,7 @@ public class DataObjects<T> where T : DataObject, new() {
 
                 string key = fieldInfo.Name;
 
-                if(attributes.ContainsKey(key)) {
+                if (attributes.ContainsKey(key)) {
                     attributes[key] = "field";
                 }
                 else {
@@ -517,7 +541,7 @@ public class DataObjects<T> where T : DataObject, new() {
                 
                 string key = propInfo.Name;
                 
-                if(attributes.ContainsKey(key)) {
+                if (attributes.ContainsKey(key)) {
                     attributes[key] = "property";
                 }
                 else {
@@ -527,15 +551,15 @@ public class DataObjects<T> where T : DataObject, new() {
 
             // TODO dictionary keys...
         }
-    }          
+    }
 
     public T GetByStringKey(string key, string keyValue) {
 
         foreach (T obj in GetAll()) {
             
-            if(Has(obj, key)) {
+            if (Has(obj, key)) {
 
-                if(keyValue == GetFieldValue<string>(obj, key)) {
+                if (keyValue == GetFieldValue<string>(obj, key)) {
                     return obj;
                 }
             }
@@ -550,7 +574,7 @@ public class DataObjects<T> where T : DataObject, new() {
     public bool Has(T obj, string key) {
         
         Inspect<T>(obj);
-        if(attributes.ContainsKey(key)) {
+        if (attributes.ContainsKey(key)) {
             return true;
         }
         return false;
@@ -560,24 +584,24 @@ public class DataObjects<T> where T : DataObject, new() {
 
         object val = null;
         
-        if(Has(obj, fieldName)) {
+        if (Has(obj, fieldName)) {
 
             string type = attributes[fieldName];
 
-            if(type == "dict") {
+            if (type == "dict") {
                 if (typeof(BaseDataObject).IsAssignableFrom(obj.GetType())) {                                         
-                    if(((BaseDataObject)obj).ContainsKey(fieldName)) {                        
+                    if (((BaseDataObject)obj).ContainsKey(fieldName)) {                        
                         val = ((BaseDataObject)obj)[fieldName];
                     } 
                 }
             }
-            else if(type == "field") {
+            else if (type == "field") {
                 System.Reflection.FieldInfo field = obj.GetType().GetField(fieldName);
                 if (field != null) {
                     val = field.GetValue(obj);
                 }
             }
-            else if(type == "property") {
+            else if (type == "property") {
                 System.Reflection.PropertyInfo prop = obj.GetType().GetProperty(fieldName);                
                 if (prop != null) {
                     if (prop.Name == fieldName) {
@@ -590,7 +614,7 @@ public class DataObjects<T> where T : DataObject, new() {
         try { 
             return (U)val;
         }
-        catch(Exception e) {
+        catch (Exception e) {
             LogUtil.Log(e);
             return default(U);
         }
@@ -599,23 +623,23 @@ public class DataObjects<T> where T : DataObject, new() {
     public void SetFieldValue(T obj, string fieldName, object fieldValue) {
         //bool hasSet = false;
         
-        if(Has(obj, fieldName)) {
+        if (Has(obj, fieldName)) {
             string type = attributes[fieldName];
-            if(type == "dict") {
+            if (type == "dict") {
                 if (typeof(BaseDataObject).IsAssignableFrom(obj.GetType())) {                                         
-                    if(((BaseDataObject)obj).ContainsKey(fieldName)) {                        
+                    if (((BaseDataObject)obj).ContainsKey(fieldName)) {                        
                         ((BaseDataObject)obj)[fieldName] = fieldValue;
                     }   
                 }
             }
-            else if(type == "field") {
+            else if (type == "field") {
                 System.Reflection.FieldInfo field = obj.GetType().GetField(fieldName);
                 if (field != null) {
                     field.SetValue(obj, fieldValue);
                 }
             }
-            else if(type == "property") {
-                 System.Reflection.PropertyInfo prop = obj.GetType().GetProperty(fieldName);                
+            else if (type == "property") {
+                System.Reflection.PropertyInfo prop = obj.GetType().GetProperty(fieldName);                
                 if (prop != null) {
                     if (prop.Name == fieldName) {
                         prop.SetValue(obj, fieldValue, null);
@@ -631,9 +655,9 @@ public class DataObjects<T> where T : DataObject, new() {
             
             Inspect<T>(obj);
             
-            if(attributes.ContainsKey(key)) {
+            if (attributes.ContainsKey(key)) {
                 string val = GetFieldValue<string>(obj, key);
-                if(val != keyValue && !string.IsNullOrEmpty(val)) {
+                if (val != keyValue && !string.IsNullOrEmpty(val)) {
                     return true;
                 }
             }
@@ -780,16 +804,16 @@ public class DataObjects<T> where T : DataObject, new() {
 
             List<T> itemsActive = new List<T>();
 
-            foreach(T t in items) {
+            foreach (T t in items) {
                 bool active = GetFieldValue<bool>(t, "active");
-                if(active) {
+                if (active) {
                     itemsActive.Add(t);
                 }
             }
 
             items.Clear();
 
-            foreach(T t in itemsActive) {
+            foreach (T t in itemsActive) {
                 items.Add(t);
             }
 

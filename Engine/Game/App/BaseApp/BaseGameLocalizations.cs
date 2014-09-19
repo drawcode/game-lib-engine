@@ -95,10 +95,15 @@ public class BaseGameLocalizations<T> : DataObjects<T> where T : DataObject, new
     }
 
     public BaseGameLocalizations(bool loadData) {
-        LoadLocale(defaultLocale);
+        //LoadLocale(defaultLocale);
+        Reset();
     }
 
     public void LoadLocale(string localeCode) {
+
+        if(!GameConfigs.globalReady) {
+            return;
+        }
 
         Reset();
                 
@@ -116,13 +121,17 @@ public class BaseGameLocalizations<T> : DataObjects<T> where T : DataObject, new
     }
 
     public string ReplaceLocalized(string content) {
+        
+        if(!GameConfigs.globalReady) {
+            return content;
+        }
     
         //\{\{\s+(.*?)\s+\}\}
     
         // If string contains mustache/handlebars {{ [code] }} then get all 
         // matches and replace with localized content
 
-        string regexTemplate = @"\{\{[ ]*(.*?)[ ]*\}\}";
+        string regexTemplate = @"\{\{[ ]*\^[ ]*(.*?)[ ]*\}\}";
         
         if (content.RegexIsMatch(regexTemplate)) {
             
@@ -151,7 +160,7 @@ public class BaseGameLocalizations<T> : DataObjects<T> where T : DataObject, new
                         }
                     }
                     
-                    string regexCode = @"(\{\{[ ]*" + valCodeGroup + @"[ ]*\}\})"; //{{[ ]*(.*?)[ ]*}} //({{[ ]*app_display_name[ ]*}}.)
+                    string regexCode = @"(\{\{[ ]*\^[ ]*" + valCodeGroup + @"[ ]*\}\})"; //{{[ ]*(.*?)[ ]*}} //({{[ ]*app_display_name[ ]*}}.)
                     string replaceText = valCodeMatch; // replace it if not found to prevent recursion
 
                     if (dataItem != null) {
@@ -182,8 +191,24 @@ public class BaseGameLocalizations<T> : DataObjects<T> where T : DataObject, new
         }
         return stringToTranslate;
     }
+    
+    public static string Get(string key) {
+        return GetString(key);
+    }
+
+    public static string Get(string locale, string key) {
+        return GetString(locale, key);
+    }
+    
+    public static string GetString(string key) {
+        return GetString(currentLocale, key);
+    }
 
     public static string GetString(string locale, string key) {
+        
+        if(!GameConfigs.globalReady) {
+            return key;
+        }
         
         GameLocalizationDataItem item = GetDataItem(
             GameLocalizationDataItemType.strings, locale, key);
@@ -197,6 +222,10 @@ public class BaseGameLocalizations<T> : DataObjects<T> where T : DataObject, new
 
     public static string GetImage(string locale, string key) {
         
+        if(!GameConfigs.globalReady) {
+            return key;
+        }
+        
         GameLocalizationDataItem item = GetDataItem(
             GameLocalizationDataItemType.images, locale, key);
         
@@ -209,6 +238,10 @@ public class BaseGameLocalizations<T> : DataObjects<T> where T : DataObject, new
 
     public static GameLocalizationDataItem GetDataItem(
         GameLocalizationDataItemType itemType, string locale, string key) {
+        
+        if(!GameConfigs.globalReady) {
+            return null;
+        }
         
         if (GameLocalizations.Instance != null) {
             

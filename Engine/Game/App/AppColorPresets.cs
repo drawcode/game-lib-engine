@@ -11,9 +11,7 @@ public class AppColorPresets : BaseAppColorPresets<AppColorPreset> {
     private static volatile AppColorPresets instance;
     private static System.Object syncRoot = new System.Object();
     private string DATA_KEY = "app-color-preset-data";
-        
-    public static Dictionary<string, Color> cachedColors = new Dictionary<string, Color>();
-        
+                
     public static AppColorPreset Current {
         get {
             if (current == null) {
@@ -53,58 +51,6 @@ public class AppColorPresets : BaseAppColorPresets<AppColorPreset> {
         pathKey = DATA_KEY;
         LoadData();
     }      
-
-    public static Color GetColor(string code) {
-
-        Color colorTo = Color.white;
-
-        if(GameConfigs.globalReady) {
-
-            if(!cachedColors.ContainsKey(code)) {
-             
-                AppColor color = AppColors.Instance.GetByCode(code);
-
-                if(color != null) {
-                    colorTo = color.GetColor();
-                }
-
-                cachedColors.Add(code, colorTo);
-            }
-            else {
-                colorTo = cachedColors[code];
-            }
-        }
-
-        return colorTo;
-    }
-
-    public static string GetColorCodeByItemCode(string customItemCode) {
-        return "";//List<AppColorPreset>
-    }
-
-    public static Color GetColorByItemCode(string customItemCode) { // helmet, jersey etc
-        
-        Color colorTo = Color.white;
-        
-        if(GameConfigs.globalReady) {
-            
-            if(!cachedColors.ContainsKey(customItemCode)) {
-                
-                AppColor color = AppColors.Instance.GetByCode(customItemCode);
-                
-                if(color != null) {
-                    colorTo = color.GetColor();
-                }
-                
-                cachedColors.Add(customItemCode, colorTo);
-            }
-            else {
-                colorTo = cachedColors[customItemCode];
-            }
-        }
-        
-        return colorTo;
-    }
 }
 
 public class AppColorPreset : BaseAppColorPreset {
