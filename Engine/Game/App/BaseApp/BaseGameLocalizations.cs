@@ -53,7 +53,7 @@ public class BaseGameLocalizations<T> : DataObjects<T> where T : DataObject, new
     private static T current;
     private static volatile BaseGameLocalizations<T> instance;
     private static System.Object syncRoot = new System.Object();
-    public static string currentLocale = "--"; //
+    public static string currentLocale = ""; //
     public static string defaultLocale = "en"; //
 
     public static string BASE_DATA_KEY = "game-localization-data";
@@ -112,6 +112,10 @@ public class BaseGameLocalizations<T> : DataObjects<T> where T : DataObject, new
         Debug.Log("GameLocalizations:LoadLocale:" + " localeSystem:" + localeSystem);
         
         Debug.Log("GameLocalizations:LoadLocale:" + " localeCode:" + localeCode);
+
+        if(string.IsNullOrEmpty(localeCode)) {
+            localeCode = defaultLocale;
+        }
                 
         currentLocale = localeCode;
 
