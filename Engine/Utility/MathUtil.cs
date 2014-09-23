@@ -41,15 +41,23 @@ public class MathUtil {
         return UnityEngine.Random.insideUnitSphere * radius;
     }
 
+    //
+       
+    
+    public static Vector3 LerpPercent(Vector3 start, Vector3 end, float percent) {
+        
+        return (start + percent * (end - start));
+    }
+
     // Add items that add up to 1 and choose probabilistically
 
     public static T ChooseProbability<T>(List<T> items, List<float> probs) {
         int index = ChooseProbability(probs);
-        if(items != null) {
-            if(items.Count > index) {
+        if (items != null) {
+            if (items.Count > index) {
                 return items[index];
             }
-            if(items.Count > 1)
+            if (items.Count > 1)
                 return items[0];
         }
 
@@ -105,7 +113,6 @@ public class MathUtil {
         
         return default(T);
     }
-
 
     public static float Hermite(float start, float end, float value) {
         return Mathf.Lerp(start, end, value * value * (3.0f - 2.0f * value));
