@@ -40,7 +40,18 @@ public class BaseGameLocalizationKeys {
     public static string social_photo_library_photo_saved_title = "social_photo_library_photo_saved_title";
     public static string social_photo_library_photo_saved_message = "social_photo_library_photo_saved_message";
 
+    // -- GAME -- FACEBOOK
 
+    public static string social_facebook_game_results_title = "social_facebook_game_results_title";
+    public static string social_facebook_game_results_message = "social_facebook_game_results_message";
+    public static string social_facebook_game_results_url = "social_facebook_game_results_url";
+    public static string social_facebook_game_results_image_url = "social_facebook_game_results_image_url";
+    public static string social_facebook_game_results_caption = "social_facebook_game_results_caption";
+    
+    // -- GAME -- TWITTER
+    
+    public static string social_twitter_game_results_message = "social_twitter_game_results_message";
+    public static string social_twitter_game_results_image_url = "social_twitter_game_results_image_url";
 
 }
 
