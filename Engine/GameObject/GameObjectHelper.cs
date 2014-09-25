@@ -232,7 +232,41 @@ public static class GameObjectHelper {
             component.enabled = false;
         }
     }
-    
+
+    // HIT OBJECT
+
+    public static bool HitObject(GameObject inst, Vector3 pos) {
+        
+        if (inst == null)
+            return false;
+
+        Ray screenRay = Camera.main.ScreenPointToRay(pos);
+
+        RaycastHit hit;
+        
+        if (Physics.Raycast(screenRay, out hit, Mathf.Infinity) && hit.transform != null) {
+            if (hit.transform.gameObject == inst) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public static GameObject HitObject(Vector3 pos, string containsNameTo) {
+                
+        Ray screenRay = Camera.main.ScreenPointToRay(pos);
+        
+        RaycastHit hit;
+        
+        if (Physics.Raycast(screenRay, out hit, Mathf.Infinity) && hit.transform != null) {
+            GameObject go = hit.transform.gameObject;
+            if (go.name.ToLower().Contains(containsNameTo.ToLower())) {
+                return go;
+            }
+        }
+        return null;
+    }
+        
     // DEBUG
     
     public static void DumpRootTransforms() {

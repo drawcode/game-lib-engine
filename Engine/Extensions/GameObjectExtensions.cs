@@ -349,6 +349,13 @@ public static class GameObjectExtensions {
         GameObjectHelper.HideChildren(inst, applyGameObjectInactive);
     }
 
+    public static void HitObject(this GameObject inst, Vector3 pos) {
+        if (inst == null)
+            return;
+
+        GameObjectHelper.HitObject(inst, pos);
+    }
+
     //---------------------------------------------------------------
     // AUDIO
 
