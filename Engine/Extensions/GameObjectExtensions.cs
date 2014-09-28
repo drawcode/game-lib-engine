@@ -188,6 +188,27 @@ public static class GameObjectExtensions {
         return null;
     }
 
+    public static bool Remove<T>(this GameObject inst) where T : Component {
+        if (inst == null)
+            return false;
+        
+        return GameObjectHelper.Remove<T>(inst);
+    }
+
+    public static T GetOrSet<T>(this GameObject inst) where T : Component {
+        if (inst == null)
+            return null;
+        
+        return GameObjectHelper.GetOrSet<T>(inst);
+    }
+
+    public static T Set<T>(this GameObject inst) where T : Component {
+        if (inst == null)
+            return null;
+        
+        return GameObjectHelper.Set<T>(inst);
+    }
+
     public static T Get<T>(this GameObject inst) where T : Component {
         if (inst == null)
             return null;

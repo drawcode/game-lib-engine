@@ -496,6 +496,38 @@ public static class GameObjectHelper {
     }
     
     // COMPONENTS
+
+    public static bool Remove<T>(GameObject inst) where T : Component {
+        if (inst == null) {
+            return false;
+        }
+
+        T t = inst.Get<T>();
+        
+        if(t != default(T)) {
+            UnityEngine.Object.Destroy(t);
+            return true;
+        }
+        
+        return false;
+    }
+
+    public static T GetOrSet<T>(GameObject inst) where T : Component {
+        if (inst == null) {
+            return null;
+        }
+        
+        if (!inst.Has<T>()) {
+            return inst.AddComponent<T>();
+        }
+        else {
+            return inst.Get<T>();
+        }
+    }
+
+    public static T Set<T>(GameObject inst) where T : Component {
+        return GetOrSet<T>(inst);
+    }
     
     public static T Get<T>(GameObject inst) where T : Component {
         if (inst == null) {
