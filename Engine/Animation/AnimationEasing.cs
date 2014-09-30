@@ -1,12 +1,38 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
-using System.Reflection;
-using System.Text;
 using System.ComponentModel;
 using System.Globalization;
+using System.Reflection;
+using System.Text;
 
-public class AnimationEasing {
+using Engine.Data.Json;
 
+using UnityEngine;
+
+public class AnimationEasing : MonoBehaviour {
+        
+    // Only one BroadcastNetworks can exist. We use a singleton pattern to enforce this.
+    private static AnimationEasing _instance = null;
+    
+    public static AnimationEasing Instance {
+        get {
+            if (!_instance) {
+                
+                // check if an ObjectPoolManager is already available in the scene graph
+                _instance = FindObjectOfType(typeof(AnimationEasing)) as AnimationEasing;
+                
+                // nope, create a new one
+                if (!_instance) {
+                    var obj = new GameObject("_AnimationEasing");
+                    _instance = obj.AddComponent<AnimationEasing>();
+                }
+            }
+            
+            return _instance;
+        }
+    }
+    
     public enum Equations {
         Linear,
         QuadEaseOut,
@@ -50,7 +76,187 @@ public class AnimationEasing {
         BackEaseInOut,
         BackEaseOutIn
     }
+
+    public Dictionary<string,AnimationItem> animationItems = new Dictionary<string,AnimationItem>();
+
+    public class AnimationItem {
+        public Equations equationType = Equations.QuadEaseInOut;
+        public double val = 0;
+        public double valStart = 0;
+        public double valEnd = 0;
+        public double timeStart = 0;
+        public double timeDuration = 1.0;
+        public double timeDelay = 1.0;
+        public string key = "";
+
+        public AnimationItem() {
+            Reset();
+        }
+
+        public void Reset() {
+            equationType = Equations.QuadEaseInOut;
+            val = 0f;
+            valStart = 0f;
+            valEnd = 1f;
+            timeStart = 0f;
+            timeDuration = 1.0f;
+            timeDelay = 1.0f;
+            key = System.Guid.NewGuid().ToString();
+        }
+    }
+
+    public void Update() {
+        foreach (KeyValuePair<string,AnimationItem> item in getAnimationItems()) {
+            easeUpdate(item.Value);
+        }
+    }
+
+    // GET
+
+    public static Dictionary<string,AnimationItem> GetAnimationItems() {
+        return Instance.getAnimationItems();
+    }
     
+    public Dictionary<string,AnimationItem> getAnimationItems() {
+
+        if (animationItems == null) {
+            animationItems = new Dictionary<string, AnimationItem>();
+        }
+
+        return animationItems;
+    }
+    
+    public static double EaseGetValue(string key, double defaultValue) {
+        return Instance.easeGetValue(key, defaultValue);
+    }
+
+    public double easeGetValue(string key, double defaultValue) {
+
+        AnimationItem item = easeGet(key);
+
+        if (item == null) {
+            return defaultValue;
+        }
+
+        return easeGet(key).val;
+    }
+
+    public static AnimationItem EaseGet(string key) {
+        return Instance.easeGet(key);
+    }
+    
+    public AnimationItem easeGet(string key) {
+
+        if (getAnimationItems().ContainsKey(key)) {
+            return animationItems[key];
+        }
+
+        return null;
+    }
+
+    // UPDATE
+
+    public static AnimationItem EaseUpdate(AnimationItem animationItem) {
+        return Instance.easeUpdate(animationItem);
+    }
+
+    public AnimationItem easeUpdate(AnimationItem animationItem) {
+
+        if (animationItem == null) {
+            return null;
+        }
+
+        if (!animationItems.ContainsKey(animationItem.key)) {
+            easeAdd(animationItem);
+        }
+
+        if (animationItem.timeStart == 0) {
+            animationItem.timeStart = Time.time;
+        }
+
+        float tickDuration = Time.time - (float)animationItem.timeStart;
+        
+        if (tickDuration <= animationItem.timeDuration) {
+            animationItem.val = (float)AnimationEasing.QuadEaseInOut(
+                tickDuration, 
+                animationItem.valStart, 
+                animationItem.valEnd, 
+                animationItem.timeDuration);
+        }
+
+        return animationItem;
+    }
+
+    // ADD
+
+    //
+    
+    public static void EaseAdd(AnimationItem animationItem) {
+        Instance.easeAdd(animationItem);
+    }
+
+    public void easeAdd(AnimationItem animationItem) {
+        
+        if (animationItem == null) {
+            return;
+        }
+
+        string key = animationItem.key;
+
+        if (animationItems.ContainsKey(key)) {
+            animationItems[key] = animationItem;
+        }
+        else {
+            animationItems.Add(key, animationItem);
+        }
+    }
+
+    //
+    
+    public static void EaseAdd(
+        string key, 
+        AnimationEasing.Equations equationType, 
+        double val, 
+        double valStart, 
+        double valEnd, 
+        double timeDuration,
+        double timeDelay) {
+
+        Instance.easeAdd(key, equationType, val, valStart, valEnd, timeDuration, timeDelay);
+    }
+
+    public void easeAdd(
+        string key, 
+        AnimationEasing.Equations equationType, 
+        double val, 
+        double valStart, 
+        double valEnd, 
+        double timeDuration, 
+        double timeDelay) {
+
+        AnimationItem animationItem = null;
+
+        if(animationItems.ContainsKey(key)) {
+            animationItem = animationItems[key];
+        }
+        else {
+            animationItem = new AnimationItem();
+        }
+
+        animationItem.key = key;
+        animationItem.val = val;
+        animationItem.valStart = valStart;
+        animationItem.valEnd = valEnd;
+        animationItem.timeDuration = timeDuration;
+        animationItem.equationType = equationType;
+        animationItem.timeStart = Time.time;
+        animationItem.timeDelay = timeDelay;
+        
+        Debug.Log("easeAdd:" + " animationItem:" + animationItem.ToJson());
+
+        easeAdd(animationItem);
+    }
+
     #region Equations
     
     // These methods are all public to enable reflection in GetCurrentValueCore.
