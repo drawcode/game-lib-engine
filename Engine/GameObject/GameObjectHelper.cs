@@ -254,12 +254,20 @@ public static class GameObjectHelper {
 
     public static GameObject HitObject(Vector3 pos, string containsNameTo) {
                 
-        Ray screenRay = Camera.main.ScreenPointToRay(pos);
+        return HitObject(Camera.main, pos, containsNameTo);
+    }
+
+    public static GameObject HitObject(Camera cam, Vector3 pos, string containsNameTo) {
+        
+        Ray screenRay = cam.ScreenPointToRay(pos);
         
         RaycastHit hit;
         
         if (Physics.Raycast(screenRay, out hit, Mathf.Infinity) && hit.transform != null) {
             GameObject go = hit.transform.gameObject;
+            
+            //Debug.Log("HitObject:" + " name:" + go.name + " containsNameTo:" + containsNameTo + " pos:" + pos);
+            
             if (go.name.ToLower().Contains(containsNameTo.ToLower())) {
                 return go;
             }

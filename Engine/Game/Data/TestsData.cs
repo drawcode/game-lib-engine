@@ -178,26 +178,37 @@ public class TestsData {
         //
 
         
-        testName = "TestGameLocalization_List";
-        Advance(testName);
-        success = TestGameLocalization_List(testName);
+        //testName = "TestGameLocalization_List";
+        //Advance(testName);
+        //success = TestGameLocalization_List(testName);
 
         
-        testName = "TestGameLocalization_Code";
-        Advance(testName);
-        success = TestGameLocalization_Code(testName);
+        //testName = "TestGameLocalization_Code";
+        //Advance(testName);
+        //success = TestGameLocalization_Code(testName);
 
-        testName = "TestGameLocalization_Get";
-        Advance(testName);
-        success = TestGameLocalization_Get(testName, "en", GameLocalizationKeys.app_display_code);
+        //testName = "TestGameLocalization_Get";
+        //Advance(testName);
+        //success = TestGameLocalization_Get(testName, "en", GameLocalizationKeys.app_display_code);
                 
-        testName = "TestGameLocalization_Get";
-        Advance(testName);
-        success = TestGameLocalization_Get(testName, "en", GameLocalizationKeys.social_facebook_post_message);
+        //testName = "TestGameLocalization_Get";
+        //Advance(testName);
+        //success = TestGameLocalization_Get(testName, "en", GameLocalizationKeys.social_facebook_post_message);
                 
-        testName = "TestGameLocalization_Get";
+        //testName = "TestGameLocalization_Get";
+        //Advance(testName);
+        //success = TestGameLocalization_Get(testName, "sp", GameLocalizationKeys.social_facebook_post_message);
+
+        
+        
+        testName = "TestAnimationEasing_ValueDecrement";
         Advance(testName);
-        success = TestGameLocalization_Get(testName, "sp", GameLocalizationKeys.social_facebook_post_message);
+        success = TestAnimationEasing_ValueDecrement(testName);
+
+        
+        //testName = "TestAnimationEasing_ValueIncrement";
+        //Advance(testName);
+        //success = TestAnimationEasing_ValueIncrement(testName);
 
 
         //
@@ -245,6 +256,48 @@ public class TestsData {
         DumpObj(name, "dataB", dataB);
 
         return equal;
+    }
+
+    public static bool TestAnimationEasing_ValueIncrement(string name) {
+        
+        bool success = false;
+        
+        Debug.Log(name);
+        
+        AnimationEasing.EaseAdd(
+            "tester", 
+            AnimationEasing.Equations.QuadEaseInOut, 
+            1, 
+            1, 
+            2, 
+            .5, 
+            .1
+        );
+
+        success = true;
+
+        return success;
+    }
+
+    public static bool TestAnimationEasing_ValueDecrement(string name) {
+        
+        bool success = false;
+        
+        Debug.Log(name);
+        
+        AnimationEasing.EaseAdd(
+            "tester", 
+            AnimationEasing.Equations.QuadEaseInOut, 
+            1, 
+            1, 
+            0, 
+            .5, 
+            .1
+        );
+        
+        success = true;
+        
+        return success;
     }
 
 

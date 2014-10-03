@@ -10,6 +10,20 @@ using Engine.Data.Json;
 
 using UnityEngine;
 
+public class Ani : AnimationEasing {
+
+    /*
+    public static void To(AnimationItem aniItem) {
+        
+    }
+    
+    public static void To(string key, string to, Equations type, double time, double delay) {
+        EaseAdd(key, type, 
+    }
+    */
+
+}
+
 public class AnimationEasing : MonoBehaviour {
         
     // Only one BroadcastNetworks can exist. We use a singleton pattern to enforce this.
@@ -78,6 +92,7 @@ public class AnimationEasing : MonoBehaviour {
     }
 
     public Dictionary<string,AnimationItem> animationItems = new Dictionary<string,AnimationItem>();
+    public Queue<string> queueRemove = new Queue<string>();
 
     public class AnimationItem {
         public Equations equationType = Equations.QuadEaseInOut;
@@ -106,12 +121,53 @@ public class AnimationEasing : MonoBehaviour {
     }
 
     public void Update() {
+
+        if(queueRemove.Count > 0) {
+            string key = queueRemove.Dequeue();
+            easeRemove(key);
+        }
+
         foreach (KeyValuePair<string,AnimationItem> item in getAnimationItems()) {
             easeUpdate(item.Value);
         }
     }
 
     // GET
+    
+    public static bool EaseRemove(string key) {
+        return Instance.easeRemove(key);
+    }
+    
+    public bool easeRemove(string key) {
+        
+        if (getAnimationItems().ContainsKey(key)) {
+            return animationItems.Remove(key);
+        }
+        
+        return false;
+    }    
+    
+    IEnumerator easeRemoveDelayedCo(string key, double delay) {
+        yield return new WaitForSeconds((float)delay + .5f);
+        easeRemove(key);
+    }
+
+    //
+    
+    public static bool EaseExists(string key) {
+        return Instance.easeExists(key);
+    }
+    
+    public bool easeExists(string key) {
+        
+        if (getAnimationItems().ContainsKey(key)) {
+            return true;
+        }
+
+        return false;
+    }
+
+    //
 
     public static Dictionary<string,AnimationItem> GetAnimationItems() {
         return Instance.getAnimationItems();
@@ -177,11 +233,36 @@ public class AnimationEasing : MonoBehaviour {
         float tickDuration = Time.time - (float)animationItem.timeStart;
         
         if (tickDuration <= animationItem.timeDuration) {
-            animationItem.val = (float)AnimationEasing.QuadEaseInOut(
+
+            double valTo = (float)AnimationEasing.QuadEaseInOut(
                 tickDuration, 
                 animationItem.valStart, 
-                animationItem.valEnd, 
+                animationItem.valEnd - animationItem.valStart, 
                 animationItem.timeDuration);
+
+            double valAdjust = valTo;
+
+            if (animationItem.valEnd > animationItem.valStart) {
+                valAdjust = valAdjust + .005;
+                if (valAdjust > animationItem.valEnd) {
+                    valTo = animationItem.valEnd;
+                }
+            }
+            else {                
+                if (valAdjust < animationItem.valEnd) {
+                    valAdjust = valAdjust - .005;
+                    valTo = animationItem.valEnd;
+                }
+            }
+
+            if (valTo == animationItem.valEnd) {
+                queueRemove.Enqueue(animationItem.key);
+            }
+            else {
+                animationItem.val = valTo;
+            }
+
+            //Debug.Log("EaseUpdate:" + animationItem.ToJson());
         }
 
         return animationItem;
@@ -209,6 +290,13 @@ public class AnimationEasing : MonoBehaviour {
         else {
             animationItems.Add(key, animationItem);
         }
+
+        //StartCoroutine(
+        //    easeRemoveDelayedCo(
+        //        animationItem.key, 
+        //        animationItem.timeDelay + animationItem.timeDelay
+        //    )
+        //);
     }
 
     //
@@ -236,7 +324,7 @@ public class AnimationEasing : MonoBehaviour {
 
         AnimationItem animationItem = null;
 
-        if(animationItems.ContainsKey(key)) {
+        if (animationItems.ContainsKey(key)) {
             animationItem = animationItems[key];
         }
         else {
@@ -252,7 +340,7 @@ public class AnimationEasing : MonoBehaviour {
         animationItem.timeStart = Time.time;
         animationItem.timeDelay = timeDelay;
         
-        Debug.Log("easeAdd:" + " animationItem:" + animationItem.ToJson());
+        //Debug.Log("easeAdd:" + " animationItem:" + animationItem.ToJson());
 
         easeAdd(animationItem);
     }

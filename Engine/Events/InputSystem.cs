@@ -19,9 +19,10 @@ namespace Engine.Events {
         private bool inputEnabled = true;
         public bool useAcceleration = false;
 
-        public static string EVENT_INPUT_UP = "EventInputUp";
-        public static string EVENT_INPUT_DOWN = "EventInputDown";
-        public static string EVENT_INPUT_MOVE = "EventInputMove";
+        public static string EVENT_INPUT_UP = "event-input-up";
+        public static string EVENT_INPUT_DOWN = "event-input-down";
+        public static string EVENT_INPUT_MOVE = "event-input-move";
+        public static string EVENT_INPUT_DRAG_MOVE = "event-input-drag-move";
 
         public Vector2 lastNormalizedTouch = new Vector2(0f, 0f);
         public Vector2 lastNormalizedTouch2 = new Vector2(0f, 0f);
