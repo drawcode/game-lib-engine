@@ -564,6 +564,10 @@ public static class GameObjectExtensions {
     public static void UnFreezeRigidBodies(this GameObject go) {
         GameObjectHelper.UnFreezeRigidbodies(go);
     }
+    
+    public static void ResetRigidBodiesVelocity(this GameObject go) {
+        GameObjectHelper.ResetRigidBodiesVelocity(go);
+    }
 
     // ASPECT RATIO
 

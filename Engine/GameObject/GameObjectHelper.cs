@@ -1342,8 +1342,59 @@ public static class GameObjectHelper {
             r.Freeze();
         }
     }
-    
+
     public static void UnFreezeRigidbodies(GameObject inst) {
+        
+        if (inst == null) {
+            return;
+        }
+        
+        Rigidbody[] rigidbodies
+            = inst.GetComponents<Rigidbody>();
+        
+        foreach (Rigidbody r in rigidbodies) {
+            r.UnFreeze();
+        }
+        
+        Rigidbody[] rigidbodiesChildren
+            = inst.GetComponentsInChildren<Rigidbody>(true);
+        
+        foreach (Rigidbody r in rigidbodiesChildren) {
+            r.UnFreeze();
+        }
+    }
+
+    public static void ResetRigidBodiesVelocity(GameObject inst, Vector3 angularVelocity) {
+        
+        if (inst == null) {
+            return;
+        }
+        
+        Rigidbody[] rigidbodies
+            = inst.GetComponents<Rigidbody>();
+        
+        foreach (Rigidbody r in rigidbodies) {
+            r.angularVelocity = angularVelocity;
+        }
+        
+        Rigidbody[] rigidbodiesChildren
+            = inst.GetComponentsInChildren<Rigidbody>(true);
+        
+        foreach (Rigidbody r in rigidbodiesChildren) {
+            r.angularVelocity = angularVelocity;
+        }
+    }
+    
+    public static void ResetRigidBodiesVelocity(GameObject inst) {
+        
+        if (inst == null) {
+            return;
+        }
+        
+        ResetRigidBodiesVelocity(inst, Vector3.zero);
+    }
+
+    public static void Reset(GameObject inst) {
         
         if (inst == null) {
             return;

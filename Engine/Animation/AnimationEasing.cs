@@ -122,7 +122,7 @@ public class AnimationEasing : MonoBehaviour {
 
     public void Update() {
 
-        if(queueRemove.Count > 0) {
+        if (queueRemove.Count > 0) {
             string key = queueRemove.Dequeue();
             easeRemove(key);
         }
@@ -145,11 +145,6 @@ public class AnimationEasing : MonoBehaviour {
         }
         
         return false;
-    }    
-    
-    IEnumerator easeRemoveDelayedCo(string key, double delay) {
-        yield return new WaitForSeconds((float)delay + .5f);
-        easeRemove(key);
     }
 
     //
@@ -249,8 +244,8 @@ public class AnimationEasing : MonoBehaviour {
                 }
             }
             else {                
+                valAdjust = valAdjust - .005; 
                 if (valAdjust < animationItem.valEnd) {
-                    valAdjust = valAdjust - .005;
                     valTo = animationItem.valEnd;
                 }
             }
@@ -290,13 +285,6 @@ public class AnimationEasing : MonoBehaviour {
         else {
             animationItems.Add(key, animationItem);
         }
-
-        //StartCoroutine(
-        //    easeRemoveDelayedCo(
-        //        animationItem.key, 
-        //        animationItem.timeDelay + animationItem.timeDelay
-        //    )
-        //);
     }
 
     //
