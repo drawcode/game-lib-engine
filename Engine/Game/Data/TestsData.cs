@@ -47,6 +47,8 @@ public class TestsData {
         Advance("Loading Profile");
         GameState.LoadProfile();
 
+        GameConfigs.globalReady = true;
+
         //Advance("TestGameCharacterSkin");
         //TestGameCharacterSkin();
 
@@ -194,12 +196,11 @@ public class TestsData {
         //testName = "TestGameLocalization_Get";
         //Advance(testName);
         //success = TestGameLocalization_Get(testName, "en", GameLocalizationKeys.social_facebook_post_message);
-                
+        
         //testName = "TestGameLocalization_Get";
         //Advance(testName);
         //success = TestGameLocalization_Get(testName, "sp", GameLocalizationKeys.social_facebook_post_message);
-
-        
+          
         //testName = "TestAnimationEasing_ValueDecrement";
         //Advance(testName);
         //success = TestAnimationEasing_ValueDecrement(testName);
@@ -212,13 +213,31 @@ public class TestsData {
         //Advance(testName);
         //success = TestGameProfile_NetworkTypes(testName);
 
-        testName = "TestGameProfile_NetworkTypes_Data_twitter";
-        Advance(testName);
-        success = TestGameProfile_NetworkTypes_Data(testName, SocialNetworkTypes.twitter);
+        //testName = "TestGameProfile_NetworkTypes_Data_twitter";
+        //Advance(testName);
+        //success = TestGameProfile_NetworkTypes_Data(testName, SocialNetworkTypes.twitter);
         
-        testName = "TestGameProfile_NetworkTypes_Data_facebook";
+        //testName = "TestGameProfile_NetworkTypes_Data_facebook";
+        //Advance(testName);
+        //success = TestGameProfile_NetworkTypes_Data(testName, SocialNetworkTypes.facebook);
+
+        
+        testName = "TestGameLocalization_Get";
         Advance(testName);
-        success = TestGameProfile_NetworkTypes_Data(testName, SocialNetworkTypes.facebook);
+        success = TestGameLocalization_Get(testName, "en", GameLocalizationKeys.social_twitter_disabled_title);
+        
+        testName = "TestLoco_Get";
+        Advance(testName);
+        success = TestLoco_Get(testName, "en", LocoKeys.social_twitter_disabled_title);
+
+        
+        testName = "TestGameLocalization_Get";
+        Advance(testName);
+        success = TestGameLocalization_Get(testName, "en", GameLocalizationKeys.social_twitter_game_results_message);
+        
+        testName = "TestLoco_Get";
+        Advance(testName);
+        success = TestLoco_Get(testName, "en", LocoKeys.social_twitter_game_results_message);
 
 
         //
@@ -395,6 +414,29 @@ public class TestsData {
         Debug.Log(name + " : " + code);
         
         string val = GameLocalizations.GetString(locale, code);
+        
+        if (val != null) {
+            
+            Debug.Log("val:code:" + val);
+            
+            success = true;
+            
+        }
+        else {
+            
+            Debug.Log("item:NOT FOUND:");
+        }
+        
+        return success;
+    }
+
+    public static bool TestLoco_Get(string name, string locale, string code) {
+        
+        bool success = false;
+        
+        Debug.Log(name + " : " + code);
+        
+        string val = Locos.Get(locale, code);
         
         if (val != null) {
             

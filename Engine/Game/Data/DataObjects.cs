@@ -438,7 +438,6 @@ public class DataObjects<T> where T : DataObject, new() {
         if (textData != null) {
             fileData = textData.text;
         }
-        LoadDataFromString(fileData);
 
         //LogUtil.Log("LoadDataFromResources:fileData:" + fileData + " " + pathKey);
 
@@ -454,9 +453,16 @@ public class DataObjects<T> where T : DataObject, new() {
 
     public virtual List<T> LoadDataFromString(List<T> objs, string data) {
         if (!string.IsNullOrEmpty(data)) {
-            objs = JsonMapper.ToObject<List<T>>(data);
+
+            try {
+                objs = JsonMapper.ToObject<List<T>>(data);
+            }
+            catch(Exception e) {
+                Debug.Log("LoadDataFromString:" + " e:" + e.Message + " data:" + data + " objs:" + objs.ToJson()); 
+            }
 
             //LogUtil.Log("T loaded:" + objs.Count);
+
             for (int j = 0; j < objs.Count; j++) {
                 SetFieldValue(objs[j], "pack_code", "default");
             }
