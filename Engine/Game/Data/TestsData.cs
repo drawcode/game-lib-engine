@@ -200,25 +200,35 @@ public class TestsData {
         //success = TestGameLocalization_Get(testName, "sp", GameLocalizationKeys.social_facebook_post_message);
 
         
-        
-        testName = "TestAnimationEasing_ValueDecrement";
-        Advance(testName);
-        success = TestAnimationEasing_ValueDecrement(testName);
-
-        
+        //testName = "TestAnimationEasing_ValueDecrement";
+        //Advance(testName);
+        //success = TestAnimationEasing_ValueDecrement(testName);
+                
         //testName = "TestAnimationEasing_ValueIncrement";
         //Advance(testName);
         //success = TestAnimationEasing_ValueIncrement(testName);
+                
+        //testName = "TestGameProfile_NetworkTypes";
+        //Advance(testName);
+        //success = TestGameProfile_NetworkTypes(testName);
+
+        testName = "TestGameProfile_NetworkTypes_Data_twitter";
+        Advance(testName);
+        success = TestGameProfile_NetworkTypes_Data(testName, SocialNetworkTypes.twitter);
+        
+        testName = "TestGameProfile_NetworkTypes_Data_facebook";
+        Advance(testName);
+        success = TestGameProfile_NetworkTypes_Data(testName, SocialNetworkTypes.facebook);
 
 
         //
 
         //Compress
         
-        if(!CheckTest(success, testName)) { 
+        if (!CheckTest(success, testName)) { 
             return;
         }
-        if(success) {
+        if (success) {
             Debug.Log("TESTS SUCCESSFUL");
         }
         else {
@@ -229,7 +239,7 @@ public class TestsData {
     }
 
     public static bool CheckTest(bool success, string name) {
-        if(!success) {            
+        if (!success) {            
             Debug.LogError("TESTS WERE IN ERROR! " + name);
             return success;
         }
@@ -244,7 +254,7 @@ public class TestsData {
         string dataA = a.ToJson();
         string dataB = b.ToJson();
         bool equal = false;
-        if(dataA == dataB) {            
+        if (dataA == dataB) {            
             equal = true;
             Debug.Log(name + ": SUCCESS :" + equal);
         }
@@ -256,6 +266,60 @@ public class TestsData {
         DumpObj(name, "dataB", dataB);
 
         return equal;
+    }
+
+    public static bool TestGameProfile_NetworkTypes_Data(string name, string networkType) {
+        
+        bool success = false;
+        
+        Debug.Log(name);
+        
+        
+        GameProfileNetworkItems gameProfileNetworks = null;
+
+        gameProfileNetworks = GameProfiles.Current.GetNetworks();
+        
+        DumpObj(name, "networkType:", networkType);
+        
+        DumpObj(name, "gameProfileNetworks:1:", gameProfileNetworks.ToJson());
+                
+        GameProfiles.Current.SetNetworkValueUsername(networkType, "drawlabs_play");
+        GameProfiles.Current.SetNetworkValueId(networkType, "drawlabs_play_id");
+        GameProfiles.Current.SetNetworkValueType(networkType, networkType);
+
+        //
+        
+        gameProfileNetworks = GameProfiles.Current.GetNetworks();
+        
+        DumpObj(name, "gameProfileNetworks:2:", gameProfileNetworks.ToJson());
+
+        //
+
+        bool isLoggedInNetwork = GameCommunity.IsLoggedIn(networkType);
+        
+        DumpObj(name, "isLoggedInNetwork:", isLoggedInNetwork);
+
+        GameState.SaveProfile();
+
+        success = true;
+                                                     
+        return success;
+    }
+
+    public static bool TestGameProfile_NetworkTypes(string name) {
+        
+        bool success = false;
+        
+        Debug.Log(name);
+
+
+        GameProfileNetworkItems gameProfileNetworks = GameProfiles.Current.GetNetworks();
+        
+        DumpObj(name, "gameProfileNetworks", gameProfileNetworks.ToJson());
+
+        success = true;
+        
+        return success;
     }
 
     public static bool TestAnimationEasing_ValueIncrement(string name) {
@@ -300,7 +364,6 @@ public class TestsData {
         return success;
     }
 
-
     public static bool TestGameLocalization_Code(string name) {
         
         bool success = false;
@@ -309,7 +372,7 @@ public class TestsData {
         
         GameLocalization item = GameLocalizations.Instance.GetByCode("en");
         
-        if(item != null) {
+        if (item != null) {
             
             Debug.Log("item:code:" + item.code);
             Debug.Log("item:data:" + item.data.ToJson());
@@ -333,7 +396,7 @@ public class TestsData {
         
         string val = GameLocalizations.GetString(locale, code);
         
-        if(val != null) {
+        if (val != null) {
             
             Debug.Log("val:code:" + val);
             
@@ -359,27 +422,27 @@ public class TestsData {
         
         //AssertEquals(name, username, "Player");
         
-        foreach(GameLocalization item in items) {  
+        foreach (GameLocalization item in items) {  
             
             Debug.Log("item:code:" + item.code);               
             Debug.Log("item:json:" + item.ToJson());  
             
             GameLocalizationData data = item.data;
             
-            if(data != null) {
+            if (data != null) {
 
-                if(data.strings != null) {
+                if (data.strings != null) {
 
-                    foreach(KeyValuePair<string,GameLocalizationDataItem> dataItem in data.strings) {   
+                    foreach (KeyValuePair<string,GameLocalizationDataItem> dataItem in data.strings) {   
                         Debug.Log("strings:dataItem:code:" + dataItem.Value.code);         
                         Debug.Log("strings:dataItem:json:" + dataItem.Value.ToJson());   
                         success = true;                      
                     }
                 }
 
-                if(data.images != null) {
+                if (data.images != null) {
 
-                    foreach(KeyValuePair<string,GameLocalizationDataItem> dataItem in data.images) {   
+                    foreach (KeyValuePair<string,GameLocalizationDataItem> dataItem in data.images) {   
                         Debug.Log("images:dataItem:code:" + dataItem.Value.code);         
                         Debug.Log("images:dataItem:json:" + dataItem.Value.ToJson());   
                         success = true;                          
@@ -489,14 +552,14 @@ public class TestsData {
         
         //AssertEquals(name, username, "Player");
         
-        foreach(GameCharacter item in items) {  
+        foreach (GameCharacter item in items) {  
             
             Debug.Log("item:code:" + item.code);               
             Debug.Log("item:json:" + item.ToJson());  
             
             GameDataObjectItem data = item.data;
             
-            if(data != null) {
+            if (data != null) {
 
                 GameDataAnimation attackItem = data.GetAnimationByType(GameDataActionKeys.attack);    
                 Debug.Log("attackItem:json:" + attackItem.ToJson()); 
@@ -504,7 +567,7 @@ public class TestsData {
                 GameDataAnimation runItem = data.GetAnimationByType(GameDataActionKeys.run);    
                 Debug.Log("runItem:json:" + runItem.ToJson()); 
                 
-                foreach(GameDataAnimation dataItem in data.animations) {          
+                foreach (GameDataAnimation dataItem in data.animations) {          
                     Debug.Log("dataItem:code:" + dataItem.code);         
                     Debug.Log("dataItem:json:" + dataItem.ToJson());   
                     success = true;                    
@@ -528,16 +591,16 @@ public class TestsData {
         
         //AssertEquals(name, username, "Player");
         
-        foreach(GameCharacterPreset item in items) {  
+        foreach (GameCharacterPreset item in items) {  
             
             Debug.Log("item:code:" + item.code);               
             Debug.Log("item:json:" + item.ToJson());  
             
             GameCharacterPresetItems data = item.data;
             
-            if(data != null) {
+            if (data != null) {
                 
-                foreach(GameCharacterPresetItem preset in data.items) {          
+                foreach (GameCharacterPresetItem preset in data.items) {          
                     Debug.Log("preset:code:" + preset.code);         
                     Debug.Log("preset:json:" + preset.ToJson());
                     success = true;                    
@@ -561,16 +624,16 @@ public class TestsData {
         
         //AssertEquals(name, username, "Player");
         
-        foreach(GameLeaderboard item in items) {  
+        foreach (GameLeaderboard item in items) {  
             
             Debug.Log("item:code:" + item.code);               
             Debug.Log("item:json:" + item.ToJson());  
             
             GameLeaderboardData data = item.data;
             
-            if(data != null) {
+            if (data != null) {
                 
-                foreach(GameNetworkData dataItem in data.networks) {          
+                foreach (GameNetworkData dataItem in data.networks) {          
                     Debug.Log("dataItem:code:" + dataItem.code);         
                     Debug.Log("dataItem:json:" + dataItem.ToJson());
                     success = true;                    
@@ -594,22 +657,22 @@ public class TestsData {
         
         //AssertEquals(name, username, "Player");
         
-        foreach(GameAchievement item in items) {  
+        foreach (GameAchievement item in items) {  
             
             Debug.Log("item:code:" + item.code);               
             Debug.Log("item:json:" + item.ToJson());  
             
             GameAchievementData data = item.data;
             
-            if(data != null) {
+            if (data != null) {
                 
-                foreach(GameNetworkData dataItem in data.networks) {          
+                foreach (GameNetworkData dataItem in data.networks) {          
                     Debug.Log("dataItem:code:" + dataItem.code);         
                     Debug.Log("dataItem:json:" + dataItem.ToJson());
                     success = true;                    
                 }
                                 
-                foreach(GameFilter dataItem in data.filters) {          
+                foreach (GameFilter dataItem in data.filters) {          
                     Debug.Log("dataItem:type:" + dataItem.type);            
                     Debug.Log("dataItem:data:" + dataItem.data);       
                     Debug.Log("dataItem:json:" + dataItem.ToJson());
@@ -641,16 +704,16 @@ public class TestsData {
         
         //AssertEquals(name, username, "Player");
         
-        foreach(GamePreset item in items) {  
+        foreach (GamePreset item in items) {  
             
             Debug.Log("item:code:" + item.code);               
             Debug.Log("item:json:" + item.ToJson());  
             
             GamePresetItems<GamePresetItem> data = item.data;
             
-            if(data != null) {
+            if (data != null) {
                 
-                foreach(GamePresetItem preset in data.items) {          
+                foreach (GamePresetItem preset in data.items) {          
                     Debug.Log("preset:code:" + preset.code);         
                     Debug.Log("preset:json:" + preset.ToJson());
                     success = true;                    
@@ -674,16 +737,16 @@ public class TestsData {
         
         //AssertEquals(name, username, "Player");
         
-        foreach(GamePreset item in items) {  
+        foreach (GamePreset item in items) {  
             
             Debug.Log("item:code:" + item.code);               
             Debug.Log("item:json:" + item.ToJson());  
             
             GamePresetItems<GamePresetItem> data = item.data;
             
-            if(data != null) {
+            if (data != null) {
                 
-                foreach(GamePresetItem preset in data.items) {          
+                foreach (GamePresetItem preset in data.items) {          
                     Debug.Log("preset:code:" + preset.code);         
                     Debug.Log("preset:json:" + preset.ToJson());
                     success = true;                    
@@ -707,16 +770,16 @@ public class TestsData {
         
         //AssertEquals(name, username, "Player");
         
-        foreach(GameItemPreset item in items) {  
+        foreach (GameItemPreset item in items) {  
             
             Debug.Log("item:code:" + item.code);               
             Debug.Log("item:json:" + item.ToJson());  
             
             GameItemPresetItems data = item.data;
 
-            if(data != null) {
+            if (data != null) {
 
-                foreach(GameItemPresetItem preset in data.items) {          
+                foreach (GameItemPresetItem preset in data.items) {          
                     Debug.Log("preset:code:" + preset.code);         
                     Debug.Log("preset:json:" + preset.ToJson());
                     success = true;                    
@@ -740,25 +803,25 @@ public class TestsData {
         
         //AssertEquals(name, username, "Player");
         
-        foreach(GameItem item in items) {  
+        foreach (GameItem item in items) {  
             
             Debug.Log("item:code:" + item.code);               
             Debug.Log("item:json:" + item.ToJson());  
             
             GameDataObjectItem data = item.data;
             
-            if(data != null) {
-                foreach(GameDataModel dataItem in data.models) {                    
+            if (data != null) {
+                foreach (GameDataModel dataItem in data.models) {                    
                     Debug.Log("dataItem:models:code:" + dataItem.code);
                     success = true;
                 }
                 
-                foreach(string dataItem in data.roles) {                    
+                foreach (string dataItem in data.roles) {                    
                     Debug.Log("dataItem:roles:code:" + dataItem);
                     success = true;
                 }
                 
-                foreach(GameDataItemRPG dataItem in data.rpgs) {                    
+                foreach (GameDataItemRPG dataItem in data.rpgs) {                    
                     Debug.Log("dataItem:rpgs:code:" + dataItem.code);        
                     Debug.Log("dataItem:rpgs:attack:" + dataItem.attack);
                     Debug.Log("dataItem:rpgs:attack:" + dataItem.attack_speed);
@@ -776,7 +839,7 @@ public class TestsData {
                     success = true;
                 }                
                 
-                foreach(GameDataItemReward dataItem in data.rewards) {                    
+                foreach (GameDataItemReward dataItem in data.rewards) {                    
                     Debug.Log("dataItem:rewards:code:" + dataItem.ToJson());
                     success = true;
                 }
@@ -799,25 +862,25 @@ public class TestsData {
         
         //AssertEquals(name, username, "Player");
         
-        foreach(GameWeapon item in items) {  
+        foreach (GameWeapon item in items) {  
             
             Debug.Log("item:code:" + item.code);               
             Debug.Log("item:json:" + item.ToJson());  
             
             GameDataObjectItem data = item.data;
             
-            if(data != null) {
-                foreach(GameDataModel dataItem in data.models) {                    
+            if (data != null) {
+                foreach (GameDataModel dataItem in data.models) {                    
                     Debug.Log("dataItem:models:code:" + dataItem.code);
                     success = true;
                 }
                 
-                foreach(string dataItem in data.roles) {                    
+                foreach (string dataItem in data.roles) {                    
                     Debug.Log("dataItem:roles:code:" + dataItem);
                     success = true;
                 }
                 
-                foreach(GameDataItemRPG dataItem in data.rpgs) {                    
+                foreach (GameDataItemRPG dataItem in data.rpgs) {                    
                     Debug.Log("dataItem:rpgs:code:" + dataItem.code);        
                     Debug.Log("dataItem:rpgs:attack:" + dataItem.attack);
                     Debug.Log("dataItem:rpgs:attack:" + dataItem.attack_speed);
@@ -853,25 +916,25 @@ public class TestsData {
         
         //AssertEquals(name, username, "Player");
         
-        foreach(GameTeam item in items) {  
+        foreach (GameTeam item in items) {  
 
             Debug.Log("item:code:" + item.code);               
             Debug.Log("item:json:" + item.ToJson());  
             
             GameDataObjectItem data = item.data;
             
-            if(data != null) {
-                foreach(GameDataModel dataItem in data.models) {                    
+            if (data != null) {
+                foreach (GameDataModel dataItem in data.models) {                    
                     Debug.Log("dataItem:models:code:" + dataItem.code);
                     success = true;
                 }
                 
-                foreach(GameDataColorPreset dataItem in data.color_presets) {                    
+                foreach (GameDataColorPreset dataItem in data.color_presets) {                    
                     Debug.Log("dataItem:color_presets:code:" + dataItem.code);
                     success = true;
                 }
                 
-                foreach(GameDataTexturePreset dataItem in data.texture_presets) {                    
+                foreach (GameDataTexturePreset dataItem in data.texture_presets) {                    
                     Debug.Log("dataItem:texture_presets:code:" + dataItem.code);
                     success = true;
                 }
@@ -894,7 +957,7 @@ public class TestsData {
         GameProfileCustomItem customItem = GameProfileCharacters.currentCustom;
         
         
-        if(customItem == null) {
+        if (customItem == null) {
             
             DumpObj(name, "customItem:NULL", customItem);
         }
@@ -925,7 +988,7 @@ public class TestsData {
         
         //AssertEquals(name, username, "Player");
         
-        foreach(AppContentAssetTexture item in items) {  
+        foreach (AppContentAssetTexture item in items) {  
             
             Debug.Log("item:code:" + item.code);         
             Debug.Log("item:type:" + item.type);
@@ -934,8 +997,8 @@ public class TestsData {
             
             Dictionary<string, string> data = item.data;
             
-            if(data != null) {
-                foreach(KeyValuePair<string, string> pair in data) {                    
+            if (data != null) {
+                foreach (KeyValuePair<string, string> pair in data) {                    
                     Debug.Log("pair:Key:" + pair.Key);
                     Debug.Log("pair:Value:" + pair.Value);    
                     success = true;
@@ -959,7 +1022,7 @@ public class TestsData {
         
         //AssertEquals(name, username, "Player");
         
-        foreach(AppContentAssetTexturePreset item in items) {  
+        foreach (AppContentAssetTexturePreset item in items) {  
             
             Debug.Log("item:code:" + item.code);         
             Debug.Log("item:type:" + item.type);
@@ -968,8 +1031,8 @@ public class TestsData {
             
             Dictionary<string, string> data = item.data;
             
-            if(data != null) {
-                foreach(KeyValuePair<string, string> pair in data) {                    
+            if (data != null) {
+                foreach (KeyValuePair<string, string> pair in data) {                    
                     Debug.Log("pair:Key:" + pair.Key);
                     Debug.Log("pair:Value:" + pair.Value);
                     success = true;
@@ -981,7 +1044,6 @@ public class TestsData {
 
         return success;
     }
-
         
     public static bool TestAppColorPresets_List(string name) {
 
@@ -994,7 +1056,7 @@ public class TestsData {
         
         //AssertEquals(name, username, "Player");
         
-        foreach(AppColorPreset item in items) {  
+        foreach (AppColorPreset item in items) {  
             
             Debug.Log("item:code:" + item.code);         
             Debug.Log("item:type:" + item.type);
@@ -1003,8 +1065,8 @@ public class TestsData {
             
             Dictionary<string, string> data = item.data;
             
-            if(data != null) {
-                foreach(KeyValuePair<string, string> pair in data) { 
+            if (data != null) {
+                foreach (KeyValuePair<string, string> pair in data) { 
                     success = true;
                     Debug.Log("pair:Key:" + pair.Key);
                     Debug.Log("pair:Value:" + pair.Value);                    
@@ -1016,7 +1078,6 @@ public class TestsData {
 
         return success;
     }
-
     
     public static void TestGameCharacters_List() {
         
@@ -1029,7 +1090,7 @@ public class TestsData {
         
         //AssertEquals(name, username, "Player");
         
-        foreach(GameCharacter item in items) {  
+        foreach (GameCharacter item in items) {  
             
             Debug.Log("item:code:" + item.code);         
             Debug.Log("item:type:" + item.type);
@@ -1038,8 +1099,8 @@ public class TestsData {
 
             GameDataObjectItem data = item.data;
 
-            if(data != null) {
-                foreach(GameDataModel model in data.models) {
+            if (data != null) {
+                foreach (GameDataModel model in data.models) {
                     string modelCode = model.code;
                     
                     Debug.Log("model:code:" + model.code);
@@ -1053,7 +1114,7 @@ public class TestsData {
 
                     GameObject playerObject = item.Load();
 
-                    if(playerObject != null) {
+                    if (playerObject != null) {
                         GameCustomController.SetMaterialColors(playerObject, profileCustomItem);
                     }
 
@@ -1078,22 +1139,22 @@ public class TestsData {
         
         //AssertEquals(name, username, "Player");
         
-        foreach(AppContentAssetModel item in items) {            
+        foreach (AppContentAssetModel item in items) {            
             Debug.Log("item:code:" + item.code);         
             Debug.Log("item:display_name:" + item.display_name);
             
             Debug.Log("item:json:" + item.ToJson());
             
-            if(item.custom_materials != null) {         
+            if (item.custom_materials != null) {         
                 
                 Debug.Log("item.data.custom_materials.Count:" + item.custom_materials.Count);
                 
-                foreach(AppContentAssetCustomItemProperty prop 
+                foreach (AppContentAssetCustomItemProperty prop 
                         in item.custom_materials) {
                     
                     Debug.Log("prop:code:" + prop.code);  
                     Debug.Log("prop:name:" + prop.name); 
-                    foreach(string type in prop.types) {
+                    foreach (string type in prop.types) {
                         Debug.Log("prop:type:s:" + type);
                     }
                 }
@@ -1106,9 +1167,9 @@ public class TestsData {
             
             Debug.Log("customItem:json:" + customItem.ToJson());
             
-            if(customItem != null) {
-                if(customItem.properties != null) {
-                    foreach(AppContentAssetCustomItemProperty prop in customItem.properties) {
+            if (customItem != null) {
+                if (customItem.properties != null) {
+                    foreach (AppContentAssetCustomItemProperty prop in customItem.properties) {
                         Debug.Log("prop:code:" + prop.code); 
                     }
                 }
@@ -1135,22 +1196,22 @@ public class TestsData {
         
         //AssertEquals(name, username, "Player");
         
-        foreach(AppContentAssetModel item in items) {            
+        foreach (AppContentAssetModel item in items) {            
             Debug.Log("item:code:" + item.code);         
             Debug.Log("item:display_name:" + item.display_name);
             
             Debug.Log("item:json:" + item.ToJson());
             
-            if(item.custom_materials != null) {         
+            if (item.custom_materials != null) {         
                 
                 Debug.Log("item.data.custom_materials.Count:" + item.custom_materials.Count);
                 
-                foreach(AppContentAssetCustomItemProperty prop 
+                foreach (AppContentAssetCustomItemProperty prop 
                         in item.custom_materials) {
                     
                     Debug.Log("prop:code:" + prop.code);  
                     Debug.Log("prop:name:" + prop.name); 
-                    foreach(string type in prop.types) {
+                    foreach (string type in prop.types) {
                         Debug.Log("prop:type:s:" + type);
                     }
                 }
@@ -1163,9 +1224,9 @@ public class TestsData {
             
             Debug.Log("customItem:json:" + customItem.ToJson());
             
-            if(customItem != null) {
-                if(customItem.properties != null) {
-                    foreach(AppContentAssetCustomItemProperty prop in customItem.properties) {
+            if (customItem != null) {
+                if (customItem.properties != null) {
+                    foreach (AppContentAssetCustomItemProperty prop in customItem.properties) {
                         Debug.Log("prop:code:" + prop.code); 
                     }
                 }
@@ -1190,20 +1251,20 @@ public class TestsData {
         
         //AssertEquals(name, username, "Player");
         
-        foreach(AppContentAssetCustomItem item in items) {  
+        foreach (AppContentAssetCustomItem item in items) {  
 
             Debug.Log("item:code:" + item.code);         
             Debug.Log("item:type:" + item.type);
 
-            if(item.properties != null) {         
+            if (item.properties != null) {         
                 
                 Debug.Log("item.data.properties.Count:" + item.properties.Count);
 
-                foreach(AppContentAssetCustomItemProperty prop 
+                foreach (AppContentAssetCustomItemProperty prop 
                         in item.properties) {
                     
                     Debug.Log("prop:code:" + prop.code);  
-                    foreach(string type in prop.types) {
+                    foreach (string type in prop.types) {
                         Debug.Log("prop:type:s:" + type);
                     }
                 }
@@ -1230,22 +1291,22 @@ public class TestsData {
         
         //AssertEquals(name, username, "Player");
         
-        foreach(AppContentAssetModel item in items) {            
+        foreach (AppContentAssetModel item in items) {            
             Debug.Log("item:code:" + item.code);         
             Debug.Log("item:display_name:" + item.display_name);
             
             Debug.Log("item:json:" + item.ToJson());
 
-            if(item.custom_materials != null) {         
+            if (item.custom_materials != null) {         
                 
                 Debug.Log("item.data.custom_materials.Count:" + item.custom_materials.Count);
                 
-                foreach(AppContentAssetCustomItemProperty prop 
+                foreach (AppContentAssetCustomItemProperty prop 
                         in item.custom_materials) {
                     
                     Debug.Log("prop:code:" + prop.code);  
                     Debug.Log("prop:name:" + prop.name); 
-                    foreach(string type in prop.types) {
+                    foreach (string type in prop.types) {
                         Debug.Log("prop:type:s:" + type);
                     }
                 }
@@ -1258,9 +1319,9 @@ public class TestsData {
             
             Debug.Log("customItem:json:" + customItem.ToJson());
 
-            if(customItem != null) {
-                if(customItem.properties != null) {
-                    foreach(AppContentAssetCustomItemProperty prop in customItem.properties) {
+            if (customItem != null) {
+                if (customItem.properties != null) {
+                    foreach (AppContentAssetCustomItemProperty prop in customItem.properties) {
                         Debug.Log("prop:code:" + prop.code); 
                     }
                 }
@@ -1276,7 +1337,7 @@ public class TestsData {
         
         List<AppColor> colors = AppColors.Instance.GetAll();
 
-        foreach(AppColor color in colors) {
+        foreach (AppColor color in colors) {
             Color colorTo = ColorHelper.FromRGB(color.color.rgba);
             
             Debug.Log("color:code:" + color.code);
@@ -1286,8 +1347,6 @@ public class TestsData {
                 
         DumpObj(name, "colors.Count", colors.Count);
     }
-
-    
     
     public static bool TestAppColors_Code(string name) {
         
@@ -1297,7 +1356,7 @@ public class TestsData {
         
         AppColor color = AppColors.Instance.GetByCode("game-college-ucf-knights-gold");
 
-        if(color != null) {
+        if (color != null) {
         
             Debug.Log("color:color:" + color.code);
             Debug.Log("color:color:" + color.GetColor());
@@ -1322,7 +1381,7 @@ public class TestsData {
         GameState.LoadProfile();
 
         string username = GameProfiles.Current.username;
-            DumpObj(name, "username", username);
+        DumpObj(name, "username", username);
 
         AssertEquals(name, username, "Player");
     }
@@ -1352,7 +1411,7 @@ public class TestsData {
         GameProfileCharacterItem characterItem = GameProfileCharacters.Current.GetCharacter(characterCode);
 
 
-        if(characterItem == null) {
+        if (characterItem == null) {
             
             DumpObj(name, "characterItem:NULL", characterItem);
         }
@@ -1393,7 +1452,7 @@ public class TestsData {
         a.code = "aaa";
         item.SetAttribute(a);
                 
-        if(item == null) {
+        if (item == null) {
             
             DumpObj(name, "item:NULL", item);
         }
@@ -1414,7 +1473,7 @@ public class TestsData {
         DumpObj(name, "item", item);
         
         //Debug.Break();        
-    }    
+    }
     
     public static void TestGameProfileCharacter_currentCharacter() {
         
@@ -1427,7 +1486,7 @@ public class TestsData {
         GameProfileCharacterItem characterItem = GameProfileCharacters.currentCharacter;
         
         
-        if(characterItem == null) {
+        if (characterItem == null) {
             
             DumpObj(name, "characterItem:NULL", characterItem);
         }
@@ -1449,7 +1508,6 @@ public class TestsData {
         
         //Debug.Break();        
     }
-
     
     public static void TestGameProfileCharacter_currentProgress() {
         
@@ -1462,7 +1520,7 @@ public class TestsData {
         GameProfilePlayerProgressItem item = GameProfileCharacters.currentProgress;
         
         
-        if(item == null) {
+        if (item == null) {
             
             DumpObj(name, "item:NULL", item);
         }
@@ -1520,7 +1578,7 @@ public class TestsData {
             Debug.Log(name + ":GameCharacterSkins:" + GameCharacterSkins.Instance.items.Count);
             Debug.Log(name + ":SUCCESS:" + true);
         }
-        catch(Exception e) {
+        catch (Exception e) {
 
             Debug.Log(e);
         }

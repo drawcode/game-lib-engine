@@ -790,7 +790,8 @@ public class BaseGameProfile : Profile {
         GameProfileNetworkItem item = GetNetwork(networkType);
 
         if(item == null) {
-            return;
+            item = new GameProfileNetworkItem();
+            item.network_type = networkType;
         }
 
         item.Set(key, val);
