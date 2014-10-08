@@ -23,6 +23,10 @@ public class BaseGameLocalizationKeys {
     public static string social_twitter_post_message = "social_twitter_post_message";
     public static string social_twitter_disabled_title = "social_twitter_disabled_title";
     public static string social_twitter_disabled_message = "social_twitter_disabled_message";
+    public static string social_twitter_upload_success_title = "social_twitter_upload_success_title";
+    public static string social_twitter_upload_success_message = "social_twitter_upload_success_message";
+    public static string social_twitter_upload_error_title = "social_twitter_upload_error_title";
+    public static string social_twitter_upload_error_message = "social_twitter_upload_error_message";
 
     // -- FACEBOOK
 
@@ -52,6 +56,26 @@ public class BaseGameLocalizationKeys {
     
     public static string social_twitter_game_results_message = "social_twitter_game_results_message";
     public static string social_twitter_game_results_image_url = "social_twitter_game_results_image_url";
+
+    
+    // -- GAME -- EVERYPLAY
+    
+    public static string social_everyplay_game_results_message = "social_everyplay_game_results_message";
+    public static string social_everyplay_game_explore_message = "social_everyplay_game_explore_message";
+    
+    // -- GAME -- ADVERBS
+    
+    public static string game_action_adverb_1 = "game_action_adverb_1";
+    public static string game_action_adverb_2 = "game_action_adverb_2";
+    public static string game_action_adverb_3 = "game_action_adverb_3";
+    public static string game_action_adverb_4 = "game_action_adverb_4";
+    public static string game_action_adverb_5 = "game_action_adverb_5";
+    public static string game_action_adverb_6 = "game_action_adverb_6";
+    public static string game_action_adverb_7 = "game_action_adverb_7";
+
+    
+    public static string game_type_arcade = "game_type_arcade";
+    public static string game_type_arcade_mode = "game_type_arcade_mode";
 
 }
 
