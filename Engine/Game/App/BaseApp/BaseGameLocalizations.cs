@@ -106,40 +106,39 @@ public class BaseGameLocalizations<T> : DataObjects<T> where T : DataObject, new
     }
 
     public BaseGameLocalizations(bool loadData) {
+        //Reset();
         //LoadLocale(defaultLocale);
-        Reset();
     }
 
     public void LoadLocale(string localeCode) {
-
-        if(!GameConfigs.globalReady) {
-            return;
-        }
 
         Reset();
                 
         string localeSystem = Application.systemLanguage.ToString();
         
         Debug.Log("GameLocalizations:LoadLocale:" + " localeSystem:" + localeSystem);
-        
-        Debug.Log("GameLocalizations:LoadLocale:" + " localeCode:" + localeCode);
 
-        if(string.IsNullOrEmpty(localeCode)) {
+        if (string.IsNullOrEmpty(localeCode)) {
             localeCode = defaultLocale;
         }
+        
+        Debug.Log("GameLocalizations:LoadLocale:" + " localeCode:" + localeCode);
                 
         currentLocale = localeCode;
 
         path = "data/" + BASE_DATA_KEY + "-" + localeCode + ".json";
+        
+        Debug.Log("GameLocalizations:LoadLocale:" + " path:" + path);
+
         pathKey = BASE_DATA_KEY;
         LoadData();
     }
 
     public string ReplaceLocalized(string content) {
         
-        if(!GameConfigs.globalReady) {
-            return content;
-        }
+        //if (!GameConfigs.globalReady) {
+        //    return content;
+        //}
     
         //\{\{\s+(.*?)\s+\}\}
     
@@ -220,11 +219,7 @@ public class BaseGameLocalizations<T> : DataObjects<T> where T : DataObject, new
     }
 
     public static string GetString(string locale, string key) {
-        
-        if(!GameConfigs.globalReady) {
-            return key;
-        }
-        
+
         GameLocalizationDataItem item = GetDataItem(
             GameLocalizationDataItemType.strings, locale, key);
 
@@ -236,10 +231,6 @@ public class BaseGameLocalizations<T> : DataObjects<T> where T : DataObject, new
     }
 
     public static string GetImage(string locale, string key) {
-        
-        if(!GameConfigs.globalReady) {
-            return key;
-        }
         
         GameLocalizationDataItem item = GetDataItem(
             GameLocalizationDataItemType.images, locale, key);
@@ -253,33 +244,26 @@ public class BaseGameLocalizations<T> : DataObjects<T> where T : DataObject, new
 
     public static GameLocalizationDataItem GetDataItem(
         GameLocalizationDataItemType itemType, string locale, string key) {
-        
-        if(!GameConfigs.globalReady) {
-            return null;
-        }
-        
-        if (GameLocalizations.Instance != null) {
-            
-            //if(locale != currentLocale) {
-            // check locale
-            GameLocalizations.Instance.ChangeCurrent(locale);
-            //}
-            
-            GameLocalization localeObject = GameLocalizations.Current;
-            
-            if (localeObject != null) {
-                
-                GameLocalizationData localeData = localeObject.data;
-                
-                if (localeData != null) {
 
-                    if (itemType == GameLocalizationDataItemType.strings) {
+        //if(locale != currentLocale) {
+        // check locale
+        GameLocalizations.Instance.ChangeCurrent(locale);
+        //}
+                        
+        GameLocalization localeObject = GameLocalizations.Current;
+                
+        if (localeObject != null) {
+                
+            GameLocalizationData localeData = localeObject.data;
+                
+            if (localeData != null) {
 
-                        return localeData.GetItemString(key);
-                    }
-                    else if (itemType == GameLocalizationDataItemType.images) {
-                        return localeData.GetItemImage(key);
-                    }
+                if (itemType == GameLocalizationDataItemType.strings) {
+
+                    return localeData.GetItemString(key);
+                }
+                else if (itemType == GameLocalizationDataItemType.images) {
+                    return localeData.GetItemImage(key);
                 }
             }
         }
@@ -289,8 +273,17 @@ public class BaseGameLocalizations<T> : DataObjects<T> where T : DataObject, new
 
     public void ChangeCurrent(string code) {
 
-        if (GameLocalizations.Current.code != code 
-            || code != currentLocale) {
+        //Debug.Log("ChangeCurrent:" + 
+        //          " currentLocale:" + currentLocale +
+        //          " GameLocalizations.Current.code:" + GameLocalizations.Current.code +
+        //          " code:" + code +
+        //          " IsLoaded:" + IsLoaded +
+        //          " HasLoadedStrings:" + HasLoadedStrings
+        //          );
+
+        if (code != currentLocale
+            || !IsLoaded
+            || !HasLoadedStrings) {
 
             LoadLocale(code);
 
@@ -299,9 +292,23 @@ public class BaseGameLocalizations<T> : DataObjects<T> where T : DataObject, new
             if (obj != null) {
                 
                 GameLocalizations.Current = obj;
-                LogUtil.Log("Changing Locales: code:" + code);  
             }  
         } 
+    }
+
+    public virtual bool HasLoadedStrings {
+        get {
+
+            if (GameLocalizations.Current.data == null) {
+                return false;
+            }
+
+            if (GameLocalizations.Current.data.strings == null) {
+                return false;
+            }
+
+            return GameLocalizations.Current.data.strings.Count > 0 ? true : false;
+        }
     }
 }
 
@@ -340,7 +347,9 @@ public class GameLocalizationData : GameDataObject {
     }
 
     public GameLocalizationDataItem GetItemString(string key) {
+
         if (strings != null) {
+        
             return strings.Get(key);
         }
 

@@ -833,6 +833,9 @@ public class DataObjects<T> where T : DataObject, new() {
 
     public virtual bool IsLoaded {
         get {
+            if(items == null) {
+                return false;
+            }
             return items.Count > 0 ? true : false;
         }
     }
