@@ -15,6 +15,9 @@ public class BaseGameLocalizationKeys {
     public static string app_display_name = "app_display_name";
     public static string app_display_code = "app_display_code";
     public static string app_web_url = "app_web_url";
+    public static string app_store_url_itunes = "app_store_url_itunes";
+    public static string app_store_url_google_play = "app_store_url_google_play";
+    public static string app_default_append = "app_default_append";
 
     // SOCIAL
 
@@ -35,6 +38,10 @@ public class BaseGameLocalizationKeys {
     public static string social_facebook_upload_error_message = "social_facebook_upload_error_message";
     public static string social_facebook_upload_success_title = "social_facebook_upload_success_title";
     public static string social_facebook_upload_success_message = "social_facebook_upload_success_message";
+    
+    public static string social_facebook_game_action_append = "social_facebook_game_action_append";
+
+    //social_facebook_game_action_append
 
     // -- PHOTO
 
@@ -76,6 +83,21 @@ public class BaseGameLocalizationKeys {
     
     public static string game_type_arcade = "game_type_arcade";
     public static string game_type_arcade_mode = "game_type_arcade_mode";
+
+    
+    public static string game_type_coins = "game_type_coins";
+    public static string game_type_scores = "game_type_scores";
+    public static string game_type_score = "game_type_score";
+    
+    public static string game_action_default_message = "game_action_default_message";
+    public static string game_action_results_choice_quiz_message = "game_action_results_choice_quiz_message";    
+    public static string game_action_results_arcade_message = "game_action_results_arcade_message";
+    
+    public static string game_action_panel_character_customize_message = "game_action_panel_character_customize_message";
+    public static string game_action_panel_character_colors_message = "game_action_panel_character_colors_message";
+    public static string game_action_panel_character_rpg_message = "game_action_panel_character_rpg_message";
+    public static string game_action_panel_achievements_message = "game_action_panel_achievements_message";
+    public static string game_action_panel_statistics_message = "game_action_panel_statistics_message";
 
 }
 
