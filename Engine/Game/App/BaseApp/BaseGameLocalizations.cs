@@ -106,6 +106,14 @@ public enum GameLocalizationDataItemType {
     images
 }
 
+public class LocoKeys : GameLocalizationKeys {
+    
+}
+
+public class Locos : GameLocalizations {
+    
+}
+
 public class BaseGameLocalizations<T> : DataObjects<T> where T : DataObject, new() {
     private static T current;
     private static volatile BaseGameLocalizations<T> instance;
