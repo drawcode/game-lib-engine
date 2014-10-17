@@ -9,7 +9,7 @@ using UnityEngine;
 
 using Engine.Utility;
 
-public static class GameObjectExtensions {
+public static class BaseGameObjectExtensions {
 
     // GAME OBJECT
 
