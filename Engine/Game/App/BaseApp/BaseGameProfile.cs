@@ -41,7 +41,6 @@ public class BaseGameProfileAttributes {
     public static string ATT_UI_HAS_SEEN_HELP = "ui-seen-help";
     public static string ATT_HELP_TIPS_SHOWN_DAY = "ui-help-tips-shown-day";
     public static string ATT_HELP_TIPS_SHOWN_DATE = "ui-help-tips-shown-date";
-    
     public static string ATT_BROADCAST_RECORD_LEVELS = "broadcast-record-levels";
 
 
@@ -197,6 +196,32 @@ public class BaseGameProfile : Profile {
     // HELPERS
     // We want all properties to be list attributes instead of
     // class level properties since this is json serializable.
+
+    // CONTROLS
+    
+    public bool GetControlInputTouchFinger() {
+        return GetControlInputTouchFinger(true);
+    }
+    
+    public bool GetControlInputTouchFinger(bool defaultValue) {
+        bool attValue = defaultValue;
+        string key = GameProfileAttributes.ATT_CONTROL_INPUT_TOUCH_FINGER;
+        if (CheckIfAttributeExists(key))
+            attValue = GetAttributeBoolValue(key);
+        return attValue;
+    }
+    
+    public bool GetControlInputTouchOnScreen() {
+        return GetControlInputTouchOnScreen(true);
+    }
+    
+    public bool GetControlInputTouchOnScreen(bool defaultValue) {
+        bool attValue = defaultValue;
+        string key = GameProfileAttributes.ATT_CONTROL_INPUT_TOUCH_ON_SCREEN;
+        if (CheckIfAttributeExists(key))
+            attValue = GetAttributeBoolValue(key);
+        return attValue;
+    }
 
     // GAME MODES
 
@@ -773,7 +798,7 @@ public class BaseGameProfile : Profile {
         
         GameProfileNetworkItem item = GetNetwork(networkType);
 
-        if(item == null) {
+        if (item == null) {
             return default(T);
         }
         
@@ -789,7 +814,7 @@ public class BaseGameProfile : Profile {
         
         GameProfileNetworkItem item = GetNetwork(networkType);
 
-        if(item == null) {
+        if (item == null) {
             item = new GameProfileNetworkItem();
             item.network_type = networkType;
         }
@@ -871,7 +896,7 @@ public class BaseGameProfile : Profile {
     }
 
     public string GetNetworkValueToken(string networkType) {        
-       return GameProfiles.Current.GetNetworkValue(
+        return GameProfiles.Current.GetNetworkValue(
             networkType, BaseDataObjectKeys.network_token);
     }
 

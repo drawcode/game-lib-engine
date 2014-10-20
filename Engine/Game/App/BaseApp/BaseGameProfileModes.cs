@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.IO;
 
 using Engine.Data.Json;
+using Engine.Events;
 using Engine.Utility;
 
 public class BaseGameProfileModeAttributes {
@@ -28,6 +29,60 @@ public class BaseGameProfileModeAttributes {
 	public static string ATT_CURRENT_RACE_MODE_SERIES_CONTAINER_INDEX = "race-mode-series-container-index";
 	public static string ATT_CURRENT_RACE_MODE_SERIES_LEVEL_INDEX = "race-mode-series-level-index";
 	public static string ATT_CURRENT_RACE_MODE_SERIES_RESULT_SET = "race-mode-endless-result-set";
+}
+
+
+public class GameProfileMissionItem : GameDataObject {
+    
+}
+
+public class GameProfileMissionItems {
+    
+    public List<GameProfileMissionItem> items;
+    
+    public GameProfileMissionItems() {
+        Reset();
+    }
+    
+    public void Reset() {
+        items = new List<GameProfileMissionItem>();
+    }
+    
+    public GameProfileMissionItem GetItem(string missionCode) {
+        //if(items == null) {
+        //     items = new List<GameProfileCharacterItem>();
+        //
+        //    GameProfileCharacterItem item = new GameProfileCharacterItem();
+        //    items.Add(item);
+        //}
+        
+        if (items == null) {
+            return null;
+        }
+        
+        foreach (GameProfileMissionItem item in items) {
+            if (item.mission_code.ToLower() == missionCode.ToLower()) {
+                return item;
+            }
+        }
+        return null;
+    }
+    
+    public void SetItem(string missionCode, GameProfileMissionItem item) {
+        bool found = false;
+        
+        for (int i = 0; i < items.Count; i++) {
+            if (items[i].mission_code.ToLower() == missionCode.ToLower()) {
+                items[i] = item;
+                found = true;
+                break;
+            }
+        }
+        
+        if (!found) {
+            items.Add(item);
+        }
+    }
 }
 
 public class BaseGameProfileModes {
@@ -102,25 +157,104 @@ public class BaseGameProfileMode : Profile  {
 		return GetAttributesList("mode");
 	}	
 	
-	// GAME MODES
+	// GAME MODES DATA
 
-	/*
-	public int GetCurrentGameMode(){
-		return GetCurrentGameMode((int)GameRaceMode.GAME_RACE_MODE_SERIES);
-	}
-	
-	public int GetCurrentGameMode(int defaultValue){
-		
-		int attValue = defaultValue;
-		if(CheckIfAttributeExists(GameProfileModeAttributes.ATT_CURRENT_RACE_MODE))
-			attValue = GetAttributeIntValue(GameProfileModeAttributes.ATT_CURRENT_RACE_MODE);
-		return attValue;
-	}
-	
-	public void SetCurrentGameMode(int attValue) {
-		SetAttributeIntValue(GameProfileModeAttributes.ATT_CURRENT_RACE_MODE, attValue);
-	}
-	*/
+
+    
+    // SOCIAL
+    
+    // auth/social
+    
+    
+    public virtual GameProfileMissionItems mission_items {
+        get {
+            return Get<GameProfileMissionItems>(BaseDataObjectKeys.mission_items);
+        }
+        
+        set {
+            Set(BaseDataObjectKeys.mission_items, value);
+        }
+    }
+    
+    public virtual void SetMissions(GameProfileMissionItems obj) {
+        
+        mission_items = obj;
+        
+        Messenger.Broadcast(BaseGameProfileMessages.ProfileShouldBeSaved);
+    }
+    
+    public virtual GameProfileMissionItems GetMissions() {       
+        GameProfileMissionItems obj = new GameProfileMissionItems();
+        
+        obj = mission_items;
+        
+        if (obj == null) {
+            obj = new GameProfileMissionItems();
+        }
+        
+        return obj;
+    }
+    
+    public T GetMissionValue<T>(string missionCode, string key) {
+        
+        GameProfileMissionItem item = GetMission(missionCode);
+        
+        if (item == null) {
+            return default(T);
+        }
+        
+        return item.Get<T>(key);
+    }
+    
+    public string GetMissionValue(string missionCode, string key) {
+        
+        return GetMissionValue<string>(missionCode, key);
+    }
+    
+    public void GetMissionValue(string missionCode, string key, object val) {
+        
+        GameProfileMissionItem item = GetMission(missionCode);
+        
+        if (item == null) {
+            item = new GameProfileMissionItem();
+            item.mission_code = missionCode;
+        }
+        
+        item.Set(key, val);
+        
+        SetMission(missionCode, item);
+    }
+        
+    public GameProfileMissionItem GetMission(string missionCode) {
+        
+        GameProfileMissionItem item = GetMissions().GetItem(missionCode);
+        
+        return item;
+    }
+    
+    public void SetMission(string missionCode, GameProfileMissionItem item) {
+        SetMission(missionCode, item, true);
+    }
+    
+    public void SetMission(string missionCode, GameProfileMissionItem item, bool setAsCurrent) {
+        
+        GameProfileMissionItems items = GetMissions();
+        
+        if (setAsCurrent) {
+            //BaseGameProfileCharacters.currentCharacter = item;
+            //GameProfileCharacters.Current.SetCurrentCharacterProfileCode(code);
+        }
+        
+        items.SetItem(missionCode, item);
+        SetMissions(items);
+    }
+
+    // ACTIONS
+
+    // COLLECTIONS
+
+
+
 	
 }
 

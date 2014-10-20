@@ -47,6 +47,26 @@ public class BaseDataObjectKeys {
     public static string network = "network";
     public static string networks = "networks";
     
+    public static string world_data = "world_data";
+    public static string world_code = "world_code";
+    public static string world_type = "world_type";
+    public static string world_items = "world_items";
+
+    public static string mission_data = "mission_data";
+    public static string mission_code = "mission_code";
+    public static string mission_type = "mission_type";
+    public static string mission_items = "mission_items";
+    
+    public static string collection_data = "collection_data";
+    public static string collection_code = "collection_code";
+    public static string collection_type = "collection_type";
+    public static string collection_items = "collection_items";
+    
+    public static string choice_data = "choice_data";
+    public static string choice_code = "choice_code";
+    public static string choice_type = "choice_type";
+    public static string choice_items = "choice_items";
+    
     public static string broadcast_networks_record_levels = "broadcast_networks_record_levels";
 
     public static string data_platform = "data_platform";

@@ -1144,6 +1144,134 @@ public class GameDataObject : DataObject {
             Set<object>(BaseDataObjectKeys.network_data, value);
         }
     }
+
+    //
+
+    public virtual string mission_type {
+        get {
+            return Get<string>(BaseDataObjectKeys.mission_type, "");
+        }
+        
+        set {
+            Set<string>(BaseDataObjectKeys.mission_type, value);
+        }
+    }
+    
+    public virtual string mission_code {
+        get {
+            return Get<string>(BaseDataObjectKeys.mission_code, "");
+        }
+        
+        set {
+            Set<string>(BaseDataObjectKeys.mission_code, value);
+        }
+    }
+    
+    public virtual object mission_data {
+        get {
+            return Get<object>(BaseDataObjectKeys.mission_data, null);
+        }
+        
+        set {
+            Set<object>(BaseDataObjectKeys.mission_data, value);
+        }
+    }
+
+    //
+    
+    public virtual string collection_type {
+        get {
+            return Get<string>(BaseDataObjectKeys.collection_type, "");
+        }
+        
+        set {
+            Set<string>(BaseDataObjectKeys.collection_type, value);
+        }
+    }
+    
+    public virtual string collection_code {
+        get {
+            return Get<string>(BaseDataObjectKeys.collection_code, "");
+        }
+        
+        set {
+            Set<string>(BaseDataObjectKeys.collection_code, value);
+        }
+    }
+    
+    public virtual object collection_data {
+        get {
+            return Get<object>(BaseDataObjectKeys.collection_data, null);
+        }
+        
+        set {
+            Set<object>(BaseDataObjectKeys.collection_data, value);
+        }
+    }
+
+    //
+    
+    public virtual string choice_type {
+        get {
+            return Get<string>(BaseDataObjectKeys.choice_type, "");
+        }
+        
+        set {
+            Set<string>(BaseDataObjectKeys.choice_type, value);
+        }
+    }
+    
+    public virtual string choice_code {
+        get {
+            return Get<string>(BaseDataObjectKeys.choice_code, "");
+        }
+        
+        set {
+            Set<string>(BaseDataObjectKeys.choice_code, value);
+        }
+    }
+    
+    public virtual object choice_data {
+        get {
+            return Get<object>(BaseDataObjectKeys.choice_data, null);
+        }
+        
+        set {
+            Set<object>(BaseDataObjectKeys.choice_data, value);
+        }
+    }
+
+    //
+    
+    public virtual string world_code {
+        get {
+            return Get<string>(BaseDataObjectKeys.world_code, "");
+        }
+        
+        set {
+            Set<string>(BaseDataObjectKeys.world_code, value);
+        }
+    }
+
+    public virtual string world_type {
+        get {
+            return Get<string>(BaseDataObjectKeys.world_type, null);
+        }
+        
+        set {
+            Set<string>(BaseDataObjectKeys.world_type, value);
+        }
+    }
+
+    public virtual object world_data {
+        get {
+            return Get<object>(BaseDataObjectKeys.world_data, "");
+        }
+        
+        set {
+            Set<object>(BaseDataObjectKeys.world_data, value);
+        }
+    }
     
     //[JsonIgnore(JsonIgnoreWhen.Deserializing)]
     public virtual string type {
