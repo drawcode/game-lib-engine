@@ -121,8 +121,8 @@ public class GameDataSound : GameDataObject {
         get {
             return data_type == GameDataPlayType.loop
                 || data_type == GameDataPlayType.loop_reverse
-                    || play_type == GameDataPlayType.loop
-                    || play_type == GameDataPlayType.loop_reverse
+                || play_type == GameDataPlayType.loop
+                || play_type == GameDataPlayType.loop_reverse
                     ? true : false;
         }
     }
@@ -132,8 +132,8 @@ public class GameDataSound : GameDataObject {
         get {
             return data_type == GameDataPlayType.once
                 || data_type == GameDataPlayType.once_reverse
-                    || play_type == GameDataPlayType.once
-                    || play_type == GameDataPlayType.once_reverse
+                || play_type == GameDataPlayType.once
+                || play_type == GameDataPlayType.once_reverse
                     ? true : false;
         }
     }
@@ -157,7 +157,7 @@ public class GameDataItemReward : GameDataObject {
     public static string xp = "xp";
     public static string currency = "currency";
     public static string currencyDouble = "currency-double";
-    public static string health = "health";    
+    public static string health = "health";
     public static string goalFly = "goal-fly";    
 }
 
@@ -760,8 +760,8 @@ public class GameFilterIncludeKeys : GameDataObject {
         pack = GameFilterIncludeType.none;
         tracker = GameFilterIncludeType.none;
         action = GameFilterIncludeType.none;
-        appState = GameFilterIncludeType.none;
-        appContentState = GameFilterIncludeType.none;
+        app_state = GameFilterIncludeType.none;
+        app_content_state = GameFilterIncludeType.none;
         custom = GameFilterIncludeType.none;
     }
 }
@@ -959,7 +959,17 @@ public class GameDataObject : DataObject {
         set {
             Set<string>(BaseDataObjectKeys.display_name, value);
         }
-    }    
+    }  
+
+    public virtual string action_display_name {
+        get {
+            return Get<string>(BaseDataObjectKeys.action_display_name, "");
+        }
+        
+        set {
+            Set<string>(BaseDataObjectKeys.action_display_name, value);
+        }
+    }  
     
     //[JsonIgnore(JsonIgnoreWhen.Deserializing)]
     public virtual string name {
@@ -981,7 +991,17 @@ public class GameDataObject : DataObject {
         set {
             Set<string>(BaseDataObjectKeys.description, value);
         }
-    }   
+    } 
+
+    public virtual string action_description {
+        get {
+            return Get<string>(BaseDataObjectKeys.action_description);
+        }
+        
+        set {
+            Set<string>(BaseDataObjectKeys.action_description, value);
+        }
+    } 
 
     //[JsonIgnore(JsonIgnoreWhen.Deserializing)]
     public virtual string url {
@@ -992,7 +1012,7 @@ public class GameDataObject : DataObject {
         set {
             Set<string>(BaseDataObjectKeys.url, value);
         }
-    }    
+    }
     
     public virtual string path {
         get {
@@ -1002,7 +1022,7 @@ public class GameDataObject : DataObject {
         set {
             Set<string>(BaseDataObjectKeys.path, value);
         }
-    } 
+    }
     
     public virtual string content {
         get {
@@ -1093,7 +1113,7 @@ public class GameDataObject : DataObject {
         set {
             Set<string>(BaseDataObjectKeys.game_id, value);
         }
-    }  
+    }
 
     public virtual string network_id {
         get {
@@ -1103,7 +1123,7 @@ public class GameDataObject : DataObject {
         set {
             Set<string>(BaseDataObjectKeys.network_id, value);
         }
-    }  
+    }
     
     public virtual string network_username {
         get {
@@ -1584,23 +1604,23 @@ public class GameDataObject : DataObject {
         }
     }
     
-    public virtual string appState {
+    public virtual string app_state {
         get {
-            return Get<string>(BaseDataObjectKeys.appState);
+            return Get<string>(BaseDataObjectKeys.app_state);
         }
         
         set {
-            Set(BaseDataObjectKeys.appState, value);
+            Set(BaseDataObjectKeys.app_state, value);
         }
     }
     
-    public virtual string appContentState {
+    public virtual string app_content_state {
         get {
-            return Get<string>(BaseDataObjectKeys.appContentState);
+            return Get<string>(BaseDataObjectKeys.app_content_state);
         }
         
         set {
-            Set(BaseDataObjectKeys.appContentState, value);
+            Set(BaseDataObjectKeys.app_content_state, value);
         }
     }
     
@@ -1642,6 +1662,120 @@ public class GameDataObject : DataObject {
         set {
             Set<double>(BaseDataObjectKeys.play_delay, value);
         }
+    }
+
+    // app level
+
+    public virtual List<string> tags {
+        get {
+            return Get<List<string>>(BaseDataObjectKeys.tags);
+        }
+        
+        set {
+            Set(BaseDataObjectKeys.tags, value);
+        }
+    }
+    
+    public virtual List<string> app_states {
+        get {
+            return Get<List<string>>(BaseDataObjectKeys.app_states);
+        }
+        
+        set {
+            Set(BaseDataObjectKeys.app_states, value);
+        }
+    }
+    
+    public virtual List<string> app_content_states {
+        get {
+            return Get<List<string>>(BaseDataObjectKeys.app_content_states);
+        }
+        
+        set {
+            Set(BaseDataObjectKeys.app_content_states, value);
+        }
+    }
+    
+    public virtual Dictionary<string, List<string>> required_assets {
+        get {
+            return Get<Dictionary<string, List<string>>>(BaseDataObjectKeys.required_assets);
+        }
+        
+        set {
+            Set(BaseDataObjectKeys.required_assets, value);
+        }
+    }
+    
+    public virtual List<string> required_packs {
+        get {
+            return Get<List<string>>(BaseDataObjectKeys.required_packs);
+        }
+        
+        set {
+            Set(BaseDataObjectKeys.required_packs, value);
+        }
+    }
+    
+    public virtual List<string> required_trackers {
+        get {
+            return Get<List<string>>(BaseDataObjectKeys.required_trackers);
+        }
+        
+        set {
+            Set(BaseDataObjectKeys.required_trackers, value);
+        }
+    }
+    
+    public virtual List<string> keys {
+        get {
+            return Get<List<string>>(BaseDataObjectKeys.keys);
+        }
+        
+        set {
+            Set(BaseDataObjectKeys.keys, value);
+        }
+    }
+    
+    public virtual Dictionary<string, object> content_attributes {
+        get {
+            return Get<Dictionary<string, object>>(BaseDataObjectKeys.content_attributes);
+        }
+        
+        set {
+            Set(BaseDataObjectKeys.content_attributes, value);
+        }
+    }
+
+    public virtual List<string> types {
+        get {
+            return Get<List<string>>(BaseDataObjectKeys.types);
+        }
+        
+        set {
+            Set<List<string>>(BaseDataObjectKeys.types, value);
+        }
+    }
+
+    // helpers
+
+    public bool IsTypeTexture() {
+        return IsType("texture");
+    }
+    
+    public bool IsTypeColor() {
+        return IsType("color");
+    }
+
+    public bool IsType(string typeTo) {
+        return type == typeTo ? true : false;
+    }
+
+    public bool HasTag(string tagTo) {
+        if (tags == null) {
+            return false;
+        }
+
+        return tags.Contains(tagTo);
     }
 
     //

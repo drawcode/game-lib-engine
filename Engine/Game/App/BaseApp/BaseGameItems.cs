@@ -6,7 +6,6 @@ public class BaseGameItems<T> : DataObjects<T> where T : DataObject, new() {
     private static T current;
     private static volatile BaseGameItems<T> instance;
     private static object syncRoot = new Object();
-
     private string BASE_DATA_KEY = "game-item-data";
 
     public static T BaseCurrent {

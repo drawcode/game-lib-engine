@@ -7,7 +7,6 @@ public class BaseAppContentItems<T> : DataObjects<T> where T : DataObject, new()
     private static T current;
     private static volatile BaseAppContentItems<T> instance;
     private static object syncRoot = new Object();
-
     private string BASE_DATA_KEY = "app-content-item-data";
 
     public static T BaseCurrent {
@@ -54,43 +53,8 @@ public class BaseAppContentItems<T> : DataObjects<T> where T : DataObject, new()
     }
 }
 
-public class BaseAppContentItemKeys {
-    public static string appStates = "appStates";
-    public static string appContentStates = "appContentStates";
-    public static string requiredAssets = "requiredAssets";
-}
-
 public class BaseAppContentItem : GameDataObject {
         
-    public virtual List<string> appStates {
-        get {
-            return Get<List<string>>(BaseAppContentItemKeys.appStates);
-        }
-        
-        set {
-            Set(BaseAppContentItemKeys.appStates, value);
-        }
-    }
-    
-    public virtual List<string> appContentStates {
-        get {
-            return Get<List<string>>(BaseAppContentItemKeys.appContentStates);
-        }
-        
-        set {
-            Set(BaseAppContentItemKeys.appContentStates, value);
-        }
-    }
-    
-    public virtual Dictionary<string, List<string>> requiredAssets {
-        get {
-            return Get<Dictionary<string, List<string>>>(BaseAppContentItemKeys.requiredAssets);
-        }
-        
-        set {
-            Set(BaseAppContentItemKeys.requiredAssets, value);
-        }
-    }
 
     // types: tracker, pack, data, generic
 
@@ -103,8 +67,5 @@ public class BaseAppContentItem : GameDataObject {
 
     public override void Reset() {
         base.Reset();
-        appStates = new List<string>();
-        appContentStates = new List<string>();
-        requiredAssets = new Dictionary<string, List<string>>();
     }
 }

@@ -80,7 +80,7 @@ public class AppContentActions : BaseAppContentActions<AppContentAction>
 		}
 	}
 	
-	public AppContentSet GetContentSet(AppContentAction action, string appState) {
+	public AppContentSet GetContentSet(AppContentAction action, string app_state) {
 		AppContentSet contentSet = null;
 		if(action != null) {
 			contentSet = action.GetContentSet("all");
@@ -91,18 +91,18 @@ public class AppContentActions : BaseAppContentActions<AppContentAction>
 				contentSet = action.GetContentSet("*");
 			}
 			if(contentSet == null) {
-				contentSet = action.GetContentSet(appState);
+				contentSet = action.GetContentSet(app_state);
 			}			
 		}
 		return contentSet;
 	}
 	
 	public AppContentActionEventPointInfo GetAppContentActionEventPointInfo (
-		string appPack, string appState, string appContentState) {
+		string appPack, string app_state, string app_content_state) {
 		AppContentActionEventPointInfo eventInfo = new AppContentActionEventPointInfo();
 		
 		List<AppContentAction> actions = GetListByPackAndStateAndContentState(
-			appPack, appState, appContentState);
+			appPack, app_state, app_content_state);
 			
 		foreach(AppContentAction action in actions) {
 			
@@ -127,12 +127,12 @@ public class AppContentActions : BaseAppContentActions<AppContentAction>
 	}
 	
 	public List<AppContentActionEvent> GetActionEvents(
-		string packCode, string appState, string appContentState) {
+		string packCode, string app_state, string app_content_state) {
 		
 		List<AppContentActionEvent> eventList = new List<AppContentActionEvent>();
 		
 		List<AppContentAction> actionList = GetListByPackAndStateAndContentState(
-			packCode, appState, appContentState);
+			packCode, app_state, app_content_state);
 		
 		foreach(AppContentAction action in actionList) {
 			List<AppContentActionEvent> actionEvents = action.GetAppContentActionEvents();
@@ -143,12 +143,12 @@ public class AppContentActions : BaseAppContentActions<AppContentAction>
 	}
 	
 	public List<AppContentActionEvent> GetActionEventPoints(
-		string packCode, string appState, string appContentState) {
+		string packCode, string app_state, string app_content_state) {
 		
 		List<AppContentActionEvent> eventList = new List<AppContentActionEvent>();
 		
 		List<AppContentAction> actionList = GetListByPackAndStateAndContentState(
-			packCode, appState, appContentState);
+			packCode, app_state, app_content_state);
 		
 		foreach(AppContentAction action in actionList) {
 			List<AppContentActionEvent> actionEvents 
@@ -159,17 +159,17 @@ public class AppContentActions : BaseAppContentActions<AppContentAction>
 		return eventList;
 	}
 	
-	public List<AppContentAction> GetListByPackAndState(string packCode, string appState) {
+	public List<AppContentAction> GetListByPackAndState(string packCode, string app_state) {
 		List<AppContentAction> filteredList = new List<AppContentAction>();
 		List<AppContentAction> actions = GetListByPack(packCode);
 		if(actions != null) {
 			foreach(AppContentAction obj in actions) {
 				if(obj != null) {
-					AppContentSet contentSet = GetContentSet(obj, appState);
+					AppContentSet contentSet = GetContentSet(obj, app_state);
 						
 					if(contentSet != null) {
 						if(packCode.ToLower() == obj.pack_code.ToLower()
-							&& (contentSet.GetAppStates().Contains(appState.ToLower())
+							&& (contentSet.GetAppStates().Contains(app_state.ToLower())
 							|| contentSet.GetAppStates().Contains("*")
 							|| contentSet.GetAppStates().Contains("all")
 							|| contentSet.GetInitialAppState().IndexOf("all") > -1)) {
@@ -183,28 +183,28 @@ public class AppContentActions : BaseAppContentActions<AppContentAction>
 	}
 	
 	public List<AppContentAction> GetListByPackAndStateAndContentState(
-		string packCode, string appState, string appContentState) {
+		string packCode, string app_state, string app_content_state) {
 		List<AppContentAction> filteredList = new List<AppContentAction>();
 		List<AppContentAction> actions = GetListByPack(packCode);
 		if(actions != null) {
 			foreach(AppContentAction obj in actions) {
 				if(obj != null) {
-					AppContentSet contentSet = GetContentSet(obj, appState);
+					AppContentSet contentSet = GetContentSet(obj, app_state);
 						
 					if(contentSet != null) {
 						
-						List<string> appStates = contentSet.GetAppStates();
-						List<string> appContentStates = contentSet.GetAppContentStates();
+						List<string> app_states = contentSet.GetAppStates();
+						List<string> app_content_states = contentSet.GetAppContentStates();
 						
 						if(packCode.ToLower() == obj.pack_code.ToLower()
-							&& (appStates.Contains(appState.ToLower())
-							|| appStates.Contains("*")
-							|| appStates.Contains("all")
+							&& (app_states.Contains(app_state.ToLower())
+							|| app_states.Contains("*")
+							|| app_states.Contains("all")
 							|| contentSet.GetInitialAppState().IndexOf("all") > -1)) {
 							
-							if(appContentStates.Contains(appContentState)
-								|| appContentStates.Contains("*")
-								|| appContentStates.Contains("all")) {
+							if(app_content_states.Contains(app_content_state)
+								|| app_content_states.Contains("*")
+								|| app_content_states.Contains("all")) {
 								filteredList.Add(obj);
 							}
 						}
@@ -216,11 +216,11 @@ public class AppContentActions : BaseAppContentActions<AppContentAction>
 	}
 	
 	/*
-	public List<AppContentAction> GetListByPackAndContentState(string packCode, string appContentState) {
+	public List<AppContentAction> GetListByPackAndContentState(string packCode, string app_content_state) {
 		List<AppContentAction> filteredList = new List<AppContentAction>();
 		foreach(AppContentAction obj in GetAll()) {
 			if(packCode.ToLower() == obj.pack_code.ToLower()
-				&& obj.GetCurrentContentSet().GetAppContentStates().Contains(appContentState.ToLower())) {
+				&& obj.GetCurrentContentSet().GetAppContentStates().Contains(app_content_state.ToLower())) {
 				filteredList.Add(obj);
 			}
 		}
@@ -229,15 +229,15 @@ public class AppContentActions : BaseAppContentActions<AppContentAction>
 	}
 	*/
 	
-	public List<string> GetListTrackerCodesByPackAndAppState(string packCode, string appState) {
+	public List<string> GetListTrackerCodesByPackAndAppState(string packCode, string app_state) {
 		
-		//LogUtil.Log("GetListTrackerCodesByPackAndState:" + " packCode:" + packCode + " appState:" + appState);
+		//LogUtil.Log("GetListTrackerCodesByPackAndState:" + " packCode:" + packCode + " app_state:" + app_state);
 		
 		List<string> filteredList = new List<string>();
-		foreach(AppContentAction obj in GetListByPackAndState(packCode, appState)) {
+		foreach(AppContentAction obj in GetListByPackAndState(packCode, app_state)) {
 			//LogUtil.Log("GetListTrackerCodesByPackAndState:" + " obj.code:" + obj.code + " objGetAppTrackers:" + obj.GetAppTrackers()[0]);
 			
-			AppContentSet contentSet = GetContentSet(obj, appState);
+			AppContentSet contentSet = GetContentSet(obj, app_state);
 			
 			if(contentSet != null) {
 				foreach(string s in contentSet.GetAppTrackers()) {
@@ -252,16 +252,16 @@ public class AppContentActions : BaseAppContentActions<AppContentAction>
 	}
 	
 	public List<string> GetListTrackerCodesByPackAndAppContentState(
-		string packCode, string appState, string appContentState) {
+		string packCode, string app_state, string app_content_state) {
 		
-		//LogUtil.Log("GetListTrackerCodesByPackAndState:" + " packCode:" + packCode + " appState:" + appState);
+		//LogUtil.Log("GetListTrackerCodesByPackAndState:" + " packCode:" + packCode + " app_state:" + app_state);
 		
 		List<string> filteredList = new List<string>();
 		foreach(AppContentAction obj in GetListByPackAndStateAndContentState(
-			packCode, appState, appContentState)) {
+			packCode, app_state, app_content_state)) {
 			//LogUtil.Log("GetListTrackerCodesByPackAndState:" + " obj.code:" + obj.code + " objGetAppTrackers:" + obj.GetAppTrackers()[0]);
 			
-			AppContentSet contentSet = GetContentSet(obj, appState);
+			AppContentSet contentSet = GetContentSet(obj, app_state);
 			
 			if(contentSet != null) {
 				foreach(string s in contentSet.GetAppTrackers()) {
@@ -276,12 +276,12 @@ public class AppContentActions : BaseAppContentActions<AppContentAction>
 	}
 	
 	/*
-	public List<string> GetListTrackerCodesByPackAndAppContentState(string packCode, string appContentState) {
+	public List<string> GetListTrackerCodesByPackAndAppContentState(string packCode, string app_content_state) {
 		
-		//LogUtil.Log("GetListTrackerCodesByPackAndState:" + " packCode:" + packCode + " appState:" + appState);
+		//LogUtil.Log("GetListTrackerCodesByPackAndState:" + " packCode:" + packCode + " app_state:" + app_state);
 		
 		List<string> filteredList = new List<string>();
-		foreach(AppContentAction obj in GetListByPackAndContentState(packCode, appContentState)) {
+		foreach(AppContentAction obj in GetListByPackAndContentState(packCode, app_content_state)) {
 			//LogUtil.Log("GetListTrackerCodesByPackAndState:" + " obj.code:" + obj.code + " objGetAppTrackers:" + obj.GetAppTrackers()[0]);
 			foreach(string s in obj.GetCurrentContentSet().GetAppTrackers()) {
 				filteredList.Add(s);
@@ -331,13 +331,13 @@ public class AppContentActions : BaseAppContentActions<AppContentAction>
 		return filtered;
 	}
 	
-	public bool CheckActionByAppState(AppContentAction action, string appState) {
+	public bool CheckActionByAppState(AppContentAction action, string app_state) {
 		
-		AppContentSet contentSet = GetContentSet(action, appState);
+		AppContentSet contentSet = GetContentSet(action, app_state);
 		
 		if(contentSet != null) {
 		
-			if(contentSet.GetAppStates().Contains(appState)
+			if(contentSet.GetAppStates().Contains(app_state)
 				|| contentSet.GetAppStates().Contains("*")
 				|| contentSet.GetAppStates().Contains("all")
 				|| contentSet.GetInitialAppState().IndexOf("all") > -1) {
@@ -348,8 +348,8 @@ public class AppContentActions : BaseAppContentActions<AppContentAction>
 	}
 	
 	/*
-	public bool CheckActionByAppContentState(AppContentAction action, string appContentState) {
-		if(action.GetCurrentContentSet().GetAppContentStates().Contains(appContentState)
+	public bool CheckActionByAppContentState(AppContentAction action, string app_content_state) {
+		if(action.GetCurrentContentSet().GetAppContentStates().Contains(app_content_state)
 			|| action.GetCurrentContentSet().GetAppContentStates().Contains("*")
 			|| action.GetCurrentContentSet().GetAppContentStates().Contains("all")
 			|| action.GetCurrentContentSet().GetInitialAppContentState().IndexOf("all") > -1) {
@@ -374,7 +374,7 @@ public class AppContentActions : BaseAppContentActions<AppContentAction>
 		return false;
 	}
 	
-	public List<AppContentAction> GetByTrackerCodeAndAppState(string trackerCode, string appState, bool onlyThisPack) {
+	public List<AppContentAction> GetByTrackerCodeAndAppState(string trackerCode, string app_state, bool onlyThisPack) {
 		List<AppContentAction> filtered = new List<AppContentAction>();
 		
 		List<AppContentAction> currentSet;
@@ -387,7 +387,7 @@ public class AppContentActions : BaseAppContentActions<AppContentAction>
 		}
 		
 		foreach(AppContentAction action in currentSet) {
-			if(CheckActionByAppState(action, appState) 
+			if(CheckActionByAppState(action, app_state) 
 				&& CheckActionByTrackerCode(action, trackerCode)) {
 				
 				if(!filtered.Contains(action)) {
@@ -401,12 +401,12 @@ public class AppContentActions : BaseAppContentActions<AppContentAction>
 	}
 	
 	public List<AppContentAction> GetByTrackerCodeAndAppStateAndAppContentState(
-		string trackerCode, string appState, string appContentState) {
-		return GetByTrackerCodeAndAppStateAndAppContentState(trackerCode, appState, appContentState, null);
+		string trackerCode, string app_state, string app_content_state) {
+		return GetByTrackerCodeAndAppStateAndAppContentState(trackerCode, app_state, app_content_state, null);
 	}
 	
 	public List<AppContentAction> GetByTrackerCodeAndAppStateAndAppContentState(
-		string trackerCode, string appState, string appContentState, string packCode) {
+		string trackerCode, string app_state, string app_content_state, string packCode) {
 		
 		List<AppContentAction> filtered = new List<AppContentAction>();
 		
@@ -420,13 +420,13 @@ public class AppContentActions : BaseAppContentActions<AppContentAction>
 		}
 		
 		foreach(AppContentAction action in currentSet) {
-			if(CheckActionByAppState(action, appState) 
+			if(CheckActionByAppState(action, app_state) 
 				&& CheckActionByTrackerCode(action, trackerCode)) {
 				
-				AppContentSet contentSet = action.GetContentSet(appState);
-				List<string> appContentStates = contentSet.appContentStates;
+				AppContentSet contentSet = action.GetContentSet(app_state);
+				List<string> app_content_states = contentSet.app_content_states;
 				
-				if(appContentStates.Contains(appContentState)) {
+				if(app_content_states.Contains(app_content_state)) {
 					if(!filtered.Contains(action)) {
 						filtered.Add(action);
 					}
@@ -475,7 +475,7 @@ public class AppContentActions : BaseAppContentActions<AppContentAction>
 	*/
 	
 	/*
-	public List<AppContentAction> GetByTrackerCodeAndContentAppState(string trackerCode, string appContentState, bool onlyThisPack) {
+	public List<AppContentAction> GetByTrackerCodeAndContentAppState(string trackerCode, string app_content_state, bool onlyThisPack) {
 		List<AppContentAction> filtered = new List<AppContentAction>();
 		
 		List<AppContentAction> currentSet;
@@ -489,7 +489,7 @@ public class AppContentActions : BaseAppContentActions<AppContentAction>
 		
 		
 		foreach(AppContentAction action in currentSet) {
-			if(CheckActionByAppContentState(action, appContentState) 
+			if(CheckActionByAppContentState(action, app_content_state) 
 				&& CheckActionByTrackerCode(action, trackerCode)) {
 				
 				if(!filtered.Contains(action) && action != null) {
@@ -504,73 +504,73 @@ public class AppContentActions : BaseAppContentActions<AppContentAction>
 	*/
 	
 	/*
-	public void ChangeState(AppState appStateTo) {
-		if(lastAppState != appStateTo) {
-			appState = appStateTo;
+	public void ChangeState(AppState app_stateTo) {
+		if(lastAppState != app_stateTo) {
+			app_state = app_stateTo;
 			HandleStateChange();
 		}
 	}
 	
 	public void HandleStateChange() {
-		if(appState == AppState.StateNotSet) {
+		if(app_state == AppState.StateNotSet) {
 			OnAppStateNotStarted();
 		}
-		else if(appState == AppState.StateBook) {
+		else if(app_state == AppState.StateBook) {
 			OnAppStateBooks();
 		}
-		else if(appState == AppState.StateCards) {
+		else if(app_state == AppState.StateCards) {
 			OnAppStateCards();
 		}
-		else if(appState == AppState.StateGames) {
+		else if(app_state == AppState.StateGames) {
 			OnAppStateGames();
 		}
 	}
 	
 	public void OnAppStateNotStarted() {
-		appState = AppState.StateNotSet;
+		app_state = AppState.StateNotSet;
 		appSubState = AppSubState.StateSubEnvironment;
 		
-		Messenger<AppState, AppSubState>.Broadcast(AppViewerAppControllerMessages.StateNotSet, appState, appSubState);
+		Messenger<AppState, AppSubState>.Broadcast(AppViewerAppControllerMessages.StateNotSet, app_state, appSubState);
 	}
 	
 	public void OnAppStateBooks() {
-		appState = AppState.StateBook;
+		app_state = AppState.StateBook;
 		appSubState = AppSubState.StateSubEnvironment;
 			
 		currentApp = new App();
 		currentApp.appCode = "default";
 		
-		Messenger<AppState, AppSubState>.Broadcast(AppViewerAppControllerMessages.StateBooks, appState, appSubState);
+		Messenger<AppState, AppSubState>.Broadcast(AppViewerAppControllerMessages.StateBooks, app_state, appSubState);
 	}
 	
 	public void OnAppStateCards() {
-		appState = AppState.StateCards;
+		app_state = AppState.StateCards;
 		appSubState = AppSubState.StateSubEnvironment;
 			
 		currentApp = new App();
 		currentApp.appCode = "default";
 		
-		Messenger<AppState, AppSubState>.Broadcast(AppViewerAppControllerMessages.StateCards, appState, appSubState);
+		Messenger<AppState, AppSubState>.Broadcast(AppViewerAppControllerMessages.StateCards, app_state, appSubState);
 	}
 	
 	public void OnAppStateGames() {
-		appState = AppState.StateCards;
+		app_state = AppState.StateCards;
 		appSubState = AppSubState.StateSubEnvironment;
 			
 		currentApp = new App();
 		currentApp.appCode = "default";
 		
-		Messenger<AppState, AppSubState>.Broadcast(AppViewerAppControllerMessages.StateGames, appState, appSubState);
+		Messenger<AppState, AppSubState>.Broadcast(AppViewerAppControllerMessages.StateGames, app_state, appSubState);
 	}
 	*/
 }
 
 public class AppContentActionAttributes {
-	public static string appStates = "appStates";
-	public static string appContentStates = "appContentStates";
+	public static string app_states = "app_states";
+	public static string app_content_states = "app_content_states";
 	public static string actionStates = "actionStates";
 	public static string appTrackers = "appTrackers";
-	public static string requiredAssets = "requiredAssets";
+	public static string required_assets = "required_assets";
 	public static string actionTypes = "actionTypes";
 }
 
@@ -703,10 +703,10 @@ public class AppContentSet : DataObjectItem {
 	
 	public string type = "";
 	public string actionType = "";
-	public List<string> appStates = new List<string>();
-	public List<string> appContentStates = new List<string>();
+	public List<string> app_states = new List<string>();
+	public List<string> app_content_states = new List<string>();
 	public List<string> appTrackers = new List<string>();
-	public List<string> requiredAssets = new List<string>();
+	public List<string> required_assets = new List<string>();
 	public List<string> actionStates = new List<string>();
 	public Vector3Data rotate = new Vector3Data();
 	public string actionAdvance = AppContentSetActionType.actionTap;
@@ -717,13 +717,13 @@ public class AppContentSet : DataObjectItem {
 	public string loadType = "default";
 	
 	public List<string> GetAppStates() {
-		return appStates;
+		return app_states;
 	}
 		
 	public string GetInitialAppState() {
 		List<string> states = new List<string>();
 		string initial = "";
-		states = appStates;
+		states = app_states;
 		if(states.Count > 0) {
 			initial = states[0];
 		}
@@ -732,13 +732,13 @@ public class AppContentSet : DataObjectItem {
 	}	
 	
 	public List<string> GetAppContentStates() {
-		return appContentStates;
+		return app_content_states;
 	}
 		
 	public string GetInitialAppContentState() {
 		List<string> contentStates = new List<string>();
 		string initial = "";
-		contentStates = appContentStates;
+		contentStates = app_content_states;
 		if(contentStates.Count > 0) {
 			initial = contentStates[0];
 		}
@@ -790,13 +790,13 @@ public class AppContentSet : DataObjectItem {
 	
 	
 	public List<string> GetActionStates() {
-		return appStates;
+		return app_states;
 	}
 		
 	public string GetInitialActionState() {
 		List<string> states = new List<string>();
 		string initial = "";
-		states = appStates;
+		states = app_states;
 		if(states.Count > 0) {
 			initial = states[0];
 		}
@@ -805,13 +805,13 @@ public class AppContentSet : DataObjectItem {
 	}
 	
 	public List<string> GetRequiredAssets() {
-		return requiredAssets;
+		return required_assets;
 	}
 	
 	public string GetInitialRequiredAsset() {
 		List<string> states = new List<string>();
 		string initial = "";
-		states = requiredAssets;
+		states = required_assets;
 		if(states.Count > 0) {
 			initial = states[0];
 		}
@@ -1291,10 +1291,10 @@ public class AppContentAction : BaseAppContentAction
 	public List<AppDataDisplay> content_data = new List<AppDataDisplay>();
 	public List<AppContentActionEvent> content_events = new List<AppContentActionEvent>();
 	
-    //  "appStates":["all"],
+    //  "app_states":["all"],
      // "actionStates":["all"],
      // "appTrackers":["rocket-kid"],
-    //  "requiredAssets":["shuttle"]
+    //  "required_assets":["shuttle"]
 	
 	// Attributes that are added or changed after launch should be like this to prevent
 	// profile conversions.
@@ -1357,14 +1357,14 @@ public class AppContentAction : BaseAppContentAction
 		return GetContentSet(AppStates.Current.code);
 	}
 	
-	public AppContentSet GetContentSet(string appState) {
-		if(!string.IsNullOrEmpty(appState)) {
+	public AppContentSet GetContentSet(string app_state) {
+		if(!string.IsNullOrEmpty(app_state)) {
 			if(content_sets != null) {
 				if(content_sets.Count > 0) {
 					
-					if(content_sets.ContainsKey(appState)) {
-						if(content_sets[appState] != null) {							
-							return content_sets[appState];
+					if(content_sets.ContainsKey(app_state)) {
+						if(content_sets[app_state] != null) {							
+							return content_sets[app_state];
 						}
 					}
 					else if(content_sets.ContainsKey("all")) {
@@ -1568,13 +1568,13 @@ public class AppContentAction : BaseAppContentAction
 	
 	/*
 	public List<string> GetAppStates() {
-		return GetContentSet(AppContentStates.Current.code)(AppContentActionAttributes.appStates);
+		return GetContentSet(AppContentStates.Current.code)(AppContentActionAttributes.app_states);
 	}
 		
 	public string GetInitialAppState() {
 		List<string> states = new List<string>();
 		string initial = "";
-		states = GetContentList(AppContentActionAttributes.appStates);
+		states = GetContentList(AppContentActionAttributes.app_states);
 		if(states.Count > 0) {
 			initial = states[0];
 		}
@@ -1583,13 +1583,13 @@ public class AppContentAction : BaseAppContentAction
 	}	
 	
 	public List<string> GetAppContentStates() {
-		return GetContentList(AppContentActionAttributes.appContentStates);
+		return GetContentList(AppContentActionAttributes.app_content_states);
 	}
 		
 	public string GetInitialAppContentState() {
 		List<string> states = new List<string>();
 		string initial = "";
-		states = GetContentList(AppContentActionAttributes.appContentStates);
+		states = GetContentList(AppContentActionAttributes.app_content_states);
 		if(states.Count > 0) {
 			initial = states[0];
 		}
@@ -1652,13 +1652,13 @@ public class AppContentAction : BaseAppContentAction
 	}
 	
 	public List<string> GetRequiredAssets() {
-		return GetContentList(AppContentActionAttributes.requiredAssets);
+		return GetContentList(AppContentActionAttributes.required_assets);
 	}
 	
 	public string GetInitialRequiredAsset() {
 		List<string> states = new List<string>();
 		string initial = "";
-		states = GetContentList(AppContentActionAttributes.requiredAssets);
+		states = GetContentList(AppContentActionAttributes.required_assets);
 		if(states.Count > 0) {
 			initial = states[0];
 		}
@@ -1668,17 +1668,17 @@ public class AppContentAction : BaseAppContentAction
 
 	
 	public List<string> GetRequiredPacks() {
-		List<string> requiredPacks = new List<string>();
-		object obj = GetAttributeObjectValue(AppContentActionAttributes.requiredPacks);
+		List<string> required_packs = new List<string>();
+		object obj = GetAttributeObjectValue(AppContentActionAttributes.required_packs);
 		if(obj != null) {
 			try {
-				requiredPacks = (List<string>)obj;
+				required_packs = (List<string>)obj;
 			}
 			catch (Exception e) {
 				//LogUtil.Log("Attribute object conversion error:" + e);
 			}
 		}
-		return requiredPacks;
+		return required_packs;
 	}
 	*/
 }

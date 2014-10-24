@@ -6,7 +6,6 @@ public class BaseGameCharacterPresets<T> : DataObjects<T> where T : DataObject, 
     private static T current;
     private static volatile BaseGameCharacterPresets<T> instance;
     private static object syncRoot = new Object();
-
     private string BASE_DATA_KEY = "game-character-preset-data";
 
     public static T BaseCurrent {
@@ -52,7 +51,6 @@ public class BaseGameCharacterPresets<T> : DataObjects<T> where T : DataObject, 
         LoadData();
     }
 }
-
 
 public class GameCharacterPresetItems : GamePresetItems<GameCharacterPresetItem> {
     

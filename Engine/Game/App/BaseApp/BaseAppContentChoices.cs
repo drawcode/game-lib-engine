@@ -7,7 +7,6 @@ public class BaseAppContentChoices<T> : DataObjects<T> where T : DataObject, new
     private static T current;
     private static volatile BaseAppContentChoices<T> instance;
     private static object syncRoot = new Object();
-
     private string BASE_DATA_KEY = "app-content-choice-data";
 
     public static T BaseCurrent {
@@ -42,7 +41,6 @@ public class BaseAppContentChoices<T> : DataObjects<T> where T : DataObject, new
         }
     }
 
-
     public BaseAppContentChoices() {
         Reset();
     }
@@ -55,15 +53,15 @@ public class BaseAppContentChoices<T> : DataObjects<T> where T : DataObject, new
     }
 
     public void ChangeState(string code) {
-        if(AppContentChoices.Current.code != code) {
+        if (AppContentChoices.Current.code != code) {
             AppContentChoices.Current = AppContentChoices.Instance.GetById(code);
         }
     }
 
     public List<AppContentChoice> GetListByCodeAndPackCode(string assetCode, string packCode) {
         List<AppContentChoice> filteredList = new List<AppContentChoice>();
-        foreach(AppContentChoice obj in AppContentChoices.Instance.GetListByPack(packCode)) {
-            if(assetCode.ToLower() == obj.code.ToLower()) {
+        foreach (AppContentChoice obj in AppContentChoices.Instance.GetListByPack(packCode)) {
+            if (assetCode.ToLower() == obj.code.ToLower()) {
                 filteredList.Add(obj);
             }
         }
@@ -82,14 +80,14 @@ public class BaseAppContentChoices<T> : DataObjects<T> where T : DataObject, new
     
         string file = "";
         AppContentChoice appContentAsset = AppContentChoices.Instance.GetById(asset);
-        if(appContentAsset != null) {
+        if (appContentAsset != null) {
             file = appContentAsset.code
-            + "."
-            + appContentAsset.GetVersionFileExt();
+                + "."
+                + appContentAsset.GetVersionFileExt();
         }
     
         string fullPath = PathUtil.Combine(packPathContent, file);
-        if(versioned) {
+        if (versioned) {
             fullPath = Contents.GetFullPathVersioned(fullPath);
         }
         return fullPath;
@@ -97,16 +95,16 @@ public class BaseAppContentChoices<T> : DataObjects<T> where T : DataObject, new
 
     public bool CheckChoiceUser(string code, List<AppContentChoiceItem> choices) {
 
-        if(choices == null) {
+        if (choices == null) {
             return false;
         }
 
-        if(choices.Count > 0) {
+        if (choices.Count > 0) {
             return false;
         }
 
-        foreach(AppContentChoiceItem item in choices) {
-            if(item.code.ToLower() == code.ToLower()) {
+        foreach (AppContentChoiceItem item in choices) {
+            if (item.code.ToLower() == code.ToLower()) {
                 return true;
             }
         }
@@ -115,25 +113,25 @@ public class BaseAppContentChoices<T> : DataObjects<T> where T : DataObject, new
 
     public bool CheckChoices(string choiceCode, List<AppContentChoiceItem> choices, bool correctOnly) {
 
-        if(choices == null) {
+        if (choices == null) {
             return false;
         }
 
-        if(choices.Count > 0) {
+        if (choices.Count > 0) {
             return false;
         }
 
         AppContentChoice choice = AppContentChoices.Instance.GetByCode(choiceCode);
-        if(choice != null) {
-            foreach(AppContentChoiceItem choiceItem in choice.choices) {
+        if (choice != null) {
+            foreach (AppContentChoiceItem choiceItem in choice.choices) {
 
-                if(correctOnly) {
-                    if(choiceItem.type != AppContentChoiceType.correct) {
+                if (correctOnly) {
+                    if (choiceItem.type != AppContentChoiceType.correct) {
                         return false;
                     }
                 }
 
-                if(!CheckChoiceUser(choiceItem.code, choices)) {
+                if (!CheckChoiceUser(choiceItem.code, choices)) {
                     return false;
                 }
             }
@@ -142,14 +140,13 @@ public class BaseAppContentChoices<T> : DataObjects<T> where T : DataObject, new
             return false;
         }
 
-        if(choices.Count == choice.choices.Count) {
+        if (choices.Count == choice.choices.Count) {
             return true;
         }
 
         return false;
     }
 }
-
 
 public class AppContentChoiceAttributes {
     public static string version_file_increment = "version_file_increment";
@@ -177,13 +174,10 @@ public class AppContentChoiceAttributesFileType {
 public class AppContentChoiceAttributesFileExt {
     public static string videoM4vExt = "m4v";
     public static string videoMp4Ext = "mp4";
-
     public static string audioMp3Ext = "mp3";
     public static string audioWavExt = "wav";
-
     public static string imagePngExt = "png";
     public static string imageJpgExt = "jpg";
-
     public static string assetBundleExt = "unity3d";
 }
 
@@ -231,7 +225,6 @@ public class AppContentChoiceType {
     public static string level = "level";
     public static string custom = "custom";
 }
-
 
 public class AppContentChoiceItemKeys {
     public static string code = "code";
@@ -357,8 +350,8 @@ public class AppContentChoicesData : DataObject {
 
         int correct = 0;
 
-        foreach(KeyValuePair<string, AppContentChoiceData> choiceData in choices) {
-            if(choiceData.Value.CheckChoices(true)) {
+        foreach (KeyValuePair<string, AppContentChoiceData> choiceData in choices) {
+            if (choiceData.Value.CheckChoices(true)) {
                 correct += 1;
             }
         }
@@ -379,7 +372,7 @@ public class AppContentChoicesData : DataObject {
     }
 
     public void CheckDicts() {
-        if(choices == null) {
+        if (choices == null) {
             choices = new Dictionary<string, AppContentChoiceData>();
         }
     }
@@ -393,7 +386,7 @@ public class AppContentChoicesData : DataObject {
     public AppContentChoiceData GetChoice(string code) {
         CheckDicts();
 
-        if(choices.ContainsKey(code)) {
+        if (choices.ContainsKey(code)) {
             return choices[code];
         }
 
@@ -401,13 +394,13 @@ public class AppContentChoicesData : DataObject {
     }
 
     public void SetChoice(AppContentChoiceData choiceData) {
-        if(choiceData == null) {
+        if (choiceData == null) {
             return;
         }
 
         CheckDicts();
 
-        if(choices.ContainsKey(choiceData.choiceCode)) {
+        if (choices.ContainsKey(choiceData.choiceCode)) {
             choices[choiceData.choiceCode] = choiceData;
         }
         else {
@@ -476,8 +469,8 @@ public class AppContentChoiceData : DataObject {
     }
 
     public AppContentChoiceItem GetChoice(string choiceCode) {
-        foreach(AppContentChoiceItem item in choices) {
-            if(choiceCode == item.code) {
+        foreach (AppContentChoiceItem item in choices) {
+            if (choiceCode == item.code) {
                 return item;
             }
         }
@@ -485,8 +478,8 @@ public class AppContentChoiceData : DataObject {
     }
 
     public bool HasChoice(AppContentChoiceItem choiceItem) {
-        foreach(AppContentChoiceItem item in choices) {
-            if(item.code == choiceItem.code
+        foreach (AppContentChoiceItem item in choices) {
+            if (item.code == choiceItem.code
                 && item.type == choiceItem.type) {
                 return true;
             }
@@ -495,8 +488,8 @@ public class AppContentChoiceData : DataObject {
     }
 
     public void SetChoice(AppContentChoiceItem choiceItem) {
-        if(HasChoice(choiceItem)) {
-            for(int i = 0; i < choices.Count; i++) {
+        if (HasChoice(choiceItem)) {
+            for (int i = 0; i < choices.Count; i++) {
                 choices[i] = choiceItem;
             }
         }
@@ -508,75 +501,15 @@ public class AppContentChoiceData : DataObject {
 
 public class BaseAppContentChoiceKeys {
     public static string tags = "tags";
-    public static string appStates = "appStates";
-    public static string appContentStates = "appContentStates";
-    public static string requiredAssets = "requiredAssets";
+    public static string app_states = "app_states";
+    public static string app_content_states = "app_content_states";
+    public static string required_assets = "required_assets";
     public static string keys = "keys";
-    public static string contentAttributes = "contentAttributes";
+    public static string content_attributes = "content_attributes";
     public static string choices = "choices";
 }
 
 public class BaseAppContentChoice : GameDataObject {    
-    
-    public virtual List<string> tags {
-        get {
-            return Get<List<string>>(BaseAppContentChoiceKeys.tags);
-        }
-        
-        set {
-            Set(BaseAppContentChoiceKeys.tags, value);
-        }
-    }
-    
-    public virtual List<string> appStates {
-        get {
-            return Get<List<string>>(BaseAppContentChoiceKeys.appStates);
-        }
-        
-        set {
-            Set(BaseAppContentChoiceKeys.appStates, value);
-        }
-    }
-    
-    public virtual List<string> appContentStates {
-        get {
-            return Get<List<string>>(BaseAppContentChoiceKeys.appContentStates);
-        }
-        
-        set {
-            Set(BaseAppContentChoiceKeys.appContentStates, value);
-        }
-    }
-
-    public virtual Dictionary<string, List<string>> requiredAssets {
-        get {
-            return Get<Dictionary<string, List<string>>>(BaseAppContentChoiceKeys.requiredAssets);
-        }
-        
-        set {
-            Set(BaseAppContentChoiceKeys.requiredAssets, value);
-        }
-    }
-
-    public virtual List<string> keys {
-        get {
-            return Get<List<string>>(BaseAppContentChoiceKeys.keys);
-        }
-        
-        set {
-            Set(BaseAppContentChoiceKeys.keys, value);
-        }
-    }
-
-    public virtual Dictionary<string, string> contentAttributes {
-        get {
-            return Get<Dictionary<string, string>>(BaseAppContentChoiceKeys.contentAttributes);
-        }
-        
-        set {
-            Set(BaseAppContentChoiceKeys.contentAttributes, value);
-        }
-    }
 
     public virtual List<AppContentChoiceItem> choices {
         get {
@@ -599,17 +532,17 @@ public class BaseAppContentChoice : GameDataObject {
 
     public override void Reset() {
         base.Reset();
-        appStates = new List<string>();
-        appContentStates = new List<string>();
-        requiredAssets = new Dictionary<string, List<string>>();
+        app_states = new List<string>();
+        app_content_states = new List<string>();
+        required_assets = new Dictionary<string, List<string>>();
         keys = new List<string>();
-        contentAttributes = new Dictionary<string, string>();
+        content_attributes = new Dictionary<string, object>();
         choices = new List<AppContentChoiceItem>();
     }
 
     public bool HasTypeCorrect() {
-        foreach(AppContentChoiceItem item in choices) {
-            if(item.type.ToLower() == AppContentChoiceType.correct) {
+        foreach (AppContentChoiceItem item in choices) {
+            if (item.type.ToLower() == AppContentChoiceType.correct) {
                 return true;
             }
         }
@@ -618,8 +551,8 @@ public class BaseAppContentChoice : GameDataObject {
 
     public bool HasTypeCorrectMultiple() {
         int answers = 0;
-        foreach(AppContentChoiceItem item in choices) {
-            if(item.type.ToLower() == AppContentChoiceType.correct) {
+        foreach (AppContentChoiceItem item in choices) {
+            if (item.type.ToLower() == AppContentChoiceType.correct) {
                 answers += 1;
             }
         }
@@ -628,8 +561,8 @@ public class BaseAppContentChoice : GameDataObject {
  
     public string GetContentString(string key) {
         string content = "";
-        if(contentAttributes.ContainsKey(key)) {
-            content = contentAttributes[key];
+        if (content_attributes.ContainsKey(key)) {
+            content = content_attributes[key].ToString();
         }
         return content;
     }
@@ -648,7 +581,7 @@ public class BaseAppContentChoice : GameDataObject {
     
     public string GetVersionType() {
         return GetContentString(AppContentChoiceAttributes.version_type);
-    }   
+    }
     
     public string GetVersionFileType() {
         return GetContentString(AppContentChoiceAttributes.version_file_type);

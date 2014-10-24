@@ -6,7 +6,6 @@ public class BaseAppContentAssetMaterials<T> : DataObjects<T> where T : DataObje
     private static T current;
     private static volatile BaseAppContentAssetMaterials<T> instance;
     private static object syncRoot = new Object();
-
     private string BASE_DATA_KEY = "app-content-asset-material-data";
 
     public static T BaseCurrent {

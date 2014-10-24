@@ -16,6 +16,8 @@ public class BaseDataObjectKeys {
     public static string data_type = "data_type";
     public static string description = "description";
     public static string display_name = "display_name";
+    public static string action_description = "action_description";
+    public static string action_display_name = "action_display_name";
     public static string attributes = "attributes";
     public static string url = "url";
     public static string path = "path";
@@ -26,14 +28,12 @@ public class BaseDataObjectKeys {
     public static string file = "file";
     public static string files = "files";
     public static string host = "host";
-    public static string data = "data"; 
-    
+    public static string data = "data";
     public static string strings = "strings";
     public static string images = "images";
-
-    public static string info = "info";  
-    public static string error = "error";  
-    public static string datatype = "datatype";  
+    public static string info = "info";
+    public static string error = "error";
+    public static string datatype = "datatype";
     public static string direction = "direction";
     public static string network_id = "network_id";
     public static string network_username = "network_username";
@@ -46,29 +46,23 @@ public class BaseDataObjectKeys {
     public static string network_items = "network_items";
     public static string network = "network";
     public static string networks = "networks";
-    
     public static string world_data = "world_data";
     public static string world_code = "world_code";
     public static string world_type = "world_type";
     public static string world_items = "world_items";
-
     public static string mission_data = "mission_data";
     public static string mission_code = "mission_code";
     public static string mission_type = "mission_type";
     public static string mission_items = "mission_items";
-    
     public static string collection_data = "collection_data";
     public static string collection_code = "collection_code";
     public static string collection_type = "collection_type";
     public static string collection_items = "collection_items";
-    
     public static string choice_data = "choice_data";
     public static string choice_code = "choice_code";
     public static string choice_type = "choice_type";
     public static string choice_items = "choice_items";
-    
     public static string broadcast_networks_record_levels = "broadcast_networks_record_levels";
-
     public static string data_platform = "data_platform";
     public static string sort_order = "sort_order";
     public static string sort_order_type = "sort_order_type";
@@ -94,13 +88,11 @@ public class BaseDataObjectKeys {
     public static string date_created = "date_created";
     public static string date_modified = "date_modified";
     public static string email = "email";
-        
     public static string username = "username";
     public static string udid = "udid";
     public static string file_name = "file_name";
     public static string file_path = "file_path";
     public static string file_full_path = "file_full_path";
-
     public static string keys = "keys";
     public static string properties = "properties";
     public static string types = "types";
@@ -112,8 +104,6 @@ public class BaseDataObjectKeys {
     public static string character_skin_variation = "character_skin_variation";
     public static string character_data = "character_data";
     public static string character_items = "character_items";
-
-    
     public static string social_data = "social_data";
     public static string social_items = "social_items";
 
@@ -153,23 +143,18 @@ public class BaseDataObjectKeys {
     public static string custom_materials = "custom_materials";
     public static string custom_textures = "custom_textures";
     public static string custom_models = "custom_models";
-
     public static string current_texture_preset = "current_texture_preset";
     public static string current_color_preset = "current_color_preset";
     public static string color_presets = "color_presets";
     public static string texture_presets = "texture_presets";
     public static string item_presets = "item_presets";
     public static string terrain_presets = "terrain_presets";
-
     public static string model = "model";
     public static string models = "models";
-
     public static string presets = "presets";
     public static string roles = "roles";
-    
     public static string sound = "sound";
     public static string sounds = "sounds";
-    
     public static string animation = "animation";
     public static string animations = "animations";
     public static string animator = "animator";
@@ -178,10 +163,8 @@ public class BaseDataObjectKeys {
     public static string play_type = "play_type";
     public static string play_delay = "play_delay";
     public static string layer = "layer";
-    
     public static string projectile = "projectile";
     public static string projectiles = "projectiles";
-    
     public static string effect = "effect";
     public static string effects = "effects";
 
@@ -189,19 +172,14 @@ public class BaseDataObjectKeys {
 
     public static string color = "color";
     public static string colors = "colors";
-
     public static string asset = "asset";
     public static string assets = "assets";
-        
     public static string val = "val";
     public static string vals = "vals";
-    
     public static string last_update = "last_update";
     public static string modifier = "modifier";
-
     public static string texture = "texture";
     public static string textures = "textures";
-
     public static string material = "material";
     public static string materials = "materials";
 
@@ -209,10 +187,8 @@ public class BaseDataObjectKeys {
     
     public static string rpg = "rpg";
     public static string rpgs = "rpgs";
-        
     public static string reward = "reward";
     public static string rewards = "rewards";
-    
     public static string duration = "duration";
     public static string limit = "limit";
     public static string max = "max";
@@ -239,10 +215,12 @@ public class BaseDataObjectKeys {
     // content
     
     public static string tags = "tags";
-    public static string appStates = "appStates";
-    public static string appContentStates = "appContentStates";
-    public static string requiredAssets = "requiredAssets";
-    public static string contentAttributes = "contentAttributes";
+    public static string app_states = "app_states";
+    public static string app_content_states = "app_content_states";
+    public static string required_assets = "required_assets";
+    public static string required_packs = "required_packs";
+    public static string required_trackers = "required_trackers";
+    public static string content_attributes = "content_attributes";
     public static string choices = "choices";
 
     // missions
@@ -257,19 +235,16 @@ public class BaseDataObjectKeys {
     public static string pack = "pack";
     public static string tracker = "tracker";
     public static string action = "action";
-    public static string appState = "appState";
-    public static string appContentState = "appContentState";
+    public static string app_state = "app_state";
+    public static string app_content_state = "app_content_state";
     public static string custom = "custom";
     public static string codes = "codes";
-    
     public static string codeType = "codeType";
     public static string compareType = "compareType";
     public static string compareValue = "compareValue";
     public static string includeKeys = "includeKeys";
-    
     public static string codeCompareTo = "codeCompareTo";
     public static string codeLike = "codeLike";
-
     public static string points = "points";
     public static string leaderboard = "leaderboard";
     public static string game_stat = "game_stat";
@@ -403,7 +378,6 @@ public class BaseDataObject : Dictionary<string, object> {
         return dataValue;
     }
 
-
     public string LoadDataFromResources(string path) {
 
         string dataValue = "";
@@ -490,7 +464,7 @@ public class BaseDataObject : Dictionary<string, object> {
         
         bool hasGet = false;
 
-        if(obj == null) {
+        if (obj == null) {
             return obj;
         }
         
@@ -515,7 +489,7 @@ public class BaseDataObject : Dictionary<string, object> {
         
         //bool hasSet = false;
                 
-        if(obj == null) {
+        if (obj == null) {
             return;
         }
         
@@ -701,11 +675,11 @@ public class BaseDataObject : Dictionary<string, object> {
 
     public T GetAttributeObjectValue<T>(string code) {
         object objectValue = GetAttribute(code).val;
-        if(objectValue != null) {
+        if (objectValue != null) {
             try {
                 return (T)objectValue;
             }
-            catch(Exception e) {
+            catch (Exception e) {
                 LogUtil.Log(e);
                 LogUtil.Log("ERROR:GetAttributeObjectValue:code:" + code);
             }

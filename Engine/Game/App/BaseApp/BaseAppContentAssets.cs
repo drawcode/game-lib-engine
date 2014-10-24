@@ -230,43 +230,12 @@ public class AppContentAssetAttributesFileExt {
 }
 
 public class BaseAppContentAssetKeys {
-    public static string appStates = "appStates";
-    public static string appContentStates = "appContentStates";
-    public static string requiredAssets = "requiredAssets";
+    public static string app_states = "app_states";
+    public static string app_content_states = "app_content_states";
+    public static string required_assets = "required_assets";
 }
 
 public class BaseAppContentAsset : GameDataObject {
-
-    public virtual List<string> appStates {
-        get {
-            return Get<List<string>>(BaseAppContentAssetKeys.appStates);
-        }
-        
-        set {
-            Set(BaseAppContentAssetKeys.appStates, value);
-        }
-    }
-
-    public virtual List<string> appContentStates {
-        get {
-            return Get<List<string>>(BaseAppContentAssetKeys.appContentStates);
-        }
-        
-        set {
-            Set(BaseAppContentAssetKeys.appContentStates, value);
-        }
-    }
-
-    public virtual Dictionary<string, List<string>> requiredAssets {
-        get {
-            return Get<Dictionary<string, List<string>>>(BaseAppContentAssetKeys.requiredAssets);
-        }
-        
-        set {
-            Set(BaseAppContentAssetKeys.requiredAssets, value);
-        }
-    }
-
     // types: tracker, pack, data, generic
 
     // Attributes that are added or changed after launch should be like this to prevent
@@ -278,8 +247,8 @@ public class BaseAppContentAsset : GameDataObject {
 
     public override void Reset() {
         base.Reset();
-        appStates = new List<string>();
-        appContentStates = new List<string>();
-        requiredAssets = new Dictionary<string, List<string>>();
+        app_states = new List<string>();
+        app_content_states = new List<string>();
+        required_assets = new Dictionary<string, List<string>>();
     }
 }

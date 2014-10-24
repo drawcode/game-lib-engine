@@ -39,6 +39,5 @@ public static class ObjectExtensions {
     public static object FromJson(this string inst) {
         return Engine.Data.Json.JsonMapper.ToObject<object>(inst);
     }
-    
-    
+
 }

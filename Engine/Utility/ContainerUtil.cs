@@ -22,7 +22,7 @@ public class Destroyer : GameObjectBehavior {
 public static class Containers {
 
     public static void Store<T>(string name, T val) {
-        foreach (var obj in ObjectUtil.FindObjects<GameObject>()) {
+        foreach (var obj in UnityObjectUtil.FindObjects<GameObject>()) {
             if ((obj.name == name + " Container"
                || obj.name == name + " Container (Clone)")
                && obj.GetComponent<Container>() != null) {
@@ -37,7 +37,7 @@ public static class Containers {
 
     public static T Retrieve<T>(string name)
         where T : class {
-        foreach (var obj in ObjectUtil.FindObjects<GameObject>()) {
+        foreach (var obj in UnityObjectUtil.FindObjects<GameObject>()) {
             if ((obj.name == name + " Container"
                || obj.name == name + " Container (Clone)")
                && obj.GetComponent<Container>() != null) {

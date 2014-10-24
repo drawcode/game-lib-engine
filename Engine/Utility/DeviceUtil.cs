@@ -9,7 +9,7 @@ public class DeviceUtil : GameObjectBehavior {
     private static DeviceUtil Instance {
         get {
             if (instance == null) {
-                instance = ObjectUtil.FindObject<DeviceUtil>();
+                instance = UnityObjectUtil.FindObject<DeviceUtil>();
                 if (instance == null) {
                     instance =
                         new GameObject("DeviceUtil", typeof(DeviceUtil))

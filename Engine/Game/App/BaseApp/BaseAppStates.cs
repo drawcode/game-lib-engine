@@ -4,7 +4,7 @@ using System.IO;
 
 public class BaseAppStateMeta {
     //public static string appModeTypeGameDefault = "app-mode-game-default";
-    public static string appStateGame = "app-state-game";
+    public static string app_stateGame = "app-state-game";
 }
 
 public class BaseAppStates<T> : DataObjects<T> where T : DataObject, new() {
@@ -59,7 +59,7 @@ public class BaseAppStates<T> : DataObjects<T> where T : DataObject, new() {
 
     public bool isAppStateGame {
         get {
-            return IsAppState(AppStateMeta.appStateGame);
+            return IsAppState(AppStateMeta.app_stateGame);
         }
     }
 
@@ -74,10 +74,10 @@ public class BaseAppStates<T> : DataObjects<T> where T : DataObject, new() {
 
         if(AppStates.Current.code != code) {
 
-            AppState appState = AppStates.Instance.GetByCode(code);
+            AppState app_state = AppStates.Instance.GetByCode(code);
 
-            if(appState != null) {
-                AppStates.Current = appState;
+            if(app_state != null) {
+                AppStates.Current = app_state;
 
                 GameProfiles.Current.SetCurrentAppState(code);
 

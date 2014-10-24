@@ -9,7 +9,7 @@ public class CoroutineUtil : GameObjectBehavior {
     private static CoroutineUtil Instance {
         get {
             if (instance == null) {
-                instance = ObjectUtil.FindObject<CoroutineUtil>();
+                instance = UnityObjectUtil.FindObject<CoroutineUtil>();
                 if (instance == null) {
                     instance =
                         new GameObject("_CoroutineUtil", typeof(CoroutineUtil))

@@ -6,7 +6,6 @@ public class BaseARDataSetTrackers<T> : DataObjects<T> where T : DataObject, new
     private static T current;
     private static volatile BaseARDataSetTrackers<T> instance;
     private static object syncRoot = new Object();
-
     private string BASE_DATA_KEY = "ar-data-tracker-data";
 
     public static T BaseCurrent {

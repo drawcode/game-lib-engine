@@ -62,31 +62,7 @@ public class AppContentAssetCustomItemProperty : GameDataObject {
     //public List<string> types = new List<string>();
     //public string code = "";
 
-    public virtual List<string> types {
-        get {
-            return Get<List<string>>(BaseDataObjectKeys.types);
-        }
-        
-        set {
-            Set<List<string>>(BaseDataObjectKeys.types, value);
-        }
-    }  
-
-    public bool IsType(string type) {
-        if(types.Contains(type)) {
-            return true;
-        }
-        return false;
-    }
-
-    public bool IsTypeTexture() {
-        return IsType("texture");
-    }
-    
-    public bool IsTypeColor() {
-        return IsType("color");
-    }
-
+  
 }
 
 public class AppContentAssetCustomItemData : GameDataObject {

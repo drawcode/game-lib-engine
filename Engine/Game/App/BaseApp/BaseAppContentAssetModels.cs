@@ -8,7 +8,6 @@ public class BaseAppContentAssetModels<T> : DataObjects<T> where T : DataObject,
     private static T current;
     private static volatile BaseAppContentAssetModels<T> instance;
     private static System.Object syncRoot = new System.Object();
-
     private string BASE_DATA_KEY = "app-content-asset-model-data";
 
     public static T BaseCurrent {
@@ -56,7 +55,7 @@ public class BaseAppContentAssetModels<T> : DataObjects<T> where T : DataObject,
 
     public static GameObject LoadModel(string code) {
         AppContentAssetModel model = AppContentAssetModels.Instance.GetByCode(code);
-        if(model != null) {
+        if (model != null) {
             string assetCode = model.asset;
             return AppContentAssets.LoadAsset(assetCode);
         }
@@ -65,7 +64,7 @@ public class BaseAppContentAssetModels<T> : DataObjects<T> where T : DataObject,
     
     public static GameObject LoadPrefab(string code) {
         AppContentAssetModel model = AppContentAssetModels.Instance.GetByCode(code);
-        if(model != null) {
+        if (model != null) {
             string assetCode = model.asset;
             return AppContentAssets.LoadAssetPrefab(assetCode);
         }
@@ -111,14 +110,13 @@ public class BaseAppContentAssetModel : GameDataObject {
         base.Clone(toCopy);
     }
     
-    
     public GameObject LoadModel() {
         return AppContentAssetModels.LoadModel(code);
     }
 
     public virtual List<AppContentAssetCustomItemProperty> GetCustomMaterials() {
         return custom_materials;
-    }    
+    }
     
     public virtual AppContentAssetCustomItem GetCustomItems() {
         return AppContentAssetCustomItems.Instance.GetByCode(custom_items);

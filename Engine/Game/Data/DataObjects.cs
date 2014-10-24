@@ -757,6 +757,19 @@ public class DataObjects<T> where T : DataObject, new() {
         return GetList("type", val);
     }
  
+    //
+    //  
+        
+    public List<T> GetList(Predicate<T> match) {
+        return items.FindAll(match);
+    }
+
+    public List<T> GetList(List<T> fromList, Predicate<T> match) {
+        return fromList.FindAll(match);
+    }
+
+    //
+
     public List<T> SortList() {
         if (items == null) {
             return null;

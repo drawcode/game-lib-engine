@@ -115,72 +115,69 @@ public class AppContentAssets : BaseAppContentAssets<AppContentAsset> {
     
         
     /*
-    public void ChangeState(AppState appStateTo) {
-        if(lastAppState != appStateTo) {
-            appState = appStateTo;
+    public void ChangeState(AppState app_stateTo) {
+        if(lastAppState != app_stateTo) {
+            app_state = app_stateTo;
             HandleStateChange();
         }
     }
     
     public void HandleStateChange() {
-        if(appState == AppState.StateNotSet) {
+        if(app_state == AppState.StateNotSet) {
             OnAppStateNotStarted();
         }
-        else if(appState == AppState.StateBook) {
+        else if(app_state == AppState.StateBook) {
             OnAppStateBooks();
         }
-        else if(appState == AppState.StateCards) {
+        else if(app_state == AppState.StateCards) {
             OnAppStateCards();
         }
-        else if(appState == AppState.StateGames) {
+        else if(app_state == AppState.StateGames) {
             OnAppStateGames();
         }
     }
     
     public void OnAppStateNotStarted() {
-        appState = AppState.StateNotSet;
+        app_state = AppState.StateNotSet;
         appSubState = AppSubState.StateSubEnvironment;
         
-        Messenger<AppState, AppSubState>.Broadcast(AppViewerAppControllerMessages.StateNotSet, appState, appSubState);
+        Messenger<AppState, AppSubState>.Broadcast(AppViewerAppControllerMessages.StateNotSet, app_state, appSubState);
     }
     
     public void OnAppStateBooks() {
-        appState = AppState.StateBook;
+        app_state = AppState.StateBook;
         appSubState = AppSubState.StateSubEnvironment;
             
         currentApp = new App();
         currentApp.appCode = "default";
         
-        Messenger<AppState, AppSubState>.Broadcast(AppViewerAppControllerMessages.StateBooks, appState, appSubState);
+        Messenger<AppState, AppSubState>.Broadcast(AppViewerAppControllerMessages.StateBooks, app_state, appSubState);
     }
     
     public void OnAppStateCards() {
-        appState = AppState.StateCards;
+        app_state = AppState.StateCards;
         appSubState = AppSubState.StateSubEnvironment;
             
         currentApp = new App();
         currentApp.appCode = "default";
         
-        Messenger<AppState, AppSubState>.Broadcast(AppViewerAppControllerMessages.StateCards, appState, appSubState);
+        Messenger<AppState, AppSubState>.Broadcast(AppViewerAppControllerMessages.StateCards, app_state, appSubState);
     }
     
     public void OnAppStateGames() {
-        appState = AppState.StateCards;
+        app_state = AppState.StateCards;
         appSubState = AppSubState.StateSubEnvironment;
             
         currentApp = new App();
         currentApp.appCode = "default";
         
-        Messenger<AppState, AppSubState>.Broadcast(AppViewerAppControllerMessages.StateGames, appState, appSubState);
+        Messenger<AppState, AppSubState>.Broadcast(AppViewerAppControllerMessages.StateGames, app_state, appSubState);
     }
     */
 }
 
 public class AppContentAsset : BaseAppContentAsset {
-    
-    public List<string> keys;
-    public Dictionary<string, string> content_attributes;   
-    
+
     // Attributes that are added or changed after launch should be like this to prevent
     // profile conversions.
             
@@ -191,13 +188,13 @@ public class AppContentAsset : BaseAppContentAsset {
     public override void Reset() {
         base.Reset();
         keys = new List<string>();
-        content_attributes = new Dictionary<string, string>();
+        content_attributes = new Dictionary<string, object>();
     }
     
     public string GetContentString(string key) {
         string content = "";
         if (content_attributes.ContainsKey(key)) {
-            content = content_attributes[key];
+            content = content_attributes[key].ToString();
         }
         return content;
     }

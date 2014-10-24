@@ -93,7 +93,7 @@ public class BaseGameAudio2 {
 
     //var onSuccess = new Action<AudioClip>( clip =>
     //{
-    //	AudioSystem.Instance.PlayAudioClipOneShot(clip);
+    //  AudioSystem.Instance.PlayAudioClipOneShot(clip);
     //});
 
     public bool CheckIfEffectHasCustom(string audioEffectName) {
@@ -157,28 +157,28 @@ public class BaseGameAudio2 {
                     GetCurrentVolumeAdjust(2f));
 
                 //GameAudio.PlayDefaultEffect(CustomPlayerAudioKeys.audioBikeBoosting,
-                //	(float)GameProfiles.Current.GetAudioEffectsVolume()*.3f);
+                //  (float)GameProfiles.Current.GetAudioEffectsVolume()*.3f);
             }
             else if (audioEffectName.ToLower() == CustomPlayerAudioKeys.audioBikeRacing.ToLower()) {
                 BaseGameAudioRecorder.Instance.Play(GetFileName(CustomPlayerAudioKeys.audioBikeRacing),
                     GetCurrentVolumeAdjust(2f));
 
                 //GameAudio.PlayDefaultEffect(CustomPlayerAudioKeys.audioBikeRacing,
-                //	(float)GameProfiles.Current.GetAudioEffectsVolume()*.3f);
+                //  (float)GameProfiles.Current.GetAudioEffectsVolume()*.3f);
             }
             else if (audioEffectName.ToLower() == CustomPlayerAudioKeys.audioBikeRevving.ToLower()) {
                 BaseGameAudioRecorder.Instance.Play(GetFileName(CustomPlayerAudioKeys.audioBikeRevving),
                     GetCurrentVolumeAdjust(2f));
 
                 //GameAudio.PlayDefaultEffect(CustomPlayerAudioKeys.audioBikeRevving,
-                //	(float)GameProfiles.Current.GetAudioEffectsVolume()*.3f);
+                //  (float)GameProfiles.Current.GetAudioEffectsVolume()*.3f);
             }
             else if (audioEffectName.ToLower() == CustomPlayerAudioKeys.audioCrowdBoo.ToLower()) {
                 BaseGameAudioRecorder.Instance.Play(GetFileName(CustomPlayerAudioKeys.audioCrowdBoo),
                     GetCurrentVolumeAdjust(2f));
 
                 //GameAudio.PlayDefaultEffect(CustomPlayerAudioKeys.audioCrowdBoo,
-                //	(float)GameProfiles.Current.GetAudioEffectsVolume()*.3f);
+                //  (float)GameProfiles.Current.GetAudioEffectsVolume()*.3f);
             }
             else if (audioEffectName.ToLower() == CustomPlayerAudioKeys.audioCrowdCheer.ToLower()) {
                 BaseGameAudioRecorder.Instance.Play(GetFileName(CustomPlayerAudioKeys.audioCrowdCheer),
@@ -191,7 +191,7 @@ public class BaseGameAudio2 {
                     GetCurrentVolumeAdjust(2f));
 
                 //GameAudio.PlayDefaultEffect(CustomPlayerAudioKeys.audioCrowdJump,
-                //	(float)GameProfiles.Current.GetAudioEffectsVolume()*.3f);
+                //  (float)GameProfiles.Current.GetAudioEffectsVolume()*.3f);
             }
         }
         else {

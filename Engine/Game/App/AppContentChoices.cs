@@ -62,63 +62,63 @@ public class AppContentChoices : BaseAppContentChoices<AppContentChoice>
 	}
 		
 	/*
-	public void ChangeState(AppState appStateTo) {
-		if(lastAppState != appStateTo) {
-			appState = appStateTo;
+	public void ChangeState(AppState app_stateTo) {
+		if(lastAppState != app_stateTo) {
+			app_state = app_stateTo;
 			HandleStateChange();
 		}
 	}
 	
 	public void HandleStateChange() {
-		if(appState == AppState.StateNotSet) {
+		if(app_state == AppState.StateNotSet) {
 			OnAppStateNotStarted();
 		}
-		else if(appState == AppState.StateBook) {
+		else if(app_state == AppState.StateBook) {
 			OnAppStateBooks();
 		}
-		else if(appState == AppState.StateCards) {
+		else if(app_state == AppState.StateCards) {
 			OnAppStateCards();
 		}
-		else if(appState == AppState.StateGames) {
+		else if(app_state == AppState.StateGames) {
 			OnAppStateGames();
 		}
 	}
 	
 	public void OnAppStateNotStarted() {
-		appState = AppState.StateNotSet;
+		app_state = AppState.StateNotSet;
 		appSubState = AppSubState.StateSubEnvironment;
 		
-		Messenger<AppState, AppSubState>.Broadcast(AppViewerAppControllerMessages.StateNotSet, appState, appSubState);
+		Messenger<AppState, AppSubState>.Broadcast(AppViewerAppControllerMessages.StateNotSet, app_state, appSubState);
 	}
 	
 	public void OnAppStateBooks() {
-		appState = AppState.StateBook;
+		app_state = AppState.StateBook;
 		appSubState = AppSubState.StateSubEnvironment;
 			
 		currentApp = new App();
 		currentApp.appCode = "default";
 		
-		Messenger<AppState, AppSubState>.Broadcast(AppViewerAppControllerMessages.StateBooks, appState, appSubState);
+		Messenger<AppState, AppSubState>.Broadcast(AppViewerAppControllerMessages.StateBooks, app_state, appSubState);
 	}
 	
 	public void OnAppStateCards() {
-		appState = AppState.StateCards;
+		app_state = AppState.StateCards;
 		appSubState = AppSubState.StateSubEnvironment;
 			
 		currentApp = new App();
 		currentApp.appCode = "default";
 		
-		Messenger<AppState, AppSubState>.Broadcast(AppViewerAppControllerMessages.StateCards, appState, appSubState);
+		Messenger<AppState, AppSubState>.Broadcast(AppViewerAppControllerMessages.StateCards, app_state, appSubState);
 	}
 	
 	public void OnAppStateGames() {
-		appState = AppState.StateCards;
+		app_state = AppState.StateCards;
 		appSubState = AppSubState.StateSubEnvironment;
 			
 		currentApp = new App();
 		currentApp.appCode = "default";
 		
-		Messenger<AppState, AppSubState>.Broadcast(AppViewerAppControllerMessages.StateGames, appState, appSubState);
+		Messenger<AppState, AppSubState>.Broadcast(AppViewerAppControllerMessages.StateGames, app_state, appSubState);
 	}
 	*/
 }

@@ -7,7 +7,6 @@ public class BaseAppContentTips<T> : DataObjects<T> where T : DataObject, new() 
     private static T current;
     private static volatile BaseAppContentTips<T> instance;
     private static object syncRoot = new Object();
-
     private string BASE_DATA_KEY = "app-content-tip-data";
 
     public static T BaseCurrent {
@@ -42,7 +41,6 @@ public class BaseAppContentTips<T> : DataObjects<T> where T : DataObject, new() 
         }
     }
 
-
     public BaseAppContentTips() {
         Reset();
     }
@@ -55,15 +53,15 @@ public class BaseAppContentTips<T> : DataObjects<T> where T : DataObject, new() 
     }
 
     public void ChangeState(string code) {
-        if(AppContentTips.Current.code != code) {
+        if (AppContentTips.Current.code != code) {
             AppContentTips.Current = AppContentTips.Instance.GetById(code);
         }
     }
 
     public List<AppContentTip> GetListByCodeAndPackCode(string assetCode, string packCode) {
         List<AppContentTip> filteredList = new List<AppContentTip>();
-        foreach(AppContentTip obj in AppContentTips.Instance.GetListByPack(packCode)) {
-            if(assetCode.ToLower() == obj.code.ToLower()) {
+        foreach (AppContentTip obj in AppContentTips.Instance.GetListByPack(packCode)) {
+            if (assetCode.ToLower() == obj.code.ToLower()) {
                 filteredList.Add(obj);
             }
         }
@@ -73,26 +71,6 @@ public class BaseAppContentTips<T> : DataObjects<T> where T : DataObject, new() 
 }
 
 public class BaseAppContentTip : GameDataObject {    
-    
-    public virtual List<string> tags {
-        get {
-            return Get<List<string>>(BaseDataObjectKeys.tags);
-        }
-        
-        set {
-            Set(BaseDataObjectKeys.tags, value);
-        }
-    }
-
-    public virtual List<string> keys {
-        get {
-            return Get<List<string>>(BaseDataObjectKeys.keys);
-        }
-        
-        set {
-            Set(BaseDataObjectKeys.keys, value);
-        }
-    }
 
     public BaseAppContentTip() {
         Reset();

@@ -18,26 +18,25 @@ app-content-state-game-training-tips
 
 public class BaseAppContentStateMeta {
     //public static string appModeTypeGameDefault = "app-mode-game-default";
-    public static string appContentStateGameArcade = "app-content-state-game-arcade";
-    public static string appContentStateGameChallenge = "app-content-state-game-challenge";
-    public static string appContentStateGameMissions = "app-content-state-game-missions";
-    public static string appContentStateGameCoop = "app-content-state-game-coop";
-    public static string appContentStateGameMultiplayerCoop = "app-content-state-game-mulitiplayer-coop";
-    public static string appContentStateGameMultiplayerMatchup = "app-content-state-game-mulitiplayer-matchup";
-    public static string appContentStateGameMultiplayer = "app-content-state-game-mulitiplayer";
-    public static string appContentStateGameMatchup = "app-content-state-game-matchup";
-    public static string appContentStateGameTraining = "app-content-state-game-training";
-    public static string appContentStateGameTrainingChoice = "app-content-state-game-training-choice";
-    public static string appContentStateGameTrainingCollection = "app-content-state-game-training-collection";
-    public static string appContentStateGameContent = "app-content-state-game-content";
-    public static string appContentStateGameTips = "app-content-state-game-tips";
+    public static string app_content_stateGameArcade = "app-content-state-game-arcade";
+    public static string app_content_stateGameChallenge = "app-content-state-game-challenge";
+    public static string app_content_stateGameMissions = "app-content-state-game-missions";
+    public static string app_content_stateGameCoop = "app-content-state-game-coop";
+    public static string app_content_stateGameMultiplayerCoop = "app-content-state-game-mulitiplayer-coop";
+    public static string app_content_stateGameMultiplayerMatchup = "app-content-state-game-mulitiplayer-matchup";
+    public static string app_content_stateGameMultiplayer = "app-content-state-game-mulitiplayer";
+    public static string app_content_stateGameMatchup = "app-content-state-game-matchup";
+    public static string app_content_stateGameTraining = "app-content-state-game-training";
+    public static string app_content_stateGameTrainingChoice = "app-content-state-game-training-choice";
+    public static string app_content_stateGameTrainingCollection = "app-content-state-game-training-collection";
+    public static string app_content_stateGameContent = "app-content-state-game-content";
+    public static string app_content_stateGameTips = "app-content-state-game-tips";
 }
 
 public class BaseAppContentStates<T> : DataObjects<T> where T : DataObject, new() {
     private static T current;
     private static volatile BaseAppContentStates<T> instance;
     private static object syncRoot = new Object();
-
     private string BASE_DATA_KEY = "app-content-state-data";
 
     public static T BaseCurrent {
@@ -83,57 +82,56 @@ public class BaseAppContentStates<T> : DataObjects<T> where T : DataObject, new(
         LoadData();
     }
 
-
     public bool isAppContentStateGameArcade {
         get {
-            return IsAppContentState(AppContentStateMeta.appContentStateGameArcade);
+            return IsAppContentState(AppContentStateMeta.app_content_stateGameArcade);
         }
     }
 
     public bool isAppContentStateGameCoop {
         get {
-            return IsAppContentState(AppContentStateMeta.appContentStateGameCoop);
+            return IsAppContentState(AppContentStateMeta.app_content_stateGameCoop);
         }
     }
         
     public bool isAppContentStateGameMissions {
         get {
-            return IsAppContentState(AppContentStateMeta.appContentStateGameMissions);
+            return IsAppContentState(AppContentStateMeta.app_content_stateGameMissions);
         }
     }
 
     public bool isAppContentStateGameChallenge {
         get {
-            return IsAppContentState(AppContentStateMeta.appContentStateGameChallenge);
+            return IsAppContentState(AppContentStateMeta.app_content_stateGameChallenge);
         }
     }
 
     public bool isAppContentStateGameContent {
         get {
-            return IsAppContentState(AppContentStateMeta.appContentStateGameContent);
+            return IsAppContentState(AppContentStateMeta.app_content_stateGameContent);
         }
     }
 
     public bool isAppContentStateGameTraining {
         get {
-            return IsAppContentState(AppContentStateMeta.appContentStateGameTraining);
+            return IsAppContentState(AppContentStateMeta.app_content_stateGameTraining);
         }
     }
 
     public bool isAppContentStateGameTrainingChoice {
         get {
-            return IsAppContentState(AppContentStateMeta.appContentStateGameTrainingChoice);
+            return IsAppContentState(AppContentStateMeta.app_content_stateGameTrainingChoice);
         }
     }
 
     public bool isAppContentStateGameTrainingCollection {
         get {
-            return IsAppContentState(AppContentStateMeta.appContentStateGameTrainingCollection);
+            return IsAppContentState(AppContentStateMeta.app_content_stateGameTrainingCollection);
         }
     }
 
     public bool IsAppContentState(string code) {
-        if(AppContentStates.Current.code == code) {
+        if (AppContentStates.Current.code == code) {
             return true;
         }
         return false;
@@ -143,23 +141,23 @@ public class BaseAppContentStates<T> : DataObjects<T> where T : DataObject, new(
 
         LogUtil.Log("ChangeState:code:" + code);
 
-        if(AppContentStates.Current.code != code) {
+        if (AppContentStates.Current.code != code) {
 
             LogUtil.Log("ChangeState:code-CHANGE:" + code);
 
-            AppContentState appContentState = AppContentStates.Instance.GetByCode(code);
+            AppContentState app_content_state = AppContentStates.Instance.GetByCode(code);
 
-            if(appContentState != null) {
+            if (app_content_state != null) {
 
-                AppContentStates.Current = appContentState;
+                AppContentStates.Current = app_content_state;
 
                 GameProfiles.Current.SetCurrentAppContentState(code);
 
                 LogUtil.Log("AppContentStates:code:" + AppContentStates.Current.code);
 
-                string modeType = appContentState.type;
-                string mode = appContentState.key;
-                string state = appContentState.GetAppStateDefault();
+                string modeType = app_content_state.type;
+                string mode = app_content_state.key;
+                string state = app_content_state.GetAppStateDefault();
 
                 LogUtil.Log("AppContentStates:modeType:" + modeType);
                 LogUtil.Log("AppContentStates:mode:" + mode);
@@ -189,8 +187,8 @@ public class BaseAppContentStates<T> : DataObjects<T> where T : DataObject, new(
 
         List<AppContentState> filteredList = new List<AppContentState>();
 
-        foreach(AppContentState obj in AppContentStates.Instance.GetListByPack(packCode)) {
-            if(stateCode.ToLower() == obj.code.ToLower()) {
+        foreach (AppContentState obj in AppContentStates.Instance.GetListByPack(packCode)) {
+            if (stateCode.ToLower() == obj.code.ToLower()) {
                 filteredList.Add(obj);
             }
         }
@@ -198,33 +196,33 @@ public class BaseAppContentStates<T> : DataObjects<T> where T : DataObject, new(
         return filteredList;
     }
     
-    public List<AppContentState> GetByAppState(string appState) {
+    public List<AppContentState> GetByAppState(string app_state) {
 
         Dictionary<string, int> packSorts = new Dictionary<string, int>();
-        List<AppContentState> appContentStates = new List<AppContentState>();
+        List<AppContentState> app_content_states = new List<AppContentState>();
 
-        foreach(AppContentState state in AppContentStates.Instance.GetAll()) {
-            if(state.appStates.Contains(appState)
-            || state.appStates.Contains("*")) {
+        foreach (AppContentState state in AppContentStates.Instance.GetAll()) {
+            if (state.app_states.Contains(app_state)
+                || state.app_states.Contains("*")) {
 
                 int sortOrder = 1;
-                if(packSorts.ContainsKey(state.pack_code)) {
+                if (packSorts.ContainsKey(state.pack_code)) {
                     sortOrder = packSorts[state.pack_code];
                 }
                 else {
                     GamePack gamePack = GamePacks.Instance.GetById(state.pack_code);
-                    if(gamePack != null) {
+                    if (gamePack != null) {
                         sortOrder = gamePack.sort_order;
                         packSorts.Add(state.pack_code, sortOrder);
                     }
                 }
                 state.sort_order = state.sort_order * sortOrder;
-                appContentStates.Add(state);
+                app_content_states.Add(state);
             }
         }
-        appContentStates = AppContentStates.Instance.SortList(appContentStates);
+        app_content_states = AppContentStates.Instance.SortList(app_content_states);
     
-        return appContentStates;
+        return app_content_states;
     }
 }
 
@@ -236,43 +234,14 @@ public class DataPlatformStoreMeta {
     public string locale = "en";
     public string price = "0";
 }
+
 public class BaseAppContentStateKeys {
-    public static string appStates = "appStates";
-    public static string requiredPacks = "requiredPacks";
-    public static string requiredTrackers = "requiredTrackers";
+    public static string app_states = "app_states";
+    public static string required_packs = "required_packs";
+    public static string required_trackers = "required_trackers";
 }
 
 public class BaseAppContentState : GameDataObject {
-
-    public virtual List<string> appStates {
-        get {
-            return Get<List<string>>(BaseAppContentStateKeys.appStates);
-        }
-        
-        set {
-            Set(BaseAppContentStateKeys.appStates, value);
-        }
-    }
-    
-    public virtual List<string> requiredPacks {
-        get {
-            return Get<List<string>>(BaseAppContentStateKeys.requiredPacks);
-        }
-        
-        set {
-            Set(BaseAppContentStateKeys.requiredPacks, value);
-        }
-    }
-    
-    public virtual List<string> requiredTrackers {
-        get {
-            return Get<List<string>>(BaseAppContentStateKeys.requiredTrackers);
-        }
-        
-        set {
-            Set(BaseAppContentStateKeys.requiredTrackers, value);
-        }
-    }
 
     // type
 
@@ -285,14 +254,14 @@ public class BaseAppContentState : GameDataObject {
 
     public override void Reset() {
         base.Reset();
-        appStates = new List<string>();
-        requiredPacks = new List<string>();
-        requiredTrackers = new List<string>();
+        app_states = new List<string>();
+        required_packs = new List<string>();
+        required_trackers = new List<string>();
     }
 
     public string GetAppStateDefault() {
-        foreach(string appState in appStates) {
-            return appState;
+        foreach (string app_state in app_states) {
+            return app_state;
         }
         return "";
     }
@@ -303,11 +272,11 @@ public class BaseAppContentState : GameDataObject {
         string json = GetAttributeStringValue(key);
         //UnityEngine.LogUtil.LogWarning("json:" + json);
         //UnityEngine.LogUtil.LogWarning("json:" + json.Replace("\\\"", "\""));
-        if(!string.IsNullOrEmpty(json)) {
+        if (!string.IsNullOrEmpty(json)) {
             try {
                 return JsonMapper.ToObject<DataPlatformStoreMeta>(json);
             }
-            catch (Exception e){
+            catch (Exception e) {
                 LogUtil.LogWarning("Error parsing DataPlatformStoreMeta" + e);
             }
         }

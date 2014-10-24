@@ -221,23 +221,40 @@ public class TestsData {
         //Advance(testName);
         //success = TestGameProfile_NetworkTypes_Data(testName, SocialNetworkTypes.facebook);
 
+        // LOCO
+
+
+        //testName = "TestGameLocalization_Get";
+        //Advance(testName);
+        //success = TestGameLocalization_Get(testName, "en", GameLocalizationKeys.social_twitter_disabled_title);
         
-        testName = "TestGameLocalization_Get";
-        Advance(testName);
-        success = TestGameLocalization_Get(testName, "en", GameLocalizationKeys.social_twitter_disabled_title);
-        
-        testName = "TestLoco_Get";
-        Advance(testName);
-        success = TestLoco_Get(testName, "en", LocoKeys.social_twitter_disabled_title);
+        //testName = "TestLoco_Get";
+        //Advance(testName);
+        //success = TestLoco_Get(testName, "en", LocoKeys.social_twitter_disabled_title);
 
         
-        testName = "TestGameLocalization_Get";
-        Advance(testName);
-        success = TestGameLocalization_Get(testName, "en", GameLocalizationKeys.social_twitter_game_results_message);
+        //testName = "TestGameLocalization_Get";
+        //Advance(testName);
+        //success = TestGameLocalization_Get(testName, "en", GameLocalizationKeys.social_twitter_game_results_message);
         
-        testName = "TestLoco_Get";
+        //testName = "TestLoco_Get";
+        //Advance(testName);
+        //success = TestLoco_Get(testName, "en", LocoKeys.social_twitter_game_results_message);
+
+        // MISSIONS
+                
+        //testName = "TestAppContentCollects_Get";
+        //Advance(testName);
+        //success = TestAppContentCollects_Get(testName);
+        
+        //testName = "TestAppContentCollects_Get_Missions";
+        //Advance(testName);
+        //success = TestAppContentCollects_Get_Missions(testName);
+        
+        testName = "TestAppContentCollects_Get_Missions_By_World";
         Advance(testName);
-        success = TestLoco_Get(testName, "en", LocoKeys.social_twitter_game_results_message);
+        success = TestAppContentCollects_Get_Missions_By_World(testName, GameWorlds.Instance.GetAll()[0].code);
+
 
 
         //
@@ -286,6 +303,115 @@ public class TestsData {
 
         return equal;
     }
+
+    // -----------------------------------------------------------------------------------
+
+    
+    public static bool TestAppContentCollects_Get_Missions_By_World(string name, string code) {
+        
+        bool success = false;
+        
+        Debug.Log(name);
+        
+        List<AppContentCollect> items = AppContentCollects.GetMissionsByWorld(code);
+        DumpObj(name, "items", items);
+
+        
+        foreach (AppContentCollect item in items) {
+                        
+            Debug.Log("data:item:code:" +  item.display_name);
+            Debug.Log("data:item:code:" + item.description);
+            
+            foreach (AppContentCollectItem dataItem in item.GetItemsData()) {                
+                
+                Debug.Log("data:dataItem:code:" + dataItem.code);         
+                Debug.Log("data:dataItem:json:" + dataItem.ToJson());   
+                success = true;     
+            }
+        }
+        
+        DumpObj(name, "items.Count", items.Count);
+        
+        return success;
+    }
+
+
+            
+    public static bool TestAppContentCollects_Get_Missions(string name) {
+        
+        bool success = false;
+        
+        Debug.Log(name);
+        
+        List<AppContentCollect> items = AppContentCollects.GetMissions();
+        DumpObj(name, "items", items);
+        
+        //AssertEquals(name, username, "Player");
+        
+        foreach (AppContentCollect item in items) {  
+            
+            Debug.Log("item:code:" + item.code);               
+            Debug.Log("item:json:" + item.ToJson());  
+            
+            List<AppContentCollectItem> data = item.data;
+            
+            if (data != null) {
+                
+                foreach (AppContentCollectItem dataItem in data) {
+                                        
+                    Debug.Log("data:dataItem:code:" + dataItem.code);         
+                    Debug.Log("data:dataItem:json:" + dataItem.ToJson());   
+                    success = true;                      
+                                       
+                    
+                    Debug.Log("data:dataItem:json:" + dataItem.ToJson());   
+                }
+                
+            }
+        }
+        
+        DumpObj(name, "items.Count", items.Count);
+        
+        return success;
+    }
+
+    public static bool TestAppContentCollects_Get(string name) {
+        
+        bool success = false;
+        
+        Debug.Log(name);
+        
+        List<AppContentCollect> items = AppContentCollects.Instance.GetAll();
+        DumpObj(name, "items", items);
+        
+        //AssertEquals(name, username, "Player");
+        
+        foreach (AppContentCollect item in items) {  
+            
+            Debug.Log("item:code:" + item.code);               
+            Debug.Log("item:json:" + item.ToJson());  
+            
+            List<AppContentCollectItem> data = item.data;
+            
+            if (data != null) {
+
+                foreach (AppContentCollectItem dataItem in data) {
+
+                    Debug.Log("data:dataItem:code:" + dataItem.code);         
+                    Debug.Log("data:dataItem:json:" + dataItem.ToJson());   
+                    success = true;                      
+
+                }
+
+            }
+        }
+        
+        DumpObj(name, "items.Count", items.Count);
+        
+        return success;
+    }
+
+    //
 
     public static bool TestGameProfile_NetworkTypes_Data(string name, string networkType) {
         

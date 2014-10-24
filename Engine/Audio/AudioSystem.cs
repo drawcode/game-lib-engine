@@ -498,7 +498,7 @@ public class AudioSystem : GameObjectBehavior {
 
     public Transform FindAudioListenerPosition() {
         if (listener == null) {
-            listener = ObjectUtil.FindObject<AudioListener>();
+            listener = UnityObjectUtil.FindObject<AudioListener>();
         }
         if (listener != null) {
             return listener.transform;

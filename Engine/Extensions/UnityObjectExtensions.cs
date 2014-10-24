@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-public static class ObjectUtil {
+public static class UnityObjectUtil {
 
     public static GameObject FindRequiredObject(string name) {
         var obj = GameObject.Find(name);

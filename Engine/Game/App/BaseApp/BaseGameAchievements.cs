@@ -58,7 +58,7 @@ public class BaseGameAchievements<T> : DataObjects<T> where T : DataObject, new(
 }
 
 // Used to determin if an achievement should also filter on other params such as
-// type (action), pack, tracker, appState, appContentState and a custom string for an
+// type (action), pack, tracker, app_state, app_content_state and a custom string for an
 // object or value...
 
 
@@ -156,7 +156,6 @@ public class BaseGameAchievement : GameDataObject {
     public override void Reset() {
         base.Reset();
     }
-
     
     public GameFilterBase GameFilterData(GameFilter filter) {
         if (filter != null) {

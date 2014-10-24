@@ -6,7 +6,6 @@ public class BaseAppContentAssetTexturePresets<T> : DataObjects<T> where T : Dat
     private static T current;
     private static volatile BaseAppContentAssetTexturePresets<T> instance;
     private static object syncRoot = new Object();
-
     private string BASE_DATA_KEY = "app-content-asset-texture-preset-data";
 
     public static T BaseCurrent {
