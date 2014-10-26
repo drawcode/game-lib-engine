@@ -15,6 +15,8 @@ public class BaseGameLocalizationKeys {
     public static string app_display_name = "app_display_name";
     public static string app_display_code = "app_display_code";
     public static string app_web_url = "app_web_url";
+    public static string app_web_url_facebook = "app_web_url_facebook";
+    public static string app_web_url_twitter = "app_web_url_twitter";
     public static string app_store_url_itunes = "app_store_url_itunes";
     public static string app_store_url_google_play = "app_store_url_google_play";
     public static string app_default_append = "app_default_append";
