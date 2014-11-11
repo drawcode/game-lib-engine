@@ -1232,11 +1232,11 @@ public static class GameObjectHelper {
         return obj;
     }
     
-    public static void DestroyGameObject(GameObject go, bool pooled) {
+    public static void DestroyGameObject(GameObject go, bool pooled = true) {
         DestroyGameObject(go, 0f, pooled);
     }
     
-    public static void DestroyGameObject(GameObject go, float delay, bool pooled) {
+    public static void DestroyGameObject(GameObject go, float delay, bool pooled = true) {
         if (!pooled && !go.Has<PoolGameObject>()) {
             DestroyDelayed(go, delay);
         }
