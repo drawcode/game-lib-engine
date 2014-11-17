@@ -1541,7 +1541,27 @@ public class GameDataObject : DataObject {
             Set<float>(BaseDataObjectKeys.val, value);
         }
     }
+    
+    public virtual double delta {
+        get {
+            return Get<double>(BaseDataObjectKeys.delta);
+        }
         
+        set {
+            Set<double>(BaseDataObjectKeys.delta, value);
+        }
+    }
+
+    public virtual double last_time {
+        get {
+            return Get<double>(BaseDataObjectKeys.last_time);
+        }
+        
+        set {
+            Set<double>(BaseDataObjectKeys.last_time, value);
+        }
+    }
+
     public virtual double last_update {
         get {
             return Get<double>(BaseDataObjectKeys.last_update);
