@@ -65,7 +65,7 @@ public class BaseGameStatisticKeys {
     public static string store_count = "store_count";
 }
 
-public class BaseGameStatistic : GameDataObject {
+public class BaseGameStatistic : GameDataObjectLocalized {
 
     public virtual string order {
         get {

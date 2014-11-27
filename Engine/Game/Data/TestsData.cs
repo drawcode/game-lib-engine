@@ -145,9 +145,13 @@ public class TestsData {
         //Advance(testName);
         //success = TestGamePresets_List(testName);
                 
-        testName = "TestGameAchievements_List";
+        //testName = "TestGameAchievements_List";
+        //Advance(testName);
+        //success = TestGameAchievements_List(testName);
+        
+        testName = "TestGameStatistics_List";
         Advance(testName);
-        success = TestGameAchievements_List(testName);
+        success = TestGameStatistics_List(testName);
                 
         //testName = "TestGameLeaderboards_List";
         //Advance(testName);
@@ -867,6 +871,32 @@ public class TestsData {
                         
             List<GameFilterBase> statisticAll = item.GetFilterStatisticAll();        
             Debug.Log("item:statisticAll:" + statisticAll);
+        }
+        
+        DumpObj(name, "items.Count", items.Count);
+        
+        return success;
+    }
+        
+    public static bool TestGameStatistics_List(string name) {
+        
+        bool success = false;
+        
+        Debug.Log(name);
+        
+        List<GameStatistic> items = GameStatistics.Instance.GetAll();
+        DumpObj(name, "items", items);
+        
+        //AssertEquals(name, username, "Player");
+        
+        foreach (GameStatistic item in items) {  
+            
+            Debug.Log("item:code:" + item.code);    
+            Debug.Log("item:display_name:" + item.display_name);    
+            Debug.Log("item:description:" + item.description);               
+            Debug.Log("item:json:" + item.ToJson());  
+            success = true;                    
+
         }
         
         DumpObj(name, "items.Count", items.Count);
