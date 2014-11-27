@@ -189,6 +189,13 @@ public class BaseGameLocalizations<T> : DataObjects<T> where T : DataObject, new
         pathKey = BASE_DATA_KEY;
         LoadData();
     }
+    
+    
+    public static string GetReplaceLocalized(string content) {
+        return Locos.Instance.ReplaceLocalized(content);
+    }
+
+    private string lastString = "--";
 
     public string ReplaceLocalized(string content) {
         
@@ -243,9 +250,14 @@ public class BaseGameLocalizations<T> : DataObjects<T> where T : DataObject, new
 
                 }
             }
-            
-            // recurse
-            content = ReplaceLocalized(content);
+
+            // recurse check... 
+            // never infinity and beyond in a loop
+            if(lastString != content) {
+                lastString = content;
+                // recurse
+                content = ReplaceLocalized(content);
+            }
         }
         
         return content;

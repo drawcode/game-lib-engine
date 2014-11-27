@@ -49,6 +49,8 @@ public class TestsData {
 
         GameConfigs.globalReady = true;
 
+        GameLocalizations.Instance.ChangeCurrent("en");
+
         //Advance("TestGameCharacterSkin");
         //TestGameCharacterSkin();
 
@@ -143,9 +145,9 @@ public class TestsData {
         //Advance(testName);
         //success = TestGamePresets_List(testName);
                 
-        //testName = "TestGameAchievements_List";
-        //Advance(testName);
-        //success = TestGameAchievements_List(testName);
+        testName = "TestGameAchievements_List";
+        Advance(testName);
+        success = TestGameAchievements_List(testName);
                 
         //testName = "TestGameLeaderboards_List";
         //Advance(testName);
@@ -192,6 +194,15 @@ public class TestsData {
         //testName = "TestGameLocalization_Get";
         //Advance(testName);
         //success = TestGameLocalization_Get(testName, "en", GameLocalizationKeys.app_display_code);
+
+        
+        //testName = "TestGameLocalization_Get";
+        //Advance(testName);
+        //success = TestGameLocalization_Get(testName, "en", "game_achievement_times_played_1_display_name");
+        
+        //testName = "TestGameLocalization_Get";
+        //Advance(testName);
+        //success = TestGameLocalization_Get(testName, "en", "game_achievement_times_played_1_description");
                 
         //testName = "TestGameLocalization_Get";
         //Advance(testName);
@@ -251,9 +262,9 @@ public class TestsData {
         //Advance(testName);
         //success = TestAppContentCollects_Get_Missions(testName);
         
-        testName = "TestAppContentCollects_Get_Missions_By_World";
-        Advance(testName);
-        success = TestAppContentCollects_Get_Missions_By_World(testName, GameWorlds.Instance.GetAll()[0].code);
+        //testName = "TestAppContentCollects_Get_Missions_By_World";
+        //Advance(testName);
+        //success = TestAppContentCollects_Get_Missions_By_World(testName, GameWorlds.Instance.GetAll()[0].code);
 
 
 
@@ -827,7 +838,9 @@ public class TestsData {
         
         foreach (GameAchievement item in items) {  
             
-            Debug.Log("item:code:" + item.code);               
+            Debug.Log("item:code:" + item.code);    
+            Debug.Log("item:display_name:" + item.display_name);    
+            Debug.Log("item:description:" + item.description);               
             Debug.Log("item:json:" + item.ToJson());  
             
             GameAchievementData data = item.data;

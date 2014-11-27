@@ -902,6 +902,111 @@ public class GameDataObjectMeta : GameDataObject {
     } 
 }
 
+
+public class GameDataObjectLocalized : GameDataObject {
+
+    
+    /*
+    public override V Get<V>(string code, V defaultValue) {                
+        V val = base.Get<V>(code, defaultValue);
+
+        if(EqualityComparer<V>.Default.Equals(val, default(V))) {
+            return val;
+        }
+
+        if(val.GetType() == typeof(string)) {
+            // Localize if it is a string
+
+            string valToLocalize = (string)Convert.ChangeType(val, typeof(string));//Convert.ToString(defaultValue);
+
+            if(!string.IsNullOrEmpty(valToLocalize)) {
+                string valLocalized = Locos.GetReplaceLocalized(valToLocalize);
+                val = (V)Convert.ChangeType(valLocalized, typeof(V));
+            }
+        }
+
+        return val;
+    }
+    */
+    
+    
+    public string GetLocalized(string code, string defaultValue) {          
+        string valTo = Get<string>(code, defaultValue);
+        
+        if(!string.IsNullOrEmpty(valTo)) {
+            valTo = Locos.GetReplaceLocalized(valTo);
+        }
+        
+        return valTo;
+    }
+
+    
+    //[JsonIgnore(JsonIgnoreWhen.Deserializing)]
+    public override string display_name {
+        get {
+            return GetLocalized(BaseDataObjectKeys.display_name, "");
+        }
+        
+        set {
+            Set<string>(BaseDataObjectKeys.display_name, value);
+        }
+    }  
+    
+    public override string action_display_name {
+        get {
+            return GetLocalized(BaseDataObjectKeys.action_display_name, "");
+        }
+        
+        set {
+            Set<string>(BaseDataObjectKeys.action_display_name, value);
+        }
+    }  
+    
+    //[JsonIgnore(JsonIgnoreWhen.Deserializing)]
+    public override string name {
+        get {
+            return GetLocalized(BaseDataObjectKeys.name, "");//Get<string>(BaseDataObjectKeys.name);
+        }
+        
+        set {
+            Set<string>(BaseDataObjectKeys.name, value);
+        }
+    }   
+    
+    //[JsonIgnore(JsonIgnoreWhen.Deserializing)]
+    public override string description {
+        get {
+            return GetLocalized(BaseDataObjectKeys.description, "");//Get<string>(BaseDataObjectKeys.description);
+        }
+        
+        set {
+            Set<string>(BaseDataObjectKeys.description, value);
+        }
+    } 
+    
+    public override string action_description {
+        get {
+            return GetLocalized(BaseDataObjectKeys.action_description, "");//Get<string>(BaseDataObjectKeys.action_description);
+        }
+        
+        set {
+            Set<string>(BaseDataObjectKeys.action_description, value);
+        }
+    } 
+
+    public virtual string content {
+        get {
+            return GetLocalized(BaseDataObjectKeys.content, "");//Get<string>(BaseDataObjectKeys.content);
+        }
+        
+        set {
+            Set<string>(BaseDataObjectKeys.content, value);
+            
+            hash = CryptoUtil.CalculateBase64SHA1ASCII(value);
+        }
+    } 
+}
+
 public class GameDataObject : DataObject {
 
     // Dataobject handles keys
@@ -974,7 +1079,7 @@ public class GameDataObject : DataObject {
     //[JsonIgnore(JsonIgnoreWhen.Deserializing)]
     public virtual string name {
         get {
-            return Get<string>(BaseDataObjectKeys.name);
+            return Get<string>(BaseDataObjectKeys.name, "");//Get<string>(BaseDataObjectKeys.name);
         }
         
         set {
@@ -985,7 +1090,7 @@ public class GameDataObject : DataObject {
     //[JsonIgnore(JsonIgnoreWhen.Deserializing)]
     public virtual string description {
         get {
-            return Get<string>(BaseDataObjectKeys.description);
+            return Get<string>(BaseDataObjectKeys.description, "");//Get<string>(BaseDataObjectKeys.description);
         }
         
         set {
@@ -995,7 +1100,7 @@ public class GameDataObject : DataObject {
 
     public virtual string action_description {
         get {
-            return Get<string>(BaseDataObjectKeys.action_description);
+            return Get<string>(BaseDataObjectKeys.action_description, "");//Get<string>(BaseDataObjectKeys.action_description);
         }
         
         set {
@@ -1026,7 +1131,7 @@ public class GameDataObject : DataObject {
     
     public virtual string content {
         get {
-            return Get<string>(BaseDataObjectKeys.content);
+            return Get<string>(BaseDataObjectKeys.content, "");//Get<string>(BaseDataObjectKeys.content);
         }
 
         set {

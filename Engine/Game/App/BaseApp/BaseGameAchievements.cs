@@ -136,7 +136,7 @@ public class GameAchievementData : GameDataObject {
     }
 }
 
-public class BaseGameAchievement : GameDataObject {
+public class BaseGameAchievement : GameDataObjectLocalized {
 
 
     public virtual GameAchievementData data {
