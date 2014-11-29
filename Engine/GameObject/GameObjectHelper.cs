@@ -42,7 +42,7 @@ public static class GameObjectHelper {
         inst.layer = layer;
         
         foreach (Transform child in inst.transform)
-            child.gameObject.SetLayerRecursively(layer);
+            SetLayerRecursively(child.gameObject, layer);
     }
     
     public static void SetLayerRecursively(GameObject inst, string name) {
@@ -52,7 +52,7 @@ public static class GameObjectHelper {
         inst.layer = LayerMask.NameToLayer(name);
         
         foreach (Transform child in inst.transform)
-            child.gameObject.SetLayerRecursively(LayerMask.NameToLayer(name));
+            SetLayerRecursively(child.gameObject, LayerMask.NameToLayer(name));
     }
     
     // AUDIO

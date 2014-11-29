@@ -4,8 +4,10 @@ using System.IO;
 using System.Text;
 using System.Text.RegularExpressions;
 
+using Engine.Events;
 using Engine.Data.Json;
 using Engine.Utility;
+
 using UnityEngine;
 
 public class BaseGameLocalizationKeys {
@@ -40,7 +42,6 @@ public class BaseGameLocalizationKeys {
     public static string social_facebook_upload_error_message = "social_facebook_upload_error_message";
     public static string social_facebook_upload_success_title = "social_facebook_upload_success_title";
     public static string social_facebook_upload_success_message = "social_facebook_upload_success_message";
-    
     public static string social_facebook_game_action_append = "social_facebook_game_action_append";
 
     //social_facebook_game_action_append
@@ -81,26 +82,24 @@ public class BaseGameLocalizationKeys {
     public static string game_action_adverb_5 = "game_action_adverb_5";
     public static string game_action_adverb_6 = "game_action_adverb_6";
     public static string game_action_adverb_7 = "game_action_adverb_7";
-
-    
     public static string game_type_arcade = "game_type_arcade";
     public static string game_type_arcade_mode = "game_type_arcade_mode";
-
-    
     public static string game_type_coins = "game_type_coins";
     public static string game_type_scores = "game_type_scores";
     public static string game_type_score = "game_type_score";
-    
     public static string game_action_default_message = "game_action_default_message";
-    public static string game_action_results_choice_quiz_message = "game_action_results_choice_quiz_message";    
+    public static string game_action_results_choice_quiz_message = "game_action_results_choice_quiz_message";
     public static string game_action_results_arcade_message = "game_action_results_arcade_message";
-    
     public static string game_action_panel_character_customize_message = "game_action_panel_character_customize_message";
     public static string game_action_panel_character_colors_message = "game_action_panel_character_colors_message";
     public static string game_action_panel_character_rpg_message = "game_action_panel_character_rpg_message";
     public static string game_action_panel_achievements_message = "game_action_panel_achievements_message";
     public static string game_action_panel_statistics_message = "game_action_panel_statistics_message";
 
+}
+
+public class GameLocalizationMessages {
+    public static string gameLocalizationChanged = "game-localization-changed";
 }
 
 public enum GameLocalizationDataItemType {
@@ -190,7 +189,6 @@ public class BaseGameLocalizations<T> : DataObjects<T> where T : DataObject, new
         LoadData();
     }
     
-    
     public static string GetReplaceLocalized(string content) {
         return Locos.Instance.ReplaceLocalized(content);
     }
@@ -253,7 +251,7 @@ public class BaseGameLocalizations<T> : DataObjects<T> where T : DataObject, new
 
             // recurse check... 
             // never infinity and beyond in a loop
-            if(lastString != content) {
+            if (lastString != content) {
                 lastString = content;
                 // recurse
                 content = ReplaceLocalized(content);
@@ -360,6 +358,9 @@ public class BaseGameLocalizations<T> : DataObjects<T> where T : DataObject, new
             if (obj != null) {
                 
                 GameLocalizations.Current = obj;
+
+                Messenger<string>.Broadcast(
+                    GameLocalizationMessages.gameLocalizationChanged, code);
             }  
         } 
     }
@@ -377,6 +378,29 @@ public class BaseGameLocalizations<T> : DataObjects<T> where T : DataObject, new
 
             return GameLocalizations.Current.data.strings.Count > 0 ? true : false;
         }
+    }
+        
+    public static string GetCodeFromContent(string content) {
+    
+        return GameLocalizations.Instance.FindCodeFromContent(content);
+    }
+
+    public virtual string FindCodeFromContent(string content) {
+
+        // Find content in english to translate
+
+        if (string.IsNullOrEmpty(content) || !HasLoadedStrings) {
+            return null;
+        }
+
+        foreach (KeyValuePair<string, GameLocalizationDataItem> pair 
+                in GameLocalizations.Current.data.strings) {
+            if (content == pair.Value.valString) {
+                return pair.Value.valString;
+            }
+        }
+
+        return null;
     }
 }
 
