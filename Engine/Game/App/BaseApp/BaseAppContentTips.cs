@@ -70,7 +70,7 @@ public class BaseAppContentTips<T> : DataObjects<T> where T : DataObject, new() 
     }
 }
 
-public class BaseAppContentTip : GameDataObject {    
+public class BaseAppContentTip : GameDataObjectLocalized {    
 
     public BaseAppContentTip() {
         Reset();
