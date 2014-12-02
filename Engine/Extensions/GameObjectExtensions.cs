@@ -482,12 +482,20 @@ public static class BaseGameObjectExtensions {
         GameObjectHelper.ResetScale(go, valueTo, includeChildren);
     }
     
+    public static void ResetLocalRotation(this GameObject go) {
+        GameObjectHelper.ResetLocalRotation(go);   
+    }
+    
     public static void ResetRotation(this GameObject go) {
         GameObjectHelper.ResetRotation(go);   
     }
 
     public static void ResetRotation(this GameObject go, bool includeChildren) {
         GameObjectHelper.ResetRotation(go, includeChildren);
+    }
+
+    public static void ResetLocalPosition(this GameObject go) {
+        GameObjectHelper.ResetLocalPosition(go);
     }
 
     public static void ResetPosition(this GameObject go) {

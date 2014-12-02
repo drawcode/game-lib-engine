@@ -145,28 +145,29 @@ public class BaseAppContentAssets<T> : DataObjects<T> where T : DataObject, new(
                     string path = "";
                     
                     LogUtil.Log("LoadAsset:" + " assetCode:" + assetCode + " asset.type:" + asset.type);
+                    
+                    if (asset.key.StartsWith("level")) {                    
+                        path = ContentPaths.appCacheVersionSharedPrefabLevelAssets;
+                    }
+                    else if (asset.key.StartsWith("character")) {                    
+                        path = ContentPaths.appCacheVersionSharedPrefabCharacters;
+                    }
+                    else if (asset.key.StartsWith("weapon")) {                    
+                        path = ContentPaths.appCacheVersionSharedPrefabWeapons;
+                    }
+                    else if (asset.key.StartsWith("world")) {                    
+                        path = ContentPaths.appCacheVersionSharedPrefabWorlds;
+                    }
+                    else if (asset.key.StartsWith("vehicle")) {                    
+                        path = ContentPaths.appCacheVersionSharedPrefabVehicles;
+                    }
+                    
+                    path += assetCode;
 
                     if (asset.type == "resource") {
-                        // Load from resources
 
-                        if (asset.key.StartsWith("level")) {                    
-                            path = ContentPaths.appCacheVersionSharedPrefabLevelAssets;
-                        }
-                        else if (asset.key.StartsWith("character")) {                    
-                            path = ContentPaths.appCacheVersionSharedPrefabCharacters;
-                        }
-                        else if (asset.key.StartsWith("weapon")) {                    
-                            path = ContentPaths.appCacheVersionSharedPrefabWeapons;
-                        }
-                        else if (asset.key.StartsWith("world")) {                    
-                            path = ContentPaths.appCacheVersionSharedPrefabWorlds;
-                        }
-                        else if (asset.key.StartsWith("vehicle")) {                    
-                            path = ContentPaths.appCacheVersionSharedPrefabVehicles;
-                        }
-                        
-                        path += assetCode;
-                                                
+                        // Load from resources
+                                                                        
                         LogUtil.Log("LoadAsset:" + " path:" + path);
                         
                         GameObject prefabObject = PrefabsPool.PoolPrefab(path);

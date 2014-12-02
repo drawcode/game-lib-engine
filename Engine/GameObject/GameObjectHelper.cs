@@ -425,6 +425,14 @@ public static class GameObjectHelper {
             go.transform.localRotation = objectRotation;
         }
     }
+
+    
+    public static void ResetLocalRotation(GameObject go) {
+        if (go != null) {
+            Quaternion objectRotation = Quaternion.identity;
+            go.transform.localRotation = objectRotation;
+        }
+    }
     
     public static void ResetRotation(GameObject go, bool includeChildren) {
         if (go != null) {
@@ -442,6 +450,13 @@ public static class GameObjectHelper {
         if (go != null) {
             Vector3 pos = Vector3.zero;
             go.transform.position = pos;
+            go.transform.localPosition = pos;
+        }
+    }
+
+    public static void ResetLocalPosition(GameObject go) {
+        if (go != null) {
+            Vector3 pos = Vector3.zero;
             go.transform.localPosition = pos;
         }
     }

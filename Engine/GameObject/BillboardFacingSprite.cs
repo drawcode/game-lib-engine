@@ -17,6 +17,6 @@ public class BillboardFacingSprite : GameObjectBehavior {
     // Update is called once per frame
     private void FixedUpdate() {
         transform.LookAt(cameraTransform);
-        transform.position = Vector3.zero.WithX(0f).WithY(transform.position.y).WithZ(0f);
+        transform.localPosition = transform.localPosition.WithY(transform.localPosition.y);
     }
 }

@@ -355,7 +355,8 @@ public class BaseDataObject : Dictionary<string, object> {
     // LOADING/SAVING
 
     public string DataPrepareSave(string dataValue) {
-                
+        
+        #if !UNITY_WEBPLAYER
         if (AppConfigs.useStorageEncryption) {
             dataValue = dataValue.ToEncrypted();
         }
@@ -363,12 +364,14 @@ public class BaseDataObject : Dictionary<string, object> {
         if (AppConfigs.useStorageCompression) {
             dataValue = dataValue.ToCompressed();
         }
+        #endif
 
         return dataValue;
     }
 
     public string DataPrepareLoad(string dataValue) {
-
+        
+        #if !UNITY_WEBPLAYER
         if (AppConfigs.useStorageCompression) { /// || data.IsCompressed()) {
             dataValue = dataValue.ToDecompressed();
         }
@@ -376,6 +379,7 @@ public class BaseDataObject : Dictionary<string, object> {
         if (AppConfigs.useStorageEncryption) {
             dataValue = dataValue.ToDecrypted();
         }
+        #endif
 
         return dataValue;
     }
@@ -414,8 +418,14 @@ public class BaseDataObject : Dictionary<string, object> {
         #if !UNITY_WEBPLAYER 
         if (FileSystemUtil.CheckFileExists(fileFullPath)) {       
             dataValue = FileSystemUtil.ReadString(fileFullPath);
-        }        
-        #endif       
+        }
+        #else
+        string fileWebPath = 
+            fileFullPath
+                .Replace(Application.dataPath)
+                .Replace(Application.persistentDataPath);
+        dataValue = SystemPrefUtil.SetLocalSettingString(fileWebPath, dataValue);
+        #endif  
         
         dataValue = DataPrepareLoad(dataValue);
 
@@ -428,8 +438,14 @@ public class BaseDataObject : Dictionary<string, object> {
         string path = PathUtil.Combine(folderPath, (fileKey + ".json").TrimStart('/'));
         if (FileSystemUtil.CheckFileExists(path)) {       
             dataValue = FileSystemUtil.ReadString(path);
-        }        
-        #endif   
+        }
+        #else
+        string fileWebPath = 
+            path
+                .Replace(Application.dataPath)
+                .Replace(Application.persistentDataPath);
+        dataValue = SystemPrefUtil.SetLocalSettingString(fileWebPath, dataValue);
+        #endif 
 
         if (!string.IsNullOrEmpty(dataValue)) {
             dataValue = DataPrepareLoad(dataValue);
@@ -455,6 +471,13 @@ public class BaseDataObject : Dictionary<string, object> {
 
             FileSystemUtil.WriteString(fileFullPath, dataValue);
         }
+        #else
+        
+        string fileWebPath = 
+            fileFullPath
+                .Replace(Application.dataPath)
+                .Replace(Application.persistentDataPath);
+        SystemPrefUtil.SetLocalSettingString(fileWebPath, dataValue);
         #endif
     }
     

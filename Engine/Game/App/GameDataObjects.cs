@@ -994,7 +994,7 @@ public class GameDataObjectLocalized : GameDataObject {
         }
     } 
 
-    public virtual string content {
+    public override string content {
         get {
             return GetLocalized(BaseDataObjectKeys.content, "");//Get<string>(BaseDataObjectKeys.content);
         }
