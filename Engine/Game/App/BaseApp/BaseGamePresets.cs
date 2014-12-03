@@ -6,12 +6,14 @@ public class GamePresetTypes {
     public static string item = "item";
     public static string character = "character";
     public static string terrain = "terrain";
+    public static string asset = "asset";
 }
 
 public class GamePresetTypeDefault {
     public static string itemDefault = "item-default";
     public static string characterDefault = "character-default";
     public static string terrainDefault = "terrain-default";
+    public static string assetDefault = "asset-default";
 }
 //GamePresets.Instance.GetByCode("game-item-default");
 public class BaseGamePresets<T> : DataObjects<T> where T : DataObject, new() {
@@ -91,6 +93,11 @@ public class BaseGamePresets<T> : DataObjects<T> where T : DataObject, new() {
         if(!currentPresets.ContainsKey(GamePresetTypes.terrain)) {
             currentPresets.Set(GamePresetTypes.terrain, GamePresetTypeDefault.terrainDefault);
         }
+                
+        if(!currentPresets.ContainsKey(GamePresetTypes.asset)) {
+            currentPresets.Set(GamePresetTypes.asset, GamePresetTypeDefault.assetDefault);
+        }
+
     }
         
     public void ChangeCurrentPreset(string presetType, string presetCode) {
@@ -131,6 +138,10 @@ public class BaseGamePresets<T> : DataObjects<T> where T : DataObject, new() {
     
     public GamePreset GetCurrentPresetDataTerrain() {
         return GetCurrentPresetData(GamePresetTypes.terrain);
+    }
+    
+    public GamePreset GetCurrentPresetDataAsset() {
+        return GetCurrentPresetData(GamePresetTypes.asset);
     }
 }
 

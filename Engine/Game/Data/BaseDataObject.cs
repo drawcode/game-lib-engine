@@ -149,6 +149,9 @@ public class BaseDataObjectKeys {
     public static string texture_presets = "texture_presets";
     public static string item_presets = "item_presets";
     public static string terrain_presets = "terrain_presets";
+    public static string asset_presets = "asset_presets";
+    public static string character_presets = "character_presets";
+
     public static string model = "model";
     public static string models = "models";
     public static string presets = "presets";

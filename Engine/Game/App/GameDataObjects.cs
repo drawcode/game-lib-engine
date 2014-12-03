@@ -43,6 +43,14 @@ public class GameDataTerrainPreset : GameDataObject {
     
 }
 
+public class GameDataCharacterPreset : GameDataObject {
+    
+}
+
+public class GameDataAssetPreset : GameDataObject {
+    
+}
+
 public class GameDataActionKeys {
     
     public static string goal_range_1 = "goal_range_1";
@@ -234,6 +242,29 @@ public class GameDataObjectItem : GameDataObject {
             Set<List<GameDataTerrainPreset>>(BaseDataObjectKeys.terrain_presets, value);
         }
     }
+    
+    public virtual List<GameDataCharacterPreset> character_presets {
+        get {
+            return Get<List<GameDataCharacterPreset>>(BaseDataObjectKeys.character_presets);
+        }
+        
+        set {
+            Set<List<GameDataCharacterPreset>>(BaseDataObjectKeys.character_presets, value);
+        }
+    }
+    
+    public virtual List<GameDataAssetPreset> asset_presets {
+        get {
+            return Get<List<GameDataAssetPreset>>(BaseDataObjectKeys.asset_presets);
+        }
+        
+        set {
+            Set<List<GameDataAssetPreset>>(BaseDataObjectKeys.asset_presets, value);
+        }
+    }
+
+
+    //character_presets
     
     public virtual List<GameDataSound> sounds {
         get {
@@ -615,6 +646,48 @@ public class GameDataObjectItem : GameDataObject {
     
     public GameDataTerrainPreset GetTerrainPreset(string code) {
         return GetItem<GameDataTerrainPreset>(terrain_presets, code);
+    }
+
+    // character presets
+    
+    public bool HasCharacterPresets() {
+        
+        if (character_presets != null) {
+            if (character_presets.Count > 0) {
+                return true;
+            }
+        }
+        
+        return false;
+    }
+    
+    public GameDataCharacterPreset GetCharacterPreset() {
+        return GetCharacterPreset(GameDataItemTypeKeys.defaultType);
+    }
+    
+    public GameDataCharacterPreset GetCharacterPreset(string code) {
+        return GetItem<GameDataCharacterPreset>(character_presets, code);
+    }
+
+    // asset presets
+    
+    public bool HasAssetPresets() {
+        
+        if (asset_presets != null) {
+            if (asset_presets.Count > 0) {
+                return true;
+            }
+        }
+        
+        return false;
+    }
+    
+    public GameDataAssetPreset GetAssetPreset() {
+        return GetAssetPreset(GameDataItemTypeKeys.defaultType);
+    }
+    
+    public GameDataAssetPreset GetAssetPreset(string code) {
+        return GetItem<GameDataAssetPreset>(asset_presets, code);
     }
     
     // rpgs
@@ -1559,7 +1632,7 @@ public class GameDataObject : DataObject {
         
     public virtual double max {
         get {
-            return Get<double>(BaseDataObjectKeys.max);
+            return Get<double>(BaseDataObjectKeys.max, 1);
         }
         
         set {
@@ -1569,7 +1642,7 @@ public class GameDataObject : DataObject {
     
     public virtual double min {
         get {
-            return Get<double>(BaseDataObjectKeys.min);
+            return Get<double>(BaseDataObjectKeys.min, 0);
         }
         
         set {
