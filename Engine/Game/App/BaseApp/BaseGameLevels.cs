@@ -213,6 +213,58 @@ public class BaseGameLevels<T> : DataObjects<T> where T : DataObject, new() {
             LogUtil.Log("Changing Level: code:" + code);    
         }
     } 
+
+    //
+
+    public static GameLevelGridData GetLevelGridTerrains(GameLevelGridData dataItems, List<GameDataTerrainPreset> presets) {
+        
+        foreach(GameDataTerrainPreset terrainDataItem in presets) {
+            
+            GamePreset terrainPreset = GamePresets.Instance.GetById(terrainDataItem.code);
+            
+            if(terrainPreset != null) {
+                
+                GamePresetItem terrainPresetItem = terrainPreset.GetItemRandomByProbability(terrainPreset.data.items);
+                
+                if(terrainPresetItem != null) {
+                    dataItems = GameLevelGridData.AddAssets(dataItems, terrainPresetItem.code, 1);
+                }
+            }
+        }
+        
+        return dataItems;
+    }
+    
+    public static GameLevelGridData GetLevelGridAssets(GameLevelGridData dataItems, List<GameDataAssetPreset> presets) {        
+        
+        foreach(GameDataAssetPreset assetDataItem in presets) {
+            
+            int minAssetLimit = (int)assetDataItem.min;
+            int maxAssetLimit = (int)assetDataItem.max;
+            
+            int totalAssetLimit = 0;
+            
+            GamePreset assetPreset = GamePresets.Instance.GetById(assetDataItem.code);
+            
+            if(assetPreset != null) {
+                
+                foreach(GamePresetItem presetItem in assetPreset.data.items) {
+                    
+                    int amount = UnityEngine.Random.Range((int)presetItem.min, (int)presetItem.max);
+                    totalAssetLimit += amount;
+                    
+                    dataItems = GameLevelGridData.AddAssets(dataItems, presetItem.code, amount);
+                    
+                    if(totalAssetLimit > maxAssetLimit) {
+                        // Too many for this set to add more...
+                        break;
+                    }
+                }
+            }
+        }
+        
+        return dataItems;
+    }
 }
 
 public class BaseGameLevelKeys {
