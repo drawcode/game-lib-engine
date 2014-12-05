@@ -241,23 +241,43 @@ public class BaseGameLevels<T> : DataObjects<T> where T : DataObject, new() {
             
             int minAssetLimit = (int)assetDataItem.min;
             int maxAssetLimit = (int)assetDataItem.max;
+
+            int randomAssetLimit = UnityEngine.Random.Range(minAssetLimit, maxAssetLimit);
             
             int totalAssetLimit = 0;
-            
+
+            bool isNestedLimitsType = assetDataItem.Get(BaseDataObjectKeys.data_type) == "nested_limits" ? true : false;
+
             GamePreset assetPreset = GamePresets.Instance.GetById(assetDataItem.code);
             
             if(assetPreset != null) {
-                
-                foreach(GamePresetItem presetItem in assetPreset.data.items) {
+
+                if(!isNestedLimitsType) {
+
+                    for(int i = 0; i < randomAssetLimit; i++) {
+
+                        GamePresetItem presetItem = assetPreset.GetItemRandomByProbability(assetPreset.data.items);
+                        
+                        if(presetItem != null) {
+                            int amount = 1;
+                            dataItems = GameLevelGridData.AddAssets(dataItems, presetItem.code, amount);
+                            totalAssetLimit += amount;
+                        }
+                    }
+                }
+                else {
+
+                    foreach(GamePresetItem presetItem in assetPreset.data.items) {
                     
-                    int amount = UnityEngine.Random.Range((int)presetItem.min, (int)presetItem.max);
-                    totalAssetLimit += amount;
-                    
-                    dataItems = GameLevelGridData.AddAssets(dataItems, presetItem.code, amount);
-                    
-                    if(totalAssetLimit > maxAssetLimit) {
-                        // Too many for this set to add more...
-                        break;
+                        int amount = UnityEngine.Random.Range((int)presetItem.min, (int)presetItem.max);
+                        totalAssetLimit += amount;
+                        
+                        dataItems = GameLevelGridData.AddAssets(dataItems, presetItem.code, amount);
+                        
+                        if(totalAssetLimit > maxAssetLimit) {
+                            // Too many for this set to add more...
+                            break;
+                        }
                     }
                 }
             }
