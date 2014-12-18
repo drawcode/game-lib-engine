@@ -425,7 +425,6 @@ public static class GameObjectHelper {
             go.transform.localRotation = objectRotation;
         }
     }
-
     
     public static void ResetLocalRotation(GameObject go) {
         if (go != null) {
@@ -509,8 +508,8 @@ public static class GameObjectHelper {
                 go.AddComponent<Rigidbody>();
                 go.rigidbody.constraints =
                     RigidbodyConstraints.FreezePosition
-                        | RigidbodyConstraints.FreezeRotationX
-                        | RigidbodyConstraints.FreezeRotationZ;
+                    | RigidbodyConstraints.FreezeRotationX
+                    | RigidbodyConstraints.FreezeRotationZ;
                 go.rigidbody.useGravity = false;
                 go.rigidbody.angularDrag = .25f;
             }
@@ -527,7 +526,7 @@ public static class GameObjectHelper {
 
         T t = inst.Get<T>();
         
-        if(t != default(T)) {
+        if (t != default(T)) {
             UnityEngine.Object.Destroy(t);
             return true;
         }
@@ -625,7 +624,7 @@ public static class GameObjectHelper {
     public static void Hide(GameObject inst) {
         //LogUtil.Log("Hide:" + inst.name);
         if (inst != null) {
-            if(inst.activeSelf || inst.activeInHierarchy) {
+            if (inst.activeSelf || inst.activeInHierarchy) {
                 HideRenderers(inst);
                 inst.SetActive(false);
             }
@@ -950,9 +949,9 @@ public static class GameObjectHelper {
         
         //TrailRenderer trailRendererCurrent = inst.GetComponent<TrailRenderer>();
         //if (trailRendererCurrent != null) {
-           // foreach (Color color in colors) {
-                //trailRendererCurrent..color = color;
-            //}
+        // foreach (Color color in colors) {
+        //trailRendererCurrent..color = color;
+        //}
         //}
         
         if (!includeChildren) {
@@ -1287,7 +1286,12 @@ public static class GameObjectHelper {
         
         foreach (Transform t in transforms) {
             t.parent = null;
-            UnityEngine.Object.Destroy(t.gameObject);
+            try {
+                UnityEngine.Object.Destroy(t.gameObject);
+            }
+            catch (Exception e) {
+                Debug.Log("ERROR:" + e);
+            }
         }
         
         transforms.Clear();

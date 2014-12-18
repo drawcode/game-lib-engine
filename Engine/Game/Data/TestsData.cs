@@ -149,9 +149,9 @@ public class TestsData {
         //Advance(testName);
         //success = TestGameAchievements_List(testName);
         
-        testName = "TestGameStatistics_List";
-        Advance(testName);
-        success = TestGameStatistics_List(testName);
+        //testName = "TestGameStatistics_List";
+        //Advance(testName);
+        //success = TestGameStatistics_List(testName);
                 
         //testName = "TestGameLeaderboards_List";
         //Advance(testName);
@@ -178,9 +178,9 @@ public class TestsData {
         //Advance(testName);
         //success = TestEncrypt(testName);
         
-        //testName = "TestGameStateProfileSync";
-        //Advance(testName);
-        //success = TestGameStateProfileSync(testName);
+        testName = "TestGameStateProfileSync";
+        Advance(testName);
+        success = TestGameStateProfileSync(testName);
 
 
         //
@@ -644,6 +644,10 @@ public class TestsData {
         bool success = true;
         
         Debug.Log(name);
+
+        GameProfiles.Current.SetAttributeStringValue("tester", "test1");
+
+        GameState.SaveProfile();
 
         GameState.SyncProfile();
 
