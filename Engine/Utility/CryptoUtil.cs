@@ -143,7 +143,7 @@ public class CryptoUtil {
     /// <param name="sharedSecret">A password used to generate a key for decryption.</param>
     public static string DecryptStringAES(string cipherText, string sharedSecret) {
         
-        if(!cipherText.IsBase64()) {
+        if (!cipherText.IsBase64()) {
             return cipherText;
         }
 
@@ -206,5 +206,71 @@ public class CryptoUtil {
         }
             
         return buffer;
+    }
+
+    //
+
+    
+    public static string GenerateRandomString(int length) {
+        
+        if (length < 8)
+            length = 8;
+        
+        byte[] result = new byte[length];
+        
+        for (int index = 0; index < length; index++) {
+            result[index] = (byte)new Random().Next(33, 126);
+        }
+        
+        return System.Text.Encoding.ASCII.GetString(result);
+    }
+    
+    // HASHING, only use MD5 for basic file or content compare, nothing secure (use minimum SHA-1 for that)
+    
+    // Used primarily for comparing last network user profile data against current to see if update needed
+    
+    public static bool VerifyMD5(string input, string hash) {
+        using (MD5 md5Hash = MD5.Create()) {
+            if (HashVerify(md5Hash, input, hash)) {
+                return true;
+            }
+            else {
+                return false;
+            }
+        }
+    }
+    
+    public static string HashMD5(string input) {
+        using (MD5 md5Hash = MD5.Create()) {
+            string hash = Hash(md5Hash, input);
+            return hash;
+        }
+    }
+    
+    static string Hash(MD5 md5Hash, string input) {
+        
+        byte[] data = md5Hash.ComputeHash(Encoding.UTF8.GetBytes(input));
+        
+        StringBuilder sb = new StringBuilder();
+        
+        // Loop through each byte of the hashed data  
+        // and format each one as a hexadecimal string. 
+        for (int i = 0; i < data.Length; i++) {
+            sb.Append(data[i].ToString("x2"));
+        }
+        
+        return sb.ToString();
+    }
+    
+    static bool HashVerify(MD5 md5Hash, string input, string hash) {
+        string hashOfInput = Hash(md5Hash, input);
+        StringComparer comparer = StringComparer.OrdinalIgnoreCase;
+        
+        if (0 == comparer.Compare(hashOfInput, hash)) {
+            return true;
+        }
+        else {
+            return false;
+        }
     }
 }

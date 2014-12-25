@@ -139,4 +139,130 @@ public static class StringExtensions {
     public static string RegexMatchesReplace(this string val, string regex, string replacement) {
         return RegexUtil.RegexReplace(val, regex, replacement);
     }
+
+    // 
+    public static string LineBreaksToHtml(this string val) {
+        if (!string.IsNullOrEmpty(val)) {
+            val = val.Replace("\\r\\n", "<br>");
+            val = val.Replace("\\r", "<br>");
+            val = val.Replace("\\n", "<br>");
+        }
+        return val;
+    }
+    
+    public static string ToBase36(this string val) {
+        return FormatUtil.ConvertToBase36(val);
+    }
+    
+    public static string ToPascalCase(this string val) {
+        string output = "";
+        char[] chars = val.ToCharArray();
+        bool firstUpper = true;
+        bool upperNext = false;
+        foreach (char ch in chars) {
+            if (char.IsUpper(ch)) {
+                if (firstUpper) {
+                    firstUpper = false;
+                    output += ch.ToString().ToLower();
+                    
+                }
+                else if (ch == '-' || ch == '_') {
+                    // skip but cap next
+                    upperNext = true;
+                }
+                else {
+                    if (upperNext) {
+                        upperNext = false;
+                        output += ch.ToString().ToUpper();
+                    }
+                }
+            }
+            else {
+                output += ch.ToString();
+            }
+        }
+        return output;
+    }
+    
+    //public static string ToTitleCase(this string val) {
+    //    return CultureInfo.CurrentCulture.TextInfo.ToTitleCase(val);
+    //}
+    
+    public static string ToDelimitedUnderscore(this string val) {
+        return val.ToDelimited("_");
+    }
+    
+    public static string ToDelimitedDashed(this string val) {
+        return val.ToDelimited("-");
+    }
+        
+    public static string ToDelimited(this string val, string delimiter = "-") {
+        string output = "";
+        char[] chars = val.ToCharArray();
+        foreach (char ch in chars) {
+            if (char.IsUpper(ch)) {
+                if (output.Length > 0) {
+                    output += delimiter;
+                }
+                output += ch.ToString().ToLower();
+            }
+            else {
+                output += ch.ToString();
+            }
+        }
+        return output;
+    }
+    
+    public static string ToNonDelimited(this string val, string replaceDelimeter = " ", string delimiter = "-") {
+        if (val == null) {
+            return null;
+        }
+        val = val.Replace(delimiter, replaceDelimeter);
+        return val;
+    }
+
+    public static string StripToAlphanumerics(this string input) {
+        string output = "";
+        output = Regex.Replace(input, @"[^\w\s _-]|", "");
+        //.replace(/\s+/g, " ");
+        return output;
+    }
+    
+    public static bool IsRegexMatch(this string input, string pattern) {
+        if (string.IsNullOrEmpty(input)) {
+            return false;
+        }
+        
+        //^[A-Z][a-z]*( [A-Z][a-z]*)*$
+        if (Regex.IsMatch(input, pattern)) {
+            return true;
+        }
+        return false;
+    }
+    
+    public static bool EndsWithSlash(this string input) {
+        return input.IsRegexMatch("/$");
+    }
+    
+    public static Match RegexMatch(this string input, string pattern) {
+        return Regex.Match(input, pattern);
+    }
+    
+    public static string Substring(this string str, string StartString, string EndString) {
+        if (str.Contains(StartString)) {
+            int iStart = str.IndexOf(StartString) + StartString.Length;
+            int iEnd = str.IndexOf(EndString, iStart);
+            return str.Substring(iStart, (iEnd - iStart));
+        }
+        return null;
+    }
+    
+    public static string ToHashMD5(this string val) {
+        return CryptoUtil.HashMD5(val);
+    }
+    
+    public static bool IsNullOrEmpty(this string val) {
+        return string.IsNullOrEmpty(val);
+    }
+
 }

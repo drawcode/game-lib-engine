@@ -189,7 +189,7 @@ public class WWWs : GameObjectBehavior {
             if (paramHash != null) {
                 if (paramHash.Count > 0) {
                     foreach (KeyValuePair<string, object> pair in paramHash) {
-                        AddParam(pair.Key, pair.Value.ToString());
+                        AddParam(pair.Key, pair.Value);
                     }
                 }
             }
@@ -197,12 +197,25 @@ public class WWWs : GameObjectBehavior {
 
         public void AddParam(string key, object value) {
 
+            string val = "";
+            
+            if (typeof(string) == value.GetType()
+                || typeof(float) == value.GetType()
+                || typeof(double) == value.GetType()
+                || typeof(int) == value.GetType()
+                || typeof(DateTime) == value.GetType()) {
+                val = Convert.ToString(value);
+            }
+            else {
+                val = value.ToJson();
+            }
+
             if(POST) {
                 if(form == null) {
                     form = new WWWForm();
                 }
 
-                form.AddField(key, value.ToString());
+                form.AddField(key, val);
             }
             else if(GET) {
                 if(url.Contains(key + "=")) {
@@ -220,9 +233,9 @@ public class WWWs : GameObjectBehavior {
                 }
                 
                 paramValues.Append(key);
-                paramValues.Append("=");                    
+                paramValues.Append("=");  
                 paramValues.Append(
-                    Uri.EscapeDataString(value.ToString()));
+                    Uri.EscapeDataString(val.ToString()));
                 
                 string urlAppend = paramValues.ToString();
                 url = url + urlAppend;
@@ -354,6 +367,8 @@ public class WWWs : GameObjectBehavior {
     public IEnumerator WaitForResponse(RequestItem requestItem) {
     
         WWW www = null;
+
+        requestItem.url = EnsureUrlUniqueByTime(requestItem.url);
 
         if (requestItem.form != null) {
             www = new WWW(requestItem.url, requestItem.form);

@@ -1087,11 +1087,41 @@ public class GameDataObject : DataObject {
     //[JsonIgnore(JsonIgnoreWhen.Deserializing)]
     public virtual string uuid {
         get { 
-            return Get<string>(BaseDataObjectKeys.uuid, UniqueUtil.Instance.CreateUUID4());
+            return Get<string>(BaseDataObjectKeys.uuid, "");//UniqueUtil.Instance.CreateUUID4());
         }
         
         set {
             Set<string>(BaseDataObjectKeys.uuid, value);
+        }
+    }
+
+    public virtual string uid {
+        get { 
+            return Get<string>(BaseDataObjectKeys.uid, "");
+        }
+        
+        set {
+            Set<string>(BaseDataObjectKeys.uid, value);
+        }
+    }
+
+    public virtual string profile_id {
+        get { 
+            return Get<string>(BaseDataObjectKeys.profile_id, "");
+        }
+        
+        set {
+            Set<string>(BaseDataObjectKeys.profile_id, value);
+        }
+    }
+
+    public virtual string game_id {
+        get { 
+            return Get<string>(BaseDataObjectKeys.game_id, "");
+        }
+        
+        set {
+            Set<string>(BaseDataObjectKeys.game_id, value);
         }
     }
     
@@ -1281,17 +1311,6 @@ public class GameDataObject : DataObject {
             Set<string>(BaseDataObjectKeys.key, value);
         }
     }    
-    
-    //[JsonIgnore(JsonIgnoreWhen.Deserializing)]
-    public virtual string game_id {
-        get {
-            return Get<string>(BaseDataObjectKeys.game_id, UniqueUtil.Instance.CreateUUID4());
-        }
-        
-        set {
-            Set<string>(BaseDataObjectKeys.game_id, value);
-        }
-    }
 
     public virtual string network_id {
         get {

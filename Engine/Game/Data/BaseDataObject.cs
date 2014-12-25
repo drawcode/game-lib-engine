@@ -10,6 +10,9 @@ using Engine.Data.Json;
 public class BaseDataObjectKeys { 
     
     public static string id = "id";
+    public static string uid = "uid";
+    public static string profile_id = "profile_id";
+    public static string game_id = "game_id";
     public static string uuid = "uuid";
     public static string code = "code";
     public static string name = "name";
@@ -76,7 +79,6 @@ public class BaseDataObjectKeys {
     public static string platform = "platform";
     public static string platforms = "platforms";
     public static string product_id = "product_id";
-    public static string game_id = "game_id";
     public static string type = "type";
     public static string game = "game";
     public static string games = "games";
