@@ -19,9 +19,9 @@ app-content-state-game-training-tips
 
 public class AppContentStateMeta : BaseAppContentStateMeta {
     //public static string appModeTypeGameDefault = "app-mode-game-default";
-    public static string app_content_stateGameTrainingChoiceQuiz = "app-content-state-game-training-choice-quiz";
-    public static string app_content_stateGameTrainingCollectionSafety = "app-content-state-game-training-collection-safety";
-    public static string app_content_stateGameTrainingCollectionSmarts = "app-content-state-game-training-collection-smarts";
+    public static string appContentStateGameTrainingChoiceQuiz = "app-content-state-game-training-choice-quiz";
+    public static string appContentStateGameTrainingCollectionSafety = "app-content-state-game-training-collection-safety";
+    public static string appContentStateGameTrainingCollectionSmarts = "app-content-state-game-training-collection-smarts";
 }
 
 public class AppContentStates : BaseAppContentStates<AppContentState>
@@ -87,19 +87,19 @@ public class AppContentStates : BaseAppContentStates<AppContentState>
 
     public bool isAppContentStateGameTrainingChoiceQuiz {
         get {
-            return IsAppContentState(AppContentStateMeta.app_content_stateGameTrainingChoiceQuiz);
+            return IsAppContentState(AppContentStateMeta.appContentStateGameTrainingChoiceQuiz);
         }
     }
 
     public bool isAppContentStateGameTrainingCollectionSafety {
         get {
-            return IsAppContentState(AppContentStateMeta.app_content_stateGameTrainingCollectionSafety);
+            return IsAppContentState(AppContentStateMeta.appContentStateGameTrainingCollectionSafety);
         }
     }
 
     public bool isAppContentStateGameTrainingCollectionSmarts {
         get {
-            return IsAppContentState(AppContentStateMeta.app_content_stateGameTrainingCollectionSmarts);
+            return IsAppContentState(AppContentStateMeta.appContentStateGameTrainingCollectionSmarts);
         }
     }
 

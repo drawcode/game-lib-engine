@@ -567,7 +567,7 @@ public class AppContentActions : BaseAppContentActions<AppContentAction>
 
 public class AppContentActionAttributes {
 	public static string app_states = "app_states";
-	public static string app_content_states = "app_content_states";
+	public static string AppContentStates = "app_content_states";
 	public static string actionStates = "actionStates";
 	public static string appTrackers = "appTrackers";
 	public static string required_assets = "required_assets";

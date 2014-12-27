@@ -232,7 +232,7 @@ public class AppContentAssetAttributesFileExt {
 
 public class BaseAppContentAssetKeys {
     public static string app_states = "app_states";
-    public static string app_content_states = "app_content_states";
+    public static string AppContentStates = "app_content_states";
     public static string required_assets = "required_assets";
 }
 
