@@ -1162,6 +1162,9 @@ public static class GameObjectHelper {
                 //LogUtil.Log("SetMaterialColor m:" + m.name);
                 if (FilterMaterialName(m.name).Contains(FilterMaterialName(name))) {
                     m.color = color;
+                    m.SetColor("_MainColor", color);
+                    m.SetColor("_Color", color);
+                    m.SetColor("_TintColor", color);
                     //LogUtil.Log("SetMaterialColor color:" + color);
                     if (!all)
                         return true;
@@ -1177,6 +1180,9 @@ public static class GameObjectHelper {
                 //LogUtil.Log("SetMaterialColor m:" + m.name);
                 if (FilterMaterialName(m.name).Contains(FilterMaterialName(name))) {
                     m.color = color;
+                    m.SetColor("_MainColor", color);
+                    m.SetColor("_Color", color);
+                    m.SetColor("_TintColor", color);
                     //LogUtil.Log("SetMaterialColor color:" + color);
                     if (!all)
                         return true;
@@ -1192,6 +1198,9 @@ public static class GameObjectHelper {
                 //LogUtil.Log("SetMaterialColor m:" + m.name);
                 if (FilterMaterialName(m.name).Contains(FilterMaterialName(name))) {
                     m.color = color;
+                    m.SetColor("_MainColor", color);
+                    m.SetColor("_Color", color);
+                    m.SetColor("_TintColor", color);
                     //LogUtil.Log("SetMaterialColor color:" + color);
                     if (!all)
                         return true;
@@ -1207,6 +1216,9 @@ public static class GameObjectHelper {
                 //LogUtil.Log("SetMaterialColor m:" + m.name);
                 if (FilterMaterialName(m.name).Contains(FilterMaterialName(name))) {
                     m.color = color;
+                    m.SetColor("_MainColor", color);
+                    m.SetColor("_Color", color);
+                    m.SetColor("_TintColor", color);
                     //LogUtil.Log("SetMaterialColor color:" + color);
                     if (!all)
                         return true;
