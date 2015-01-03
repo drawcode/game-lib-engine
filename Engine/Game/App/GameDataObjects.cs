@@ -51,6 +51,10 @@ public class GameDataAssetPreset : GameDataObject {
     
 }
 
+public class GameDataLayoutPreset : GameDataObject {
+    
+}
+
 public class GameDataActionKeys {
     
     public static string goal_range_1 = "goal_range_1";
@@ -262,7 +266,16 @@ public class GameDataObjectItem : GameDataObject {
             Set<List<GameDataAssetPreset>>(BaseDataObjectKeys.asset_presets, value);
         }
     }
-
+    
+    public virtual List<GameDataLayoutPreset> layout_presets {
+        get {
+            return Get<List<GameDataLayoutPreset>>(BaseDataObjectKeys.layout_presets);
+        }
+        
+        set {
+            Set<List<GameDataLayoutPreset>>(BaseDataObjectKeys.layout_presets, value);
+        }
+    }
 
     //character_presets
     

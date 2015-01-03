@@ -152,6 +152,23 @@ public class BaseDataObjectKeys {
     public static string item_presets = "item_presets";
     public static string terrain_presets = "terrain_presets";
     public static string asset_presets = "asset_presets";
+    public static string layout_presets = "layout_presets";
+    
+    public static string game_level_item_asset = "game_level_item_asset";
+    public static string start_position = "start_position";
+    public static string physics_type = "physics_type";
+    public static string destructable = "destructable";
+    public static string reactive = "reactive";
+    public static string kinematic = "kinematic";
+    public static string gravity = "gravity";
+    public static string range_scale = "range_scale";
+    public static string range_rotation = "range_rotation";
+    public static string destroy_effect_code = "destroy_effect_code";
+    public static string speed_rotation = "speed_rotation";
+    public static string destroyed = "destroyed";
+
+    public static string steps = "steps";
+
     public static string character_presets = "character_presets";
 
     public static string model = "model";

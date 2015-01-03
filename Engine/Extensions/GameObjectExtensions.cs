@@ -573,6 +573,10 @@ public static class BaseGameObjectExtensions {
         GameObjectHelper.UnFreezeRigidbodies(go);
     }
     
+    public static Rigidbody GetRigidbody(this GameObject go) {
+        return GameObjectHelper.GetRigidbody(go);
+    }
+    
     public static void ResetRigidBodiesVelocity(this GameObject go) {
         GameObjectHelper.ResetRigidBodiesVelocity(go);
     }

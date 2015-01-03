@@ -1,5 +1,7 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+
 using UnityEngine;
 
 public class ObjectPoolItem {
@@ -41,7 +43,7 @@ public class ObjectPool : System.Object {
 
         // if we don't have any object already in the cache, create a new one
         if (pool.Count == 0) {
-            obj = Object.Instantiate(prefab, position, rotation) as GameObject;
+            obj = UnityEngine.Object.Instantiate(prefab, position, rotation) as GameObject;
         }
         else { // else pull one from the cache
             obj = pool.Dequeue();

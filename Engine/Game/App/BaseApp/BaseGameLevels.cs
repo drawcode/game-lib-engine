@@ -1,13 +1,16 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+
 using Engine.Data.Json;
 using Engine.Utility;
+
+using UnityEngine;
 
 public class BaseGameLevels<T> : DataObjects<T> where T : DataObject, new() {
     private static T current;
     private static volatile BaseGameLevels<T> instance;
-    private static object syncRoot = new Object();
+    private static System.Object syncRoot = new System.Object();
     public static string BASE_DATA_KEY = "game-level-data";
     public static float gridHeight = 1f;
     public static float gridWidth = 80f;
@@ -232,6 +235,35 @@ public class BaseGameLevels<T> : DataObjects<T> where T : DataObject, new() {
             }
         }
         
+        return dataItems;
+    }
+
+    public static GameLevelGridData GetLevelGridLayouts(GameLevelGridData dataItems, List<GameDataLayoutPreset> presets) {
+
+        /*
+        foreach(GameDataTerrainPreset terrainDataItem in presets) {
+            
+            GamePreset layoutPreset = GamePresets.Instance.GetById(terrainDataItem.code);
+            
+            if(terrainPreset != null) {
+                
+                GamePresetItem terrainPresetItem = terrainPreset.GetItemRandomByProbability(terrainPreset.data.items);
+                
+                if(terrainPresetItem != null) {
+                    dataItems = GameLevelGridData.AddAssets(dataItems, terrainPresetItem.code, 1);
+                }
+            }
+        }
+        */
+
+        dataItems.SetAssetsInAssetMap("wall-1", Vector3.zero.WithX(3).WithY(1).WithZ(3));
+        dataItems.SetAssetsInAssetMap("wall-1", Vector3.zero.WithX(3).WithY(1).WithZ(4));
+        dataItems.SetAssetsInAssetMap("wall-1", Vector3.zero.WithX(3).WithY(1).WithZ(5));
+        dataItems.SetAssetsInAssetMap("wall-1", Vector3.zero.WithX(3).WithY(1).WithZ(6));
+        dataItems.SetAssetsInAssetMap("wall-1", Vector3.zero.WithX(4).WithY(1).WithZ(6));
+        dataItems.SetAssetsInAssetMap("wall-1", Vector3.zero.WithX(5).WithY(1).WithZ(6));
+        dataItems.SetAssetsInAssetMap("wall-1", Vector3.zero.WithX(6).WithY(1).WithZ(6));
+
         return dataItems;
     }
     

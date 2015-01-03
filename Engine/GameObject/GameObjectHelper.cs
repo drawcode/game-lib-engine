@@ -1382,6 +1382,29 @@ public static class GameObjectHelper {
             r.UnFreeze();
         }
     }
+    
+    public static Rigidbody GetRigidbody(GameObject inst) {
+        
+        if (inst == null) {
+            return null;
+        }
+        
+        Rigidbody[] rigidbodies
+            = inst.GetComponents<Rigidbody>();
+        
+        foreach (Rigidbody r in rigidbodies) {
+            return r;
+        }
+        
+        Rigidbody[] rigidbodiesChildren
+            = inst.GetComponentsInChildren<Rigidbody>(true);
+        
+        foreach (Rigidbody r in rigidbodiesChildren) {
+            return r;
+        }
+
+        return null;
+    }
 
     public static void ResetRigidBodiesVelocity(GameObject inst, Vector3 angularVelocity) {
         
