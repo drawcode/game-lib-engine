@@ -502,7 +502,7 @@ public class AppContentChoiceData : DataObject {
 public class BaseAppContentChoiceKeys {
     public static string tags = "tags";
     public static string app_states = "app_states";
-    public static string app_content_states = "app_content_states";
+    public static string AppContentStates = "app_content_states";
     public static string required_assets = "required_assets";
     public static string keys = "keys";
     public static string content_attributes = "content_attributes";

@@ -18,19 +18,19 @@ app-content-state-game-training-tips
 
 public class BaseAppContentStateMeta {
     //public static string appModeTypeGameDefault = "app-mode-game-default";
-    public static string app_content_stateGameArcade = "app-content-state-game-arcade";
-    public static string app_content_stateGameChallenge = "app-content-state-game-challenge";
-    public static string app_content_stateGameMissions = "app-content-state-game-missions";
-    public static string app_content_stateGameCoop = "app-content-state-game-coop";
-    public static string app_content_stateGameMultiplayerCoop = "app-content-state-game-mulitiplayer-coop";
-    public static string app_content_stateGameMultiplayerMatchup = "app-content-state-game-mulitiplayer-matchup";
-    public static string app_content_stateGameMultiplayer = "app-content-state-game-mulitiplayer";
-    public static string app_content_stateGameMatchup = "app-content-state-game-matchup";
-    public static string app_content_stateGameTraining = "app-content-state-game-training";
-    public static string app_content_stateGameTrainingChoice = "app-content-state-game-training-choice";
-    public static string app_content_stateGameTrainingCollection = "app-content-state-game-training-collection";
-    public static string app_content_stateGameContent = "app-content-state-game-content";
-    public static string app_content_stateGameTips = "app-content-state-game-tips";
+    public static string appContentStateGameArcade = "app-content-state-game-arcade";
+    public static string appContentStateGameChallenge = "app-content-state-game-challenge";
+    public static string appContentStateGameMissions = "app-content-state-game-missions";
+    public static string appContentStateGameCoop = "app-content-state-game-coop";
+    public static string appContentStateGameMultiplayerCoop = "app-content-state-game-mulitiplayer-coop";
+    public static string appContentStateGameMultiplayerMatchup = "app-content-state-game-mulitiplayer-matchup";
+    public static string appContentStateGameMultiplayer = "app-content-state-game-mulitiplayer";
+    public static string appContentStateGameMatchup = "app-content-state-game-matchup";
+    public static string appContentStateGameTraining = "app-content-state-game-training";
+    public static string appContentStateGameTrainingChoice = "app-content-state-game-training-choice";
+    public static string appContentStateGameTrainingCollection = "app-content-state-game-training-collection";
+    public static string appContentStateGameContent = "app-content-state-game-content";
+    public static string appContentStateGameTips = "app-content-state-game-tips";
 }
 
 public class BaseAppContentStates<T> : DataObjects<T> where T : DataObject, new() {
@@ -84,49 +84,49 @@ public class BaseAppContentStates<T> : DataObjects<T> where T : DataObject, new(
 
     public bool isAppContentStateGameArcade {
         get {
-            return IsAppContentState(AppContentStateMeta.app_content_stateGameArcade);
+            return IsAppContentState(AppContentStateMeta.appContentStateGameArcade);
         }
     }
 
     public bool isAppContentStateGameCoop {
         get {
-            return IsAppContentState(AppContentStateMeta.app_content_stateGameCoop);
+            return IsAppContentState(AppContentStateMeta.appContentStateGameCoop);
         }
     }
         
     public bool isAppContentStateGameMissions {
         get {
-            return IsAppContentState(AppContentStateMeta.app_content_stateGameMissions);
+            return IsAppContentState(AppContentStateMeta.appContentStateGameMissions);
         }
     }
 
     public bool isAppContentStateGameChallenge {
         get {
-            return IsAppContentState(AppContentStateMeta.app_content_stateGameChallenge);
+            return IsAppContentState(AppContentStateMeta.appContentStateGameChallenge);
         }
     }
 
     public bool isAppContentStateGameContent {
         get {
-            return IsAppContentState(AppContentStateMeta.app_content_stateGameContent);
+            return IsAppContentState(AppContentStateMeta.appContentStateGameContent);
         }
     }
 
     public bool isAppContentStateGameTraining {
         get {
-            return IsAppContentState(AppContentStateMeta.app_content_stateGameTraining);
+            return IsAppContentState(AppContentStateMeta.appContentStateGameTraining);
         }
     }
 
     public bool isAppContentStateGameTrainingChoice {
         get {
-            return IsAppContentState(AppContentStateMeta.app_content_stateGameTrainingChoice);
+            return IsAppContentState(AppContentStateMeta.appContentStateGameTrainingChoice);
         }
     }
 
     public bool isAppContentStateGameTrainingCollection {
         get {
-            return IsAppContentState(AppContentStateMeta.app_content_stateGameTrainingCollection);
+            return IsAppContentState(AppContentStateMeta.appContentStateGameTrainingCollection);
         }
     }
 
