@@ -1997,8 +1997,14 @@ public class GameDataObject : DataObject {
     }
 
     public bool IsType(string typeTo) {
+
+        bool isTypes = false;
+
+        if(types != null) {
+            isTypes = types.Contains(typeTo) ? true : false;
+        }
+
         bool isType = type == typeTo ? true : false;
-        bool isTypes = types.Contains(typeTo) ? true : false;
 
         return isType || isTypes ? true : false;
     }

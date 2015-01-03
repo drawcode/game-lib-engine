@@ -198,16 +198,18 @@ public class WWWs : GameObjectBehavior {
         public void AddParam(string key, object value) {
 
             string val = "";
-            
-            if (typeof(string) == value.GetType()
-                || typeof(float) == value.GetType()
-                || typeof(double) == value.GetType()
-                || typeof(int) == value.GetType()
-                || typeof(DateTime) == value.GetType()) {
-                val = Convert.ToString(value);
-            }
-            else {
-                val = value.ToJson();
+
+            if(value != null) {            
+                if (typeof(string) == value.GetType()
+                    || typeof(float) == value.GetType()
+                    || typeof(double) == value.GetType()
+                    || typeof(int) == value.GetType()
+                    || typeof(DateTime) == value.GetType()) {
+                    val = Convert.ToString(value);
+                }
+                else {
+                    val = value.ToJson();
+                }
             }
 
             if(POST) {

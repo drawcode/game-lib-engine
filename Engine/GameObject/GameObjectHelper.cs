@@ -1297,9 +1297,12 @@ public static class GameObjectHelper {
         }
         
         foreach (Transform t in transforms) {
-            t.parent = null;
             try {
-                UnityEngine.Object.Destroy(t.gameObject);
+                if(t.gameObject.GetType() == typeof(GameObject)
+                   && !t.IsPrefabGhost()) {
+                    t.parent = null;
+                    GameObject.Destroy(t.gameObject);
+                }
             }
             catch (Exception e) {
                 Debug.Log("ERROR:" + e);
