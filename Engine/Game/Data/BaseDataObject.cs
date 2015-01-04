@@ -161,8 +161,8 @@ public class BaseDataObjectKeys {
     public static string reactive = "reactive";
     public static string kinematic = "kinematic";
     public static string gravity = "gravity";
-    public static string range_scale = "range_scale";
-    public static string range_rotation = "range_rotation";
+    public static string asset_scale = "range_scale";
+    public static string asset_rotation = "range_rotation";
     public static string destroy_effect_code = "destroy_effect_code";
     public static string speed_rotation = "speed_rotation";
     public static string destroyed = "destroyed";
@@ -206,6 +206,15 @@ public class BaseDataObjectKeys {
     public static string textures = "textures";
     public static string material = "material";
     public static string materials = "materials";
+
+    // asset items
+    public static string delay = "delay";
+    public static string time = "time";
+    public static string ease_type = "ease_type";
+    public static string position_data = "position_data";
+    public static string rotation_data = "rotation_data";
+    public static string scale_data = "scale_data";
+    //delay
 
     // RPG
     

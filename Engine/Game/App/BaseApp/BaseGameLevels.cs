@@ -13,8 +13,8 @@ public class BaseGameLevels<T> : DataObjects<T> where T : DataObject, new() {
     private static System.Object syncRoot = new System.Object();
     public static string BASE_DATA_KEY = "game-level-data";
     public static float gridHeight = 1f;
-    public static float gridWidth = 80f;
-    public static float gridDepth = 40f;
+    public static float gridWidth = 100f;
+    public static float gridDepth = 60f;
     public static float gridBoxSize = 4f;
     public static bool centeredX = true;
     public static bool centeredY = false;
@@ -228,10 +228,16 @@ public class BaseGameLevels<T> : DataObjects<T> where T : DataObject, new() {
             if(terrainPreset != null) {
                 
                 GamePresetItem terrainPresetItem = terrainPreset.GetItemRandomByProbability(terrainPreset.data.items);
-                
-                if(terrainPresetItem != null) {
-                    dataItems = GameLevelGridData.AddAssets(dataItems, terrainPresetItem.code, 1);
-                }
+                                
+                dataItems.SetAssetsInAssetMap(
+                    terrainPresetItem.code, 
+                    Vector3.zero, 
+                    Vector3.one, 
+                    Vector3.zero);
+
+                //if(terrainPresetItem != null) {
+                //    dataItems = GameLevelGridData.AddAssets(dataItems, terrainPresetItem.code, 1);
+                //}
             }
         }
         
@@ -256,13 +262,18 @@ public class BaseGameLevels<T> : DataObjects<T> where T : DataObject, new() {
         }
         */
 
-        dataItems.SetAssetsInAssetMap("wall-1", Vector3.zero.WithX(3).WithY(1).WithZ(3));
-        dataItems.SetAssetsInAssetMap("wall-1", Vector3.zero.WithX(3).WithY(1).WithZ(4));
-        dataItems.SetAssetsInAssetMap("wall-1", Vector3.zero.WithX(3).WithY(1).WithZ(5));
-        dataItems.SetAssetsInAssetMap("wall-1", Vector3.zero.WithX(3).WithY(1).WithZ(6));
-        dataItems.SetAssetsInAssetMap("wall-1", Vector3.zero.WithX(4).WithY(1).WithZ(6));
-        dataItems.SetAssetsInAssetMap("wall-1", Vector3.zero.WithX(5).WithY(1).WithZ(6));
-        dataItems.SetAssetsInAssetMap("wall-1", Vector3.zero.WithX(6).WithY(1).WithZ(6));
+        int offsetX = ((int)GameLevels.gridWidth / 2) + 3;
+        int offsetZ = ((int)GameLevels.gridDepth / 2) + 3;
+
+        Vector3 scale = Vector3.one;//(Vector3.one/2).WithY(2);
+
+        dataItems.SetAssetsInAssetMap("wall-1", Vector3.zero.WithX(offsetX+2).WithY(1).WithZ(offsetZ+2), scale, Vector3.zero.WithY(90));
+        dataItems.SetAssetsInAssetMap("wall-1", Vector3.zero.WithX(offsetX+2).WithY(1).WithZ(offsetZ+4), scale, Vector3.zero.WithY(90));
+        dataItems.SetAssetsInAssetMap("wall-1", Vector3.zero.WithX(offsetX+2).WithY(1).WithZ(offsetZ+6), scale, Vector3.zero.WithY(90));
+        dataItems.SetAssetsInAssetMap("wall-1", Vector3.zero.WithX(offsetX+2).WithY(1).WithZ(offsetZ+8), scale, Vector3.zero.WithY(90));
+        dataItems.SetAssetsInAssetMap("wall-1", Vector3.zero.WithX(offsetX+4).WithY(1).WithZ(offsetZ+8), scale, Vector3.zero.WithY(0));
+        dataItems.SetAssetsInAssetMap("wall-1", Vector3.zero.WithX(offsetX+6).WithY(1).WithZ(offsetZ+8), scale, Vector3.zero.WithY(0));
+        dataItems.SetAssetsInAssetMap("wall-1", Vector3.zero.WithX(offsetX+8).WithY(1).WithZ(offsetZ+8), scale, Vector3.zero.WithY(0));
 
         return dataItems;
     }

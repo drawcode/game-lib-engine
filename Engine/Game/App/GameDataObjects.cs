@@ -1986,6 +1986,68 @@ public class GameDataObject : DataObject {
         }
     }
 
+    public virtual double delay {
+        get {
+            return Get<double>(BaseDataObjectKeys.delay);
+        }
+        
+        set {
+            Set<double>(BaseDataObjectKeys.delay, value);
+        }
+    }
+    
+    public virtual double time {
+        get {
+            return Get<double>(BaseDataObjectKeys.time);
+        }
+        
+        set {
+            Set<double>(BaseDataObjectKeys.time, value);
+        }
+    }
+    
+    public virtual string ease_type { // linear, easeInOut, easeIn, easeOut
+        get {
+            return Get<string>(BaseDataObjectKeys.ease_type);
+        }
+        
+        set {
+            Set<string>(BaseDataObjectKeys.ease_type, value);
+        }
+    }
+    
+    public virtual Vector3Data position_data { 
+        get {
+            return Get<Vector3Data>(BaseDataObjectKeys.position_data);
+        }
+        
+        set {
+            Set<Vector3Data>(BaseDataObjectKeys.position_data, value);
+        }
+    }
+    
+    public virtual Vector3Data rotation_data { 
+        get {
+            return Get<Vector3Data>(BaseDataObjectKeys.rotation_data);
+        }
+        
+        set {
+            Set<Vector3Data>(BaseDataObjectKeys.rotation_data, value);
+            
+        }
+    }
+    
+    public virtual Vector3Data scale_data { 
+        get {
+            return Get<Vector3Data>(BaseDataObjectKeys.scale_data);
+        }
+        
+        set {
+            Set<Vector3Data>(BaseDataObjectKeys.scale_data, value);
+        }
+    }
+
+
     // helpers
 
     public bool IsTypeTexture() {
