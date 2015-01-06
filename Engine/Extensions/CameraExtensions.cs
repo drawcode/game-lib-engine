@@ -1,3 +1,7 @@
+using System;
+using System.Collections;
+using System.Collections.Generic;
+
 using UnityEngine;
 
 public static class CameraExtensions {
@@ -46,5 +50,61 @@ public static class CameraExtensions {
     
     public static void LayerCullingToggle(this Camera cam, string layer, bool isOn) {
         LayerCullingToggle(cam, 1 << LayerMask.NameToLayer(layer), isOn);
+    }
+}
+
+public static class CamerAnimationExtensions {
+
+    // SHOW
+
+    public static void ShowCameraFadeIn(this Camera cam) {
+
+        if (cam == null) {
+            return;
+        }
+
+        CoroutineUtil.Start(showCameraCo(cam));
+    }
+    
+    public static IEnumerator showCameraCo(Camera cam) {
+                
+        yield return new WaitForSeconds(1f);  
+
+        if (cam != null) {
+            if (cam.gameObject != null) {
+                //cam.gameObject.Show();                
+                cam.enabled = true;
+                UITweenerUtil.FadeTo(cam.gameObject, UITweener.Method.EaseIn, UITweener.Style.Once, .5f, .5f, 1f);
+            }
+        }     
+    }
+
+    // HIDE 
+
+    public static void HideCameraFadeOut(this Camera cam) {
+        
+        if (cam == null) {
+            return;
+        }
+
+        CoroutineUtil.Start(hideCameraCo(cam));
+    }
+    
+    public static IEnumerator hideCameraCo(Camera cam) {
+
+        if (cam != null) {
+            if (cam.gameObject != null) {
+                UITweenerUtil.FadeTo(cam.gameObject, UITweener.Method.EaseIn, UITweener.Style.Once, .5f, .5f, 0f);
+            }
+        }
+
+        yield return new WaitForSeconds(1f);
+        
+        if (cam != null) {
+            cam.enabled = false;
+            if (cam.gameObject != null) {
+                //cam.gameObject.Hide();
+            }
+        }
     }
 }

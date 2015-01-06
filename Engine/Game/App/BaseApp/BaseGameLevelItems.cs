@@ -212,13 +212,13 @@ public class GameLevelItemAssetData : GameDataObject {
         }
     }
     
-    public virtual Vector3 start_position {
+    public virtual Vector3Data start_position {
         get {
-            return Get<Vector3>(BaseDataObjectKeys.start_position);
+            return Get<Vector3Data>(BaseDataObjectKeys.start_position);
         }
         
         set {
-            Set<Vector3>(BaseDataObjectKeys.start_position, value);
+            Set<Vector3Data>(BaseDataObjectKeys.start_position, value);
         }
     }
     
@@ -272,23 +272,23 @@ public class GameLevelItemAssetData : GameDataObject {
         }
     }
     
-    public virtual Vector3 asset_scale {
+    public virtual Vector3Data asset_scale {
         get {
-            return Get<Vector3>(BaseDataObjectKeys.asset_scale);
+            return Get<Vector3Data>(BaseDataObjectKeys.asset_scale);
         }
         
         set {
-            Set<Vector3>(BaseDataObjectKeys.asset_scale, value);
+            Set<Vector3Data>(BaseDataObjectKeys.asset_scale, value);
         }
     }
     
-    public virtual Vector3 asset_rotation {
+    public virtual Vector3Data asset_rotation {
         get {
-            return Get<Vector3>(BaseDataObjectKeys.asset_rotation);
+            return Get<Vector3Data>(BaseDataObjectKeys.asset_rotation);
         }
         
         set {
-            Set<Vector3>(BaseDataObjectKeys.asset_rotation, value);
+            Set<Vector3Data>(BaseDataObjectKeys.asset_rotation, value);
         }
     }
     
@@ -299,7 +299,7 @@ public class GameLevelItemAssetData : GameDataObject {
     // scale range
     
     public void SetAssetScaleRange(float min, float max) {
-        asset_scale = GetAssetScaleRange(min, max, min, max, min, max);
+        asset_scale = new Vector3Data(GetAssetScaleRange(min, max));
     }
         
     // set
@@ -307,37 +307,38 @@ public class GameLevelItemAssetData : GameDataObject {
     // x
     
     public void SetAssetScaleRangeX(float val) {
-        asset_scale = GetAssetScaleRangeX(val);
+        asset_scale = new Vector3Data(GetAssetScaleRangeX(val));
     }
     
     public void SetAssetScaleRangeX(float min, float max) {
-        asset_scale = GetAssetScaleRangeX(min, max);
+        asset_scale = new Vector3Data(GetAssetScaleRangeX(min, max));
     }
     
     // y
     
     public void SetAssetScaleRangeY(float val) {
-        asset_scale = GetAssetScaleRangeY(val);
+        asset_scale = new Vector3Data(GetAssetScaleRangeY(val));
     }
     
     public void SetAssetScaleRangeY(float min, float max) {
-        asset_scale = GetAssetScaleRangeY(min, max);
+        asset_scale = new Vector3Data(GetAssetScaleRangeY(min, max));
     }
     
     // z
     
     public void SetAssetScaleRangeZ(float val) {
-        asset_scale = GetAssetScaleRangeZ(val);
+        asset_scale = new Vector3Data(GetAssetScaleRangeZ(val));
     }
     
     public void SetAssetScaleRangeZ(float min, float max) {
-        asset_scale = GetAssetScaleRangeZ(min, max);
+        asset_scale = new Vector3Data(GetAssetScaleRangeZ(min, max));
     }
     
     // get
     
     public Vector3 GetAssetScaleRange(float min, float max) {
-        return GetAssetScaleRange(min, max, min, max, min, max);
+        float range = UnityEngine.Random.Range(min, max);
+        return Vector3.zero.WithX(range).WithY(range).WithZ(range);
     }
     
     // x
@@ -359,8 +360,7 @@ public class GameLevelItemAssetData : GameDataObject {
     public Vector3 GetAssetScaleRangeY(float min, float max) {
         return GetAssetScaleRange(0, 0, min, max, 0, 0);
     }
-    
-    
+        
     // z
     
     public Vector3 GetAssetScaleRangeZ(float val) {
@@ -374,9 +374,9 @@ public class GameLevelItemAssetData : GameDataObject {
     // all
     
     public Vector3 GetAssetScaleRange(
-        float minX = 0, float maxX = 0,
-        float minY = 0, float maxY = 0,
-        float minZ = 0, float maxZ = 0) {
+        float minX, float maxX,
+        float minY, float maxY,
+        float minZ, float maxZ) {
         
         float range_x = UnityEngine.Random.Range(minX, maxX);
         float range_y = UnityEngine.Random.Range(minY, maxY);
@@ -385,7 +385,6 @@ public class GameLevelItemAssetData : GameDataObject {
         return Vector3.zero.WithX(range_x).WithY(range_y).WithZ(range_z);
     }
 
-
     // rotation range
 
     // set
@@ -393,31 +392,31 @@ public class GameLevelItemAssetData : GameDataObject {
     // x
 
     public void SetAssetRotationRangeX(float val) {
-        asset_rotation = GetAssetRotationRangeX(val);
+        asset_rotation = new Vector3Data(GetAssetRotationRangeX(val));
     }
 
     public void SetAssetRotationRangeX(float min, float max) {
-        asset_rotation = GetAssetRotationRangeX(min, max);
+        asset_rotation = new Vector3Data(GetAssetRotationRangeX(min, max));
     }
     
     // y
     
     public void SetAssetRotationRangeY(float val) {
-        asset_rotation = GetAssetRotationRangeY(val);
+        asset_rotation = new Vector3Data(GetAssetRotationRangeY(val));
     }
     
     public void SetAssetRotationRangeY(float min, float max) {
-        asset_rotation = GetAssetRotationRangeY(min, max);
+        asset_rotation = new Vector3Data(GetAssetRotationRangeY(min, max));
     }
     
     // z
     
     public void SetAssetRotationRangeZ(float val) {
-        asset_rotation = GetAssetRotationRangeZ(val);
+        asset_rotation = new Vector3Data(GetAssetRotationRangeZ(val));
     }
     
     public void SetAssetRotationRangeZ(float min, float max) {
-        asset_rotation = GetAssetRotationRangeZ(min, max);
+        asset_rotation = new Vector3Data(GetAssetRotationRangeZ(min, max));
     }
 
     // get
@@ -475,15 +474,15 @@ public class GameLevelItemAssetData : GameDataObject {
     
     public override void Reset() {
         game_level_item_asset = new GameLevelItemAsset();
-        start_position = Vector3.zero;
+        start_position = new Vector3Data(Vector3.zero);
         limit = 0;
         physics_type = GameLevelItemAssetPhysicsType.physicsStatic;
         destructable = false;
         reactive = false;
         kinematic = true;
         gravity = true;
-        asset_scale = Vector3.one;
-        asset_rotation = Vector3.zero; // range of rotation start stop
+        asset_scale = new Vector3Data(Vector3.one);
+        asset_rotation = new Vector3Data(Vector3.zero); // range of rotation start stop
     }
 }
 
