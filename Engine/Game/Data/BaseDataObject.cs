@@ -153,7 +153,6 @@ public class BaseDataObjectKeys {
     public static string terrain_presets = "terrain_presets";
     public static string asset_presets = "asset_presets";
     public static string layout_presets = "layout_presets";
-    
     public static string game_level_item_asset = "game_level_item_asset";
     public static string start_position = "start_position";
     public static string physics_type = "physics_type";
@@ -166,11 +165,8 @@ public class BaseDataObjectKeys {
     public static string destroy_effect_code = "destroy_effect_code";
     public static string speed_rotation = "speed_rotation";
     public static string destroyed = "destroyed";
-
     public static string steps = "steps";
-
     public static string character_presets = "character_presets";
-
     public static string model = "model";
     public static string models = "models";
     public static string presets = "presets";
@@ -453,9 +449,9 @@ public class BaseDataObject : Dictionary<string, object> {
         #else
         string fileWebPath = 
             fileFullPath
-                .Replace(Application.dataPath)
-                .Replace(Application.persistentDataPath);
-        dataValue = SystemPrefUtil.SetLocalSettingString(fileWebPath, dataValue);
+                .Replace(Application.dataPath, "")
+                .Replace(Application.persistentDataPath, "");
+        dataValue = SystemPrefUtil.GetLocalSettingString(fileWebPath);
         #endif  
         
         dataValue = DataPrepareLoad(dataValue);
@@ -472,10 +468,10 @@ public class BaseDataObject : Dictionary<string, object> {
         }
         #else
         string fileWebPath = 
-            path
-                .Replace(Application.dataPath)
-                .Replace(Application.persistentDataPath);
-        dataValue = SystemPrefUtil.SetLocalSettingString(fileWebPath, dataValue);
+            folderPath
+                .Replace(Application.dataPath, "")
+                .Replace(Application.persistentDataPath, "");
+        dataValue = SystemPrefUtil.GetLocalSettingString(fileWebPath);
         #endif 
 
         if (!string.IsNullOrEmpty(dataValue)) {
@@ -506,8 +502,8 @@ public class BaseDataObject : Dictionary<string, object> {
         
         string fileWebPath = 
             fileFullPath
-                .Replace(Application.dataPath)
-                .Replace(Application.persistentDataPath);
+                .Replace(Application.dataPath, "")
+                .Replace(Application.persistentDataPath, "");
         SystemPrefUtil.SetLocalSettingString(fileWebPath, dataValue);
         #endif
     }
