@@ -289,7 +289,7 @@ public class BaseGameLevels<T> : DataObjects<T> where T : DataObject, new() {
             
             int totalAssetLimit = 0;
 
-            bool isNestedLimitsType = assetDataItem.Get(BaseDataObjectKeys.data_type) == "nested_limits" ? true : false;
+            bool isNestedLimitsType = assetDataItem.Get<string>(BaseDataObjectKeys.data_type) == "nested_limits" ? true : false;
 
             GamePreset assetPreset = GamePresets.Instance.GetById(assetDataItem.code);
             
