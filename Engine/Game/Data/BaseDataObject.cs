@@ -437,6 +437,19 @@ public class BaseDataObject : Dictionary<string, object> {
 
         return dataValue;
     }
+
+    public string GetWebPath(string path) {
+
+        if(!string.IsNullOrEmpty(Application.dataPath)) {
+            path = path.Replace(Application.dataPath, "");
+        }
+
+        if(!string.IsNullOrEmpty(Application.persistentDataPath)) {
+            path = path.Replace(Application.persistentDataPath, "");
+        }
+
+        return path;
+    }
     
     public string LoadData(string fileFullPath) {
 
@@ -447,10 +460,7 @@ public class BaseDataObject : Dictionary<string, object> {
             dataValue = FileSystemUtil.ReadString(fileFullPath);
         }
         #else
-        string fileWebPath = 
-            fileFullPath
-                .Replace(Application.dataPath, "")
-                .Replace(Application.persistentDataPath, "");
+        string fileWebPath = GetWebPath(fileFullPath);
         dataValue = SystemPrefUtil.GetLocalSettingString(fileWebPath);
         #endif  
         
@@ -459,7 +469,7 @@ public class BaseDataObject : Dictionary<string, object> {
         return dataValue;
     }
     
-    public T LoadData<T>(string folderPath, string fileKey) {
+    public T LoadData<T>(string fileFullPath, string fileKey) {
         string dataValue = "";
         #if !UNITY_WEBPLAYER
         string path = PathUtil.Combine(folderPath, (fileKey + ".json").TrimStart('/'));
@@ -467,10 +477,7 @@ public class BaseDataObject : Dictionary<string, object> {
             dataValue = FileSystemUtil.ReadString(path);
         }
         #else
-        string fileWebPath = 
-            folderPath
-                .Replace(Application.dataPath, "")
-                .Replace(Application.persistentDataPath, "");
+        string fileWebPath = GetWebPath(fileFullPath);
         dataValue = SystemPrefUtil.GetLocalSettingString(fileWebPath);
         #endif 
 
@@ -500,10 +507,7 @@ public class BaseDataObject : Dictionary<string, object> {
         }
         #else
         
-        string fileWebPath = 
-            fileFullPath
-                .Replace(Application.dataPath, "")
-                .Replace(Application.persistentDataPath, "");
+        string fileWebPath = GetWebPath(fileFullPath);
         SystemPrefUtil.SetLocalSettingString(fileWebPath, dataValue);
         #endif
     }
