@@ -472,7 +472,7 @@ public class BaseDataObject : Dictionary<string, object> {
     public T LoadData<T>(string fileFullPath, string fileKey) {
         string dataValue = "";
         #if !UNITY_WEBPLAYER
-        string path = PathUtil.Combine(folderPath, (fileKey + ".json").TrimStart('/'));
+        string path = PathUtil.Combine(fileFullPath, (fileKey + ".json").TrimStart('/'));
         if (FileSystemUtil.CheckFileExists(path)) {       
             dataValue = FileSystemUtil.ReadString(path);
         }
