@@ -36,6 +36,6 @@ public class AudioDestroy : GameObjectBehavior {
         }
         gameObject.audio.enabled = false;
         gameObject.SetActive(false);
-        Destroy(gameObject);
+        GameObjectHelper.DestroyGameObject(gameObject);
     }
 }

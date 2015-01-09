@@ -4,11 +4,13 @@ using System.Collections.Generic;
 
 using UnityEngine;
 
+/*
 public class ObjectPoolItem {
     public GameObject parentObject;
     public GameObject itemObject;
 
 }
+*/
 
 // The ObjectPool is the storage class for pooled objects of the same kind (e.g. "Pistol Bullet", or "Enemy A")
 // This is used by the ObjectPoolManager and is not meant to be used separately
@@ -24,6 +26,8 @@ public class ObjectPool : System.Object {
     //public Dictionary<int, GameObject> pool;
 
     public Queue<GameObject> pool;
+
+    public string key = "default";
 
     // How many objects are currently sitting in the cache
     public int Count {

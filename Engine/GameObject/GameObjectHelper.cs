@@ -1257,20 +1257,52 @@ public static class GameObjectHelper {
         
         return obj;
     }
+
+    // Pool keyed
+        
+    public static GameObject CreateGameObject(
+        string key, 
+        GameObject go,
+        Vector3 pos,
+        Quaternion rotate,
+        bool pooled) {
+        
+        GameObject obj = null;
+        
+        if (!pooled) {
+            obj = GameObject.Instantiate(go, pos, rotate) as GameObject;
+        }
+        else {
+            obj = ObjectPoolKeyedManager.createPooled(key, go, pos, rotate);
+        }
+        
+        if (obj != null) {
+            
+            if (!obj.Has<PoolGameObject>()) {
+                obj.AddComponent<PoolGameObject>();
+            }
+        }   
+        
+        return obj;
+    }
     
     public static void DestroyGameObject(GameObject go, bool pooled = true) {
         DestroyGameObject(go, 0f, pooled);
     }
-    
+
     public static void DestroyGameObject(GameObject go, float delay, bool pooled = true) {
         if (!pooled && !go.Has<PoolGameObject>()) {
             DestroyDelayed(go, delay);
+        }
+        else if (go.Has<ObjectPoolKeyed>()) {
+            ObjectPoolKeyedManager.destroyPooled(go, delay);
         }
         else {
             ObjectPoolManager.destroyPooled(go, delay);
         }
     }
-    
+
+
     public static void DestroyNow(GameObject inst) {
         if (inst == null)
             return;
