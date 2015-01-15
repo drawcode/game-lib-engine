@@ -9,6 +9,10 @@ public class AudioDestroy : GameObjectBehavior {
 
     // Use this for initialization
     private void Start() {
+        Reset();
+    }
+
+    public void Reset() {
         float audioLength = afterTimeDefault;
         if (audio != null) {
             if (audio.clip != null) {
@@ -19,7 +23,7 @@ public class AudioDestroy : GameObjectBehavior {
                 }
             }
         }
-        StartCoroutine(DestroySound(audioLength));
+        StartCoroutine(DestroySound(audioLength));    
     }
 
     private IEnumerator DestroySound(float afterTime) {

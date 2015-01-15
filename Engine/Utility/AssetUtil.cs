@@ -9,6 +9,12 @@ using UnityEngine;
 public static class AssetUtil {
 
     public static T LoadAsset<T>(string path) where T : UnityEngine.Object {
+
+        // TODO CHECK if streaming assets enabled
+        // if so load from there or try from there
+        // then try resources
+        // also server fetch if needed...
+
         return LoadAssetFromResources<T>(path);
     }
 
