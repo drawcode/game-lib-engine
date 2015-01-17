@@ -258,18 +258,40 @@ public class GameLevelLayoutData : GameDataObject {
             }
 
             foreach(char c in rowAssets) {
+
                 GameDataObject assetObject = GetGameDataObjectKeyed(c.ToString());
+
                 if(assetObject != null) {
 
                     // add the game object in place of the text character 
+
+                    if(assetObject.local_position_data == null) {
+                        assetObject.local_position_data = new Vector3Data();
+                    }
+
+                    if(assetObject.local_rotation_data == null) {
+                        assetObject.local_rotation_data = new Vector3Data();
+                    }
+                                        
+                    if(assetObject.rotation_data == null) {
+                        assetObject.rotation_data = new Vector3Data();
+                    }
 
                     if(assetObject.position_data == null) {
                         assetObject.position_data = new Vector3Data();
                     }
 
-                    assetObject.position_data.x = x;
-                    assetObject.position_data.y = y;
-                    assetObject.position_data.z = z;
+                    if(assetObject.scale_data == null) {
+                        assetObject.scale_data = new Vector3Data(1, 1, 1);
+                    }
+
+                    if(assetObject.grid_data == null) {
+                        assetObject.grid_data = new Vector3Data();
+                    }
+
+                    assetObject.grid_data.x = x;
+                    assetObject.grid_data.y = y;
+                    assetObject.grid_data.z = z;
 
                     SetGameDataObject(assetObject);
                 }

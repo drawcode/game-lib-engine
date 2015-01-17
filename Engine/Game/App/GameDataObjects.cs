@@ -702,6 +702,27 @@ public class GameDataObjectItem : GameDataObject {
     public GameDataAssetPreset GetAssetPreset(string code) {
         return GetItem<GameDataAssetPreset>(asset_presets, code);
     }
+        
+    // layout presets
+    
+    public bool HasLayoutPresets() {
+        
+        if (layout_presets != null) {
+            if (layout_presets.Count > 0) {
+                return true;
+            }
+        }
+        
+        return false;
+    }
+    
+    public GameDataLayoutPreset GetLayoutPreset() {
+        return GetLayoutPreset(GameDataItemTypeKeys.defaultType);
+    }
+    
+    public GameDataLayoutPreset GetLayoutPreset(string code) {
+        return GetItem<GameDataLayoutPreset>(layout_presets, code);
+    }
     
     // rpgs
     
@@ -2043,6 +2064,16 @@ public class GameDataObject : DataObject {
         
         set {
             Set<Vector3Data>(BaseDataObjectKeys.position_data, value);
+        }
+    }
+        
+    public virtual Vector3Data grid_data { 
+        get {
+            return Get<Vector3Data>(BaseDataObjectKeys.grid_data);
+        }
+        
+        set {
+            Set<Vector3Data>(BaseDataObjectKeys.grid_data, value);
         }
     }
     

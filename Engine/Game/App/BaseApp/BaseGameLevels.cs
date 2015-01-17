@@ -245,53 +245,42 @@ public class BaseGameLevels<T> : DataObjects<T> where T : DataObject, new() {
     }
 
     public static GameLevelGridData GetLevelGridLayouts(GameLevelGridData dataItems, List<GameDataLayoutPreset> presets) {
+                        
+        foreach(GameDataLayoutPreset layoutDataItem in presets) {
 
-        /*
-        foreach(GameDataTerrainPreset terrainDataItem in presets) {
-            
-            GamePreset layoutPreset = GamePresets.Instance.GetById(terrainDataItem.code);
-            
-            if(terrainPreset != null) {
-                
-                GamePresetItem terrainPresetItem = terrainPreset.GetItemRandomByProbability(terrainPreset.data.items);
-                
-                if(terrainPresetItem != null) {
-                    dataItems = GameLevelGridData.AddAssets(dataItems, terrainPresetItem.code, 1);
-                }
+            GameLevelLayout gameLevelLayout = GameLevelLayouts.Instance.GetById(layoutDataItem.code);
+
+            if(gameLevelLayout == null || gameLevelLayout.data == null) {
+                continue;
             }
+
+            List<GameDataObject> layoutObjects = gameLevelLayout.data.GetLayoutAssets();
+
+            if(layoutObjects == null) {
+                continue;
+            }
+
+            Debug.Log("layoutObjects.Count:" + layoutObjects.Count);
+
+            int offsetX = ((int)GameLevels.gridWidth / 2) + 3;
+            int offsetZ = ((int)GameLevels.gridDepth / 2) + 3;
+            int offsetY = 0;// TODO 2d/3d type ((int)GameLevels.gridHeight / 2) + 3;
+
+            foreach(GameDataObject layoutObjectItem in layoutObjects) {
+                
+                dataItems.SetAssetsInAssetMap(
+                    layoutObjectItem.code,
+                    Vector3.zero
+                    .WithX(offsetX + (float)layoutObjectItem.grid_data.x)
+                    .WithY(offsetY + (float)layoutObjectItem.grid_data.y)
+                    .WithZ(offsetZ + (float)layoutObjectItem.grid_data.z), 
+
+                    layoutObjectItem.scale_data.GetVector3(), 
+                    layoutObjectItem.local_rotation_data.GetVector3());
+            }
+
         }
-        */
-
-
-        GameLevelLayout gameLevelLayout = GameLevelLayouts.Instance.GetById("level-layout-basic-text-1");
-
-        if(gameLevelLayout == null || gameLevelLayout.data == null) {
-            return dataItems;
-        }
-
-        List<GameDataObject> layoutObjects = gameLevelLayout.data.GetLayoutAssets();
-
-        if(layoutObjects == null) {
-            return dataItems;
-        }
-
-        int offsetX = ((int)GameLevels.gridWidth / 2) + 3;
-        int offsetZ = ((int)GameLevels.gridDepth / 2) + 3;
-        int offsetY = 0;// TODO 2d/3d type ((int)GameLevels.gridHeight / 2) + 3;
-
-        foreach(GameDataObject layoutObjectItem in layoutObjects) {
-            
-            dataItems.SetAssetsInAssetMap(
-                layoutObjectItem.code,
-                Vector3.zero
-                .WithX(offsetX + (float)layoutObjectItem.position_data.x)
-                .WithY(offsetY + (float)layoutObjectItem.position_data.y)
-                .WithZ(offsetZ + (float)layoutObjectItem.position_data.z), 
-
-                layoutObjectItem.scale_data.GetVector3(), 
-                layoutObjectItem.rotation_data.GetVector3());
-        }
-
+        
         /*
         dataItems.SetAssetsInAssetMap("wall-1", Vector3.zero.WithX(offsetX+2).WithY(1).WithZ(offsetZ+2), scale, Vector3.zero.WithY(90));
         dataItems.SetAssetsInAssetMap("wall-1", Vector3.zero.WithX(offsetX+2).WithY(1).WithZ(offsetZ+4), scale, Vector3.zero.WithY(90));
@@ -301,7 +290,6 @@ public class BaseGameLevels<T> : DataObjects<T> where T : DataObject, new() {
         dataItems.SetAssetsInAssetMap("wall-1", Vector3.zero.WithX(offsetX+6).WithY(1).WithZ(offsetZ+8), scale, Vector3.zero.WithY(0));
         dataItems.SetAssetsInAssetMap("wall-1", Vector3.zero.WithX(offsetX+8).WithY(1).WithZ(offsetZ+8), scale, Vector3.zero.WithY(0));
 */
-
         return dataItems;
     }
     

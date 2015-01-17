@@ -217,6 +217,7 @@ public class BaseDataObjectKeys {
     public static string local_rotation_data = "local_rotation_data";
     public static string local_scale_data = "local_scale_data";
     public static string position_data = "position_data";
+    public static string grid_data = "grid_data";
     public static string rotation_data = "rotation_data";
     public static string scale_data = "scale_data";
     //delay
