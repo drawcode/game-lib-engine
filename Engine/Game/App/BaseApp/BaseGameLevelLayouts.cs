@@ -243,6 +243,11 @@ public class GameLevelLayoutData : GameDataObject {
             return;
         }
 
+        // If has list, clear the data objects already parsed.
+        if(data_game_objects != null) {
+            data_game_objects.Clear();
+        }
+
         int x = 0;
         int y = 0;
         int z = 0;
@@ -259,41 +264,46 @@ public class GameLevelLayoutData : GameDataObject {
 
             foreach(char c in rowAssets) {
 
-                GameDataObject assetObject = GetGameDataObjectKeyed(c.ToString());
+                string key = c.ToString();
 
-                if(assetObject != null) {
+                if(!string.IsNullOrEmpty(key)) {
 
-                    // add the game object in place of the text character 
+                    GameDataObject assetObject = GetGameDataObjectKeyed(key);
 
-                    if(assetObject.local_position_data == null) {
-                        assetObject.local_position_data = new Vector3Data();
+                    if(assetObject != null) {
+
+                        // add the game object in place of the text character 
+
+                        if(assetObject.local_position_data == null) {
+                            assetObject.local_position_data = new Vector3Data();
+                        }
+
+                        if(assetObject.local_rotation_data == null) {
+                            assetObject.local_rotation_data = new Vector3Data();
+                        }
+                                            
+                        if(assetObject.rotation_data == null) {
+                            assetObject.rotation_data = new Vector3Data();
+                        }
+
+                        if(assetObject.position_data == null) {
+                            assetObject.position_data = new Vector3Data();
+                        }
+
+                        if(assetObject.scale_data == null) {
+                            assetObject.scale_data = new Vector3Data(1, 1, 1);
+                        }
+
+                        if(assetObject.grid_data == null) {
+                            assetObject.grid_data = new Vector3Data();
+                        }
+
+                        assetObject.grid_data.x = x;
+                        assetObject.grid_data.y = y;
+                        assetObject.grid_data.z = z;
+
+                        SetGameDataObject(assetObject);
                     }
-
-                    if(assetObject.local_rotation_data == null) {
-                        assetObject.local_rotation_data = new Vector3Data();
-                    }
-                                        
-                    if(assetObject.rotation_data == null) {
-                        assetObject.rotation_data = new Vector3Data();
-                    }
-
-                    if(assetObject.position_data == null) {
-                        assetObject.position_data = new Vector3Data();
-                    }
-
-                    if(assetObject.scale_data == null) {
-                        assetObject.scale_data = new Vector3Data(1, 1, 1);
-                    }
-
-                    if(assetObject.grid_data == null) {
-                        assetObject.grid_data = new Vector3Data();
-                    }
-
-                    assetObject.grid_data.x = x;
-                    assetObject.grid_data.y = y;
-                    assetObject.grid_data.z = z;
-
-                    SetGameDataObject(assetObject);
                 }
 
                 x++;

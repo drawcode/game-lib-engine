@@ -267,14 +267,14 @@ public class BaseGameLevels<T> : DataObjects<T> where T : DataObject, new() {
             int offsetY = 0;// TODO 2d/3d type ((int)GameLevels.gridHeight / 2) + 3;
 
             foreach(GameDataObject layoutObjectItem in layoutObjects) {
+
+                float gridX = offsetX + (float)layoutObjectItem.grid_data.x;
+                float gridY = offsetY + (float)layoutObjectItem.grid_data.y;
+                float gridZ = offsetZ + (float)layoutObjectItem.grid_data.z;
                 
                 dataItems.SetAssetsInAssetMap(
                     layoutObjectItem.code,
-                    Vector3.zero
-                    .WithX(offsetX + (float)layoutObjectItem.grid_data.x)
-                    .WithY(offsetY + (float)layoutObjectItem.grid_data.y)
-                    .WithZ(offsetZ + (float)layoutObjectItem.grid_data.z), 
-
+                    Vector3.zero.WithX(gridX).WithY(gridY).WithZ(gridZ), 
                     layoutObjectItem.scale_data.GetVector3(), 
                     layoutObjectItem.local_rotation_data.GetVector3());
             }
