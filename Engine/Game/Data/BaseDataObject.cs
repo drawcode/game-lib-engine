@@ -7,7 +7,7 @@ using UnityEngine;
 using Engine.Events;
 using Engine.Data.Json;
 
-public class BaseDataObjectKeys { 
+public class BaseDataObjectKeys {  
     
     public static string id = "id";
     public static string uid = "uid";
@@ -31,7 +31,13 @@ public class BaseDataObjectKeys {
     public static string file = "file";
     public static string files = "files";
     public static string host = "host";
+
     public static string data = "data";
+    public static string data_list = "data_list";
+    public static string data_object = "data_object";
+    public static string data_items = "data_items";
+    public static string data_game_objects = "data_game_objects";
+
     public static string strings = "strings";
     public static string images = "images";
     public static string info = "info";
@@ -84,7 +90,7 @@ public class BaseDataObjectKeys {
     public static string games = "games";
     public static string order_by = "order_by";
     public static string status = "status";
-    public static string data_items = "data_items";
+
     public static string pack_code = "pack_code";
     public static string pack_sort = "pack_sort";
     public static string date_created = "date_created";
@@ -207,6 +213,9 @@ public class BaseDataObjectKeys {
     public static string delay = "delay";
     public static string time = "time";
     public static string ease_type = "ease_type";
+    public static string local_position_data = "local_position_data";
+    public static string local_rotation_data = "local_rotation_data";
+    public static string local_scale_data = "local_scale_data";
     public static string position_data = "position_data";
     public static string rotation_data = "rotation_data";
     public static string scale_data = "scale_data";

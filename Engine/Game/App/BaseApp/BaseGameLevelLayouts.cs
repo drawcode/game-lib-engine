@@ -128,18 +128,172 @@ public class BaseGameLevelLayouts<T> : DataObjects<T> where T : DataObject, new(
             LogUtil.Log("Changing LevelLayout: code:" + code);    
         }
     }
+}
 
+public class GameLevelLayoutType {
+    public static string layoutGridList = "layout-grid-list";
+    public static string layoutTextKeys = "layout-text-keys";
+}
+
+public class GameLevelLayoutDisplayType {
+    public static string layoutCentered = "centered";
+    public static string layoutExplicit = "explicit";
+}
+
+/*
+"asset_data" : [{
+               "code": "wall-1", 
+               "position_data": {"x":1, "y":1, "z": 0}, 
+               "local_position_data": {"x":0, "y":0, "z": 0}, 
+               "rotation_data": {"x":0, "y":90, "z": 0}, 
+               "scale_data": {"x":1, "y":1, "z": 1}
+            },
+            {
+               "code": "wall-1", 
+               "position_data": {"x":1, "y":1, "z": 0}, 
+               "local_position_data": {"x":0, "y":0, "z": 0}, 
+               "rotation_data": {"x":0, "y":9, "z": 0}, 
+               "scale_data": {"x":1, "y":1, "z": 1}
+            }
+         ]
+
+
+"display_type": "centered",
+         "data_keys": {
+            "-", {
+               "code": "wall-1", 
+               "local_position_data": {"x":0, "y":0, "z": 0}, 
+               "rotation_data": {"x":0, "y":90, "z": 0}, 
+               "scale_data": {"x":1, "y":1, "z": 1}
+            }
+            "|", {
+               "code": "wall-1", 
+               "local_position_data": {"x":0, "y":0, "z": 0}, 
+               "rotation_data": {"x":0, "y":0, "z": 0}, 
+               "scale_data": {"x":1, "y":1, "z": 1}
+            }
+            "c", {
+               "code": "item-coin", 
+               "local_position_data": {"x":0, "y":0, "z": 0}, 
+               "rotation_data": {"x":0, "y":0, "z": 0}, 
+               "scale_data": {"x":1, "y":1, "z": 1}
+            }
+         }
+         "layout_data" : [
+            "|---------  |",
+            "| c c c c c |",
+            "|           |",
+            "| c c c c c |",
+            "|           |",
+            "| c c c c c |",
+            "|  ---------|"
+         ]
+
+*/
+
+
+public class GameLevelLayoutData : GameDataObject {
+        
+    // code
+    // type
+
+    public GameLevelLayoutData() {
+        Reset();
+    }
+
+    public override void Reset() {
+        base.Reset();
+
+        data_list = new List<string>();
+        data_object = new Dictionary<string, GameDataObject>();
+        data_game_objects = new List<GameDataObject>();
+    }
+
+    public List<GameDataObject> GetLayoutAssets() {
+        ProcessLayout();
+
+        return data_game_objects;
+    }
+
+    public GameDataObject GetGameDataObjectKeyed(string assetKey) {
+
+        if(data_object == null) {
+            return null;
+        }
+
+        if(data_object.ContainsKey(assetKey)) {
+            return data_object.Get(assetKey);
+        }
+
+        return null;
+    }
+
+    public void SetGameDataObject(GameDataObject gameDataObject) {
+        if(data_game_objects == null) {
+            return;
+        }
+
+        data_game_objects.Add(gameDataObject);
+    }
+
+    public void ProcessLayout() {
+        // Get the list based level layout
+
+        if(data_list == null) {
+            return;
+        }
+
+        int x = 0;
+        int y = 0;
+        int z = 0;
+       
+        foreach(string row in data_list) {
+
+            x = 0;
+
+            char[] rowAssets = row.ToCharArray();
+
+            if(rowAssets == null) {
+                continue;
+            }
+
+            foreach(char c in rowAssets) {
+                GameDataObject assetObject = GetGameDataObjectKeyed(c.ToString());
+                if(assetObject != null) {
+
+                    // add the game object in place of the text character 
+
+                    if(assetObject.position_data == null) {
+                        assetObject.position_data = new Vector3Data();
+                    }
+
+                    assetObject.position_data.x = x;
+                    assetObject.position_data.y = y;
+                    assetObject.position_data.z = z;
+
+                    SetGameDataObject(assetObject);
+                }
+
+                x++;
+            }
+            z++;
+        }
+
+        // Get they keyed asset dictionary to lookup assets to load
+
+        // Fill data_game_objects with the list
+    }
 }
 
 public class BaseGameLevelLayout : GameDataObject {
 
-    public virtual GameDataObjectItem data {
+    public virtual GameLevelLayoutData data {
         get {
-            return Get<GameDataObjectItem>(BaseDataObjectKeys.data);
+            return Get<GameLevelLayoutData>(BaseDataObjectKeys.data);
         }
         
         set {
-            Set<GameDataObjectItem>(BaseDataObjectKeys.data, value);
+            Set<GameLevelLayoutData>(BaseDataObjectKeys.data, value);
         }
     } 
 

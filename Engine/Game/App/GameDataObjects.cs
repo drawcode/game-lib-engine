@@ -988,7 +988,6 @@ public class GameDataObjectMeta : GameDataObject {
     } 
 }
 
-
 public class GameDataObjectLocalized : GameDataObject {
 
     
@@ -1019,7 +1018,7 @@ public class GameDataObjectLocalized : GameDataObject {
     public string GetLocalized(string code, string defaultValue) {          
         string valTo = Get<string>(code, defaultValue);
         
-        if(!string.IsNullOrEmpty(valTo)) {
+        if (!string.IsNullOrEmpty(valTo)) {
             valTo = Locos.GetReplaceLocalized(valTo);
         }
         
@@ -1036,7 +1035,7 @@ public class GameDataObjectLocalized : GameDataObject {
         set {
             Set<string>(BaseDataObjectKeys.display_name, value);
         }
-    }  
+    }
     
     public override string action_display_name {
         get {
@@ -1068,7 +1067,7 @@ public class GameDataObjectLocalized : GameDataObject {
         set {
             Set<string>(BaseDataObjectKeys.description, value);
         }
-    } 
+    }
     
     public override string action_description {
         get {
@@ -1078,7 +1077,7 @@ public class GameDataObjectLocalized : GameDataObject {
         set {
             Set<string>(BaseDataObjectKeys.action_description, value);
         }
-    } 
+    }
 
     public override string content {
         get {
@@ -1180,7 +1179,7 @@ public class GameDataObject : DataObject {
         set {
             Set<string>(BaseDataObjectKeys.display_name, value);
         }
-    }  
+    }
 
     public virtual string action_display_name {
         get {
@@ -1212,7 +1211,7 @@ public class GameDataObject : DataObject {
         set {
             Set<string>(BaseDataObjectKeys.description, value);
         }
-    } 
+    }
 
     public virtual string action_description {
         get {
@@ -1323,7 +1322,7 @@ public class GameDataObject : DataObject {
         set {
             Set<string>(BaseDataObjectKeys.key, value);
         }
-    }    
+    }
 
     public virtual string network_id {
         get {
@@ -2015,7 +2014,28 @@ public class GameDataObject : DataObject {
             Set<string>(BaseDataObjectKeys.ease_type, value);
         }
     }
+
+    public virtual Vector3Data local_position_data { 
+        get {
+            return Get<Vector3Data>(BaseDataObjectKeys.local_position_data);
+        }
+        
+        set {
+            Set<Vector3Data>(BaseDataObjectKeys.local_position_data, value);
+        }
+    }
     
+    public virtual Vector3Data local_rotation_data { 
+        get {
+            return Get<Vector3Data>(BaseDataObjectKeys.local_rotation_data);
+        }
+        
+        set {
+            Set<Vector3Data>(BaseDataObjectKeys.local_rotation_data, value);
+            
+        }
+    }
+
     public virtual Vector3Data position_data { 
         get {
             return Get<Vector3Data>(BaseDataObjectKeys.position_data);
@@ -2046,6 +2066,36 @@ public class GameDataObject : DataObject {
             Set<Vector3Data>(BaseDataObjectKeys.scale_data, value);
         }
     }
+    
+    public virtual List<string> data_list {
+        get {
+            return Get<List<string>>(BaseDataObjectKeys.data_list);
+        }
+        
+        set {
+            Set<List<string>>(BaseDataObjectKeys.data_list, value);
+        }
+    }
+    
+    public virtual List<GameDataObject> data_game_objects {
+        get {
+            return Get<List<GameDataObject>>(BaseDataObjectKeys.data_game_objects);
+        }
+        
+        set {
+            Set<List<GameDataObject>>(BaseDataObjectKeys.data_game_objects, value);
+        }
+    }
+    
+    public virtual Dictionary<string, GameDataObject> data_object {
+        get {
+            return Get<Dictionary<string, GameDataObject>>(BaseDataObjectKeys.data_object);
+        }
+        
+        set {
+            Set<Dictionary<string, GameDataObject>>(BaseDataObjectKeys.data_object, value);
+        }
+    } 
 
 
     // helpers
@@ -2062,7 +2112,7 @@ public class GameDataObject : DataObject {
 
         bool isTypes = false;
 
-        if(types != null) {
+        if (types != null) {
             isTypes = types.Contains(typeTo) ? true : false;
         }
 
