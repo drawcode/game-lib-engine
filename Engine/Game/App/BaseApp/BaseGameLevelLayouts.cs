@@ -268,7 +268,7 @@ public class GameLevelLayoutData : GameDataObject {
 
                 if(!string.IsNullOrEmpty(key)) {
 
-                    GameDataObject assetObject = GetGameDataObjectKeyed(key);
+                    GameDataObject assetObject = GetGameDataObjectKeyed(key).ToDataObject<GameDataObject>();
 
                     if(assetObject != null) {
 
@@ -301,6 +301,9 @@ public class GameLevelLayoutData : GameDataObject {
                         assetObject.grid_data.x = x;
                         assetObject.grid_data.y = y;
                         assetObject.grid_data.z = z;
+
+                        
+                        Debug.Log("ProcessLayout:" + " x:" + x + " y:" + y + " z:" + z + assetObject.grid_data.GetVector3());
 
                         SetGameDataObject(assetObject);
                     }

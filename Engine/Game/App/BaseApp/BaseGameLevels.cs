@@ -266,17 +266,32 @@ public class BaseGameLevels<T> : DataObjects<T> where T : DataObject, new() {
             int offsetZ = ((int)GameLevels.gridDepth / 2) + 3;
             int offsetY = 0;// TODO 2d/3d type ((int)GameLevels.gridHeight / 2) + 3;
 
+            //offsetX = 0;
+            //offsetZ = 0;
+
             foreach(GameDataObject layoutObjectItem in layoutObjects) {
 
-                float gridX = offsetX + (float)layoutObjectItem.grid_data.x;
-                float gridY = offsetY + (float)layoutObjectItem.grid_data.y;
-                float gridZ = offsetZ + (float)layoutObjectItem.grid_data.z;
+                float gridX = offsetX + (float)(layoutObjectItem.grid_data.x);
+                float gridY = offsetY + (float)(layoutObjectItem.grid_data.y);
+                float gridZ = offsetZ + (float)(layoutObjectItem.grid_data.z);
+
+                Vector3 gridPos = Vector3.zero.WithX(gridX).WithY(gridY).WithZ(gridZ);
+                Vector3 gridScale = layoutObjectItem.scale_data.GetVector3();
+                Vector3 gridRotation = layoutObjectItem.local_rotation_data.GetVector3();
+
+                string assetCode = layoutObjectItem.code;
+
+                Debug.Log("layoutObjectItem:"  + " assetCode:" + assetCode + " gridPos:" + gridPos
+                          + " gridScale:" + gridScale  + " gridRotation:" + gridRotation 
+                          + " gridX:" + gridX + " gridY:" + gridY+ " gridZ:" + gridZ
+                          + " layoutObjectItem.grid_data:" + layoutObjectItem.grid_data.GetVector3()
+                          );
                 
                 dataItems.SetAssetsInAssetMap(
-                    layoutObjectItem.code,
-                    Vector3.zero.WithX(gridX).WithY(gridY).WithZ(gridZ), 
-                    layoutObjectItem.scale_data.GetVector3(), 
-                    layoutObjectItem.local_rotation_data.GetVector3());
+                    assetCode,
+                    gridPos, 
+                    gridScale, 
+                    gridRotation);
             }
 
         }
