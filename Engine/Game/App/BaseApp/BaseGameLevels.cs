@@ -260,16 +260,40 @@ public class BaseGameLevels<T> : DataObjects<T> where T : DataObject, new() {
                 continue;
             }
 
-            Debug.Log("layoutObjects.Count:" + layoutObjects.Count);
+            //Debug.Log("layoutObjects.Count:" + layoutObjects.Count);
 
-            int offsetX = ((int)GameLevels.gridWidth / 2) + 3;
-            int offsetZ = ((int)GameLevels.gridDepth / 2) + 3;
-            int offsetY = 0;// TODO 2d/3d type ((int)GameLevels.gridHeight / 2) + 3;
+            float offsetX = 0;
+            float offsetZ = 0;
+            float offsetY = 0;// TODO 2d/3d type ((int)GameLevels.gridHeight / 2) + 3;
 
-            //offsetX = 0;
-            //offsetZ = 0;
+            float offsetPlayerX = 3;
+            float offsetPlayerY = 3;
+            float offsetPlayerZ = 3;
 
             foreach(GameDataObject layoutObjectItem in layoutObjects) {
+                
+                if(layoutObjectItem.position_data == null) {
+                    layoutObjectItem.position_data = new Vector3Data();
+                }
+                
+                if(layoutObjectItem.grid_data == null) {
+                    layoutObjectItem.grid_data = new Vector3Data();
+                }
+
+                if(layoutDataItem.type == GameLevelLayoutDisplayType.layoutCentered) {                    
+
+                    if(GameLevels.centeredX) {
+                        offsetX = ((GameLevels.gridWidth / 2) + offsetPlayerX) - ((float)layoutObjectItem.position_data.x / 2);
+                    }
+                    
+                    if(GameLevels.centeredY) {
+                        offsetY = ((GameLevels.gridWidth / 2) + offsetPlayerY) - ((float)layoutObjectItem.position_data.y / 2);
+                    }
+
+                    if(GameLevels.centeredZ) {
+                        offsetZ = ((GameLevels.gridDepth / 2) + offsetPlayerZ) - ((float)layoutObjectItem.position_data.z / 2);
+                    }
+                }
 
                 float gridX = offsetX + (float)(layoutObjectItem.grid_data.x);
                 float gridY = offsetY + (float)(layoutObjectItem.grid_data.y);
@@ -281,11 +305,11 @@ public class BaseGameLevels<T> : DataObjects<T> where T : DataObject, new() {
 
                 string assetCode = layoutObjectItem.code;
 
-                Debug.Log("layoutObjectItem:"  + " assetCode:" + assetCode + " gridPos:" + gridPos
-                          + " gridScale:" + gridScale  + " gridRotation:" + gridRotation 
-                          + " gridX:" + gridX + " gridY:" + gridY+ " gridZ:" + gridZ
-                          + " layoutObjectItem.grid_data:" + layoutObjectItem.grid_data.GetVector3()
-                          );
+                //Debug.Log("layoutObjectItem:"  + " assetCode:" + assetCode + " gridPos:" + gridPos
+                //          + " gridScale:" + gridScale  + " gridRotation:" + gridRotation 
+                //          + " gridX:" + gridX + " gridY:" + gridY+ " gridZ:" + gridZ
+                //          + " layoutObjectItem.grid_data:" + layoutObjectItem.grid_data.GetVector3()
+                //          );
                 
                 dataItems.SetAssetsInAssetMap(
                     assetCode,

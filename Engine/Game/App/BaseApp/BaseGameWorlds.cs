@@ -50,6 +50,21 @@ public class BaseGameWorlds<T> : DataObjects<T> where T : DataObject, new() {
         pathKey = BASE_DATA_KEY;
         LoadData();
     }
+    
+    public void ChangeCurrentAbsolute(string code) {
+        GameWorlds.Current.code = "changeme";
+        ChangeCurrent(code);
+    }
+    
+    public void ChangeCurrent(string code) {
+        if (GameWorlds.Current.code != code) {
+            GameWorlds.Current = GameWorlds.Instance.GetById(code);
+            //string originalCode = code;
+            if (string.IsNullOrEmpty(GameWorlds.Current.code)) {
+                GameWorlds.Current = GameWorlds.Instance.GetById(code);
+            }   
+        }
+    }     
 }
 
 public class BaseGameWorld : GameDataObject {

@@ -457,7 +457,7 @@ public class DataObjects<T> where T : DataObject, new() {
             try {
                 objs = JsonMapper.ToObject<List<T>>(data);
             }
-            catch(Exception e) {
+            catch (Exception e) {
                 Debug.Log("LoadDataFromString:" + " e:" + e.Message + " data:" + data + " objs:" + objs.ToJson()); 
             }
 
@@ -846,7 +846,7 @@ public class DataObjects<T> where T : DataObject, new() {
 
     public virtual bool IsLoaded {
         get {
-            if(items == null) {
+            if (items == null) {
                 return false;
             }
             return items.Count > 0 ? true : false;

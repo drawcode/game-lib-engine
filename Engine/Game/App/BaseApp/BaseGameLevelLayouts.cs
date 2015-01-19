@@ -199,6 +199,7 @@ public class GameLevelLayoutData : GameDataObject {
 
     public GameLevelLayoutData() {
         Reset();
+
     }
 
     public override void Reset() {
@@ -207,6 +208,8 @@ public class GameLevelLayoutData : GameDataObject {
         data_list = new List<string>();
         data_object = new Dictionary<string, GameDataObject>();
         data_game_objects = new List<GameDataObject>();
+
+        position_data = new Vector3Data();
     }
 
     public List<GameDataObject> GetLayoutAssets() {
@@ -302,8 +305,7 @@ public class GameLevelLayoutData : GameDataObject {
                         assetObject.grid_data.y = y;
                         assetObject.grid_data.z = z;
 
-                        
-                        Debug.Log("ProcessLayout:" + " x:" + x + " y:" + y + " z:" + z + assetObject.grid_data.GetVector3());
+                        //Debug.Log("ProcessLayout:" + " x:" + x + " y:" + y + " z:" + z + assetObject.grid_data.GetVector3());
 
                         SetGameDataObject(assetObject);
                     }
@@ -313,6 +315,13 @@ public class GameLevelLayoutData : GameDataObject {
             }
             z++;
         }
+
+        position_data.x = x;
+        position_data.y = y;
+        position_data.z = z;
+
+
+
 
         // Get they keyed asset dictionary to lookup assets to load
 
