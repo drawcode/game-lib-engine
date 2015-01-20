@@ -250,6 +250,7 @@ public class BaseDataObjectKeys {
     public static string upgrades = "upgrades";
     public static string xp = "xp";
     public static string level = "level";
+    public static string power = "power";
     public static string currency = "currency";
 
     // content

@@ -223,6 +223,16 @@ public class GameDataItemRPG : GameDataObject {
             Set<double>(BaseDataObjectKeys.level, value);
         }
     }
+        
+    public virtual double power {
+        get {
+            return Get<double>(BaseDataObjectKeys.power, 1.0);
+        }
+        
+        set {
+            Set<double>(BaseDataObjectKeys.power, value);
+        }
+    }
     
     public virtual double currency {
         get {
