@@ -228,12 +228,38 @@ public class BaseGameLevels<T> : DataObjects<T> where T : DataObject, new() {
             if(terrainPreset != null) {
                 
                 GamePresetItem terrainPresetItem = terrainPreset.GetItemRandomByProbability(terrainPreset.data.items);
-                                
+
+                float offsetX = 0;
+                float offsetY = 0;
+                float offsetZ = 0;
+
+                if(GameLevels.centeredX) {
+                    offsetX = (GameLevels.gridWidth / 2);
+                }
+                
+                if(GameLevels.centeredY) {
+                    offsetY = (GameLevels.gridHeight / 2);
+                }
+                
+                if(GameLevels.centeredZ) {
+                    offsetZ = (GameLevels.gridDepth / 2);
+                }
+
+                float gridX = offsetX;// + (float)(layoutObjectItem.grid_data.x);
+                float gridY = offsetY;// + (float)(layoutObjectItem.grid_data.y);
+                float gridZ = offsetZ;// + (float)(layoutObjectItem.grid_data.z);
+                
+                Vector3 gridPos = Vector3.zero.WithX(gridX).WithY(gridY).WithZ(gridZ);
+                Vector3 gridScale = Vector3.one;
+                Vector3 gridRotation = Vector3.zero;
+                
+                string assetCode = terrainPresetItem.code;
+
                 dataItems.SetAssetsInAssetMap(
-                    terrainPresetItem.code, 
-                    Vector3.zero, 
-                    Vector3.one, 
-                    Vector3.zero);
+                    assetCode,
+                    gridPos, 
+                    gridScale, 
+                    gridRotation);
 
                 //if(terrainPresetItem != null) {
                 //    dataItems = GameLevelGridData.AddAssets(dataItems, terrainPresetItem.code, 1);
@@ -287,7 +313,7 @@ public class BaseGameLevels<T> : DataObjects<T> where T : DataObject, new() {
                     }
                     
                     if(GameLevels.centeredY) {
-                        offsetY = ((GameLevels.gridWidth / 2) + offsetPlayerY) - ((float)layoutObjectItem.position_data.y / 2);
+                        offsetY = ((GameLevels.gridHeight / 2) + offsetPlayerY) - ((float)layoutObjectItem.position_data.y / 2);
                     }
 
                     if(GameLevels.centeredZ) {
