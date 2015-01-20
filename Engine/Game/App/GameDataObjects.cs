@@ -1544,6 +1544,16 @@ public class GameDataObject : DataObject {
         }
     }
     
+    public virtual string display_type {
+        get {
+            return Get<string>(BaseDataObjectKeys.display_type, "");
+        }
+        
+        set {
+            Set<string>(BaseDataObjectKeys.display_type, value);
+        }
+    }
+    
     //[JsonIgnore(JsonIgnoreWhen.Deserializing)]
     public virtual string order_by {
         get {

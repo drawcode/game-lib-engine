@@ -17,6 +17,7 @@ public class BaseDataObjectKeys {
     public static string code = "code";
     public static string name = "name";
     public static string data_type = "data_type";
+    public static string display_type = "display_type";
     public static string description = "description";
     public static string display_name = "display_name";
     public static string action_description = "action_description";

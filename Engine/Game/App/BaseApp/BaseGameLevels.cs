@@ -286,6 +286,16 @@ public class BaseGameLevels<T> : DataObjects<T> where T : DataObject, new() {
                 continue;
             }
 
+            Vector3 size = Vector3.zero;
+            if(gameLevelLayout.data.position_data == null) {
+                gameLevelLayout.data.position_data = new Vector3Data();
+            }
+
+            
+            if(layoutDataItem.display_type == GameLevelLayoutDisplayType.layoutCentered) {   
+                size = gameLevelLayout.data.position_data.GetVector3();
+            }
+
             //Debug.Log("layoutObjects.Count:" + layoutObjects.Count);
 
             float offsetX = 0;
@@ -294,7 +304,7 @@ public class BaseGameLevels<T> : DataObjects<T> where T : DataObject, new() {
 
             float offsetPlayerX = 3;
             float offsetPlayerY = 3;
-            float offsetPlayerZ = 3;
+            float offsetPlayerZ = 0;
 
             foreach(GameDataObject layoutObjectItem in layoutObjects) {
                 
@@ -305,25 +315,29 @@ public class BaseGameLevels<T> : DataObjects<T> where T : DataObject, new() {
                 if(layoutObjectItem.grid_data == null) {
                     layoutObjectItem.grid_data = new Vector3Data();
                 }
+                
+                if(layoutDataItem.grid_data == null) {
+                    layoutDataItem.grid_data = new Vector3Data();
+                }
 
                 if(layoutDataItem.type == GameLevelLayoutDisplayType.layoutCentered) {                    
 
                     if(GameLevels.centeredX) {
-                        offsetX = ((GameLevels.gridWidth / 2) + offsetPlayerX) - ((float)layoutObjectItem.position_data.x / 2);
+                        offsetX = ((GameLevels.gridWidth / 2) + offsetPlayerX) - ((float)size.x / 2);
                     }
                     
                     if(GameLevels.centeredY) {
-                        offsetY = ((GameLevels.gridHeight / 2) + offsetPlayerY) - ((float)layoutObjectItem.position_data.y / 2);
+                        offsetY = ((GameLevels.gridHeight / 2) + offsetPlayerY) - ((float)size.y / 2);
                     }
 
                     if(GameLevels.centeredZ) {
-                        offsetZ = ((GameLevels.gridDepth / 2) + offsetPlayerZ) - ((float)layoutObjectItem.position_data.z / 2);
+                        offsetZ = ((GameLevels.gridDepth / 2) + offsetPlayerZ) - ((float)size.z / 2);
                     }
                 }
 
-                float gridX = offsetX + (float)(layoutObjectItem.grid_data.x);
-                float gridY = offsetY + (float)(layoutObjectItem.grid_data.y);
-                float gridZ = offsetZ + (float)(layoutObjectItem.grid_data.z);
+                float gridX = offsetX + (float)(layoutObjectItem.grid_data.x) + (float)(layoutDataItem.grid_data.x);
+                float gridY = offsetY + (float)(layoutObjectItem.grid_data.y) + (float)(layoutDataItem.grid_data.y);
+                float gridZ = offsetZ + (float)(layoutObjectItem.grid_data.z) + (float)(layoutDataItem.grid_data.z);
 
                 Vector3 gridPos = Vector3.zero.WithX(gridX).WithY(gridY).WithZ(gridZ);
                 Vector3 gridScale = layoutObjectItem.scale_data.GetVector3();

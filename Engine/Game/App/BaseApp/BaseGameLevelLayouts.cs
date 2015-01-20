@@ -298,12 +298,8 @@ public class GameLevelLayoutData : GameDataObject {
                         }
 
                         if(assetObject.grid_data == null) {
-                            assetObject.grid_data = new Vector3Data();
+                            assetObject.grid_data = new Vector3Data(x, y, z);
                         }
-
-                        assetObject.grid_data.x = x;
-                        assetObject.grid_data.y = y;
-                        assetObject.grid_data.z = z;
 
                         //Debug.Log("ProcessLayout:" + " x:" + x + " y:" + y + " z:" + z + assetObject.grid_data.GetVector3());
 
@@ -316,12 +312,7 @@ public class GameLevelLayoutData : GameDataObject {
             z++;
         }
 
-        position_data.x = x;
-        position_data.y = y;
-        position_data.z = z;
-
-
-
+        position_data = new Vector3Data(x, y, z);
 
         // Get they keyed asset dictionary to lookup assets to load
 
