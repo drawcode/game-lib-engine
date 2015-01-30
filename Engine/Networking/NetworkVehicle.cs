@@ -1,5 +1,4 @@
 //  Copyright © 2011 Impossible Interactive LLC
-
 using System;
 using UnityEngine;
 

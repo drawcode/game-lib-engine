@@ -6,7 +6,6 @@ using Engine.Utility;
 using UnityEngine;
 
 namespace Engine.Networking {
-
     public class PingTester : BaseEngineBehavior {
 #if !UNITY_FLASH
 #if !UNITY_IPHONE

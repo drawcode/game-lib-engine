@@ -2,7 +2,6 @@ using System.Collections;
 using UnityEngine;
 
 namespace Engine.Networking {
-
     public class NetworkPlayerObject : GameObjectBehavior {
 #if !UNITY_FLASH
         public bool isMe = false;

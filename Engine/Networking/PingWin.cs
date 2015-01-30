@@ -6,7 +6,6 @@ using Engine;
 using UnityEngine;
 
 namespace Engine.Networking {
-
     public class PingWin : BaseEngineBehavior {
 #if !UNITY_FLASH
 #if !UNITY_IPHONE
@@ -40,7 +39,7 @@ namespace Engine.Networking {
         private static extern IntPtr IcmpCreateFile();
 
         [DllImport("icmp.dll")]
-        private static extern uint IcmpSendEcho(IntPtr icmpHandle, uint ipAddr, ref int requestData, ushort requestSize, IntPtr optionInfo, ref	ICMP_ECHO_REPLY replyBuffer, uint replySize, int timeout);
+        private static extern uint IcmpSendEcho(IntPtr icmpHandle, uint ipAddr, ref int requestData, ushort requestSize, IntPtr optionInfo, ref ICMP_ECHO_REPLY replyBuffer, uint replySize, int timeout);
 
         [DllImport("icmp.dll")]
         private static extern bool IcmpCloseHandle(IntPtr icmpHandle);

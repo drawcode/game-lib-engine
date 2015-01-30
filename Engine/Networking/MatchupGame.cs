@@ -5,7 +5,8 @@ using Engine.Utility;
 using UnityEngine;
 
 namespace Engine.Networking {
-#if !UNITY_FLASH
+    
+    #if NETWORK_UNITY
     public enum MatchupState {
         MATCHUP_NOT_STARTED = 0,
         MATCHUP_FINDING,

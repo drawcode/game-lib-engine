@@ -9,8 +9,8 @@ using UnityEngine;
 namespace Engine.Networking {
 
     public class NetworkInterpolatedTransform : BaseEngineBehavior {
-#if !UNITY_FLASH
-
+        
+        #if NETWORK_UNITY
         public double interpolationBackTime = 0.1;
 
         internal struct State {

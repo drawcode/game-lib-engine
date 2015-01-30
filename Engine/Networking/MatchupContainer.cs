@@ -4,7 +4,8 @@ using Engine.Networking;
 using UnityEngine;
 
 public class MatchupContainer : GameObjectBehavior {
-#if !UNITY_FLASH
+    
+    #if NETWORK_UNITY
     public string trackName;
     public UnityNetworking unityNetworkingComponent;
     public MatchupGame matchupGameComponent;

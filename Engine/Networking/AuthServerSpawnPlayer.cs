@@ -8,7 +8,8 @@ using Engine.Utility;
 using UnityEngine;
 
 public class AuthServerSpawnPlayer : BaseEngineBehavior {
-#if !UNITY_FLASH
+    
+    #if NETWORK_UNITY
     public Transform playerPrefab;
 
     // Local player information when one is instantiated

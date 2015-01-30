@@ -21,6 +21,9 @@ namespace Engine.Networking {
     // and client is larger than 100 ms.
     public class GraduallyUpdateState : GameObjectBehavior {
 #if !UNITY_FLASH
+        
+        #if NETWORK_UNITY
+
         private Component targetController;
         private FieldInfo isMovingFieldInfo;
 
@@ -180,6 +183,8 @@ namespace Engine.Networking {
 
         // The network sync routine makes sure m_BufferedState always contains the last 20 updates
         // The latest update is in slot 0, oldest in slot 19
+
+
         private void OnSerializeNetworkView(BitStream stream, NetworkMessageInfo info) {
 
             // Always send transform (depending on reliability of the network view)
@@ -307,6 +312,7 @@ namespace Engine.Networking {
             }
         }
 
+#endif
 #endif
     }
 }

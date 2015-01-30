@@ -7,7 +7,8 @@ using Engine.Utility;
 using UnityEngine;
 
 namespace Engine.Networking {
-#if !UNITY_FLASH
+    
+    #if NETWORK_UNITY
 
     [RequireComponent(typeof(NetworkView))]
     public class NetworkLevelLoad : BaseEngineBehavior {

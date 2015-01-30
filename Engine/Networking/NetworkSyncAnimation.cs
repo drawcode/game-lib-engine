@@ -8,9 +8,9 @@ using Engine.Utility;
 using UnityEngine;
 
 namespace Engine.Networking {
-
     public class NetworkSyncAnimation : BaseEngineBehavior {
-#if !UNITY_FLASH
+        
+        #if NETWORK_UNITY
 
         public enum AniStates {
             walk = 0,

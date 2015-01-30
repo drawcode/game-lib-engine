@@ -8,7 +8,6 @@ using Engine.Utility;
 using UnityEngine;
 
 namespace Engine.Networking {
-
     public class PingCustom : BaseEngineBehavior {
 #if !UNITY_FLASH && !UNITY_IPHONE
 
@@ -18,8 +17,8 @@ namespace Engine.Networking {
         public int Ping(string host, int timeout) {
             double startTime = 0;
             int pingTime = -1;
-            int pingDataSize = 4;				// Ping packet payload, dummy data
-            int packetSize = pingDataSize + 8;	// Ping payload + ICMP header
+            int pingDataSize = 4;               // Ping packet payload, dummy data
+            int packetSize = pingDataSize + 8;  // Ping payload + ICMP header
 
             // Convert IP address string to something we can use
             IPEndPoint ipepServer;
@@ -37,7 +36,7 @@ namespace Engine.Networking {
 
             // Create packet
             IcmpPacket packet = new IcmpPacket();
-            packet.type = 8; 		// ICMP echo request
+            packet.type = 8;        // ICMP echo request
             packet.subCode = 0;
             packet.checkSum = 0;
             packet.identifier = 1;

@@ -3,9 +3,9 @@ using Engine;
 using UnityEngine;
 
 namespace Engine.Networking {
-
     public class SpawnPrefab : BaseEngineBehavior {
-#if !UNITY_FLASH
+        
+        #if NETWORK_UNITY
 
         public Transform playerPrefab;
 

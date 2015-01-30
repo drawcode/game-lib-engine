@@ -21,8 +21,8 @@ namespace Engine.Networking {
     }
 
     public class NetworkPlayerInfoCoop {
-#if !UNITY_FLASH
-
+        
+        #if NETWORK_UNITY
         public NetworkPlayer networkPlayer;
         public string name;
         public Transform transform;

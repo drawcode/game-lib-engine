@@ -7,7 +7,8 @@ using Engine.Utility;
 using UnityEngine;
 
 public class AuthServerPersonAnimation : BaseEngineBehavior {
-#if !UNITY_FLASH
+    
+    #if NETWORK_UNITY
     public float runSpeedScale = 1.0f;
     public float walkSpeedScale = 1.0f;
 

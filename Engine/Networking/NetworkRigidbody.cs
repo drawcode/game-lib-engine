@@ -7,9 +7,9 @@ using Engine.Utility;
 using UnityEngine;
 
 namespace Engine.Networking {
-
     public class NetworkRigidbody : BaseEngineBehavior {
-#if !UNITY_FLASH
+        
+        #if NETWORK_UNITY
 
         public double m_InterpolationBackTime = 0.1;
         public double m_ExtrapolationLimit = 0.5;
