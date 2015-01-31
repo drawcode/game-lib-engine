@@ -32,13 +32,15 @@ public class BaseDataObjectKeys {
     public static string file = "file";
     public static string files = "files";
     public static string host = "host";
-
+    //
+    public static string empty = "empty";
+    //
     public static string data = "data";
     public static string data_list = "data_list";
     public static string data_object = "data_object";
     public static string data_items = "data_items";
     public static string data_game_objects = "data_game_objects";
-
+    //
     public static string strings = "strings";
     public static string images = "images";
     public static string info = "info";
@@ -91,7 +93,7 @@ public class BaseDataObjectKeys {
     public static string games = "games";
     public static string order_by = "order_by";
     public static string status = "status";
-
+    //
     public static string pack_code = "pack_code";
     public static string pack_sort = "pack_sort";
     public static string date_created = "date_created";
@@ -105,7 +107,7 @@ public class BaseDataObjectKeys {
     public static string keys = "keys";
     public static string properties = "properties";
     public static string types = "types";
-
+    //
     // characters
 
     public static string character = "character";
@@ -115,7 +117,7 @@ public class BaseDataObjectKeys {
     public static string character_items = "character_items";
     public static string social_data = "social_data";
     public static string social_items = "social_items";
-
+    //
     // weapons
 
     public static string weapon = "weapon";
@@ -123,7 +125,7 @@ public class BaseDataObjectKeys {
     public static string weapon_skin_variation = "weapon_skin_variation";
     public static string weapon_data = "weapon_data";
     public static string weapon_items = "weapon_items";
-
+    //
     // items
     
     public static string item = "item";
@@ -132,7 +134,7 @@ public class BaseDataObjectKeys {
     public static string item_skin_variation = "item_skin_variation";
     public static string item_data = "item_data";
     public static string item_items = "item_items";
-
+    //
     // locales
     
     public static string any = "any";
@@ -145,7 +147,7 @@ public class BaseDataObjectKeys {
     public static string jp = "jp";
     public static string cn = "cn";
     public static string ko = "ko";
-
+    //
     // custom
 
     public static string custom_items = "custom_items";
@@ -209,7 +211,7 @@ public class BaseDataObjectKeys {
     public static string textures = "textures";
     public static string material = "material";
     public static string materials = "materials";
-
+    //
     // asset items
     public static string delay = "delay";
     public static string time = "time";
@@ -222,7 +224,7 @@ public class BaseDataObjectKeys {
     public static string rotation_data = "rotation_data";
     public static string scale_data = "scale_data";
     //delay
-
+    //
     // RPG
     
     public static string rpg = "rpg";
@@ -252,7 +254,7 @@ public class BaseDataObjectKeys {
     public static string level = "level";
     public static string power = "power";
     public static string currency = "currency";
-
+    //
     // content
     
     public static string tags = "tags";
@@ -263,11 +265,11 @@ public class BaseDataObjectKeys {
     public static string required_trackers = "required_trackers";
     public static string content_attributes = "content_attributes";
     public static string choices = "choices";
-
+    //
     // missions
 
     public static string amount = "amount";
-
+    //
     // achievements
     
     public static string filter = "filter";
@@ -452,11 +454,11 @@ public class BaseDataObject : Dictionary<string, object> {
 
     public string GetWebPath(string path) {
 
-        if(!string.IsNullOrEmpty(Application.dataPath)) {
+        if (!string.IsNullOrEmpty(Application.dataPath)) {
             path = path.Replace(Application.dataPath, "");
         }
 
-        if(!string.IsNullOrEmpty(Application.persistentDataPath)) {
+        if (!string.IsNullOrEmpty(Application.persistentDataPath)) {
             path = path.Replace(Application.persistentDataPath, "");
         }
 
