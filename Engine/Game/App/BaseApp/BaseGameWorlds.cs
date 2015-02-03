@@ -52,7 +52,7 @@ public class BaseGameWorlds<T> : DataObjects<T> where T : DataObject, new() {
     }
     
     public void ChangeCurrentAbsolute(string code) {
-        GameWorlds.Current.code = "changeme";
+        //GameWorlds.Current.code = "changeme";
         ChangeCurrent(code);
     }
     
@@ -65,6 +65,15 @@ public class BaseGameWorlds<T> : DataObjects<T> where T : DataObject, new() {
             }   
         }
     }     
+
+    public GameWorld GetByWorldNum(int worldNum) {
+        foreach(GameWorld item in GameWorlds.Instance.GetAll()) {
+            if(item.data.world_num == worldNum) {
+                return item;
+            }
+        }
+        return null;
+    }
 }
 
 public class BaseGameWorld : GameDataObject {

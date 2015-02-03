@@ -465,7 +465,7 @@ public class TestsData {
             Debug.Log("item:code:" + item.code);               
             Debug.Log("item:json:" + item.ToJson());  
             
-            List<AppContentCollectItem> data = item.data;
+            List<AppContentCollectItem> data = item.data.data;
             
             if (data != null) {
                 
@@ -503,7 +503,7 @@ public class TestsData {
             Debug.Log("item:code:" + item.code);               
             Debug.Log("item:json:" + item.ToJson());  
             
-            List<AppContentCollectItem> data = item.data;
+            List<AppContentCollectItem> data = item.data.data;
             
             if (data != null) {
 

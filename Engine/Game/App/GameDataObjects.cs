@@ -1492,6 +1492,38 @@ public class GameDataObject : DataObject {
     }
 
     //
+
+    public virtual int level_num {
+        get {
+            return Get<int>(BaseDataObjectKeys.level_num, 1);
+        }
+        
+        set {
+            Set<int>(BaseDataObjectKeys.level_num, value);
+        }
+    }
+    
+    public virtual string level_code {
+        get {
+            return Get<string>(BaseDataObjectKeys.level_code, "");
+        }
+        
+        set {
+            Set<string>(BaseDataObjectKeys.level_code, value);
+        }
+    }
+
+    //
+
+    public virtual int world_num {
+        get {
+            return Get<int>(BaseDataObjectKeys.world_num, 1);
+        }
+        
+        set {
+            Set<int>(BaseDataObjectKeys.world_num, value);
+        }
+    }
     
     public virtual string world_code {
         get {

@@ -36,10 +36,16 @@ public class BaseDataObjectKeys {
     public static string empty = "empty";
     //
     public static string data = "data";
+    public static string data_suffix_list = "data_suffix_list";
     public static string data_list = "data_list";
     public static string data_object = "data_object";
     public static string data_items = "data_items";
     public static string data_game_objects = "data_game_objects";
+    //
+    public static string level_num_suffix_list = "level_num_suffix_list";
+    public static string world_num_list = "world_num_list";
+    public static string level_list = "level_list";
+    public static string world_list = "world_list";
     //
     public static string strings = "strings";
     public static string images = "images";
@@ -47,6 +53,7 @@ public class BaseDataObjectKeys {
     public static string error = "error";
     public static string datatype = "datatype";
     public static string direction = "direction";
+    //
     public static string network_id = "network_id";
     public static string network_username = "network_username";
     public static string network_name = "network_name";
@@ -58,23 +65,36 @@ public class BaseDataObjectKeys {
     public static string network_items = "network_items";
     public static string network = "network";
     public static string networks = "networks";
+    //    
+    public static string level_num = "level_num";
+    public static string level_code = "level_code";
+    public static string level_data = "level_data";
+    public static string level_items = "level_items";
+    public static string level_type = "level_type";
+    //
     public static string world_data = "world_data";
+    public static string world_num = "world_num";
     public static string world_code = "world_code";
     public static string world_type = "world_type";
     public static string world_items = "world_items";
+    //
     public static string mission_data = "mission_data";
     public static string mission_code = "mission_code";
     public static string mission_type = "mission_type";
     public static string mission_items = "mission_items";
+    //
     public static string collection_data = "collection_data";
     public static string collection_code = "collection_code";
     public static string collection_type = "collection_type";
     public static string collection_items = "collection_items";
+    //
     public static string choice_data = "choice_data";
     public static string choice_code = "choice_code";
     public static string choice_type = "choice_type";
     public static string choice_items = "choice_items";
+    //
     public static string broadcast_networks_record_levels = "broadcast_networks_record_levels";
+    //
     public static string data_platform = "data_platform";
     public static string sort_order = "sort_order";
     public static string sort_order_type = "sort_order_type";
