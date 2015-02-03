@@ -84,7 +84,7 @@ public class DataObjects<T> where T : DataObject, new() {
             break;
 
         case DataObjectsStorage.RESOURCES:
-            LogUtil.Log("LoadData:LoadDataFromResources:" + path + " " + pathKey);
+            Debug.Log("LoadData:LoadDataFromResources:" + path + " " + pathKey);
             LoadDataFromResources();
             break;
 
@@ -461,7 +461,7 @@ public class DataObjects<T> where T : DataObject, new() {
                 Debug.Log("LoadDataFromString:" + " e:" + e.Message + " data:" + data + " objs:" + objs.ToJson()); 
             }
 
-            //LogUtil.Log("T loaded:" + objs.Count);
+            Debug.Log(objs.GetType().ToString() + " T loaded:" + objs.Count);
 
             for (int j = 0; j < objs.Count; j++) {
                 SetFieldValue(objs[j], "pack_code", "default");

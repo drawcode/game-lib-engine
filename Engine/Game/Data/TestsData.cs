@@ -178,9 +178,9 @@ public class TestsData {
         //Advance(testName);
         //success = TestEncrypt(testName);
         
-        testName = "TestGameStateProfileSync";
-        Advance(testName);
-        success = TestGameStateProfileSync(testName);
+        ////testName = "TestGameStateProfileSync";
+        ////Advance(testName);
+        ////success = TestGameStateProfileSync(testName);
 
 
         //
@@ -271,6 +271,19 @@ public class TestsData {
         //success = TestAppContentCollects_Get_Missions_By_World(testName, GameWorlds.Instance.GetAll()[0].code);
 
 
+        // LEVELS
+        
+        testName = "TestGameLevels_Get";
+        Advance(testName);
+        success = TestGameLevels_Get(testName);
+        
+        testName = "TestGameLevels_Get_By_Id";
+        Advance(testName);
+        success = TestGameLevels_Get_By_Id(testName, GameLevels.Instance.GetAll()[0].code);
+        
+        testName = "TestGameLevels_ChangeCurrent";
+        Advance(testName);
+        success = TestGameLevels_ChangeCurrent(testName);
 
         //
 
@@ -317,6 +330,90 @@ public class TestsData {
         DumpObj(name, "dataB", dataB);
 
         return equal;
+    }
+
+    //----------------------------------------------------------------------------
+        
+    public static bool TestGameLevels_Get_By_Id(string name, string code) {
+        
+        bool success = false;
+        
+        Debug.Log(name);
+        
+        GameLevel item = GameLevels.Instance.GetById(code);
+        DumpObj(name, "item", item.ToJson());
+        
+        
+        if(item != null) {
+            Debug.Log("data:item:code:" +  item.code);
+            Debug.Log("data:item:display_name:" +  item.display_name);
+            Debug.Log("data:item:description:" + item.description);
+            
+            GameDataObjectItem dataItem = item.data;
+
+            if(dataItem != null) {        
+                Debug.Log("data:dataItem:json:" + dataItem.ToJson());   
+                success = true;            
+            }
+        }
+
+        return success;
+    }       
+    
+    public static bool TestGameLevels_Get(string name) {
+        
+        bool success = false;
+        
+        Debug.Log(name);
+        
+        List<GameLevel> items = GameLevels.Instance.GetAll();
+        DumpObj(name, "items", items.ToJson());
+                
+        foreach (GameLevel item in items) {
+            
+            Debug.Log("data:item:code:" +  item.code);
+            Debug.Log("data:item:display_name:" +  item.display_name);
+            Debug.Log("data:item:description:" + item.description);
+            
+            GameDataObjectItem dataItem = item.data;
+
+            if(dataItem != null)  {
+                Debug.Log("data:dataItem:json:" + dataItem.ToJson());   
+                success = true;     
+            }
+        }
+         
+        
+        DumpObj(name, "items.Count", items.Count);
+        
+        return success;
+    }
+
+    
+    public static bool TestGameLevels_ChangeCurrent(string name) {
+        
+        bool success = false;
+        
+        Debug.Log(name);
+        
+        GameLevel item1 = GameLevels.Instance.GetById("1-1");
+        GameLevel item2 = GameLevels.Instance.GetById("1-2");;
+        
+        DumpObj(name, "Current:item1:", item1.ToJson());
+
+        GameLevels.Instance.ChangeCurrent(item2.code);
+                
+        DumpObj(name, "Current:item2:", item2.ToJson());        
+        
+        GameLevels.Instance.ChangeCurrent("1-1");
+
+        item1 = GameLevels.Current;
+        
+        DumpObj(name, "Current:item1:", item1.ToJson());
+
+        success = true;
+        
+        return success;
     }
 
     // -----------------------------------------------------------------------------------
