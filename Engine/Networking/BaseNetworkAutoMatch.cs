@@ -6,7 +6,7 @@ using UnityEngine;
 namespace Engine.Networking {
 
     public class BaseNetworkAutoMatch : BaseNetwork {
-#if !UNITY_FLASH
+#if !UNITY_FLASH && NETWORK_UNITY
 
         public BaseNetworkAutoMatch() {
         }

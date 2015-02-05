@@ -871,8 +871,9 @@ public class DataObjects<T> where T : DataObject, new() {
         fullPath = PathUtil.Combine(fullPath, pathCode.TrimStart('/'));
         return fullPath;
     }
-        
-    public T LoadItem<U>(string key, string code) {
+    
+    //public T LoadItem<U>(string key, string code) {
+    public T LoadItem(string key, string code) {
         // Load from file individually not a list
 
         string path = GetPathItem(key, code, "items");

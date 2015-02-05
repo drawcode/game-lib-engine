@@ -3,7 +3,6 @@ using Engine.Utility;
 using UnityEngine;
 
 namespace Engine.Game.Racing {
-
     public class NetworkVehicleProxy : GameObjectBehavior {
         /*
         public int competitorIndex;

@@ -48,8 +48,10 @@ public class GoogleTracker
         TrackingAccount = trackingAccount;
         TrackingDomain = trackingDomain;
         GoogleTrackerAnalyticsSession = googleTrackerAnalyticsSession;
-
-        string hostname = Network.player.ipAddress;
+        string hostname = "";
+#if NETWORK_UNITY
+        hostname = Network.player.ipAddress;
+#endif
         string osversionstring = SystemInfo.operatingSystem;
         string osplatform = Application.platform.ToString();
         string osversion = SystemInfo.deviceModel;

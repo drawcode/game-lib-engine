@@ -115,7 +115,8 @@ public class BaseGameLevelItems<T> : DataObjects<T> where T : DataObject, new() 
     
     public virtual void Load(string code) {
         GameLevelItems.Current.code = code;        
-        GameLevelItem currentItem = GameLevelItems.Instance.LoadItem<GameLevelItem>(GameLevelItems.Instance.DATA_KEY, code);
+        GameLevelItem currentItem = GameLevelItems.Instance.LoadItem(GameLevelItems.Instance.DATA_KEY, code);
+        //GameLevelItem currentItem = GameLevelItems.Instance.LoadItem<GameLevelItem>(GameLevelItems.Instance.DATA_KEY, code);
         if (currentItem != null) {
             GameLevelItems.Current = currentItem;
         }

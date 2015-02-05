@@ -6,7 +6,7 @@ using Engine.Utility;
 using UnityEngine;
 
 public class AuthServerNetworkLogin : BaseEngineBehavior {
-#if !UNITY_FLASH
+    #if NETWORK_UNITY
 
     private void Start() {
         MasterServer.dedicatedServer = true;

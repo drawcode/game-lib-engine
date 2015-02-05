@@ -9,7 +9,8 @@ using UnityEngine;
 namespace Engine.Networking {
 
     public class CarNetworkInit : BaseEngineBehavior {
-#if !UNITY_FLASH
+        
+        #if NETWORK_UNITY
 
         private void OnNetworkInstantiate(NetworkMessageInfo msg) {
 
