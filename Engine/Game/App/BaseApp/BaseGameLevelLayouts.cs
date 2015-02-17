@@ -303,7 +303,12 @@ public class GameLevelLayoutData : GameDataObject {
 
                         //Debug.Log("ProcessLayout:" + " x:" + x + " y:" + y + " z:" + z + assetObject.grid_data.GetVector3());
 
-                        SetGameDataObject(assetObject);
+                        if(assetObject.code == BaseDataObjectKeys.random) {
+                            // skip and later randomize
+                        }
+                        else {
+                            SetGameDataObject(assetObject);                        
+                        }
                     }
                 }
 

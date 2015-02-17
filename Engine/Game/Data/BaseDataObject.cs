@@ -34,6 +34,7 @@ public class BaseDataObjectKeys {
     public static string host = "host";
     //
     public static string empty = "empty";
+    public static string random = "random";
     //
     public static string data = "data";
     public static string data_suffix_list = "data_suffix_list";
