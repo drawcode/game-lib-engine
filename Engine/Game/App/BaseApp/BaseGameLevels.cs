@@ -260,9 +260,15 @@ public class BaseGameLevels<T> : DataObjects<T> where T : DataObject, new() {
                 Vector3 gridRotation = Vector3.zero;
                 
                 string assetCode = terrainPresetItem.code;
+                string assetType = terrainPresetItem.type;
+                string assetDataType = terrainPresetItem.data_type;
+                string assetDisplayType = terrainPresetItem.display_type;
 
                 dataItems.SetAssetsInAssetMap(
                     assetCode,
+                    assetType,
+                    assetDataType,
+                    assetDisplayType,
                     gridPos, 
                     gridScale, 
                     gridRotation);
@@ -350,6 +356,9 @@ public class BaseGameLevels<T> : DataObjects<T> where T : DataObject, new() {
                 Vector3 gridRotation = layoutObjectItem.local_rotation_data.GetVector3();
 
                 string assetCode = layoutObjectItem.code;
+                string assetType = layoutObjectItem.type;
+                string assetDataType = layoutObjectItem.data_type;
+                string assetDisplayType = layoutObjectItem.display_type;
 
                 //Debug.Log("layoutObjectItem:"  + " assetCode:" + assetCode + " gridPos:" + gridPos
                 //          + " gridScale:" + gridScale  + " gridRotation:" + gridRotation 
@@ -359,6 +368,9 @@ public class BaseGameLevels<T> : DataObjects<T> where T : DataObject, new() {
                 
                 dataItems.SetAssetsInAssetMap(
                     assetCode,
+                    assetType,
+                    assetDataType,
+                    assetDisplayType,
                     gridPos, 
                     gridScale, 
                     gridRotation);
