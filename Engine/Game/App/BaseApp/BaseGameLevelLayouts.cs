@@ -253,7 +253,7 @@ public class GameLevelLayoutData : GameDataObject {
 
         int x = 0;
         int y = 0;
-        int z = 0;
+        int z = data_list.Count;
        
         foreach(string row in data_list) {
 
@@ -314,7 +314,7 @@ public class GameLevelLayoutData : GameDataObject {
 
                 x++;
             }
-            z++;
+            z--;
         }
 
         position_data = new Vector3Data(x, y, z);
