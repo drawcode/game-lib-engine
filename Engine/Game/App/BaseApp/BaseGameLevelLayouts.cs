@@ -275,6 +275,10 @@ public class GameLevelLayoutData : GameDataObject {
 
                     if(assetObject != null) {
 
+                        //if(assetObject.code == "wall-1") {
+                        //    Debug.Log("ProcessLayout:" + " code:" + assetObject.code + " data:" + assetObject.ToJson());
+                        //}
+
                         // add the game object in place of the text character 
 
                         if(assetObject.local_position_data == null) {

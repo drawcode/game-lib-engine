@@ -299,10 +299,10 @@ public class BaseGameLevels<T> : DataObjects<T> where T : DataObject, new() {
             }
 
             Vector3 size = Vector3.zero;
+
             if (gameLevelLayout.data.position_data == null) {
                 gameLevelLayout.data.position_data = new Vector3Data();
             }
-
             
             if (layoutDataItem.display_type == GameLevelLayoutDisplayType.layoutCentered) {   
                 size = gameLevelLayout.data.position_data.GetVector3();
@@ -322,6 +322,10 @@ public class BaseGameLevels<T> : DataObjects<T> where T : DataObject, new() {
                 
                 if (layoutObjectItem.position_data == null) {
                     layoutObjectItem.position_data = new Vector3Data();
+                }
+                
+                if (layoutObjectItem.local_position_data == null) {
+                    layoutObjectItem.local_position_data = new Vector3Data();
                 }
                 
                 if (layoutObjectItem.grid_data == null) {
@@ -355,6 +359,8 @@ public class BaseGameLevels<T> : DataObjects<T> where T : DataObject, new() {
                 Vector3 gridScale = layoutObjectItem.scale_data.GetVector3();
                 Vector3 gridRotation = layoutObjectItem.local_rotation_data.GetVector3();
 
+                Vector3 localPosition = layoutObjectItem.local_position_data.GetVector3();
+
                 string assetCode = layoutObjectItem.code;
                 string assetType = layoutObjectItem.type;
                 string assetDataType = layoutObjectItem.data_type;
@@ -373,7 +379,8 @@ public class BaseGameLevels<T> : DataObjects<T> where T : DataObject, new() {
                     assetDisplayType,
                     gridPos, 
                     gridScale, 
-                    gridRotation);
+                    gridRotation,
+                    localPosition);
             }
 
         }

@@ -515,11 +515,11 @@ public class GameLevelItemAsset : GameDataObject {
 
     public virtual List<GameLevelItemAssetStep> steps {
         get {
-            return Get<List<GameLevelItemAssetStep>>(BaseDataObjectKeys.asset_rotation);
+            return Get<List<GameLevelItemAssetStep>>(BaseDataObjectKeys.steps);
         }
         
         set {
-            Set<List<GameLevelItemAssetStep>>(BaseDataObjectKeys.asset_rotation, value);
+            Set<List<GameLevelItemAssetStep>>(BaseDataObjectKeys.steps, value);
         }
     }
     
@@ -586,6 +586,10 @@ public class GameLevelItemAsset : GameDataObject {
         reactive = false;
         
         speed_rotation = new Vector3Data();
+
+        local_position_data = new Vector3Data(0, 0, 0);
+        local_rotation_data = new Vector3Data(0, 0, 0);
+        scale_data = new Vector3Data(1, 1, 1);
     }
 }
 

@@ -228,8 +228,20 @@ public class GameVehicleDrive : GameObjectBehavior {
         FullBraking();
             
         SetCurrentGear();
-        HandleGearSound();    
+        HandleGearSound();   
+        HandleAboveGround();
     
+    }
+
+    public void HandleAboveGround() {
+
+        Vector3 currentPosition = transform.position;
+
+        // Never let the vehicle go below ground due to collision or physics
+        if(currentPosition.y < .05f) {
+            currentPosition.y = .2f;
+            transform.position = currentPosition;
+        }
     }
 
     void FullBraking() {
