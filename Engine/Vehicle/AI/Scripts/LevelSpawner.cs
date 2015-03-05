@@ -22,15 +22,18 @@ public class LevelSpawner : GameObjectBehavior {
     
     }
     
-    void OnGUI() {
-        if (GUILayout.Button("Respawn Road")) {
-            playerCar.rigidbody.velocity = Vector3.zero;
-            playerCar.rigidbody.freezeRotation = true;
-            playerCar.position = spawnPointRoad.position;
-            playerCar.rotation = spawnPointRoad.rotation;
-            StartCoroutine("ResetRotation");
-            carSmoothFollow.target = playerCar;
-        }
+    //void OnGUI() {
+    //    if (GUILayout.Button("Respawn Road")) {/
+    //
+    //       Rigidbody rb = playerCar.GetComponent<Rigidbody>();
+    //
+    //        rb.velocity = Vector3.zero;
+    //        rb.freezeRotation = true;
+    //        playerCar.position = spawnPointRoad.position;
+    //        playerCar.rotation = spawnPointRoad.rotation;
+    //        StartCoroutine("ResetRotation");
+    //        carSmoothFollow.target = playerCar;
+    //    }
         /*
         if (GUILayout.Button("Respawn Hill"))
         {
@@ -42,23 +45,23 @@ public class LevelSpawner : GameObjectBehavior {
             StartCoroutine("ResetRotation");
         }
         */
-        if (GUILayout.Button("Watch Hilly AI")) {
+    //    if (GUILayout.Button("Watch Hilly AI")) {
             
-            playerCar.rigidbody.velocity = Vector3.zero;
-            playerCar.rigidbody.freezeRotation = true;
+     //       playerCar.rigidbody.velocity = Vector3.zero;
+     //       playerCar.rigidbody.freezeRotation = true;
             /*
             playerCar.rigidbody.rotation = Quaternion.identity;
             playerCar.position = spawnPointHill.position;
             playerCar.rotation = spawnPointHill.rotation;
             */
-            carSmoothFollow.target = hillyAICar;
-            //StartCoroutine("ResetRotation");
-        }
+     //       carSmoothFollow.target = hillyAICar;
+     //       //StartCoroutine("ResetRotation");
+     //   }
         
-    }
+    //}
     
     IEnumerator ResetRotation() {
         yield return new WaitForSeconds(0.5f);
-        playerCar.rigidbody.freezeRotation = false;
+        //playerCar.rigidbody.freezeRotation = false;
     }
 }

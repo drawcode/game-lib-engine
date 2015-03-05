@@ -21,6 +21,8 @@ namespace Engine.Events {
         //private float sqrMoveLimit;
         private int collisionCount = 0;
 
+        Rigidbody rb;
+
         //private Transform camTransform;
 
         private void Start() {
@@ -32,6 +34,8 @@ namespace Engine.Events {
                 return;
             }
 
+            rb = GetComponent<Rigidbody>();
+
             //camTransform = cam.transform;
             //sqrMoveLimit = moveLimit * moveLimit;   // Since we're using sqrMagnitude, which is faster than magnitude
         }
@@ -39,18 +43,18 @@ namespace Engine.Events {
         private void OnMouseDown() {
             canMove = true;
             gameObject.transform.Translate(Vector3.up * addHeightWhenClicked);
-            gravitySetting = gameObject.rigidbody.useGravity;
-            freezeRotationSetting = gameObject.rigidbody.freezeRotation;
-            gameObject.rigidbody.useGravity = false;
-            gameObject.rigidbody.freezeRotation = freezeRotationOnDrag;
+            gravitySetting = rb.useGravity;
+            freezeRotationSetting = rb.freezeRotation;
+            rb.useGravity = false;
+            rb.freezeRotation = freezeRotationOnDrag;
             yPos = gameObject.transform.position.y;
         }
 
         private void OnMouseUp() {
             canMove = false;
-            gameObject.rigidbody.useGravity = gravitySetting;
-            gameObject.rigidbody.freezeRotation = freezeRotationSetting;
-            if (!gameObject.rigidbody.useGravity) {
+            rb.useGravity = gravitySetting;
+            rb.freezeRotation = freezeRotationSetting;
+            if (!rb.useGravity) {
                 float _y = yPos - addHeightWhenClicked;
 
                 LogUtil.Log(_y);

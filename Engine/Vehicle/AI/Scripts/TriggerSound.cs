@@ -13,7 +13,7 @@ public class TriggerSound : GameObjectBehavior {
     }
     
     void InitSound(out AudioSource audioSource, AudioClip clip, float volume, bool looping) {
-        audioSource = gameObject.AddComponent("AudioSource") as AudioSource;
+        audioSource = gameObject.AddComponent<AudioSource>();
         audioSource.playOnAwake = false;
         audioSource.clip = clip;
         audioSource.loop = looping;
@@ -23,10 +23,12 @@ public class TriggerSound : GameObjectBehavior {
 
     void OnTriggerEnter(Collider other) {
         //if (other.gameObject.tag == tagName1 || other.gameObject.tag == tagName2) //2013-08-02
-        if (other.gameObject.CompareTag(tagName1) || other.gameObject.CompareTag(tagName2)) { //2013-08-02
-            if (other.gameObject.layer != 2) //2011-12-27
-                triggerAudioSource.Play();
-        }
+
+        // TODO sound trigger
+        //if (other.gameObject.CompareTag(tagName1) || other.gameObject.CompareTag(tagName2)) { //2013-08-02
+        //    if (other.gameObject.layer != 2) //2011-12-27
+        //        triggerAudioSource.Play();
+        //}
 
     }
 

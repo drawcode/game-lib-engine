@@ -163,7 +163,7 @@ namespace Engine.Audio {
             if (loop != null) {
 
                 // Fade out sounds and reset
-                if (loop.audio.isPlaying) {
+                if (loop.isPlaying) {
 
                     //loop.gameObject.AudioTo(0f, 1f, 1.5f, 0f);
                     wait = true;
@@ -171,7 +171,7 @@ namespace Engine.Audio {
             }
 
             if (intro != null) {
-                if (intro.audio.isPlaying) {
+                if (intro.isPlaying) {
 
                     //intro.gameObject.AudioTo(0f, 1f, 1.5f, 0f);
                     wait = true;

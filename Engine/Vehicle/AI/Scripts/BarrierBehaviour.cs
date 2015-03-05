@@ -7,8 +7,8 @@ public class BarrierBehaviour : GameObjectBehavior {
     public bool triggerCollider = true;
 
     void Awake() {
-        gameObject.collider.isTrigger = triggerCollider;
-        gameObject.transform.renderer.enabled = show;
+        gameObject.GetComponent<Collider>().isTrigger = triggerCollider;
+        gameObject.transform.GetComponent<Renderer>().enabled = show;
     }
         
     

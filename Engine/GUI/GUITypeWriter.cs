@@ -2,7 +2,7 @@ using System.Collections;
 using System.Text;
 using UnityEngine;
 
-[RequireComponent(typeof(GUIText))]
+//[RequireComponent(typeof(GUIText))]
 internal class GUITypeWriter : GameObjectBehavior {
     public float delay = 0.03f;
     public StringBuilder currentText;
@@ -23,10 +23,10 @@ internal class GUITypeWriter : GameObjectBehavior {
             return _text;
         }
         set {
-            guiText.text = string.Empty;
+            //guiText.text = string.Empty;
 
             // reset our pixelOffset
-            guiText.pixelOffset = Vector2.zero;
+            //guiText.pixelOffset = Vector2.zero;
 
             // Setup the stringBuilder with a length of the string size
             currentText = new StringBuilder(value.Length);
@@ -37,8 +37,8 @@ internal class GUITypeWriter : GameObjectBehavior {
     public void Start() {
 
         // Position the guiText properly so that it can type and expand properly
-        guiText.anchor = TextAnchor.UpperLeft;
-        guiText.alignment = TextAlignment.Left;
+        //guiText.anchor = TextAnchor.UpperLeft;
+        //guiText.alignment = TextAlignment.Left;
 
         // example usage for a group of strings
         //string[] someTextPages = {"Unity 3D Student is a new way to learn game development with the Unity Game Engine. By following small 'bitesize' Modules of tutorial info, and combining them in our Challenges, you will learn all the skills you need to pickup game development and also get an understanding of how to research further info as you work.", "Poop on you fool", "Unity 3D Student is a new way to learn game development with the Unity Game Engine. By following small 'bitesize' Modules of tutorial info, and combining them in our Challenges, you will learn all the skills you need to pickup game development and also get an understanding of how to research further info as you work."};
@@ -52,8 +52,8 @@ internal class GUITypeWriter : GameObjectBehavior {
         // check each touch to see if it is on the typing text
         foreach (Touch touch in Input.touches) {
             if (touch.phase == TouchPhase.Began) {
-                if (guiText.HitTest(touch.position))
-                    skipAhead = true;
+                //if (guiText.HitTest(touch.position))
+                //    skipAhead = true;
             }
         }
     }
@@ -82,24 +82,24 @@ internal class GUITypeWriter : GameObjectBehavior {
             //LogUtil.Log( guiText.GetScreenRect().height / numberOfLines );
 
             // Width check.  If the guiText gets too wide we need to backtrack to the previous word boundary and insert a newline
-            if (guiText.GetScreenRect().width > maxWidth) {
+           // if (guiText.GetScreenRect().width > maxWidth) {
 
                 // Shift the guiText position if we are set to keep the text valigned
                 if (keepTextValigned) {
-                    float lineHeight = guiText.GetScreenRect().height / numberOfLines;
-                    Vector2 offset = guiText.pixelOffset;
-                    offset.y += lineHeight / 2;
-                    guiText.pixelOffset = offset;
+                    //float lineHeight = guiText.GetScreenRect().height / numberOfLines;
+                   // Vector2 offset = guiText.pixelOffset;
+                   // offset.y += lineHeight / 2;
+                    //guiText.pixelOffset = offset;
                 }
 
                 // Look for the last newline
                 int lastIndex = currentText.ToString().LastIndexOf(' ');
                 currentText.Replace(" ", "\n", lastIndex, 1);
                 numberOfLines++;
-            }
+           // }
 
             currentText.Append(letter);
-            guiText.text = currentText.ToString();
+           // guiText.text = currentText.ToString();
 
             if (sound && !audio.isPlaying)
                 audio.PlayOneShot(sound);

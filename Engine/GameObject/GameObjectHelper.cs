@@ -60,10 +60,12 @@ public static class GameObjectHelper {
     public static void StopSounds(GameObject inst) {
         if (inst == null)
             return;
+
+        AudioSource audioSource = inst.GetComponent<AudioSource>();
         
-        if (inst.audio != null) {
-            if (inst.audio.isPlaying) {
-                inst.audio.Stop();
+        if (audioSource != null) {
+            if (audioSource.isPlaying) {
+                audioSource.Stop();
             }
         }
         
@@ -76,9 +78,11 @@ public static class GameObjectHelper {
         if (inst == null)
             return;
         
-        if (inst.audio != null) {
-            if (inst.audio.isPlaying) {
-                inst.audio.Pause();
+        AudioSource audioSource = inst.GetComponent<AudioSource>();
+        
+        if (audioSource != null) {
+            if (audioSource.isPlaying) {
+                audioSource.Pause();
             }
         }
         
@@ -91,9 +95,11 @@ public static class GameObjectHelper {
         if (inst == null)
             return;
         
-        if (inst.audio != null) {
-            if (!inst.audio.isPlaying) {
-                inst.audio.Play();
+        AudioSource audioSource = inst.GetComponent<AudioSource>();
+
+        if (audioSource != null) {
+            if (!audioSource.isPlaying) {
+                audioSource.Play();
             }
         }
         
@@ -106,8 +112,10 @@ public static class GameObjectHelper {
         if (inst == null)
             return false;
         
-        if (inst.audio != null) {
-            if (inst.audio.isPlaying) {
+        AudioSource audioSource = inst.GetComponent<AudioSource>();
+
+        if (audioSource != null) {
+            if (audioSource.isPlaying) {
                 return true;
             }
         }
@@ -130,10 +138,12 @@ public static class GameObjectHelper {
         if (!inst.IsRenderersVisible()) {
             return false;
         }
+
+        Renderer render = inst.GetComponent<Renderer>();
         
-        if (inst.renderer != null) {
-            if (inst.renderer.enabled) {
-                if (inst.renderer.isVisible) {
+        if (render != null) {
+            if (render.enabled) {
+                if (render.isVisible) {
                     return true;
                 }
             }
@@ -142,10 +152,8 @@ public static class GameObjectHelper {
         // Enable rendering:
         foreach (Renderer component in inst.GetComponentsInChildren<Renderer>()) {
             if (component.enabled) {
-                if (inst.renderer != null) {
-                    if (inst.renderer.isVisible) {
-                        return true;
-                    }
+                if (component.isVisible) {
+                    return true;
                 }
             }
         }
@@ -161,10 +169,12 @@ public static class GameObjectHelper {
             return false;
         }
         
-        if (inst.renderer != null) {
-            if (inst.renderer.enabled) {
-                if (inst.renderer.isVisible
-                    && inst.renderer.IsVisibleFrom(cam)) {
+        Renderer render = inst.GetComponent<Renderer>();
+        
+        if (render != null) {
+            if (render.enabled) {
+                if (render.isVisible
+                    && render.IsVisibleFrom(cam)) {
                     return true;
                 }
             }
@@ -173,11 +183,9 @@ public static class GameObjectHelper {
         // Enable rendering:
         foreach (Renderer component in inst.GetComponentsInChildren<Renderer>()) {
             if (component.enabled) {
-                if (inst.renderer != null) {
-                    if (inst.renderer.isVisible
-                        && inst.renderer.IsVisibleFrom(cam)) {
-                        return true;
-                    }
+                if (component.isVisible
+                    && component.IsVisibleFrom(cam)) {
+                    return true;
                 }
             }
         }
@@ -189,8 +197,10 @@ public static class GameObjectHelper {
         if (inst == null)
             return false;
         
-        if (inst.renderer != null) {
-            if (inst.renderer.enabled) {
+        Renderer render = inst.GetComponent<Renderer>();
+
+        if (render != null) {
+            if (render.enabled) {
                 return true;
             }
         }
@@ -209,8 +219,10 @@ public static class GameObjectHelper {
         if (inst == null)
             return;
         
-        if (inst.renderer != null) {
-            inst.renderer.enabled = true;
+        Renderer render = inst.GetComponent<Renderer>();
+
+        if (render != null) {
+            render.enabled = true;
         }
         
         // Enable rendering:
@@ -223,8 +235,10 @@ public static class GameObjectHelper {
         if (inst == null)
             return;
         
-        if (inst.renderer != null) {
-            inst.renderer.enabled = false;
+        Renderer render = inst.GetComponent<Renderer>();
+        
+        if (render != null) {
+            render.enabled = false;
         }
         
         // Enable rendering:
@@ -298,10 +312,17 @@ public static class GameObjectHelper {
         return sb.ToString();
     }
     
-    private static void DumpGameObject(GameObject gameObject, StringBuilder sb, string indent, bool includeAllComponents) {
+    private static void DumpGameObject(GameObject go, StringBuilder sb, string indent, bool includeAllComponents) {
         bool rendererEnabled = false;
-        if (gameObject.renderer != null) {
-            rendererEnabled = gameObject.renderer.enabled;
+
+        if(go == null) {
+            return;
+        }
+
+        Renderer render = go.GetComponent<Renderer>();
+
+        if (render != null) {
+            rendererEnabled = render.enabled;
         }
         
         int markerId = -1;
@@ -319,23 +340,26 @@ public static class GameObjectHelper {
         */
         
         sb.Append(string.Format("\r\n{0}+{1} - a:{2} - r:{3} - mid:{4} - loadedObj: {5} - scale: x:{6} y:{7} z:{8} - pos: x:{9} y:{10} z:{11}",
-                                indent, gameObject.name,
-                                gameObject.activeSelf, rendererEnabled,
-                                markerId, hasLoadedObj,
-                                gameObject.transform.localScale.x,
-                                gameObject.transform.localScale.y,
-                                gameObject.transform.localScale.z,
-                                gameObject.transform.position.x,
-                                gameObject.transform.position.y,
-                                gameObject.transform.position.z));
+                                indent, 
+                                go.name,
+                                go.activeSelf, 
+                                rendererEnabled,
+                                markerId, 
+                                hasLoadedObj,
+                                go.transform.localScale.x,
+                                go.transform.localScale.y,
+                                go.transform.localScale.z,
+                                go.transform.position.x,
+                                go.transform.position.y,
+                                go.transform.position.z));
         
         if (includeAllComponents) {
-            foreach (Component component in gameObject.GetComponents<Component>()) {
+            foreach (Component component in go.GetComponents<Component>()) {
                 DumpComponent(component, sb, indent + "  ");
             }
         }
         
-        foreach (Transform child in gameObject.transform) {
+        foreach (Transform child in go.transform) {
             DumpGameObject(child.gameObject, sb, indent + "  ", includeAllComponents);
         }
     }
@@ -504,16 +528,18 @@ public static class GameObjectHelper {
     public static void SpinObject(GameObject go, Vector2 fingerPos, Vector2 delta) {
         
         if (go != null) {
-            if (go.rigidbody == null) {
-                go.AddComponent<Rigidbody>();
-                go.rigidbody.constraints =
+            Rigidbody rigid = go.GetComponent<Rigidbody>();
+
+            if (rigid == null) {
+                rigid = go.AddComponent<Rigidbody>();
+                rigid.constraints =
                     RigidbodyConstraints.FreezePosition
                     | RigidbodyConstraints.FreezeRotationX
                     | RigidbodyConstraints.FreezeRotationZ;
-                go.rigidbody.useGravity = false;
-                go.rigidbody.angularDrag = .25f;
+                rigid.useGravity = false;
+                rigid.angularDrag = .25f;
             }
-            go.rigidbody.angularVelocity = (new Vector3(0, -delta.x, 0));
+            rigid.angularVelocity = (new Vector3(0, -delta.x, 0));
         }
     }
     
@@ -715,10 +741,12 @@ public static class GameObjectHelper {
     public static void ResetAnimations(GameObject inst) {
         if (inst == null)
             return;
-        
-        if (inst.animation != null) {
-            inst.animation.Stop();
-            inst.animation.Rewind();
+
+        Animation anim = inst.GetComponent<Animation>();
+
+        if (anim != null) {
+            anim.Stop();
+            anim.Rewind();
         }
         
         foreach (Animation source in inst.GetComponentsInChildren<Animation>()) {
@@ -731,10 +759,12 @@ public static class GameObjectHelper {
         if (inst == null)
             return;
         
-        if (inst.animation != null) {
-            if (inst.animation[name] != null) {
-                if (!inst.animation.isPlaying) {
-                    inst.animation.Play(name);
+        Animation anim = inst.GetComponent<Animation>();
+
+        if (anim != null) {
+            if (anim[name] != null) {
+                if (!anim.isPlaying) {
+                    anim.Play(name);
                 }
             }
         }
@@ -751,11 +781,13 @@ public static class GameObjectHelper {
     public static void StopAnimation(GameObject inst, string name) {
         if (inst == null)
             return;
+
+        Animation anim = inst.GetComponent<Animation>();
         
-        if (inst.animation != null) {
-            if (inst.animation[name] != null) {
-                if (inst.animation.isPlaying) {
-                    inst.animation.Stop(name);
+        if (anim != null) {
+            if (anim[name] != null) {
+                if (anim.isPlaying) {
+                    anim.Stop(name);
                 }
             }
         }
@@ -773,9 +805,11 @@ public static class GameObjectHelper {
         if (inst == null)
             return;
         
-        if (inst.animation != null) {
-            if (!inst.animation.isPlaying) {
-                inst.animation.Play();
+        Animation anim = inst.GetComponent<Animation>();
+        
+        if (anim != null) {
+            if (!anim.isPlaying) {
+                anim.Play();
             }
         }
         
@@ -790,9 +824,11 @@ public static class GameObjectHelper {
         if (inst == null)
             return;
         
-        if (inst.animation != null) {
-            if (inst.animation.isPlaying) {
-                inst.animation.Stop();
+        Animation anim = inst.GetComponent<Animation>();
+        
+        if (anim != null) {
+            if (anim.isPlaying) {
+                anim.Stop();
             }
         }
         
@@ -807,9 +843,11 @@ public static class GameObjectHelper {
         if (inst == null)
             return;
         
-        if (inst.animation != null) {
-            if (inst.animation.isPlaying) {
-                inst.animation.Stop();
+        Animation anim = inst.GetComponent<Animation>();
+        
+        if (anim != null) {
+            if (anim.isPlaying) {
+                anim.Stop();
             }
         }
         

@@ -34,7 +34,7 @@ namespace Engine.Cameras {
 
         private void DidChangeTarget() {
             if (target) {
-                CharacterController characterController = (CharacterController)target.collider;
+                CharacterController characterController = (CharacterController)target.GetComponent<CharacterController>();
                 if (characterController) {
                     centerOffset = characterController.bounds.center - target.position;
                     headOffset = centerOffset;

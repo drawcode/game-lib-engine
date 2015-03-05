@@ -60,7 +60,7 @@ public class Sound {
         audioSource.volume = volume;
 
         //audioSource.pitch = Random.Range( 0.9f, 1.1f );
-        audioSource.audio.Play();
+        audioSource.Play();
 
         // Wait for the clip to finish
         yield return new WaitForSeconds(audioSource.clip.length + 0.1f);

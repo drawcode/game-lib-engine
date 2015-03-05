@@ -220,7 +220,7 @@ public class GameVehicleAIDriverMenu : GameObjectBehavior
 		viewPointCollider.transform.localPosition = Vector3.zero;
 		viewPointCollider.transform.localScale = new Vector3(1, 1, 1);
         viewPointCollider.transform.localRotation = Quaternion.identity;
-        viewPointCollider.transform.renderer.enabled = false;
+        viewPointCollider.transform.GetComponent<Renderer>().enabled = false;
 
         GameVehicleAIDriverController aiDriverController;
         aiDriverController = Selection.activeGameObject.GetComponent("GameVehicleAIDriverController") as GameVehicleAIDriverController;

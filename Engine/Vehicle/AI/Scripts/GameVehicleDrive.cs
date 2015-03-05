@@ -133,7 +133,7 @@ public class GameVehicleDrive : GameObjectBehavior {
 
     void InitSound() {
         
-        brakeAudioSource = gameObject.AddComponent("AudioSource") as AudioSource;
+        brakeAudioSource = gameObject.AddComponent<AudioSource>();
         brakeAudioSource.clip = brakeSound;
         brakeAudioSource.loop = true;
         brakeAudioSource.volume = (float)GameProfiles.Current.GetAudioEffectsVolume();
@@ -141,14 +141,14 @@ public class GameVehicleDrive : GameObjectBehavior {
         brakeAudioSource.playOnAwake = false;
         
 
-        turboAudioSource = gameObject.AddComponent("AudioSource") as AudioSource;
+        turboAudioSource = gameObject.AddComponent<AudioSource>();
         turboAudioSource.clip = turboSound;
         turboAudioSource.loop = false;
         turboAudioSource.volume = (float)GameProfiles.Current.GetAudioEffectsVolume();
         //turboAudioSource.rolloffMode = AudioRolloffMode.Linear;
         turboAudioSource.playOnAwake = false;
 
-        motorAudioSource = gameObject.AddComponent("AudioSource") as AudioSource;
+        motorAudioSource = gameObject.AddComponent<AudioSource>();
         motorAudioSource.clip = motorSound;
         motorAudioSource.loop = true;
         motorAudioSource.volume = (float)GameProfiles.Current.GetAudioEffectsVolume();
@@ -157,7 +157,7 @@ public class GameVehicleDrive : GameObjectBehavior {
         //motorAudioSource.rolloffMode = AudioRolloffMode.Linear;
         motorAudioSource.Play();
 
-        motorAudioSourceLow = gameObject.AddComponent("AudioSource") as AudioSource;
+        motorAudioSourceLow = gameObject.AddComponent<AudioSource>();
         motorAudioSourceLow.clip = motorSoundLow;
         motorAudioSourceLow.loop = true;
         motorAudioSourceLow.volume = (float)GameProfiles.Current.GetAudioEffectsVolume();
@@ -166,7 +166,7 @@ public class GameVehicleDrive : GameObjectBehavior {
         //motorAudioSourceLow.rolloffMode = AudioRolloffMode.Linear;
         motorAudioSourceLow.Play();
 
-        motorAudioSourceMid = gameObject.AddComponent("AudioSource") as AudioSource;
+        motorAudioSourceMid = gameObject.AddComponent<AudioSource>();
         motorAudioSourceMid.clip = motorSoundMid;
         motorAudioSourceMid.loop = true;
         motorAudioSourceMid.volume = (float)GameProfiles.Current.GetAudioEffectsVolume();
@@ -331,12 +331,17 @@ public class GameVehicleDrive : GameObjectBehavior {
         Vector3 skidmarkPos;
         Vector3 relativePos;
         Quaternion rotationToLastSkidmark;
+        
+        ParticleEmitter particleEmitterL = DustL.GetComponent<ParticleEmitter>();
+        ParticleEmitter particleEmitterR = DustR.GetComponent<ParticleEmitter>(); 
+
         if (PlayEffects == true) {
+
             WheelHit hit;
             
             if (rlWheelCollider.GetGroundHit(out hit)) {
              
-                DustL.particleEmitter.emit = true;
+                particleEmitterL.emit = true;
                 isGrounding = true;
                 //Skidmarks
                 skidmarkPos = hit.point;
@@ -352,13 +357,13 @@ public class GameVehicleDrive : GameObjectBehavior {
             }
             else {
                     
-                DustL.particleEmitter.emit = false; 
+                particleEmitterL.emit = false; 
                 lastSkidmarkPosL = Vector3.zero;            
             }
                     
             if (rrWheelCollider.GetGroundHit(out hit)) {
                
-                DustR.particleEmitter.emit = true;
+                particleEmitterR.emit = true;
                 isGrounding = true;
                 //Skidmarks
                 skidmarkPos = hit.point;
@@ -373,7 +378,7 @@ public class GameVehicleDrive : GameObjectBehavior {
             }
             else {
                         
-                DustR.particleEmitter.emit = false; 
+                particleEmitterR.emit = false; 
                 lastSkidmarkPosR = Vector3.zero;            
             }
                     
@@ -391,8 +396,8 @@ public class GameVehicleDrive : GameObjectBehavior {
             isPlayingSound = false;
             brakeAudioSource.Stop();
 
-            DustL.particleEmitter.emit = false; 
-            DustR.particleEmitter.emit = false; 
+            particleEmitterL.emit = false; 
+            particleEmitterR.emit = false; 
             lastSkidmarkPosL = Vector3.zero;    
             lastSkidmarkPosR = Vector3.zero;    
         }        

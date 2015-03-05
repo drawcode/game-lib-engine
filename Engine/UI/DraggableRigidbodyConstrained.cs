@@ -48,8 +48,8 @@ namespace Engine.UI {
             if (!springJoint) {
                 LogUtil.Log("Adding rigidbody and joint for draggable");
                 var go = new GameObject("Rigidbody dragger");
-                var body = go.AddComponent("Rigidbody") as Rigidbody;
-                springJoint = go.AddComponent("SpringJoint") as SpringJoint;
+                var body = go.AddComponent<Rigidbody>();
+                springJoint = go.AddComponent<SpringJoint>();
                 body.isKinematic = true;
             }
 
@@ -101,7 +101,14 @@ namespace Engine.UI {
             // Constrain to boundaries, if past stop velocity.
 
             currentPosition = gameObject.transform.position;
-            Vector3 angularVelocityBody = gameObject.rigidbody.angularVelocity;
+
+            Rigidbody rigid = gameObject.GetComponent<Rigidbody>();
+
+            if(rigid == null) {
+                return;
+            }
+
+            Vector3 angularVelocityBody = rigid.angularVelocity;
 
             //LogUtil.Log("currentPosition:" + currentPosition);
 
@@ -122,7 +129,7 @@ namespace Engine.UI {
                 angularVelocityBody.y = 0;
             }
 
-            gameObject.rigidbody.angularVelocity = angularVelocityBody;
+            rigid.angularVelocity = angularVelocityBody;
             gameObject.transform.position = currentPosition;
         }
 

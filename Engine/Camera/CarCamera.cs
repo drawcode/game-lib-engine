@@ -16,18 +16,21 @@ public class CarCamera : GameObjectBehavior {
 
     private Vector3 currentVelocity = Vector3.zero;
 
+    Rigidbody rb;
+
     private void Start() {
         raycastLayers = ~ignoreLayers;
+        rb = target.root.GetComponent<Rigidbody>();
     }
 
     private void FixedUpdate() {
-        currentVelocity = Vector3.Lerp(prevVelocity, target.root.rigidbody.velocity, velocityDamping * Time.deltaTime);
+        currentVelocity = Vector3.Lerp(prevVelocity, rb.velocity, velocityDamping * Time.deltaTime);
         currentVelocity.y = 0;
         prevVelocity = currentVelocity;
     }
 
     private void LateUpdate() {
-        float speedFactor = Mathf.Clamp01(target.root.rigidbody.velocity.magnitude / 70.0f);
+        float speedFactor = Mathf.Clamp01(rb.velocity.magnitude / 70.0f);
         camera.fieldOfView = Mathf.Lerp(55, 72, speedFactor);
         float currentDistance = Mathf.Lerp(7.5f, 6.5f, speedFactor);
 

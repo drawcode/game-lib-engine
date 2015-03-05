@@ -1,5 +1,4 @@
 using System;
-using Engine.Animation;
 using Engine.Events;
 using Engine.Game.Actor;
 using Engine.Utility;
@@ -70,7 +69,7 @@ namespace Engine.Game.Actor {
         }
 
         public virtual void PlayAnimation(string animationName, PlayMode mode) {
-            gameObject.animation.CrossFade(animationName, 1.0f, mode);
+            gameObject.GetComponent<Animation>().CrossFade(animationName, 1.0f, mode);
         }
 
         public virtual void PlayRun() {

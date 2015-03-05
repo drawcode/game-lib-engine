@@ -7,19 +7,23 @@ public class AudioDestroy : GameObjectBehavior {
     public float afterTimeDefault = 5.5f;
     public float clipLength = 5.5f;
 
+    AudioSource audioSource;
+
     // Use this for initialization
     private void Start() {
         Reset();
+
+        audioSource = GetComponent<AudioSource>();
     }
 
     public void Reset() {
         float audioLength = afterTimeDefault;
-        if (audio != null) {
-            if (audio.clip != null) {
-                clipLength = audio.clip.length;
+        if (audioSource != null) {
+            if (audioSource.clip != null) {
+                clipLength = audioSource.clip.length;
                 //LogUtil.LogAudio("DestroySound audio.clip.length:" + audio.clip.length);
-                if (audio.clip.length > 0) {
-                    audioLength = audio.clip.length + 1;
+                if (audioSource.clip.length > 0) {
+                    audioLength = audioSource.clip.length + 1;
                 }
             }
         }
@@ -29,16 +33,16 @@ public class AudioDestroy : GameObjectBehavior {
     private IEnumerator DestroySound(float afterTime) {
         //LogUtil.LogAudio("DestroySound afterTime:" + afterTime);
         yield return new WaitForSeconds(afterTime);
-        if (gameObject.audio != null) {
-            if (gameObject.audio.clip != null) {
-                if (gameObject.audio.isPlaying) {
-                    gameObject.audio.Stop();
+        if (audioSource != null) {
+            if (audioSource.clip != null) {
+                if (audioSource.isPlaying) {
+                    audioSource.Stop();
 
                     //DestroyImmediate(gameObject.audio.clip);
                 }
             }
         }
-        gameObject.audio.enabled = false;
+        audioSource.enabled = false;
         gameObject.SetActive(false);
         GameObjectHelper.DestroyGameObject(gameObject);
     }

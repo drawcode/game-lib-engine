@@ -14,16 +14,15 @@ public class AudioSetItem {
 
 public class AudioActionObject {
     
-    public Vector3 pos;        
-    public Transform parent;        
-    public AudioClip clip;        
-    public bool loop;        
-    public int increment;        
-    public float volume;        
+    public Vector3 pos;
+    public Transform parent;
+    public AudioClip clip;
+    public bool loop;
+    public int increment;
+    public float volume;
     public bool startPlaying;
     public float panLevel;
     public float minDistance;
-    
     
     public AudioActionObject() {
         Reset();
@@ -46,9 +45,7 @@ public class AudioActionObject {
 public class AudioSystem : GameObjectBehavior {
 
     public static AudioSystem Instance;
-        
     public GameObject prefabAudioItem;
-
     public GameObject globalTranform;
     public AudioSource currentLoop;
     public AudioSource currentGameLoop;
@@ -293,10 +290,12 @@ public class AudioSystem : GameObjectBehavior {
             goClip.transform.position = Vector3.zero;
         }
 
-        goClip.audio.clip = clip;
-        goClip.audio.loop = loop;
-        goClip.audio.volume = (float)volume;
-        goClip.audio.playOnAwake = false;
+        AudioSource audioSource = GetComponent<AudioSource>();
+
+        audioSource.clip = clip;
+        audioSource.loop = loop;
+        audioSource.volume = (float)volume;
+        audioSource.playOnAwake = false;
 
         return goClip;
     }
@@ -364,7 +363,7 @@ public class AudioSystem : GameObjectBehavior {
 
         AudioClip clip = LoadAudioClip(file);
 
-        if(clip == null) {
+        if (clip == null) {
             return null;
         }
 
@@ -379,7 +378,7 @@ public class AudioSystem : GameObjectBehavior {
     
     public GameObject PlayAudioClip(Vector3 pos, Transform parent, AudioClip clip, bool loop, int increment, float volume) {
         
-        if(clip == null) {
+        if (clip == null) {
             return null;
         }
         
@@ -396,7 +395,7 @@ public class AudioSystem : GameObjectBehavior {
 
     public GameObject PlayAudioClip(AudioClip clip, bool loop, int increment, float volume) {
 
-        if(clip == null) {
+        if (clip == null) {
             return null;
         }
 
@@ -413,27 +412,27 @@ public class AudioSystem : GameObjectBehavior {
 
     public GameObject PlayAudioClip(AudioActionObject audioActionObject) {
 
-        if(audioActionObject == null) {
+        if (audioActionObject == null) {
             return null;
         }
 
         string fileVersion = audioActionObject.clip.name + "-" + audioActionObject.increment.ToString();
 
-        if(prefabAudioItem == null) {
-            prefabAudioItem =  PrefabsPool.PoolPrefab(audioRootPath + "audio-item");
+        if (prefabAudioItem == null) {
+            prefabAudioItem = PrefabsPool.PoolPrefab(audioRootPath + "audio-item");
         }
 
         GameObject goClip = GameObjectHelper.CreateGameObject(prefabAudioItem, audioActionObject.pos, Quaternion.identity, true);
 
         //goClip.name = fileVersion;
 
-        if(goClip == null) {
+        if (goClip == null) {
             return null;
         }
 
         GameObjectData gameObjectData = goClip.GetOrSet<GameObjectData>();
 
-        if(gameObjectData != null) {
+        if (gameObjectData != null) {
             gameObjectData.Set("code", fileVersion);
             gameObjectData.Set("name", audioActionObject.clip.name);
         }
@@ -460,15 +459,15 @@ public class AudioSystem : GameObjectBehavior {
 
         audioSourceObject.playOnAwake = false;
 
-        if(audioDestroy != null) {
+        if (audioDestroy != null) {
             audioDestroy.Reset();
         }
 
-        if(audioActionObject.panLevel > 0.0) {
+        if (audioActionObject.panLevel > 0.0) {
             audioSourceObject.maxDistance = 25;
             audioSourceObject.spread = 360;
             audioSourceObject.priority = 0;
-            audioSourceObject.panLevel = audioActionObject.panLevel;
+            audioSourceObject.spatialBlend = audioActionObject.panLevel;
             audioSourceObject.rolloffMode = AudioRolloffMode.Linear;
         }
 
@@ -486,7 +485,7 @@ public class AudioSystem : GameObjectBehavior {
 
         audioSourceObject.enabled = true;
 
-        if(audioActionObject.startPlaying) {
+        if (audioActionObject.startPlaying) {
             audioSourceObject.Play();
         }
 
@@ -576,7 +575,7 @@ public class AudioSystem : GameObjectBehavior {
     public AudioClip LoadAudioClip(string path) {
         AudioSetItem audioSetItem = LoadAudioSetItem(path);
 
-        if(audioSetItem != null) {
+        if (audioSetItem != null) {
             return audioSetItem.audioClip;
         }
 
@@ -584,7 +583,7 @@ public class AudioSystem : GameObjectBehavior {
     }
 
     public void ClearAudioItems() {
-        if(audioSetItems == null) {
+        if (audioSetItems == null) {
             return;
         }
 
@@ -697,9 +696,9 @@ public class AudioSystem : GameObjectBehavior {
                     return;
                 }
 
-                if (currentGameLoops[i].audio == null) {
-                    return;
-                }
+                //if (currentGameLoops[i].audio == null) {
+                //    return;
+                //}
 
                 if (isCurrent) {
 
@@ -731,23 +730,19 @@ public class AudioSystem : GameObjectBehavior {
         if (ambienceActive) {
 
             if (currentLoop != null) {
-                if (currentLoop.audio.isPlaying) {
+                if (currentLoop.isPlaying) {
                     //currentLoop.gameObject.AudioTo(0f, 1f, 1.5f, 0f);
                     if (currentIntro != null) {
-                        if (currentIntro.audio != null) {
-                            currentIntro.volume = 0f;
-                        }
+                        currentIntro.volume = 0f;
                     }
                 }
             }
     
             if (currentIntro != null) {
-                if (currentIntro.audio != null) {
-                    if (currentIntro.audio.isPlaying) {
-                        currentIntro.volume = 0f;
-                    }
-                    //currentIntro.gameObject.AudioTo(0f, 1f, 1.5f, 0f);
+                if (currentIntro.isPlaying) {
+                    currentIntro.volume = 0f;
                 }
+                //currentIntro.gameObject.AudioTo(0f, 1f, 1.5f, 0f);
             }
 
             yield return new WaitForSeconds(0.5f);

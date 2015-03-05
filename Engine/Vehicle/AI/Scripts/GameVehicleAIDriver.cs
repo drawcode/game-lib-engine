@@ -214,7 +214,7 @@ public class GameVehicleAIDriver : GameObjectBehavior {
 
     void InitSound() {    
 
-        motorAudioSource = gameObject.AddComponent("AudioSource") as AudioSource;
+        motorAudioSource = gameObject.AddComponent<AudioSource>();
         motorAudioSource.clip = motorSound;
         motorAudioSource.loop = true;
         motorAudioSource.volume = soundVolume;

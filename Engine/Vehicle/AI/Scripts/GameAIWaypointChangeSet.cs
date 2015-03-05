@@ -10,9 +10,9 @@ public class GameAIWaypointChangeSet : GameObjectBehavior {
     public int nextWaypointNo = 1;
     
     void Start() {
-        gameObject.layer = 2;
-        gameObject.collider.isTrigger = true;
-        gameObject.transform.renderer.enabled = false;
+        //layer = 2;
+        collider.isTrigger = true;
+        renderer.enabled = false;
     }
     
     void OnTriggerEnter(Collider other) {

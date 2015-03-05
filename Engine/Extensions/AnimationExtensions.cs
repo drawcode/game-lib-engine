@@ -31,13 +31,15 @@ public static class AnimationExtentions {
         if (actor == null) {
             return;
         }
+
+        Animation anim = actor.GetComponent<Animation>();
     
-        if (actor.animation == null) {
+        if (anim == null) {
             return;
         }
     
-        if (actor.animation[aniTo.name] != null) {
-            ani.CrossFade(aniTo.name);
+        if (anim[aniTo.name] != null) {
+            anim.CrossFade(aniTo.name);
         }
     }
 
@@ -61,12 +63,14 @@ public static class AnimationExtentions {
         if (actor == null) {
             return;
         }
-    
-        if (actor.animation == null) {
+        
+        Animation anim = actor.GetComponent<Animation>();
+        
+        if (anim == null) {
             return;
         }
     
-        if (actor.animation[aniTo.name] != null) {
+        if (anim[aniTo.name] != null) {
             ani.Blend(aniTo.name, targetWeight, fadeLength);
         }
     }
@@ -79,12 +83,14 @@ public static class AnimationExtentions {
         if (actor == null) {
             return;
         }
-    
-        if (actor.animation == null) {
+        
+        Animation anim = actor.GetComponent<Animation>();
+        
+        if (anim == null) {
             return;
         }
     
-        actor.animation.Play(ani.name, PlayMode.StopSameLayer);
+        anim.Play(ani.name, PlayMode.StopSameLayer);
     }
 
     public static void AnimationStateCrossFade(this AnimationState ani, GameObject actor, AnimationState aniTo) {
@@ -99,13 +105,15 @@ public static class AnimationExtentions {
         if (actor == null) {
             return;
         }
-    
-        if (actor.animation == null) {
+        
+        Animation anim = actor.GetComponent<Animation>();
+        
+        if (anim == null) {
             return;
         }
-    
-        if (actor.animation[aniTo.name] != null) {
-            actor.animation.CrossFade(aniTo.name);
+
+        if (anim[aniTo.name] != null) {
+            anim.CrossFade(aniTo.name);
         }
     }
 
@@ -129,13 +137,15 @@ public static class AnimationExtentions {
         if (actor == null) {
             return;
         }
-    
-        if (actor.animation == null) {
+        
+        Animation anim = actor.GetComponent<Animation>();
+        
+        if (anim == null) {
             return;
         }
     
-        if (actor.animation[aniTo.name] != null) {
-            actor.animation.Blend(aniTo.name, targetWeight, fadeLength);
+        if (anim[aniTo.name] != null) {
+            anim.Blend(aniTo.name, targetWeight, fadeLength);
         }
     }
 }

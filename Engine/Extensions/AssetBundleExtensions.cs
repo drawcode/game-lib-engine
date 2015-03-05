@@ -5,9 +5,9 @@ using UnityEngine;
 
 public static class AssetBundleExtensions {
 
-    public static AssetBundleRequest LoadAsync<T>(this AssetBundle inst, string name) {
-        return inst.LoadAsync(name, typeof(T));
-    }
+    //public static AssetBundleRequest LoadAsync<T>(this AssetBundle inst, string name) {
+    //    return inst.LoadAsync(name, typeof(T));
+    //}
 
     /// <summary>
     /// Instantiate the main asset of the bundle

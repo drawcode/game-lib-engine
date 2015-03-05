@@ -103,10 +103,10 @@ public class GameVehicleRespawnController : GameObjectBehavior {
     
     IEnumerator Freeze(float seconds) {
         
-        gameObject.rigidbody.freezeRotation = true;
-        gameObject.rigidbody.velocity = Vector3.zero;
+        rigidbody.freezeRotation = true;
+        rigidbody.velocity = Vector3.zero;
         yield return new WaitForSeconds(seconds);
-        gameObject.rigidbody.freezeRotation = false;
+        rigidbody.freezeRotation = false;
         
     }
     

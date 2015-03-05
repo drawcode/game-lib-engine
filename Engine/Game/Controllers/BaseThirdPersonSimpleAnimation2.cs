@@ -5,6 +5,7 @@ using Engine.Networking;
 using Engine.Utility;
 using UnityEngine;
 
+/*
 namespace Engine.Game.Controllers {
 
     public class BaseThirdPersonSimpleAnimation2 : BaseEngineBehavior {
@@ -143,3 +144,4 @@ namespace Engine.Game.Controllers {
         }
     }
 }
+*/

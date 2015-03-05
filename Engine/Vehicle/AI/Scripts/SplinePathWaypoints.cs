@@ -212,8 +212,8 @@ public class SplinePathWaypoints : SplinePath {
             currentName = "/" + m_waypointFolder + "/" + m_waypointPreName + counter.ToString();            
             go = GameObject.Find(currentName);
             
-            if (go != null) {                               
-                go.renderer.enabled = waypointActive;
+            if (go != null && go.Has<Rigidbody>()) {                               
+                go.GetComponent<Renderer>().enabled = waypointActive;
                 counter++;
             }
             else {

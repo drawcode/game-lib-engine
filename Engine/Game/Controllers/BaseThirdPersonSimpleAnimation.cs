@@ -31,21 +31,38 @@ namespace Engine.Game.Controllers {
 
         public void Reset() {
             if (actor != null) {
-                if (actor.animation != null) {
+                
+                
+                if(actor == null) {
+                    return;
+                }
+                
+                Animation anim = actor.GetComponent<Animation>();
+
+                if (anim != null) {
 
                     // By default loop all animations
-                    actor.animation.wrapMode = WrapMode.Loop;
+                    anim.wrapMode = WrapMode.Loop;
 
                     // We are in full control here - don't let any other animations play when we start
-                    actor.animation.Stop();
-                    actor.animation.Play("idle");
+                    anim.Stop();
+                    anim.Play("idle");
                     isRunning = true;
                 }
             }
         }
 
+        Animation ani;
+
         private void Update() {
             if (isRunning) {
+                
+                if(actor == null) {
+                    return;
+                }
+                
+                ani = actor.GetComponent<Animation>();
+
                 var currentSpeed = thirdPersonController.GetSpeed();
 
                 //LogUtil.Log("currentSpeed:" + currentSpeed);
@@ -62,48 +79,48 @@ namespace Engine.Game.Controllers {
 
                 // Fade in run
                 if (currentSpeed > thirdPersonController.walkSpeed) {
-                    actor.animation.CrossFade("run");
+                    ani.CrossFade("run");
 
                     // We fade out jumpland quick otherwise we get sliding feet
-                    actor.animation.Blend("jump", 0);
+                    ani.Blend("jump", 0);
                     SendMessage("SyncAnimation", "run", SendMessageOptions.DontRequireReceiver);
                 }
 
                 // Fade in walk
                 else if (currentSpeed > 0.1) {
-                    actor.animation.CrossFade("walk");
+                    ani.CrossFade("walk");
 
                     // We fade out jumpland realy quick otherwise we get sliding feet
-                    actor.animation.Blend("jump", 0);
+                    ani.Blend("jump", 0);
                     SendMessage("SyncAnimation", "walk", SendMessageOptions.DontRequireReceiver);
                 }
 
                 // Fade out walk and run
                 else {
-                    actor.animation.CrossFade("idle");
+                    ani.CrossFade("idle");
                     SendMessage("SyncAnimation", "idle", SendMessageOptions.DontRequireReceiver);
                 }
 
-                actor.animation["run"].normalizedSpeed = runSpeedScale;
-                actor.animation["walk"].normalizedSpeed = walkSpeedScale;
+                ani["run"].normalizedSpeed = runSpeedScale;
+                ani["walk"].normalizedSpeed = walkSpeedScale;
 
                 if (thirdPersonController.IsJumping()) {
                     if (thirdPersonController.IsCapeFlying()) {
 
                         //actor.animation.CrossFade("jetpackjump", 0.2f);
                         //SendMessage("SyncAnimation", "jetpackjump", SendMessageOptions.DontRequireReceiver);
-                        actor.animation.CrossFade("jump", 0.2f);
+                        ani.CrossFade("jump", 0.2f);
                         SendMessage("SyncAnimation", "jump", SendMessageOptions.DontRequireReceiver);
                     }
                     else if (thirdPersonController.HasJumpReachedApex()) {
 
                         //actor.animation.CrossFade("jumpfall", 0.2f);
                         //SendMessage("SyncAnimation", "jumpfall", SendMessageOptions.DontRequireReceiver);
-                        actor.animation.CrossFade("jump", 0.2f);
+                        ani.CrossFade("jump", 0.2f);
                         SendMessage("SyncAnimation", "jump", SendMessageOptions.DontRequireReceiver);
                     }
                     else {
-                        actor.animation.CrossFade("jump", 0.2f);
+                        ani.CrossFade("jump", 0.2f);
                         SendMessage("SyncAnimation", "jump", SendMessageOptions.DontRequireReceiver);
                     }
                 }
@@ -124,32 +141,43 @@ namespace Engine.Game.Controllers {
         }
 
         public void DidLand() {
+            if(actor == null) {
+                return;
+            }
+            
+            Animation anim = actor.GetComponent<Animation>();
 
             //actor.animation.Play("jumpland");
             //SendMessage("SyncAnimation", "jumpland", SendMessageOptions.DontRequireReceiver);
-            actor.animation.Play("jump");
+            anim.Play("jump");
             SendMessage("SyncAnimation", "jumpland", SendMessageOptions.DontRequireReceiver);
         }
 
         public void DidAttack() {
             LogUtil.Log("DidAttack:");
             float currentSpeed = thirdPersonController.GetSpeed();
+            
+            if(actor == null) {
+                return;
+            }
+            
+            Animation anim = actor.GetComponent<Animation>();
 
             // Fade in run
             if (currentSpeed > thirdPersonController.walkSpeed) {
-                actor.animation.CrossFade("attack_far");
+                anim.CrossFade("attack_far");
                 SendMessage("SyncAnimation", "run", SendMessageOptions.DontRequireReceiver);
             }
 
             // Fade in walk
             else if (currentSpeed > 0.1) {
-                actor.animation.CrossFade("attack_far");
+                anim.CrossFade("attack_far");
                 SendMessage("SyncAnimation", "walk", SendMessageOptions.DontRequireReceiver);
             }
 
             // Fade out walk and run
             else {
-                actor.animation.Play("attack_far");
+                anim.Play("attack_far");
                 SendMessage("SyncAnimation", "idle", SendMessageOptions.DontRequireReceiver);
             }
         }
@@ -158,21 +186,27 @@ namespace Engine.Game.Controllers {
             LogUtil.Log("DidSkill:");
             float currentSpeed = thirdPersonController.GetSpeed();
 
+            if(actor == null) {
+                return;
+            }
+
+            Animation anim = actor.GetComponent<Animation>();
+
             // Fade in run
             if (currentSpeed > thirdPersonController.walkSpeed) {
-                actor.animation.CrossFade("skill");
+                anim.CrossFade("skill");
                 SendMessage("SyncAnimation", "run", SendMessageOptions.DontRequireReceiver);
             }
 
             // Fade in walk
             else if (currentSpeed > 0.1) {
-                actor.animation.CrossFade("skill");
+                anim.CrossFade("skill");
                 SendMessage("SyncAnimation", "walk", SendMessageOptions.DontRequireReceiver);
             }
 
             // Fade out walk and run
             else {
-                actor.animation.Play("skill");
+                anim.Play("skill");
                 SendMessage("SyncAnimation", "idle", SendMessageOptions.DontRequireReceiver);
             }
 
@@ -187,17 +221,30 @@ namespace Engine.Game.Controllers {
         }
 
         public void ApplyDamage() {
-            actor.animation.CrossFade("hit", 0.1f);
+            
+            if(actor == null) {
+                return;
+            }
+            
+            Animation anim = actor.GetComponent<Animation>();
+
+            anim.CrossFade("hit", 0.1f);
             SendMessage("SyncAnimation", "hit", SendMessageOptions.DontRequireReceiver);
         }
 
         public void DidWallJump() {
+            
+            if(actor == null) {
+                return;
+            }
+            
+            Animation anim = actor.GetComponent<Animation>();
 
             // Wall jump animation is played without fade.
             // We are turning the character controller 180 degrees around when doing a wall jump so the animation accounts for that.
             // But we really have to make sure that the animation is in full control so
             // that we don't do weird blends between 180 degree apart rotations
-            actor.animation.Play("walljump");
+            anim.Play("walljump");
             SendMessage("SyncAnimation", "walljump");
         }
     }

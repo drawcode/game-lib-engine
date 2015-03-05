@@ -35,7 +35,7 @@ public class DrawLineToNext : GameObjectBehavior {
                 if (nextWP != null) {
                     //if (show && active)
                     if (show) {
-                        nextWP.renderer.sharedMaterial.color = renderer.sharedMaterial.color;
+                        nextWP.GetComponent<Renderer>().sharedMaterial.color = renderer.sharedMaterial.color;
                         Debug.DrawLine(transform.position, nextWP.position, color);                 
                     }
                     

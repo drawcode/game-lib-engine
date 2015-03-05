@@ -46,12 +46,16 @@ private var DustFL : Transform;
 private var DustFR : Transform;
 var tagNameTest : String;
 
+var rigid : Rigidbody = null;
+
 
 function Awake () {	
 	//guiSpeed.material.color = Color.green;
 	
-	rigidbody.centerOfMass.y = 0;	
-	rigidbody.centerOfMass.z = 0;	
+	rigid = GetComponent(Rigidbody);
+	
+	rigid.centerOfMass.y = 0;	
+	rigid.centerOfMass.z = 0;	
 	//rigidbody.centerOfMass.z = 0;		
 	oldForwardFriction = frWheelCollider.forwardFriction.stiffness;
 	oldSidewaysFriction = frWheelCollider.sidewaysFriction.stiffness;
@@ -122,7 +126,7 @@ function FullBraking (){
 		rlWheelCollider.brakeTorque =FullBrakeTorque;
 		rrWheelCollider.brakeTorque =FullBrakeTorque;
 		
-		if ((Mathf.Abs(rigidbody.velocity.z)>1) || (Mathf.Abs(rigidbody.velocity.x)>1)){
+		if ((Mathf.Abs(rigid.velocity.z)>1) || (Mathf.Abs(rigid.velocity.x)>1)){
 		
 			SetFriction(brakingForwardFriction,brakingSidewaysFriction);	
 			SetBrakeEffects(true);	
@@ -164,8 +168,8 @@ function SetBrakeEffects(PlayEffects : boolean){
 		var hit : WheelHit;
 		
 		if (rlWheelCollider.GetGroundHit(hit)){
-			//GameObject.Find("DustL").particleEmitter.emit=true;
-			DustL.particleEmitter.emit=true;
+			//GameObject.Find("DustL").GetComponent(ParticleEmitter).emit=true;
+			DustL.GetComponent(ParticleEmitter).emit=true;
 			isGrounding = true;
 			skidmarkPos  = hit.point;
 			skidmarkPos.y += 0.01;
@@ -178,14 +182,14 @@ function SetBrakeEffects(PlayEffects : boolean){
 			lastSkidmarkPosL = skidmarkPos;
 		}
 		else{
-			//GameObject.Find("DustL").particleEmitter.emit=false;		
-			DustL.particleEmitter.emit=false;	
+			//GameObject.Find("DustL").GetComponent(ParticleEmitter).emit=false;		
+			DustL.GetComponent(ParticleEmitter).emit=false;	
 			lastSkidmarkPosL = Vector3.zero;			
 		}
 				
 		if (rrWheelCollider.GetGroundHit(hit)){
-			//GameObject.Find("DustR").particleEmitter.emit=true;
-			DustR.particleEmitter.emit=true;
+			//GameObject.Find("DustR").GetComponent(ParticleEmitter).emit=true;
+			DustR.GetComponent(ParticleEmitter).emit=true;
 			isGrounding = true;
 			skidmarkPos  = hit.point;
 			skidmarkPos.y += 0.01;
@@ -198,8 +202,8 @@ function SetBrakeEffects(PlayEffects : boolean){
 			lastSkidmarkPosR = skidmarkPos;
 		}
 		else{
-			//GameObject.Find("DustR").particleEmitter.emit=false;		
-			DustR.particleEmitter.emit=false;	
+			//GameObject.Find("DustR").GetComponent(ParticleEmitter).emit=false;		
+			DustR.GetComponent(ParticleEmitter).emit=false;	
 			lastSkidmarkPosR = Vector3.zero;				
 		}
 				
@@ -216,10 +220,10 @@ function SetBrakeEffects(PlayEffects : boolean){
 	else{
 		isPlayingSound = false;
 		brakeAudioSource.Stop();
-		//GameObject.Find("DustL").particleEmitter.emit=false;
-		//GameObject.Find("DustR").particleEmitter.emit=false;
-		DustL.particleEmitter.emit=false;	
-		DustR.particleEmitter.emit=false;	
+		//GameObject.Find("DustL").GetComponent(ParticleEmitter).emit=false;
+		//GameObject.Find("DustR").GetComponent(ParticleEmitter).emit=false;
+		DustL.GetComponent(ParticleEmitter).emit=false;	
+		DustR.GetComponent(ParticleEmitter).emit=false;	
 		lastSkidmarkPosL = Vector3.zero;	
 		lastSkidmarkPosR = Vector3.zero;	
 	}
@@ -277,5 +281,5 @@ function GearSound(){
 	}
 	
 	currentPitch =((Mathf.Abs(currentSpeed) - tempMinSpeed)/(tempMaxSpeed-tempMinSpeed)) + 0.8;
-	audio.pitch = currentPitch;
+	GetComponent(AudioSource).pitch = currentPitch;
 }

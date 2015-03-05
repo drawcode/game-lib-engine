@@ -9,8 +9,8 @@ public class SwitchOAMode : GameObjectBehavior {
     void Start() {
         
         gameObject.layer = 2;
-        gameObject.collider.isTrigger = true;
-        gameObject.transform.renderer.enabled = false;
+        collider.isTrigger = true;
+        renderer.enabled = false;
         
     }
     //2012-06-23
