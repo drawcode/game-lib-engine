@@ -290,7 +290,7 @@ public class AudioSystem : GameObjectBehavior {
             goClip.transform.position = Vector3.zero;
         }
 
-        AudioSource audioSource = GetComponent<AudioSource>();
+        AudioSource audioSource = goClip.GetComponent<AudioSource>();
 
         audioSource.clip = clip;
         audioSource.loop = loop;
