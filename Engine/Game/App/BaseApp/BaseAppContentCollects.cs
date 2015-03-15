@@ -241,8 +241,14 @@ public class AppContentCollectType {
     public static string action = "action";
 }
 
+public class AppContentCollectTypeProgress {
+    public static string notCompleted = "not-completed";
+    public static string inProgress = "in-progress";
+    public static string completed = "completed";
+}
+
 public class AppContentCollectActionType {
-    public static string actionRescue = "action-rescue";
+    public static string actionSave = "action-save";
     public static string actionWin = "action-win";
     public static string actionCollect = "action-collect";
     public static string actionDefend = "action-defend";
@@ -255,6 +261,11 @@ public class AppContentCollectActionDataType {
     public static string statisticType = "statistic";
     public static string achievementType = "achievement";
     public static string characterType = "character";
+}
+
+public class AppContentCollectActionDataScope {
+    public static string levelScope = "level";
+    public static string alltimeScope = "all-time";
 }
 
 public class AppContentCollectActionDataCode {
@@ -338,6 +349,7 @@ public class AppContentCollectItem : GameDataObject {
 
     // code 
     // type 
+    // data_type
 
     public virtual GameDataObject data {
         get {
@@ -358,6 +370,8 @@ public class AppContentCollectItem : GameDataObject {
         type = AppContentCollectType.mission;
     }
 
+    // type
+
     public bool IsTypeAction() {
         return IsType(AppContentCollectType.action);
     }
@@ -365,6 +379,173 @@ public class AppContentCollectItem : GameDataObject {
     public bool IsTypeMission() {
         return IsType(AppContentCollectType.mission);
     }
+
+    // code
+            
+    public bool IsCodeActionAttack() {
+        return IsCode(AppContentCollectActionType.actionAttack);
+    }
+    
+    public bool IsCodeActionCollect() {
+        return IsCode(AppContentCollectActionType.actionCollect);
+    }
+    
+    public bool IsCodeActionDefend() {
+        return IsCode(AppContentCollectActionType.actionDefend);
+    }
+    
+    public bool IsCodeActionKill() {
+        return IsCode(AppContentCollectActionType.actionKill);
+    }
+    
+    public bool IsCodeActionSave() {
+        return IsCode(AppContentCollectActionType.actionSave);
+    }
+        
+    public bool IsCodeActionWin() {
+        return IsCode(AppContentCollectActionType.actionWin);
+    }
+
+    // data / code
+
+    public string GetDataCodeAction() {
+        if(data == null) {
+            return null;
+        }
+        
+        return data.code;
+    }
+    
+    public bool IsDataCodeAction(string dataCode) {
+        return GetDataCodeAction() == dataCode ? true : false;
+    }
+
+    // data / type
+
+    
+    public string GetDataTypeAction() {
+        if(data == null) {
+            return null;
+        }
+        
+        return data.type;
+    }
+
+    public bool IsDataTypeAction(string dataType) {
+        return GetDataTypeAction() == dataType ? true : false;
+    }
+
+    public bool IsDataTypeActionAchievement() {
+        return IsDataTypeAction(AppContentCollectActionDataType.achievementType);
+    }
+    
+    public bool IsDataTypeActionCharacter() {
+        return IsDataTypeAction(AppContentCollectActionDataType.achievementType);
+    }
+    
+    public bool IsDataTypeActionItem() {
+        return IsDataTypeAction(AppContentCollectActionDataType.itemType);
+    }
+    
+    public bool IsDataTypeActionStatistic() {
+        return IsDataTypeAction(AppContentCollectActionDataType.statisticType);
+    }
+    
+    
+    // data / data_type
+
+    
+    public bool IsDataTypeActionDataType() {
+        return GetDataTypeActionDataScope() == 
+            AppContentCollectActionDataScope.alltimeScope ? true : false;
+    }
+
+    // data / data_type
+
+    public string GetDataTypeActionDataScope() {
+        if(data == null) {
+            return null;
+        }
+
+        return data.data_type;
+    }
+    
+    
+    public bool IsDataTypeActionDataScopeAlltime() {
+        return GetDataTypeActionDataScope() == 
+            AppContentCollectActionDataScope.alltimeScope ? true : false;
+    }
+    
+    public bool IsDataTypeActionDataScopeLevel() {
+        return GetDataTypeActionDataScope() == 
+            AppContentCollectActionDataScope.levelScope ? true : false;
+    }
+
+
+    // action/mission/complete state
+        
+    public bool IsCompleted(GamePlayerRuntimeData runtimeData) {
+        // check each action to see if completed
+        
+        if(runtimeData == null) {
+            return false;
+        }
+        
+        if(IsTypeMission()) {
+            // Check all data items
+            
+            
+        }
+        else if(IsTypeAction()) {
+            
+        }
+        
+        // check action by default
+        
+        if(IsCodeActionSave()) {
+            if(IsDataTypeActionDataScopeLevel()) {
+                // check runtime rescues against action threshold
+
+                double val = runtimeData.saves;
+
+                double valNeeded = data.valDouble;
+
+                if(val >= valNeeded) {
+                    return true;
+                }
+            }
+        }
+        else if(IsCodeActionKill()) {
+            if(IsDataTypeActionDataScopeLevel()) {
+                // check runtime rescues against action threshold
+                
+                double val = runtimeData.kills;
+                
+                double valNeeded = data.valDouble;
+                
+                if(val >= valNeeded) {
+                    return true;
+                }
+            }
+        }
+        else if(IsCodeActionCollect()) {
+            if(IsDataTypeActionDataScopeLevel()) {
+                // check runtime rescues against action threshold
+                
+                double val = runtimeData.kills;
+                
+                double valNeeded = data.valDouble;
+                
+                if(val >= valNeeded) {
+                    return true;
+                }
+            }
+        }
+        
+        return false;
+    }
+
+    // display templating 
 
     public void UpdateDisplayValues() {
         // get the action and object
@@ -484,6 +665,17 @@ public class BaseAppContentCollect : GameDataObject {
 
     public override void Reset() {
         base.Reset();
+    }
+
+    public bool IsCompleted(GamePlayerRuntimeData runtimeData) {
+        
+        foreach(AppContentCollectItem item in GetItemsData()) {
+            if(!item.IsCompleted(runtimeData)) {
+                return false;
+            }
+        }
+        
+        return true;
     }
 
     public bool HasTypeMission() {

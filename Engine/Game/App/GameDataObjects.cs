@@ -2202,6 +2202,22 @@ public class GameDataObject : DataObject {
         return tags.Contains(tagTo);
     }
 
+    public bool IsCode(string val) {
+        return code == val ? true : false;
+    }
+
+    public bool IsDataType(string val) {
+        return data_type == val ? true : false;
+    }
+
+    public bool IsValGreaterThanOrEqual(double valTo) {
+        if(valDouble >= valTo) {
+            return true;
+        }
+
+        return false;
+    }
+
     //
 
     public GameDataObject() {

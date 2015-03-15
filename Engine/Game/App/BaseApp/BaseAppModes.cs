@@ -90,6 +90,12 @@ public class BaseAppModes<T> : DataObjects<T> where T : DataObject, new() {
             return IsAppMode(AppModeMeta.appModeGameChallenge);
         }
     }
+    
+    public bool isAppModeGameMission {
+        get {
+            return IsAppMode(AppModeMeta.appModeGameMission);
+        }
+    }
 
     public bool isAppModeGameTraining {
         get {
