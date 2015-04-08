@@ -9,7 +9,6 @@ public class AppContentAssetTexturePresets : BaseAppContentAssetTexturePresets<A
     private static volatile AppContentAssetTexturePreset current;
     private static volatile AppContentAssetTexturePresets instance;
     private static System.Object syncRoot = new System.Object();
-
     private string DATA_KEY = "app-content-asset-texture-preset-data";
     
     public static AppContentAssetTexturePreset Current {
@@ -50,7 +49,7 @@ public class AppContentAssetTexturePresets : BaseAppContentAssetTexturePresets<A
         path = "data/" + DATA_KEY + ".json";
         pathKey = DATA_KEY;
         LoadData();
-    }   
+    }
     
     public static List<AppContentAssetTexturePreset> All {
         get {

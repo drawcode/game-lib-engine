@@ -15,9 +15,9 @@ public class BaseGameProfileTrackers {
  
     public static BaseGameProfileTracker BaseCurrent {
         get {
-            if(current == null) {
-                lock(syncRoot) {
-                    if(current == null) 
+            if (current == null) {
+                lock (syncRoot) {
+                    if (current == null) 
                         current = new BaseGameProfileTracker();
                 }
             }
@@ -31,9 +31,9 @@ public class BaseGameProfileTrackers {
      
     public static BaseGameProfileTrackers BaseInstance {
         get {
-            if(instance == null) {
-                lock(syncRoot) {
-                    if(instance == null) 
+            if (instance == null) {
+                lock (syncRoot) {
+                    if (instance == null) 
                         instance = new BaseGameProfileTrackers();
                 }
             }
@@ -75,7 +75,7 @@ public class BaseGameProfileTracker : Profile {
     public virtual string GetTrackerValue(string code) {
         string currentValue = "";
         object objectValue = GetAttribute(code).val;
-        if(objectValue != null) {
+        if (objectValue != null) {
             currentValue = Convert.ToString(objectValue);
         }
      

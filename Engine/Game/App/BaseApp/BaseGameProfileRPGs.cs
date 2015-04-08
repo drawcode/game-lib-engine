@@ -29,9 +29,9 @@ public class BaseGameProfileRPGs {
  
     public static BaseGameProfileRPG BaseCurrent {
         get {
-            if(current == null) {
-                lock(syncRoot) {
-                    if(current == null) 
+            if (current == null) {
+                lock (syncRoot) {
+                    if (current == null) 
                         current = new BaseGameProfileRPG();
                 }
             }
@@ -45,9 +45,9 @@ public class BaseGameProfileRPGs {
      
     public static BaseGameProfileRPGs BaseInstance {
         get {
-            if(instance == null) {
-                lock(syncRoot) {
-                    if(instance == null) 
+            if (instance == null) {
+                lock (syncRoot) {
+                    if (instance == null) 
                         instance = new BaseGameProfileRPGs();
                 }
             }
@@ -152,7 +152,7 @@ public class GameDataItemRPG : GameDataObject {
         set {
             Set<double>(BaseDataObjectKeys.fly, value);
         }
-    }    
+    }
     
     public virtual double boost {
         get {
@@ -313,7 +313,7 @@ public class GameProfilePlayerProgressItem : DataObjectItem {
  
     public double GetGamePlayerProgressXP(double defaultValue) {
         double attValue = defaultValue;
-        if(CheckIfAttributeExists(BaseGameProfileRPGAttributes.ATT_PROGRESS_XP))
+        if (CheckIfAttributeExists(BaseGameProfileRPGAttributes.ATT_PROGRESS_XP))
             attValue = GetAttributeDoubleValue(BaseGameProfileRPGAttributes.ATT_PROGRESS_XP);
         return attValue;
     }
@@ -344,7 +344,7 @@ public class GameProfilePlayerProgressItem : DataObjectItem {
     public double GetGamePlayerProgressLevel(double defaultValue) {
      
         double attValue = defaultValue;
-        if(CheckIfAttributeExists(BaseGameProfileRPGAttributes.ATT_PROGRESS_LEVEL))
+        if (CheckIfAttributeExists(BaseGameProfileRPGAttributes.ATT_PROGRESS_LEVEL))
             attValue = GetAttributeDoubleValue(BaseGameProfileRPGAttributes.ATT_PROGRESS_LEVEL);
         return attValue;
     }
@@ -376,7 +376,7 @@ public class GameProfilePlayerProgressItem : DataObjectItem {
     public double GetGamePlayerProgressHealth(double defaultValue) {
      
         double attValue = defaultValue;
-        if(CheckIfAttributeExists(BaseGameProfileRPGAttributes.ATT_PROGRESS_HEALTH))
+        if (CheckIfAttributeExists(BaseGameProfileRPGAttributes.ATT_PROGRESS_HEALTH))
             attValue = GetAttributeDoubleValue(BaseGameProfileRPGAttributes.ATT_PROGRESS_HEALTH);
         return attValue;
     }
@@ -408,7 +408,7 @@ public class GameProfilePlayerProgressItem : DataObjectItem {
     public double GetGamePlayerProgressEnergy(double defaultValue) {
      
         double attValue = defaultValue;
-        if(CheckIfAttributeExists(BaseGameProfileRPGAttributes.ATT_PROGRESS_ENERGY))
+        if (CheckIfAttributeExists(BaseGameProfileRPGAttributes.ATT_PROGRESS_ENERGY))
             attValue = GetAttributeDoubleValue(BaseGameProfileRPGAttributes.ATT_PROGRESS_ENERGY);
         return attValue;
     }
@@ -427,7 +427,7 @@ public class GameProfileRPGItem : DataObjectItem {
     public override void Reset() {
         base.Reset();
 
-      attributes = new Dictionary<string, DataAttribute>();
+        attributes = new Dictionary<string, DataAttribute>();
     }
  
     public void LoadFromGameDataItemRPG(GameDataItemRPG itemRPG) {
@@ -478,7 +478,7 @@ public class GameProfileRPGItem : DataObjectItem {
 
     public double GetXP(double defaultValue) {
         double attValue = defaultValue;
-        if(CheckIfAttributeExists(GameDataItemRPGAttributes.xp))
+        if (CheckIfAttributeExists(GameDataItemRPGAttributes.xp))
             attValue = GetAttributeDoubleValue(GameDataItemRPGAttributes.xp);
         return attValue;
     }
@@ -495,7 +495,7 @@ public class GameProfileRPGItem : DataObjectItem {
 
     public double GetLevel(double defaultValue) {
         double attValue = defaultValue;
-        if(CheckIfAttributeExists(GameDataItemRPGAttributes.level))
+        if (CheckIfAttributeExists(GameDataItemRPGAttributes.level))
             attValue = GetAttributeDoubleValue(GameDataItemRPGAttributes.level);
         return attValue;
     }
@@ -512,7 +512,7 @@ public class GameProfileRPGItem : DataObjectItem {
 
     public double GetCurrency(double defaultValue) {
         double attValue = defaultValue;
-        if(CheckIfAttributeExists(GameDataItemRPGAttributes.xp))
+        if (CheckIfAttributeExists(GameDataItemRPGAttributes.xp))
             attValue = GetAttributeDoubleValue(GameDataItemRPGAttributes.xp);
         return attValue;
     }
@@ -529,7 +529,7 @@ public class GameProfileRPGItem : DataObjectItem {
  
     public double GetUpgradesApplied(double defaultValue) {      
         double attValue = defaultValue;
-        if(CheckIfAttributeExists(GameDataItemRPGAttributes.upgrades_applied))
+        if (CheckIfAttributeExists(GameDataItemRPGAttributes.upgrades_applied))
             attValue = GetAttributeDoubleValue(GameDataItemRPGAttributes.upgrades_applied);
         return attValue;
     }
@@ -546,7 +546,7 @@ public class GameProfileRPGItem : DataObjectItem {
  
     public double GetUpgrades(double defaultValue) {     
         double attValue = defaultValue;
-        if(CheckIfAttributeExists(GameDataItemRPGAttributes.upgrades))
+        if (CheckIfAttributeExists(GameDataItemRPGAttributes.upgrades))
             attValue = GetAttributeDoubleValue(GameDataItemRPGAttributes.upgrades);
         return attValue;
     }
@@ -563,7 +563,7 @@ public class GameProfileRPGItem : DataObjectItem {
 
     public double GetJump(double defaultValue) {
         double attValue = defaultValue;
-        if(CheckIfAttributeExists(GameDataItemRPGAttributes.jump))
+        if (CheckIfAttributeExists(GameDataItemRPGAttributes.jump))
             attValue = GetAttributeDoubleValue(GameDataItemRPGAttributes.jump);
         return attValue;
     }
@@ -580,7 +580,7 @@ public class GameProfileRPGItem : DataObjectItem {
 
     public double GetFly(double defaultValue) {
         double attValue = defaultValue;
-        if(CheckIfAttributeExists(GameDataItemRPGAttributes.fly))
+        if (CheckIfAttributeExists(GameDataItemRPGAttributes.fly))
             attValue = GetAttributeDoubleValue(GameDataItemRPGAttributes.fly);
         return attValue;
     }
@@ -597,7 +597,7 @@ public class GameProfileRPGItem : DataObjectItem {
  
     public double GetSpeed(double defaultValue) {        
         double attValue = defaultValue;
-        if(CheckIfAttributeExists(GameDataItemRPGAttributes.speed))
+        if (CheckIfAttributeExists(GameDataItemRPGAttributes.speed))
             attValue = GetAttributeDoubleValue(GameDataItemRPGAttributes.speed);
         return attValue;
     }
@@ -614,7 +614,7 @@ public class GameProfileRPGItem : DataObjectItem {
     
     public double GetScale(double defaultValue) {        
         double attValue = defaultValue;
-        if(CheckIfAttributeExists(GameDataItemRPGAttributes.scale))
+        if (CheckIfAttributeExists(GameDataItemRPGAttributes.scale))
             attValue = GetAttributeDoubleValue(GameDataItemRPGAttributes.scale);
         return attValue;
     }
@@ -631,7 +631,7 @@ public class GameProfileRPGItem : DataObjectItem {
  
     public double GetAttack(double defaultValue) {       
         double attValue = defaultValue;
-        if(CheckIfAttributeExists(GameDataItemRPGAttributes.attack))
+        if (CheckIfAttributeExists(GameDataItemRPGAttributes.attack))
             attValue = GetAttributeDoubleValue(GameDataItemRPGAttributes.attack);
         return attValue;
     }
@@ -648,7 +648,7 @@ public class GameProfileRPGItem : DataObjectItem {
  
     public double GetDefense(double defaultValue) {      
         double attValue = defaultValue;
-        if(CheckIfAttributeExists(GameDataItemRPGAttributes.defense))
+        if (CheckIfAttributeExists(GameDataItemRPGAttributes.defense))
             attValue = GetAttributeDoubleValue(GameDataItemRPGAttributes.defense);
         return attValue;
     }
@@ -665,7 +665,7 @@ public class GameProfileRPGItem : DataObjectItem {
  
     public double GetHealth(double defaultValue) {       
         double attValue = defaultValue;
-        if(CheckIfAttributeExists(GameDataItemRPGAttributes.health))
+        if (CheckIfAttributeExists(GameDataItemRPGAttributes.health))
             attValue = GetAttributeDoubleValue(GameDataItemRPGAttributes.health);
         return attValue;
     }
@@ -682,7 +682,7 @@ public class GameProfileRPGItem : DataObjectItem {
  
     public double GetEnergy(double defaultValue) {       
         double attValue = defaultValue;
-        if(CheckIfAttributeExists(GameDataItemRPGAttributes.energy))
+        if (CheckIfAttributeExists(GameDataItemRPGAttributes.energy))
             attValue = GetAttributeDoubleValue(GameDataItemRPGAttributes.energy);
         return attValue;
     }
@@ -699,7 +699,7 @@ public class GameProfileRPGItem : DataObjectItem {
  
     public double GetAttackSpeed(double defaultValue) {      
         double attValue = defaultValue;
-        if(CheckIfAttributeExists(GameDataItemRPGAttributes.attack_speed))
+        if (CheckIfAttributeExists(GameDataItemRPGAttributes.attack_speed))
             attValue = GetAttributeDoubleValue(GameDataItemRPGAttributes.attack_speed);
         return attValue;
     }
@@ -716,7 +716,7 @@ public class GameProfileRPGItem : DataObjectItem {
  
     public double GetRechargeSpeed(double defaultValue) {        
         double attValue = defaultValue;
-        if(CheckIfAttributeExists(GameDataItemRPGAttributes.recharge_speed))
+        if (CheckIfAttributeExists(GameDataItemRPGAttributes.recharge_speed))
             attValue = GetAttributeDoubleValue(GameDataItemRPGAttributes.recharge_speed);
         return attValue;
     }
@@ -733,7 +733,7 @@ public class GameProfileRPGItem : DataObjectItem {
  
     public string GetData(string defaultValue) {     
         string attValue = defaultValue;
-        if(CheckIfAttributeExists(GameDataItemRPGAttributes.data))
+        if (CheckIfAttributeExists(GameDataItemRPGAttributes.data))
             attValue = GetAttributeStringValue(GameDataItemRPGAttributes.data);
         return attValue;
     }
@@ -766,8 +766,8 @@ public class GameProfileCustomPresets {
         GameProfileCustomPreset preset = new GameProfileCustomPreset();
         bool found = false;
 
-        for(int i = 0; i < presets.Count; i++ ) {            
-            if(presets[i].code.ToLower() == code.ToLower()) {
+        for (int i = 0; i < presets.Count; i++) {            
+            if (presets[i].code.ToLower() == code.ToLower()) {
                 presets[i].customItem.SetCustomColor(key, color);
                 found = true;
                 //preset = presets[i];
@@ -780,25 +780,24 @@ public class GameProfileCustomPresets {
         preset.name = name;
         preset.customItem.SetCustomColor(key, color);
 
-        if(!found) {
+        if (!found) {
             presets.Add(preset);
         }
     }
-
 
     public void SetPresetColor(GameProfileCustomPreset preset) {
 
         bool found = false;
         
-        for(int i = 0; i < presets.Count; i++ ) {            
-            if(presets[i].code.ToLower() == preset.code.ToLower()) {
+        for (int i = 0; i < presets.Count; i++) {            
+            if (presets[i].code.ToLower() == preset.code.ToLower()) {
                 presets[i] = preset;
                 found = true;
                 return;
             }
         }
         
-        if(!found) {
+        if (!found) {
             presets.Add(preset);
         }
     
@@ -820,8 +819,8 @@ public class CustomColorPresets {
     
         bool found = false;
 
-        for(int i = 0; i < items.Count; i++) {
-            if(items[i].colorCode == itemTo.colorCode) {
+        for (int i = 0; i < items.Count; i++) {
+            if (items[i].colorCode == itemTo.colorCode) {
                 
                 items[i].a = itemTo.a;
                 items[i].attributes = itemTo.attributes;
@@ -835,16 +834,14 @@ public class CustomColorPresets {
             }
         }
         
-        if(!found && itemTo.colorCode != "default") {
+        if (!found && itemTo.colorCode != "default") {
             items.Add(itemTo);
         }
     }
 }
 
-
 public class CustomTexturePresets {
     public List<CustomTextureItem> items = new List<CustomTextureItem>();
-    
     
     public bool Has(string code) {
         return items.Exists(u => u.textureCode == code);
@@ -858,8 +855,8 @@ public class CustomTexturePresets {
         
         bool found = false;
         
-        for(int i = 0; i < items.Count; i++) {
-            if(items[i].textureCode == itemTo.textureCode) {
+        for (int i = 0; i < items.Count; i++) {
+            if (items[i].textureCode == itemTo.textureCode) {
 
                 items[i].attributes = itemTo.attributes;
                 items[i].textureCode = itemTo.textureCode;
@@ -870,7 +867,7 @@ public class CustomTexturePresets {
             }
         }
         
-        if(!found && itemTo.textureCode != "default") {
+        if (!found && itemTo.textureCode != "default") {
             items.Add(itemTo);
         }
     }
@@ -887,12 +884,12 @@ public class GameProfileCustomItem : DataObject {
 
         color_presets = new CustomColorPresets();
         texture_presets = new CustomTexturePresets();
-    }    
+    }
 
     public bool HasData() {
-        if(attributes.Count > 0 
-           || color_presets.items.Count > 0
-           || texture_presets.items.Count > 0) {
+        if (attributes.Count > 0 
+            || color_presets.items.Count > 0
+            || texture_presets.items.Count > 0) {
             return true;
         }
         return false;
@@ -980,7 +977,7 @@ public class GameProfileCustomItem : DataObject {
         texture_presets = item;
         */
         CustomTexturePresets items = texture_presets;        
-        if(items != null) {  
+        if (items != null) {  
             items.Set(itemTo);
         }
         texture_presets = items;
@@ -994,7 +991,7 @@ public class GameProfileCustomItem : DataObject {
         */
 
         CustomColorPresets items = color_presets;        
-        if(items != null) {  
+        if (items != null) {  
             items.Set(itemTo);
         }
         color_presets = items;
@@ -1022,8 +1019,8 @@ public class GameProfileCustomItem : DataObject {
 
         CustomTexturePresets items = texture_presets;
         
-        if(items != null) {            
-            if(items.Has(key)) {
+        if (items != null) {            
+            if (items.Has(key)) {
                 item = items.Get(key);
             }
         }
@@ -1044,8 +1041,8 @@ public class GameProfileCustomItem : DataObject {
 
         CustomColorPresets items = color_presets;
 
-        if(items != null) {            
-            if(items.Has(key)) {
+        if (items != null) {            
+            if (items.Has(key)) {
                 item = items.Get(key);
             }
         }
@@ -1133,7 +1130,6 @@ public class CustomPlayerColorsRunner : DataObject {
 */
 }
 
-
 public class BaseGameProfileRPG : Profile {
     // BE CAREFUL adding properties as they will cause a need for a profile conversion
     // Best way to add items to the profile is the GetAttribute and SetAttribute class as 
@@ -1158,7 +1154,7 @@ public class BaseGameProfileRPG : Profile {
  
     public virtual double GetUpgradesApplied(double defaultValue) {
         double attValue = defaultValue;
-        if(CheckIfAttributeExists(GameDataItemRPGAttributes.upgrades_applied))
+        if (CheckIfAttributeExists(GameDataItemRPGAttributes.upgrades_applied))
             attValue = GetAttributeDoubleValue(GameDataItemRPGAttributes.upgrades_applied);
         return attValue;
     }
@@ -1179,7 +1175,7 @@ public class BaseGameProfileRPG : Profile {
 
     public virtual double SubtractUpgrades(double val) {
         double upgrades = GetUpgrades();
-        if(val > 0) {
+        if (val > 0) {
             val = -val;
         }
         upgrades += val;
@@ -1193,7 +1189,7 @@ public class BaseGameProfileRPG : Profile {
  
     public virtual double GetUpgrades(double defaultValue) {     
         double attValue = defaultValue;
-        if(CheckIfAttributeExists(GameDataItemRPGAttributes.upgrades))
+        if (CheckIfAttributeExists(GameDataItemRPGAttributes.upgrades))
             attValue = GetAttributeDoubleValue(GameDataItemRPGAttributes.upgrades);
         return attValue;
     }
@@ -1239,7 +1235,7 @@ public class BaseGameProfileRPG : Profile {
 
     public virtual double GetCurrency(double defaultValue) {
         double attValue = defaultValue;
-        if(CheckIfAttributeExists(BaseGameProfileAttributes.ATT_CURRENCY))
+        if (CheckIfAttributeExists(BaseGameProfileAttributes.ATT_CURRENCY))
             attValue = GetAttributeDoubleValue(BaseGameProfileAttributes.ATT_CURRENCY);
         return attValue;
     }
@@ -1254,7 +1250,7 @@ public class BaseGameProfileRPG : Profile {
 
     public virtual double GetGamePlayerProgressCurrency(double defaultValue) {
         double attValue = defaultValue;
-        if(CheckIfAttributeExists(BaseGameProfileRPGAttributes.ATT_PROGRESS_CURRENCY))
+        if (CheckIfAttributeExists(BaseGameProfileRPGAttributes.ATT_PROGRESS_CURRENCY))
             attValue = GetAttributeDoubleValue(BaseGameProfileRPGAttributes.ATT_PROGRESS_CURRENCY);
         return attValue;
     }
@@ -1286,7 +1282,7 @@ public class BaseGameProfileRPG : Profile {
  
     public double GetGamePlayerProgressXP(double defaultValue) {
         double attValue = defaultValue;
-        if(CheckIfAttributeExists(BaseGameProfileRPGAttributes.ATT_PROGRESS_XP))
+        if (CheckIfAttributeExists(BaseGameProfileRPGAttributes.ATT_PROGRESS_XP))
             attValue = GetAttributeDoubleValue(BaseGameProfileRPGAttributes.ATT_PROGRESS_XP);
         return attValue;
     }
@@ -1316,7 +1312,7 @@ public class BaseGameProfileRPG : Profile {
     public double GetGamePlayerProgressLevel(double defaultValue) {
      
         double attValue = defaultValue;
-        if(CheckIfAttributeExists(BaseGameProfileRPGAttributes.ATT_PROGRESS_LEVEL))
+        if (CheckIfAttributeExists(BaseGameProfileRPGAttributes.ATT_PROGRESS_LEVEL))
             attValue = GetAttributeDoubleValue(BaseGameProfileRPGAttributes.ATT_PROGRESS_LEVEL);
         return attValue;
     }
@@ -1347,7 +1343,7 @@ public class BaseGameProfileRPG : Profile {
     public double GetGamePlayerProgressHealth(double defaultValue) {
      
         double attValue = defaultValue;
-        if(CheckIfAttributeExists(BaseGameProfileRPGAttributes.ATT_PROGRESS_HEALTH))
+        if (CheckIfAttributeExists(BaseGameProfileRPGAttributes.ATT_PROGRESS_HEALTH))
             attValue = GetAttributeDoubleValue(BaseGameProfileRPGAttributes.ATT_PROGRESS_HEALTH);
         return attValue;
     }
@@ -1378,7 +1374,7 @@ public class BaseGameProfileRPG : Profile {
     public double GetGamePlayerProgressEnergy(double defaultValue) {
      
         double attValue = defaultValue;
-        if(CheckIfAttributeExists(BaseGameProfileRPGAttributes.ATT_PROGRESS_ENERGY))
+        if (CheckIfAttributeExists(BaseGameProfileRPGAttributes.ATT_PROGRESS_ENERGY))
             attValue = GetAttributeDoubleValue(BaseGameProfileRPGAttributes.ATT_PROGRESS_ENERGY);
         return attValue;
     }

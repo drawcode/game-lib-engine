@@ -1034,8 +1034,7 @@ public class GameDataObjectLocalized : GameDataObject {
         return val;
     }
     */
-    
-    
+        
     public string GetLocalized(string code, string defaultValue) {          
         string valTo = Get<string>(code, defaultValue);
         
@@ -1045,9 +1044,8 @@ public class GameDataObjectLocalized : GameDataObject {
         
         return valTo;
     }
-
     
-    //[JsonIgnore(JsonIgnoreWhen.Deserializing)]
+    //[JsonIgnore]
     public override string display_name {
         get {
             return GetLocalized(BaseDataObjectKeys.display_name, "");
@@ -1406,6 +1404,16 @@ public class GameDataObject : DataObject {
             Set<string>(BaseDataObjectKeys.mission_type, value);
         }
     }
+        
+    public virtual string mission_key {
+        get {
+            return Get<string>(BaseDataObjectKeys.mission_key, "");
+        }
+        
+        set {
+            Set<string>(BaseDataObjectKeys.mission_key, value);
+        }
+    }
     
     public virtual string mission_code {
         get {
@@ -1424,6 +1432,49 @@ public class GameDataObject : DataObject {
         
         set {
             Set<object>(BaseDataObjectKeys.mission_data, value);
+        }
+    }
+
+    // 
+
+    
+    public virtual string action_type {
+        get {
+            return Get<string>(BaseDataObjectKeys.action_type, "");
+        }
+        
+        set {
+            Set<string>(BaseDataObjectKeys.action_type, value);
+        }
+    }
+    
+    public virtual string action_key {
+        get {
+            return Get<string>(BaseDataObjectKeys.action_key, "");
+        }
+        
+        set {
+            Set<string>(BaseDataObjectKeys.action_key, value);
+        }
+    }
+    
+    public virtual string action_code {
+        get {
+            return Get<string>(BaseDataObjectKeys.action_code, "");
+        }
+        
+        set {
+            Set<string>(BaseDataObjectKeys.action_code, value);
+        }
+    }
+    
+    public virtual object action_data {
+        get {
+            return Get<object>(BaseDataObjectKeys.action_data, null);
+        }
+        
+        set {
+            Set<object>(BaseDataObjectKeys.action_data, value);
         }
     }
 
@@ -2068,6 +2119,26 @@ public class GameDataObject : DataObject {
         }
     }
     
+    public virtual double points {
+        get {
+            return Get<double>(BaseDataObjectKeys.points);
+        }
+        
+        set {
+            Set<double>(BaseDataObjectKeys.time, value);
+        }
+    }
+    
+    public virtual bool complete {
+        get {
+            return Get<bool>(BaseDataObjectKeys.complete);
+        }
+        
+        set {
+            Set<bool>(BaseDataObjectKeys.complete, value);
+        }
+    }
+    
     public virtual string ease_type { // linear, easeInOut, easeIn, easeOut
         get {
             return Get<string>(BaseDataObjectKeys.ease_type);
@@ -2211,7 +2282,7 @@ public class GameDataObject : DataObject {
     }
 
     public bool IsValGreaterThanOrEqual(double valTo) {
-        if(valDouble >= valTo) {
+        if (valDouble >= valTo) {
             return true;
         }
 

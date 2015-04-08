@@ -12,7 +12,7 @@ public static class WWWExtensions {
 
         return (hasLength && length == "0") ||
             (responseHeaderCount > 0 && !hasLength) ||
-                inst.error != null;
+            inst.error != null;
     }
 }
 

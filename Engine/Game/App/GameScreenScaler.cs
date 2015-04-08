@@ -9,14 +9,10 @@ public class GameScreenScaler : GameObjectBehavior {
     public bool realtime = false;
     public bool broadcast = true;
     public bool run = true;
-
     public float originalScreenRatio = 0.0f;
-
     public float screenRatio = 0.0f;
     public float screenScaledRatio = 0.0f;
-
     public Rect scaledViewportRect = new Rect();
-
     public float currentHeight = 0.0f;
     public float currentWidth = 0.0f;
 

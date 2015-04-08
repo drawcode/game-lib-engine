@@ -12,7 +12,6 @@ namespace Engine.Events {
         public string axisName = "main";
         public Vector3 axisInput;
         public Vector3 padPos;
-        
         TouchInputAxisObject touchedObj;
 
         private void FindPad() {

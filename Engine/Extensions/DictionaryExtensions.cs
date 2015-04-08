@@ -17,7 +17,7 @@ public static class DictionaryExtensions {
     }
     
     public static TVal Get<TKey, TVal>(this Dictionary<TKey, TVal> dict, TKey code, TVal defaultValue) {  
-        if(dict == null) {
+        if (dict == null) {
             return default(TVal);
         }
 
@@ -31,7 +31,7 @@ public static class DictionaryExtensions {
             LogUtil.Log(e);
             return default(TVal);
         }
-    }   
+    }
 
     public static void Set<T>(this Dictionary<string, T> dict, string code, T val) {
         dict.Set<string, T>(code, val);
@@ -42,7 +42,7 @@ public static class DictionaryExtensions {
     }
 
     public static void Set<TKey, TVal>(this Dictionary<TKey, TVal> dict, TKey code, TVal val) {
-        if(dict == null) {
+        if (dict == null) {
             return;
         }
         
@@ -63,7 +63,7 @@ public static class DictionaryExtensions {
     }
 
     public static bool Has<TKey, TVal>(this Dictionary<TKey, TVal> dict, TKey code) {
-        if(dict == null) {
+        if (dict == null) {
             return false;
         }
         

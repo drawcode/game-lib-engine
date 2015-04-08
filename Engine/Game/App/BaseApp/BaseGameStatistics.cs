@@ -6,7 +6,6 @@ public class BaseGameStatistics<T> : DataObjects<T> where T : DataObject, new() 
     private static T current;
     private static volatile BaseGameStatistics<T> instance;
     private static object syncRoot = new Object();
-
     public static string BASE_DATA_KEY = "game-statistics-data";
 
     public static T BaseCurrent {
@@ -40,7 +39,6 @@ public class BaseGameStatistics<T> : DataObjects<T> where T : DataObject, new() 
 
     public static string STAT_TOTAL_TIMES_PLAYED = "times-played";
     public static string STAT_TOTAL_TIME_PLAYED = "time-played";
-
     public static string STAT_TOTAL_WINS = "total-wins";
     public static string STAT_TOTAL_LOSSES = "total-losses";
 
@@ -75,7 +73,7 @@ public class BaseGameStatistic : GameDataObjectLocalized {
         set {
             Set(BaseGameStatisticKeys.order, value);
         }
-    } 
+    }
 
     public virtual int store_count {
         get {

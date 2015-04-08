@@ -6,7 +6,6 @@ public class BaseGameTerrainPresets<T> : DataObjects<T> where T : DataObject, ne
     private static T current;
     private static volatile BaseGameTerrainPresets<T> instance;
     private static object syncRoot = new Object();
-
     private string BASE_DATA_KEY = "game-terrain-preset-data";
 
     public static T BaseCurrent {

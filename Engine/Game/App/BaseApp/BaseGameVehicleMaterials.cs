@@ -6,7 +6,6 @@ public class BaseGameVehicleMaterials<T> : DataObjects<T> where T : DataObject, 
     private static T current;
     private static volatile BaseGameVehicleMaterials<T> instance;
     private static object syncRoot = new Object();
-
     private string BASE_DATA_KEY = "game-vehicle-material-data";
 
     public static T BaseCurrent {

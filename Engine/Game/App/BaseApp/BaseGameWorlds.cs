@@ -8,7 +8,6 @@ public class BaseGameWorlds<T> : DataObjects<T> where T : DataObject, new() {
     private static T current;
     private static volatile BaseGameWorlds<T> instance;
     private static object syncRoot = new Object();
-
     public static string BASE_DATA_KEY = "game-world-data";
 
     public static T BaseCurrent {
@@ -64,11 +63,11 @@ public class BaseGameWorlds<T> : DataObjects<T> where T : DataObject, new() {
                 GameWorlds.Current = GameWorlds.Instance.GetById(code);
             }   
         }
-    }     
+    }
 
     public GameWorld GetByWorldNum(int worldNum) {
-        foreach(GameWorld item in GameWorlds.Instance.GetAll()) {
-            if(item.data.world_num == worldNum) {
+        foreach (GameWorld item in GameWorlds.Instance.GetAll()) {
+            if (item.data.world_num == worldNum) {
                 return item;
             }
         }
@@ -89,7 +88,7 @@ public class BaseGameWorld : GameDataObject {
         set {
             Set<GameDataObjectItem>(BaseDataObjectKeys.data, value);
         }
-    } 
+    }
 
     public BaseGameWorld() {
         Reset();

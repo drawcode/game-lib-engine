@@ -6,7 +6,6 @@ public class BaseGameVehicleTextures<T> : DataObjects<T> where T : DataObject, n
     private static T current;
     private static volatile BaseGameVehicleTextures<T> instance;
     private static object syncRoot = new Object();
-
     private string BASE_DATA_KEY = "game-vehicle-texture-data";
 
     public static T BaseCurrent {

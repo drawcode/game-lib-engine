@@ -3,7 +3,6 @@ using Engine;
 using UnityEngine;
 
 namespace Engine.Events {
-
     public class DraggableGUIElement : GameObjectBehavior {
 
         [System.Serializable]
@@ -12,7 +11,6 @@ namespace Engine.Events {
         }
 
         public Border border;
-
         private Vector3 lastMousePosition;
 
         private void OnMouseDown() {

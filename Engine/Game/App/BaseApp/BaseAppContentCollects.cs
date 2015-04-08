@@ -345,7 +345,12 @@ public class AppContentCollectData : GameDataObject {
     }
 }
 
-public class AppContentCollectItem : GameDataObject {
+public class AppContentCollectItemState {
+    public bool completed = false;
+    public double points = 0;
+}
+
+ public class AppContentCollectItem : GameDataObject {
 
     // code 
     // type 
@@ -481,14 +486,31 @@ public class AppContentCollectItem : GameDataObject {
             AppContentCollectActionDataScope.levelScope ? true : false;
     }
 
+    public double ScoreCompleted(GamePlayerRuntimeData runtimeData) {
+
+        AppContentCollectItemState state = ProcessCompleted(runtimeData);
+
+        if(state.completed) {
+            return state.points;
+        }
+
+        return 0;
+    }
+
+        
+    public bool IsCompleted(GamePlayerRuntimeData runtimeData) {
+        return ProcessCompleted(runtimeData).completed;
+    }
 
     // action/mission/complete state
         
-    public bool IsCompleted(GamePlayerRuntimeData runtimeData) {
+    public AppContentCollectItemState ProcessCompleted(GamePlayerRuntimeData runtimeData) {
         // check each action to see if completed
-        
+
+        AppContentCollectItemState state = new AppContentCollectItemState();
+
         if(runtimeData == null) {
-            return false;
+            return state;
         }
         
         if(IsTypeMission()) {
@@ -511,20 +533,24 @@ public class AppContentCollectItem : GameDataObject {
                 double valNeeded = data.valDouble;
 
                 if(val >= valNeeded) {
-                    return true;
+                    state.completed = true;
+                    state.points = (val) * (valNeeded * 25);
+                    return state;
                 }
             }
         }
         else if(IsCodeActionKill()) {
             if(IsDataTypeActionDataScopeLevel()) {
-                // check runtime rescues against action threshold
+                // check runtime kills against action threshold
                 
                 double val = runtimeData.kills;
                 
                 double valNeeded = data.valDouble;
-                
+
                 if(val >= valNeeded) {
-                    return true;
+                    state.completed = true;
+                    state.points = (val) * (valNeeded * 10);
+                    return state;
                 }
             }
         }
@@ -537,12 +563,14 @@ public class AppContentCollectItem : GameDataObject {
                 double valNeeded = data.valDouble;
                 
                 if(val >= valNeeded) {
-                    return true;
+                    state.completed = true;
+                    state.points = (val) * (valNeeded * 5);
+                    return state;
                 }
             }
         }
         
-        return false;
+        return state;
     }
 
     // display templating 
@@ -676,6 +704,33 @@ public class BaseAppContentCollect : GameDataObject {
         }
         
         return true;
+    }
+
+    public void SetProfileCollectValue(string collectType, string typeKey, string key, object val) {        
+        GameProfileModes.Current.SetContentCollectValue(collectType, typeKey, key, val);
+    }
+    
+    public double ScoreCompleted(string collectType, GamePlayerRuntimeData runtimeData) {
+
+        double points = 0;
+
+        foreach(AppContentCollectItem item in GetItemsData()) {
+
+            AppContentCollectItemState itemState = item.ProcessCompleted(runtimeData);
+
+            if(itemState.completed) {
+                string collectKey = BaseGameProfileModes.GetAppContentCollectItemKey(code, item.code);
+
+                GameProfileModes.Current.SetContentCollectValue(
+                    collectType, collectKey, BaseDataObjectKeys.complete, itemState.completed);
+                GameProfileModes.Current.SetContentCollectValue(
+                    collectType, collectKey, BaseDataObjectKeys.points, itemState.points);
+            }
+
+            points += itemState.points;
+        }
+        
+        return points;
     }
 
     public bool HasTypeMission() {

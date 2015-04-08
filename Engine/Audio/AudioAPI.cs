@@ -5,7 +5,6 @@ using Engine.Utility;
 using UnityEngine;
 
 namespace Game {
-
     public class AudioAPI : BaseEngineObject {
 
         // -------------------------------------------------------------------

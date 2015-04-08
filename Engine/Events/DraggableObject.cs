@@ -3,7 +3,6 @@ using Engine;
 using UnityEngine;
 
 namespace Engine.Events {
-
     [RequireComponent(typeof(Rigidbody))]
     public class DraggableObject : GameObjectBehavior {
         public int normalCollisionCount = 1;
@@ -12,7 +11,6 @@ namespace Engine.Events {
         public float addHeightWhenClicked = 0.0f;
         public bool freezeRotationOnDrag = true;
         public Camera cam;
-
         private bool canMove = false;
         private float yPos;
         private bool gravitySetting;
@@ -20,7 +18,6 @@ namespace Engine.Events {
 
         //private float sqrMoveLimit;
         private int collisionCount = 0;
-
         Rigidbody rb;
 
         //private Transform camTransform;
@@ -72,7 +69,8 @@ namespace Engine.Events {
         }
 
         private void FixedUpdate() {
-            if (!canMove) return;
+            if (!canMove)
+                return;
             /*
             gameObject.rigidbody.velocity = Vector3.zero;
             gameObject.rigidbody.angularVelocity = Vector3.zero;

@@ -6,7 +6,6 @@ public class BaseGameVehicleSkins<T> : DataObjects<T> where T : DataObject, new(
     private static T current;
     private static volatile BaseGameVehicleSkins<T> instance;
     private static object syncRoot = new Object();
-
     private string BASE_DATA_KEY = "game-vehicle-skin-data";
 
     public static T BaseCurrent {

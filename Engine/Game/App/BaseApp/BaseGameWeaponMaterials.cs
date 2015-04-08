@@ -6,7 +6,6 @@ public class BaseGameWeaponMaterials<T> : DataObjects<T> where T : DataObject, n
     private static T current;
     private static volatile BaseGameWeaponMaterials<T> instance;
     private static object syncRoot = new Object();
-
     private string BASE_DATA_KEY = "game-weapon-skin-data";
 
     public static T BaseCurrent {

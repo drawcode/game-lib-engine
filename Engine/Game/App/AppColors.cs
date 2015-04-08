@@ -50,7 +50,7 @@ public class AppColors : BaseAppColors<AppColor> {
         path = "data/" + DATA_KEY + ".json";
         pathKey = DATA_KEY;
         LoadData();
-    }      
+    }
     
     public static Dictionary<string, Color> cachedColors = new Dictionary<string, Color>();
 
@@ -58,17 +58,17 @@ public class AppColors : BaseAppColors<AppColor> {
 
         Color colorTo = Color.white;
 
-        if(GameConfigs.globalReady) {
+        if (GameConfigs.globalReady) {
                         
-            if(!cachedColors.ContainsKey(code)) {
+            if (!cachedColors.ContainsKey(code)) {
              
                 AppColor color = AppColors.Instance.GetByCode(code);
 
-                if(color != null) {
+                if (color != null) {
                     colorTo = color.GetColor();
                 }
 
-                if(colorTo != Color.white) {
+                if (colorTo != Color.white) {
                     cachedColors.Add(code, colorTo);            
                 }
 

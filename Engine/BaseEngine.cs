@@ -4,7 +4,6 @@ using System.IO;
 using UnityEngine;
 
 namespace Engine {
-
     public class BaseEngine : BaseEngineObject {
 
         public BaseEngine() {

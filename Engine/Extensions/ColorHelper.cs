@@ -28,26 +28,27 @@ public class ColorItem {
         b = bTo;
         a = aTo;
     }
+
     public void Set(List<double> color) {
-        if(color == null) {
+        if (color == null) {
             return;
         }
 
-        if(color.Count > 0) 
+        if (color.Count > 0) 
             r = (float)color[0];
         
-        if(color.Count > 1) 
+        if (color.Count > 1) 
             g = (float)color[1];
         
-        if(color.Count > 2) 
+        if (color.Count > 2) 
             b = (float)color[2];
         
-        if(color.Count > 3) 
+        if (color.Count > 3) 
             a = (float)color[3];
     }
 
     public Color GetColor(List<double> color) {
-        if(color == null) {
+        if (color == null) {
             return Color.white;
         } 
 

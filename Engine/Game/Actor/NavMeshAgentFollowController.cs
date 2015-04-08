@@ -5,7 +5,6 @@ using System.Collections.Generic;
 using UnityEngine;
 
 namespace Engine.Game.Actor {
-
     public class NavMeshAgentFollowController : GameObjectBehavior {
         public NavMeshAgent agent;
         public Transform targetFollow;
@@ -34,10 +33,10 @@ namespace Engine.Game.Actor {
         // Update is called once per frame
         private void Update() {
 
-            if(!GameConfigs.isGameRunning) {
+            if (!GameConfigs.isGameRunning) {
 
                 if (agent != null) {
-                   agent.Stop();
+                    agent.Stop();
                 }
                 return;
             }

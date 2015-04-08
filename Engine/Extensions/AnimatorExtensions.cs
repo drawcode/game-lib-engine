@@ -8,7 +8,7 @@ public static class AnimatorExtentions {
 
     public static void ResetFloat(this Animator animator, string paramName) {
 
-        if(animator == null) {
+        if (animator == null) {
             return;
         }
         
@@ -20,7 +20,7 @@ public static class AnimatorExtentions {
     
     public static void SetBool(this Animator animator, string key, bool val) {
         
-        if(animator == null) {
+        if (animator == null) {
             return;
         }
         
@@ -29,7 +29,7 @@ public static class AnimatorExtentions {
     
     public static void SetFloat(this Animator animator, string key, float val) {
         
-        if(animator == null) {
+        if (animator == null) {
             return;
         }
         
@@ -38,7 +38,7 @@ public static class AnimatorExtentions {
 
     public static void PlayOneShotBool(this Animator animator, string paramName) {        
         
-        if(animator == null) {
+        if (animator == null) {
             return;
         }
 
@@ -47,7 +47,7 @@ public static class AnimatorExtentions {
 
     public static void PlayOneShotFloat(this Animator animator, string paramName) {
         
-        if(animator == null) {
+        if (animator == null) {
             return;
         }
 
@@ -56,7 +56,7 @@ public static class AnimatorExtentions {
 
     public static void PlayOneShotFloat(this Animator animator, string paramName, float startValue, float endValue) {
         
-        if(animator == null) {
+        if (animator == null) {
             return;
         }
 
@@ -65,7 +65,7 @@ public static class AnimatorExtentions {
         
     public static void PlayOneShotFloat(this Animator animator, string paramName, float startValue) {
         
-        if(animator == null) {
+        if (animator == null) {
             return;
         }
         

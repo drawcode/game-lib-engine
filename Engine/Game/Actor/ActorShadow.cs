@@ -19,11 +19,11 @@ namespace Engine.Game.Actor {
 
         private void LateUpdate() {
             
-            if(GameConfigs.isUIRunning) {
+            if (GameConfigs.isUIRunning) {
                 return;
             }
             
-            if(!GameConfigs.isGameRunning) {
+            if (!GameConfigs.isGameRunning) {
                 return;
             }
 

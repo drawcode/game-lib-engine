@@ -32,14 +32,13 @@ public class AppModeTypes : BaseAppModeTypes<AppModeType> {
     private static volatile AppModeType current;
     private static volatile AppModeTypes instance;
     private static object syncRoot = new System.Object();
-    
     public static string DATA_KEY = "app-mode-type-data";
     
     public static AppModeType Current {
 
-        get  {
+        get {
             if (current == null) {
-                lock (syncRoot)  {
+                lock (syncRoot) {
                     if (current == null)
                         current = new AppModeType();
                 }
@@ -54,9 +53,9 @@ public class AppModeTypes : BaseAppModeTypes<AppModeType> {
     }
      
     public static AppModeTypes Instance {
-        get  {
+        get {
             if (instance == null) {
-                lock (syncRoot)  {
+                lock (syncRoot) {
                     if (instance == null)
                         instance = new AppModeTypes(true);
                 }
@@ -86,7 +85,7 @@ public class AppModeType : BaseAppModeType {
     // Attributes that are added or changed after launch should be like this to prevent
     // profile conversions.
          
-    public AppModeType () {
+    public AppModeType() {
         Reset();
     }
     

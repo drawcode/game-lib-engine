@@ -4,21 +4,16 @@ using Engine.Utility;
 using UnityEngine;
 
 namespace Engine.Audio {
-
     public class Sounds : GameObjectBehavior {
         private AudioSource loop;
         private AudioSource intro;
         private AudioSource[] effects;
-
         public GameObject loopSoundsObject;
         public GameObject introSoundsObject;
         public GameObject effectsSoundsObject;
-
         private double effectSoundVolume = 1.0;
         private double musicSoundVolume = 0.5;
-
         private bool ambienceActive = false;
-
         private bool stopping;
 
         public bool isAudioLoopPlaying {

@@ -5,14 +5,14 @@ using UnityEngine;
 public static class AudioSourceExtensions {
 
     public static void StopIfPlaying(this AudioSource audioSource) {
-        if(audioSource == null) {
+        if (audioSource == null) {
             return;
         }
 
-        if(audioSource.isPlaying) {
+        if (audioSource.isPlaying) {
             audioSource.Stop();
         }
-    }    
+    }
     
     public static void FadeOut(this AudioSource audioSource, float duration) {
         CoroutineUtil.Start(audioSource.fadeOut(duration, () => audioSource.StopIfPlaying()));
@@ -55,5 +55,5 @@ public static class AudioSourceExtensions {
         if (onComplete != null)
             onComplete();
     }
-	
+    
 }

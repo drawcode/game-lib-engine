@@ -5,7 +5,6 @@ using System.Collections.Generic;
 using UnityEngine;
 
 namespace Engine.Game.Actor {
-
     public class NavMeshDirector : GameObjectBehavior {
         public NavMeshAgent agentTester;
         public Vector3 nextDestination;

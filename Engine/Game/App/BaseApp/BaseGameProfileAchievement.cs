@@ -6,9 +6,9 @@ using System.IO;
 using Engine.Data.Json;
 using Engine.Utility;
 
-public class BaseGameProfileAchievementAttributes {	
+public class BaseGameProfileAchievementAttributes { 
 
-}	
+}
 
 public class BaseGameProfileAchievements {
     private static volatile BaseGameProfileAchievement current;
@@ -85,7 +85,7 @@ public class BaseGameProfileAchievement : Profile {
         return currentValue;
     }
 
-	public virtual List<DataAttribute> GetList() {
+    public virtual List<DataAttribute> GetList() {
         return GetAttributesList("achievement");
     }
 }

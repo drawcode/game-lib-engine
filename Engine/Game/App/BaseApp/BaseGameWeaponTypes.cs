@@ -6,7 +6,6 @@ public class BaseGameWeaponTypes<T> : DataObjects<T> where T : DataObject, new()
     private static T current;
     private static volatile BaseGameWeaponTypes<T> instance;
     private static object syncRoot = new Object();
-
     private string BASE_DATA_KEY = "game-weapon-type-data";
 
     public static T BaseCurrent {
@@ -49,7 +48,7 @@ public class BaseGameWeaponTypes<T> : DataObjects<T> where T : DataObject, new()
         Reset();
         path = "data/" + BASE_DATA_KEY + ".json";
         pathKey = BASE_DATA_KEY;
-	}
+    }
 
 }
 

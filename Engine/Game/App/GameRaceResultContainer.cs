@@ -7,7 +7,6 @@ public class GameRaceResultContainer : GameObjectBehavior {
     //public List<Race.RaceResults> results;
     //public List<Race.RaceResults.LapDetails> lapDetails;
     public string trackName;
-
     public bool networked;
 
     private void Start() {

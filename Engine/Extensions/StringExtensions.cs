@@ -47,7 +47,7 @@ public static class StringExtensions {
     }
     
     public static bool IsCompressed(this string val) {
-        if(string.IsNullOrEmpty(val)) {
+        if (string.IsNullOrEmpty(val)) {
             return false;
         }
 
@@ -59,14 +59,14 @@ public static class StringExtensions {
     }
 
     public static string ToBase64(this string val) {
-        if(string.IsNullOrEmpty(val)) {
+        if (string.IsNullOrEmpty(val)) {
             return val;
         }
         return FormatUtil.StringToBase64(val);
     }
         
     public static string FromBase64(this string val) {
-        if(string.IsNullOrEmpty(val)) {
+        if (string.IsNullOrEmpty(val)) {
             return val;
         }
         return FormatUtil.StringFromBase64(val);

@@ -36,6 +36,11 @@ public class BaseDataObjectKeys {
     public static string empty = "empty";
     public static string random = "random";
     //
+    public static string complete = "complete";
+    public static string incomplete = "incomplete";
+    public static string star = "star";
+    public static string stars = "stars";
+    //
     public static string data = "data";
     public static string data_suffix_list = "data_suffix_list";
     public static string data_list = "data_list";
@@ -67,22 +72,45 @@ public class BaseDataObjectKeys {
     public static string network = "network";
     public static string networks = "networks";
     //    
+    public static string level = "level";
+    public static string levels = "levels";
     public static string level_num = "level_num";
     public static string level_code = "level_code";
     public static string level_data = "level_data";
     public static string level_items = "level_items";
     public static string level_type = "level_type";
     //
+    public static string world = "world";
+    public static string worlds = "worlds";
     public static string world_data = "world_data";
     public static string world_num = "world_num";
     public static string world_code = "world_code";
     public static string world_type = "world_type";
     public static string world_items = "world_items";
     //
+    public static string mission = "mission";
+    public static string missions = "missions";
     public static string mission_data = "mission_data";
     public static string mission_code = "mission_code";
     public static string mission_type = "mission_type";
+    public static string mission_key = "mission_key";
     public static string mission_items = "mission_items";
+    //    
+    public static string app_content_collect = "app_content_collect";
+    public static string app_content_collects = "app_content_collects";
+    public static string app_content_collect_data = "app_content_collect_data";
+    public static string app_content_collect_code = "app_content_collect_code";
+    public static string app_content_collect_type = "app_content_collect_type";
+    public static string app_content_collect_key = "app_content_collect_key";
+    public static string app_content_collect_items = "app_content_collect_items";
+    //
+    public static string action = "action";
+    public static string actions = "actions";
+    public static string action_data = "action_data";
+    public static string action_code = "action_code";
+    public static string action_type = "action_type";
+    public static string action_key = "action_key";
+    public static string action_items = "action_items";
     //
     public static string collection_data = "collection_data";
     public static string collection_code = "collection_code";
@@ -272,7 +300,6 @@ public class BaseDataObjectKeys {
     public static string upgrades_applied = "upgrades_applied";
     public static string upgrades = "upgrades";
     public static string xp = "xp";
-    public static string level = "level";
     public static string power = "power";
     public static string currency = "currency";
     //
@@ -298,7 +325,6 @@ public class BaseDataObjectKeys {
     public static string defaultKey = "defaultKey";
     public static string pack = "pack";
     public static string tracker = "tracker";
-    public static string action = "action";
     public static string app_state = "app_state";
     public static string app_content_state = "app_content_state";
     public static string custom = "custom";

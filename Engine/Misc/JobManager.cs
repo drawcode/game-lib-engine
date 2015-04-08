@@ -52,7 +52,8 @@ public class Job {
     #region constructors
 
     public Job(IEnumerator coroutine)
-        : this(coroutine, true) { }
+        : this(coroutine, true) {
+    }
 
     public Job(IEnumerator coroutine, bool shouldStart) {
         _coroutine = coroutine;

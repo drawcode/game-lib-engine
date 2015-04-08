@@ -8,7 +8,6 @@ public class BaseGameTeams<T> : DataObjects<T> where T : DataObject, new() {
     private static T current;
     private static volatile BaseGameTeams<T> instance;
     private static object syncRoot = new Object();
-    
     private string BASE_DATA_KEY = "game-team-data";
     
     public static T BaseCurrent {
@@ -55,9 +54,9 @@ public class BaseGameTeams<T> : DataObjects<T> where T : DataObject, new() {
     }
 
     public void ChangeCurrent(string code) {
-        if(GameTeams.Current.code != code) {
+        if (GameTeams.Current.code != code) {
             GameTeam team = GameTeams.Instance.GetByCode(code);
-            if(team != null) {
+            if (team != null) {
                 GameTeams.Current = team;
                 Messenger<GameTeam>.Broadcast("game-team-changed", team);
             }
@@ -78,7 +77,7 @@ public class BaseGameTeam : GameDataObject {
         set {
             Set<GameDataObjectItem>(BaseDataObjectKeys.data, value);
         }
-    }  
+    }
 
     public BaseGameTeam() {
         Reset();

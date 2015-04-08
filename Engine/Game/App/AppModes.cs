@@ -11,14 +11,13 @@ public class AppModes : BaseAppModes<AppMode> {
     private static volatile AppMode current;
     private static volatile AppModes instance;
     private static object syncRoot = new System.Object();
-    
     public static string DATA_KEY = "app-mode-data";
     
     public static AppMode Current {
 
-        get  {
+        get {
             if (current == null) {
-                lock (syncRoot)  {
+                lock (syncRoot) {
                     if (current == null)
                         current = new AppMode();
                 }
@@ -33,9 +32,9 @@ public class AppModes : BaseAppModes<AppMode> {
     }
      
     public static AppModes Instance {
-        get  {
+        get {
             if (instance == null) {
-                lock (syncRoot)  {
+                lock (syncRoot) {
                     if (instance == null)
                         instance = new AppModes(true);
                 }
@@ -65,7 +64,7 @@ public class AppMode : BaseAppMode {
     // Attributes that are added or changed after launch should be like this to prevent
     // profile conversions.
          
-    public AppMode () {
+    public AppMode() {
         Reset();
     }
     

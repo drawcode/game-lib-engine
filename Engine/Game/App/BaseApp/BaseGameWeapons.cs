@@ -8,7 +8,6 @@ public class BaseGameWeapons<T> : DataObjects<T> where T : DataObject, new() {
     private static T current;
     private static volatile BaseGameWeapons<T> instance;
     private static object syncRoot = new Object();
-
     public static string BASE_DATA_KEY = "game-weapon-data";
 
     public static T BaseCurrent {
@@ -65,7 +64,7 @@ public class BaseGameWeapon : GameDataObject {
         set {
             Set<GameDataObjectItem>(BaseDataObjectKeys.data, value);
         }
-    } 
+    }
 
     public BaseGameWeapon() {
         Reset();

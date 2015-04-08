@@ -5,7 +5,6 @@ using Engine.Utility;
 using UnityEngine;
 
 namespace Engine.Game.Actor {
-
     public class ActorObject : GameObjectBehavior {
         public string sequenceType;
         public string sequenceCode;

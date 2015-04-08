@@ -13,12 +13,10 @@
 // Messenger<float>.AddListener("myEvent", MyEventHandler);
 // ...
 // Messenger<float>.Broadcast("myEvent", 1.0f);
-
 using System;
 using System.Collections.Generic;
 
 namespace Engine.Events {
-
     public enum MessengerMode {
         DONT_REQUIRE_LISTENER,
         REQUIRE_LISTENER,

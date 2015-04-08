@@ -2,77 +2,74 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using System.Text;
 
 using Engine.Data.Json;
 using Engine.Events;
 using Engine.Utility;
 
 public class BaseGameProfileModeAttributes {
-		
-	// MODES	
-	
-	public static string ATT_CURRENT_RACE_MODE = "race-mode";
-	public static string ATT_CURRENT_CAMERA_MODE = "camera-mode";
-	public static string ATT_CURRENT_RACE_MODE_ARCADE_LEVEL = "race-mode-arcade-level";	
-	public static string ATT_CURRENT_RACE_MODE_ARCADE_DIFFICULTY_VALUE = "race-mode-arcade-difficulty-value";
-	
-	public static string ATT_CURRENT_RACE_MODE_ENDLESS_LEVEL = "race-mode-endless-level";
-	public static string ATT_CURRENT_RACE_MODE_ENDLESS_ITEM = "race-mode-endless-item";
-	public static string ATT_CURRENT_RACE_MODE_ENDLESS_PACK = "race-mode-endless-pack";
-	public static string ATT_CURRENT_RACE_MODE_ENDLESS_RESULT_SET = "race-mode-endless-result-set";
-	public static string ATT_CURRENT_RACE_MODE_ENDLESS_RESULT = "race-mode-endless-result";
-	
-	public static string ATT_CURRENT_RACE_MODE_SERIES_PACK = "race-mode-series-pack";
-	public static string ATT_CURRENT_RACE_MODE_SERIES_LEVEL = "race-mode-series-level";
-	public static string ATT_CURRENT_RACE_MODE_SERIES_INDEX = "race-mode-series-index";		
-	public static string ATT_CURRENT_RACE_MODE_SERIES_DIFFICULTY_TYPE = "race-mode-series-difficulty-type";
-	public static string ATT_CURRENT_RACE_MODE_SERIES_CONTAINER_INDEX = "race-mode-series-container-index";
-	public static string ATT_CURRENT_RACE_MODE_SERIES_LEVEL_INDEX = "race-mode-series-level-index";
-	public static string ATT_CURRENT_RACE_MODE_SERIES_RESULT_SET = "race-mode-endless-result-set";
+        
+    // MODES    
+    public static string ATT_CURRENT_CAMERA_MODE = "camera-mode";
 }
 
+public class GameProfileContentCollectItem : GameDataObject {
 
-public class GameProfileMissionItem : GameDataObject {
-    
-}
+    // action code
+    // level code
+    // mission code
+    // world code
 
-public class GameProfileMissionItems {
+    //public List<AppContentCollectItem> data;
     
-    public List<GameProfileMissionItem> items;
-    
-    public GameProfileMissionItems() {
+    public GameProfileContentCollectItem() {
         Reset();
     }
     
     public void Reset() {
-        items = new List<GameProfileMissionItem>();
+        //data = new List<AppContentCollectItem>();
+    } 
+
+}
+
+public class GameProfileContentCollectItems {
+    
+    public List<GameProfileContentCollectItem> items;
+    
+    public GameProfileContentCollectItems() {
+        Reset();
     }
     
-    public GameProfileMissionItem GetItem(string missionCode) {
-        //if(items == null) {
-        //     items = new List<GameProfileCharacterItem>();
-        //
-        //    GameProfileCharacterItem item = new GameProfileCharacterItem();
-        //    items.Add(item);
-        //}
+    public void Reset() {
+        items = new List<GameProfileContentCollectItem>();
+    }
+
+    // COLLECT ITEM KEYS
+            
+    public GameProfileContentCollectItem GetItemByTypeAndKey(
+        string type, string key) {
         
         if (items == null) {
             return null;
         }
         
-        foreach (GameProfileMissionItem item in items) {
-            if (item.mission_code.ToLower() == missionCode.ToLower()) {
+        foreach (GameProfileContentCollectItem item in items) {
+            if (item.key.ToLower() == key.ToLower()
+                && item.type.ToLower() == type.ToLower()) {
                 return item;
             }
         }
         return null;
     }
-    
-    public void SetItem(string missionCode, GameProfileMissionItem item) {
+        
+    public void SetItemByTypeAndKey(GameProfileContentCollectItem item) {
+
         bool found = false;
         
         for (int i = 0; i < items.Count; i++) {
-            if (items[i].mission_code.ToLower() == missionCode.ToLower()) {
+            if (items[i].key.ToLower() == item.key.ToLower()
+                && items[i].type.ToLower() == item.type.ToLower()) {
                 items[i] = item;
                 found = true;
                 break;
@@ -82,122 +79,197 @@ public class GameProfileMissionItems {
         if (!found) {
             items.Add(item);
         }
-    }
+    }    
 }
 
 public class BaseGameProfileModes {
-	private static volatile BaseGameProfileMode current;
-	private static volatile BaseGameProfileModes instance;
-	private static object syncRoot = new Object();
-	
-	public static string DEFAULT_USERNAME = "Player";
-	
-	
-	public static BaseGameProfileMode BaseCurrent {
-		get {
-	    	if (current == null) {
-	        	lock (syncRoot) {
-	           		if (current == null) 
-	              		current = new BaseGameProfileMode();
-	        	}
-	     	}
-	
-	     	return current;
-	  	}
-		set {
-			current = value;
-		}
-	}
-		
-	public static BaseGameProfileModes BaseInstance {
-	  get {
-	     if (instance == null) {
-	        lock (syncRoot) {
-	           if (instance == null) 
-	              instance = new BaseGameProfileModes();
-	        }
-	     }
-	
-	     return instance;
-	  }
-	}
-	
-	
-	// TODO: Common profile actions, lookup, count, etc
+    private static volatile BaseGameProfileMode current;
+    private static volatile BaseGameProfileModes instance;
+    private static object syncRoot = new Object();
+    public static string DEFAULT_USERNAME = "Player";
+    
+    public static BaseGameProfileMode BaseCurrent {
+        get {
+            if (current == null) {
+                lock (syncRoot) {
+                    if (current == null) 
+                        current = new BaseGameProfileMode();
+                }
+            }
+    
+            return current;
+        }
+        set {
+            current = value;
+        }
+    }
+
+    
+    //string appContentState = AppContentStates.Current.code;
+    //string appState = AppStates.Current.code;
+        
+    public static BaseGameProfileModes BaseInstance {
+        get {
+            if (instance == null) {
+                lock (syncRoot) {
+                    if (instance == null) 
+                        instance = new BaseGameProfileModes();
+                }
+            }
+    
+            return instance;
+        }
+    }
+
+    public static string GetAppContentCollectItemKey(
+        string appState,
+        string appContentState,
+        string worldCode, 
+        string levelCode, 
+        string appContentCollectCode, 
+        string actionCode) {
+
+        StringBuilder sb = new StringBuilder();
+
+        sb.Append(":");
+        sb.Append(BaseDataObjectKeys.app_state);
+        sb.Append(":");
+        sb.Append(appState);
+        
+        sb.Append(":");
+        sb.Append(BaseDataObjectKeys.app_content_state);
+        sb.Append(":");
+        sb.Append(appContentState);
+        
+        sb.Append(":");
+        sb.Append(BaseDataObjectKeys.world_code);
+        sb.Append(":");
+        sb.Append(worldCode);
+        
+        sb.Append(":");
+        sb.Append(BaseDataObjectKeys.level_code);
+        sb.Append(":");
+        sb.Append(levelCode);
+        
+        sb.Append(":");
+        sb.Append(BaseDataObjectKeys.app_content_collect_code);
+        sb.Append(":");
+        sb.Append(appContentCollectCode);
+        
+        sb.Append(":");
+        sb.Append(BaseDataObjectKeys.action_code);
+        sb.Append(":");
+        sb.Append(actionCode);
+
+        return sb.ToString();
+    }
+
+    public static string GetAppContentCollectItemKey(
+        string missionCode) {
+        
+        string appState = AppStates.Current.code;
+        string appContentState = AppContentStates.Current.code;
+        string worldCode = GameWorlds.Current.code;
+        string levelCode = "all";
+                        
+        return 
+            GetAppContentCollectItemKey(
+                appState, appContentState, worldCode, 
+                levelCode, missionCode, "default");
+    }
+
+    public static string GetAppContentCollectItemKey(
+        string missionCode, string actionUid) {
+        
+        string appState = AppStates.Current.code;
+        string appContentState = AppContentStates.Current.code;
+        string worldCode = GameWorlds.Current.code;
+        string levelCode = "all";
+        
+        return 
+            GetAppContentCollectItemKey(
+                appState, appContentState, worldCode, 
+                levelCode, missionCode, actionUid);
+    }
+        
+    // TODO: Common profile actions, lookup, count, etc
 }
 
-public class BaseGameProfileMode : Profile  {
-	// BE CAREFUL adding properties as they will cause a need for a profile conversion
-	// Best way to add items to the profile is the GetAttribute and SetAttribute class as 
-	// that stores as a generic DataAttribute class.  Booleans, strings, objects, serialized json objects etc
-	// all work well and cause no need to convert profile on updates. 
-		
-	public BaseGameProfileMode() {
-		Reset();
-	}
-	
-	public override void Reset() {
-		base.Reset();
-		username = ProfileConfigs.defaultPlayerName;
-	}
-		
-	// customizations		
-	
-	public virtual void SetValue(string code, object value) {
-		DataAttribute att = new DataAttribute();
-		att.val = value;
-		att.code = code;
-		att.name = "";
-		att.type = "bool";
-		att.otype = "mode";
-		SetAttribute(att);
-	}
-		
-	public virtual List<DataAttribute> GetList() {
-		return GetAttributesList("mode");
-	}	
-	
-	// GAME MODES DATA
+public class BaseGameProfileMode : Profile {
+    // BE CAREFUL adding properties as they will cause a need for a profile conversion
+    // Best way to add items to the profile is the GetAttribute and SetAttribute class as 
+    // that stores as a generic DataAttribute class.  Booleans, strings, objects, serialized json objects etc
+    // all work well and cause no need to convert profile on updates. 
+        
+    public BaseGameProfileMode() {
+        Reset();
+    }
+    
+    public override void Reset() {
+        base.Reset();
+        username = ProfileConfigs.defaultPlayerName;
+    }
+        
+    // customizations       
+    
+    public virtual void SetValue(string code, object value) {
+        DataAttribute att = new DataAttribute();
+        att.val = value;
+        att.code = code;
+        att.name = "";
+        att.type = "bool";
+        att.otype = "mode";
+        SetAttribute(att);
+    }
+        
+    public virtual List<DataAttribute> GetList() {
+        return GetAttributesList("mode");
+    }   
+        
+    // -----------------------------------------------------------------
+    // GAME MODES DATA
+    
+    // -----------------------------------------------------------------
+    // COLLECTIONS - ACTIONS
 
 
+    // -----------------------------------------------------------------
+    // COLLECTIONS MISSIONS 
+
+    // Missions are
     
-    // SOCIAL
-    
-    // auth/social
-    
-    
-    public virtual GameProfileMissionItems mission_items {
+    public virtual GameProfileContentCollectItems app_content_collect_items {
         get {
-            return Get<GameProfileMissionItems>(BaseDataObjectKeys.mission_items);
+            return Get<GameProfileContentCollectItems>(BaseDataObjectKeys.app_content_collect_items);
         }
         
         set {
-            Set(BaseDataObjectKeys.mission_items, value);
+            Set(BaseDataObjectKeys.app_content_collect_items, value);
         }
     }
     
-    public virtual void SetMissions(GameProfileMissionItems obj) {
+    public virtual void SetContentCollectItems(GameProfileContentCollectItems obj) {
         
-        mission_items = obj;
+        app_content_collect_items = obj;
         
         Messenger.Broadcast(BaseGameProfileMessages.ProfileShouldBeSaved);
     }
-    
-    public virtual GameProfileMissionItems GetMissions() {       
-        GameProfileMissionItems obj = new GameProfileMissionItems();
+
+    public virtual GameProfileContentCollectItems GetContentCollectItems() {       
+        GameProfileContentCollectItems obj = new GameProfileContentCollectItems();
         
-        obj = mission_items;
+        obj = app_content_collect_items;
         
         if (obj == null) {
-            obj = new GameProfileMissionItems();
+            obj = new GameProfileContentCollectItems();
         }
         
         return obj;
     }
     
-    public T GetMissionValue<T>(string missionCode, string key) {
+    public T GetContentCollectValue<T>(string type, string typeKey, string key) {
         
-        GameProfileMissionItem item = GetMission(missionCode);
+        GameProfileContentCollectItem item = GetContentCollectItem(type, typeKey);
         
         if (item == null) {
             return default(T);
@@ -206,56 +278,68 @@ public class BaseGameProfileMode : Profile  {
         return item.Get<T>(key);
     }
     
-    public string GetMissionValue(string missionCode, string key) {
+    public string GetContentCollectValue(string type, string typeKey, string key) {
         
-        return GetMissionValue<string>(missionCode, key);
+        return GetContentCollectValue<string>(type, typeKey, key);
     }
-    
-    public void GetMissionValue(string missionCode, string key, object val) {
+
+    /*
+    public void SetContentCollectItems(string type, string typeKey, List<AppContentCollectItem> items) {
         
-        GameProfileMissionItem item = GetMission(missionCode);
+        GameProfileContentCollectItem item = GetContentCollectItem(type, typeKey);
         
         if (item == null) {
-            item = new GameProfileMissionItem();
-            item.mission_code = missionCode;
+            item = new GameProfileContentCollectItem();
+        }
+
+        item.data = items;
+        
+        SetContentCollectItem(item);
+    }
+    */
+    
+    public void SetContentCollectValue(string type, string typeKey, string key, object val) {
+        
+        GameProfileContentCollectItem item = GetContentCollectItem(type, typeKey);
+        
+        if (item == null) {
+            item = new GameProfileContentCollectItem();
         }
         
+        item.type = type;
+        item.key = typeKey;
+
         item.Set(key, val);
         
-        SetMission(missionCode, item);
+        SetContentCollectItem(item);
     }
         
-    public GameProfileMissionItem GetMission(string missionCode) {
-        
-        GameProfileMissionItem item = GetMissions().GetItem(missionCode);
-        
-        return item;
-    }
-    
-    public void SetMission(string missionCode, GameProfileMissionItem item) {
-        SetMission(missionCode, item, true);
+    public GameProfileContentCollectItem GetContentCollectItem(string type, string typeKey) {
+
+        GameProfileContentCollectItems objs = GetContentCollectItems();
+
+        return objs.GetItemByTypeAndKey(type, typeKey);
     }
     
-    public void SetMission(string missionCode, GameProfileMissionItem item, bool setAsCurrent) {
+    public void SetContentCollectItem(GameProfileContentCollectItem item) {
+        SetContentCollectItem(item, true);
+    }
+    
+    public void SetContentCollectItem(GameProfileContentCollectItem item, bool setAsCurrent) {
         
-        GameProfileMissionItems items = GetMissions();
+        GameProfileContentCollectItems items = GetContentCollectItems();
         
         if (setAsCurrent) {
             //BaseGameProfileCharacters.currentCharacter = item;
             //GameProfileCharacters.Current.SetCurrentCharacterProfileCode(code);
         }
         
-        items.SetItem(missionCode, item);
-        SetMissions(items);
+        items.SetItemByTypeAndKey(item);
+
+        SetContentCollectItems(items);
     }
 
-    // ACTIONS
-
-    // COLLECTIONS
-
-
-
-	
+    
 }
 
 

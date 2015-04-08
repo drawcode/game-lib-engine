@@ -22,9 +22,9 @@ public class BaseGameProfileCurrencies {
  
     public static BaseGameProfileCurrency BaseCurrent {
         get {
-            if(current == null) {
-                lock(syncRoot) {
-                    if(current == null) 
+            if (current == null) {
+                lock (syncRoot) {
+                    if (current == null) 
                         current = new BaseGameProfileCurrency();
                 }
             }
@@ -38,9 +38,9 @@ public class BaseGameProfileCurrencies {
      
     public static BaseGameProfileCurrencies BaseInstance {
         get {
-            if(instance == null) {
-                lock(syncRoot) {
-                    if(instance == null) 
+            if (instance == null) {
+                lock (syncRoot) {
+                    if (instance == null) 
                         instance = new BaseGameProfileCurrencies();
                 }
             }
@@ -103,7 +103,7 @@ public class BaseGameProfileCurrency : Profile {
 
     public virtual double GetCurrency(double defaultValue) {
         double attValue = defaultValue;
-        if(CheckIfAttributeExists(BaseGameProfileAttributes.ATT_CURRENCY))
+        if (CheckIfAttributeExists(BaseGameProfileAttributes.ATT_CURRENCY))
             attValue = GetAttributeDoubleValue(BaseGameProfileAttributes.ATT_CURRENCY);
         return attValue;
     }
@@ -118,16 +118,12 @@ public class BaseGameProfileCurrency : Profile {
 
     public virtual double GetGamePlayerProgressCurrency(double defaultValue) {
         double attValue = defaultValue;
-        if(CheckIfAttributeExists(BaseGameProfileCurrencyAttributes.ATT_PROGRESS_CURRENCY))
+        if (CheckIfAttributeExists(BaseGameProfileCurrencyAttributes.ATT_PROGRESS_CURRENCY))
             attValue = GetAttributeDoubleValue(BaseGameProfileCurrencyAttributes.ATT_PROGRESS_CURRENCY);
         return attValue;
     }
 
     public virtual void SetGamePlayerProgressCurrency(double attValue) {
         SetAttributeDoubleValue(BaseGameProfileCurrencyAttributes.ATT_PROGRESS_CURRENCY, attValue);
-    }
-
- 
+    } 
 }
-
-

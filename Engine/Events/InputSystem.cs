@@ -4,7 +4,6 @@ using Engine.Utility;
 using UnityEngine;
 
 namespace Engine.Events {
-
     public class InputTouchInfo {
         public Vector2 position2d;
         public Vector3 position3d;
@@ -18,32 +17,25 @@ namespace Engine.Events {
     public class InputSystem : GameObjectBehavior {
         private bool inputEnabled = true;
         public bool useAcceleration = false;
-
         public static string EVENT_INPUT_UP = "event-input-up";
         public static string EVENT_INPUT_DOWN = "event-input-down";
         public static string EVENT_INPUT_MOVE = "event-input-move";
         public static string EVENT_INPUT_DRAG_MOVE = "event-input-drag-move";
-
         public Vector2 lastNormalizedTouch = new Vector2(0f, 0f);
         public Vector2 lastNormalizedTouch2 = new Vector2(0f, 0f);
         public Vector3 lastTargetDirection = new Vector3(0f, 0f, 0f);
         public Vector3 lastTargetDirection2 = new Vector3(0f, 0f, 0f);
-
         public Vector3 lastAccelerometer = Vector3.zero;
-		
-        public bool mousePressed = false;	
-        public bool touchPressed = false;   		
-		public bool leftPressed = false;
-		public bool rightPressed = false;
-		public bool upPressed = false;
+        public bool mousePressed = false;
+        public bool touchPressed = false;
+        public bool leftPressed = false;
+        public bool rightPressed = false;
+        public bool upPressed = false;
         public bool downPressed = false;
         public bool usePressed = false;
-
         public InputTouchInfo lastTouch;
         public List<InputTouchInfo> touchesList;
-
         private InputTouchInfo touchInfo;
-
         private static InputSystem _instance = null;
         
         public static InputSystem Instance {
@@ -156,7 +148,7 @@ namespace Engine.Events {
 
         public InputTouchInfo GetTouchInfoFromInput() {
             if (!Context.Current.isMobile) {
-                if(touchInfo != null) {
+                if (touchInfo != null) {
                     if (Input.GetMouseButtonDown(0)) {
                         touchInfo.position2d.x = Input.mousePosition.x;
                         touchInfo.position2d.y = Input.mousePosition.y;
@@ -172,8 +164,8 @@ namespace Engine.Events {
             else {
                 foreach (Touch touch in Input.touches) {
                     if (touch.phase == TouchPhase.Moved
-                       || touch.tapCount > 0) {
-                        if(touchInfo != null) {
+                        || touch.tapCount > 0) {
+                        if (touchInfo != null) {
                             touchInfo.position2d = touch.position;
                             touchInfo.position3d.x = touch.position.x;
                             touchInfo.position3d.y = touch.position.y;
@@ -202,7 +194,7 @@ namespace Engine.Events {
             else {
                 foreach (Touch touch in Input.touches) {
                     if (touch.phase == TouchPhase.Moved
-                       || touch.tapCount > 0) {
+                        || touch.tapCount > 0) {
                         SendInputDownMessage(GetTouchInfoFromInput());
                         return true;
                     }
@@ -221,9 +213,9 @@ namespace Engine.Events {
             else {
                 foreach (Touch touch in Input.touches) {
                     if (touch.phase == TouchPhase.Began
-                       || touch.phase == TouchPhase.Moved
-                       || touch.tapCount > 0
-                       || Input.GetMouseButtonDown(0)) {
+                        || touch.phase == TouchPhase.Moved
+                        || touch.tapCount > 0
+                        || Input.GetMouseButtonDown(0)) {
                         SendInputDownMessage(GetTouchInfoFromInput());
                         return true;
                     }
@@ -339,7 +331,7 @@ namespace Engine.Events {
 
                 IsInputTouchUp();
                 IsInputTouchDown();
-				                
+                                
                 mousePressed = Input.GetMouseButton(0);
                 touchPressed = Input.touchCount > 0 ? true : false;
                 

@@ -24,9 +24,9 @@ public class BaseGameProfileCharacters {
  
     public static BaseGameProfileCharacter BaseCurrent {
         get {
-            if(current == null) {
-                lock(syncRoot) {
-                    if(current == null) 
+            if (current == null) {
+                lock (syncRoot) {
+                    if (current == null) 
                         current = new BaseGameProfileCharacter();
                 }
             }
@@ -40,9 +40,9 @@ public class BaseGameProfileCharacters {
      
     public static BaseGameProfileCharacters BaseInstance {
         get {
-            if(instance == null) {
-                lock(syncRoot) {
-                    if(instance == null) 
+            if (instance == null) {
+                lock (syncRoot) {
+                    if (instance == null) 
                         instance = new BaseGameProfileCharacters();
                 }
             }
@@ -127,12 +127,12 @@ public class GameProfileCharacterItems {
         //    items.Add(item);
         //}
 
-        if(items == null) {
+        if (items == null) {
             return null;
         }
 
-        foreach(GameProfileCharacterItem item in items) {
-            if(item.code.ToLower() == code.ToLower()) {
+        foreach (GameProfileCharacterItem item in items) {
+            if (item.code.ToLower() == code.ToLower()) {
                 return item;
             }
         }
@@ -142,15 +142,15 @@ public class GameProfileCharacterItems {
     public void SetCharacter(string code, GameProfileCharacterItem item) {
         bool found = false;
      
-        for(int i = 0; i < items.Count; i++) {
-            if(items[i].code.ToLower() == code.ToLower()) {
+        for (int i = 0; i < items.Count; i++) {
+            if (items[i].code.ToLower() == code.ToLower()) {
                 items[i] = item;
                 found = true;
                 break;
             }
         }
      
-        if(!found) {
+        if (!found) {
             items.Add(item);
         }
     }
@@ -158,7 +158,7 @@ public class GameProfileCharacterItems {
     public void SetCharacterRPG(string code, GameProfileRPGItem item) {
         GameProfileCharacterItem character = GetCharacter(code);
 
-        if(character == null) {
+        if (character == null) {
             character = new GameProfileCharacterItem();
         }
 
@@ -169,7 +169,7 @@ public class GameProfileCharacterItems {
     public void SetCharacterCustom(string code, GameProfileCustomItem item) {
         GameProfileCharacterItem character = GetCharacter(code);
 
-        if(character == null) {
+        if (character == null) {
             character = new GameProfileCharacterItem();
         }
 
@@ -180,7 +180,7 @@ public class GameProfileCharacterItems {
     public void SetCharacterProgress(string code, GameProfilePlayerProgressItem item) {
         GameProfileCharacterItem character = GetCharacter(code);
 
-        if(character == null) {
+        if (character == null) {
             character = new GameProfileCharacterItem();
         }
 
@@ -314,17 +314,17 @@ public class GameProfileCharacterItem : DataObject {
     public string GetCharacterDataModel() {
         GameCharacter gameCharacter = GetCharacterData();
 
-        if(gameCharacter == null) {
+        if (gameCharacter == null) {
             return ProfileConfigs.defaultGameCharacterCode;
         }
 
-        if(gameCharacter.data == null) {
+        if (gameCharacter.data == null) {
             return ProfileConfigs.defaultGameCharacterCode;
         }
 
         GameDataModel gameModelData = gameCharacter.data.GetModel();
         
-        if(gameModelData == null) {
+        if (gameModelData == null) {
             return ProfileConfigs.defaultGameCharacterCode;
         }
 
@@ -373,11 +373,11 @@ public class BaseGameProfileCharacter : Profile {
 
         //UnityEngine.LogUtil.Log("GameProfileCharacterItems:obj:" + obj.ToJson());
      
-        if(obj == null) {
+        if (obj == null) {
             obj = new GameProfileCharacterItems();
         }
      
-        if(obj.items.Count == 0) {
+        if (obj.items.Count == 0) {
             // add default
             obj.SetCharacter(GameProfileCharacters.Current.GetCurrentCharacterProfileCode(), 
                              new GameProfileCharacterItem());
@@ -457,20 +457,20 @@ public class BaseGameProfileCharacter : Profile {
  
     public GameProfileCharacterItem GetCharacter(string code) {
 
-        if(BaseGameProfileCharacters.currentCharacter == null) {
+        if (BaseGameProfileCharacters.currentCharacter == null) {
             GameProfileCharacterItem item = GetCharacters().GetCharacter(code);
     
             // TODO check this to be sure initing is no problem in sync
-            if(item == null && code != "default") {
-               item = new GameProfileCharacterItem();
-               GetCharacters().SetCharacter(code, item);
+            if (item == null && code != "default") {
+                item = new GameProfileCharacterItem();
+                GetCharacters().SetCharacter(code, item);
             }
 
-            if(item != null) {
-                if(item.profileCustomItem != null && GameCustomController.Instance != null) {
+            if (item != null) {
+                if (item.profileCustomItem != null && GameCustomController.Instance != null) {
                     item.profileCustomItem = 
                         GameCustomController.CheckCustomColorInit(item.profileCustomItem, BaseDataObjectKeys.character);
-				}
+                }
                 BaseGameProfileCharacters.currentCharacter = item;
             }
         }
@@ -481,14 +481,14 @@ public class BaseGameProfileCharacter : Profile {
     public void AddCharacter(string characterCode) {
         GameCharacter gameCharacter = GameCharacters.Instance.GetById(characterCode);
 
-        if(gameCharacter != null) {
+        if (gameCharacter != null) {
 
             int countSameType = 0;
 
             string characterNameTemp = "";
 
-            foreach(GameProfileCharacterItem _item in GetCharacters().items) {
-                if(_item.characterDisplayName.Contains(gameCharacter.display_name)) {
+            foreach (GameProfileCharacterItem _item in GetCharacters().items) {
+                if (_item.characterDisplayName.Contains(gameCharacter.display_name)) {
                     countSameType = countSameType + 1;
                 }
             }
@@ -512,7 +512,7 @@ public class BaseGameProfileCharacter : Profile {
 
         GameProfileCharacterItems characters = GetCharacters();
 
-        if(setAsCurrent) {
+        if (setAsCurrent) {
             BaseGameProfileCharacters.currentCharacter = item;
             GameProfileCharacters.Current.SetCurrentCharacterProfileCode(code);
         }
@@ -566,7 +566,7 @@ public class BaseGameProfileCharacter : Profile {
     public virtual bool GetValue(string code) {
         bool currentValue = false;
         object objectValue = GetAttribute(code).val;
-        if(objectValue != null) {
+        if (objectValue != null) {
             currentValue = Convert.ToBoolean(objectValue);
         }
      
@@ -585,7 +585,7 @@ public class BaseGameProfileCharacter : Profile {
  
     public string GetCurrentCharacterProfileCode(string defaultValue) {
         string attValue = defaultValue;
-        if(CheckIfAttributeExists(BaseGameProfileCharacterAttributes.ATT_CURRENT_CHARACTER_PROFILE_CODE))
+        if (CheckIfAttributeExists(BaseGameProfileCharacterAttributes.ATT_CURRENT_CHARACTER_PROFILE_CODE))
             attValue = GetAttributeStringValue(BaseGameProfileCharacterAttributes.ATT_CURRENT_CHARACTER_PROFILE_CODE);
         return attValue;
     }

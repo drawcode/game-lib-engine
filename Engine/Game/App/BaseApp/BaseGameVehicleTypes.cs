@@ -6,7 +6,6 @@ public class BaseGameVehicleTypes<T> : DataObjects<T> where T : DataObject, new(
     private static T current;
     private static volatile BaseGameVehicleTypes<T> instance;
     private static object syncRoot = new Object();
-
     private string BASE_DATA_KEY = "game-vehicle-type-data";
 
     public static T BaseCurrent {
@@ -49,7 +48,7 @@ public class BaseGameVehicleTypes<T> : DataObjects<T> where T : DataObject, new(
         Reset();
         path = "data/" + BASE_DATA_KEY + ".json";
         pathKey = BASE_DATA_KEY;
-	}
+    }
 
 }
 

@@ -6,7 +6,6 @@ using System.Text;
 namespace Engine.Networking {
 
     // Enums
-
     public enum EngineNetworkType {
         NETWORK_ONLINE,
         NETWORK_LOCAL
@@ -73,16 +72,16 @@ namespace Engine.Networking {
     }
 
     /*
-     * useNat	 Does this server require NAT punchthrough?
-gameType	 The type of the game (like "MyUniqueGameType")
-gameName	 The name of the game (like John Doe's Game)
-connectedPlayers	 Currently connected players
-playerLimit	 Maximum players limit
-ip	 Server IP address
-port	 Server port
-passwordProtected	 Does the server require a password?
-comment	 A miscellaneous comment (can hold data)
-guid	 The GUID of the host, needed when connecting with NAT punchthrough
+     * useNat    Does this server require NAT punchthrough?
+gameType     The type of the game (like "MyUniqueGameType")
+gameName     The name of the game (like John Doe's Game)
+connectedPlayers     Currently connected players
+playerLimit  Maximum players limit
+ip   Server IP address
+port     Server port
+passwordProtected    Does the server require a password?
+comment  A miscellaneous comment (can hold data)
+guid     The GUID of the host, needed when connecting with NAT punchthrough
      * */
 
     public class EngineNetworkSession {

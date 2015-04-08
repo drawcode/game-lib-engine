@@ -44,7 +44,7 @@ public static class AnimationExtentions {
     }
 
     public static void AnimationBlend(this Animation ani, Animation aniTo, GameObject actor) {
-        AnimationBlend(ani, aniTo, actor,  .5f, .5f);
+        AnimationBlend(ani, aniTo, actor, .5f, .5f);
     }
 
     public static void AnimationBlend(this Animation ani, Animation aniTo, GameObject actor, float targetWeight) {

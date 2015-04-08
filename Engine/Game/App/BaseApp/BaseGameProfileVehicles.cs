@@ -18,9 +18,9 @@ public class BaseGameProfileVehicles {
  
     public static BaseGameProfileVehicle BaseCurrent {
         get {
-            if(current == null) {
-                lock(syncRoot) {
-                    if(current == null) 
+            if (current == null) {
+                lock (syncRoot) {
+                    if (current == null) 
                         current = new BaseGameProfileVehicle();
                 }
             }
@@ -34,9 +34,9 @@ public class BaseGameProfileVehicles {
      
     public static BaseGameProfileVehicles BaseInstance {
         get {
-            if(instance == null) {
-                lock(syncRoot) {
-                    if(instance == null) 
+            if (instance == null) {
+                lock (syncRoot) {
+                    if (instance == null) 
                         instance = new BaseGameProfileVehicles();
                 }
             }
@@ -78,7 +78,7 @@ public class BaseGameProfileVehicle : Profile {
     public virtual bool GetValue(string code) {
         bool currentValue = false;
         object objectValue = GetAttribute(code).val;
-        if(objectValue != null) {
+        if (objectValue != null) {
             currentValue = Convert.ToBoolean(objectValue);
         }
      
