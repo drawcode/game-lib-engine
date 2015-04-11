@@ -27,7 +27,8 @@ public class GameProfileContentCollectItem : GameDataObject {
         Reset();
     }
     
-    public void Reset() {
+    public override void Reset() {
+        base.Reset();
         //data = new List<AppContentCollectItem>();
     } 
 

@@ -30,7 +30,7 @@ public class FPSHUD : GameObjectBehavior {
             enabled = false;
             return;
         //}
-        timeleft = updateInterval;
+        //timeleft = updateInterval;
     }
 
     private void Update() {
@@ -42,23 +42,23 @@ public class FPSHUD : GameObjectBehavior {
         if (timeleft <= 0.0) {
 
             // display two fractional digits (f2 format)
-            float fps = accum / frames;
-            string format = System.String.Format("{0:F2} FPS", fps);
+            //float fps = accum / frames;
+            //string format = System.String.Format("{0:F2} FPS", fps);
             //guiText.text = format;
 
-            if (fps < 30) {
+            //if (fps < 30) {
                 //guiText.material.color = Color.yellow;
-            }
-            else {
+            //}
+            //else {
                 //if (fps < 10)
                 //    guiText.material.color = Color.red;
                 //else
                 //    guiText.material.color = Color.green;
 
-                timeleft = updateInterval;
-                accum = 0.0F;
-                frames = 0;
-            }
+            //    timeleft = updateInterval;
+            //    accum = 0.0F;
+            //    frames = 0;
+            //}
         }
     }
 }

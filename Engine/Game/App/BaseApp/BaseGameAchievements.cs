@@ -94,17 +94,7 @@ public class GameAchievementData : GameDataObject {
             Set<string>(BaseDataObjectKeys.level, value);
         }
     }
-    
-    public virtual int points {
-        get {
-            return Get<int>(BaseDataObjectKeys.points);
-        }
-        
-        set {
-            Set<int>(BaseDataObjectKeys.points, value);
-        }
-    }
-    
+
     public virtual bool leaderboard {
         get {
             return Get<bool>(BaseDataObjectKeys.leaderboard);

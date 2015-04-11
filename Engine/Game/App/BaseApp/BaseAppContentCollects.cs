@@ -719,10 +719,12 @@ public class BaseAppContentCollect : GameDataObject {
             AppContentCollectItemState itemState = item.ProcessCompleted(runtimeData);
 
             if(itemState.completed) {
-                string collectKey = BaseGameProfileModes.GetAppContentCollectItemKey(code, item.code);
+
+                string collectKey = BaseGameProfileModes.GetAppContentCollectItemKey(code, item.uid);
 
                 GameProfileModes.Current.SetContentCollectValue(
                     collectType, collectKey, BaseDataObjectKeys.complete, itemState.completed);
+
                 GameProfileModes.Current.SetContentCollectValue(
                     collectType, collectKey, BaseDataObjectKeys.points, itemState.points);
             }

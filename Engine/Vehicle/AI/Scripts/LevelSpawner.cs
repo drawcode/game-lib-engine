@@ -7,10 +7,10 @@ public class LevelSpawner : GameObjectBehavior {
     public Transform spawnPointHill;
     public Transform playerCar;
     public Transform hillyAICar;
-    private GameVehicleSmoothFollow carSmoothFollow;
+    //private GameVehicleSmoothFollow carSmoothFollow;
 
     void Awake() {
-        carSmoothFollow = GetComponent<GameVehicleSmoothFollow>();
+        //carSmoothFollow = GetComponent<GameVehicleSmoothFollow>();
     }
     // Use this for initialization
     void Start() {

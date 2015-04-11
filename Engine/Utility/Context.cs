@@ -107,11 +107,11 @@ public class Context {
 		}
 	}
 	
-	public bool isGoogleNativeClient {
-		get {
-			return Application.platform == RuntimePlatform.NaCl;
-		}
-	}
+	//public bool isGoogleNativeClient {
+	//	get {
+	//		return Application.platform == RuntimePlatform.NaCl;
+	//	}
+	//}
 	
 	public bool isDesktop {
 		get {

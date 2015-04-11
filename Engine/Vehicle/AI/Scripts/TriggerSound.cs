@@ -6,10 +6,10 @@ public class TriggerSound : GameObjectBehavior {
     public string tagName2 = "";
     public AudioClip triggerSound;
     public float soundVolume = 1.0f;
-    private AudioSource triggerAudioSource;
+    //private AudioSource triggerAudioSource;
 
     void Awake() {
-        InitSound(out triggerAudioSource, triggerSound, soundVolume, false);
+        //InitSound(out triggerAudioSource, triggerSound, soundVolume, false);
     }
     
     void InitSound(out AudioSource audioSource, AudioClip clip, float volume, bool looping) {

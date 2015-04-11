@@ -749,7 +749,7 @@ public class AchievementMeta : GameDataObject {
 
     public bool global { get; set; }
 
-    public int points { get; set; }
+    //public double points { get; set; }
 
     public bool leaderboard { get; set; }
 

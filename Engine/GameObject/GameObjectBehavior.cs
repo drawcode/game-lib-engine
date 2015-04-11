@@ -1,3 +1,4 @@
+
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -153,7 +154,7 @@ public class GameObjectBehavior : MonoBehaviour {
     
     private ParticleSystem _particleSystem;
     
-    public ParticleSystem particleSystem {
+    public new ParticleSystem particleSystem {
         get {
             if (!_particleSystem) {
                 _particleSystem = base.GetComponent<ParticleSystem>();
@@ -175,7 +176,7 @@ public class GameObjectBehavior : MonoBehaviour {
     
     private Light _light;
     
-    public Light light {
+    public new Light light {
         get {
             if (!_light) {
                 _light = base.GetComponent<Light>();
