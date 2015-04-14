@@ -28,7 +28,7 @@ public class TestsData {
         Debug.Log(name + "\r\n----------------------------------\r\n\r\n");
     }
 
-    public static void RunTest() {
+    public static void RunTests() {
 
         Advance("Running tests...");
 
@@ -270,25 +270,28 @@ public class TestsData {
         //Advance(testName);
         //success = TestAppContentCollects_Get_Missions_By_World(testName, GameWorlds.Instance.GetAll()[0].code);
 
-
         // LEVELS
         
-        testName = "TestGameLevels_Get";
-        Advance(testName);
-        success = TestGameLevels_Get(testName);
+        //testName = "TestGameLevels_Get";
+        //Advance(testName);
+        //success = TestGameLevels_Get(testName);
         
-        testName = "TestGameLevels_Get_By_Id";
-        Advance(testName);
-        success = TestGameLevels_Get_By_Id(testName, GameLevels.Instance.GetAll()[0].code);
+        //testName = "TestGameLevels_Get_By_Id";
+        //Advance(testName);
+        //success = TestGameLevels_Get_By_Id(testName, GameLevels.Instance.GetAll()[0].code);
         
-        testName = "TestGameLevels_ChangeCurrent";
+        //testName = "TestGameLevels_ChangeCurrent";
+        //Advance(testName);
+        //success = TestGameLevels_ChangeCurrent(testName);
+
+        // PROFILE COLLECTION ITEMS
+        
+        testName = "TestGameProfileContentCollectItems_Get";
         Advance(testName);
-        success = TestGameLevels_ChangeCurrent(testName);
+        success = TestGameProfileContentCollectItems_Get(testName);
 
         //
 
-        //Compress
-        
         if (!CheckTest(success, testName)) { 
             return;
         }
@@ -418,6 +421,51 @@ public class TestsData {
 
     // -----------------------------------------------------------------------------------
 
+    //TestGameProfileContentCollectItems_Get
+
+    
+    public static bool TestGameProfileContentCollectItems_Get(string name) {
+        
+        bool success = false;
+        
+        Debug.Log(name);
+
+        string missionCode = "mission-default-1";
+        string actionUid = "910c4ce1-a073-48d8-8dda-9edc8d071405";
+        
+        AppStates.Instance.ChangeState(AppStateMeta.appStateGame);
+        AppContentStates.Instance.ChangeState(AppContentStateMeta.appContentStateGameMissions);
+        GameLevels.Instance.ChangeCurrent("1-1");
+
+        GamePlayerRuntimeData runtimeData = new GamePlayerRuntimeData();
+        runtimeData.coins = 2;
+
+        DumpObj(name, "TestGameProfileContentCollectItems_Get:runtimeData:", runtimeData.ToJson());
+
+        AppContentCollects.ChangeCurrent(missionCode);
+                
+        AppContentCollects.Current.ScoreCompleted(
+            BaseDataObjectKeys.mission, runtimeData);
+        
+        GameProfileContentCollectItem collectData = 
+            GameProfileModes.Current.GetContentCollectItem(
+                BaseDataObjectKeys.mission,
+                GameProfileModes.GetAppContentCollectItemKey(missionCode, actionUid));
+
+        if(collectData == null) {
+            return false;
+        }
+
+        DumpObj(name, "TestGameProfileContentCollectItems_Get:collectData:", collectData.ToJson());
+
+
+
+        success = true;
+        
+        return success;
+    }
+
+    // -----------------------------------------------------------------------------------
     
     public static bool TestAppContentCollects_Get_Missions_By_World(string name, string code) {
         

@@ -558,9 +558,17 @@ public class AppContentCollectItemState {
             if(IsDataTypeActionDataScopeLevel()) {
                 // check runtime rescues against action threshold
                 
-                double val = runtimeData.kills;
+                double val = 0;
+
+                if(data.code == AppContentCollectActionDataCode.itemCoin) {
+                    val = runtimeData.coins;
+                }
                 
                 double valNeeded = data.valDouble;
+
+                if(valNeeded == 0) {
+                    valNeeded = (double)data.valInt;
+                }
                 
                 if(val >= valNeeded) {
                     state.completed = true;
