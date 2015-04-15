@@ -179,8 +179,60 @@ public class BaseAppContentCollects<T> : DataObjects<T> where T : GameDataObject
     public List<AppContentCollect> getActions() {
         return GetByType(AppContentCollectType.action);
     }
-}
 
+    // PROCESS ACTIONS / COLLECTIONS
+
+    public static List<GameProfileContentCollectItem> GetCompleted(
+        string collectType, string collectTypeCode) {
+        return AppContentCollects.Instance.getCompleted(
+            collectType, collectTypeCode);
+    }
+        
+    public List<GameProfileContentCollectItem> getCompleted(
+        string collectType, string collectTypeCode) {
+
+        AppContentCollect collect = 
+            AppContentCollects.Instance.GetById(collectTypeCode);
+        
+        if(collect == null) {
+            return null;
+        }
+
+        List<GameProfileContentCollectItem> items = 
+            new List<GameProfileContentCollectItem>();
+                
+        foreach(AppContentCollectItem collectItem in collect.GetItemsData()) {
+
+            GameProfileContentCollectItem profileItem = 
+                getProfileCollectData(collectType, collectTypeCode, collectItem.uid);
+
+            if(profileItem != null) {
+                items.Add(profileItem);
+            }
+        }
+        
+        return items;
+    }
+
+    // GetItem
+    
+    public static GameProfileContentCollectItem GetProfileCollectData(
+        string collectType, string collectTypeCode, string actionUid) {
+        return AppContentCollects.Instance.getProfileCollectData(
+            collectType, collectTypeCode, actionUid);
+    }
+    
+    public GameProfileContentCollectItem getProfileCollectData(
+        string collectType, string collectTypeCode, string actionUid) {
+
+        string key = GameProfileModes.GetAppContentCollectItemKey(collectTypeCode, actionUid);
+
+        GameProfileContentCollectItem collectData = 
+            GameProfileModes.Current.GetContentCollectItem(collectType, key);
+        
+        return collectData;
+    }
+}
 
 /*
     {
@@ -254,6 +306,14 @@ public class AppContentCollectActionType {
     public static string actionDefend = "action-defend";
     public static string actionAttack = "action-attack";
     public static string actionKill = "action-kill";    
+}
+
+public class AppCompareType {
+    public static string greaterThan = "greater-than";
+    public static string lessThan = "less-than";
+    public static string greaterThanOrEqualTo = "greater-than-or-equal-to";
+    public static string lessThanOrEqualTo = "less-than-or-equal-to";
+    public static string equalTo = "equal-to";
 }
 
 public class AppContentCollectActionDataType {
@@ -526,7 +586,6 @@ public class AppContentCollectItemState {
         
         if(IsCodeActionSave()) {
             if(IsDataTypeActionDataScopeLevel()) {
-                // check runtime rescues against action threshold
 
                 double val = runtimeData.saves;
 
@@ -541,7 +600,6 @@ public class AppContentCollectItemState {
         }
         else if(IsCodeActionKill()) {
             if(IsDataTypeActionDataScopeLevel()) {
-                // check runtime kills against action threshold
                 
                 double val = runtimeData.kills;
                 
@@ -556,8 +614,7 @@ public class AppContentCollectItemState {
         }
         else if(IsCodeActionCollect()) {
             if(IsDataTypeActionDataScopeLevel()) {
-                // check runtime rescues against action threshold
-                
+
                 double val = 0;
 
                 if(data.code == AppContentCollectActionDataCode.itemCoin) {
@@ -578,7 +635,54 @@ public class AppContentCollectItemState {
             }
         }
         
+        else if(IsCodeActionWin()) {
+            if(IsDataTypeActionDataScopeLevel()) {
+
+                double val = 0;
+                
+                val = runtimeData.hitHealthRemaining;
+                    
+                double valNeeded = data.valDouble;
+                
+                if(valNeeded == 0) {
+                    valNeeded = (double)data.valInt;
+                }
+                
+                if(CompareCollectData(AppCompareType.greaterThan, val, valNeeded)) {
+                    state.completed = true;
+                    state.points = (val) * (valNeeded * 5);
+                    return state;
+                }
+            }
+        }
+        
         return state;
+    }
+
+    public bool CompareCollectData(string compareType, double val, double valNeeded) {
+
+        if(compareType == AppCompareType.greaterThan) {
+            if(val > valNeeded) {
+                return true;
+            }
+        }
+        else if(compareType == AppCompareType.greaterThanOrEqualTo) {
+            if(val >= valNeeded) {
+                return true;
+            }
+        }
+        else if(compareType == AppCompareType.lessThan) {
+            if(val > valNeeded) {
+                return true;
+            }
+        }
+        else if(compareType == AppCompareType.lessThanOrEqualTo) {
+            if(val >= valNeeded) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     // display templating 
@@ -713,11 +817,7 @@ public class BaseAppContentCollect : GameDataObject {
         
         return true;
     }
-
-    public void SetProfileCollectValue(string collectType, string typeKey, string key, object val) {        
-        GameProfileModes.Current.SetContentCollectValue(collectType, typeKey, key, val);
-    }
-    
+        
     public double ScoreCompleted(string collectType, GamePlayerRuntimeData runtimeData) {
 
         double points = 0;

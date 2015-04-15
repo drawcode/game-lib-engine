@@ -113,9 +113,9 @@ public class FormatUtil {
             Convert.FromBase64String(base64String);
             return true;
         }
-        catch (Exception exception) {
+        catch (Exception ex) {
             // Handle the exception
-            UnityEngine.Debug.Log(exception.ToString());
+            UnityEngine.Debug.Log(ex);
         }
         return false;
     }
