@@ -55,7 +55,7 @@ public class GameVehicleAIDriverMenu : GameObjectBehavior
     [MenuItem("Component/AI/GameObject/AI Driver")]
     static void CreateAIDPrototypeNew()
     {
-        GameObject prefab = Resources.LoadAssetAtPath("Assets/GameVehicleAIDriverToolkit/Prefabs/GameVehicleAIDriverPrototypeNew.prefab", typeof(GameObject)) as GameObject;
+        GameObject prefab = AssetDatabase.LoadAssetAtPath("Assets/GameVehicleAIDriverToolkit/Prefabs/GameVehicleAIDriverPrototypeNew.prefab", typeof(GameObject)) as GameObject;
         GameObject newObject = Instantiate(prefab, Vector3.zero, Quaternion.identity) as GameObject;
         newObject.name = "AI Driver";
 
@@ -76,7 +76,7 @@ public class GameVehicleAIDriverMenu : GameObjectBehavior
     [MenuItem("Component/AI/GameObject/Buggy Example")]
     static void CreateAIDBuggyNew()
     {
-        GameObject prefab = Resources.LoadAssetAtPath("Assets/GameVehicleAIDriverToolkit/Prefabs/AIBuggyNew.prefab", typeof(GameObject)) as GameObject;
+        GameObject prefab = AssetDatabase.LoadAssetAtPath("Assets/GameVehicleAIDriverToolkit/Prefabs/AIBuggyNew.prefab", typeof(GameObject)) as GameObject;
         GameObject newObject = Instantiate(prefab, Vector3.zero, Quaternion.identity) as GameObject;
         newObject.name = "Buggy Example";
 

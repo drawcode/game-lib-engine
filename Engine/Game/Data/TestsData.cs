@@ -436,16 +436,19 @@ public class TestsData {
         AppStates.Instance.ChangeState(AppStateMeta.appStateGame);
         AppContentStates.Instance.ChangeState(AppContentStateMeta.appContentStateGameMissions);
         GameLevels.Instance.ChangeCurrent("1-1");
+        
+        GameGameRuntimeData gameRuntimeData = new GameGameRuntimeData();
+        gameRuntimeData.timeRemaining = 0;
 
-        GamePlayerRuntimeData runtimeData = new GamePlayerRuntimeData();
-        runtimeData.coins = 2;
+        GamePlayerRuntimeData playerRuntimeData = new GamePlayerRuntimeData();
+        playerRuntimeData.coins = 2;
 
-        DumpObj(name, "TestGameProfileContentCollectItems_Get:runtimeData:", runtimeData.ToJson());
+        DumpObj(name, "TestGameProfileContentCollectItems_Get:runtimeData:", playerRuntimeData.ToJson());
 
         AppContentCollects.ChangeCurrent(missionCode);
                 
         AppContentCollects.Current.ScoreCompleted(
-            BaseDataObjectKeys.mission, runtimeData);
+            BaseDataObjectKeys.mission, gameRuntimeData, playerRuntimeData);
         
         GameProfileContentCollectItem collectData = 
             GameProfileModes.Current.GetContentCollectItem(

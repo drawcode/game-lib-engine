@@ -113,7 +113,7 @@ public class GameVehicleAIWaypointEditorEditor : Editor
 	                        }
 	
 	                        //Undo.RegisterUndo("Create new Waypoint");
-	                        GameObject prefab = Resources.LoadAssetAtPath("Assets/GameVehicleAIDriverToolkit/Prefabs/Waypoint.prefab", typeof(GameObject)) as GameObject;
+	                        GameObject prefab = AssetDatabase.LoadAssetAtPath("Assets/GameVehicleAIDriverToolkit/Prefabs/Waypoint.prefab", typeof(GameObject)) as GameObject;
 	                        GameObject waypoint = Instantiate(prefab) as GameObject;
 	                        Vector3 myPosition;
 	                        myPosition = hit.point;

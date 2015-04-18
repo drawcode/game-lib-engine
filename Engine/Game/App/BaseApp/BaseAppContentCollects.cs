@@ -515,7 +515,40 @@ public class AppContentCollectItemState {
     public bool IsDataTypeActionStatistic() {
         return IsDataTypeAction(AppContentCollectActionDataType.statisticType);
     }
+        
+    // data / compare_type    
     
+    public string GetDataCompareType() {
+        if(data == null) {
+            return null;
+        }
+        
+        return data.compare_type;
+    }
+    
+    public bool IsDataCompareType(string dataType) {
+        return GetDataCompareType() == dataType ? true : false;
+    }
+    
+    public bool IsDataCompareTypeGreaterThan() {
+        return IsDataCompareType(AppCompareType.greaterThan);
+    }
+    
+    public bool IsDataCompareTypeGreaterThanOrEqualTo() {
+        return IsDataCompareType(AppCompareType.greaterThanOrEqualTo);
+    }
+    
+    public bool IsDataCompareTypeLessThan() {
+        return IsDataCompareType(AppCompareType.lessThan);
+    }
+    
+    public bool IsDataCompareTypeLessThanOrEqualTo() {
+        return IsDataCompareType(AppCompareType.lessThanOrEqualTo);
+    }
+    
+    public bool IsDataCompareTypeEqualTo() {
+        return IsDataCompareType(AppCompareType.equalTo);
+    }        
     
     // data / data_type
 
@@ -546,9 +579,12 @@ public class AppContentCollectItemState {
             AppContentCollectActionDataScope.levelScope ? true : false;
     }
 
-    public double ScoreCompleted(GamePlayerRuntimeData runtimeData) {
+    public double ScoreCompleted(
+        GameGameRuntimeData gameRuntimeData, 
+        GamePlayerRuntimeData playerRuntimeData) {
 
-        AppContentCollectItemState state = ProcessCompleted(runtimeData);
+        AppContentCollectItemState state = 
+            ProcessCompleted(gameRuntimeData, playerRuntimeData);
 
         if(state.completed) {
             return state.points;
@@ -558,18 +594,22 @@ public class AppContentCollectItemState {
     }
 
         
-    public bool IsCompleted(GamePlayerRuntimeData runtimeData) {
-        return ProcessCompleted(runtimeData).completed;
+    public bool IsCompleted(
+        GameGameRuntimeData gameRuntimeData,
+        GamePlayerRuntimeData playerRuntimeData) {
+        return ProcessCompleted(gameRuntimeData, playerRuntimeData).completed;
     }
 
     // action/mission/complete state
         
-    public AppContentCollectItemState ProcessCompleted(GamePlayerRuntimeData runtimeData) {
+    public AppContentCollectItemState ProcessCompleted(
+        GameGameRuntimeData gameRuntimeData, 
+        GamePlayerRuntimeData playerRuntimeData) {
         // check each action to see if completed
 
         AppContentCollectItemState state = new AppContentCollectItemState();
 
-        if(runtimeData == null) {
+        if(gameRuntimeData == null || playerRuntimeData == null) {
             return state;
         }
         
@@ -587,11 +627,11 @@ public class AppContentCollectItemState {
         if(IsCodeActionSave()) {
             if(IsDataTypeActionDataScopeLevel()) {
 
-                double val = runtimeData.saves;
+                double val = playerRuntimeData.saves;
 
                 double valNeeded = data.valDouble;
-
-                if(val >= valNeeded) {
+                    
+                if(CompareCollectData(data.compare_type, val, valNeeded)) {
                     state.completed = true;
                     state.points = (val) * (valNeeded * 25);
                     return state;
@@ -601,11 +641,11 @@ public class AppContentCollectItemState {
         else if(IsCodeActionKill()) {
             if(IsDataTypeActionDataScopeLevel()) {
                 
-                double val = runtimeData.kills;
+                double val = playerRuntimeData.kills;
                 
                 double valNeeded = data.valDouble;
-
-                if(val >= valNeeded) {
+                                
+                if(CompareCollectData(data.compare_type, val, valNeeded)) {
                     state.completed = true;
                     state.points = (val) * (valNeeded * 10);
                     return state;
@@ -618,7 +658,7 @@ public class AppContentCollectItemState {
                 double val = 0;
 
                 if(data.code == AppContentCollectActionDataCode.itemCoin) {
-                    val = runtimeData.coins;
+                    val = playerRuntimeData.coins;
                 }
                 
                 double valNeeded = data.valDouble;
@@ -627,7 +667,7 @@ public class AppContentCollectItemState {
                     valNeeded = (double)data.valInt;
                 }
                 
-                if(val >= valNeeded) {
+                if(CompareCollectData(data.compare_type, val, valNeeded)) {
                     state.completed = true;
                     state.points = (val) * (valNeeded * 5);
                     return state;
@@ -639,8 +679,9 @@ public class AppContentCollectItemState {
             if(IsDataTypeActionDataScopeLevel()) {
 
                 double val = 0;
-                
-                val = runtimeData.hitHealthRemaining;
+
+                // time expired and still alive
+                val = gameRuntimeData.timeExpired ? 1 : 0;
                     
                 double valNeeded = data.valDouble;
                 
@@ -648,9 +689,9 @@ public class AppContentCollectItemState {
                     valNeeded = (double)data.valInt;
                 }
                 
-                if(CompareCollectData(AppCompareType.greaterThan, val, valNeeded)) {
+                if(CompareCollectData(data.compare_type, val, valNeeded)) {
                     state.completed = true;
-                    state.points = (val) * (valNeeded * 5);
+                    state.points = (val) * (valNeeded * 50);
                     return state;
                 }
             }
@@ -666,17 +707,23 @@ public class AppContentCollectItemState {
                 return true;
             }
         }
-        else if(compareType == AppCompareType.greaterThanOrEqualTo) {
-            if(val >= valNeeded) {
-                return true;
-            }
-        }
         else if(compareType == AppCompareType.lessThan) {
-            if(val > valNeeded) {
+            if(val < valNeeded) {
                 return true;
             }
         }
         else if(compareType == AppCompareType.lessThanOrEqualTo) {
+            if(val <= valNeeded) {
+                return true;
+            }
+        }
+        else if(compareType == AppCompareType.equalTo) {
+            if(val == valNeeded) {
+                return true;
+            }
+        }
+        else {
+                //compareType == AppCompareType.greaterThanOrEqualTo
             if(val >= valNeeded) {
                 return true;
             }
@@ -807,10 +854,12 @@ public class BaseAppContentCollect : GameDataObject {
         base.Reset();
     }
 
-    public bool IsCompleted(GamePlayerRuntimeData runtimeData) {
+    public bool IsCompleted(
+        GameGameRuntimeData gameRuntimeData, 
+        GamePlayerRuntimeData playerRuntimeData) {
         
         foreach(AppContentCollectItem item in GetItemsData()) {
-            if(!item.IsCompleted(runtimeData)) {
+            if(!item.IsCompleted(gameRuntimeData, playerRuntimeData)) {
                 return false;
             }
         }
@@ -818,13 +867,17 @@ public class BaseAppContentCollect : GameDataObject {
         return true;
     }
         
-    public double ScoreCompleted(string collectType, GamePlayerRuntimeData runtimeData) {
+    public double ScoreCompleted(
+        string collectType, 
+        GameGameRuntimeData gameRuntimeData, 
+        GamePlayerRuntimeData playerRuntimeData) {
 
         double points = 0;
 
         foreach(AppContentCollectItem item in GetItemsData()) {
 
-            AppContentCollectItemState itemState = item.ProcessCompleted(runtimeData);
+            AppContentCollectItemState itemState = 
+                item.ProcessCompleted(gameRuntimeData, playerRuntimeData);
 
             if(itemState.completed) {
 
@@ -835,8 +888,9 @@ public class BaseAppContentCollect : GameDataObject {
 
                 GameProfileModes.Current.SetContentCollectValue(
                     collectType, collectKey, BaseDataObjectKeys.points, itemState.points);
-            }
 
+            }
+            
             points += itemState.points;
         }
         

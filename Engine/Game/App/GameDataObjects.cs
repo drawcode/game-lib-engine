@@ -1617,6 +1617,16 @@ public class GameDataObject : DataObject {
         }
     }
 
+    public virtual string compare_type {
+        get {
+            return Get<string>(BaseDataObjectKeys.compare_type, "");
+        }
+        
+        set {
+            Set<string>(BaseDataObjectKeys.compare_type, value);
+        }
+    }
+
     public virtual string data_type {
         get {
             return Get<string>(BaseDataObjectKeys.data_type, "");
@@ -2121,11 +2131,31 @@ public class GameDataObject : DataObject {
     
     public virtual double points {
         get {
-            return Get<double>(BaseDataObjectKeys.points);
+
+            double valFinal = 0;
+            object valObj = Get(BaseDataObjectKeys.points);
+
+            if(valObj == null) {
+                return valFinal;
+            }
+
+            if(valObj.GetType() == typeof(double)) {
+                valFinal = Get<double>(BaseDataObjectKeys.points);
+            }
+            else if(valObj.GetType() == typeof(int)) {
+                valFinal = (double)Get<int>(BaseDataObjectKeys.points);
+            }
+
+            return valFinal;
         }
         
         set {
-            Set<double>(BaseDataObjectKeys.time, value);
+            if(value.GetType() == typeof(double)) {
+                Set<double>(BaseDataObjectKeys.time, value);            
+            }
+            else if(value.GetType() == typeof(int)) {
+                Set<double>(BaseDataObjectKeys.time, (double)value);            
+            }
         }
     }
     
