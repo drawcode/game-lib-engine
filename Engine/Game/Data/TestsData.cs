@@ -432,6 +432,9 @@ public class TestsData {
 
         string missionCode = "mission-default-1";
         string actionUid = "910c4ce1-a073-48d8-8dda-9edc8d071405";
+        string collectType = BaseDataObjectKeys.mission;
+        
+        string keyItem = GameProfileModes.GetAppContentCollectItemKey(missionCode, actionUid);
         
         AppStates.Instance.ChangeState(AppStateMeta.appStateGame);
         AppContentStates.Instance.ChangeState(AppContentStateMeta.appContentStateGameMissions);
@@ -441,27 +444,32 @@ public class TestsData {
         gameRuntimeData.timeRemaining = 0;
 
         GamePlayerRuntimeData playerRuntimeData = new GamePlayerRuntimeData();
-        playerRuntimeData.coins = 2;
+        playerRuntimeData.coins = 1;
+        playerRuntimeData.kills = 1;
 
         DumpObj(name, "TestGameProfileContentCollectItems_Get:runtimeData:", playerRuntimeData.ToJson());
 
         AppContentCollects.ChangeCurrent(missionCode);
                 
+        // Score completed from a sample level progress.
+
         AppContentCollects.Current.ScoreCompleted(
-            BaseDataObjectKeys.mission, gameRuntimeData, playerRuntimeData);
+            collectType, gameRuntimeData, playerRuntimeData);
+
+        GameState.SaveProfile();
+        GameState.LoadProfile();
+
+        // Fetch completed just scored.
         
         GameProfileContentCollectItem collectData = 
             GameProfileModes.Current.GetContentCollectItem(
-                BaseDataObjectKeys.mission,
-                GameProfileModes.GetAppContentCollectItemKey(missionCode, actionUid));
+                collectType, keyItem);
 
         if(collectData == null) {
             return false;
         }
 
         DumpObj(name, "TestGameProfileContentCollectItems_Get:collectData:", collectData.ToJson());
-
-
 
         success = true;
         

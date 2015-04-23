@@ -71,7 +71,10 @@ public class GameProfileContentCollectItems {
         for (int i = 0; i < items.Count; i++) {
             if (items[i].key.ToLower() == item.key.ToLower()
                 && items[i].type.ToLower() == item.type.ToLower()) {
-                items[i] = item;
+                items[i].type = item.type;
+                items[i].key = item.key;
+                items[i].points = item.points;
+                items[i].complete = item.complete;
                 found = true;
                 break;
             }
@@ -245,7 +248,7 @@ public class BaseGameProfileMode : Profile {
         }
         
         set {
-            Set(BaseDataObjectKeys.app_content_collect_items, value);
+            Set<GameProfileContentCollectItems>(BaseDataObjectKeys.app_content_collect_items, value);
         }
     }
     

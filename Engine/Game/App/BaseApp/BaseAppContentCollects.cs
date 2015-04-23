@@ -663,10 +663,6 @@ public class AppContentCollectItemState {
                 
                 double valNeeded = data.valDouble;
 
-                if(valNeeded == 0) {
-                    valNeeded = (double)data.valInt;
-                }
-                
                 if(CompareCollectData(data.compare_type, val, valNeeded)) {
                     state.completed = true;
                     state.points = (val) * (valNeeded * 5);

@@ -1857,7 +1857,7 @@ public class GameDataObject : DataObject {
         
     public virtual double valDouble {
         get {
-            return Get<double>(BaseDataObjectKeys.val);
+            return Convert.ToDouble(val);
         }
         
         set {

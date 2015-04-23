@@ -11,7 +11,6 @@ public class BaseAppStates<T> : DataObjects<T> where T : DataObject, new() {
     private static T current;
     private static volatile BaseAppStates<T> instance;
     private static object syncRoot = new Object();
-
     private string BASE_DATA_KEY = "app-state-data";
 
     public static T BaseCurrent {
@@ -64,7 +63,7 @@ public class BaseAppStates<T> : DataObjects<T> where T : DataObject, new() {
     }
 
     public bool IsAppState(string code) {
-        if(AppStates.Current.code == code) {
+        if (AppStates.Current.code == code) {
             return true;
         }
         return false;
@@ -72,11 +71,11 @@ public class BaseAppStates<T> : DataObjects<T> where T : DataObject, new() {
 
     public void ChangeState(string code) {
 
-        if(AppStates.Current.code != code) {
+        if (AppStates.Current.code != code) {
 
             AppState app_state = AppStates.Instance.GetByCode(code);
 
-            if(app_state != null) {
+            if (app_state != null) {
                 AppStates.Current = app_state;
 
                 GameProfiles.Current.SetCurrentAppState(code);

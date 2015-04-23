@@ -392,6 +392,8 @@ public class BaseGameState {
             //LogUtil.Log("SaveProfile: key: " + key);
             //LogUtil.Log("SaveProfile: keyAchievement: " + keyAchievement);
             //LogUtil.Log("SaveProfile: keyStatistic: " + keyStatistic);
+
+            Debug.Log("BaseGameState::saveProfile username:" + profile.username);
             
             save(key, profile);
             save(keyAchievement, profileAchievement);
