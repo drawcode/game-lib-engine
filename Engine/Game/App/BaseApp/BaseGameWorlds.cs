@@ -57,6 +57,8 @@ public class BaseGameWorlds<T> : DataObjects<T> where T : DataObject, new() {
     
     public void ChangeCurrent(string code) {
         if (GameWorlds.Current.code != code) {
+                    UnityEngine.Debug.Log("BaseGameWorlds:ChangeCurrent:" + code);
+
             GameWorlds.Current = GameWorlds.Instance.GetById(code);
             //string originalCode = code;
             if (string.IsNullOrEmpty(GameWorlds.Current.code)) {
