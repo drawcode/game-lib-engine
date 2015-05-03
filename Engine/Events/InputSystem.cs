@@ -27,6 +27,7 @@ namespace Engine.Events {
         public Vector3 lastTargetDirection2 = new Vector3(0f, 0f, 0f);
         public Vector3 lastAccelerometer = Vector3.zero;
         public bool mousePressed = false;
+        public bool mouseSecondaryPressed = false;
         public bool touchPressed = false;
         public bool leftPressed = false;
         public bool rightPressed = false;
@@ -69,6 +70,12 @@ namespace Engine.Events {
         public static bool isMousePressed {
             get {
                 return Instance.mousePressed;
+            }
+        }
+
+        public static bool isMouseSecondaryPressed {
+            get {
+                return Instance.mouseSecondaryPressed;
             }
         }
                 
@@ -333,6 +340,7 @@ namespace Engine.Events {
                 IsInputTouchDown();
                                 
                 mousePressed = Input.GetMouseButton(0);
+                mouseSecondaryPressed = Input.GetMouseButton(1);
                 touchPressed = Input.touchCount > 0 ? true : false;
                 
                 leftPressed = Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.LeftArrow);
