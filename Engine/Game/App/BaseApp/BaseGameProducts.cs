@@ -218,6 +218,7 @@ public class BaseGameProductType {
     public static string feature = "feature";
     public static string character = "character";
     public static string characterSkin = "character-skin";
+    public static string weapon = "weapon";
     public static string currency = "currency";
 }
 
