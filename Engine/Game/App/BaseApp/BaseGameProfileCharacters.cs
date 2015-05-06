@@ -456,6 +456,15 @@ public class BaseGameProfileCharacter : Profile {
     }
  
     public GameProfileCharacterItem GetCharacter(string code) {
+        
+        if (BaseGameProfileCharacters.currentCharacter != null) {
+            if (BaseGameProfileCharacters.currentCharacter.code == code) {
+                return BaseGameProfileCharacters.currentCharacter;
+            }
+            else  {
+                BaseGameProfileCharacters.currentCharacter = null;
+            }
+        }
 
         if (BaseGameProfileCharacters.currentCharacter == null) {
             GameProfileCharacterItem item = GetCharacters().GetCharacter(code);
