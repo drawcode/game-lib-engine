@@ -47,7 +47,9 @@ namespace Engine.Events {
                                 axisInput.x = (hit.textureCoord.x - .5f) * 2;
                                 axisInput.y = (hit.textureCoord.y - .5f) * 2;
 
-                                Messenger<string, Vector3>.Broadcast("input-axis", "input-axis-" + axisName, axisInput);
+                                Messenger<string, Vector3>.Broadcast(
+                                    InputSystemEvents.inputAxis, 
+                                    InputSystemEvents.inputAxis + "-" + axisName, axisInput);
 
                                 if (pad != null) {
                                     padPos = pad.localPosition;
@@ -97,17 +99,20 @@ namespace Engine.Events {
                     padPos.y = axisInput.y;
                     padPos.z = 0;
                     pad.localPosition = padPos;
-                }
-             
+                }             
              
                 LogUtil.Log("axisInput:", axisInput);
              
-                Messenger<string, Vector3>.Broadcast("input-axis", "input-axis-" + axisName, axisInput);
+                Messenger<string, Vector3>.Broadcast(
+                    InputSystemEvents.inputAxis, 
+                    InputSystemEvents.inputAxis + "-" + axisName, axisInput);
             }
             else {
                 axisInput = Vector3.zero;
                 
-                Messenger<string, Vector3>.Broadcast("input-axis", "input-axis-" + axisName, axisInput);
+                Messenger<string, Vector3>.Broadcast(
+                    InputSystemEvents.inputAxis, 
+                    InputSystemEvents.inputAxis + "-" + axisName, axisInput);
 
                 if (pad != null) {
                     Vector3 padPos = pad.localPosition;

@@ -3,6 +3,10 @@ using System.Collections.Generic;
 using Engine.Utility;
 using UnityEngine;
 
+public class InputSystemEvents {
+    public static string inputAxis = "input-axis";
+}
+
 namespace Engine.Events {
     public class InputTouchInfo {
         public Vector2 position2d;
