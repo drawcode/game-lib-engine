@@ -286,9 +286,15 @@ public class TestsData {
 
         // PROFILE COLLECTION ITEMS
         
-        testName = "TestGameProfileContentCollectItems_Get";
+        //testName = "TestGameProfileContentCollectItems_Get";
+        //Advance(testName);
+        //success = TestGameProfileContentCollectItems_Get(testName);
+
+        // SYNCING PROFILE
+
+        testName = "TestGameState_SyncProfile";
         Advance(testName);
-        success = TestGameProfileContentCollectItems_Get(testName);
+        success = TestGameState_SyncProfile();
 
         //
 
@@ -336,6 +342,31 @@ public class TestsData {
     }
 
     //----------------------------------------------------------------------------
+
+    public static bool TestGameState_SyncProfile() {
+
+        bool success = true;
+        
+        string name = "TestGameState_SyncProfile";
+        
+        Debug.Log(name);
+                
+        GameState.SaveProfile();
+        
+        string username = GameProfiles.Current.username;
+        DumpObj(name, "username", username);
+
+        //AssertEquals(name, username, "Player");
+                
+        Debug.Log("Syncing START...");
+
+        GameState.SyncProfile();
+        
+        Debug.Log("Syncing END...");
+        
+        return success;
+
+    }
         
     public static bool TestGameLevels_Get_By_Id(string name, string code) {
         

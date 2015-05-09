@@ -2151,10 +2151,10 @@ public class GameDataObject : DataObject {
         
         set {
             if(value.GetType() == typeof(double)) {
-                Set<double>(BaseDataObjectKeys.time, value);            
+                Set<double>(BaseDataObjectKeys.points, value);            
             }
             else if(value.GetType() == typeof(int)) {
-                Set<double>(BaseDataObjectKeys.time, (double)value);            
+                Set<double>(BaseDataObjectKeys.points, (double)value);            
             }
         }
     }
