@@ -292,9 +292,13 @@ public class TestsData {
 
         // SYNCING PROFILE
 
-        testName = "TestGameState_SyncProfile";
+        //testName = "TestGameState_SyncProfile";
+        //Advance(testName);
+        //success = TestGameState_SyncProfile();
+
+        testName = "TestGameDataObject_Sizes";
         Advance(testName);
-        success = TestGameState_SyncProfile();
+        success = TestGameDataObject_Sizes();
 
         //
 
@@ -343,6 +347,102 @@ public class TestsData {
 
     //----------------------------------------------------------------------------
 
+    // SIZE TESTS
+
+    public class TestSizeObject {
+        public string action = "fdsafdfda fdaf";
+
+        public TestSizeObject() {
+            //
+        }
+    }
+
+    public static bool TestGameDataObject_Sizes() {
+        
+        bool success = true;
+        
+        string name = "TestGameDataObject_Sizes";
+        
+        Debug.Log(name);
+
+        //
+
+        GameDataObject obj = new GameDataObject();
+
+        int size1 = obj.GetObjectSize();
+
+        DumpObj(name, "size1", size1);
+
+        //
+                
+        GameDataObject obj2 = new GameDataObject();
+        obj2.action = "action";
+        obj.data_list = new List<string>();
+        obj.data_list.Add("gfdgsfgfdsgfds");
+        
+        int size2 = obj2.GetObjectSize();
+
+        DumpObj(name, "size2", size2);
+
+        //
+
+        DataObject obj3 = new DataObject();
+        
+        int size3 = obj3.GetObjectSize();
+        
+        DumpObj(name, "size3", size3);
+
+        //
+                
+        Dictionary<string,object> obj4 = new Dictionary<string, object>();
+        
+        int size4 = obj4.GetObjectSize();
+        
+        DumpObj(name, "size4", size4);
+        
+        //
+
+
+        
+        TestSizeObject obj5 = new TestSizeObject();
+        
+        int size5 = obj5.GetObjectSize();
+        
+        DumpObj(name, "size5", size5);
+
+        //
+
+        TestGameDataObject_Size_Generic(name);
+
+
+        Debug.Log("TestGameDataObject_Sizes...");
+
+        return success;
+        
+    }
+
+    public static void TestGameDataObject_Size_Generic(string name) {
+
+        long stopBytes = 0;
+
+        TestSizeObject testFoo;
+        
+        long startBytes = System.GC.GetTotalMemory(true);
+
+        testFoo = new TestSizeObject();
+        testFoo.action = "fdsfdsf";
+
+        stopBytes = System.GC.GetTotalMemory(true);
+
+        GC.KeepAlive(testFoo); // This ensure a reference to object keeps object in memory
+
+        long sizeTotal = ((long)(stopBytes - startBytes));///.ToString();
+                
+        DumpObj(name, "sizeTotal", sizeTotal);
+    }
+
+    // PROFILE SYNC
+
     public static bool TestGameState_SyncProfile() {
 
         bool success = true;
@@ -361,8 +461,6 @@ public class TestsData {
         Debug.Log("Syncing START...");
 
         GameState.SyncProfile();
-        
-        Debug.Log("Syncing END...");
         
         return success;
 

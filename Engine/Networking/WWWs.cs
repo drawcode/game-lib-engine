@@ -217,7 +217,9 @@ public class WWWs : GameObjectBehavior {
                     form = new WWWForm();
                 }
 
-                form.AddField(key, val);
+                if(val != null) {
+                    form.AddField(key, val);
+                }
             }
             else if(GET) {
                 if(url.Contains(key + "=")) {
@@ -234,10 +236,12 @@ public class WWWs : GameObjectBehavior {
                     paramValues.Append("&");
                 }
                 
-                paramValues.Append(key);
-                paramValues.Append("=");  
-                paramValues.Append(
-                    Uri.EscapeDataString(val.ToString()));
+                if(val != null) {
+                    paramValues.Append(key);
+                    paramValues.Append("=");  
+                    paramValues.Append(
+                        Uri.EscapeDataString(val.ToString()));
+                }
                 
                 string urlAppend = paramValues.ToString();
                 url = url + urlAppend;

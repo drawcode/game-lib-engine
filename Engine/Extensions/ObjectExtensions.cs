@@ -1,6 +1,8 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.Serialization.Formatters.Binary;
+using System.IO;
 
 using UnityEngine;
 
@@ -77,6 +79,19 @@ public static class ObjectExtensions {
         }
         
         return val;
+    }
+
+    public static int GetObjectSize(this object val) {
+        if (val == null) {
+            return 0;
+        }
+
+        BinaryFormatter bf = new BinaryFormatter();
+        MemoryStream ms = new MemoryStream();
+        byte[] Array;
+        bf.Serialize(ms, val.GetType());
+        Array = ms.ToArray();
+        return Array.Length;
     }
 
 }

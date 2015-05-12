@@ -110,7 +110,7 @@ public static class StringExtensions {
             return val;
         }
 
-        return CryptoUtil.EncryptStringAES(val);
+        return CryptoUtil.EncryptStringAES(val).ToBase64();
     }
     
     public static string ToDecrypted(this string val) {
@@ -119,7 +119,7 @@ public static class StringExtensions {
             return val;
         }
         
-        return CryptoUtil.DecryptStringAES(val);
+        return CryptoUtil.DecryptStringAES(val.FromBase64());
     }
 
     // REGEX
