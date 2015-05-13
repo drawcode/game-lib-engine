@@ -166,17 +166,17 @@ public class TestsData {
         //Advance(testName);
         //success = TestGameCharacterAnimations_List(testName);
                 
-        //testName = "TestCompress";
-        //Advance(testName);
-        //success = TestCompress(testName);
+        testName = "TestCompress";
+        Advance(testName);
+        success = TestCompress(testName);
                 
         //testName = "TestBase64";
         //Advance(testName);
         //success = TestBase64(testName);
           
-        //testName = "TestEncrypt";
-        //Advance(testName);
-        //success = TestEncrypt(testName);
+        testName = "TestEncrypt";
+        Advance(testName);
+        success = TestEncrypt(testName);
         
         ////testName = "TestGameStateProfileSync";
         ////Advance(testName);
@@ -292,13 +292,13 @@ public class TestsData {
 
         // SYNCING PROFILE
 
-        //testName = "TestGameState_SyncProfile";
-        //Advance(testName);
-        //success = TestGameState_SyncProfile();
-
-        testName = "TestGameDataObject_Sizes";
+        testName = "TestGameState_SyncProfile";
         Advance(testName);
-        success = TestGameDataObject_Sizes();
+        success = TestGameState_SyncProfile();
+
+        //testName = "TestGameDataObject_Sizes";
+        //Advance(testName);
+        //success = TestGameDataObject_Sizes();
 
         //
 
@@ -947,7 +947,7 @@ public class TestsData {
         
         Debug.Log(name);
         
-        string data = "This is a test of the data system!";
+        string data = "ryan";//This is a test of the data system!";
         
         Debug.Log("item:data:" + data); 
         
@@ -970,7 +970,7 @@ public class TestsData {
         
         Debug.Log(name);
 
-        string data = "This is a test of the data system!";
+        string data = "ryan";//"This is a test of the data system!";
         
         Debug.Log("item:data:" + data); 
 
@@ -998,7 +998,7 @@ public class TestsData {
         
         Debug.Log(name);
         
-        string data = "This is a test of the data system!";
+        string data = "ryan";//"This is a test of the data system!";
         
         string data64 = data.ToBase64();
         
