@@ -347,7 +347,10 @@ public class BaseGameState {
     }
     
     public virtual void syncProfile() {
-        CoroutineUtil.Start(syncProfileCo());
+
+        if(AppConfigs.gameCloudSyncEnabled) {
+            CoroutineUtil.Start(syncProfileCo());
+        }
     }
 
     public IEnumerator syncProfileCo() {
@@ -405,7 +408,7 @@ public class BaseGameState {
             save(keyRPG, profileRPG);
             save(keyTeam, profileTeam);
             save(keyVehicle, profileVehicle);
-            
+
             //CoroutineUtil.Start(SaveProfileCo(profile));
         }
     }
