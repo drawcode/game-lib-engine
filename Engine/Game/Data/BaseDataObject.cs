@@ -11,6 +11,7 @@ public class BaseDataObjectKeys {
     
     public static string id = "id";
     public static string uid = "uid";
+    public static string profile = "profile";
     public static string profile_id = "profile_id";
     public static string game_id = "game_id";
     public static string uuid = "uuid";

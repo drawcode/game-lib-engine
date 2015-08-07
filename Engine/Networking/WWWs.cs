@@ -154,6 +154,10 @@ public class WWWs : GameObjectBehavior {
             }
         }
 
+        public bool IsAction(string action) {
+            return url.Contains(action);
+        }
+
         // ACTIONS
 
         public void PrepareParams() {

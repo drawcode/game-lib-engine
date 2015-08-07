@@ -366,11 +366,13 @@ public class BaseGameLevels<T> : DataObjects<T> where T : DataObject, new() {
                 string assetDataType = layoutObjectItem.data_type;
                 string assetDisplayType = layoutObjectItem.display_type;
 
-                //Debug.Log("layoutObjectItem:"  + " assetCode:" + assetCode + " gridPos:" + gridPos
-                //          + " gridScale:" + gridScale  + " gridRotation:" + gridRotation 
-                //          + " gridX:" + gridX + " gridY:" + gridY+ " gridZ:" + gridZ
-                //          + " layoutObjectItem.grid_data:" + layoutObjectItem.grid_data.GetVector3()
-                //          );
+                if(assetCode != BaseDataObjectKeys.empty) {
+                    Debug.Log("layoutObjectItem:"  + " assetCode:" + assetCode + " gridPos:" + gridPos
+                          + " gridScale:" + gridScale  + " gridRotation:" + gridRotation 
+                          + " gridX:" + gridX + " gridY:" + gridY+ " gridZ:" + gridZ
+                          + " layoutObjectItem.grid_data:" + layoutObjectItem.grid_data.GetVector3()
+                          );
+                }
                 
                 dataItems.SetAssetsInAssetMap(
                     assetCode,

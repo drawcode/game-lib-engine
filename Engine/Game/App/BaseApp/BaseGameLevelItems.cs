@@ -572,8 +572,8 @@ public class GameLevelItemAsset : GameDataObject {
     public override void Reset() {
         base.Reset();
         
-        code = "barrel-1";
-        destroy_effect_code = "effect-smoke-puff-1";
+        code = "";
+        destroy_effect_code = "";
         physics_type = GameLevelItemAssetPhysicsType.physicsStatic;
         steps = new List<GameLevelItemAssetStep>();
         uuid = UniqueUtil.Instance.CreateUUID4();
