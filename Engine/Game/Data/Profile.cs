@@ -52,6 +52,11 @@ public class Profile : DataObject {
     }
 
     public void ChangeUser(string name) {
+
+        if(name == username) {
+            return;
+        }
+
         Reset();
 
         username = name;
