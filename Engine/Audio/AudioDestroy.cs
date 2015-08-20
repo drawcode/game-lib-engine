@@ -10,23 +10,27 @@ public class AudioDestroy : GameObjectBehavior {
 
     // Use this for initialization
     private void Start() {
-        Reset();
-
+        
         audioSource = GetComponent<AudioSource>();
+        audioSource.enabled = true;
+        gameObject.SetActive(true);
+
+        Reset();
     }
 
     public void Reset() {
         float audioLength = afterTimeDefault;
         if (audioSource != null) {
-            if (audioSource.clip != null) {
+            if (audioSource.clip != null 
+                && audioSource.isActiveAndEnabled){
                 clipLength = audioSource.clip.length;
                 //LogUtil.LogAudio("DestroySound audio.clip.length:" + audio.clip.length);
                 if (audioSource.clip.length > 0) {
                     audioLength = audioSource.clip.length + 1;
+                    StartCoroutine(DestroySound(audioLength));    
                 }
             }
         }
-        StartCoroutine(DestroySound(audioLength));    
     }
 
     private IEnumerator DestroySound(float afterTime) {
