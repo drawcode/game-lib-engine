@@ -27,6 +27,25 @@ public class GameDataModel : GameDataObject {
     }
 }
 
+public class GameDataDirectorType {
+    public static string ai = "ai";
+    public static string item = "item";
+    public static string custom = "custom";
+}
+
+public class GameDataDirector : GameDataObject {
+    
+    public virtual bool run {
+        get {
+            return Get<bool>(BaseDataObjectKeys.run, true);
+        }
+        
+        set {
+            Set(BaseDataObjectKeys.run, value);
+        }
+    }
+}
+
 public class GameDataColorPreset : GameDataObject {
     
 }
@@ -206,7 +225,17 @@ public class GameDataObjectItem : GameDataObject {
             Set<List<GameDataModel>>(BaseDataObjectKeys.models, value);
         }
     }
-    
+
+    public virtual List<GameDataDirector> directors {
+        get {
+            return Get<List<GameDataDirector>>(BaseDataObjectKeys.directors);
+        }
+        
+        set {
+            Set<List<GameDataDirector>>(BaseDataObjectKeys.directors, value);
+        }
+    }
+
     public virtual List<GameDataColorPreset> color_presets {
         get {
             return Get<List<GameDataColorPreset>>(BaseDataObjectKeys.color_presets);

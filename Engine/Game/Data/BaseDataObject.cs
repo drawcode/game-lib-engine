@@ -208,6 +208,7 @@ public class BaseDataObjectKeys {
     public static string current_texture_preset = "current_texture_preset";
     public static string current_color_preset = "current_color_preset";
     public static string color_presets = "color_presets";
+    public static string directors = "directors";
     public static string texture_presets = "texture_presets";
     public static string item_presets = "item_presets";
     public static string terrain_presets = "terrain_presets";
@@ -319,6 +320,7 @@ public class BaseDataObjectKeys {
     // missions
 
     public static string amount = "amount";
+    public static string run = "run";
     //
     // achievements
     
