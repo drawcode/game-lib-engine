@@ -14,7 +14,6 @@ public static class NavMeshExtentions {
         //navMeshAgent.updateRotation = true;        
     }
 
-
     public static void Off(this NavMeshAgent navMeshAgent) {
         if (navMeshAgent == null) {
             return;
@@ -50,6 +49,5 @@ public static class NavMeshExtentions {
             }
         }
     }
-
 }
 
