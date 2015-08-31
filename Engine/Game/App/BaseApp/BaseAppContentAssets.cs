@@ -53,10 +53,96 @@ public class BaseAppContentAssets<T> : DataObjects<T> where T : DataObject, new(
         pathKey = BASE_DATA_KEY;
         LoadData();
     }
+
+    public static string GetLoadAssetPath(string key, string assetCode, string type) {
+
+        string path = "";
+        
+        LogUtil.Log("LoadAsset:" + " assetCode:" + assetCode + " type:" + type);
+
+        if (key.StartsWith(BaseDataObjectKeys.level) 
+            || key.StartsWith(BaseDataObjectKeys.levelAssets)) {                    
+            path = ContentPaths.appCacheVersionSharedPrefabLevelAssets;
+        }
+        else if (key.StartsWith(BaseDataObjectKeys.character)) {                    
+            path = ContentPaths.appCacheVersionSharedPrefabCharacters;
+        }
+        else if (key.StartsWith(BaseDataObjectKeys.weapon)) {                    
+            path = ContentPaths.appCacheVersionSharedPrefabWeapons;
+        }
+        else if (key.StartsWith(BaseDataObjectKeys.world)) {                    
+            path = ContentPaths.appCacheVersionSharedPrefabWorlds;
+        }
+        else if (key.StartsWith(BaseDataObjectKeys.vehicle)) {                    
+            path = ContentPaths.appCacheVersionSharedPrefabVehicles;
+        }
+        
+        path += assetCode;
+        
+        LogUtil.Log("LoadAsset:" + " path:" + path);
+        
+        if (type == "resource") {
+            // Load from resources                        
+        }
+        else if (type == "streaming") {
+            // TODO update path for streaming folder
+        }
+        else if (type == "server") {
+            // TODO udpate path for download and process
+        }
+        else {
+            // Load from other
+        }
+
+        return path;
+    }
+
+    // LOAD ASSET
     
     public static GameObject LoadAsset(string code) {
         return LoadAsset("", code);
     }
+
+    public static GameObject LoadAssetLevelAssets(string code) {
+        return LoadAsset(BaseDataObjectKeys.levelAssets, code);
+    }
+    
+    public static GameObject LoadAssetCharacter(string code) {
+        return LoadAsset(BaseDataObjectKeys.character, code);
+    }
+    
+    public static GameObject LoadAssetWeapon(string code) {
+        return LoadAsset(BaseDataObjectKeys.weapon, code);
+    }
+    
+    public static GameObject LoadAssetWorld(string code) {
+        return LoadAsset(BaseDataObjectKeys.world, code);
+    }
+    
+    public static GameObject LoadAssetVehicle(string code) {
+        return LoadAsset(BaseDataObjectKeys.vehicle, code);
+    }
+    
+    public static GameObject LoadAsset(string key, string code) {
+        
+        LogUtil.Log("LoadAsset:" + " key:" + key + " code:" + code);
+        
+        GameObject prefabObject = LoadAssetPrefab(key, code);
+        
+        if (prefabObject == null) {
+            return null;
+        }
+        
+        GameObject go = GameObjectHelper.CreateGameObject(
+            prefabObject, Vector3.zero, Quaternion.identity, 
+            true) as GameObject;
+        
+        LogUtil.Log("LoadAsset:" + " go:" + go != null);
+        
+        return go;
+    }
+
+    // LOAD ASSET PREFAB
     
     public static GameObject LoadAssetPrefab(string code) {
         return LoadAssetPrefab("", code);
@@ -64,7 +150,7 @@ public class BaseAppContentAssets<T> : DataObjects<T> where T : DataObject, new(
 
     public static GameObject LoadAssetPrefab(string key, string code) {
         
-        LogUtil.Log("LoadAsset:" + " key:" + key + " code:" + code);
+        LogUtil.Log("LoadAssetPrefab:" + " key:" + key + " code:" + code);
         //LogUtil.Log("LoadAsset:" + " code:" + code);
         
         foreach (AppContentAsset asset in AppContentAssets.Instance.GetAll()) {
@@ -72,123 +158,23 @@ public class BaseAppContentAssets<T> : DataObjects<T> where T : DataObject, new(
             if (asset.code == code 
                 && (asset.key == key || string.IsNullOrEmpty(key))) {
                 
-                LogUtil.Log("LoadAsset2:" + " key:" + key + " code:" + code);
+                LogUtil.Log("LoadAssetPrefab2:" + " key:" + key + " code:" + code);
                 
                 if (asset != null) {
-                    
-                    string assetCode = asset.code;
-                    string path = "";
-                    
-                    LogUtil.Log("LoadAsset:" + " assetCode:" + assetCode + " asset.type:" + asset.type);
-                    
-                    if (asset.type == "resource") {
-                        // Load from resources
-                        
-                        if (asset.key.StartsWith("level")) {                    
-                            path = ContentPaths.appCacheVersionSharedPrefabLevelAssets;
-                        }
-                        else if (asset.key.StartsWith("character")) {                    
-                            path = ContentPaths.appCacheVersionSharedPrefabCharacters;
-                        }
-                        else if (asset.key.StartsWith("weapon")) {                    
-                            path = ContentPaths.appCacheVersionSharedPrefabWeapons;
-                        }
-                        else if (asset.key.StartsWith("world")) {                    
-                            path = ContentPaths.appCacheVersionSharedPrefabWorlds;
-                        }
-                        else if (asset.key.StartsWith("vehicle")) {                    
-                            path = ContentPaths.appCacheVersionSharedPrefabVehicles;
-                        }
-                        
-                        path += assetCode;
-                        
-                        LogUtil.Log("LoadAsset:" + " path:" + path);
-                        
-                        GameObject prefabObject = PrefabsPool.PoolPrefab(path);
-                        
-                        LogUtil.Log("LoadAsset:" + " prefabObject:" + prefabObject != null);
-                        
-                        return prefabObject;
-                        
-                    }
-                    else if (asset.type == "streaming") {
-                        // Load from resources
-                    }
-                    else if (asset.type == "server") {
-                        // Load from resources
-                    }
-                    else {
-                        // Load from other
-                    }
-                }
-            }
-        }
-        
-        return null;
-    }
 
-    public static GameObject LoadAsset(string key, string code) {
-        
-        LogUtil.Log("LoadAsset:" + " key:" + key + " code:" + code);
-        //LogUtil.Log("LoadAsset:" + " code:" + code);
+                    string path = GetLoadAssetPath(asset.key, asset.code, asset.type);                    
 
-        foreach (AppContentAsset asset in AppContentAssets.Instance.GetAll()) {
-
-            if (asset.code == code 
-                && (asset.key == key || string.IsNullOrEmpty(key))) {
-                
-                LogUtil.Log("LoadAsset2:" + " key:" + key + " code:" + code);
-
-                if (asset != null) {
-
-                    string assetCode = asset.code;
-                    string path = "";
-                    
-                    LogUtil.Log("LoadAsset:" + " assetCode:" + assetCode + " asset.type:" + asset.type);
-                    
-                    if (asset.key.StartsWith("level")) {                    
-                        path = ContentPaths.appCacheVersionSharedPrefabLevelAssets;
+                    if (string.IsNullOrEmpty(path)) {
+                        return null;
                     }
-                    else if (asset.key.StartsWith("character")) {                    
-                        path = ContentPaths.appCacheVersionSharedPrefabCharacters;
-                    }
-                    else if (asset.key.StartsWith("weapon")) {                    
-                        path = ContentPaths.appCacheVersionSharedPrefabWeapons;
-                    }
-                    else if (asset.key.StartsWith("world")) {                    
-                        path = ContentPaths.appCacheVersionSharedPrefabWorlds;
-                    }
-                    else if (asset.key.StartsWith("vehicle")) {                    
-                        path = ContentPaths.appCacheVersionSharedPrefabVehicles;
-                    }
-                    
-                    path += assetCode;
 
-                    if (asset.type == "resource") {
-
-                        // Load from resources
-                                                                        
-                        LogUtil.Log("LoadAsset:" + " path:" + path);
+                    LogUtil.Log("LoadAssetPrefab:" + " path:" + path);
                         
-                        GameObject prefabObject = PrefabsPool.PoolPrefab(path);
-                        GameObject go = GameObjectHelper.CreateGameObject(
-                            prefabObject, Vector3.zero, Quaternion.identity, 
-                             true) as GameObject;
+                    GameObject prefabObject = PrefabsPool.PoolPrefab(path);
                         
-                        LogUtil.Log("LoadAsset:" + " go:" + go != null);
-
-                        return go;
-
-                    }
-                    else if (asset.type == "streaming") {
-                        // Load from resources
-                    }
-                    else if (asset.type == "server") {
-                        // Load from resources
-                    }
-                    else {
-                        // Load from other
-                    }
+                    LogUtil.Log("LoadAssetPrefab:" + " prefabObject:" + prefabObject != null);
+                        
+                    return prefabObject;
                 }
             }
         }

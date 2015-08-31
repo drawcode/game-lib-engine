@@ -81,6 +81,7 @@ public class BaseDataObjectKeys {
     public static string level_data = "level_data";
     public static string level_items = "level_items";
     public static string level_type = "level_type";
+    public static string levelAssets = "level-assets";
     //
     public static string world = "world";
     public static string worlds = "worlds";
@@ -89,6 +90,14 @@ public class BaseDataObjectKeys {
     public static string world_code = "world_code";
     public static string world_type = "world_type";
     public static string world_items = "world_items";
+    //
+    public static string vehicle = "vehicle";
+    public static string vehicles = "vehicles";
+    public static string vehicle_data = "vehicle_data";
+    public static string vehicle_num = "vehicle_num";
+    public static string vehicle_code = "vehicle_code";
+    public static string vehicle_type = "vehicle_type";
+    public static string vehicle_items = "vehicle_items";
     //
     public static string mission = "mission";
     public static string missions = "missions";
