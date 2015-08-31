@@ -315,7 +315,7 @@ public static class GameObjectHelper {
     private static void DumpGameObject(GameObject go, StringBuilder sb, string indent, bool includeAllComponents) {
         bool rendererEnabled = false;
 
-        if(go == null) {
+        if (go == null) {
             return;
         }
 
@@ -801,6 +801,48 @@ public static class GameObjectHelper {
         }
     }
     
+    public static void StepAnimationFrame(
+        GameObject inst, string name, float time, bool normalizedTime = true, bool stopPlaying = true) {
+        if (inst == null)
+            return;
+        
+        Animation anim = inst.GetComponent<Animation>();
+        
+        if (anim != null) {
+            if (anim[name] != null) {
+                if (normalizedTime) {
+                    anim[name].normalizedTime = time;
+                }
+                else {
+                    anim[name].time = time;
+                }
+                if (stopPlaying) {
+                    anim[name].speed = 0.0f;
+                }
+                if (!anim.isPlaying) {
+                    anim.Play(name);
+                }
+            }
+        }
+        
+        foreach (Animation source in inst.GetComponentsInChildren<Animation>()) {
+            if (source[name] != null) {
+                if (normalizedTime) {
+                    source[name].normalizedTime = time;
+                }
+                else {
+                    source[name].time = time;
+                }
+                if (stopPlaying) {
+                    source[name].speed = 0.0f;
+                }
+                if (!source.isPlaying) {
+                    source.Play(name);
+                }
+            }
+        }
+    }
+        
     public static void PlayAnimations(GameObject inst) {
         if (inst == null)
             return;
@@ -1340,7 +1382,6 @@ public static class GameObjectHelper {
         }
     }
 
-
     public static void DestroyNow(GameObject inst) {
         if (inst == null)
             return;
@@ -1368,8 +1409,8 @@ public static class GameObjectHelper {
         
         foreach (Transform t in transforms) {
             try {
-                if(t.gameObject.GetType() == typeof(GameObject)
-                   && !t.IsPrefabGhost()) {
+                if (t.gameObject.GetType() == typeof(GameObject)
+                    && !t.IsPrefabGhost()) {
                     t.parent = null;
                     GameObject.Destroy(t.gameObject);
                 }

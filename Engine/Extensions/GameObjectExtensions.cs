@@ -310,6 +310,14 @@ public static class BaseGameObjectExtensions {
         GameObjectHelper.PlayAnimation(inst, name);
     }
     
+    public static void StepAnimationFrame(
+        this GameObject inst, string name, float time, bool normalizedTime = true, bool stopPlaying = true) {
+        if (inst == null)
+            return;
+        
+        GameObjectHelper.StepAnimationFrame(inst, name, time, normalizedTime, stopPlaying);
+    }
+    
     public static void StopAnimation(this GameObject inst, string name) {
         if (inst == null)
             return;
