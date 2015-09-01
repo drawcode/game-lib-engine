@@ -9,6 +9,7 @@ using Engine.Data.Json;
 
 public class BaseDataObjectKeys {  
     
+    public static string none = "none";
     public static string id = "id";
     public static string uid = "uid";
     public static string profile = "profile";

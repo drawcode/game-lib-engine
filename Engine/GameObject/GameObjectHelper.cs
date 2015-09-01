@@ -810,6 +810,10 @@ public static class GameObjectHelper {
         
         if (anim != null) {
             if (anim[name] != null) {
+                if (anim.isPlaying) {
+                    anim.Stop();                    
+                    anim.Play(name);
+                }
                 if (normalizedTime) {
                     anim[name].normalizedTime = time;
                 }
@@ -827,6 +831,10 @@ public static class GameObjectHelper {
         
         foreach (Animation source in inst.GetComponentsInChildren<Animation>()) {
             if (source[name] != null) {
+                if (source.isPlaying) {
+                    source.Stop();                    
+                    source.Play(name);
+                }
                 if (normalizedTime) {
                     source[name].normalizedTime = time;
                 }
