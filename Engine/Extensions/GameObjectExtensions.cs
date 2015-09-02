@@ -303,11 +303,11 @@ public static class BaseGameObjectExtensions {
         GameObjectHelper.StopAnimations(inst);
     }
     
-    public static void PlayAnimation(this GameObject inst, string name) {
+    public static void PlayAnimation(this GameObject inst, string name, float speed = 1f) {
         if (inst == null)
             return;
 
-        GameObjectHelper.PlayAnimation(inst, name);
+        GameObjectHelper.PlayAnimation(inst, name, speed);
     }
     
     public static void StepAnimationFrame(

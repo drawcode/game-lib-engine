@@ -755,7 +755,7 @@ public static class GameObjectHelper {
         }
     }
     
-    public static void PlayAnimation(GameObject inst, string name) {
+    public static void PlayAnimation(GameObject inst, string name, float speed = 1f) {
         if (inst == null)
             return;
         
@@ -763,7 +763,11 @@ public static class GameObjectHelper {
 
         if (anim != null) {
             if (anim[name] != null) {
+                if(anim.isPlaying) {
+                    anim.Stop();
+                }
                 if (!anim.isPlaying) {
+                    anim[name].speed = 1;
                     anim.Play(name);
                 }
             }
@@ -771,7 +775,11 @@ public static class GameObjectHelper {
         
         foreach (Animation source in inst.GetComponentsInChildren<Animation>()) {
             if (source[name] != null) {
+                if(source.isPlaying) {
+                    source.Stop();
+                }
                 if (!source.isPlaying) {
+                    source[name].speed = 1;
                     source.Play(name);
                 }
             }

@@ -116,6 +116,7 @@ public class GameDataActionKeys {
     public static string skill = "skill";
     public static string boost = "boost";
     public static string idle = "idle";
+    public static string start = "start";
     public static string jump = "jump";
     public static string win = "win";
     public static string lose = "lost";
@@ -556,6 +557,10 @@ public class GameDataObjectItem : GameDataObject {
 
     public GameDataAnimation GetAnimationsByTypeIdle() {
         return GetAnimationByType(GameDataActionKeys.idle);
+    }
+    
+    public GameDataAnimation GetAnimationsByTypeStart() {
+        return GetAnimationByType(GameDataActionKeys.start);
     }
     
     public GameDataAnimation GetAnimationsByTypeAttack() {
