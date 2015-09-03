@@ -185,6 +185,10 @@ public class GameObjectBehavior : MonoBehaviour {
         }
     }
 
+    public void RemoveMe() {
+        GameObjectHelper.DestroyGameObject(gameObject);
+    }
+
 
 
 }
