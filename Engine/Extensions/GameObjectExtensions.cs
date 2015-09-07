@@ -222,6 +222,13 @@ public static class BaseGameObjectExtensions {
         return GameObjectHelper.Get<T>(inst, name);
     }
 
+    public static List<T> GetList<T>(this GameObject inst, string name) where T : Component {
+        if (inst == null)
+            return null;
+        
+        return GameObjectHelper.GetList<T>(inst, name);
+    }
+
     public static T[] GetList<T>(this GameObject inst) where T : Component {
         if (inst == null)
             return null;

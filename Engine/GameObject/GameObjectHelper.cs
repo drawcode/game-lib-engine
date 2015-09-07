@@ -614,6 +614,28 @@ public static class GameObjectHelper {
         
         return null;
     }
+
+    public static List<T> GetList<T>(GameObject inst, string name) where T : Component {
+        if (inst == null) {
+            return null;
+        }
+
+        List<T> list = new List<T>();
+        
+        foreach (T obj in inst.GetComponents<T>()) {
+            if (obj.name == name) {
+                list.Add(obj);
+            }
+        }
+                
+        foreach (T obj in inst.GetComponentsInChildren<T>(true)) {
+            if (obj.name == name) {
+                list.Add(obj);
+            }
+        }
+        
+        return list;
+    }
     
     public static T[] GetList<T>(GameObject inst) where T : Component {
         if (inst == null) {
