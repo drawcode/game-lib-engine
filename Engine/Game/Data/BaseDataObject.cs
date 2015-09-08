@@ -82,6 +82,11 @@ public class BaseDataObjectKeys {
     public static string level_data = "level_data";
     public static string level_items = "level_items";
     public static string level_type = "level_type";
+    //
+    public static string height = "height";
+    public static string width = "width";
+    public static string depth = "depth";
+    //
     public static string levelAssets = "level-assets";
     //
     public static string world = "world";

@@ -13,8 +13,8 @@ public class BaseGameLevels<T> : DataObjects<T> where T : DataObject, new() {
     private static System.Object syncRoot = new System.Object();
     public static string BASE_DATA_KEY = "game-level-data";
     public static float gridHeight = 1f;
-    public static float gridWidth = 100f;
-    public static float gridDepth = 60f;
+    public static float gridWidth = 240f;
+    public static float gridDepth = 240f;
     public static float gridBoxSize = 4f;
     public static bool centeredX = true;
     public static bool centeredY = false;
@@ -205,12 +205,25 @@ public class BaseGameLevels<T> : DataObjects<T> where T : DataObject, new() {
                 gameLevel.game_id = ContentsConfig.contentAppFolder;
                 gameLevel.key = originalCode;
                 gameLevel.world_code = GameWorlds.Current.code;
-                gameLevel.data = new GameDataObjectItem();
+                gameLevel.data = new GameLevelDataObjectItem();
                 GameLevels.Instance.items.Add(gameLevel);
             }
             
             if (string.IsNullOrEmpty(GameLevels.Current.code)) {
                 GameLevels.Current = GameLevels.Instance.GetById(code);
+            }
+
+            //
+
+            if (GameLevels.Current.data != null) {
+                
+                GameLevelData levelData = GameLevels.Current.data.level_data;
+                
+                if (levelData != null) {
+                    GameLevels.gridHeight = (float)levelData.height;
+                    GameLevels.gridWidth = (float)levelData.width;
+                    GameLevels.gridDepth = (float)levelData.depth;
+                }
             }
 
             // Update World
@@ -366,12 +379,12 @@ public class BaseGameLevels<T> : DataObjects<T> where T : DataObject, new() {
                 string assetDataType = layoutObjectItem.data_type;
                 string assetDisplayType = layoutObjectItem.display_type;
 
-                if(assetCode != BaseDataObjectKeys.empty) {
-                    Debug.Log("layoutObjectItem:"  + " assetCode:" + assetCode + " gridPos:" + gridPos
-                          + " gridScale:" + gridScale  + " gridRotation:" + gridRotation 
-                          + " gridX:" + gridX + " gridY:" + gridY+ " gridZ:" + gridZ
-                          + " layoutObjectItem.grid_data:" + layoutObjectItem.grid_data.GetVector3()
-                          );
+                if (assetCode != BaseDataObjectKeys.empty) {
+                    Debug.Log("layoutObjectItem:" + " assetCode:" + assetCode + " gridPos:" + gridPos
+                        + " gridScale:" + gridScale + " gridRotation:" + gridRotation 
+                        + " gridX:" + gridX + " gridY:" + gridY + " gridZ:" + gridZ
+                        + " layoutObjectItem.grid_data:" + layoutObjectItem.grid_data.GetVector3()
+                    );
                 }
                 
                 dataItems.SetAssetsInAssetMap(
@@ -457,15 +470,76 @@ public class BaseGameLevelKeys {
     public static string LEVEL_SPONSOR_IMAGE = "sponsor-img";
 }
 
-public class BaseGameLevel : GameDataObject {
+public class GameLevelRenderType {
+    public static string type_3d = "3d";
+    public static string type_2d = "2d";
+}
 
-    public virtual GameDataObjectItem data {
+public class GameLevelData : DataObject {
+
+    public virtual string type {
         get {
-            return Get<GameDataObjectItem>(BaseDataObjectKeys.data);
+            return Get<string>(BaseDataObjectKeys.type, GameLevelRenderType.type_3d);
         }
         
         set {
-            Set<GameDataObjectItem>(BaseDataObjectKeys.data, value);
+            Set<string>(BaseDataObjectKeys.type, value);
+        }
+    }
+
+    public virtual double depth {
+        get {
+            return Get<double>(BaseDataObjectKeys.depth, 120);
+        }
+        
+        set {
+            Set<double>(BaseDataObjectKeys.depth, value);
+        }
+    }
+    
+    public virtual double width {
+        get {
+            return Get<double>(BaseDataObjectKeys.width, 120);
+        }
+        
+        set {
+            Set<double>(BaseDataObjectKeys.width, value);
+        }
+    }    
+    
+    public virtual double height {
+        get {
+            return Get<double>(BaseDataObjectKeys.height, 1);
+        }
+        
+        set {
+            Set<double>(BaseDataObjectKeys.height, value);
+        }
+    }
+}
+
+public class GameLevelDataObjectItem : GameDataObjectItem {
+
+    public virtual GameLevelData level_data {
+        get {
+            return Get<GameLevelData>(BaseDataObjectKeys.level_data, new GameLevelData());
+        }
+        
+        set {
+            Set<GameLevelData>(BaseDataObjectKeys.level_data, value);
+        }
+    }
+}
+
+public class BaseGameLevel : GameDataObject {
+
+    public virtual GameLevelDataObjectItem data {
+        get {
+            return Get<GameLevelDataObjectItem>(BaseDataObjectKeys.data);
+        }
+        
+        set {
+            Set<GameLevelDataObjectItem>(BaseDataObjectKeys.data, value);
         }
     }
 
