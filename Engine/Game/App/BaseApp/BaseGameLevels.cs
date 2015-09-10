@@ -12,14 +12,10 @@ public class BaseGameLevels<T> : DataObjects<T> where T : DataObject, new() {
     private static volatile BaseGameLevels<T> instance;
     private static System.Object syncRoot = new System.Object();
     public static string BASE_DATA_KEY = "game-level-data";
-    public static float gridHeight = 1f;
-    public static float gridWidth = 240f;
-    public static float gridDepth = 240f;
-    public static float gridBoxSize = 4f;
-    public static bool centeredX = true;
-    public static bool centeredY = false;
-    public static bool centeredZ = true;
-
+    //
+    public static GameLevelData defaultLevelData;
+    public static GameLevelData currentLevelData;
+    //
     public static T BaseCurrent {
         get {
             if (current == null) {
@@ -62,6 +58,13 @@ public class BaseGameLevels<T> : DataObjects<T> where T : DataObject, new() {
         pathKey = BASE_DATA_KEY;
         LoadData();
 
+    }
+
+    public override void Reset() {
+        base.Reset();
+
+        defaultLevelData = new GameLevelData();
+        currentLevelData = new GameLevelData();
     }
 
     public virtual T GetDefaultLevel() {
@@ -220,9 +223,12 @@ public class BaseGameLevels<T> : DataObjects<T> where T : DataObject, new() {
                 GameLevelData levelData = GameLevels.Current.data.level_data;
                 
                 if (levelData != null) {
-                    GameLevels.gridHeight = (float)levelData.height;
-                    GameLevels.gridWidth = (float)levelData.width;
-                    GameLevels.gridDepth = (float)levelData.depth;
+
+                    currentLevelData.Copy(levelData);
+                }
+                else {
+                    
+                    currentLevelData.Copy(defaultLevelData);
                 }
             }
 
@@ -252,16 +258,16 @@ public class BaseGameLevels<T> : DataObjects<T> where T : DataObject, new() {
                 float offsetY = 0;
                 float offsetZ = 0;
 
-                if (GameLevels.centeredX) {
-                    offsetX = (GameLevels.gridWidth / 2);
+                if (GameLevels.currentLevelData.grid_centered_x) {
+                    offsetX = (float)(GameLevels.currentLevelData.grid_width / 2);
                 }
                 
-                if (GameLevels.centeredY) {
-                    offsetY = (GameLevels.gridHeight / 2);
+                if (GameLevels.currentLevelData.grid_centered_y) {
+                    offsetY = (float)(GameLevels.currentLevelData.grid_height / 2);
                 }
                 
-                if (GameLevels.centeredZ) {
-                    offsetZ = (GameLevels.gridDepth / 2);
+                if (GameLevels.currentLevelData.grid_centered_z) {
+                    offsetZ = (float)(GameLevels.currentLevelData.grid_depth / 2);
                 }
 
                 float gridX = offsetX;// + (float)(layoutObjectItem.grid_data.x);
@@ -351,16 +357,16 @@ public class BaseGameLevels<T> : DataObjects<T> where T : DataObject, new() {
 
                 if (layoutDataItem.type == GameLevelLayoutDisplayType.layoutCentered) {                    
 
-                    if (GameLevels.centeredX) {
-                        offsetX = ((GameLevels.gridWidth / 2) + offsetPlayerX) - ((float)size.x / 2);
+                    if (GameLevels.currentLevelData.grid_centered_x) {
+                        offsetX = (float)((GameLevels.currentLevelData.grid_width / 2) + offsetPlayerX) - ((float)size.x / 2);
                     }
                     
-                    if (GameLevels.centeredY) {
-                        offsetY = ((GameLevels.gridHeight / 2) + offsetPlayerY) - ((float)size.y / 2);
+                    if (GameLevels.currentLevelData.grid_centered_y) {
+                        offsetY = (float)((GameLevels.currentLevelData.grid_height / 2) + offsetPlayerY) - ((float)size.y / 2);
                     }
 
-                    if (GameLevels.centeredZ) {
-                        offsetZ = ((GameLevels.gridDepth / 2) + offsetPlayerZ) - ((float)size.z / 2);
+                    if (GameLevels.currentLevelData.grid_centered_z) {
+                        offsetZ = (float)((GameLevels.currentLevelData.grid_depth / 2) + offsetPlayerZ) - ((float)size.z / 2);
                     }
                 }
 
@@ -477,6 +483,37 @@ public class GameLevelRenderType {
 
 public class GameLevelData : DataObject {
 
+    /*
+     * 
+    public static float gridHeight = 1f;
+    public static float gridWidth = 240f;
+    public static float gridDepth = 240f;
+    public static float gridBoxSize = 4f;
+    public static bool centeredX = true;
+    public static bool centeredY = false;
+    public static bool centeredZ = true;
+
+    public static string grid_height = "grid_height";
+    public static string grid_width = "grid_width";
+    public static string grid_depth = "grid_depth";
+    public static string grid_box_size = "grid_box_size";
+    public static string grid_centered_x = "grid_centered_x";
+    public static string grid_centered_y = "grid_centered_y";
+    public static string grid_centered_z = "grid_centered_z";
+
+         "level_data": {
+            "grid_centered_x": true,
+            "grid_centered_y": false,
+            "grid_centered_z": true,
+            "grid_box_size": 4,
+            "grid_width": 240,
+            "grid_height": 1,
+            "grid_depth": 240,
+            "type": "3d"
+         },
+         
+    */
+
     public virtual string type {
         get {
             return Get<string>(BaseDataObjectKeys.type, GameLevelRenderType.type_3d);
@@ -486,35 +523,88 @@ public class GameLevelData : DataObject {
             Set<string>(BaseDataObjectKeys.type, value);
         }
     }
-
-    public virtual double depth {
+    
+    public virtual bool grid_centered_x {
         get {
-            return Get<double>(BaseDataObjectKeys.depth, 120);
+            return Get<bool>(BaseDataObjectKeys.grid_centered_x, true);
         }
         
         set {
-            Set<double>(BaseDataObjectKeys.depth, value);
+            Set<bool>(BaseDataObjectKeys.grid_centered_x, value);
+        }
+    }
+        
+    public virtual bool grid_centered_y {
+        get {
+            return Get<bool>(BaseDataObjectKeys.grid_centered_y, false);
+        }
+        
+        set {
+            Set<bool>(BaseDataObjectKeys.grid_centered_y, value);
         }
     }
     
-    public virtual double width {
+    public virtual bool grid_centered_z {
         get {
-            return Get<double>(BaseDataObjectKeys.width, 120);
+            return Get<bool>(BaseDataObjectKeys.grid_centered_z, true);
         }
         
         set {
-            Set<double>(BaseDataObjectKeys.width, value);
+            Set<bool>(BaseDataObjectKeys.grid_centered_z, value);
         }
-    }    
+    }
     
-    public virtual double height {
+    public virtual double grid_box_size {
         get {
-            return Get<double>(BaseDataObjectKeys.height, 1);
+            return Get<double>(BaseDataObjectKeys.grid_box_size, 4);
         }
         
         set {
-            Set<double>(BaseDataObjectKeys.height, value);
+            Set<double>(BaseDataObjectKeys.grid_box_size, value);
         }
+    }
+
+    public virtual double grid_depth {
+        get {
+            return Get<double>(BaseDataObjectKeys.grid_depth, 240);
+        }
+        
+        set {
+            Set<double>(BaseDataObjectKeys.grid_depth, value);
+        }
+    }
+    
+    public virtual double grid_width {
+        get {
+            return Get<double>(BaseDataObjectKeys.grid_width, 240);
+        }
+        
+        set {
+            Set<double>(BaseDataObjectKeys.grid_width, value);
+        }
+    }
+    
+    public virtual double grid_height {
+        get {
+            return Get<double>(BaseDataObjectKeys.grid_height, 1);
+        }
+        
+        set {
+            Set<double>(BaseDataObjectKeys.grid_height, value);
+        }
+    }
+
+    public void Copy(GameLevelData from) {
+                
+        grid_depth = from.grid_depth;
+        grid_height = from.grid_height;
+        grid_width = from.grid_width;
+        //
+        grid_box_size = from.grid_box_size;
+        //
+        grid_centered_x = from.grid_centered_x;
+        grid_centered_y = from.grid_centered_y;
+        grid_centered_z = from.grid_centered_z;
     }
 }
 

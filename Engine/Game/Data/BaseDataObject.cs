@@ -87,6 +87,14 @@ public class BaseDataObjectKeys {
     public static string width = "width";
     public static string depth = "depth";
     //
+    public static string grid_height = "grid_height";
+    public static string grid_width = "grid_width";
+    public static string grid_depth = "grid_depth";
+    public static string grid_box_size = "grid_box_size";
+    public static string grid_centered_x = "grid_centered_x";
+    public static string grid_centered_y = "grid_centered_y";
+    public static string grid_centered_z = "grid_centered_z";
+    //
     public static string levelAssets = "level-assets";
     //
     public static string world = "world";
