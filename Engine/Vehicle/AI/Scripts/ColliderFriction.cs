@@ -8,9 +8,9 @@ public class ColliderFriction : GameObjectBehavior {
 	// Use this for initialization
 	void Start () {
         collider.material.staticFriction = frictionValue;
-        collider.material.staticFriction2 = frictionValue;
+        //collider.material.staticFriction2 = frictionValue;
         collider.material.dynamicFriction = frictionValue;
-        collider.material.dynamicFriction2 = frictionValue;
+        //collider.material.dynamicFriction2 = frictionValue;
 	}
 	
 	
