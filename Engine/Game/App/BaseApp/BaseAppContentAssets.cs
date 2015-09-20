@@ -99,31 +99,83 @@ public class BaseAppContentAssets<T> : DataObjects<T> where T : DataObject, new(
 
     // LOAD ASSET
     
-    public static GameObject LoadAsset(string code) {
-        return LoadAsset("", code);
+    public static GameObject LoadAsset(
+        string code,
+        Vector3 pos = default(Vector3),
+        Quaternion rotate = default(Quaternion),
+        bool pool = true) {
+
+        return LoadAsset("", code,
+                         pos, rotate, pool);
     }
 
-    public static GameObject LoadAssetLevelAssets(string code) {
-        return LoadAsset(BaseDataObjectKeys.levelAssets, code);
+    public static GameObject LoadAssetLevelAssets(
+        string code,
+        Vector3 pos = default(Vector3),
+        Quaternion rotate = default(Quaternion),
+        bool pool = true) {
+
+        return LoadAsset(BaseDataObjectKeys.levelAssets, code,
+                         pos, rotate, pool);
     }
     
-    public static GameObject LoadAssetCharacter(string code) {
-        return LoadAsset(BaseDataObjectKeys.character, code);
+    public static GameObject LoadAssetCharacter(
+        string code,
+        Vector3 pos = default(Vector3),
+        Quaternion rotate = default(Quaternion),
+        bool pool = true) {
+
+        return LoadAsset(BaseDataObjectKeys.character, code,
+                         pos, rotate, pool);
     }
     
-    public static GameObject LoadAssetWeapon(string code) {
-        return LoadAsset(BaseDataObjectKeys.weapon, code);
+    public static GameObject LoadAssetWeapon(
+        string code,
+        Vector3 pos = default(Vector3),
+        Quaternion rotate = default(Quaternion),
+        bool pool = true) {
+
+        return LoadAsset(BaseDataObjectKeys.weapon, code,
+                         pos, rotate, pool);
+    }
+
+    public static GameObject LoadAssetEffect(
+        string code,
+        Vector3 pos = default(Vector3),
+        Quaternion rotate = default(Quaternion),
+        bool pool = true) {
+
+        return LoadAsset(BaseDataObjectKeys.effect, code,
+                         pos, rotate, pool);
     }
     
-    public static GameObject LoadAssetWorld(string code) {
-        return LoadAsset(BaseDataObjectKeys.world, code);
+    public static GameObject LoadAssetWorld(
+        string code,
+        Vector3 pos = default(Vector3),
+        Quaternion rotate = default(Quaternion),
+        bool pool = true) {
+
+        return LoadAsset(BaseDataObjectKeys.world, code,
+                         pos, rotate, pool);
     }
     
-    public static GameObject LoadAssetVehicle(string code) {
-        return LoadAsset(BaseDataObjectKeys.vehicle, code);
+    public static GameObject LoadAssetVehicle(
+        string code,
+        Vector3 pos = default(Vector3),
+        Quaternion rotate = default(Quaternion),
+        bool pool = true) {
+
+        return LoadAsset(BaseDataObjectKeys.vehicle, code,
+                         pos, rotate, pool);
     }
     
-    public static GameObject LoadAsset(string key, string code) {
+    public static GameObject LoadAsset(
+        string key, 
+        string code,
+        Vector3 pos = default(Vector3),
+        Quaternion rotate = default(Quaternion),
+        bool pool = true
+        ) {
         
         LogUtil.Log("LoadAsset:" + " key:" + key + " code:" + code);
         
@@ -134,8 +186,8 @@ public class BaseAppContentAssets<T> : DataObjects<T> where T : DataObject, new(
         }
         
         GameObject go = GameObjectHelper.CreateGameObject(
-            prefabObject, Vector3.zero, Quaternion.identity, 
-            true) as GameObject;
+            prefabObject, pos, rotate, 
+            pool) as GameObject;
         
         LogUtil.Log("LoadAsset:" + " go:" + go != null);
         
