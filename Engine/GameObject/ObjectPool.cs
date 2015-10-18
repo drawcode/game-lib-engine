@@ -17,7 +17,7 @@ public class ObjectPoolItem {
 
 public class ObjectPool : System.Object {
 
-    public int maxPoolItems = 1000;
+    public int maxPoolItems = 5;
 
     // The type of object this pool is handling
     public GameObject prefab;
@@ -42,11 +42,11 @@ public class ObjectPool : System.Object {
         GameObject obj;
 
         if (pool.Count > maxPoolItems) {
-            return null;
+            //return null;
         }
 
         // if we don't have any object already in the cache, create a new one
-        if (pool.Count == 0) {
+        if (pool.Count == 0 || pool.Count > maxPoolItems) {
             obj = UnityEngine.Object.Instantiate(prefab, position, rotation) as GameObject;
         }
         else { // else pull one from the cache
@@ -72,12 +72,13 @@ public class ObjectPool : System.Object {
             return;
         }
         
+        //if (pool.Count > maxPoolItems) {
+        //    obj.DestroyGameObject(0,false);
+        //    return;            
+        //}
+
         // deactivate the object
         obj.SetActive(false);
-
-        if (pool.Count > maxPoolItems) {
-            return;            
-        }
 
         // put the recycled object in this ObjectPool's bucket
         obj.transform.parent = ObjectPoolManager.instance.gameObject.transform;

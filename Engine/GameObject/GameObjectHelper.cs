@@ -1392,14 +1392,14 @@ public static class GameObjectHelper {
         }
         else {
             obj = ObjectPoolKeyedManager.createPooled(key, go, pos, rotate);
-        }
-        
-        if (obj != null) {
             
-            if (!obj.Has<PoolGameObject>()) {
-                obj.AddComponent<PoolGameObject>();
-            }
-        }   
+            if (obj != null) {
+                
+                if (!obj.Has<PoolGameObject>()) {
+                    obj.AddComponent<PoolGameObject>();
+                }
+            }  
+        }
         
         return obj;
     }
