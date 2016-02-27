@@ -13,11 +13,18 @@ namespace Engine.Game.Actor {
         private Vector3 surfaceRightVector;
         public Vector3 surfaceForwardVector;
         float lastUpdate = 0f;
+        public GameObject gamePlayerObject;
+        public GamePlayerController gamePlayerController;
+        public float initialPlayerHeight = -1;
+        public float currentPlayerHeight = 0;
+        public float deltaPlayerHeight = 0;
+        public Vector3 initialScale = Vector3.zero;
 
         private void Start() {
+
         }
 
-        private void LateUpdate() {
+        private void Update() {
             
             if (GameConfigs.isUIRunning) {
                 return;
@@ -25,6 +32,18 @@ namespace Engine.Game.Actor {
             
             if (!GameConfigs.isGameRunning) {
                 return;
+            }
+
+            if (gamePlayerObject == null) {
+
+                gamePlayerObject = gameObject.FindTypeAboveObjectRecursive<GamePlayerController>();
+
+                if (gamePlayerObject != null) {
+                    if (gamePlayerController == null) {
+                        gamePlayerController = 
+                            gamePlayerObject.Get<GamePlayerController>();
+                    }
+                }
             }
 
             if (objectParent != null && objectShadow != null) {
@@ -75,6 +94,37 @@ namespace Engine.Game.Actor {
                         objectShadow.transform.rotation = shadowRot;
                     }
                 }
+
+                // Adjust size
+
+                //if(gamePlayerController.IsPlayerControlled) {
+
+                if (initialPlayerHeight == -1) {
+                    initialPlayerHeight = gamePlayerObject.transform.localPosition.y;
+                }
+
+                if (initialScale == Vector3.zero) {
+                    initialScale = objectShadow.transform.localScale;
+                }
+
+                currentPlayerHeight = gamePlayerObject.transform.localPosition.y;
+
+                deltaPlayerHeight = currentPlayerHeight - initialPlayerHeight;
+
+                if (deltaPlayerHeight > .1f) {
+                        
+                    //Debug.Log("ActorShadow deltaPlayerHeight:" + deltaPlayerHeight);
+
+                    Vector3 scaleChange = initialScale * ((5 - currentPlayerHeight) / 5);
+
+                    if (scaleChange != objectShadow.transform.localScale) {
+                        objectShadow.transform.localScale = scaleChange;
+                            
+                        //Debug.Log("ActorShadow scaleChange:" + scaleChange);
+                    }
+                }
+                //}
+
             }
         }
     }
