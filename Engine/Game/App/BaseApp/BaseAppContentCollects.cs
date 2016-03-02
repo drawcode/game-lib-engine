@@ -454,7 +454,7 @@ public class AppContentCollectItem : GameDataObject {
     public bool IsCodeActionAttack() {
         return IsCode(AppContentCollectActionType.actionAttack);
     }
-    
+       
     public bool IsCodeActionCollect() {
         return IsCode(AppContentCollectActionType.actionCollect);
     }
