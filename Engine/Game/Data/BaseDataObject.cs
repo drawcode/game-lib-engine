@@ -269,6 +269,8 @@ public class BaseDataObjectKeys {
     public static string projectiles = "projectiles";
     public static string effect = "effect";
     public static string effects = "effects";
+    public static string characters = "characters";
+    public static string weapons = "weapons";
 
     //roles
 

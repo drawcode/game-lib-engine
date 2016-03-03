@@ -488,6 +488,12 @@ public class ContentPaths {
             return appCacheVersionSharedPrefab + "weapons/";
         }
     }
+        
+    public static string appCacheVersionSharedPrefabEffects {
+        get {
+            return appCacheVersionSharedPrefab + "effects/";
+        }
+    }
     
     public static string appCacheVersionSharedPrefabWorlds {
         get {

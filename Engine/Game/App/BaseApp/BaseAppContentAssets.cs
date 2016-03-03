@@ -64,17 +64,25 @@ public class BaseAppContentAssets<T> : DataObjects<T> where T : DataObject, new(
             || key.StartsWith(BaseDataObjectKeys.levelAssets)) {                    
             path = ContentPaths.appCacheVersionSharedPrefabLevelAssets;
         }
-        else if (key.StartsWith(BaseDataObjectKeys.character)) {                    
+        else if (key.StartsWith(BaseDataObjectKeys.character)
+                 || key.StartsWith(BaseDataObjectKeys.characters)) {                    
             path = ContentPaths.appCacheVersionSharedPrefabCharacters;
         }
-        else if (key.StartsWith(BaseDataObjectKeys.weapon)) {                    
+        else if (key.StartsWith(BaseDataObjectKeys.weapon)
+                 || key.StartsWith(BaseDataObjectKeys.weapons)) {                    
             path = ContentPaths.appCacheVersionSharedPrefabWeapons;
         }
-        else if (key.StartsWith(BaseDataObjectKeys.world)) {                    
+        else if (key.StartsWith(BaseDataObjectKeys.world)
+                 || key.StartsWith(BaseDataObjectKeys.worlds)) {                    
             path = ContentPaths.appCacheVersionSharedPrefabWorlds;
         }
-        else if (key.StartsWith(BaseDataObjectKeys.vehicle)) {                    
+        else if (key.StartsWith(BaseDataObjectKeys.vehicle)
+                 || key.StartsWith(BaseDataObjectKeys.vehicles)) {                    
             path = ContentPaths.appCacheVersionSharedPrefabVehicles;
+        }
+        else if (key.StartsWith(BaseDataObjectKeys.effect)
+                 || key.StartsWith(BaseDataObjectKeys.effects)) {                    
+            path = ContentPaths.appCacheVersionSharedPrefabEffects;
         }
         
         path += assetCode;
@@ -119,53 +127,53 @@ public class BaseAppContentAssets<T> : DataObjects<T> where T : DataObject, new(
                          pos, rotate, pool);
     }
     
-    public static GameObject LoadAssetCharacter(
+    public static GameObject LoadAssetCharacters(
         string code,
         Vector3 pos = default(Vector3),
         Quaternion rotate = default(Quaternion),
         bool pool = true) {
 
-        return LoadAsset(BaseDataObjectKeys.character, code,
+        return LoadAsset(BaseDataObjectKeys.characters, code,
                          pos, rotate, pool);
     }
     
-    public static GameObject LoadAssetWeapon(
+    public static GameObject LoadAssetWeapons(
         string code,
         Vector3 pos = default(Vector3),
         Quaternion rotate = default(Quaternion),
         bool pool = true) {
 
-        return LoadAsset(BaseDataObjectKeys.weapon, code,
+        return LoadAsset(BaseDataObjectKeys.weapons, code,
                          pos, rotate, pool);
     }
 
-    public static GameObject LoadAssetEffect(
+    public static GameObject LoadAssetEffects(
         string code,
         Vector3 pos = default(Vector3),
         Quaternion rotate = default(Quaternion),
         bool pool = true) {
 
-        return LoadAsset(BaseDataObjectKeys.effect, code,
-                         pos, rotate, pool);
-    }
-    
-    public static GameObject LoadAssetWorld(
-        string code,
-        Vector3 pos = default(Vector3),
-        Quaternion rotate = default(Quaternion),
-        bool pool = true) {
-
-        return LoadAsset(BaseDataObjectKeys.world, code,
+        return LoadAsset(BaseDataObjectKeys.effects, code,
                          pos, rotate, pool);
     }
     
-    public static GameObject LoadAssetVehicle(
+    public static GameObject LoadAssetWorlds(
         string code,
         Vector3 pos = default(Vector3),
         Quaternion rotate = default(Quaternion),
         bool pool = true) {
 
-        return LoadAsset(BaseDataObjectKeys.vehicle, code,
+        return LoadAsset(BaseDataObjectKeys.worlds, code,
+                         pos, rotate, pool);
+    }
+    
+    public static GameObject LoadAssetVehicles(
+        string code,
+        Vector3 pos = default(Vector3),
+        Quaternion rotate = default(Quaternion),
+        bool pool = true) {
+
+        return LoadAsset(BaseDataObjectKeys.vehicles, code,
                          pos, rotate, pool);
     }
     
