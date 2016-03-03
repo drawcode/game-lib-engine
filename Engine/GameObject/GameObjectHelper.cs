@@ -945,7 +945,16 @@ public static class GameObjectHelper {
             return;
         
         ParticleSystem particleSystemCurrent = inst.GetComponent<ParticleSystem>();
+
         if (particleSystemCurrent != null) {
+
+            if(!emissionEnabled) {                
+                particleSystemCurrent.gameObject.StopParticleSystem(false);
+            }
+            else {
+                particleSystemCurrent.gameObject.PlayParticleSystem(false);            
+            }
+
             particleSystemCurrent.enableEmission = emissionEnabled;
         }
         
@@ -956,6 +965,14 @@ public static class GameObjectHelper {
         ParticleSystem[] particleSystems = inst.GetComponentsInChildren<ParticleSystem>(true);
         
         foreach (ParticleSystem particleSystem in particleSystems) {
+            
+            if(!emissionEnabled) {                
+                particleSystem.gameObject.StopParticleSystem(false);
+            }
+            else {
+                particleSystem.gameObject.PlayParticleSystem(false);
+            }
+
             particleSystem.enableEmission = emissionEnabled;
         }
     }
@@ -966,6 +983,14 @@ public static class GameObjectHelper {
         
         ParticleSystem particleSystemCurrent = inst.GetComponent<ParticleSystem>();
         if (particleSystemCurrent != null) {
+
+            if(emissionRate > 0) {                
+                particleSystemCurrent.gameObject.StopParticleSystem(false);
+            }
+            else {
+                particleSystemCurrent.gameObject.PlayParticleSystem(false);            
+            }
+
             particleSystemCurrent.emissionRate = emissionRate;
         }
         
@@ -976,6 +1001,14 @@ public static class GameObjectHelper {
         ParticleSystem[] particleSystems = inst.GetComponentsInChildren<ParticleSystem>(true);
         
         foreach (ParticleSystem particleSystem in particleSystems) {
+            
+            if(emissionRate > 0) {                
+                particleSystem.gameObject.StopParticleSystem(false);
+            }
+            else {
+                particleSystem.gameObject.PlayParticleSystem(false);            
+            }
+
             particleSystem.emissionRate = emissionRate;
         }
     }
