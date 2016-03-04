@@ -369,6 +369,11 @@ public class BaseDataObjectKeys {
     public static string game_stat = "game_stat";
     public static string global = "global";
 
+    // particles
+        
+    public static string particleEmissionRate = "particle-emission-rate";
+    public static string particleEmissionEnabled = "particle-emission-enabled";
+
 }
 
 public class BaseDataObject : Dictionary<string, object> {  

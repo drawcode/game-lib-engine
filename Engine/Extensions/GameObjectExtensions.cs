@@ -318,7 +318,8 @@ public static class BaseGameObjectExtensions {
     }
     
     public static void StepAnimationFrame(
-        this GameObject inst, string name, float time, bool normalizedTime = true, bool stopPlaying = true) {
+        this GameObject inst, string name, float time, 
+        bool normalizedTime = true, bool stopPlaying = true) {
         if (inst == null)
             return;
         
@@ -404,35 +405,56 @@ public static class BaseGameObjectExtensions {
     //---------------------------------------------------------------
     // PARTICLE SYSTEMS
 
-    public static void SetParticleSystemStartColor(this GameObject inst, Color startColor, bool includeChildren) {
+    public static void SetParticleSystemStartColor(
+        this GameObject inst, Color startColor, bool includeChildren) {
         if (inst == null)
             return;
 
         GameObjectHelper.SetParticleSystemStartColor(inst, startColor, includeChildren);
     }
 
-    public static void PlayParticleSystem(this GameObject inst, bool includeChildren) {
+    public static void PlayParticleSystem(
+        this GameObject inst, bool includeChildren) {
         if (inst == null)
             return;
 
         GameObjectHelper.PlayParticleSystem(inst, includeChildren);
     }
     
-    public static void StopParticleSystem(this GameObject inst, bool includeChildren) {
+    public static void StopParticleSystem(
+        this GameObject inst, bool includeChildren) {
         if (inst == null)
             return;
 
         GameObjectHelper.StopParticleSystem(inst, includeChildren);
     }
      
-    public static void SetParticleSystemEmissionRate(this GameObject inst, float emissionRate, bool includeChildren) {
+    public static void SetParticleSystemEmissionRate(
+        this GameObject inst, float emissionRate, bool includeChildren) {
         if (inst == null)
             return;
 
         GameObjectHelper.SetParticleSystemEmissionRate(inst, emissionRate, includeChildren);
     }
+
+    public static void SetParticleSystemEmissionRateNormalized(
+        this GameObject inst, float emissionRate, bool includeChildren) {
+        if (inst == null)
+            return;
+        
+        GameObjectHelper.SetParticleSystemEmissionRateNormalized(inst, emissionRate, includeChildren);
+    }
+        
+    public static void SetParticleSystemEmissionRateNormalizedFlipped(
+        this GameObject inst, float emissionRate, bool includeChildren) {
+        if (inst == null)
+            return;
+        
+        GameObjectHelper.SetParticleSystemEmissionRateNormalizedFlipped(inst, emissionRate, includeChildren);
+    }
     
-    public static void SetParticleSystemEmission(this GameObject inst, bool emissionEnabled, bool includeChildren) {
+    public static void SetParticleSystemEmission(
+        this GameObject inst, bool emissionEnabled, bool includeChildren) {
         if (inst == null)
             return;
 

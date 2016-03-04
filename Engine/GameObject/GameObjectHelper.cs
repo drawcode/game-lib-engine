@@ -1002,7 +1002,7 @@ public static class GameObjectHelper {
         
         foreach (ParticleSystem particleSystem in particleSystems) {
             
-            if(emissionRate > 0) {                
+            if(emissionRate <= 0) {                
                 particleSystem.gameObject.StopParticleSystem(false);
             }
             else {
@@ -1010,6 +1010,121 @@ public static class GameObjectHelper {
             }
 
             particleSystem.emissionRate = emissionRate;
+        }
+    }
+    
+    public static void SetParticleSystemEmissionRateNormalizedFlipped(
+        GameObject inst, float emissionRateNormalized, bool includeChildren) {
+        
+        SetParticleSystemEmissionRateNormalized(inst, emissionRateNormalized, includeChildren, true);
+    }
+    
+    public static void SetParticleSystemEmissionRateNormalized(
+        GameObject inst, float emissionRateNormalized, bool includeChildren) {
+
+        SetParticleSystemEmissionRateNormalized(inst, emissionRateNormalized, includeChildren, false);
+    }
+    
+    public static void SetParticleSystemEmissionRateNormalized(
+        GameObject inst, float emissionRateNormalized, bool includeChildren, bool flipped) {
+
+        if (inst == null) {
+            return;
+        }
+
+        GameObjectData goData = null;
+        
+        float currentEmissionRate = 0;
+        float initialEmissionRate = 0;
+        
+        ParticleSystem particleSystemCurrent = inst.GetComponent<ParticleSystem>();
+    
+        if (particleSystemCurrent != null) {
+
+            currentEmissionRate = 0;
+            initialEmissionRate = 0;
+
+            goData = null;
+
+            currentEmissionRate = particleSystemCurrent.emissionRate;
+            initialEmissionRate = particleSystemCurrent.emissionRate;
+
+            goData = particleSystemCurrent.gameObject.Get<GameObjectData>();
+
+            if(goData == null) {
+                goData = particleSystemCurrent.gameObject.GetOrSet<GameObjectData>();
+                goData.Set(
+                    BaseDataObjectKeys.particleEmissionRate, 
+                    initialEmissionRate);
+            }
+            
+            object valEmission = goData.Get(BaseDataObjectKeys.particleEmissionRate);
+            
+            if(valEmission != null) {
+                initialEmissionRate = goData.GetFloat(BaseDataObjectKeys.particleEmissionRate);            
+            }
+
+            if(flipped) {
+                currentEmissionRate = (initialEmissionRate * (1 - emissionRateNormalized));      
+            }
+            else {
+                currentEmissionRate = (initialEmissionRate * emissionRateNormalized);               
+            }
+
+            // (22 * (1 - .1))
+
+            particleSystemCurrent.emissionRate = currentEmissionRate;
+
+            if(emissionRateNormalized <= 0) {                
+                particleSystemCurrent.gameObject.StopParticleSystem(false);
+            }
+            else {
+                particleSystemCurrent.gameObject.PlayParticleSystem(false);            
+            }
+        }
+        
+        if (!includeChildren) {
+            return;
+        }
+        
+        ParticleSystem[] particleSystems = inst.GetComponentsInChildren<ParticleSystem>(true);
+        
+        foreach (ParticleSystem particleSystem in particleSystems) {
+
+            currentEmissionRate = 0;
+            initialEmissionRate = 0;
+
+            goData = null;
+            
+            currentEmissionRate = particleSystem.emissionRate;
+            initialEmissionRate = particleSystem.emissionRate;
+            
+            goData = particleSystem.gameObject.Get<GameObjectData>();
+            
+            if(goData == null) {
+                goData = particleSystem.gameObject.GetOrSet<GameObjectData>();
+                goData.Set(
+                    BaseDataObjectKeys.particleEmissionRate, 
+                    initialEmissionRate);
+            }
+
+            object valEmission = goData.Get(BaseDataObjectKeys.particleEmissionRate);
+
+            if(valEmission != null) {
+                initialEmissionRate = goData.GetFloat(BaseDataObjectKeys.particleEmissionRate);            
+            }
+            
+            currentEmissionRate = (initialEmissionRate * (1 - emissionRateNormalized));      
+            // (22 * (1 - .1))
+            
+            particleSystem.emissionRate = currentEmissionRate;
+
+            if(emissionRateNormalized <= 0) {                
+                particleSystem.gameObject.StopParticleSystem(false);
+            }
+            else {
+                particleSystem.gameObject.PlayParticleSystem(false);            
+            }
         }
     }
     
