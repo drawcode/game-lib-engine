@@ -303,13 +303,11 @@ public class AppContentCollectActionType {
     public static string actionSave = "action-save";
     public static string actionWin = "action-win";
     public static string actionCollect = "action-collect";
-    public static string actionDefend = "action-defend";
-    public static string actionAttack = "action-attack";
     public static string actionKill = "action-kill";
-    public static string actionAssetBuild = "action-asset-build";
-    public static string actionAssetAttack = "action-asset-attack";
-    public static string actionAssetDefend = "action-asset-defend";
-    public static string actionAssetRepair = "action-asset-repair";    
+    public static string actionBuild = "action-build";
+    public static string actionAttack = "action-attack";
+    public static string actionDefend = "action-defend";
+    public static string actionRepair = "action-repair";    
 }
 
 public class AppCompareType {
@@ -450,19 +448,11 @@ public class AppContentCollectItem : GameDataObject {
     }
 
     // code
-            
-    public bool IsCodeActionAttack() {
-        return IsCode(AppContentCollectActionType.actionAttack);
-    }
-       
+                  
     public bool IsCodeActionCollect() {
         return IsCode(AppContentCollectActionType.actionCollect);
     }
-    
-    public bool IsCodeActionDefend() {
-        return IsCode(AppContentCollectActionType.actionDefend);
-    }
-    
+
     public bool IsCodeActionKill() {
         return IsCode(AppContentCollectActionType.actionKill);
     }
@@ -475,20 +465,20 @@ public class AppContentCollectItem : GameDataObject {
         return IsCode(AppContentCollectActionType.actionWin);
     }
     
-    public bool IsCodeActionAssetBuild() {
-        return IsCode(AppContentCollectActionType.actionAssetBuild);
+    public bool IsCodeActionBuild() {
+        return IsCode(AppContentCollectActionType.actionBuild);
     }
     
-    public bool IsCodeActionAssetRepair() {
-        return IsCode(AppContentCollectActionType.actionAssetRepair);
+    public bool IsCodeActionRepair() {
+        return IsCode(AppContentCollectActionType.actionRepair);
     }
     
-    public bool IsCodeActionAssetAttack() {
-        return IsCode(AppContentCollectActionType.actionAssetAttack);
+    public bool IsCodeActionAttack() {
+        return IsCode(AppContentCollectActionType.actionAttack);
     }
     
-    public bool IsCodeActionAssetDefend() {
-        return IsCode(AppContentCollectActionType.actionAssetDefend);
+    public bool IsCodeActionDefend() {
+        return IsCode(AppContentCollectActionType.actionDefend);
     }
 
     // data / code
@@ -656,10 +646,10 @@ public class AppContentCollectItem : GameDataObject {
                 }
             }
         }
-        else if (IsCodeActionAssetBuild()) {
+        else if (IsCodeActionBuild()) {
             if (IsDataTypeActionDataScopeLevel()) {
                 
-                double val = playerRuntimeData.assetBuilds;
+                double val = playerRuntimeData.builds;
                 
                 double valNeeded = data.valDouble;
                 
@@ -670,10 +660,10 @@ public class AppContentCollectItem : GameDataObject {
                 }
             }
         }
-        else if (IsCodeActionAssetRepair()) {
+        else if (IsCodeActionRepair()) {
             if (IsDataTypeActionDataScopeLevel()) {
                 
-                double val = playerRuntimeData.assetRepairs;
+                double val = playerRuntimeData.repairs;
                 
                 double valNeeded = data.valDouble;
                 
@@ -684,10 +674,10 @@ public class AppContentCollectItem : GameDataObject {
                 }
             }
         }
-        else if (IsCodeActionAssetAttack()) {
+        else if (IsCodeActionAttack()) {
             if (IsDataTypeActionDataScopeLevel()) {
                 
-                double val = playerRuntimeData.assetAttacks;
+                double val = playerRuntimeData.attacks;
                 
                 double valNeeded = data.valDouble;
                 
@@ -698,10 +688,10 @@ public class AppContentCollectItem : GameDataObject {
                 }
             }
         }
-        else if (IsCodeActionAssetDefend()) {
+        else if (IsCodeActionDefend()) {
             if (IsDataTypeActionDataScopeLevel()) {
                 
-                double val = playerRuntimeData.assetDefends;
+                double val = playerRuntimeData.defends;
                 
                 double valNeeded = data.valDouble;
                 
