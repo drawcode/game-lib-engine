@@ -170,8 +170,11 @@ public class BaseAppContentCollects<T> : DataObjects<T> where T : GameDataObject
     //}
 
     // ---------------------------------------------------------
+
     // ACTIONS
-    
+
+    // GETS
+
     public static List<AppContentCollect> GetActions() {
         return AppContentCollects.Instance.getActions();
     }
@@ -179,6 +182,67 @@ public class BaseAppContentCollects<T> : DataObjects<T> where T : GameDataObject
     public List<AppContentCollect> getActions() {
         return GetByType(AppContentCollectType.action);
     }
+
+    // HAS
+
+    public static bool HasAction(string code) {
+        return AppContentCollects.Instance.hasAction(code);
+    }
+    
+    public bool hasAction(string code) {
+
+        foreach(AppContentCollect appContentCollect in getActions()) {
+            if(appContentCollect.code.ToLower() == code.ToLower()) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    // HAS ACTION ITEM - CURRENT
+
+    public static bool HasActionItemCurrent(string code) {
+        return AppContentCollects.Instance.hasActionItemCurrent(code);
+    }
+    
+    public bool hasActionItemCurrent(string code) {
+        
+        AppContentCollect appContentCollect = AppContentCollects.Current;
+                
+        return AppContentCollects.HasActionItem(appContentCollect, code);
+    }
+    
+    // HAS ACTION ITEM
+
+    public static bool HasActionItem(AppContentCollect appContentCollect, string code) {
+        return AppContentCollects.Instance.hasActionItem(appContentCollect, code);
+    }
+    
+    public bool hasActionItem(AppContentCollect appContentCollect, string code) {
+
+        if(appContentCollect != null) {
+            
+            List<AppContentCollectItem> appContentCollectItems = appContentCollect.GetItemsData();
+
+            foreach(AppContentCollectItem appContentCollectItem in appContentCollectItems) {
+                if(appContentCollectItem.code.ToLower() == code.ToLower()) {
+                    return true;
+                }
+            }
+        }
+        
+        return false;
+    }
+
+    /*
+    AppContentCollect appContentCollect = AppContentCollects.Current;
+    
+    if(appContentCollect != null) {
+        
+        List<AppContentCollectItem> appContentCollectItems = appContentCollect.GetItemsData();
+    }
+    */
 
     // PROCESS ACTIONS / COLLECTIONS
 
@@ -1072,4 +1136,5 @@ public class BaseAppContentCollect : GameDataObject {
     public string GetVersionFileExt() {
         return GetContentString(AppContentAssetAttributes.version_file_ext);
     }
+
 }

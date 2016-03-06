@@ -244,7 +244,8 @@ public class BaseGameLevels<T> : DataObjects<T> where T : DataObject, new() {
 
     //
 
-    public static GameLevelGridData GetLevelGridTerrains(GameLevelGridData dataItems, List<GameDataTerrainPreset> presets) {
+    public static GameLevelGridData GetLevelGridTerrains(
+        GameLevelGridData dataItems, List<GameDataTerrainPreset> presets) {
         
         foreach (GameDataTerrainPreset terrainDataItem in presets) {
             
@@ -252,7 +253,8 @@ public class BaseGameLevels<T> : DataObjects<T> where T : DataObject, new() {
             
             if (terrainPreset != null) {
                 
-                GamePresetItem terrainPresetItem = terrainPreset.GetItemRandomByProbability(terrainPreset.data.items);
+                GamePresetItem terrainPresetItem = 
+                    terrainPreset.GetItemRandomByProbability(terrainPreset.data.items);
 
                 float offsetX = 0;
                 float offsetY = 0;
@@ -301,8 +303,9 @@ public class BaseGameLevels<T> : DataObjects<T> where T : DataObject, new() {
         return dataItems;
     }
 
-    public static GameLevelGridData GetLevelGridLayouts(GameLevelGridData dataItems, List<GameDataLayoutPreset> presets) {
-                        
+    public static GameLevelGridData GetLevelGridLayouts(
+        GameLevelGridData dataItems, List<GameDataLayoutPreset> presets) {
+
         foreach (GameDataLayoutPreset layoutDataItem in presets) {
 
             GameLevelLayout gameLevelLayout = GameLevelLayouts.Instance.GetById(layoutDataItem.code);
@@ -358,15 +361,21 @@ public class BaseGameLevels<T> : DataObjects<T> where T : DataObject, new() {
                 if (layoutDataItem.type == GameLevelLayoutDisplayType.layoutCentered) {                    
 
                     if (GameLevels.currentLevelData.grid_centered_x) {
-                        offsetX = (float)((GameLevels.currentLevelData.grid_width / 2) + offsetPlayerX) - ((float)size.x / 2);
+                        offsetX = 
+                            (float)((GameLevels.currentLevelData.grid_width / 2) + offsetPlayerX) - 
+                                ((float)size.x / 2);
                     }
                     
                     if (GameLevels.currentLevelData.grid_centered_y) {
-                        offsetY = (float)((GameLevels.currentLevelData.grid_height / 2) + offsetPlayerY) - ((float)size.y / 2);
+                        offsetY = 
+                            (float)((GameLevels.currentLevelData.grid_height / 2) + offsetPlayerY) - 
+                                ((float)size.y / 2);
                     }
 
                     if (GameLevels.currentLevelData.grid_centered_z) {
-                        offsetZ = (float)((GameLevels.currentLevelData.grid_depth / 2) + offsetPlayerZ) - ((float)size.z / 2);
+                        offsetZ = 
+                            (float)((GameLevels.currentLevelData.grid_depth / 2) + offsetPlayerZ) - 
+                                ((float)size.z / 2);
                     }
                 }
 
