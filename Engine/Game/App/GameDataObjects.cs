@@ -28,7 +28,8 @@ public class GameDataModel : GameDataObject {
 }
 
 public class GameDataDirectorType {
-    public static string ai = "ai";
+    public static string enemy = "enemy";
+    public static string sidekick = "sidekick";
     public static string item = "item";
     public static string custom = "custom";
 }

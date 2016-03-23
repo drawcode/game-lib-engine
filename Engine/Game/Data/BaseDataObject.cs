@@ -346,6 +346,8 @@ public class BaseDataObjectKeys {
 
     public static string amount = "amount";
     public static string run = "run";
+    public static string run_enemies = "run_enemies";
+    public static string run_sidekicks = "run_sidekicks";
     //
     // achievements
     
@@ -787,7 +789,7 @@ public class BaseDataObject : Dictionary<string, object> {
     public double GetAttributeDoubleValue(string code) {
         double currentValue = 0.0;
         object objectValue = GetAttribute(code).val;
-        if (objectValue != null) {
+        if(objectValue != null) {
             currentValue = Convert.ToDouble(objectValue);
         }
         
