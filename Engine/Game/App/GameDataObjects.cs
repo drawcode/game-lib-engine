@@ -31,6 +31,7 @@ public class GameDataDirectorType {
     public static string enemy = "enemy";
     public static string sidekick = "sidekick";
     public static string item = "item";
+    public static string weapon = "weapon";
     public static string custom = "custom";
 }
 
@@ -57,6 +58,10 @@ public class GameDataTexturePreset : GameDataObject {
 
 public class GameDataItemPreset : GameDataObject {
     
+}
+
+public class GameDataWeaponPreset : GameDataObject {
+
 }
 
 public class GameDataTerrainPreset : GameDataObject {
@@ -265,6 +270,16 @@ public class GameDataObjectItem : GameDataObject {
         
         set {
             Set<List<GameDataItemPreset>>(BaseDataObjectKeys.item_presets, value);
+        }
+    }
+
+    public virtual List<GameDataWeaponPreset> weapon_presets {
+        get {
+            return Get<List<GameDataWeaponPreset>>(BaseDataObjectKeys.weapon_presets);
+        }
+
+        set {
+            Set<List<GameDataWeaponPreset>>(BaseDataObjectKeys.weapon_presets, value);
         }
     }
         
@@ -715,6 +730,49 @@ public class GameDataObjectItem : GameDataObject {
     
     public GameDataCharacterPreset GetCharacterPreset(string code) {
         return GetItem<GameDataCharacterPreset>(character_presets, code);
+    }
+
+
+    // item presets
+
+    public bool HasItemPresets() {
+
+        if (item_presets != null) {
+            if (item_presets.Count > 0) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    public GameDataItemPreset GetItemPreset() {
+        return GetItemPreset(GameDataItemTypeKeys.defaultType);
+    }
+
+    public GameDataItemPreset GetItemPreset(string code) {
+        return GetItem<GameDataItemPreset>(item_presets, code);
+    }
+
+    // weapon presets
+
+    public bool HasWeaponPresets() {
+
+        if (weapon_presets != null) {
+            if (weapon_presets.Count > 0) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    public GameDataWeaponPreset GetWeaponPreset() {
+        return GetWeaponPreset(GameDataItemTypeKeys.defaultType);
+    }
+
+    public GameDataWeaponPreset GetWeaponPreset(string code) {
+        return GetItem<GameDataWeaponPreset>(weapon_presets, code);
     }
 
     // asset presets

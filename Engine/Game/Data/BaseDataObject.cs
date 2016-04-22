@@ -234,6 +234,7 @@ public class BaseDataObjectKeys {
     public static string directors = "directors";
     public static string texture_presets = "texture_presets";
     public static string item_presets = "item_presets";
+    public static string weapon_presets = "weapon_presets";
     public static string terrain_presets = "terrain_presets";
     public static string asset_presets = "asset_presets";
     public static string layout_presets = "layout_presets";
