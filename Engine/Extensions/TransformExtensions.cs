@@ -21,7 +21,8 @@ public static class TransformExtensions {
             return false;
         }
         finally {
-            UnityEngine.Object.DestroyImmediate(tmp);
+            //UnityEngine.Object.DestroyImmediate(tmp);
+            UnityEngine.Object.Destroy(tmp);
         }
     }
 }
