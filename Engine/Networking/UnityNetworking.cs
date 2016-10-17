@@ -23,7 +23,7 @@ namespace Engine.Networking {
         public int masterServerPort = 25010;
         public int connectionTesterPort = 25011;
         public int natFacilitatorPort = 25011;
-        public string masterserveriPAddressOrDns = "matchup.drawlabs.com";
+        public string masterserveriPAddressOrDns = "matchup.test.com";
         private bool awaitingHostList = false;
 
         // CONNECTING

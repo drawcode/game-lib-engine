@@ -19,7 +19,7 @@ namespace Engine.Networking {
         // TODO move to downloadable config.
         public string masterserverGameName = "defaultgame";
 
-        public string masterserveriPAddressOrDns = "matchup.drawlabs.com";
+        public string masterserveriPAddressOrDns = "matchup.test.com";
         public int masterServerPort = 25010;
 
         public int defaultServerPort = 50666;
