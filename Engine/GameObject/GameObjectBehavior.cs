@@ -141,16 +141,16 @@ public class GameObjectBehavior : MonoBehaviour {
         }
     }
     
-    private ParticleRenderer _rendererParticle;
+    //private ParticleRenderer _rendererParticle;
 
-    public ParticleRenderer rendererParticle {
-        get {
-            if (!_rendererParticle) {
-                _rendererParticle = base.GetComponent<ParticleRenderer>();
-            }
-            return _rendererParticle;
-        }
-    }
+    //public ParticleRenderer rendererParticle {
+    //    get {
+    //        if (!_rendererParticle) {
+    //            _rendererParticle = base.GetComponent<ParticleRenderer>();
+    //        }
+    //        return _rendererParticle;
+    //    }
+    //}
     
     private ParticleSystem _particleSystem;
     
@@ -185,7 +185,7 @@ public class GameObjectBehavior : MonoBehaviour {
         }
     }
 
-    public void RemoveMe() {
+    public virtual void RemoveMe() {
         GameObjectHelper.DestroyGameObject(gameObject);
     }
 

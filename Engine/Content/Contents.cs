@@ -3828,7 +3828,7 @@ public class Contents : GameObjectBehavior {
 			string sceneName = GamePacks.Current.code + "-main";
 						
 			//AsyncOperation asyncLoad = Application.LoadLevelAsync(sceneName);
-			Application.LoadLevel(sceneName);
+			Context.Current.ApplicationLoadLevelByName(sceneName);
 				
 			Messenger<string>.Broadcast(
 				ContentMessages.ContentItemPrepareSuccess, 

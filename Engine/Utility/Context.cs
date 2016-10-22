@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.SceneManagement;
 using System.Collections;
 
 public class Context {
@@ -58,16 +59,10 @@ public class Context {
 #endif
         }
 	}
-	
-	public bool isWebMac {
+		
+	public bool isWebGL {
 		get {
-			return Application.platform == RuntimePlatform.OSXWebPlayer;
-		}
-	}
-	
-	public bool isWebWindows {
-		get {
-			return Application.platform == RuntimePlatform.WindowsWebPlayer;
+			return Application.platform == RuntimePlatform.WebGLPlayer;
 		}
 	}
 	
@@ -206,32 +201,32 @@ public class Context {
 	}
 
 	public int ApplicationTotalLevels() {
-		return Application.levelCount;
+		return SceneManager.sceneCount;
 	}
 
 	public int ApplicationLoadedLevelNumber() {
-		return Application.loadedLevel;
+		return SceneManager.GetActiveScene().buildIndex;
 	}
 
 	public string ApplicationLoadedLevelName() {
-		return Application.loadedLevelName;
+		return SceneManager.GetActiveScene().name;
 	}
 
 	public void ApplicationLoadLevelByNumber(int levelNumber) {
-		Application.LoadLevel(levelNumber);
+        SceneManager.LoadScene(levelNumber);
 	}
 
 	public void ApplicationLoadLevelByName(string levelName) {
-		Application.LoadLevel(levelName);
+        SceneManager.LoadScene(levelName);
 	}
 
 	public void ApplicationStreamLevelByNumber(int levelNumber) {
-		Application.LoadLevelAdditive(levelNumber);
+        SceneManager.LoadScene(levelNumber, LoadSceneMode.Additive);
 	}
 
 	public void ApplicationStreamLevelByName(string levelName) {
-		Application.LoadLevelAdditive(levelName);
-	}
+        SceneManager.LoadScene(levelName, LoadSceneMode.Additive);
+    }
 
 	public void ApplicationOpenURL(string url) {
 		Application.OpenURL(url);

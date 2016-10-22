@@ -15,7 +15,7 @@ namespace Engine.UI {
             public Node parent;
 
             public void LoadScene() {
-                Application.LoadLevel(sceneName);
+                Context.Current.ApplicationLoadLevelByName(sceneName);
             }
         }
 

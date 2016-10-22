@@ -310,7 +310,7 @@ namespace Engine.Graphics.Vector {
 
             if (useMaterial == null) {
                 if (VectorMaterial.defaultLineMaterial == null) {
-                    VectorMaterial.defaultLineMaterial = new Material("Shader \"Vertex Colors/Alpha\" {SubShader {Cull Off ZWrite On Blend SrcAlpha OneMinusSrcAlpha Pass {BindChannels {Bind \"Color\", color Bind \"Vertex\", vertex}}}}");
+                    //VectorMaterial.defaultLineMaterial = new Material("Shader \"Vertex Colors/Alpha\" {SubShader {Cull Off ZWrite On Blend SrcAlpha OneMinusSrcAlpha Pass {BindChannels {Bind \"Color\", color Bind \"Vertex\", vertex}}}}");
                 }
                 useMaterial = VectorMaterial.defaultLineMaterial;
             }

@@ -11,7 +11,7 @@ namespace Engine.Content {
         }
 
         public void LoadSceneByName(string name) {
-            Application.LoadLevelAsync(name);
+            Context.Current.ApplicationLoadLevelByName(name);
         }
     }
 }

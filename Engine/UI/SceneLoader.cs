@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Engine.Utility;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 namespace Engine.UI {
 
@@ -89,10 +90,10 @@ namespace Engine.UI {
             }
 
             if (async) {
-                Application.LoadLevelAsync(sceneName);
+                SceneManager.LoadSceneAsync(sceneName);
             }
             else {
-                Application.LoadLevel(sceneName);
+                SceneManager.LoadScene(sceneName);
             }
             LogUtil.Log("Loaded scene: " + sceneName);
 

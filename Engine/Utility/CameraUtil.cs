@@ -66,8 +66,8 @@ public class CameraUtil {
 
 		if(levelCode == "default"
 			|| string.IsNullOrEmpty(levelCode)
-			|| Application.loadedLevelName.IndexOf("UIScene") > -1) {
-			levelCode = Application.loadedLevelName;
+			|| Context.Current.ApplicationLoadedLevelName().IndexOf("UIScene") > -1) {
+			levelCode = Context.Current.ApplicationLoadedLevelName();
 		}
 
 		string fileName = gameName + "-screen-" + levelCode + "-";

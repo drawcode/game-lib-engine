@@ -133,8 +133,7 @@ public class LogUtil {
             Debug.Log(message);
 
             // Output to Firebug or inspectors as avail in the browser.
-            if (Application.platform == RuntimePlatform.OSXWebPlayer
-                || Application.platform == RuntimePlatform.WindowsWebPlayer) {
+            if (Application.platform == RuntimePlatform.WebGLPlayer) {
                 if (message.GetType() == typeof(String))
                     Application.ExternalCall("if(console)console.log", message);
                 else
@@ -153,8 +152,7 @@ public class LogUtil {
         Debug.LogError(message + "\r\n\r\n\r\n");
 
         // Output to Firebug or inspectors as avail in the browser.
-        if (Application.platform == RuntimePlatform.OSXWebPlayer
-            || Application.platform == RuntimePlatform.WindowsWebPlayer) {
+        if (Application.platform == RuntimePlatform.WebGLPlayer) {
             if (message.GetType() == typeof(String))
                 Application.ExternalCall("if(console)console.error", message);
             else
@@ -166,8 +164,7 @@ public class LogUtil {
         Debug.LogWarning(message + "\r\n\r\n\r\n");
         
         // Output to Firebug or inspectors as avail in the browser.
-        if (Application.platform == RuntimePlatform.OSXWebPlayer
-            || Application.platform == RuntimePlatform.WindowsWebPlayer) {
+        if (Application.platform == RuntimePlatform.WebGLPlayer) {
             if (message.GetType() == typeof(String))
                 Application.ExternalCall("if(console)console.error", message);
             else

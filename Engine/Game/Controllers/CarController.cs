@@ -219,12 +219,12 @@ public class CarController : GameObjectBehavior {
                 if (slip > 0.5 && hit.collider.tag == "Dusty") {
                     groundDustEffect.position = hit.point;
 
-                    ParticleEmitter particleEmitter = groundDustEffect.GetComponent<ParticleEmitter>();
+                    //ParticleSystem particleEmitter = groundDustEffect.GetComponent<ParticleSystem>();
 
-                    particleEmitter.worldVelocity = rigidbody.velocity * 0.5f;
-                    particleEmitter.minEmission = (slip - 0.5f) * 3f;
-                    particleEmitter.maxEmission = (slip - 0.5f) * 3f;
-                    particleEmitter.Emit();
+                    //particleEmitter.worldVelocity = rigidbody.velocity * 0.5f;
+                    //particleEmitter.minEmission = (slip - 0.5f) * 3f;
+                    //particleEmitter.maxEmission = (slip - 0.5f) * 3f;
+                    //particleEmitter.Emit();
                 }
 
                 //and skid marks

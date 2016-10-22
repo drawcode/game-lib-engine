@@ -7,7 +7,7 @@ namespace Engine.State {
         /// <summary>
         /// The array of emitters to fire when the effect starts.
         /// </summary>
-        public ParticleEmitter[] emitters;
+        public ParticleSystem[] systems;
 
         /// <summary>
         /// The length of the effect in seconds.  After which the effect will be reset and pooled if needed.
@@ -35,8 +35,8 @@ namespace Engine.State {
         /// Starts the effect.
         /// </summary>
         public virtual void StartEffect() {
-            foreach (ParticleEmitter emitter in emitters) {
-                emitter.Emit();
+            foreach (ParticleSystem emitter in systems) {
+                emitter.Emit(1000);
             }
 
             StartCoroutine(WaitForCompletion());

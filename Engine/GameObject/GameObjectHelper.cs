@@ -955,7 +955,7 @@ public static class GameObjectHelper {
                 particleSystemCurrent.gameObject.PlayParticleSystem(false);            
             }
 
-            particleSystemCurrent.enableEmission = emissionEnabled;
+            particleSystemCurrent.EnableEmission(emissionEnabled);
         }
         
         if (!includeChildren) {
@@ -973,7 +973,7 @@ public static class GameObjectHelper {
                 particleSystem.gameObject.PlayParticleSystem(false);
             }
 
-            particleSystem.enableEmission = emissionEnabled;
+            particleSystem.EnableEmission(emissionEnabled);
         }
     }
     
@@ -991,7 +991,7 @@ public static class GameObjectHelper {
                 particleSystemCurrent.gameObject.PlayParticleSystem(false);            
             }
 
-            particleSystemCurrent.emissionRate = emissionRate;
+            particleSystemCurrent.SetEmissionRate(emissionRate);
         }
         
         if (!includeChildren) {
@@ -1009,7 +1009,7 @@ public static class GameObjectHelper {
                 particleSystem.gameObject.PlayParticleSystem(false);            
             }
 
-            particleSystem.emissionRate = emissionRate;
+            particleSystem.SetEmissionRate(emissionRate);
         }
     }
     
@@ -1046,8 +1046,8 @@ public static class GameObjectHelper {
 
             goData = null;
 
-            currentEmissionRate = particleSystemCurrent.emissionRate;
-            initialEmissionRate = particleSystemCurrent.emissionRate;
+            currentEmissionRate = particleSystemCurrent.GetEmissionRate();
+            initialEmissionRate = particleSystemCurrent.GetEmissionRate();
 
             goData = particleSystemCurrent.gameObject.Get<GameObjectData>();
 
@@ -1073,7 +1073,7 @@ public static class GameObjectHelper {
 
             // (22 * (1 - .1))
 
-            particleSystemCurrent.emissionRate = currentEmissionRate;
+            particleSystemCurrent.SetEmissionRate(currentEmissionRate);
 
             if(emissionRateNormalized <= 0) {                
                 particleSystemCurrent.gameObject.StopParticleSystem(false);
@@ -1096,8 +1096,8 @@ public static class GameObjectHelper {
 
             goData = null;
             
-            currentEmissionRate = particleSystem.emissionRate;
-            initialEmissionRate = particleSystem.emissionRate;
+            currentEmissionRate = particleSystem.GetEmissionRate();
+            initialEmissionRate = particleSystem.GetEmissionRate();
             
             goData = particleSystem.gameObject.Get<GameObjectData>();
             
@@ -1117,7 +1117,7 @@ public static class GameObjectHelper {
             currentEmissionRate = (initialEmissionRate * (1 - emissionRateNormalized));      
             // (22 * (1 - .1))
             
-            particleSystem.emissionRate = currentEmissionRate;
+            particleSystem.SetEmissionRate(currentEmissionRate);
 
             if(emissionRateNormalized <= 0) {                
                 particleSystem.gameObject.StopParticleSystem(false);
@@ -1154,7 +1154,7 @@ public static class GameObjectHelper {
         
         ParticleSystem particleSystemCurrent = inst.GetComponent<ParticleSystem>();
         if (particleSystemCurrent != null) {
-            particleSystemCurrent.enableEmission = true;
+            particleSystemCurrent.EnableEmission(true);
             if (!particleSystemCurrent.isPlaying) {
                 particleSystemCurrent.Play();//.enableEmission = emissionEnabled;
             }
@@ -1167,7 +1167,7 @@ public static class GameObjectHelper {
         ParticleSystem[] particleSystems = inst.GetComponentsInChildren<ParticleSystem>(true);
         
         foreach (ParticleSystem particleSystem in particleSystems) {
-            particleSystem.enableEmission = true;
+            particleSystem.EnableEmission(true);
             if (!particleSystem.isPlaying) {
                 particleSystem.Play();//.enableEmission = emissionEnabled;
             }
@@ -1180,7 +1180,7 @@ public static class GameObjectHelper {
         
         ParticleSystem particleSystemCurrent = inst.GetComponent<ParticleSystem>();
         if (particleSystemCurrent != null) {
-            particleSystemCurrent.enableEmission = false;
+            particleSystemCurrent.EnableEmission(false);
             if (particleSystemCurrent.isPlaying) {
                 //particleSystemCurrent.Stop();
             }
@@ -1193,7 +1193,7 @@ public static class GameObjectHelper {
         ParticleSystem[] particleSystems = inst.GetComponentsInChildren<ParticleSystem>(true);
         
         foreach (ParticleSystem particleSystem in particleSystems) {
-            particleSystem.enableEmission = false;
+            particleSystem.EnableEmission(false);
             if (particleSystem.isPlaying) {
                 //particleSystem.Stop();
             }
