@@ -1,3 +1,4 @@
+#pragma warning disable CS0109
 
 using System;
 using System.Collections;
