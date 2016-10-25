@@ -2227,7 +2227,7 @@ public class GameDataObject : DataObject {
         get {
 
             double valFinal = 0;
-            object valObj = Get(BaseDataObjectKeys.points);
+            object valObj = Get<object>(BaseDataObjectKeys.points);
 
             if(valObj == null) {
                 return valFinal;
