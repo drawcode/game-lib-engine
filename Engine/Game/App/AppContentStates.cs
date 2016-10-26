@@ -22,6 +22,11 @@ public class AppContentStateMeta : BaseAppContentStateMeta {
     public static string appContentStateGameTrainingChoiceQuiz = "app-content-state-game-training-choice-quiz";
     public static string appContentStateGameTrainingCollectionSafety = "app-content-state-game-training-collection-safety";
     public static string appContentStateGameTrainingCollectionSmarts = "app-content-state-game-training-collection-smarts";
+
+
+    public static string appContentStateGameAR = "app-content-state-game-ar";
+    public static string appContentStateGameARSettings = "app-content-state-game-ar-settings";
+    public static string appContentStateGameVR = "app-content-state-game-vr";
 }
 
 public class AppContentStates : BaseAppContentStates<AppContentState> {
