@@ -272,6 +272,10 @@ public static class GameObjectHelper {
     }
 
     public static GameObject HitObject(Camera cam, Vector3 pos, string containsNameTo) {
+
+        if (cam == null) {
+            return null;
+        }
         
         Ray screenRay = cam.ScreenPointToRay(pos);
         
