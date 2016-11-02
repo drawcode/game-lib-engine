@@ -9,7 +9,7 @@ using UnityEngine;
 
 namespace Engine.Networking {
     public class PingCustom : BaseEngineBehavior {
-#if !UNITY_FLASH && !UNITY_IPHONE
+#if !UNITY_FLASH && !UNITY_WEBGL && !UNITY_IPHONE
 
         private void Start() {
         }
