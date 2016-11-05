@@ -45,7 +45,28 @@ public class AudioActionObject {
 
 public class AudioSystem : GameObjectBehavior {
 
-    public static AudioSystem Instance;
+    private static AudioSystem _instance = null;
+
+    public static AudioSystem Instance {
+        get {
+            if (!_instance) {
+
+                // check if an object is already available in the scene graph
+                _instance = FindObjectOfType(typeof(AudioSystem)) as AudioSystem;
+
+                // nope, create a new one
+                if (!_instance) {
+                    var obj = new GameObject("_AudioSystem");
+                    DontDestroyOnLoad(obj);
+                    _instance = obj.AddComponent<AudioSystem>();
+
+                }
+            }
+
+            return _instance;
+        }
+    }
+
     public GameObject prefabAudioItem;
     public GameObject globalTranform;
     public AudioSource currentLoop;
@@ -67,8 +88,8 @@ public class AudioSystem : GameObjectBehavior {
     public bool dataDrivenLoad = true;
 
     public string audioRootPath {
-        get {           
-            return ContentPaths.appCacheVersionSharedAudio; 
+        get {
+            return ContentPaths.appCacheVersionSharedAudio;
         }
     }
 
@@ -97,14 +118,6 @@ public class AudioSystem : GameObjectBehavior {
     }
 
     public void Awake() {
-        if (Instance != null && this != Instance) {
-
-            //There is already a copy of this script running
-            Destroy(this);
-            return;
-        }
-
-        Instance = this;
 
         //if(!dataDrivenLoad) {
         ambienceActive = false;
@@ -120,20 +133,16 @@ public class AudioSystem : GameObjectBehavior {
         //
     }
 
-    
-    
     // AMBIENCE / GAME NEW
-    
+
     public void PlaySoundByPreset(string presetCode) {
-        
+
         GamePreset preset = GamePresets.Get(presetCode);
         if (preset != null) {
             //preset.getI
         }
-            
-            
     }
-    
+
     // AMBIENCE OLD
 
     public void CheckAmbiencePlaying() {
@@ -171,7 +180,7 @@ public class AudioSystem : GameObjectBehavior {
         if (currentIntro != null) {
             currentIntro.volume = (float)musicSoundVolume;
         }
-         
+
         if (currentLoop != null) {
             currentLoop.volume = (float)musicSoundVolume;
         }
@@ -181,7 +190,7 @@ public class AudioSystem : GameObjectBehavior {
         }
 
         if (currentGameLoops != null) {
-            if (currentGameLoops.Count > 0 
+            if (currentGameLoops.Count > 0
                 && currentGameLoops.Count > currentLoopIndex
                 && currentLoopIndex > -1) {
                 if (currentGameLoops[currentLoopIndex] != null) {
@@ -196,7 +205,7 @@ public class AudioSystem : GameObjectBehavior {
     }
 
     public GameObject PlayEffectObject(Transform parentTransform, string name, bool loop, float volume) {
-        return PlayFileFromResourcesObject(parentTransform, 
+        return PlayFileFromResourcesObject(parentTransform,
                               audioRootPath + name, loop, soundIncrement, volume);
     }
 
@@ -205,12 +214,12 @@ public class AudioSystem : GameObjectBehavior {
     }
 
     public void PlayEffect(Transform parentTransform, string name, bool loop, float volume) {
-        PlayFileFromResources(parentTransform, 
+        PlayFileFromResources(parentTransform,
             audioRootPath + name, loop, soundIncrement, volume);
     }
 
     public void PlayEffect(Transform parentTransform, string name, float volume) {
-        PlayFileFromResources(parentTransform, 
+        PlayFileFromResources(parentTransform,
             audioRootPath + name, false, soundIncrement, volume);
     }
 
@@ -218,9 +227,9 @@ public class AudioSystem : GameObjectBehavior {
 
         PlayEffect(name, volume, false);
     }
-    
+
     public void PlayEffect(string name, float volume, bool loop) {
-        
+
         // TODO, lookup filename from sound list...
         soundIncrement++;
         PlayFileFromResources(
@@ -244,14 +253,14 @@ public class AudioSystem : GameObjectBehavior {
     public void PlayEffectSingle() {
         PlayFileFromResources(audioRootPath + name, false);
     }
-    
+
     public void PlayAudioFile(string file) {
         AudioSetItem item = GetAudioFile(file);
         if (item != null) {
             item.audioSource.Play();
         }
     }
-    
+
     public AudioSetItem GetAudioFile(string file) {
         if (clips.ContainsKey(file)) {
             return clips[file];
@@ -269,7 +278,7 @@ public class AudioSystem : GameObjectBehavior {
         GameObject goClip = GameObject.Find(code);//FindOrCreateSoundContainer().transform.FindChild(code).gameObject;
 
         if (goClip != null) {
-        
+
         }
         else {
             goClip = new GameObject(code);
@@ -373,16 +382,16 @@ public class AudioSystem : GameObjectBehavior {
         obj.loop = loop;
         obj.increment = increment;
         obj.volume = volume;
-     
+
         return PlayAudioClip(obj);
     }
-    
+
     public GameObject PlayAudioClip(Vector3 pos, Transform parent, AudioClip clip, bool loop, int increment, float volume) {
-        
+
         if (clip == null) {
             return null;
         }
-        
+
         AudioActionObject obj = new AudioActionObject();
         obj.clip = clip;
         obj.loop = loop;
@@ -390,7 +399,7 @@ public class AudioSystem : GameObjectBehavior {
         obj.volume = volume;
         obj.pos = pos;
         obj.parent = parent;
-        
+
         return PlayAudioClip(obj);
     }
 
@@ -452,9 +461,9 @@ public class AudioSystem : GameObjectBehavior {
         audioSourceObject.clip = audioActionObject.clip;
         audioSourceObject.loop = audioActionObject.loop;
         audioSourceObject.volume = audioActionObject.volume;
-        
+
         audioSourceObject.minDistance = audioActionObject.minDistance;
-        
+
         goClip.transform.parent = audioActionObject.parent;
         goClip.transform.position = audioActionObject.pos;
 
@@ -572,7 +581,7 @@ public class AudioSystem : GameObjectBehavior {
         AudioClip clip = LoadAudioClip(audioRootPath + name);
         return clip;
     }
-        
+
     public AudioClip LoadAudioClip(string path) {
         AudioSetItem audioSetItem = LoadAudioSetItem(path);
 
@@ -598,7 +607,7 @@ public class AudioSystem : GameObjectBehavior {
         }
 
         if (audioSetItems.ContainsKey(path)) {
-            return audioSetItems[path]; 
+            return audioSetItems[path];
         }
 
         AudioClip clip = AssetUtil.LoadAsset<AudioClip>(path);
@@ -630,7 +639,7 @@ public class AudioSystem : GameObjectBehavior {
                     currentGameLoop.Stop();
                 }
             }
-    
+
             if (currentIntro != null) {
                 currentIntro.volume = (float)musicSoundVolume;
                 currentIntro.Play();
@@ -641,14 +650,14 @@ public class AudioSystem : GameObjectBehavior {
                     // currentIntro.gameObject.AudioTo(0f, 1f, 1f, 0f);
                 }
             }
-    
+
             if (currentLoop != null && ambienceActive) {
 
                 currentLoop.volume = (float)musicSoundVolume;
                 currentLoop.Play();
                 //currentLoop.gameObject.AudioTo((float)musicSoundVolume, 1f, 1f, 0f);
-            }           
-            
+            }
+
             ambienceActive = true;
         }
         else {
@@ -676,7 +685,7 @@ public class AudioSystem : GameObjectBehavior {
         }
 
         currentLoopIndex = loop - 1;
-        
+
         LogUtil.Log("StartGameLoop:", " loop:" + loop.ToString());
         LogUtil.Log("StartGameLoop:", " currentLoopIndex:" + currentLoopIndex.ToString());
 
@@ -738,7 +747,7 @@ public class AudioSystem : GameObjectBehavior {
                     }
                 }
             }
-    
+
             if (currentIntro != null) {
                 if (currentIntro.isPlaying) {
                     currentIntro.volume = 0f;
@@ -751,11 +760,11 @@ public class AudioSystem : GameObjectBehavior {
             if (currentIntro != null) {
                 currentIntro.Stop();
             }
-    
+
             if (currentLoop != null) {
                 currentLoop.Stop();
             }
-            
+
             ambienceActive = false;
         }
         else {
@@ -766,7 +775,7 @@ public class AudioSystem : GameObjectBehavior {
     // READING / WRITING
 
     const int HEADER_SIZE = 44;
-    
+
     public static bool Save(string path, AudioClip clip) {
         if (!path.ToLower().EndsWith(".wav")) {
             path += ".wav";
@@ -776,140 +785,140 @@ public class AudioSystem : GameObjectBehavior {
         //LogUtil.Log(filepath);        
         // Make sure directory exists if user is saving to sub dir.
         //Directory.CreateDirectory(Path.GetDirectoryName(filepath));
-        
-        using (var fileStream = CreateEmpty(path)) {            
-            ConvertAndWrite(fileStream, clip);            
+
+        using (var fileStream = CreateEmpty(path)) {
+            ConvertAndWrite(fileStream, clip);
             WriteHeader(fileStream, clip);
         }
-        
+
         return true; // TODO: return false if there's a failure saving the file
     }
-    
+
     public static AudioClip TrimSilence(AudioClip clip, float min) {
         var samples = new float[clip.samples];
-        
+
         clip.GetData(samples, 0);
-        
+
         return TrimSilence(new List<float>(samples), min, clip.channels, clip.frequency);
     }
-    
+
     public static AudioClip TrimSilence(List<float> samples, float min, int channels, int hz) {
         return TrimSilence(samples, min, channels, hz, false, false);
     }
-    
+
     public static AudioClip TrimSilence(List<float> samples, float min, int channels, int hz, bool _3D, bool stream) {
         int i;
-        
-        for (i=0; i<samples.Count; i++) {
+
+        for (i = 0; i < samples.Count; i++) {
             if (Mathf.Abs(samples[i]) > min) {
                 break;
             }
         }
-        
+
         samples.RemoveRange(0, i);
-        
-        for (i=samples.Count - 1; i>0; i--) {
+
+        for (i = samples.Count - 1; i > 0; i--) {
             if (Mathf.Abs(samples[i]) > min) {
                 break;
             }
         }
-        
+
         samples.RemoveRange(i, samples.Count - i);
-        
+
         var clip = AudioClip.Create("TempClip", samples.Count, channels, hz, _3D, stream);
-        
+
         clip.SetData(samples.ToArray(), 0);
-        
+
         return clip;
     }
-    
+
     static FileStream CreateEmpty(string filepath) {
         var fileStream = new FileStream(filepath, FileMode.Create);
         byte emptyByte = new byte();
-        
+
         for (int i = 0; i < HEADER_SIZE; i++) { //preparing the header
             fileStream.WriteByte(emptyByte);
         }
-        
+
         return fileStream;
     }
-    
+
     static void ConvertAndWrite(FileStream fileStream, AudioClip clip) {
-        
+
         var samples = new float[clip.samples];
-        
+
         clip.GetData(samples, 0);
-        
+
         Int16[] intData = new Int16[samples.Length];
         //converting in 2 float[] steps to Int16[], //then Int16[] to Byte[]
-        
+
         Byte[] bytesData = new Byte[samples.Length * 2];
         //bytesData array is twice the size of
         //dataSource array because a float converted in Int16 is 2 bytes.
-        
+
         int rescaleFactor = 32767; //to convert float to Int16
-        
-        for (int i = 0; i<samples.Length; i++) {
+
+        for (int i = 0; i < samples.Length; i++) {
             intData[i] = (short)(samples[i] * rescaleFactor);
             Byte[] byteArr = new Byte[2];
             byteArr = BitConverter.GetBytes(intData[i]);
             byteArr.CopyTo(bytesData, i * 2);
         }
-        
+
         fileStream.Write(bytesData, 0, bytesData.Length);
     }
-    
+
     static void WriteHeader(FileStream fileStream, AudioClip clip) {
-        
+
         var hz = clip.frequency;
         var channels = clip.channels;
         var samples = clip.samples;
-        
+
         fileStream.Seek(0, SeekOrigin.Begin);
-        
+
         Byte[] riff = System.Text.Encoding.UTF8.GetBytes("RIFF");
         fileStream.Write(riff, 0, 4);
-        
+
         Byte[] chunkSize = BitConverter.GetBytes(fileStream.Length - 8);
         fileStream.Write(chunkSize, 0, 4);
-        
+
         Byte[] wave = System.Text.Encoding.UTF8.GetBytes("WAVE");
         fileStream.Write(wave, 0, 4);
-        
+
         Byte[] fmt = System.Text.Encoding.UTF8.GetBytes("fmt ");
         fileStream.Write(fmt, 0, 4);
-        
+
         Byte[] subChunk1 = BitConverter.GetBytes(16);
         fileStream.Write(subChunk1, 0, 4);
-        
+
         //UInt16 two = 2;
         UInt16 one = 1;
-        
+
         Byte[] audioFormat = BitConverter.GetBytes(one);
         fileStream.Write(audioFormat, 0, 2);
-        
+
         Byte[] numChannels = BitConverter.GetBytes(channels);
         fileStream.Write(numChannels, 0, 2);
-        
+
         Byte[] sampleRate = BitConverter.GetBytes(hz);
         fileStream.Write(sampleRate, 0, 4);
-        
+
         Byte[] byteRate = BitConverter.GetBytes(hz * channels * 2); // sampleRate * bytesPerSample*number of channels, here 44100*2*2
         fileStream.Write(byteRate, 0, 4);
-        
+
         UInt16 blockAlign = (ushort)(channels * 2);
         fileStream.Write(BitConverter.GetBytes(blockAlign), 0, 2);
-        
+
         UInt16 bps = 16;
         Byte[] bitsPerSample = BitConverter.GetBytes(bps);
         fileStream.Write(bitsPerSample, 0, 2);
-        
+
         Byte[] datastring = System.Text.Encoding.UTF8.GetBytes("data");
         fileStream.Write(datastring, 0, 4);
-        
+
         Byte[] subChunk2 = BitConverter.GetBytes(samples * channels * 2);
         fileStream.Write(subChunk2, 0, 4);
-        
+
         //      fileStream.Close();
     }
 }
