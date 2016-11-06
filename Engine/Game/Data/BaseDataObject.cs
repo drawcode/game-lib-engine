@@ -27,6 +27,7 @@ public class BaseDataObjectKeys {
     public static string action_display_name = "action_display_name";
     public static string attributes = "attributes";
     public static string url = "url";
+    public static string title = "title";
     public static string path = "path";
     public static string content = "content";
     public static string contents = "contents";
