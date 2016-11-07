@@ -195,6 +195,76 @@ public class FileSystemUtil {
 #endif
     }
 
+
+
+    public static List<string> GetFilesLikeRecursive(
+        string dirInfoCurrent
+        ) {
+
+        string filter = "*";
+        List<string> excludeExts = new List<string>();
+        excludeExts.Add(".DS_Store");
+        excludeExts.Add(".meta");
+
+        return GetFilesLikeRecursive(dirInfoCurrent, filter, excludeExts);
+    }
+
+    public static List<string> GetFilesLikeRecursive(
+        string dirInfoCurrent,
+        string filter,
+        List<string> excludeExts) {
+
+        List<string> files = new List<string>();
+
+#if !UNITY_WEBPLAYER
+        if (Directory.Exists(dirInfoCurrent)) {
+            DirectoryInfo info = new DirectoryInfo(dirInfoCurrent);
+
+            files = GetFilesLikeRecursive(info, filter, excludeExts);
+        }
+#endif
+
+        return files;
+    }
+
+    public static List<string> GetFilesLikeRecursive(
+        DirectoryInfo dirInfoCurrent,
+        string filter,
+        List<string> excludeExts) {
+
+        List<string> files = new List<string>();
+
+        return GetFilesLikeRecursive(dirInfoCurrent, files, filter, excludeExts);
+    }
+
+    public static List<string> GetFilesLikeRecursive(
+        DirectoryInfo dirInfoCurrent,
+        List<string> files,
+        string filter,
+        List<string> excludeExts) {
+
+#if !UNITY_WEBPLAYER
+        foreach (FileInfo fileInfo in dirInfoCurrent.GetFiles()) {
+            string fileTo = fileInfo.FullName;
+            if (fileTo.Contains(filter)
+                || filter == "*") {
+                if (!CheckFileExtention(fileTo, excludeExts)) {
+                    if (!files.Contains(fileTo)) {
+                        files.Add(fileTo);
+                    }
+                }
+            }
+        }
+
+        foreach (DirectoryInfo dirInfoItem in dirInfoCurrent.GetDirectories()) {
+            files = GetFilesLikeRecursive(dirInfoItem, files, filter, excludeExts);
+
+        }
+#endif
+
+        return files;
+    }
+
     public static void MoveFile(string dataFilePath, string persistenceFilePath) {
         MoveFile(dataFilePath, persistenceFilePath, false);
     }

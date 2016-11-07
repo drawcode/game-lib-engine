@@ -846,7 +846,7 @@ public class AppContentActionEventPointInfo : AppContentActionEventInfo {
 
 
 // --------------------------------------------------------------------------------
-/*
+
 public class AppContentActionEventData {
     
     public AppActionObject appActionObject = null;
@@ -967,7 +967,7 @@ public class AppContentActionEventData {
         return false;
     }   
 }
-*/
+
 
 // --------------------------------------------------------------------------------
 public class AppContentActionEventType {
