@@ -264,5 +264,21 @@ public static class StringExtensions {
     public static bool IsNullOrEmpty(this string val) {
         return string.IsNullOrEmpty(val);
     }
+    
+    public static bool IsEqualLowercase(this string val, string valCompare) {
 
+        if (val.IsNullOrEmpty() && valCompare.IsNullOrEmpty()) {
+            return true;
+        }
+
+        if (val.IsNullOrEmpty() || valCompare.IsNullOrEmpty()) {
+            return false;
+        }
+
+        if (val.ToLower() == valCompare.ToLower()) {
+            return true;
+        }
+
+        return false;
+    }
 }

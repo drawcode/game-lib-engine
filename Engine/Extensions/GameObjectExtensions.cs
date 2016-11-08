@@ -625,5 +625,86 @@ public static class BaseGameObjectExtensions {
         GameObjectHelper.ResizePreservingAspectToScreen(
             go, desiredMaxWidth, desiredMaxHeight); 
     }
-    
+
+    // CUSTOM
+
+    public static void FadeInObject(this GameObject inst) {
+        if (inst != null) {
+            //Debug.Log("FadeInObject:" + inst.name);
+            iTween.FadeTo(inst, 1f, 1f);
+            //inst.ShowObjectDelayed(1f);
+        }
+    }
+
+    public static void FadeInObject(this GameObject inst, float time) {
+        if (inst != null) {
+            //Debug.Log("FadeInObject:" + inst.name);
+            iTween.FadeTo(inst, 1f, time);
+            //inst.ShowObjectDelayed(time);
+        }
+    }
+
+    public static void FadeOutObject(this GameObject inst) {
+        if (inst != null) {
+            //Debug.Log("FadeOutObject:" + inst.name);
+
+            iTween.FadeTo(inst, 0f, 1f);//(go, iTween.Hash("alpha", 0f, "delay", 0f, "time", 1f));
+            //inst.HideObjectDelayed(1f);
+        }
+    }
+
+    public static void FadeOutObject(this GameObject inst, bool hide) {
+        if (inst != null) {
+            //Debug.Log("FadeOutObject:" + inst.name);
+
+            iTween.FadeTo(inst, 0f, 1f);//(go, iTween.Hash("alpha", 0f, "delay", 0f, "time", 1f));
+
+            if (hide) {
+                inst.HideObjectDelayed(1f);
+            }
+        }
+    }
+
+    public static void FadeOutObject(this GameObject inst, float time) {
+        if (inst != null) {
+            //Debug.Log("FadeOutObject:" + inst.name);
+            iTween.FadeTo(inst, 0f, time);//(go, iTween.Hash("alpha", 0f, "delay", 0f, "time", 1f));
+            //inst.HideObjectDelayed(time);
+        }
+    }
+
+    public static void FadeInObject(this GameObject inst, float time, float delay, float alpha) {
+        if (inst != null) {
+            //inst.ShowObject();
+            iTween.FadeTo(inst, iTween.Hash("alpha", alpha, "time", time, "delay", delay));
+        }
+    }
+
+    public static void FadeOutObject(this GameObject inst, float time, float delay, float alpha) {
+        if (inst != null) {
+            iTween.FadeTo(inst, iTween.Hash("alpha", alpha, "time", time, "delay", delay));
+            //inst.ShowObjectDelayed(delay);
+        }
+    }
+
+    //iTween.FadeTo(go, iTween.Hash("alpha",alpha,"time",time, "delay", delay));
+
+    public static void FadeOutObjectNow(this GameObject inst) {
+        if (inst != null) {
+            //Debug.Log("FadeOutObjectNow:" + inst.name);
+            iTween.FadeTo(inst, 0f, 0f);
+            //inst.HideObjectDelayed(.1f);
+        }
+    }
+
+    public static void FadeOutObjectNow(this GameObject inst, bool hide) {
+        if (inst != null) {
+            //Debug.Log("FadeOutObjectNow:" + inst.name);
+            iTween.FadeTo(inst, 0f, 0f);
+            if (hide) {
+                inst.HideObjectDelayed(.1f);
+            }
+        }
+    }
+
 }

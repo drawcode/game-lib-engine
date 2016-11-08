@@ -36,6 +36,36 @@ public class BaseDataObjectKeys {
     public static string file = "file";
     public static string files = "files";
     public static string host = "host";
+
+    //
+    public static string right = "right";
+    public static string left = "left";
+    public static string up = "up";
+    public static string down = "down";
+    public static string forward = "forward";
+    public static string back = "back";
+    //
+    public static string contentstart = "contentstart";
+    public static string contentend = "contentend";
+    public static string contentbottom = "contentbottom";
+    public static string contenttop = "contenttop";
+    public static string contentleft = "contentleft";
+    public static string contentright = "contentright";
+    public static string contentbottomleft = "contentbottomleft";
+    public static string contentbottomright = "contentbottomright";
+    public static string contenttopleft = "contenttopleft";
+    public static string contenttopright = "contenttopright";
+    //
+    public static string containerstart = "containerstart";
+    public static string containerend = "containerend";
+    public static string containerbottom = "containerbottom";
+    public static string containertop = "containertop";
+    public static string containerleft = "containerleft";
+    public static string containerright = "containerright";
+    public static string containerbottomleft = "containerbottomleft";
+    public static string containerbottomright = "containerbottomright";
+    public static string containertopleft = "containertopleft";
+    public static string containertopright = "containertopright";
     //
     public static string empty = "empty";
     public static string random = "random";

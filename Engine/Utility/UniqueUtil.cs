@@ -47,10 +47,22 @@ public class UniqueUtil {
     public UniqueUtil() {
     }
 
+
+
     // Create a UUID4 format
     // http://www.ietf.org/rfc/rfc4122.txt
 
-    public string CreateUUID4() {
+    public static string CreateUUID4() {
+        if (Instance != null) {
+            return Instance.createUUID4();
+        }
+        return "";
+    }
+
+    // Create a UUID4 format
+    // http://www.ietf.org/rfc/rfc4122.txt
+
+    public string createUUID4() {
         return System.Guid.NewGuid().ToString();
         /*
          * private int randomSeed = 1;

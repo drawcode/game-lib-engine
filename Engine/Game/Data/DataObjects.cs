@@ -181,6 +181,43 @@ public class DataObjects<T> where T : DataObject, new() {
         string data = LoadDataFromResources(pathResources);
         LoadDataFromString(data);
     }
+    
+    public virtual bool SaveDataItemsToResources() {
+        return SaveDataItemsToResources(path);
+    }
+
+    public virtual bool SaveDataItemsToResources(string path) {
+        bool saved = false;
+        string fileData = "";
+        string pathPart = path;
+
+        path =
+            Path.Combine(
+            Application.dataPath,
+            path);
+
+        Debug.Log("SaveDataItemsToResources:path:" + path);
+
+        if (items == null) {
+            items = new List<T>();
+        }
+
+        fileData = JsonMapper.ToJson(items);
+
+        if (path.EndsWith(".json")) {
+            path = path + ".txt";
+        }
+
+        FileSystemUtil.WriteString(path, fileData);
+
+        Debug.Log("SaveDataItemsToResources:fileData:" + fileData + " " + pathKey);
+
+        saved = true;
+
+        return saved;
+    }
+
+    //
 
     public virtual void LoadDataFromPrefs() {
         string data = LoadDataFromPrefs(pathKey);
@@ -844,12 +881,30 @@ public class DataObjects<T> where T : DataObject, new() {
         return items;
     }
 
+    public int CountAll() {
+        if (items == null) {
+            GetAll();
+        }
+
+        if (items == null) {
+            return 0;
+        }
+
+        return items.Count;
+    }
+
     public virtual bool IsLoaded {
         get {
             if (items == null) {
                 return false;
             }
             return items.Count > 0 ? true : false;
+        }
+    }
+
+    public virtual bool HasData {
+        get {
+            return CountAll() > 0 ? true : false;
         }
     }
 
