@@ -16,9 +16,9 @@ using System.Text;
 #if !ZIP_USE_SHARPZIPLIB
 
 #endif
-    
+
 public static class Compress {
-        
+
     /*
     public static string ToCompressed(this string val) {
 
@@ -46,7 +46,7 @@ public static class Compress {
         return val;
     }
     */
-        
+
     /*
     public static string CompressString(string text) {
         byte[] buffer = Encoding.UTF8.GetBytes(text);
@@ -87,7 +87,7 @@ public static class Compress {
     public static string CompressString(string s) {
         return Convert.ToBase64String(Zip(s));
     }
-    
+
     public static string DecompressString(string s) {
         var bytes = Convert.FromBase64String(s);
         return Unzip(bytes);
@@ -95,17 +95,17 @@ public static class Compress {
 
     public static void CopyTo(Stream src, Stream dest) {
         byte[] bytes = new byte[4096];
-        
+
         int cnt;
 
-        if(src == null) {
+        if (src == null) {
             return;
         }
 
-        if(!src.CanRead) {
+        if (!src.CanRead) {
             return;
         }
-        
+
         while ((cnt = src.Read(bytes, 0, bytes.Length)) != 0) {
             dest.Write(bytes, 0, cnt);
         }
@@ -192,21 +192,21 @@ public static class Compress {
         return result;
     }
     */
-    
+
     public static byte[] Zip(string str) {
         var bytes = Encoding.UTF8.GetBytes(str);
-        
+
         using (var msi = new MemoryStream(bytes))
         using (var mso = new MemoryStream()) {
             using (var gs = new GZipOutputStream(mso)) {
                 //msi.CopyTo(gs);
                 CopyTo(msi, gs);
             }
-            
+
             return mso.ToArray();
         }
     }
-    
+
     public static string Unzip(byte[] bytes) {
         using (var msi = new MemoryStream(bytes))
         using (var mso = new MemoryStream()) {
@@ -214,7 +214,7 @@ public static class Compress {
                 //gs.CopyTo(mso);
                 CopyTo(gs, mso);
             }
-            
+
             return Encoding.UTF8.GetString(mso.ToArray());
         }
     }
@@ -247,7 +247,7 @@ public static class Compress {
     }
 
 #endif
-        
+
     public static bool IsStringCompressed(string data) {
 
         byte[] datas = Encoding.UTF8.GetBytes(data);
@@ -262,8 +262,8 @@ public static class Compress {
     }
 
     public static bool IsCompressed(byte[] data) {
-                
-        if (IsCompressedGZip(data) 
+
+        if (IsCompressedGZip(data)
             || IsCompressedPKZip(data)) {
             data = null;
             return true;
@@ -271,11 +271,11 @@ public static class Compress {
         data = null;
         return false;
     }
-    
+
     public static bool IsCompressedGZip(byte[] data) {
         return FileSystemUtil.CheckSignature(data, 3, "1F-8B-08");
     }
-    
+
     public static bool IsCompressedPKZip(byte[] data) {
         return FileSystemUtil.CheckSignature(data, 4, "50-4B-03-04");
     }
@@ -283,7 +283,7 @@ public static class Compress {
     public static bool IsStringCompressedGZip(string data) {
         return FileSystemUtil.CheckSignatureString(data, 3, "1F-8B-08");
     }
-        
+
     public static bool IsStringCompressedPKZip(string data) {
         return FileSystemUtil.CheckSignatureString(data, 4, "50-4B-03-04");
     }

@@ -55,42 +55,42 @@ public class CameraUtil {
 
     public static void SaveScreenshotEditor() {
 #if UNITY_EDITOR
-		CameraUtil.Instance.SaveScreenshot();
+        CameraUtil.Instance.SaveScreenshot();
 #endif
     }
 
     public void SaveScreenshot() {
 #if UNITY_EDITOR
-		string gameName = GamePacks.currentPacksGame;
-		string levelCode = GameLevels.Current.code;
+        string gameName = GamePacks.currentPacksGame;
+        string levelCode = GameLevels.Current.code;
 
-		if(levelCode == "default"
-			|| string.IsNullOrEmpty(levelCode)
-			|| Context.Current.ApplicationLoadedLevelName().IndexOf("UIScene") > -1) {
-			levelCode = Context.Current.ApplicationLoadedLevelName();
-		}
+        if (levelCode == "default"
+            || string.IsNullOrEmpty(levelCode)
+            || Context.Current.ApplicationLoadedLevelName().IndexOf("UIScene") > -1) {
+            levelCode = Context.Current.ApplicationLoadedLevelName();
+        }
 
-		string fileName = gameName + "-screen-" + levelCode + "-";
-		int screenWidth = (int)Screen.width;
-		int screenHeight = (int)Screen.height;
+        string fileName = gameName + "-screen-" + levelCode + "-";
+        int screenWidth = (int)Screen.width;
+        int screenHeight = (int)Screen.height;
 
         int number = GetFilenameState(fileName);
         string name = screenWidth.ToString() + "-" + screenHeight.ToString() + "-" + number.ToString();
 
-		string path = "../screenshots";
-		if(!System.IO.Directory.Exists(path)) {
-			System.IO.Directory.CreateDirectory(path);
-		}
+        string path = "../screenshots";
+        if (!System.IO.Directory.Exists(path)) {
+            System.IO.Directory.CreateDirectory(path);
+        }
 
-		string savePath = path + "/" + fileName + name + ".png";
+        string savePath = path + "/" + fileName + name + ".png";
 
-		SetFilenameState(fileName + name, number);
+        SetFilenameState(fileName + name, number);
 
         while (System.IO.File.Exists(savePath)) {
             number++;
             name = "" + number;
-			savePath = path + "/" + fileName + name + ".png";
-			SetFilenameState(fileName + name, number);
+            savePath = path + "/" + fileName + name + ".png";
+            SetFilenameState(fileName + name, number);
         }
 
         Application.CaptureScreenshot(savePath);

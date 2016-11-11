@@ -127,7 +127,7 @@ public class BaseGameLevels<T> : DataObjects<T> where T : DataObject, new() {
             obj.sort_order_type = typeSortIndex;
             obj.status = "";
             obj.type = "default";
-            obj.uuid = UniqueUtil.Instance.CreateUUID4();
+            obj.uuid = UniqueUtil.CreateUUID4();
             GameLevels.Instance.items.Add(obj);
         }
     }

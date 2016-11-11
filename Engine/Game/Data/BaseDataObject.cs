@@ -36,6 +36,8 @@ public class BaseDataObjectKeys {
     public static string file = "file";
     public static string files = "files";
     public static string host = "host";
+    public static string ui = "ui";
+    public static string video = "video";
 
     //
     public static string right = "right";
@@ -81,6 +83,7 @@ public class BaseDataObjectKeys {
     public static string data_object = "data_object";
     public static string data_items = "data_items";
     public static string data_game_objects = "data_game_objects";
+    public static string data_dict = "data_dict";
     //
     public static string level_num_suffix_list = "level_num_suffix_list";
     public static string world_num_list = "world_num_list";
@@ -332,10 +335,13 @@ public class BaseDataObjectKeys {
     public static string grid_data = "grid_data";
     public static string rotation_data = "rotation_data";
     public static string scale_data = "scale_data";
+    public static string volume = "volume";
+    public static string loop = "loop";
+    public static string go = "go";
     //delay
     //
     // RPG
-    
+
     public static string rpg = "rpg";
     public static string rpgs = "rpgs";
     public static string reward = "reward";

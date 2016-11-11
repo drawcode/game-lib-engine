@@ -39,7 +39,7 @@ public class Profile : DataObject {
             //}
 
             return Get<string>(BaseDataObjectKeys.uuid, 
-                               UniqueUtil.Instance.CreateUUID4());
+                               UniqueUtil.CreateUUID4());
         }
         
         set {

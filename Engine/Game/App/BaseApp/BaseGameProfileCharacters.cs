@@ -508,7 +508,7 @@ public class BaseGameProfileCharacter : Profile {
             item.characterCode = characterCode;
             item.characterDisplayName = characterNameTemp;
             item.characterDisplayCode = "";
-            item.code = UniqueUtil.Instance.CreateUUID4(); // allows multiple of same type
+            item.code = UniqueUtil.CreateUUID4(); // allows multiple of same type
             SetCharacter(item.code, item);
         }
     }

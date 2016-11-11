@@ -24,7 +24,8 @@ public class AudioActionObject {
     public bool startPlaying;
     public float panLevel;
     public float minDistance;
-    
+    public float spatialBlend;
+
     public AudioActionObject() {
         Reset();
     }
@@ -40,7 +41,20 @@ public class AudioActionObject {
         startPlaying = true;
         panLevel = 0.0f;
         minDistance = 5.0f;
+        spatialBlend = 0.9f;
     }
+}
+
+public class AudioClipData {
+    public string filename = "";
+    public Transform parentTransform;
+    public bool loop = false;
+    public int increment = 1;
+    public float volume = 1.0f;
+    public float delay = 0.0f;
+    public AudioClip clip;
+    public bool is2dSound = true;
+    public float spatialBlend = 0.9f;
 }
 
 public class AudioSystem : GameObjectBehavior {
@@ -204,14 +218,35 @@ public class AudioSystem : GameObjectBehavior {
         return musicSoundVolume;
     }
 
+    public void PlayEffect(
+        string name, float volume = 1f, bool loop = false, float delay = 0f,
+        Transform parentTransform = null, float spatialBlend = 0.9f) {
+            StartCoroutine(PlayEffectCo(name, volume, loop, delay, parentTransform, spatialBlend));
+    }
+
+    IEnumerator PlayEffectCo(
+        string name, float volume, bool loop = false, float delay = 0f,
+        Transform parentTransform = null, float spatialBlend = 0.9f) {
+
+        yield return new WaitForSeconds(delay);
+        // TODO, lookup filename from sound list... 
+        if (!loop) {
+            soundIncrement++;
+        }
+        else {
+            soundIncrement = 0;
+        }
+        PlayFileFromResources(parentTransform, audioRootPath + name, loop, soundIncrement, volume, spatialBlend);
+    }
+
     public GameObject PlayEffectObject(Transform parentTransform, string name, bool loop, float volume) {
         return PlayFileFromResourcesObject(parentTransform,
                               audioRootPath + name, loop, soundIncrement, volume);
     }
 
-    public void PlayEffect(string name) {
-        PlayEffect(name, 1f);
-    }
+    //public void PlayEffect(string name) {
+    //    PlayEffect(name, 1f);
+    //}
 
     public void PlayEffect(Transform parentTransform, string name, bool loop, float volume) {
         PlayFileFromResources(parentTransform,
@@ -223,19 +258,68 @@ public class AudioSystem : GameObjectBehavior {
             audioRootPath + name, false, soundIncrement, volume);
     }
 
-    public void PlayEffect(string name, float volume) {
+    //public void PlayEffect(string name, float volume) {
+    //
+    //    PlayEffect(name, volume, false);
+    //}
 
-        PlayEffect(name, volume, false);
+    //public void PlayEffect(string name, float volume, bool loop) {
+//
+    //    // TODO, lookup filename from sound list...
+    //    soundIncrement++;
+    //    PlayFileFromResources(
+    //        audioRootPath + name, loop, soundIncrement, volume);
+    //}
+
+    //public void PlayEffectPath(
+    //    string filename, Transform parentTransform, bool loop, float volume, bool is2dSound) {
+    //    soundIncrement++;
+    //    PlayFileFromPath(
+    //        filename, parentTransform, loop, soundIncrement, volume, 0f, is2dSound);
+    //}
+
+    public void PlayEffectPathDelayed(
+        string filename, Transform parentTransform, bool loop, float volume, float delay, bool is2dSound) {
+        StartCoroutine(PlayEffectPathDelayedCo(
+            filename, parentTransform, loop, volume, delay, is2dSound));
     }
 
-    public void PlayEffect(string name, float volume, bool loop) {
-
-        // TODO, lookup filename from sound list...
+    public IEnumerator PlayEffectPathDelayedCo(
+        string filename, Transform parentTransform, bool loop, float volume, float delay, bool is2dSound) {
+        yield return new WaitForSeconds(delay);
         soundIncrement++;
-        PlayFileFromResources(
-            audioRootPath + name, loop, soundIncrement, volume);
+        PlayFileFromPath(filename, parentTransform, loop, soundIncrement, volume, delay, is2dSound);
     }
 
+    public void PlayEffectPathDelayed(
+        string filename, Transform parentTransform, bool loop, float volume, float delay, bool is2dSound, bool incrementing) {
+        StartCoroutine(PlayEffectPathDelayedCo(
+            filename, parentTransform, loop, volume, delay, is2dSound, incrementing));
+    }
+
+    public IEnumerator PlayEffectPathDelayedCo(
+        string filename, Transform parentTransform, bool loop, float volume, float delay, bool is2dSound, bool incrementing) {
+        yield return new WaitForSeconds(delay);
+        if (incrementing) {
+            soundIncrement++;
+        }
+        else {
+            soundIncrement = 0;
+        }
+        PlayFileFromPath(filename, parentTransform, loop, soundIncrement, volume, delay, is2dSound);
+    }
+    
+    public void PlayEffectPath(
+        string filename, Transform parentTransform, bool loop, float volume, bool is2dSound) {
+        soundIncrement++;
+        PlayFileFromPath(
+            filename, parentTransform, loop, soundIncrement, volume, 0f, is2dSound);
+    }
+    
+    public void PlayEffectPath(string filename, bool loop) {
+        PlayFileFromPath(filename, loop);
+    }
+    
     public void PlayEffectIncrement(AudioClip clip, float volume, int increment) {
         PlayAudioClip(clip, false, increment, volume);
     }
@@ -359,14 +443,14 @@ public class AudioSystem : GameObjectBehavior {
         return PlayFileFromResources(file, loop, 0, 1f);
     }
 
-    public GameObject PlayFileFromResources(Transform parentTransform, string file, bool loop, int increment, float volume) { // file name without extension
-        return PlayFileFromResourcesObject(parentTransform, file, loop, increment, volume);
+    public GameObject PlayFileFromResources(Transform parentTransform, string file, bool loop, int increment, float volume, float spatialBlend = 0.9f) { // file name without extension
+        return PlayFileFromResourcesObject(parentTransform, file, loop, increment, volume, spatialBlend);
     }
 
-    public GameObject PlayFileFromResourcesObject(Transform parentTransform, string file, bool loop, int increment, float volume) { // file name without extension
+    public GameObject PlayFileFromResourcesObject(Transform parentTransform, string file, bool loop, int increment, float volume, float spatialBlend = 0.9f) { // file name without extension
         AudioClip clip = LoadAudioClip(file);
 
-        return PlayAudioClip(parentTransform.position, parentTransform, clip, loop, increment, volume);
+        return PlayAudioClip(parentTransform.position, parentTransform, clip, loop, increment, volume, spatialBlend);
     }
 
     public GameObject PlayFileFromResources(string file, bool loop, int increment, float volume) { // file name without extension
@@ -386,7 +470,58 @@ public class AudioSystem : GameObjectBehavior {
         return PlayAudioClip(obj);
     }
 
-    public GameObject PlayAudioClip(Vector3 pos, Transform parent, AudioClip clip, bool loop, int increment, float volume) {
+
+
+    public void PlayFileFromPath(string file, bool loop) {
+        float profileVolume = (float)GameProfiles.Current.GetAudioEffectsVolume();
+        PlayFileFromPath(file, FindOrCreateDisposableSoundContainer().transform, loop, soundIncrement++, profileVolume, 0f, true);
+    }
+
+    public void PlayFileFromPath(string filename, Transform parentTransform, bool loop, int increment, float volume, float delay, bool is2dSound) {
+
+        AudioClipData data = new AudioClipData();
+        data.filename = filename;
+        data.parentTransform = parentTransform;
+        data.loop = loop;
+        data.increment = increment;
+        data.volume = volume;
+        data.delay = delay;
+        data.is2dSound = is2dSound;
+        data.clip = null;
+
+        var onSuccess = new Action<AudioClipData>(obj => {
+            PlayFileFromPathLoad(obj);
+        });
+
+        var onFailure = new Action<string>(error => LogUtil.Log(error));
+        CoroutineUtil.Start(LoadClipFromPath(data, onFailure, onSuccess));
+    }
+
+    public void PlayFileFromPathLoad(AudioClipData data) {
+        if (data.clip != null) {
+            string fileCode = Path.GetFileName(data.filename);
+            string fileVersion = fileCode + "-" + data.increment.ToString();
+            GameObject goClip = GameObject.Find(fileVersion);
+            if (goClip != null && data.increment == 0) {
+            }
+            else {
+                goClip = new GameObject(fileVersion);
+                goClip.AddComponent<AudioSource>();
+            }
+            goClip.transform.parent = data.parentTransform;
+            goClip.transform.position = Camera.main.transform.position;
+            goClip.GetComponent<AudioSource>().clip = data.clip;
+            goClip.GetComponent<AudioSource>().loop = data.loop;
+            goClip.GetComponent<AudioSource>().volume = data.volume;
+            goClip.GetComponent<AudioSource>().playOnAwake = false;
+            if (!data.loop) {
+                goClip.AddComponent<AudioDestroy>();
+            }
+            goClip.GetComponent<AudioSource>().Play();
+        }
+    }
+
+    public GameObject PlayAudioClip(Vector3 pos, Transform parent, AudioClip clip, bool loop, int increment, float volume, float spatialBlend = 0.9f) {
 
         if (clip == null) {
             return null;
@@ -399,6 +534,7 @@ public class AudioSystem : GameObjectBehavior {
         obj.volume = volume;
         obj.pos = pos;
         obj.parent = parent;
+        obj.spatialBlend = spatialBlend;
 
         return PlayAudioClip(obj);
     }
@@ -620,6 +756,54 @@ public class AudioSystem : GameObjectBehavior {
         audioSetItems.Set(path, audioSetItem);
 
         return audioSetItem;
+    }
+
+    public AudioClip LoadClipFromResources(string fileName) {
+        AudioClip clip = Resources.Load(fileName) as AudioClip;
+        return clip;
+    }
+
+    /*
+	public void Play(string filename, float volume) {
+		var onSuccess = new Action<AudioClip>( clip =>
+		{
+			AudioSystem.Instance.PlayEffect(clip, volume);
+			//AudioSystem.Instance.PlayEffectIncrement(clip, volume);
+		});
+		
+		var onFailure = new Action<string>( error => LogUtil.Log( error ) );
+		//,(float)GameProfiles.Current.GetAudioEffectsVolume()*.7f)
+		LoadClipFromPath(filename, onFailure, onSuccess);
+	}
+	*/
+
+    public IEnumerator LoadClipFromPath(AudioClipData data, Action<string> onFailure, Action<AudioClipData> onSuccess) {
+
+        if (data.clip == null) {
+
+            var file = "file://" + data.filename;
+            var www = new WWW(file);
+            yield return www;
+
+            if (www.error != null) {
+                //if( onFailure != null ) {
+                //	onFailure( www.error );
+                //}
+            }
+
+            if (www.audioClip) {
+                data.clip = www.GetAudioClip(!data.is2dSound);
+            }
+
+            www.Dispose();
+            GC.Collect();
+        }
+
+        if (data.clip != null) {
+            if (onSuccess != null) {
+                onSuccess(data);
+            }
+        }
     }
 
     /*

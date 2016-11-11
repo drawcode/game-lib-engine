@@ -6,7 +6,7 @@ using System.Text;
 using UnityEngine;
 
 public class FileSystemUtil {
-    
+
     public static void CreateDirectoryIfNeededAndAllowed(string path) {
 #if !UNITY_WEBPLAYER
         if (!Directory.Exists(path)) {
@@ -17,7 +17,7 @@ public class FileSystemUtil {
         }
 #endif
     }
-    
+
     public static bool DirectoryAllowed(string path) {
         bool allowCreate = true;
 
@@ -29,15 +29,15 @@ public class FileSystemUtil {
 #endif
         return allowCreate;
     }
-        
+
     public static void DirectoryCopy(string sourceDirName, string destDirName, bool copySubDirs, bool versioned) {
 
 #if !UNITY_WEBPLAYER
         FileSystemUtil.EnsureDirectory(sourceDirName, false);
         FileSystemUtil.EnsureDirectory(destDirName, false);
-        
+
         CreateDirectoryIfNeededAndAllowed(sourceDirName);
-                
+
         DirectoryInfo dir = new DirectoryInfo(sourceDirName);
         DirectoryInfo[] dirs = dir.GetDirectories();
 
@@ -48,26 +48,26 @@ public class FileSystemUtil {
         }
 
         CreateDirectoryIfNeededAndAllowed(destDirName);
-        
+
         FileInfo[] files = dir.GetFiles();
-                
+
         LogUtil.Log("Directory Files: directory: " + destDirName);
         LogUtil.Log("files.Count:", files.Count());
-        
+
         //int curr = 0;
-        
+
         foreach (FileInfo file in files) {
             if (file.Extension != ".meta"
                 && file.Extension != ".DS_Store") {
-                
+
                 string temppath = PathUtil.Combine(destDirName, file.Name);
-                
-                
+
+
                 if (!CheckFileExists(temppath) || Application.isEditor) {
-                    
+
                     LogUtil.Log("copying ship file: " + file.FullName);
                     LogUtil.Log("copying ship file to cache: " + temppath);
-                    
+
                     file.CopyTo(temppath, true);
                     ////SystemHelper.SetNoBackupFlag(temppath);
                 }
@@ -75,7 +75,7 @@ public class FileSystemUtil {
         }
 
         if (copySubDirs) {
-            
+
             foreach (DirectoryInfo subdir in dirs) {
                 string temppath = PathUtil.Combine(destDirName, subdir.Name);
                 LogUtil.Log("Copying Directory: " + temppath);
@@ -84,15 +84,15 @@ public class FileSystemUtil {
         }
 #endif      
     }
-    
+
     public static void EnsureDirectory(string filePath) {
         EnsureDirectory(filePath, true);
     }
-    
+
     public static void EnsureDirectory(string filePath, bool filterFileName) {
-        
+
         //LogUtil.Log("filePath:" + filePath);
-        
+
         string directory = filePath;
         if (filePath.IndexOf('.') > -1 && filterFileName) {
             directory = filePath.Replace(Path.GetFileName(filePath), "");
@@ -102,11 +102,11 @@ public class FileSystemUtil {
     }
 
     public static bool CheckFileExists(string path) {
-        
+
         bool exists = false;
-        
-        
-#if UNITY_ANDROID   
+
+
+#if UNITY_ANDROID
         if(!exists && path.Contains(Application.streamingAssetsPath)) {
             // android stores streamingassets in a compressed file, 
             // must use WWW to check if you can access it
@@ -138,11 +138,11 @@ public class FileSystemUtil {
         }
 #else
         exists = File.Exists(path);
-#endif  
-        
+#endif
+
         return exists;
     }
-    
+
     public static void CopyFile(string dataFilePath, string persistenceFilePath) {
         CopyFile(dataFilePath, persistenceFilePath, false);
     }
@@ -155,8 +155,8 @@ public class FileSystemUtil {
         LogUtil.Log("dataFilePath: " + dataFilePath);
         LogUtil.Log("persistenceFilePath: " + persistenceFilePath);
         if (CheckFileExists(dataFilePath) && (!CheckFileExists(persistenceFilePath) || force)) {
-            
-#if UNITY_ANDROID       
+
+#if UNITY_ANDROID
             if(dataFilePath.Contains(Application.streamingAssetsPath)) {
                 // android stores streamingassets in a compressed file, 
                 // must use WWW to copy contents if you can access it
@@ -341,8 +341,8 @@ public class FileSystemUtil {
     }
 
     public static byte[] ReadStream(string fileName) {
-#if !UNITY_WEBPLAYER    
-        
+#if !UNITY_WEBPLAYER
+
         byte[] buffer = null;
         if (CheckFileExists(fileName)) {
             FileStream fs = new FileStream(fileName, FileMode.OpenOrCreate, FileAccess.Read);
@@ -399,11 +399,11 @@ public class FileSystemUtil {
         StreamWriter sw = new StreamWriter(fileName, append);
         sw.Write(data);
         sw.Flush();
-        sw.Close();     
+        sw.Close();
         ////SystemHelper.SetNoBackupFlag(fileName);
 #endif
     }
-    
+
     public static void RemoveFile(string file) {
         if (CheckFileExists(file)) {
 #if UNITY_WEBPLAYER
@@ -416,7 +416,7 @@ public class FileSystemUtil {
     }
 
     public static void RemoveFilesLikeRecursive(DirectoryInfo dirInfo, string fileKey) {
-        
+
 #if !UNITY_WEBPLAYER
         foreach (FileInfo fileInfo in dirInfo.GetFiles()) {
             if (fileInfo.FullName.Contains(fileKey)) {
@@ -436,7 +436,7 @@ public class FileSystemUtil {
         DirectoryInfo dirInfoTo,
         string filter,
         List<string> excludeExts) {
-        
+
 #if !UNITY_WEBPLAYER
         foreach (FileInfo fileInfo in dirInfoCurrent.GetFiles()) {
             if (fileInfo.FullName.Contains(filter)) {
@@ -506,7 +506,7 @@ public class FileSystemUtil {
         DirectoryInfo dirInfoCurrent,
         string filterLike,
         string filterNotLike) {
-        
+
 #if !UNITY_WEBPLAYER
         foreach (DirectoryInfo dirInfoItem in dirInfoCurrent.GetDirectories()) {
             RemoveDirectoriesLikeRecursive(dirInfoItem, filterLike, filterNotLike);
@@ -518,9 +518,9 @@ public class FileSystemUtil {
         }
 #endif
     }
-    
+
     public static bool CheckSignatureFile(string filepath, int signatureSize, string expectedSignature) {
-        
+
 #if !UNITY_WEBPLAYER
         if (String.IsNullOrEmpty(filepath))
             throw new ArgumentException("Must specify a filepath");
@@ -548,9 +548,9 @@ public class FileSystemUtil {
         
 #endif
     }
-    
+
     public static bool CheckSignatureString(string data, int signatureSize, string expectedSignature) {
-        
+
 #if !UNITY_WEBPLAYER
         byte[] datas = Encoding.ASCII.GetBytes(data);
         return CheckSignature(datas, signatureSize, expectedSignature);
@@ -560,10 +560,10 @@ public class FileSystemUtil {
 #endif
     }
 
-    
+
     public static bool CheckSignature(byte[] datas, int signatureSize, string expectedSignature) {
-        
-        #if !UNITY_WEBPLAYER
+
+#if !UNITY_WEBPLAYER
         using (MemoryStream ms = new MemoryStream(datas)) {
             if (ms.Length < signatureSize)
                 return false;
@@ -581,9 +581,9 @@ public class FileSystemUtil {
             else
                 return false;
         }
-        #else 
+#else
         return false;
         
-        #endif
+#endif
     }
 }

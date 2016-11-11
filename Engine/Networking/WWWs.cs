@@ -101,7 +101,7 @@ public class WWWs : GameObjectBehavior {
         }
         
         public void Reset() {
-            uuid = UniqueUtil.Instance.CreateUUID4();
+            uuid = UniqueUtil.CreateUUID4();
             url = "";
             code = "profile";
             channel = "default";

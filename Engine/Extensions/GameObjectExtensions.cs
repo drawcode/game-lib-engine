@@ -316,7 +316,21 @@ public static class BaseGameObjectExtensions {
 
         GameObjectHelper.PlayAnimation(inst, name, speed);
     }
-    
+
+    public static void PlayAnimationBlend(this GameObject inst, string name, float speed = 1f, float targetWeight = .9f, float fadeLength = .5f) {
+        if (inst == null)
+            return;
+
+        GameObjectHelper.PlayAnimationBlend(inst, name, speed, targetWeight, fadeLength);
+    }
+
+    public static void PlayAnimationCrossFade(this GameObject inst, string name, float speed = 1f, float fadeLength = .5f) {
+        if (inst == null)
+            return;
+
+        GameObjectHelper.PlayAnimationCrossFade(inst, name, speed, fadeLength);
+    }
+
     public static void StepAnimationFrame(
         this GameObject inst, string name, float time, 
         bool normalizedTime = true, bool stopPlaying = true) {
@@ -370,7 +384,21 @@ public static class BaseGameObjectExtensions {
 
         GameObjectHelper.HideRenderers(inst);
     }
-    
+
+    public static void ShowChildren(this GameObject inst) {
+        if (inst == null)
+            return;
+
+        GameObjectHelper.ShowChildren(inst);
+    }
+
+    public static void ShowChildren(this GameObject inst, bool applyGameObjectInactive) {
+        if (inst == null)
+            return;
+
+        GameObjectHelper.ShowChildren(inst, applyGameObjectInactive);
+    }
+
     public static void HideChildren(this GameObject inst) {
         if (inst == null)
             return;
@@ -577,6 +605,10 @@ public static class BaseGameObjectExtensions {
     
     public static void SetMaterialColor(this GameObject go, string name, Color color) {
         GameObjectHelper.SetMaterialColor(go, name, color);    
+    }
+
+    public static void SetMaterialColorStandard(this GameObject go, string name, Color color, bool all = true) {
+        GameObjectHelper.SetMaterialColorStandard(go, name, color, all);
     }
 
     public static GameObject CreateGameObject(

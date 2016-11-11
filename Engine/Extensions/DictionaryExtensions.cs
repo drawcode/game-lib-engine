@@ -110,8 +110,8 @@ public static class DictionaryExtensions {
     public static TVal Get<TKey, TVal>(this Dictionary<TKey, TVal> dict, TKey code) {
         return dict.Get<TKey, TVal>(code, default(TVal));
     }
-    
-    public static TVal Get<TKey, TVal>(this Dictionary<TKey, TVal> dict, TKey code, TVal defaultValue) {  
+
+    public static TVal Get<TKey, TVal>(this Dictionary<TKey, TVal> dict, TKey code, TVal defaultValue) {
         if (dict == null) {
             return default(TVal);
         }
@@ -131,7 +131,7 @@ public static class DictionaryExtensions {
     public static void Set<T>(this Dictionary<string, T> dict, string code, T val) {
         dict.Set<string, T>(code, val);
     }
-    
+
     public static void Set(this Dictionary<string, object> dict, string code, object val) {
         dict.Set<string, object>(code, val);
     }
@@ -140,7 +140,7 @@ public static class DictionaryExtensions {
         if (dict == null) {
             return;
         }
-        
+
         if (dict.ContainsKey(code)) {
             dict[code] = val;
         }
@@ -161,11 +161,113 @@ public static class DictionaryExtensions {
         if (dict == null) {
             return false;
         }
-        
+
         if (dict.ContainsKey(code)) {
             return true;
         }
 
         return false;
+    }
+
+    public static List<Dictionary<string, object>> RemoveAllKeyStartsWith(
+        this List<Dictionary<string, object>> dicts, string keyStartsWith) {
+
+        if (dicts != null) {
+            foreach (Dictionary<string, object> dict in dicts) {
+
+                List<string> toRemove = new List<string>();
+
+                foreach (KeyValuePair<string, object> pair in dict) {
+                    if (pair.Key.StartsWith(keyStartsWith)) {
+                        toRemove.Add(pair.Key);
+                    }
+                }
+
+                foreach (string key in toRemove) {
+                    dict.Remove(key);
+                }
+            }
+        }
+
+        return dicts;
+    }
+
+    /*
+    public static IList<IDictionary<string, TValue>> RemoveAllKeyStartsWith<TValue>(
+        this IList<IDictionary<string, TValue>> dicts, string keyStartsWith) {
+
+        if (dicts != null) {
+            foreach (IDictionary<string, TValue> dict in dicts) {
+
+                List<string> toRemove = new List<string>();
+
+                foreach (KeyValuePair<string, TValue> pair in dict) {
+                    if (pair.Key.StartsWith(keyStartsWith)) {
+                        toRemove.Add(pair.Key);
+                    }
+                }
+
+                foreach (string key in toRemove) {
+                    dict.Remove(key);
+                }
+            }
+        }
+
+        return dicts;
+    }
+     * */
+     
+    public static IDictionary<string, TValue> RemoveAllKeyStartsWith<TValue>(
+        this IDictionary<string, TValue> dict, string keyStartsWith) {
+        if (dict != null) {
+
+            List<string> toRemove = new List<string>();
+
+            foreach (KeyValuePair<string, TValue> pair in dict) {
+                if (pair.Key.StartsWith(keyStartsWith)) {
+                    toRemove.Add(pair.Key);
+                }
+            }
+
+            foreach (string key in toRemove) {
+                dict.Remove(key);
+            }
+        }
+
+        return dict;
+    }
+
+    public static IDictionary<string, TValue> RemoveAllKeyContains<TValue>(
+        this IDictionary<string, TValue> dict, string keyContains) {
+        if (dict != null) {
+
+            List<string> toRemove = new List<string>();
+
+            foreach (KeyValuePair<string, TValue> pair in dict) {
+                if (pair.Key.Contains(keyContains)) {
+                    toRemove.Add(pair.Key);
+                }
+            }
+
+            foreach (string key in toRemove) {
+                dict.Remove(key);
+            }
+        }
+
+        return dict;
+    }
+
+    public static Dictionary<TKey, TValue> CloneDictionaryWithValues<TKey, TValue>(
+        this Dictionary<TKey, TValue> original) {
+
+        Dictionary<TKey, TValue> ret =
+            new Dictionary<TKey, TValue>(
+                original.Count, original.Comparer);
+
+        foreach (KeyValuePair<TKey, TValue> entry in original) {
+            ret.Add(entry.Key, entry.Value);
+        }
+
+        return ret;
     }
 }

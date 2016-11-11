@@ -6,6 +6,23 @@ using System.Linq;
 
 public class FormatUtil {
 
+    public static float GetMillisecondsFromTime(string time) {
+        //string[] timeformats = { @"m\:ss", @"mm\:ss", @"h\:mm\:ss" };
+        //return TimeSpan.ParseExact(time, timeformats, CultureInfo.InvariantCulture);
+
+
+        try {
+            TimeSpan duration = TimeSpan.Parse(time);
+            return (float)(duration.TotalMilliseconds / 1000);
+
+        }
+        catch (Exception e) {
+            LogUtil.Log("GetMillisecondsFromTime:" + e);
+        }
+
+        return 0;
+    }
+
     public static string GetFormattedTime(double seconds, string format) {
         TimeSpan t = TimeSpan.FromSeconds(seconds);
 
@@ -103,12 +120,12 @@ public class FormatUtil {
     }
 
     // BASE 64
-        
+
     public static bool IsStringBase64(string base64String) {
         if (base64String.Replace(" ", "").Length % 4 != 0) {
             return false;
         }
-        
+
         try {
             Convert.FromBase64String(base64String);
             return true;
@@ -120,12 +137,12 @@ public class FormatUtil {
         }
         return false;
     }
-    
+
     public static string StringToBase64(string plainText) {
         if (string.IsNullOrEmpty(plainText)) {
             return plainText;
         }
-        
+
         var plainTextBytes = System.Text.Encoding.UTF8.GetBytes(plainText);
         return System.Convert.ToBase64String(plainTextBytes);
     }
@@ -143,24 +160,24 @@ public class FormatUtil {
         if (string.IsNullOrEmpty(base64String) || !IsStringBase64(base64String)) {
             return System.Text.Encoding.UTF8.GetBytes(base64String);
         }
-        
+
         var base64EncodedBytes = System.Convert.FromBase64String(base64String);
         return base64EncodedBytes;
     }
 
     //
 
-        
+
     public static string GetCharactersLimited(string text, int length) {
         // If text in shorter or equal to length, just return it
         if (text.Length <= length) {
             return text;
         }
-        
+
         // Text is longer, so try to find out where to cut
         char[] delimiters = new char[] { ' ', '.', ',', ':', ';' };
         int index = text.LastIndexOfAny(delimiters, length - 3);
-        
+
         if (index > (length / 2)) {
             return text.Substring(0, index) + "...";
         }
@@ -168,22 +185,22 @@ public class FormatUtil {
             return text.Substring(0, length - 3) + "...";
         }
     }
-    
+
     public static string ConvertToBase36(string val) {
         var result = val.Sum(x => x);
         return ConvertToBase(result, 36);
     }
-    
+
     public static string ConvertToBase(int num, int nbase) {
         string chars = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-        
+
         // check if we can convert to another base
         if (nbase < 2 || nbase > chars.Length)
             return "";
-        
+
         int r;
         string newNumber = "";
-        
+
         // in r we have the offset of the char that was converted to the new base
         while (num >= nbase) {
             r = num % nbase;
@@ -192,7 +209,7 @@ public class FormatUtil {
         }
         // the last number to convert
         newNumber = chars[num] + newNumber;
-        
+
         return newNumber;
     }
 }

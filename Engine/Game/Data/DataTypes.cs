@@ -47,6 +47,44 @@ using Engine.Events;
 using Engine.Utility;
 using UnityEngine;
 
+public class GamePlayerProgressPointData : DataObject {
+    public bool collected = false;
+    public string uuid = "";
+    public double points = 1.0;
+}
+
+public class GamePlayerProgressPointDatas : DataObject {
+
+    public Dictionary<string, GamePlayerProgressPointData> pointItems;
+
+    public GamePlayerProgressPointData GetGamePlayerProgressData(string key) {
+        if (pointItems == null) {
+            pointItems = new Dictionary<string, GamePlayerProgressPointData>();
+        }
+        if (pointItems != null) {
+            if (pointItems.ContainsKey(key)) {
+                return pointItems[key];
+            }
+        }
+        return new GamePlayerProgressPointData();
+    }
+
+    public void SetGamePlayerProgressData(string key, GamePlayerProgressPointData pointItem) {
+        if (pointItems == null) {
+            pointItems = new Dictionary<string, GamePlayerProgressPointData>();
+        }
+        if (pointItems != null
+           && !string.IsNullOrEmpty(key)) {
+            if (pointItems.ContainsKey(key)) {
+                pointItems[key] = pointItem;
+            }
+            else {
+                pointItems.Add(key, pointItem);
+            }
+        }
+    }
+}
+
 public class VehicleStatsData {
     public bool GotHoleShot = false;
     public bool PrematureStart = false;

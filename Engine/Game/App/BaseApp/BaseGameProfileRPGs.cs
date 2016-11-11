@@ -11,7 +11,6 @@ using Engine.Utility;
 
 public class BaseGameProfileRPGAttributes {
  
-    // RPG   
     public static string ATT_PROGRESS_CURRENCY = "progress-currency";
     public static string ATT_PROGRESS_XP = "progress-xp";
     public static string ATT_PROGRESS_HEALTH = "progress-health";
@@ -19,6 +18,9 @@ public class BaseGameProfileRPGAttributes {
     public static string ATT_PROGRESS_LEVEL = "progress-level";
     public static string ATT_PROGRESS_UPGRADES_APPLIED = "progress-upgrades-applied";
     public static string ATT_PROGRESS_UPGRADES = "progress-upgrades";
+    public static string ATT_PROGRESS_POINTS = "progress-points";
+    public static string ATT_PROGRESS_STARS = "progress-stars";
+    public static string ATT_PROGRESS_COINS = "progress-coins";
 }
 
 public class BaseGameProfileRPGs {
@@ -1382,8 +1384,99 @@ public class BaseGameProfileRPG : Profile {
     public void SetGamePlayerProgressEnergy(double attValue) {
         SetAttributeDoubleValue(BaseGameProfileRPGAttributes.ATT_PROGRESS_ENERGY, attValue);
     }
- 
- 
+    
+    // -------------
+    // POINTS
+
+    // point-uuids
+
+    public virtual void SetGamePlayerProgressPointData(string uuid, double points) {
+        GamePlayerProgressPointDatas datas = GetGamePlayerProgressPointDatas();
+
+        GamePlayerProgressPointData data = datas.GetGamePlayerProgressData(uuid);
+        if (data != null) {
+            data.collected = true;
+            data.uuid = uuid;
+            data.points = points;
+        }
+        else {
+            data = new GamePlayerProgressPointData();
+            data.collected = true;
+            data.uuid = uuid;
+            data.points = points;
+        }
+        datas.SetGamePlayerProgressData(uuid, data);
+        SetGamePlayerProgressPointDatas(datas);
+    }
+
+    public virtual GamePlayerProgressPointData GetGamePlayerProgressPointData(string uuid) {
+        GamePlayerProgressPointDatas datas = GetGamePlayerProgressPointDatas();
+        GamePlayerProgressPointData data = datas.GetGamePlayerProgressData(uuid);
+        return data;
+    }
+
+    public double GetGamePlayerProgressPointDataTotal() {
+        GamePlayerProgressPointDatas datas = GetGamePlayerProgressPointDatas();
+        double totalPoints = 0.0;
+        if (datas.pointItems != null) {
+            foreach (GamePlayerProgressPointData data in datas.pointItems.Values) {
+                totalPoints += data.points;
+            }
+        }
+        return totalPoints;
+    }
+
+    public void SyncGamePlayerProgressPointDataStats() {
+        double totalPoints = GetGamePlayerProgressPointDataTotal();
+        UpdateGamePlayerProgressPointDataStats(totalPoints);
+    }
+
+    public void UpdateGamePlayerProgressPointDataStats(double totalPoints) {
+        GameProfileStatistics.Current.SetAttributeDoubleValue(
+            GameProfileStatisticAttributes.ATT_TOTAL_POINTS, totalPoints);
+    }
+
+    public virtual bool CheckGamePlayerProgressPointData(string uuid) {
+        GamePlayerProgressPointData data = GetGamePlayerProgressPointData(uuid);
+        if (!string.IsNullOrEmpty(data.uuid)) {
+            return true;
+        }
+        return false;
+    }
+
+    public virtual void SetGamePlayerProgressPointDatas(GamePlayerProgressPointDatas points) {
+        string pointsText = JsonMapper.ToJson(points);
+        LogUtil.Log("SetGamePlayerProgressPointDatas: " + pointsText);
+        SetAttributeStringValue(BaseGameProfileRPGAttributes.ATT_PROGRESS_POINTS, pointsText);
+        SyncGamePlayerProgressPointDataStats();
+    }
+
+    public virtual GamePlayerProgressPointDatas GetGamePlayerProgressPointDatas() {
+        GamePlayerProgressPointDatas points = new GamePlayerProgressPointDatas();
+
+        string key = BaseGameProfileRPGAttributes.ATT_PROGRESS_POINTS;
+
+        if (!CheckIfAttributeExists(key)) {
+            // add default colors
+            SetGamePlayerProgressPointDatas(points);
+            Messenger.Broadcast(BaseGameProfileMessages.ProfileShouldBeSaved);
+        }
+
+        string json = GetAttributeStringValue(key);
+        if (!string.IsNullOrEmpty(json)) {
+            try {
+                LogUtil.Log("GetGamePlayerProgressPoints: " + json);
+                points = JsonMapper.ToObject<GamePlayerProgressPointDatas>(json);
+            }
+            catch (Exception e) {
+                points = new GamePlayerProgressPointDatas();
+                LogUtil.Log(e);
+            }
+        }
+        return points;
+    }
+
+
 }
 
 

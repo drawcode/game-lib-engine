@@ -29,7 +29,13 @@ public class GamePacks : DataObjects<GamePack> {
     public static string currentPacksVersion = "1.1"; // used for actual version and on dlc storage
     public static string currentPacksGame = "game-[app]";
     public static string currentGameBundle = "com.[app].[app]";
-        
+
+    public static string currentPackPath = "";
+    public static string currentPacksPath = "";
+    public static string currentPackBundlePath = "";
+    public static string currentPackDataPath = "";
+    public static string currentPackScenesPath = "";
+
     public static GamePack Current {
         get {
             if (current == null) {
@@ -59,10 +65,6 @@ public class GamePacks : DataObjects<GamePack> {
         }
     }
     
-    public static string PACK_DEFAULT = "default";
-    public static string PACK_SX_2012_1 = "sx-2012-pack-1";
-    public static string PACK_SX_2012_2 = "sx-2012-pack-2";
-    
     public GamePacks() {
         Reset();
     }
@@ -73,11 +75,22 @@ public class GamePacks : DataObjects<GamePack> {
         pathKey = DATA_KEY;
         LoadData();
     }
-    
+
+    public void InitPackPaths() {
+
+        currentPacksPath = Path.Combine(ContentPaths.appCachePlatformPath, ContentConfig.contentCachePacks);
+        currentPackPath = Path.Combine(currentPacksPath, GamePacks.Current.code);
+        currentPackBundlePath = Path.Combine(currentPackPath, ContentConfig.contentCacheAssetBundles);//"packs/" + pack + "/" + assetName + ".unity3d");
+        currentPackDataPath = Path.Combine(currentPackPath, ContentConfig.contentCacheData);
+        currentPackScenesPath = Path.Combine(currentPackPath, ContentConfig.contentCacheScenes);
+    }
+
     public void ChangeCurrentGamePack(string code) {
         Current = GetById(code);
         LogUtil.Log("Changing Pack: code:" + code);
         LogUtil.Log("Changing Pack: name:" + Current.name);
+
+        InitPackPaths();
     }
     
     public bool OwnsAllPacks() {
@@ -137,3 +150,4 @@ public class GamePack : GameDataObject {
     */
     
 }
+

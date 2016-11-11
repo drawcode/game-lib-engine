@@ -576,7 +576,7 @@ public class GameLevelItemAsset : GameDataObject {
         destroy_effect_code = "";
         physics_type = GameLevelItemAssetPhysicsType.physicsStatic;
         steps = new List<GameLevelItemAssetStep>();
-        uuid = UniqueUtil.Instance.CreateUUID4();
+        uuid = UniqueUtil.CreateUUID4();
         data = new Dictionary<string, object>();
         
         destructable = true;
