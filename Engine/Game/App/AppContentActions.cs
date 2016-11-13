@@ -835,6 +835,186 @@ public class AppContentActionEventPointInfo : AppContentActionEventInfo {
 }
 
 
+// --------------------------------------------------------------------------------
+
+public class AppActionObject {
+    public string actionCode = "";
+    public string packCode = "";
+    public string bundleName = "";
+    public string assetName = "";
+    public string trackerCode = "";
+    public GameObject actionObject;
+    public ARDataSetTracker tracker;
+    public AppContentAction action;
+    public AppContentAsset asset;
+    public int actionIndex = 0;
+    public AppPlaceholderObject placeholderObject;
+    public string eventsUuid = "";
+    public List<AppContentActionEventAudio> eventsAudio;
+    public List<AppContentActionEventVideo> eventsVideo;
+    public List<AppContentActionEventLink> eventsLink;
+    public List<AppContentActionEventPoint> eventsPoint;
+    public List<AppContentActionEventTip> eventsTip;
+    public List<AppContentActionEventAsset> eventsAsset;
+
+    //public Dictionary<string,object> urls;// = new Dictionary<string, object>();
+
+    public AppActionObject() {
+        Reset();
+    }
+
+    public void Reset() {
+        actionCode = "";
+        packCode = "";
+        bundleName = "";
+        assetName = "";
+        trackerCode = "";
+        tracker = null;
+        actionObject = null;
+        action = null;
+        asset = null;
+        actionIndex = 0;
+        placeholderObject = null;
+        eventsUuid = UniqueUtil.CreateUUID4();
+        eventsAudio = new List<AppContentActionEventAudio>();
+        eventsVideo = new List<AppContentActionEventVideo>();
+        eventsLink = new List<AppContentActionEventLink>();
+        eventsPoint = new List<AppContentActionEventPoint>();
+        eventsTip = new List<AppContentActionEventTip>();
+        eventsAsset = new List<AppContentActionEventAsset>();
+    }
+
+    public bool hasAudioEvents {
+        get {
+            return eventsAudio.Count > 0 ? true : false;
+        }
+    }
+
+    public bool hasVideoEvents {
+        get {
+            return eventsVideo.Count > 0 ? true : false;
+        }
+    }
+
+    public bool hasLinkEvents {
+        get {
+            return eventsLink.Count > 0 ? true : false;
+        }
+    }
+
+    public bool hasPointEvents {
+        get {
+            return eventsPoint.Count > 0 ? true : false;
+        }
+    }
+
+    public bool hasTipEvents {
+        get {
+            return eventsTip.Count > 0 ? true : false;
+        }
+    }
+
+    public bool hasAssetEvents {
+        get {
+            return eventsAsset.Count > 0 ? true : false;
+        }
+    }
+
+    public bool HasEventActionTrigger(string eventName) {
+        if (HasEventActionTriggerAsset(eventName))
+            return true;
+        if (HasEventActionTriggerAudio(eventName))
+            return true;
+        if (HasEventActionTriggerLink(eventName))
+            return true;
+        if (HasEventActionTriggerVideo(eventName))
+            return true;
+        if (HasEventActionTriggerPoint(eventName))
+            return true;
+        if (HasEventActionTriggerTip(eventName))
+            return true;
+        return false;
+    }
+
+    public bool HasEventActionTriggerTip(string eventName) {
+        if (hasTipEvents) {
+            foreach (AppContentActionEventTip eventAction in eventsTip) {
+                if (eventAction.triggerType.ToLower() == AppContentActionEventTriggerType.eventType.ToLower()) {
+                    if (eventAction.triggerCode.ToLower() == eventName.ToLower()) {
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
+    }
+
+    public bool HasEventActionTriggerAsset(string eventName) {
+        if (hasAssetEvents) {
+            foreach (AppContentActionEventAsset eventAction in eventsAsset) {
+                if (eventAction.triggerType.ToLower() == AppContentActionEventTriggerType.eventType.ToLower()) {
+                    if (eventAction.triggerCode.ToLower() == eventName.ToLower()) {
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
+    }
+
+    public bool HasEventActionTriggerAudio(string eventName) {
+        if (hasAudioEvents) {
+            foreach (AppContentActionEventAudio eventAction in eventsAudio) {
+                if (eventAction.triggerType.ToLower() == AppContentActionEventTriggerType.eventType.ToLower()) {
+                    if (eventAction.triggerCode.ToLower() == eventName.ToLower()) {
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
+    }
+
+    public bool HasEventActionTriggerLink(string eventName) {
+        if (hasLinkEvents) {
+            foreach (AppContentActionEventLink eventAction in eventsLink) {
+                if (eventAction.triggerType.ToLower() == AppContentActionEventTriggerType.eventType.ToLower()) {
+                    if (eventAction.triggerCode.ToLower() == eventName.ToLower()) {
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
+    }
+
+    public bool HasEventActionTriggerVideo(string eventName) {
+        if (hasVideoEvents) {
+            foreach (AppContentActionEventVideo eventAction in eventsVideo) {
+                if (eventAction.triggerType.ToLower() == AppContentActionEventTriggerType.eventType.ToLower()) {
+                    if (eventAction.triggerCode.ToLower() == eventName.ToLower()) {
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
+    }
+
+    public bool HasEventActionTriggerPoint(string eventName) {
+        if (hasPointEvents) {
+            foreach (AppContentActionEventPoint eventAction in eventsPoint) {
+                if (eventAction.triggerType.ToLower() == AppContentActionEventTriggerType.eventType.ToLower()) {
+                    if (eventAction.triggerCode.ToLower() == eventName.ToLower()) {
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
+    }
+}
+
 // events base
 
 //public string triggerType = "";
