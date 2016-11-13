@@ -189,7 +189,7 @@ public class DataObjects<T> where T : DataObject, new() {
     public virtual bool SaveDataItemsToResources(string path) {
         bool saved = false;
         string fileData = "";
-        string pathPart = path;
+        //string pathPart = path;
 
         path =
             Path.Combine(
