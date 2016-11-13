@@ -25,7 +25,7 @@ public class ContentBundleDownloadHandle {
 public class ContentBundleLoader : GameObjectBehavior
 {
 	string cachePath;
-	ContentBundleLoader instance;
+	//ContentBundleLoader instance;
 
 	public static ContentBundleLoader Instance {
 		get {
