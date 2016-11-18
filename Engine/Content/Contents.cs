@@ -431,7 +431,14 @@ public class ContentPaths {
     public static List<string> packPaths;
     public static List<string> packPathsVersionedShared;
     public static List<string> packPathsVersioned;
-    
+
+    public static string appCacheVersion {
+        get {
+            return ContentsConfig.contentRootFolder + "/"
+                + ContentsConfig.contentAppFolder + "/version/";
+        }
+    }
+
     public static string appCacheVersionSharedAudio {
         get {
             return ContentsConfig.contentRootFolder + "/"
