@@ -236,7 +236,12 @@ public class AudioSystem : GameObjectBehavior {
         else {
             soundIncrement = 0;
         }
-        PlayFileFromResources(parentTransform, audioRootPath + name, loop, soundIncrement, volume, spatialBlend);
+
+        if(!name.Contains(ContentPaths.appCacheVersion)) {
+            name = audioRootPath + name;
+        }
+
+        PlayFileFromResources(parentTransform, name, loop, soundIncrement, volume, spatialBlend);
     }
 
     public GameObject PlayEffectObject(Transform parentTransform, string name, bool loop, float volume) {
