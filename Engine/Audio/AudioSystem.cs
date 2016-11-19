@@ -450,7 +450,13 @@ public class AudioSystem : GameObjectBehavior {
     public GameObject PlayFileFromResourcesObject(Transform parentTransform, string file, bool loop, int increment, float volume, float spatialBlend = 0.9f) { // file name without extension
         AudioClip clip = LoadAudioClip(file);
 
-        return PlayAudioClip(parentTransform.position, parentTransform, clip, loop, increment, volume, spatialBlend);
+        Vector3 pos = Vector3.zero;
+
+        if(parentTransform != null) {
+            pos = parentTransform.position;
+        }
+
+        return PlayAudioClip(pos, parentTransform, clip, loop, increment, volume, spatialBlend);
     }
 
     public GameObject PlayFileFromResources(string file, bool loop, int increment, float volume) { // file name without extension
