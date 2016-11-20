@@ -241,6 +241,9 @@ public class AudioSystem : GameObjectBehavior {
             name = audioRootPath + name;
         }
 
+        //Debug.Log("PlayEffectCo:path:" + name);
+        //Debug.Log("PlayEffectCo:volume:" + volume);
+
         PlayFileFromResources(parentTransform, name, loop, soundIncrement, volume, spatialBlend);
     }
 
@@ -730,9 +733,17 @@ public class AudioSystem : GameObjectBehavior {
     }
 
     public AudioClip LoadAudioClip(string path) {
+        
         AudioSetItem audioSetItem = LoadAudioSetItem(path);
 
+        //Debug.Log("LoadAudioClip:path:" + path);
+
         if (audioSetItem != null) {
+
+            if(audioSetItem.audioClip == null) {
+                Debug.LogWarning("LoadAudioClip:NOT FOUND:path:" + path);
+            }
+
             return audioSetItem.audioClip;
         }
 
@@ -757,12 +768,18 @@ public class AudioSystem : GameObjectBehavior {
             return audioSetItems[path];
         }
 
+        //Debug.Log("LoadAudioSetItem:path:" + path);
+
         AudioClip clip = AssetUtil.LoadAsset<AudioClip>(path);
+
+        //Debug.Log("LoadAudioSetItem:clip:" + clip);
 
         AudioSetItem audioSetItem = new AudioSetItem();
         audioSetItem.audioClip = clip;
         audioSetItem.file = path;
         audioSetItem.type = "audio";
+
+        //Debug.Log("LoadAudioSetItem:audioSetItem.file:" + audioSetItem.file);
 
         audioSetItems.Set(path, audioSetItem);
 

@@ -438,25 +438,27 @@ public class ContentPaths {
                 + ContentsConfig.contentAppFolder + "/version/";
         }
     }
+    public static string appCacheVersionShared {
+        get {
+            return appCacheVersion + "shared/";
+        }
+    }
 
     public static string appCacheVersionSharedAudio {
         get {
-            return ContentsConfig.contentRootFolder + "/"
-                + ContentsConfig.contentAppFolder + "/version/shared/audio/";
+            return appCacheVersionShared + "audio/";
         }
     }
     
     public static string appCacheVersionSharedPrefab {
         get {
-            return ContentsConfig.contentRootFolder + "/"
-                + ContentsConfig.contentAppFolder + "/version/shared/prefab/";
+            return appCacheVersionShared + "prefab/";
         }
     }
 
     public static string appCacheVersionSharedMaterials {
         get {
-            return ContentsConfig.contentRootFolder + "/"
-                + ContentsConfig.contentAppFolder + "/version/shared/materials/";
+            return appCacheVersionShared + "materials/";
         }
     }
     
