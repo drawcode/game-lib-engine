@@ -2365,6 +2365,16 @@ public class GameDataObject : DataObject {
         }
     }
 
+    public virtual List<Dictionary<string, object>> data_dicts {
+        get {
+            return Get<List<Dictionary<string, object>>>(BaseDataObjectKeys.data_dicts);
+        }
+
+        set {
+            Set<List<Dictionary<string, object>>>(BaseDataObjectKeys.data_dicts, value);
+        }
+    }
+
     public virtual List<GameDataObject> data_game_objects {
         get {
             return Get<List<GameDataObject>>(BaseDataObjectKeys.data_game_objects);
@@ -2372,6 +2382,16 @@ public class GameDataObject : DataObject {
 
         set {
             Set<List<GameDataObject>>(BaseDataObjectKeys.data_game_objects, value);
+        }
+    }
+
+    public virtual List<GameDataObject> data_objects {
+        get {
+            return Get<List<GameDataObject>>(BaseDataObjectKeys.data_objects);
+        }
+
+        set {
+            Set<List<GameDataObject>>(BaseDataObjectKeys.data_objects, value);
         }
     }
 

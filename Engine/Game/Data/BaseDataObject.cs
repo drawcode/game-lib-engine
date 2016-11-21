@@ -81,9 +81,11 @@ public class BaseDataObjectKeys {
     public static string data_suffix_list = "data_suffix_list";
     public static string data_list = "data_list";
     public static string data_object = "data_object";
+    public static string data_objects = "data_objects";
     public static string data_items = "data_items";
     public static string data_game_objects = "data_game_objects";
     public static string data_dict = "data_dict";
+    public static string data_dicts = "data_dicts";
     //
     public static string level_num_suffix_list = "level_num_suffix_list";
     public static string world_num_list = "world_num_list";
@@ -450,10 +452,10 @@ public class BaseDataObject : Dictionary<string, object> {
     
     public virtual T Get<T>(string code, T defaultValue) {                
         try {
-            if (ContainsKey(code)) {
-                return (T)this[code];
+            if (!ContainsKey(code)) {
+                Set(code, defaultValue);
             }
-            return defaultValue;
+            return (T)this[code];
         }
         catch (Exception e) {
             LogUtil.Log(e);
