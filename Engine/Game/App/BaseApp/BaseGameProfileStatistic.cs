@@ -8,6 +8,7 @@ using Engine.Utility;
 
 public class BaseGameProfileStatisticAttributes {   
 
+    public static string ATT_TOTAL_POINTS = "att-total-points";
 }
 
 public class BaseGameProfileStatistics {

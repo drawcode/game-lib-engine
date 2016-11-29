@@ -34,7 +34,7 @@ public class Profile : DataObject {
 
             //string val = Get<string>(BaseDataObjectKeys.uuid);
             //if(string.IsNullOrEmpty(val)) {
-            //    val = UniqueUtil.Instance.CreateUUID4();
+            //    val = UniqueUtil.CreateUUID4();
             //    Set(BaseDataObjectKeys.uuid, val);
             //}
 

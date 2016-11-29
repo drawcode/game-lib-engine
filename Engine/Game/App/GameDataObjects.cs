@@ -1212,7 +1212,7 @@ public class GameDataObject : DataObject {
     //[JsonIgnore(JsonIgnoreWhen.Deserializing)]
     public virtual string uuid {
         get {
-            return Get<string>(BaseDataObjectKeys.uuid, "");//UniqueUtil.Instance.CreateUUID4());
+            return Get<string>(BaseDataObjectKeys.uuid, "");//UniqueUtil.CreateUUID4());
         }
 
         set {

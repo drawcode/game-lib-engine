@@ -47,7 +47,7 @@ namespace Engine.Networking {
                 localDeviceId = SystemInfo.deviceUniqueIdentifier;
             }
             deviceId = localDeviceId;
-            uuid = UniqueUtil.Instance.CreateUUID4();
+            uuid = UniqueUtil.CreateUUID4();
             attributes = new Dictionary<string, string>();
         }
 
