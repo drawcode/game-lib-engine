@@ -848,7 +848,10 @@ public class AppActionObject {
     public AppContentAction action;
     public AppContentAsset asset;
     public int actionIndex = 0;
+
+#if ENABLE_AR_FULL
     public AppPlaceholderObject placeholderObject;
+#endif
     public string eventsUuid = "";
     public List<AppContentActionEventAudio> eventsAudio;
     public List<AppContentActionEventVideo> eventsVideo;
@@ -874,7 +877,10 @@ public class AppActionObject {
         action = null;
         asset = null;
         actionIndex = 0;
+
+#if ENABLE_AR_FULL
         placeholderObject = null;
+#endif
         eventsUuid = UniqueUtil.CreateUUID4();
         eventsAudio = new List<AppContentActionEventAudio>();
         eventsVideo = new List<AppContentActionEventVideo>();
