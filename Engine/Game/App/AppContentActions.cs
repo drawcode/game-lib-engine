@@ -16,13 +16,6 @@ public class AppContentActions : BaseAppContentActions<AppContentAction> {
     private static volatile AppContentAction current;
     private static volatile AppContentActions instance;
     private static object syncRoot = new System.Object();
-    /*
-    public static string APP_STATE_BOOKS = "app-state-books";
-    public static string APP_STATE_CARDS = "app-state-cards";
-    public static string APP_STATE_GAMES = "app-state-games";
-    public static string APP_STATE_SETTINGS = "app-state-settings";
-    public static string APP_STATE_TROPHIES = "app-state-trophies";
-    */
     
     public static string DATA_KEY = "app-content-action-data";
         
