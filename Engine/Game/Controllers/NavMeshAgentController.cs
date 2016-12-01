@@ -7,12 +7,12 @@ using UnityEngine;
 namespace Engine.Game.Controllers {
 
     public class NavMeshAgentController : GameObjectBehavior {
-        public NavMeshAgent agent;
+        public UnityEngine.AI.NavMeshAgent agent;
         public Vector3 nextDestination;
 
         // Use this for initialization
         private void Start() {
-            agent = GetComponent<NavMeshAgent>();
+            agent = GetComponent<UnityEngine.AI.NavMeshAgent>();
             nextDestination = transform.position;
             NavigateToDestination();
         }

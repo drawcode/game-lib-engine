@@ -1,11 +1,11 @@
 using System;
 using System.Collections.Generic;
 using Engine.Utility;
-using UnityEngine;
+
 
 public static class NavMeshExtentions {
 
-    public static void On(this NavMeshAgent navMeshAgent) {
+    public static void On(this UnityEngine.AI.NavMeshAgent navMeshAgent) {
         if (navMeshAgent == null) {
             return;
         }
@@ -14,7 +14,7 @@ public static class NavMeshExtentions {
         //navMeshAgent.updateRotation = true;        
     }
 
-    public static void Off(this NavMeshAgent navMeshAgent) {
+    public static void Off(this UnityEngine.AI.NavMeshAgent navMeshAgent) {
         if (navMeshAgent == null) {
             return;
         }
@@ -23,7 +23,7 @@ public static class NavMeshExtentions {
         //navMeshAgent.updateRotation = false;
     }
 
-    public static void StopAgent(this NavMeshAgent navMeshAgent) {
+    public static void StopAgent(this UnityEngine.AI.NavMeshAgent navMeshAgent) {
         if (navMeshAgent == null) {
             return;
         }
@@ -36,7 +36,7 @@ public static class NavMeshExtentions {
         }
     }
 
-    public static void StartAgent(this NavMeshAgent navMeshAgent) {
+    public static void StartAgent(this UnityEngine.AI.NavMeshAgent navMeshAgent) {
         if (navMeshAgent == null) {
             return;
         }

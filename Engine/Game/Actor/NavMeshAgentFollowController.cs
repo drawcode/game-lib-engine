@@ -6,12 +6,12 @@ using UnityEngine;
 
 namespace Engine.Game.Actor {
     public class NavMeshAgentFollowController : GameObjectBehavior {
-        public NavMeshAgent agent;
+        public UnityEngine.AI.NavMeshAgent agent;
         public Transform targetFollow;
 
         // Use this for initialization
         private void Start() {
-            agent = GetComponent<NavMeshAgent>();
+            agent = GetComponent<UnityEngine.AI.NavMeshAgent>();
             NavigateToDestination();
         }
 

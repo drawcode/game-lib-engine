@@ -17,7 +17,7 @@ namespace Engine.Game.Controllers {
         public bool isRunning = false;
 
         private BaseThirdPersonController thirdPersonController;
-        private NavMeshAgent navAgent;
+        private UnityEngine.AI.NavMeshAgent navAgent;
 
         private void Awake() {
             Init();
@@ -25,7 +25,7 @@ namespace Engine.Game.Controllers {
 
         public void Init() {
             thirdPersonController = GetComponent<BaseThirdPersonController>();
-            navAgent = GetComponent<NavMeshAgent>();
+            navAgent = GetComponent<UnityEngine.AI.NavMeshAgent>();
             Reset();
         }
 

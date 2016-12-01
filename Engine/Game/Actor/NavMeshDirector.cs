@@ -6,7 +6,7 @@ using UnityEngine;
 
 namespace Engine.Game.Actor {
     public class NavMeshDirector : GameObjectBehavior {
-        public NavMeshAgent agentTester;
+        public UnityEngine.AI.NavMeshAgent agentTester;
         public Vector3 nextDestination;
 
         // Use this for initialization
