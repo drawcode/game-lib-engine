@@ -220,6 +220,7 @@ public class BaseGameProductType {
     public static string characterSkin = "character-skin";
     public static string weapon = "weapon";
     public static string currency = "currency";
+    public static string access = "access";
 }
 
 public class BaseGameProduct : GameDataObject {

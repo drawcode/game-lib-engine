@@ -370,9 +370,10 @@ public class BaseDataObjectKeys {
     public static string xp = "xp";
     public static string power = "power";
     public static string currency = "currency";
+    public static string access = "access";
     //
     // content
-    
+
     public static string tags = "tags";
     public static string app_states = "app_states";
     public static string app_content_states = "app_content_states";
