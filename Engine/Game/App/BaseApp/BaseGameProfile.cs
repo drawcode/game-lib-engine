@@ -70,6 +70,8 @@ public class BaseGameProfileAttributes {
     public static string ATT_AUTH_SOCIAL_NETWORK_USERID = "auth-social-network-userid";
     public static string ATT_AUTH_SOCIAL_NETWORK_AUTHTOKEN_USER = "auth-social-network-authtoken-user";
     public static string ATT_AUTH_SOCIAL_NETWORK_AUTHTOKEN_APP = "auth-social-network-authtoken-app";
+
+    public static string ATT_ACCESS_PERMISSIONS = "access-permissions";
 }
 
 public class BaseGameProfileDataState {
@@ -691,7 +693,7 @@ public class BaseGameProfile : Profile {
     // Attribute based unlocks to switch to for profile based unlocks.
     public virtual List<string> GetAccessPermissions() {
         List<string> permissions = new List<string>();
-        DataAttribute attribute = GetAttribute("access-permissions");
+        DataAttribute attribute = GetAttribute(BaseGameProfileAttributes.ATT_ACCESS_PERMISSIONS);
         if (attribute != null) {
             permissions = attribute.val as List<string>;
             if (permissions != null)
@@ -702,7 +704,7 @@ public class BaseGameProfile : Profile {
         return permissions;
     }
 
-    public virtual bool CheckIfAccessPermissionExists(string permission) {
+    public virtual bool HasAccessPermission(string permission) {
         List<string> permissions = GetAccessPermissions();
         if (permissions.Contains(permission))
             return true;
@@ -711,7 +713,7 @@ public class BaseGameProfile : Profile {
 
     public virtual void SetAccessPermissions(List<string> permissions) {
         DataAttribute attribute = new DataAttribute();
-        attribute.code = "access-permissions";
+        attribute.code = BaseGameProfileAttributes.ATT_ACCESS_PERMISSIONS;
         attribute.val = permissions;
         SetAttribute(attribute);
     }
