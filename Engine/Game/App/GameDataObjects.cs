@@ -2617,4 +2617,21 @@ public class GameDataObject : DataObject {
 
         return default(T);
     }
+
+    public Dictionary<string, object> GetDataDictsDictByKeyValue(string key, string val) {
+
+        if (data_dicts != null) {
+
+            foreach (Dictionary<string, object> dict in data_dicts) {
+
+                string keyValue = dict.Get<string>(key);
+
+                if (keyValue == val) {
+                    return dict;
+                }
+            }            
+        }
+
+        return null;
+    }
 }

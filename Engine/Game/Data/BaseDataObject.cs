@@ -29,6 +29,7 @@ public class BaseDataObjectKeys {
     public static string url = "url";
     public static string title = "title";
     public static string path = "path";
+    public static string overlay = "overlay";
     public static string content = "content";
     public static string contents = "contents";
     public static string upload = "upload";
