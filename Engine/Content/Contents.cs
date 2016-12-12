@@ -1564,10 +1564,13 @@ public class Contents : GameObjectBehavior {
 				|| pathVersioned.Contains("/" + AppContentActions.DATA_KEY)
 				|| pathVersioned.Contains("/" + AppContentAssets.DATA_KEY)
 				|| pathVersioned.Contains("/" + AppStates.DATA_KEY)
-				//|| pathVersioned.Contains("/" + BaseGameStatistics.DATA_KEY)
-				//|| pathVersioned.Contains("/" + BaseGameAchievements.DATA_KEY)
-				|| pathVersioned.Contains("/" + ARDataSets.DATA_KEY)
-				|| pathVersioned.Contains("/" + ARDataSetTrackers.DATA_KEY)) {
+                //|| pathVersioned.Contains("/" + BaseGameStatistics.DATA_KEY)
+                //|| pathVersioned.Contains("/" + BaseGameAchievements.DATA_KEY)
+#if ENABLE_FEATURE_AR
+                || pathVersioned.Contains("/" + ARDataSets.DATA_KEY)
+				|| pathVersioned.Contains("/" + ARDataSetTrackers.DATA_KEY)
+#endif
+                ) {
 				
 				hashVerified = CheckHashVerified(pathVersioned, item.data.hash);
 				
@@ -2765,7 +2768,7 @@ public class Contents : GameObjectBehavior {
 	}
 	
 	public string getUnversionedDisplayFile(string val) {
-#if !UNITY_WEBPLAYER		
+#if !UNITY_WEBPLAYER
 		val = Path.GetFileName(val);
 #endif
 		val = GetDisplayFileUnversioned(val);

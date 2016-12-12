@@ -1,8 +1,6 @@
 using UnityEngine;
 using System.Collections;
 
-using Vuforia;
-
 public class GameObjectTrackingFlippedLocal : MonoBehaviour {
 
     public GameObject trackObject;
