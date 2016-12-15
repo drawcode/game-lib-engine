@@ -1154,6 +1154,7 @@ public class AppContentActionEventData {
 
 // --------------------------------------------------------------------------------
 
+    /*
 public class AppContentActionEventMessages {
     public static string AppActionTimelineEvent = "AppActionTimelineEvent";
     //
@@ -1182,6 +1183,7 @@ public class AppContentActionEventMessages {
     public static string AppActionPointCollectEvent = "AppActionPointCollectEvent";
 
 }
+*/
 
 public class AppContentActionEventType {
     public static string eventPoint = "point";
