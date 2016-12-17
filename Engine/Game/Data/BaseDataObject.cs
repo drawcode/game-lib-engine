@@ -60,6 +60,7 @@ public class BaseDataObjectKeys {
     public static string contenttopleft = "contenttopleft";
     public static string contenttopright = "contenttopright";
     //
+    public static string container = "container";
     public static string containerstart = "containerstart";
     public static string containerend = "containerend";
     public static string containerbottom = "containerbottom";
@@ -70,6 +71,10 @@ public class BaseDataObjectKeys {
     public static string containerbottomright = "containerbottomright";
     public static string containertopleft = "containertopleft";
     public static string containertopright = "containertopright";
+    //
+    public static string camera = "camera";
+    public static string ar = "ar";
+    public static string vr = "vr";
     //
     public static string empty = "empty";
     public static string random = "random";
