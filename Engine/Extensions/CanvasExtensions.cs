@@ -3,6 +3,37 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public static class CanvasExtensions {
+    
+    public static Rect RectTransformToScreenSpace(RectTransform transform) {
+        Vector2 size = Vector2.Scale(transform.rect.size, transform.lossyScale);
+        return new Rect((Vector2)transform.position - (size * 0.5f), size);
+    }
+
+    /*
+    public static Vector3 CalculatePositionFromTransformToRectTransform(this Canvas canvas, Vector3 pos, Camera cam) {
+
+        Vector3 val = Vector3.zero;
+
+        if (canvas == null) {
+            return val;
+        }
+
+        if (cam == null) {
+            return val;
+        }
+        
+        if (canvas.renderMode == RenderMode.ScreenSpaceOverlay) {
+            val = cam.WorldToScreenPoint(pos);
+        }
+        else if (canvas.renderMode == RenderMode.ScreenSpaceCamera) {
+            Vector2 tempVector = Vector2.zero;
+            RectTransformUtility.ScreenPointToLocalPointInRectangle(canvas.transform as RectTransform, cam.WorldToScreenPoint(pos), cam, out tempVector);
+            val = canvas.transform.TransformPoint(tempVector);
+        }
+
+        return val;
+    }
+    */
 
     #region Canvas
     /// <summary>

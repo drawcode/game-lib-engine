@@ -66,22 +66,28 @@ public class ObjectPool : System.Object {
     }
 
     // put the object in the cache and deactivate it
-    public void recycle(GameObject obj) {
+    public void recycle(GameObject obj, string key = null) {
 
         if (obj == null) {
             return;
         }
         
-        //if (pool.Count > maxPoolItems) {
-        //    obj.DestroyGameObject(0,false);
-        //    return;            
-        //}
+        if (pool.Count > maxPoolItems) {
+            obj.DestroyGameObject(0, false);
+            return;            
+        }
 
         // deactivate the object
         obj.SetActive(false);
 
         // put the recycled object in this ObjectPool's bucket
-        obj.transform.parent = ObjectPoolManager.instance.gameObject.transform;
+
+        if (!string.IsNullOrEmpty(key)) {
+            obj.transform.parent = ObjectPoolKeyedManager.instance.gameObject.transform;
+        }
+        else {
+            obj.transform.parent = ObjectPoolManager.instance.gameObject.transform;
+        }
 
 
         if (!pool.Contains(obj)) {

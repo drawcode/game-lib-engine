@@ -238,7 +238,9 @@ public class BaseAppContentAssets<T> : DataObjects<T> where T : DataObject, new(
                 }
             }
         }
-        
+
+        Debug.Log("ERROR:LoadAssetPrefab:NOT FOUND IN ASSETS DATA: key:" + key + " code:" + code);
+                
         return null;
     }
 }

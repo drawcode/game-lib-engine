@@ -33,10 +33,10 @@ using UnityEngine;
 
 public class ObjectPoolKeyed : MonoBehaviour {
 
-    public ObjectPoolKeyedItem data;
+    public ObjectPoolKeyedItem data = new ObjectPoolKeyedItem();
 
     public void Start() {
-        data = new ObjectPoolKeyedItem();
+        //data = new ObjectPoolKeyedItem();
     }
 }
 
@@ -142,6 +142,7 @@ public class ObjectPoolKeyedManager : GameObjectBehavior {
         var pool = new ObjectPool();
         pool.prefab = prefab;
         pool.key = key;
+        pool.maxPoolItems = maxPerPool;
 
         return pool;
     }
@@ -231,7 +232,7 @@ public class ObjectPoolKeyedManager : GameObjectBehavior {
 
             //LogUtil.Log( "Recyling object " + obj.name );
             var pool = instance2pool[key];
-            pool.recycle(obj);
+            pool.recycle(obj, key);
         }
         else {
 

@@ -116,6 +116,7 @@ public class ObjectPoolManager : GameObjectBehavior {
     private ObjectPool createPool(GameObject prefab) {
         var pool = new ObjectPool();
         pool.prefab = prefab;
+        pool.maxPoolItems = maxPerPool;
 
         return pool;
     }

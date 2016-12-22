@@ -1737,23 +1737,13 @@ public static class GameObjectHelper {
         Quaternion rotate,
         bool pooled) {
 
-        GameObject obj = null;
+        string key = "default";
 
-        if (!pooled) {
-            obj = GameObject.Instantiate(go, pos, rotate) as GameObject;
-        }
-        else {
-            obj = ObjectPoolManager.createPooled(go, pos, rotate);
+        if (go != null) {
+            key = go.name.ToDelimited();
         }
 
-        if (obj != null) {
-
-            if (!obj.Has<PoolGameObject>()) {
-                obj.AddComponent<PoolGameObject>();
-            }
-        }
-
-        return obj;
+        return CreateGameObject(key, go, pos, rotate, pooled);
     }
 
     // Pool keyed
@@ -1789,7 +1779,7 @@ public static class GameObjectHelper {
     }
 
     public static void DestroyGameObject(GameObject go, float delay, bool pooled = true) {
-        if (!pooled && !go.Has<PoolGameObject>()) {
+        if (!pooled || !go.Has<PoolGameObject>()) {
             DestroyDelayed(go, delay);
         }
         else if (go.Has<ObjectPoolKeyed>()) {
