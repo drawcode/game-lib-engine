@@ -739,4 +739,12 @@ public static class BaseGameObjectExtensions {
         }
     }
 
+    // MOVE
+
+    public static void MoveObject(this GameObject inst, float time, float delay, float alpha) {
+        if (inst != null) {
+            iTween.MoveTo(inst, iTween.Hash("alpha", alpha, "time", time, "delay", delay));
+        }
+    }
+            
 }
