@@ -42,7 +42,7 @@ namespace Engine.Utility {
         public float _delay = 0f;
         public TweenEaseType _easeType = TweenEaseType.quadEaseInOut;
         public TweenLoopType _loopType = TweenLoopType.once;
-        public TweenCoord _coord = TweenCoord.world;
+        public TweenCoord _coord = TweenCoord.local;
         public Action _onComplete = null;
         public Action _onFinal = null;
         public Action _onStart = null;
@@ -178,25 +178,25 @@ namespace Engine.Utility {
 
     public class TweenUtil {
 
-        public float durationShow = .45f;
-        public float durationDelayShow = .5f;
+        public static float durationShow = .45f;
+        public static float durationDelayShow = .5f;
 
-        public float durationHide = .45f;
-        public float durationDelayHide = 0f;
+        public static float durationHide = .45f;
+        public static float durationDelayHide = 0f;
 
-        public float leftOpenX = 0f;
-        public float leftClosedX = -4500f;
+        public static float leftOpenX = 0f;
+        public static float leftClosedX = -4500f;
 
-        public float rightOpenX = 0f;
-        public float rightClosedX = 4500f;
+        public static float rightOpenX = 0f;
+        public static float rightClosedX = 4500f;
 
-        public float bottomOpenY = 0f;
-        public float bottomClosedY = -4500f;
+        public static float bottomOpenY = 0f;
+        public static float bottomClosedY = -4500f;
 
-        public float topOpenY = 0f;
-        public float topClosedY = 4500f;
+        public static float topOpenY = 0f;
+        public static float topClosedY = 4500f;
 
-        public int increment = 0;
+        public static int increment = 0;
 
         // LOOP TYPES
 
@@ -427,7 +427,7 @@ namespace Engine.Utility {
         public static TweenMeta GetMetaDefault(
            TweenLib lib,
            GameObject go,
-           float time = 1f, float delay = 0f,
+           float time = .5f, float delay = .5f,
            bool stopCurrent = true,
            TweenCoord coord = TweenCoord.world,
            TweenEaseType easeType = TweenEaseType.quadEaseInOut,
@@ -446,13 +446,25 @@ namespace Engine.Utility {
             return meta;
         }
 
+        public static void OnTweenBegin(Action action) {
+            action();
+        }
+
+        public static void OnTweenFinish(Action action) {
+            action();
+        }
+
+        public static void OnTweenTick(Action action) {
+            action();
+        }
+
         // --------------------------------------------------------------------
         // MOVE
 
         public static void MoveToObject(
            GameObject go,
            Vector3 pos,
-           float time = 1f, float delay = 0f,
+           float time = .5f, float delay = .5f,
            bool stopCurrent = true,
            TweenCoord coord = TweenCoord.world,
            TweenEaseType easeType = TweenEaseType.quadEaseInOut,
@@ -466,7 +478,7 @@ namespace Engine.Utility {
            TweenLib lib,
            GameObject go,
            Vector3 pos,
-           float time = 1f, float delay = 0f,
+           float time = .5f, float delay = .5f,
            bool stopCurrent = true, 
            TweenCoord coord = TweenCoord.world,
            TweenEaseType easeType = TweenEaseType.quadEaseInOut,
@@ -482,7 +494,7 @@ namespace Engine.Utility {
         public static void MoveToObjectLeanTween(
            GameObject go,
            Vector3 pos,
-           float time = 1f, float delay = 0f,
+           float time = .5f, float delay = .5f,
            bool stopCurrent = true,
            TweenCoord coord = TweenCoord.world,
            TweenEaseType easeType = TweenEaseType.quadEaseInOut,
@@ -497,7 +509,7 @@ namespace Engine.Utility {
         public static void MoveToObjectiTween(
            GameObject go,
            Vector3 pos,
-           float time = 1f, float delay = 0f,
+           float time = .5f, float delay = .5f,
            bool stopCurrent = true,
            TweenCoord coord = TweenCoord.world,
            TweenEaseType easeType = TweenEaseType.quadEaseInOut,
@@ -512,7 +524,7 @@ namespace Engine.Utility {
         public static void MoveToObjectUITweener(
            GameObject go,
            Vector3 pos,
-           float time = 1f, float delay = 0f,
+           float time = .5f, float delay = .5f,
            bool stopCurrent = true,
            TweenCoord coord = TweenCoord.world,
            TweenEaseType easeType = TweenEaseType.quadEaseInOut,
@@ -530,6 +542,34 @@ namespace Engine.Utility {
 
             if (meta.go == null) {
                 return;
+            }
+            
+            Action onBegin = () => {
+
+            };
+
+            Action onFinish = () => {
+
+            };
+
+            Action onTick = () => {
+
+            };
+
+            if (meta.onStart != null) {
+                onBegin = onBegin.CombineAction(meta.onStart);
+            }
+
+            if (meta.onComplete != null) {
+                onFinish = onFinish.CombineAction(meta.onComplete);
+            }
+
+            if (meta.onFinal != null) {
+                onFinish = onFinish.CombineAction(meta.onFinal);
+            }
+
+            if (meta.onUpdate != null) {
+                onTick = onTick.CombineAction(meta.onUpdate);
             }
 
             if (meta.lib == TweenLib.iTween) {
@@ -549,7 +589,12 @@ namespace Engine.Utility {
                     "time", meta.time,
                     "delay", meta.delay,
                     "looptype", loopTypeLib,
-                    "easetype", easeTypeLib);
+                    "easetype", easeTypeLib,
+                    "islocal", meta.coord == TweenCoord.local,
+                    "onstart", "OnTweenBegin",
+                    "onstartparams", onBegin,
+                    "oncomplete", "OnTweenFinish",
+                    "oncompleteparams", onFinish);
 
                 iTween.MoveTo(meta.go, hash);
             }
@@ -559,27 +604,33 @@ namespace Engine.Utility {
                     LeanTween.cancel(meta.go);
                 }
 
-                LTDescr info =
-                    LeanTween.move(meta.go, pos, meta.time).setDelay(meta.delay);
+                LTDescr info = null;
+
+                if (meta.coord == TweenCoord.local) {
+                    info = 
+                        LeanTween.moveLocal(meta.go, pos, meta.time)
+                        .setDelay(meta.delay).pause();
+                }
+                else {
+                    info = 
+                        LeanTween.move(meta.go, pos, meta.time)
+                        .setDelay(meta.delay).pause();
+                }
 
                 LeanTweenType loopTypeLib =
                     ConvertLibLoopType<LeanTweenType>(meta.loopType);
 
                 info.setLoopType(ConvertLibLoopType<LeanTweenType>(meta.loopType));
-
-                if (meta.onComplete != null) {
-                    //info.setOnCompleteOnStart(true);
-                    info.setOnComplete(meta.onComplete);
-                }
-
-                if (meta.onStart != null) {
-                    //info.setOnCompleteOnStart(true);
-                    info.setOnStart(meta.onStart);
-                }
+                
+                info.setOnStart(onBegin);
+                info.setOnComplete(onFinish);
+                //info.setOnUpdate(onTick);
 
                 if (meta.onUpdate != null) {
                     //info.setOnUpdate(onUpdate);
                 }
+
+                info.resume();
             }
             else if (meta.lib == TweenLib.nguiUITweener) {
 
@@ -587,6 +638,10 @@ namespace Engine.Utility {
                     meta.go,
                     UITweener.Method.EaseInOut, UITweener.Style.Loop,
                     meta.time, meta.delay, pos);
+
+                //OnTweenBegin(onBegin);
+                //OnTweenFinish(onFinish);
+                //OnTweenTick(onTick);
             }
         }
 
@@ -596,7 +651,7 @@ namespace Engine.Utility {
         public static void FadeToObject(
            GameObject go,
            float alpha,
-           float time = 1f, float delay = 0f,
+           float time = .5f, float delay = .5f,
            bool stopCurrent = true,
            TweenCoord coord = TweenCoord.world,
            TweenEaseType easeType = TweenEaseType.quadEaseInOut,
@@ -611,7 +666,7 @@ namespace Engine.Utility {
            TweenLib lib,
            GameObject go,
            float alpha,
-           float time = 1f, float delay = 0f,
+           float time = .5f, float delay = .5f,
            bool stopCurrent = true,
            TweenCoord coord = TweenCoord.world,
            TweenEaseType easeType = TweenEaseType.quadEaseInOut,
@@ -627,7 +682,7 @@ namespace Engine.Utility {
         public static void FadeToObjectLeanTween(
            GameObject go,
            float alpha,
-           float time = 1f, float delay = 0f,
+           float time = .5f, float delay = .5f,
            bool stopCurrent = true,
            TweenCoord coord = TweenCoord.world,
            TweenEaseType easeType = TweenEaseType.quadEaseInOut,
@@ -642,7 +697,7 @@ namespace Engine.Utility {
         public static void FadeToObjectiTween(
            GameObject go,
            float alpha,
-           float time = 1f, float delay = 0f,
+           float time = .5f, float delay = .5f,
            bool stopCurrent = true,
            TweenCoord coord = TweenCoord.world,
            TweenEaseType easeType = TweenEaseType.quadEaseInOut,
@@ -657,7 +712,7 @@ namespace Engine.Utility {
         public static void FadeToObjectUITweener(
            GameObject go,
            float alpha,
-           float time = 1f, float delay = 0f,
+           float time = .5f, float delay = .5f,
            bool stopCurrent = true,
            TweenCoord coord = TweenCoord.world,
            TweenEaseType easeType = TweenEaseType.quadEaseInOut,
@@ -677,6 +732,46 @@ namespace Engine.Utility {
                 return;
             }
 
+            Action onBegin = () => {
+                
+            };
+
+            Action onFinish = () => {
+
+            };
+
+            Action onTick = () => {
+
+            };
+
+            if (meta.onStart != null) {
+                onBegin = onBegin.CombineAction(meta.onStart);
+            }
+
+            if (meta.onComplete != null) {
+                onFinish = onFinish.CombineAction(meta.onComplete);
+            }
+
+            if (meta.onFinal != null) {
+                onFinish = onFinish.CombineAction(meta.onFinal);
+            }
+
+            if (meta.onUpdate != null) {
+                onTick = onTick.CombineAction(meta.onUpdate);
+            }
+
+            if (alpha > 0f) {
+                onBegin = onBegin.CombineAction(() => {
+                    meta.go.Show();
+                });
+            }
+
+            if (alpha == 0f) {
+                onFinish = onFinish.CombineAction(() => {
+                    meta.go.Hide();
+                });
+            }
+
             if (meta.lib == TweenLib.iTween) {
 
                 if (meta.stopCurrent) {
@@ -694,7 +789,12 @@ namespace Engine.Utility {
                     "time", meta.time,
                     "delay", meta.delay,
                     "looptype", loopTypeLib,
-                    "easetype", easeTypeLib);
+                    "easetype", easeTypeLib,
+                    "islocal", meta.coord == TweenCoord.local,
+                    "onstart", "OnTweenBegin",
+                    "onstartparams", onBegin,
+                    "oncomplete", "OnTweenFinish",
+                    "oncompleteparams", onFinish);
 
                 iTween.FadeTo(meta.go, hash);
             }
@@ -705,7 +805,7 @@ namespace Engine.Utility {
                 }
 
                 LTDescr info = LeanTween.alpha(
-                    meta.go, alpha, meta.time).setDelay(meta.delay);
+                    meta.go, alpha, meta.time).setDelay(meta.delay).pause();
 
                 LeanTweenType loopTypeLib =
                     ConvertLibLoopType<LeanTweenType>(meta.loopType);
@@ -716,19 +816,15 @@ namespace Engine.Utility {
                 info.setLoopType(loopTypeLib);
                 info.setLoopType(easeTypeLib);
 
-                if (meta.onComplete != null) {
-                    //info.setOnCompleteOnStart(true);
-                    info.setOnComplete(meta.onComplete);
-                }
-
-                if (meta.onStart != null) {
-                    //info.setOnCompleteOnStart(true);
-                    info.setOnStart(meta.onStart);
-                }
-
+                info.setOnStart(onBegin);
+                info.setOnComplete(onFinish);
+                //info.setOnUpdate(onTick);
+                
                 if (meta.onUpdate != null) {
                     //info.setOnUpdate(onUpdate);
                 }
+
+                info.resume();
             }
             else if (meta.lib == TweenLib.nguiUITweener) {
 
@@ -740,6 +836,10 @@ namespace Engine.Utility {
 
                 UITweenerUtil.FadeTo(
                     meta.go, easeTypeLib, loopTypeLib, meta.time, meta.delay, alpha);
+
+                //OnTweenBegin(onBegin);
+                //OnTweenFinish(onFinish);
+                //OnTweenTick(onTick);
             }
 
             /*
@@ -771,5 +871,122 @@ namespace Engine.Utility {
             }
             */
         }
+
+        //
+        // EASING HELPERS FOR UI and OBJECTS
+
+        // top
+
+        public static void ShowObjectTop(
+            GameObject go, 
+            TweenCoord coord = TweenCoord.local, bool fade = true,
+            float time = .5f, float delay = .5f) {
+            ShowObject(go, Vector3.zero.WithY(topOpenY), coord, fade, time, delay);
+        }
+
+        public static void HideObjectTop(
+            GameObject go, 
+            TweenCoord coord = TweenCoord.local, bool fade = true,
+            float time = .5f, float delay = .5f) {
+            HideObject(go, Vector3.zero.WithY(topClosedY), coord, fade, time, delay);
+        }
+
+        // bottom
+
+        public static void ShowObjectBottom(
+            GameObject go, 
+            TweenCoord coord = TweenCoord.local, bool fade = true,
+            float time = .5f, float delay = .5f) {
+            ShowObject(go, Vector3.zero.WithY(bottomOpenY), coord, fade, time, delay);
+        }
+
+        public static void HideObjectBottom(
+            GameObject go, 
+            TweenCoord coord = TweenCoord.local, bool fade = true,
+            float time = .5f, float delay = .5f) {
+            HideObject(go, Vector3.zero.WithY(bottomClosedY), coord, fade, time, delay);
+        }
+
+        // left
+
+        public static void ShowObjectLeft(
+            GameObject go, 
+            TweenCoord coord = TweenCoord.local, bool fade = true,
+            float time = .5f, float delay = .5f) {
+            ShowObject(go, Vector3.zero.WithX(leftOpenX), coord, fade, time, delay);
+        }
+
+        public static void HideObjectLeft(
+            GameObject go, 
+            TweenCoord coord = TweenCoord.local, bool fade = true,
+            float time = .5f, float delay = .5f) {
+            HideObject(go, Vector3.zero.WithX(leftClosedX), coord, fade);
+        }
+
+        // right
+
+        public static void ShowObjectRight(
+            GameObject go, 
+            TweenCoord coord = TweenCoord.local, bool fade = true,
+            float time = .5f, float delay = .5f) {
+            ShowObject(go, Vector3.zero.WithX(rightOpenX), coord, fade, time, delay);
+        }
+
+        public static void HideObjectRight(
+            GameObject go, 
+            TweenCoord coord = TweenCoord.local, bool fade = true,
+            float time = .5f, float delay = .5f) {
+            HideObject(go, Vector3.zero.WithX(rightClosedX), coord, fade, time, delay);
+        }
+
+        //
+
+        public static void ShowObject(
+            GameObject go, Vector3 pos, 
+            TweenCoord coord = TweenCoord.local, bool fade = true,
+            float time = .5f, float delay = .5f) {
+
+            TweenObjectState(go, pos, 1f, coord, fade, time, delay);
+        }
+
+        public static void HideObject(
+            GameObject go, Vector3 pos, 
+            TweenCoord coord = TweenCoord.local, bool fade = true,
+            float time = .5f, float delay = .5f) {
+
+            TweenObjectState(go, pos, 0f, coord, fade, time, delay);
+        }
+
+        //
+
+        public static void TweenObjectState(
+            GameObject go, Vector3 pos, float alpha = 1f, 
+            TweenCoord coord = TweenCoord.local, bool fade = true,
+            float time = .5f, float delay = .5f) {
+
+            if (go == null) {
+                return;
+            }
+
+            //float time = durationShow;
+            //float delay = durationDelayShow;
+
+            //if (alpha > 0f) {
+            //    go.Show();
+            //}
+            //else {
+            //    //time = durationHide;
+            //    //delay = durationDelayHide;
+            //
+            //   //go.HideObjectDelayed(time + delay);
+            //}
+
+            if (fade) {
+                TweenUtil.FadeToObject(go, alpha, time, delay, true, coord);
+            }
+
+            TweenUtil.MoveToObject(
+                go, pos, time, delay, false, coord);
+        }        
     }
 }
