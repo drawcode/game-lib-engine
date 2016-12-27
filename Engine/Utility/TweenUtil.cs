@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace Engine.Utility {
 
@@ -458,6 +459,12 @@ namespace Engine.Utility {
             action();
         }
 
+        public static void SetImageAlpha(float val, Image img) {
+            Color color = img.color;
+            color.a = val;
+            img.color = color;
+        }
+
         // --------------------------------------------------------------------
         // MOVE
 
@@ -620,8 +627,12 @@ namespace Engine.Utility {
                 LeanTweenType loopTypeLib =
                     ConvertLibLoopType<LeanTweenType>(meta.loopType);
 
-                info.setLoopType(ConvertLibLoopType<LeanTweenType>(meta.loopType));
-                
+                LeanTweenType easeTypeLib =
+                    ConvertLibEaseType<LeanTweenType>(meta.easeType);
+
+                info.setLoopType(loopTypeLib);
+                info.setEase(easeTypeLib);
+
                 info.setOnStart(onBegin);
                 info.setOnComplete(onFinish);
                 //info.setOnUpdate(onTick);
@@ -803,9 +814,21 @@ namespace Engine.Utility {
                 if (meta.stopCurrent) {
                     LeanTween.cancel(meta.go);
                 }
+                                
+                LTDescr info = null;
 
-                LTDescr info = LeanTween.alpha(
-                    meta.go, alpha, meta.time).setDelay(meta.delay).pause();
+                if (meta.go.Has<Image>()) {
+                    info = LeanTween.alpha(
+                        meta.go.Get<Image>().rectTransform, alpha, meta.time).setDelay(meta.delay).pause();
+                }
+                else if (meta.go.Has<CanvasGroup>()) {
+                    info = LeanTween.alphaCanvas(
+                        meta.go.Get<CanvasGroup>(), alpha, meta.time).setDelay(meta.delay).pause();                    
+                }
+                else {
+                    info = LeanTween.alpha(
+                        meta.go, alpha, meta.time).setDelay(meta.delay).pause();
+                }
 
                 LeanTweenType loopTypeLib =
                     ConvertLibLoopType<LeanTweenType>(meta.loopType);
@@ -814,7 +837,7 @@ namespace Engine.Utility {
                     ConvertLibEaseType<LeanTweenType>(meta.easeType);
 
                 info.setLoopType(loopTypeLib);
-                info.setLoopType(easeTypeLib);
+                info.setEase(easeTypeLib);
 
                 info.setOnStart(onBegin);
                 info.setOnComplete(onFinish);
@@ -880,14 +903,14 @@ namespace Engine.Utility {
         public static void ShowObjectTop(
             GameObject go, 
             TweenCoord coord = TweenCoord.local, bool fade = true,
-            float time = .5f, float delay = .5f) {
+            float time = .5f, float delay = .55f) {
             ShowObject(go, Vector3.zero.WithY(topOpenY), coord, fade, time, delay);
         }
 
         public static void HideObjectTop(
             GameObject go, 
             TweenCoord coord = TweenCoord.local, bool fade = true,
-            float time = .5f, float delay = .5f) {
+            float time = .5f, float delay = 0f) {
             HideObject(go, Vector3.zero.WithY(topClosedY), coord, fade, time, delay);
         }
 
@@ -896,14 +919,14 @@ namespace Engine.Utility {
         public static void ShowObjectBottom(
             GameObject go, 
             TweenCoord coord = TweenCoord.local, bool fade = true,
-            float time = .5f, float delay = .5f) {
+            float time = .5f, float delay = .55f) {
             ShowObject(go, Vector3.zero.WithY(bottomOpenY), coord, fade, time, delay);
         }
 
         public static void HideObjectBottom(
             GameObject go, 
             TweenCoord coord = TweenCoord.local, bool fade = true,
-            float time = .5f, float delay = .5f) {
+            float time = .5f, float delay = 0f) {
             HideObject(go, Vector3.zero.WithY(bottomClosedY), coord, fade, time, delay);
         }
 
@@ -912,14 +935,14 @@ namespace Engine.Utility {
         public static void ShowObjectLeft(
             GameObject go, 
             TweenCoord coord = TweenCoord.local, bool fade = true,
-            float time = .5f, float delay = .5f) {
+            float time = .5f, float delay = .55f) {
             ShowObject(go, Vector3.zero.WithX(leftOpenX), coord, fade, time, delay);
         }
 
         public static void HideObjectLeft(
             GameObject go, 
             TweenCoord coord = TweenCoord.local, bool fade = true,
-            float time = .5f, float delay = .5f) {
+            float time = .5f, float delay = 0f) {
             HideObject(go, Vector3.zero.WithX(leftClosedX), coord, fade);
         }
 
@@ -928,14 +951,14 @@ namespace Engine.Utility {
         public static void ShowObjectRight(
             GameObject go, 
             TweenCoord coord = TweenCoord.local, bool fade = true,
-            float time = .5f, float delay = .5f) {
+            float time = .5f, float delay = .55f) {
             ShowObject(go, Vector3.zero.WithX(rightOpenX), coord, fade, time, delay);
         }
 
         public static void HideObjectRight(
             GameObject go, 
             TweenCoord coord = TweenCoord.local, bool fade = true,
-            float time = .5f, float delay = .5f) {
+            float time = .5f, float delay = 0f) {
             HideObject(go, Vector3.zero.WithX(rightClosedX), coord, fade, time, delay);
         }
 
@@ -944,7 +967,7 @@ namespace Engine.Utility {
         public static void ShowObject(
             GameObject go, Vector3 pos, 
             TweenCoord coord = TweenCoord.local, bool fade = true,
-            float time = .5f, float delay = .5f) {
+            float time = .5f, float delay = .55f) {
 
             TweenObjectState(go, pos, 1f, coord, fade, time, delay);
         }
@@ -952,7 +975,7 @@ namespace Engine.Utility {
         public static void HideObject(
             GameObject go, Vector3 pos, 
             TweenCoord coord = TweenCoord.local, bool fade = true,
-            float time = .5f, float delay = .5f) {
+            float time = .5f, float delay = 0f) {
 
             TweenObjectState(go, pos, 0f, coord, fade, time, delay);
         }
@@ -962,7 +985,7 @@ namespace Engine.Utility {
         public static void TweenObjectState(
             GameObject go, Vector3 pos, float alpha = 1f, 
             TweenCoord coord = TweenCoord.local, bool fade = true,
-            float time = .5f, float delay = .5f) {
+            float time = .5f, float delay = 0f) {
 
             if (go == null) {
                 return;
