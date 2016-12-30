@@ -869,13 +869,14 @@ namespace Engine.Utility {
              * TODO nested -a- marked objects to keep alpha on on nested when needed
              * ex: objectname-a-50 = alpha 50% on nested no matter parent
              * 
-            foreach (Transform t in go.transform) {
+             */
+            foreach (Transform t in meta.go.transform) {
                 string toLook = "-a-";
                 int alphaMarker = t.name.IndexOf(toLook);
                 //string alphaObject = t.name;
                 if (alphaMarker > -1) {
                     // Fade it immediately
-                    FadeTo(t.gameObject, UITweener.Method.Linear, UITweener.Style.Once, 0f, 0f, 0f);
+                    //FadeToObject(t.gameObject, alpha, meta.time, meta.delay);
                     // Fade to the correct value after initial fade in
                     string val = t.name.Substring(alphaMarker + toLook.Length);
                     if (!string.IsNullOrEmpty(val)) {
@@ -885,14 +886,15 @@ namespace Engine.Utility {
                         if (valNumeric > 0f) {
                             valNumeric = valNumeric / 100f;
 
-                            FadeTo(t.gameObject, UITweener.Method.Linear, UITweener.Style.Once,
-                                duration + .05f, duration + delay, valNumeric);
+                            //FadeTo(t.gameObject, UITweener.Method.Linear, UITweener.Style.Once,
+                            //    duration + .05f, duration + delay, valNumeric);
+
+                            FadeToObject(t.gameObject, valNumeric, meta.time, meta.delay + .05f);
                         }
                     }
                 }
-                FadeInHandler(t.gameObject, duration, delay);
+                //FadeToObject(t.gameObject, alpha, meta.time, meta.delay);
             }
-            */
         }
 
         //

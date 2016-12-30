@@ -117,6 +117,8 @@ public class BaseDataObjectKeys {
     public static string network_items = "network_items";
     public static string network = "network";
     public static string networks = "networks";
+    //
+    public static string arcade = "arcade";
     //    
     public static string level = "level";
     public static string levels = "levels";
