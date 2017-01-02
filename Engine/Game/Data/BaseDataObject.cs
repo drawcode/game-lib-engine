@@ -31,6 +31,7 @@ public class BaseDataObjectKeys {
     public static string path = "path";
     public static string overlay = "overlay";
     public static string background = "background";
+    public static string overview = "overview";
     public static string content = "content";
     public static string contents = "contents";
     public static string upload = "upload";

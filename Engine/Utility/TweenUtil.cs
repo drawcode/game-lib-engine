@@ -896,8 +896,251 @@ namespace Engine.Utility {
                 //FadeToObject(t.gameObject, alpha, meta.time, meta.delay);
             }
         }
+        
+        // --------------------------------------------------------------------
+        // COLOR
 
-        //
+        public static void ColorToObject(
+           GameObject go,
+           Color color,
+           float time = .5f, float delay = .5f,
+           bool stopCurrent = true,
+           TweenCoord coord = TweenCoord.world,
+           TweenEaseType easeType = TweenEaseType.quadEaseInOut,
+           TweenLoopType loopType = TweenLoopType.once) {
+
+            ColorToObjectLeanTween(
+                go,
+                color, time, delay, stopCurrent, coord, easeType, loopType);
+        }
+
+        public static void ColorToObject(
+           TweenLib lib,
+           GameObject go,
+           Color color,
+           float time = .5f, float delay = .5f,
+           bool stopCurrent = true,
+           TweenCoord coord = TweenCoord.world,
+           TweenEaseType easeType = TweenEaseType.quadEaseInOut,
+           TweenLoopType loopType = TweenLoopType.once) {
+
+            TweenMeta meta =
+                GetMetaDefault(
+                    lib, go, time, delay, stopCurrent, coord, easeType, loopType);
+
+            ColorToObject(meta, color);
+        }
+
+        public static void ColorToObjectLeanTween(
+           GameObject go,
+           Color color,
+           float time = .5f, float delay = .5f,
+           bool stopCurrent = true,
+           TweenCoord coord = TweenCoord.world,
+           TweenEaseType easeType = TweenEaseType.quadEaseInOut,
+           TweenLoopType loopType = TweenLoopType.once) {
+
+            ColorToObject(
+                TweenLib.leanTween,
+                go,
+                color, time, delay, stopCurrent, coord, easeType, loopType);
+        }
+
+        public static void ColorToObjectiTween(
+           GameObject go,
+           Color color,
+           float time = .5f, float delay = .5f,
+           bool stopCurrent = true,
+           TweenCoord coord = TweenCoord.world,
+           TweenEaseType easeType = TweenEaseType.quadEaseInOut,
+           TweenLoopType loopType = TweenLoopType.once) {
+
+            ColorToObject(
+                TweenLib.iTween,
+                go,
+                color, time, delay, stopCurrent, coord, easeType, loopType);
+        }
+
+        public static void ColorToObjectUITweener(
+           GameObject go,
+           Color color,
+           float time = .5f, float delay = .5f,
+           bool stopCurrent = true,
+           TweenCoord coord = TweenCoord.world,
+           TweenEaseType easeType = TweenEaseType.quadEaseInOut,
+           TweenLoopType loopType = TweenLoopType.once) {
+
+            ColorToObject(
+                TweenLib.nguiUITweener,
+                go,
+                color, time, delay, stopCurrent, coord, easeType, loopType);
+        }
+
+        public static void ColorToObject(
+            TweenMeta meta,
+            Color color) {
+
+            if (meta.go == null) {
+                return;
+            }
+
+            Action onBegin = () => {
+
+            };
+
+            Action onFinish = () => {
+
+            };
+
+            Action onTick = () => {
+
+            };
+
+            if (meta.onStart != null) {
+                onBegin = onBegin.CombineAction(meta.onStart);
+            }
+
+            if (meta.onComplete != null) {
+                onFinish = onFinish.CombineAction(meta.onComplete);
+            }
+
+            if (meta.onFinal != null) {
+                onFinish = onFinish.CombineAction(meta.onFinal);
+            }
+
+            if (meta.onUpdate != null) {
+                onTick = onTick.CombineAction(meta.onUpdate);
+            }
+
+            if (color.a > 0f) {
+                onBegin = onBegin.CombineAction(() => {
+                    meta.go.Show();
+                });
+            }
+
+            if (color.a == 0f) {
+                onFinish = onFinish.CombineAction(() => {
+                    meta.go.Hide();
+                });
+            }
+
+            if (meta.lib == TweenLib.iTween) {
+
+                if (meta.stopCurrent) {
+                    iTween.Stop(meta.go);
+                }
+
+                iTween.LoopType loopTypeLib =
+                    ConvertLibLoopType<iTween.LoopType>(meta.loopType);
+
+                iTween.EaseType easeTypeLib =
+                    ConvertLibEaseType<iTween.EaseType>(meta.easeType);
+
+                Hashtable hash = iTween.Hash(
+                    "color", color,
+                    "time", meta.time,
+                    "delay", meta.delay,
+                    "looptype", loopTypeLib,
+                    "easetype", easeTypeLib,
+                    "islocal", meta.coord == TweenCoord.local,
+                    "onstart", "OnTweenBegin",
+                    "onstartparams", onBegin,
+                    "oncomplete", "OnTweenFinish",
+                    "oncompleteparams", onFinish);
+
+                iTween.FadeTo(meta.go, hash);
+            }
+            else if (meta.lib == TweenLib.leanTween) {
+
+                if (meta.stopCurrent) {
+                    LeanTween.cancel(meta.go);
+                }
+
+                LTDescr info = null;
+
+                if (meta.go.Has<Image>()) {
+                    info = LeanTween.color(
+                        meta.go.Get<Image>().rectTransform, color, meta.time).setDelay(meta.delay).pause();
+                }
+                else if (meta.go.Has<CanvasGroup>()) {
+                    info = LeanTween.alphaCanvas(
+                        meta.go.Get<CanvasGroup>(), color.a, meta.time).setDelay(meta.delay).pause();
+                }
+                else {
+                    info = LeanTween.color(
+                        meta.go, color, meta.time).setDelay(meta.delay).pause();
+                }
+
+                LeanTweenType loopTypeLib =
+                    ConvertLibLoopType<LeanTweenType>(meta.loopType);
+
+                LeanTweenType easeTypeLib =
+                    ConvertLibEaseType<LeanTweenType>(meta.easeType);
+
+                info.setLoopType(loopTypeLib);
+                info.setEase(easeTypeLib);
+
+                info.setOnStart(onBegin);
+                info.setOnComplete(onFinish);
+                //info.setOnUpdate(onTick);
+
+                if (meta.onUpdate != null) {
+                    //info.setOnUpdate(onUpdate);
+                }
+
+                info.resume();
+            }
+            else if (meta.lib == TweenLib.nguiUITweener) {
+
+                UITweener.Style loopTypeLib =
+                    ConvertLibLoopType<UITweener.Style>(meta.loopType);
+
+                UITweener.Method easeTypeLib =
+                    ConvertLibEaseType<UITweener.Method>(meta.easeType);
+
+                UITweenerUtil.ColorTo(
+                    meta.go, easeTypeLib, loopTypeLib, meta.time, meta.delay, color);
+
+                //OnTweenBegin(onBegin);
+                //OnTweenFinish(onFinish);
+                //OnTweenTick(onTick);
+            }
+
+            /*
+             * TODO nested -a- marked objects to keep alpha on on nested when needed
+             * ex: objectname-a-50 = alpha 50% on nested no matter parent
+             * 
+             */
+            foreach (Transform t in meta.go.transform) {
+                string toLook = "-a-";
+                int alphaMarker = t.name.IndexOf(toLook);
+                //string alphaObject = t.name;
+                if (alphaMarker > -1) {
+                    // Fade it immediately
+                    //FadeToObject(t.gameObject, alpha, meta.time, meta.delay);
+                    // Fade to the correct value after initial fade in
+                    string val = t.name.Substring(alphaMarker + toLook.Length);
+                    if (!string.IsNullOrEmpty(val)) {
+                        float valNumeric = 0f;
+                        float.TryParse(val, out valNumeric);
+
+                        if (valNumeric > 0f) {
+                            valNumeric = valNumeric / 100f;
+
+                            color.a = valNumeric;
+
+                            //FadeTo(t.gameObject, UITweener.Method.Linear, UITweener.Style.Once,
+                            //    duration + .05f, duration + delay, valNumeric);
+
+                            ColorToObject(t.gameObject, color, meta.time, meta.delay + .05f);
+                        }
+                    }
+                }
+                //FadeToObject(t.gameObject, alpha, meta.time, meta.delay);
+            }
+        }
+
+        // --------------------------------------------------------------------
         // EASING HELPERS FOR UI and OBJECTS
 
         // top
