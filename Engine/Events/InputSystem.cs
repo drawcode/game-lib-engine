@@ -41,6 +41,7 @@ namespace Engine.Events {
         public InputTouchInfo lastTouch;
         public List<InputTouchInfo> touchesList;
         private InputTouchInfo touchInfo;
+
         private static InputSystem _instance = null;
         
         public static InputSystem Instance {
