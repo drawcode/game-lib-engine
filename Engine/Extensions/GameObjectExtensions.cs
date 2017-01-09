@@ -619,7 +619,7 @@ public static class BaseGameObjectExtensions {
         return GameObjectHelper.CreateGameObject(go, pos, rotate, pooled);
     }
 
-    public static void DestroyGameObject(this GameObject go, float delay, bool pooled) {
+    public static void DestroyGameObject(this GameObject go, float delay = 0f, bool pooled = true) {
         GameObjectHelper.DestroyGameObject(go, delay, pooled);
     }
 

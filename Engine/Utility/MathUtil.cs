@@ -41,8 +41,36 @@ public class MathUtil {
         return UnityEngine.Random.insideUnitSphere * radius;
     }
 
-    //
+    // RANGES
+    
+    public static bool IsVector3OutOfRange(Vector3 pos, Vector3 min, Vector3 max, Vector3 bounds) {
+        return !IsVector3InRange(pos, min, max, bounds);
+    }
 
+    public static bool IsVector3InRange(Vector3 pos, Vector3 min, Vector3 max, Vector3 bounds) {
+        if (pos.x > max.x + bounds.x) {
+            return false;
+        }
+        else if (pos.y > max.y + bounds.y) {
+            return false;
+        }
+        else if (pos.z > max.z + bounds.z) {
+            return false;
+        }
+        else if (pos.x < min.x + bounds.x) {
+            return false;
+        }
+        else if (pos.y < min.y + bounds.y) {
+            return false;
+        }
+        else if (pos.z < min.z + bounds.z) {
+            return false;
+        }
+
+        return true;
+    }
+
+    //
 
     public static Vector3 LerpPercent(Vector3 start, Vector3 end, float percent) {
 
