@@ -7,13 +7,38 @@ namespace Engine.Events {
 
     public class InputSystemEvents {
         public static string inputAxis = "event-input-axis";
-        public static string inputSwipe = "event-input-swipe";
-
 
         public static string inputUp = "event-input-up";
         public static string inputDown = "event-input-down";
         public static string inputMove = "event-input-move";
         public static string inputDragMove = "event-input-drag-move";
+
+        public static string inputTap= "event-input-tap";
+        public static string inputDrag= "event-input-drag";
+        public static string inputSwipe= "event-input-swipe";
+        public static string inputPinch= "event-input-pinch";
+        public static string inputRotate = "event-input-twist";
+        public static string inputLongPress = "event-input-long-press";
+        public static string inputDoubleTap = "event-input-double-tap";
+    }
+    
+    public enum InputSystemSwipeDirection {
+        All,
+        Cross,
+        Diagonals,
+        Down,
+        Horizontal,
+        Left,
+        LowerDiagonals,
+        LowerLeftDiagonal,
+        LowerRightDiagonal,
+        None,
+        Right,
+        Up,
+        UpperDiagonals,
+        UpperLeftDiagonal,
+        UpperRightDiagonal,
+        Vertical
     }
 
     public class InputTouchInfo {
@@ -29,20 +54,29 @@ namespace Engine.Events {
     public class InputSystem : GameObjectBehavior {
         private bool inputEnabled = true;
         public bool useAcceleration = false;
-
+        //
         public Vector2 lastNormalizedTouch = new Vector2(0f, 0f);
         public Vector2 lastNormalizedTouch2 = new Vector2(0f, 0f);
         public Vector3 lastTargetDirection = new Vector3(0f, 0f, 0f);
         public Vector3 lastTargetDirection2 = new Vector3(0f, 0f, 0f);
         public Vector3 lastAccelerometer = Vector3.zero;
+        //
         public bool mousePressed = false;
         public bool mouseSecondaryPressed = false;
         public bool touchPressed = false;
-        public bool leftPressed = false;
-        public bool rightPressed = false;
-        public bool upPressed = false;
-        public bool downPressed = false;
-        public bool usePressed = false;
+        //
+        public bool leftPress = false;
+        public bool rightPress = false;
+        public bool upPress = false;
+        public bool downPress = false;
+        public bool usePress = false;
+        //
+        public bool leftPressDown = false;
+        public bool rightPressDown = false;
+        public bool upPressDown = false;
+        public bool downPressDown = false;
+        public bool usePressDown = false;
+        //
         public InputTouchInfo lastTouch;
         public List<InputTouchInfo> touchesList;
         private InputTouchInfo touchInfo;
@@ -117,6 +151,7 @@ namespace Engine.Events {
 
         private void OnEnable() {
 
+
             Messenger<TapGesture>.AddListener(FingerGesturesMessages.OnTap,
              FingerGestures_OnTap);
 
@@ -171,6 +206,109 @@ namespace Engine.Events {
 
         //
 
+        public InputSystemSwipeDirection ConvertSwipeType(FingerGestures.SwipeDirection direction) {
+
+            if (direction == FingerGestures.SwipeDirection.All) {
+                return InputSystemSwipeDirection.All;
+            }
+            else if (direction == FingerGestures.SwipeDirection.Cross) {
+                return InputSystemSwipeDirection.Cross;
+            }
+            else if (direction == FingerGestures.SwipeDirection.Diagonals) {
+                return InputSystemSwipeDirection.Diagonals;
+            }
+            else if (direction == FingerGestures.SwipeDirection.Down) {
+                return InputSystemSwipeDirection.Down;
+            }
+            else if (direction == FingerGestures.SwipeDirection.Horizontal) {
+                return InputSystemSwipeDirection.Horizontal;
+            }
+            else if (direction == FingerGestures.SwipeDirection.Left) {
+                return InputSystemSwipeDirection.Left;
+            }
+            else if (direction == FingerGestures.SwipeDirection.LowerDiagonals) {
+                return InputSystemSwipeDirection.LowerDiagonals;
+            }
+            else if (direction == FingerGestures.SwipeDirection.LowerLeftDiagonal) {
+                return InputSystemSwipeDirection.LowerLeftDiagonal;
+            }
+            else if (direction == FingerGestures.SwipeDirection.LowerRightDiagonal) {
+                return InputSystemSwipeDirection.LowerRightDiagonal;
+            }
+            else if (direction == FingerGestures.SwipeDirection.Right) {
+                return InputSystemSwipeDirection.Right;
+            }
+            else if (direction == FingerGestures.SwipeDirection.Up) {
+                return InputSystemSwipeDirection.Up;
+            }
+            else if (direction == FingerGestures.SwipeDirection.UpperDiagonals) {
+                return InputSystemSwipeDirection.UpperDiagonals;
+            }
+            else if (direction == FingerGestures.SwipeDirection.UpperLeftDiagonal) {
+                return InputSystemSwipeDirection.UpperLeftDiagonal;
+            }
+            else if (direction == FingerGestures.SwipeDirection.UpperRightDiagonal) {
+                return InputSystemSwipeDirection.UpperRightDiagonal;
+            }
+            else if (direction == FingerGestures.SwipeDirection.Vertical) {
+                return InputSystemSwipeDirection.Vertical;
+            }
+
+            return InputSystemSwipeDirection.None;
+        }
+
+        public FingerGestures.SwipeDirection ConvertSwipeType(InputSystemSwipeDirection direction) {
+
+            if (direction == InputSystemSwipeDirection.All) {
+                return FingerGestures.SwipeDirection.All;
+            }
+            else if (direction == InputSystemSwipeDirection.Cross) {
+                return FingerGestures.SwipeDirection.Cross;
+            }
+            else if (direction == InputSystemSwipeDirection.Diagonals) {
+                return FingerGestures.SwipeDirection.Diagonals;
+            }
+            else if (direction == InputSystemSwipeDirection.Down) {
+                return FingerGestures.SwipeDirection.Down;
+            }
+            else if (direction == InputSystemSwipeDirection.Horizontal) {
+                return FingerGestures.SwipeDirection.Horizontal;
+            }
+            else if (direction == InputSystemSwipeDirection.Left) {
+                return FingerGestures.SwipeDirection.Left;
+            }
+            else if (direction == InputSystemSwipeDirection.LowerDiagonals) {
+                return FingerGestures.SwipeDirection.LowerDiagonals;
+            }
+            else if (direction == InputSystemSwipeDirection.LowerLeftDiagonal) {
+                return FingerGestures.SwipeDirection.LowerLeftDiagonal;
+            }
+            else if (direction == InputSystemSwipeDirection.LowerRightDiagonal) {
+                return FingerGestures.SwipeDirection.LowerRightDiagonal;
+            }
+            else if (direction == InputSystemSwipeDirection.Right) {
+                return FingerGestures.SwipeDirection.Right;
+            }
+            else if (direction == InputSystemSwipeDirection.Up) {
+                return FingerGestures.SwipeDirection.Up;
+            }
+            else if (direction == InputSystemSwipeDirection.UpperDiagonals) {
+                return FingerGestures.SwipeDirection.UpperDiagonals;
+            }
+            else if (direction == InputSystemSwipeDirection.UpperLeftDiagonal) {
+                return FingerGestures.SwipeDirection.UpperLeftDiagonal;
+            }
+            else if (direction == InputSystemSwipeDirection.UpperRightDiagonal) {
+                return FingerGestures.SwipeDirection.UpperRightDiagonal;
+            }
+            else if (direction == InputSystemSwipeDirection.Vertical) {
+                return FingerGestures.SwipeDirection.Vertical;
+            }
+
+            return FingerGestures.SwipeDirection.None;
+        }
+
+
 
         // INPUT
 
@@ -216,33 +354,63 @@ namespace Engine.Events {
             }
         }
 
-        public static bool isLeftPressed {
+        public static bool isLeftPress {
             get {
-                return Instance.leftPressed;
+                return Instance.leftPress;
             }
         }
 
-        public static bool isRightPressed {
+        public static bool isRightPress {
             get {
-                return Instance.rightPressed;
+                return Instance.rightPress;
             }
         }
 
-        public static bool isUpPressed {
+        public static bool isUpPress {
             get {
-                return Instance.upPressed;
+                return Instance.upPress;
             }
         }
 
-        public static bool isDownPressed {
+        public static bool isDownPress {
             get {
-                return Instance.downPressed;
+                return Instance.downPress;
             }
         }
 
-        public static bool isUsePressed {
+        public static bool isUsePress {
             get {
-                return Instance.usePressed;
+                return Instance.usePress;
+            }
+        }
+
+        public static bool isLeftPressDown {
+            get {
+                return Instance.leftPressDown;
+            }
+        }
+
+        public static bool isRightPressDown {
+            get {
+                return Instance.rightPressDown;
+            }
+        }
+
+        public static bool isUpPressDown {
+            get {
+                return Instance.upPressDown;
+            }
+        }
+
+        public static bool isDownPressDown {
+            get {
+                return Instance.downPressDown;
+            }
+        }
+
+        public static bool isUsePressDown {
+            get {
+                return Instance.usePressDown;
             }
         }
 
@@ -331,6 +499,12 @@ namespace Engine.Events {
             if (!IsInputAllowed()) {
                 return;
             }
+            
+            Messenger<Vector3, Vector3, float>.Broadcast(InputSystemEvents.inputPinch,
+                gesture.Fingers[0].Position,
+                gesture.Fingers[1].Position,
+                gesture.Delta);//, gesture.Delta);
+
             //ScaleCurrentObjects(delta);
         }
 
@@ -341,12 +515,26 @@ namespace Engine.Events {
                 return;
             }
             // RotateCurrentObjects(Vector3.zero.WithY(rotationAngleDelta));
+
+            if (gesture.Fingers.Count > 1) {
+
+                Messenger<Vector3, Vector3, float>.Broadcast(InputSystemEvents.inputRotate,
+                    gesture.Fingers[0].Position,
+                    gesture.Fingers[1].Position,
+                    gesture.DeltaRotation);//, gesture.Delta);
+            }
         }
 
         public virtual void FingerGestures_OnLongPress(LongPressGesture gesture) {
             Vector2 pos = gesture.Position;
             if (!IsInputAllowed()) {
                 return;
+            }
+
+            if (gesture.Fingers.Count > 0) {
+                Messenger<Vector3, float>.Broadcast(InputSystemEvents.inputLongPress,
+                gesture.Fingers[0].Position,
+                gesture.ElapsedTime);//, gesture.Delta);
             }
 
             if (currentDraggableGameObject != null) {
@@ -375,6 +563,11 @@ namespace Engine.Events {
                 return;
             }
 
+            if (gesture.Fingers.Count > 0) {
+                Messenger<Vector3, float>.Broadcast(InputSystemEvents.inputTap,
+                gesture.Fingers[0].Position,
+                gesture.ElapsedTime);//, gesture.Delta);
+            }
             //bool allowTap = true;
 
             if (currentDraggableGameObject != null) {
@@ -382,7 +575,7 @@ namespace Engine.Events {
             }
         }
 
-        public virtual void TapObject(GameObject go, Vector2 fingerPos, bool allowTap) {
+        public virtual void TapObject(GameObject go, Vector2 fingerPos, bool allowTap = true) {
             if (go != null) {
                 deferTap = !allowTap;
 
@@ -451,6 +644,12 @@ namespace Engine.Events {
 
             if (gesture.Taps == 2) {
 
+                if (gesture.Fingers.Count > 0) {
+                    Messenger<Vector3, float>.Broadcast(InputSystemEvents.inputDoubleTap,
+                    gesture.Fingers[0].Position,
+                    gesture.Taps);
+                }
+
                 if (currentDraggableGameObject != null) {
                     DoubleTapObject(currentDraggableGameObject, gesture.Position);
                 }
@@ -466,11 +665,13 @@ namespace Engine.Events {
             //AppViewerAppController.Instance.ChangeActionNext();
         }
 
+        /*
         public virtual void FingerGestures_OnTwoFingerSwipe(Vector2 startPos,
          FingerGestures.SwipeDirection direction, float velocity) {
             if (!IsInputAllowed()) {
                 return;
             }
+            
 
             if (direction == FingerGestures.SwipeDirection.All) {
 
@@ -488,6 +689,7 @@ namespace Engine.Events {
                 //AppViewerAppController.Instance.ChangeActionNext();
             }
         }
+        */
 
         public virtual void FingerGestures_OnSwipe(SwipeGesture gesture) {
 
@@ -500,6 +702,16 @@ namespace Engine.Events {
             }
 
             bool allowSwipe = true;//AppViewerAppController.Instance.AllowCurrentActionAdvanceSwipe();
+            
+            InputSystemSwipeDirection directionTo = ConvertSwipeType(direction);
+
+            if (gesture.Fingers.Count > 0) {
+                Messenger<InputSystemSwipeDirection, Vector3, float>.Broadcast(InputSystemEvents.inputSwipe,
+                directionTo,
+                gesture.Fingers[0].Position,
+                gesture.Velocity);
+            }
+
 
             if (direction == FingerGestures.SwipeDirection.Right
                 || direction == FingerGestures.SwipeDirection.Down) {
@@ -523,7 +735,10 @@ namespace Engine.Events {
             /*
             Vector2 swipeDirectionValue = gesture.Move;
 
-            Vector3 dir = GameController.CurrentGamePlayerController.thirdPersonController.movementDirection;//GameController.CurrentGamePlayerController.transform.position;//swipeDirectionValue;//GameController.CurrentGamePlayerController.thirdPersonController.aimingDirection;
+            Vector3 dir = GameController.CurrentGamePlayerController.thirdPersonController.movementDirection;
+            //GameController.CurrentGamePlayerController.transform.position;
+            //swipeDirectionValue;
+            //GameController.CurrentGamePlayerController.thirdPersonController.aimingDirection;
 
             Vector3 dirMovement =
                 Vector3.zero
@@ -693,6 +908,8 @@ namespace Engine.Events {
         */
 
 
+            /*
+             * INITIAL
         public virtual void HandleFingerGesturesOnLongPress(Vector2 fingerPos) {
             //LogUtil.Log("HandleFingerGesturesOnLongPress: " 
             //   + " fingerPos:" + fingerPos);   
@@ -843,18 +1060,22 @@ namespace Engine.Events {
         }
 
         public virtual void PinchMove(Vector2 fingerPos1, Vector2 fingerPos2, float delta) {
+
+            // TODO Move to editor code.
             if (GameDraggableEditor.appEditState == GameDraggableEditEnum.StateEditing) {
                 ScaleCurrentObject(delta);
             }
         }
 
         public virtual void Tap(Vector2 fingerPos) {
+            // TODO Move to editor code.
             if (GameDraggableEditor.appEditState == GameDraggableEditEnum.StateEditing) {
 
             }
         }
 
         public virtual void DoubleTap(Vector2 fingerPos) {
+            // TODO Move to editor code.
             if (GameDraggableEditor.appEditState == GameDraggableEditEnum.StateEditing) {
 
                 GameDraggableEditor.EditModeCreateAsset(fingerPos);
@@ -877,6 +1098,7 @@ namespace Engine.Events {
 
         public virtual void TwoFingerSwipe(Vector2 startPos, FingerGestures.SwipeDirection direction, float velocity) {
 
+            // TODO Move to editor code.
             if (GameDraggableEditor.appEditState == GameDraggableEditEnum.StateEditing) {
 
                 if (direction == FingerGestures.SwipeDirection.All) {
@@ -895,10 +1117,12 @@ namespace Engine.Events {
 
             if (direction == FingerGestures.SwipeDirection.Right
                 || direction == FingerGestures.SwipeDirection.Down) {
+                // TODO Move to controller code.
                 GameController.CycleCharacterTypesPrevious();
             }
             else if (direction == FingerGestures.SwipeDirection.Left
                 || direction == FingerGestures.SwipeDirection.Up) {
+                // TODO Move to controller code.
                 GameController.CycleCharacterTypesNext();
             }
         }
@@ -927,6 +1151,7 @@ namespace Engine.Events {
                 //}
             }
         }
+        */
 
         public virtual bool IsInputAllowed() {
             return true;
@@ -1681,12 +1906,18 @@ namespace Engine.Events {
                 mouseSecondaryPressed = Input.GetMouseButton(1);
                 touchPressed = Input.touchCount > 0 ? true : false;
 
-                leftPressed = Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.LeftArrow);
-                rightPressed = Input.GetKey(KeyCode.D) || Input.GetKey(KeyCode.RightArrow);
-                upPressed = Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.UpArrow);
-                downPressed = Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.DownArrow);
+                leftPress = Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.LeftArrow);
+                rightPress = Input.GetKey(KeyCode.D) || Input.GetKey(KeyCode.RightArrow);
+                upPress = Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.UpArrow);
+                downPress = Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.DownArrow);
 
-                usePressed = Input.GetKey(KeyCode.E);
+                leftPressDown = Input.GetKeyDown(KeyCode.A) || Input.GetKeyDown(KeyCode.LeftArrow);
+                rightPressDown = Input.GetKeyDown(KeyCode.D) || Input.GetKeyDown(KeyCode.RightArrow);
+                upPressDown = Input.GetKeyDown(KeyCode.W) || Input.GetKeyDown(KeyCode.UpArrow);
+                downPressDown = Input.GetKeyDown(KeyCode.S) || Input.GetKeyDown(KeyCode.DownArrow);
+
+                usePress = Input.GetKey(KeyCode.E);
+                usePressDown = Input.GetKeyDown(KeyCode.E);
 
                 //LogUtil.Log("InputSystem::Update");
             }
