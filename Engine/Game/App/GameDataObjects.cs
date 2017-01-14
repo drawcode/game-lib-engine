@@ -628,8 +628,12 @@ public class GameDataObjectItem : GameDataObject {
         return GetAnimationByType(GameDataActionKeys.emote);
     }
 
+    public GameDataAnimation GetAnimationsByTypeSlide() {
+        return GetAnimationByType(GameDataActionKeys.slide);
+    }
+
     // models
-        
+
     public bool HasModels() {
         
         if (models != null) {
