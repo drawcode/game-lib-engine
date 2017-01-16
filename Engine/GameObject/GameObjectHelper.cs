@@ -1820,7 +1820,8 @@ public static class GameObjectHelper {
                 if (t.gameObject.GetType() == typeof(GameObject)
                     && !t.IsPrefabGhost()) {
                     t.parent = null;
-                    GameObject.Destroy(t.gameObject);
+                    DestroyGameObject(t.gameObject);
+                    //GameObject.Destroy(t.gameObject);
                 }
             }
             catch (Exception e) {
