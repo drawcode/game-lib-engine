@@ -197,7 +197,9 @@ public class GameDataItemReward : GameDataObject {
     public static string currencyDouble = "currency-double";
     public static string health = "health";
     public static string goalFly = "goal-fly";  
-    public static string weapon = "weapon";    
+    public static string weapon = "weapon";
+    public static string letter = "letter";
+    public static string special = "special";
 }
 
 public class GameDataItemTypeKeys {

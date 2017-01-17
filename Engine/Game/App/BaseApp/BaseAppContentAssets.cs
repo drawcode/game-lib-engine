@@ -84,7 +84,11 @@ public class BaseAppContentAssets<T> : DataObjects<T> where T : DataObject, new(
                  || key.StartsWith(BaseDataObjectKeys.effects)) {                    
             path = ContentPaths.appCacheVersionSharedPrefabEffects;
         }
-        
+        else if (key.StartsWith(BaseDataObjectKeys.item)
+                 || key.StartsWith(BaseDataObjectKeys.items)) {
+            path = ContentPaths.appCacheVersionSharedPrefabLevelItems;
+        }
+
         path += assetCode;
         
         LogUtil.Log("LoadAsset:" + " path:" + path);
@@ -136,7 +140,17 @@ public class BaseAppContentAssets<T> : DataObjects<T> where T : DataObject, new(
         return LoadAsset(BaseDataObjectKeys.characters, code,
                          pos, rotate, pool);
     }
-    
+
+    public static GameObject LoadAssetItems(
+        string code,
+        Vector3 pos = default(Vector3),
+        Quaternion rotate = default(Quaternion),
+        bool pool = true) {
+
+        return LoadAsset(BaseDataObjectKeys.items, code,
+                         pos, rotate, pool);
+    }
+
     public static GameObject LoadAssetWeapons(
         string code,
         Vector3 pos = default(Vector3),
