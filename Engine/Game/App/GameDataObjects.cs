@@ -199,7 +199,9 @@ public class GameDataItemReward : GameDataObject {
     public static string goalFly = "goal-fly";  
     public static string weapon = "weapon";
     public static string letter = "letter";
-    public static string special = "special";
+    public static string specials = "specials";
+    public static string score = "score";
+    public static string scores = "scores";
 }
 
 public class GameDataItemTypeKeys {
