@@ -41,7 +41,10 @@ public class BaseDataObjectKeys {
     public static string host = "host";
     public static string ui = "ui";
     public static string video = "video";
-
+    //
+    public static string hud = "hud";
+    public static string hudItem = "hud-item";
+    public static string hudItems = "hud-items";
     //
     public static string right = "right";
     public static string left = "left";
