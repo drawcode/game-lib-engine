@@ -43,8 +43,12 @@ public class BaseDataObjectKeys {
     public static string video = "video";
     //
     public static string hud = "hud";
-    public static string hudItem = "hud-item";
-    public static string hudItems = "hud-items";
+    public static string hud_item = "hud_item";
+    public static string hud_items = "hud_items";
+    //
+    public static string display = "display";
+    public static string display_item = "display_item";
+    public static string display_items = "display_items";
     //
     public static string right = "right";
     public static string left = "left";
