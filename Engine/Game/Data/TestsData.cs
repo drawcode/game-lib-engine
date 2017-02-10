@@ -369,7 +369,7 @@ public class TestsData {
 
         GameDataObject obj = new GameDataObject();
 
-        int size1 = obj.GetObjectSize();
+        long size1 = obj.GetObjectSize();
 
         DumpObj(name, "size1", size1);
 
@@ -379,24 +379,24 @@ public class TestsData {
         obj2.action = "action";
         obj.data_list = new List<string>();
         obj.data_list.Add("gfdgsfgfdsgfds");
-        
-        int size2 = obj2.GetObjectSize();
+
+        long size2 = obj2.GetObjectSize();
 
         DumpObj(name, "size2", size2);
 
         //
 
         DataObject obj3 = new DataObject();
-        
-        int size3 = obj3.GetObjectSize();
+
+        long size3 = obj3.GetObjectSize();
         
         DumpObj(name, "size3", size3);
 
         //
                 
         Dictionary<string,object> obj4 = new Dictionary<string, object>();
-        
-        int size4 = obj4.GetObjectSize();
+
+        long size4 = obj4.GetObjectSize();
         
         DumpObj(name, "size4", size4);
         
@@ -405,8 +405,8 @@ public class TestsData {
 
         
         TestSizeObject obj5 = new TestSizeObject();
-        
-        int size5 = obj5.GetObjectSize();
+
+        long size5 = obj5.GetObjectSize();
         
         DumpObj(name, "size5", size5);
 

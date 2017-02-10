@@ -329,7 +329,7 @@ public class GameDataObjectItem : GameDataObject {
     }
 
     //character_presets
-    
+
     public virtual List<GameDataSound> sounds {
         get {
             return Get<List<GameDataSound>>(BaseDataObjectKeys.sounds);
@@ -1213,6 +1213,7 @@ public class GameDataObjectLocalized : GameDataObject {
     } 
 }
 
+[Serializable]
 public class GameDataObject : DataObject {
 
     // Dataobject handles keys
@@ -1746,6 +1747,16 @@ public class GameDataObject : DataObject {
 
         set {
             Set<string>(BaseDataObjectKeys.display_type, value);
+        }
+    }
+
+    public virtual string load_type {
+        get {
+            return Get<string>(BaseDataObjectKeys.load_type, "");
+        }
+
+        set {
+            Set<string>(BaseDataObjectKeys.load_type, value);
         }
     }
 

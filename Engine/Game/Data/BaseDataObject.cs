@@ -19,6 +19,7 @@ public class BaseDataObjectKeys {
     public static string code = "code";
     public static string name = "name";
     public static string data_type = "data_type";
+    public static string load_type = "load_type";
     public static string compare_type = "compare_type";
     public static string display_type = "display_type";
     public static string description = "description";
@@ -291,6 +292,7 @@ public class BaseDataObjectKeys {
     public static string terrain_presets = "terrain_presets";
     public static string asset_presets = "asset_presets";
     public static string layout_presets = "layout_presets";
+    public static string layout_part_presets = "layout_part_presets";
     public static string game_level_item_asset = "game_level_item_asset";
     public static string start_position = "start_position";
     public static string physics_type = "physics_type";

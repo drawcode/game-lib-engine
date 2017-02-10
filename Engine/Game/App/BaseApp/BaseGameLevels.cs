@@ -304,9 +304,14 @@ public class BaseGameLevels<T> : DataObjects<T> where T : DataObject, new() {
     }
 
     public static GameLevelGridData GetLevelGridLayouts(
-        GameLevelGridData dataItems, List<GameDataLayoutPreset> presets) {
+        GameLevelGridData dataItems, List<GameDataLayoutPreset> presets, string loadType = "default") {
 
         foreach (GameDataLayoutPreset layoutDataItem in presets) {
+
+            if (!layoutDataItem.load_type.IsNullOrEmpty()
+                && !layoutDataItem.load_type.IsEqualLowercase(loadType)) {
+                continue;
+            }
 
             GameLevelLayout gameLevelLayout = GameLevelLayouts.Instance.GetById(layoutDataItem.code);
 
@@ -426,7 +431,8 @@ public class BaseGameLevels<T> : DataObjects<T> where T : DataObject, new() {
 */
         return dataItems;
     }
-    
+       
+
     public static GameLevelGridData GetLevelGridAssets(GameLevelGridData dataItems, List<GameDataAssetPreset> presets) {        
         
         foreach (GameDataAssetPreset assetDataItem in presets) {

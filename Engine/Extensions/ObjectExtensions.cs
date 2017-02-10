@@ -81,6 +81,7 @@ public static class ObjectExtensions {
         return val;
     }
 
+    /*
     public static int GetObjectSize(this object val) {
         if (val == null) {
             return 0;
@@ -93,5 +94,17 @@ public static class ObjectExtensions {
         Array = ms.ToArray();
         return Array.Length;
     }
+    */
 
+    public static long GetObjectSize(this object o) {
+
+        long size = 0;
+        using (Stream s = new MemoryStream()) {
+            BinaryFormatter formatter = new BinaryFormatter();
+            formatter.Serialize(s, o);
+            size = s.Length;
+        }
+
+        return size;
+    }
 }
