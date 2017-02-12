@@ -76,7 +76,7 @@ public class BaseGameLevels<T> : DataObjects<T> where T : DataObject, new() {
     }
 
     public void PrepareDefaultData() {
-        
+
         /*
         items = new List<GameLevel>();
     
@@ -92,11 +92,11 @@ public class BaseGameLevels<T> : DataObjects<T> where T : DataObject, new() {
         LogUtil.Log("GameLevels:" + JsonMapper.ToJson(items));
         */
     }
-    
-    public void SetGameLevel(string code, string name, string displayName, 
+
+    public void SetGameLevel(string code, string name, string displayName,
                              string description, string type, int sortIndex, int typeSortIndex) {
         bool found = false;
-        
+
         for (int i = 0; i < GameLevels.Instance.items.Count; i++) {
             if (GameLevels.Instance.items[i].code.ToLower() == code.ToLower()) {
                 GameLevels.Instance.items[i].code = code;
@@ -105,12 +105,12 @@ public class BaseGameLevels<T> : DataObjects<T> where T : DataObject, new() {
                 GameLevels.Instance.items[i].description = description;
                 GameLevels.Instance.items[i].type = type;
                 GameLevels.Instance.items[i].sort_order = sortIndex;
-                GameLevels.Instance.items[i].sort_order_type = typeSortIndex;               
+                GameLevels.Instance.items[i].sort_order_type = typeSortIndex;
                 found = true;
                 break;
             }
         }
-        
+
         if (!found) {
             GameLevel obj = new GameLevel();
             obj.active = true;
@@ -131,10 +131,10 @@ public class BaseGameLevels<T> : DataObjects<T> where T : DataObject, new() {
             GameLevels.Instance.items.Add(obj);
         }
     }
-    
+
     public void SetGameLevel(GameLevel gameLevel) {
         bool found = false;
-        
+
         for (int i = 0; i < items.Count; i++) {
             if (GameLevels.Instance.items[i].code.ToLower() == gameLevel.code.ToLower()) {
                 GameLevels.Instance.items[i] = gameLevel;
@@ -142,12 +142,12 @@ public class BaseGameLevels<T> : DataObjects<T> where T : DataObject, new() {
                 break;
             }
         }
-        
+
         if (!found) {
             GameLevels.Instance.items.Add(gameLevel);
         }
     }
-    
+
     /*
     public override GameLevel GetById(string levelCode) {
         foreach(GameLevel level in GetAll()) {
@@ -158,7 +158,7 @@ public class BaseGameLevels<T> : DataObjects<T> where T : DataObject, new() {
         return null;
     }
     */
-    
+
     public List<GameLevel> GetByWorldId(string worldCode) {
         List<GameLevel> filteredLevels = new List<GameLevel>();
         foreach (GameLevel level in GameLevels.Instance.GetAll()) {
@@ -168,15 +168,15 @@ public class BaseGameLevels<T> : DataObjects<T> where T : DataObject, new() {
         }
         return filteredLevels;
     }
-    
+
     public void ReloadLevel() {
         ReloadLevel(GameLevels.Current.code);
     }
-    
+
     public void ReloadLevel(string levelCode) {
         GameLevelItems.Instance.Load(levelCode);
     }
-    
+
     public void ChangeCurrentAbsolute(string code) {
         //GameLevels.Current.code = "changeme";
         ChangeCurrent(code);
@@ -184,7 +184,7 @@ public class BaseGameLevels<T> : DataObjects<T> where T : DataObject, new() {
 
     public void ChangeCurrent(string code) {
 
-        Debug.Log("GameLevels:ChangeCurrent:" + " code:" + code); 
+        Debug.Log("GameLevels:ChangeCurrent:" + " code:" + code);
 
         if (GameLevels.Current.code != code) {
             GameLevels.Current = GameLevels.Instance.GetById(code);
@@ -195,7 +195,7 @@ public class BaseGameLevels<T> : DataObjects<T> where T : DataObject, new() {
                 //code = "level-" + code;
                 GameLevels.Current = GameLevels.Instance.GetById(code);
             }
-            
+
             if (string.IsNullOrEmpty(GameLevels.Current.code)) {
                 // TODO not found add?
                 GameLevel gameLevel = new GameLevel();
@@ -211,7 +211,7 @@ public class BaseGameLevels<T> : DataObjects<T> where T : DataObject, new() {
                 gameLevel.data = new GameLevelDataObjectItem();
                 GameLevels.Instance.items.Add(gameLevel);
             }
-            
+
             if (string.IsNullOrEmpty(GameLevels.Current.code)) {
                 GameLevels.Current = GameLevels.Instance.GetById(code);
             }
@@ -219,15 +219,15 @@ public class BaseGameLevels<T> : DataObjects<T> where T : DataObject, new() {
             //
 
             if (GameLevels.Current.data != null) {
-                
+
                 GameLevelData levelData = GameLevels.Current.data.level_data;
-                
+
                 if (levelData != null) {
 
                     currentLevelData.Copy(levelData);
                 }
                 else {
-                    
+
                     currentLevelData.Copy(defaultLevelData);
                 }
             }
@@ -238,22 +238,22 @@ public class BaseGameLevels<T> : DataObjects<T> where T : DataObject, new() {
                 GameWorlds.Instance.ChangeCurrent(GameLevels.Current.world_code);
             }
         }
-        
-        Debug.Log("GameLevels:ChangeCurrent:" + " GameLevels.Current.code:" + GameLevels.Current.code);  
-    } 
+
+        Debug.Log("GameLevels:ChangeCurrent:" + " GameLevels.Current.code:" + GameLevels.Current.code);
+    }
 
     //
 
     public static GameLevelGridData GetLevelGridTerrains(
         GameLevelGridData dataItems, List<GameDataTerrainPreset> presets) {
-        
+
         foreach (GameDataTerrainPreset terrainDataItem in presets) {
-            
+
             GamePreset terrainPreset = GamePresets.Instance.GetById(terrainDataItem.code);
-            
+
             if (terrainPreset != null) {
-                
-                GamePresetItem terrainPresetItem = 
+
+                GamePresetItem terrainPresetItem =
                     terrainPreset.GetItemRandomByProbability(terrainPreset.data.items);
 
                 float offsetX = 0;
@@ -263,11 +263,11 @@ public class BaseGameLevels<T> : DataObjects<T> where T : DataObject, new() {
                 if (GameLevels.currentLevelData.grid_centered_x) {
                     offsetX = (float)(GameLevels.currentLevelData.grid_width / 2);
                 }
-                
+
                 if (GameLevels.currentLevelData.grid_centered_y) {
                     offsetY = (float)(GameLevels.currentLevelData.grid_height / 2);
                 }
-                
+
                 if (GameLevels.currentLevelData.grid_centered_z) {
                     offsetZ = (float)(GameLevels.currentLevelData.grid_depth / 2);
                 }
@@ -275,11 +275,11 @@ public class BaseGameLevels<T> : DataObjects<T> where T : DataObject, new() {
                 float gridX = offsetX;// + (float)(layoutObjectItem.grid_data.x);
                 float gridY = offsetY;// + (float)(layoutObjectItem.grid_data.y);
                 float gridZ = offsetZ;// + (float)(layoutObjectItem.grid_data.z);
-                
+
                 Vector3 gridPos = Vector3.zero.WithX(gridX).WithY(gridY).WithZ(gridZ);
                 Vector3 gridScale = Vector3.one;
                 Vector3 gridRotation = Vector3.zero;
-                
+
                 string assetCode = terrainPresetItem.code;
                 string assetType = terrainPresetItem.type;
                 string assetDataType = terrainPresetItem.data_type;
@@ -290,8 +290,8 @@ public class BaseGameLevels<T> : DataObjects<T> where T : DataObject, new() {
                     assetType,
                     assetDataType,
                     assetDisplayType,
-                    gridPos, 
-                    gridScale, 
+                    gridPos,
+                    gridScale,
                     gridRotation);
 
                 //if(terrainPresetItem != null) {
@@ -299,21 +299,65 @@ public class BaseGameLevels<T> : DataObjects<T> where T : DataObject, new() {
                 //}
             }
         }
-        
+
         return dataItems;
     }
 
-    public static GameLevelGridData GetLevelGridLayouts(
-        GameLevelGridData dataItems, List<GameDataLayoutPreset> presets, string loadType = "default") {
 
-        foreach (GameDataLayoutPreset layoutDataItem in presets) {
+    public static string GetLevelLayoutCode(GameDataLayoutPreset dataItem) {
 
-            if (!layoutDataItem.load_type.IsNullOrEmpty()
-                && !layoutDataItem.load_type.IsEqualLowercase(loadType)) {
+        string layoutCode = dataItem.code;
+
+        if (dataItem.data_type.IsEqualLowercase(BaseDataObjectKeys.preset)) {
+
+            // This is a nested preset, get preset and set code
+
+            GamePreset preset = GamePresets.Instance.GetByCode(layoutCode);
+
+            if (preset != null) {
+
+                GamePresetItem presetItem = preset.GetItemRandomByProbability(preset.data.items);
+
+                if (presetItem != null) {
+                    //int amount = 1;
+                    //dataItems = GameLevelGridData.AddAssets(dataItems, presetItem.code, amount);
+                    layoutCode = presetItem.code;
+                }
+
+            }
+        }
+
+        return layoutCode;
+    }
+
+    public static bool IsGameLevelLayoutType(string dataType, string filterType) {
+        if (!dataType.IsEqualLowercase(filterType)
+                && !(dataType.IsNullOrEmpty()
+                && !filterType.IsEqualLowercase(BaseDataObjectKeys.defaultKey))) {
+            return false;
+        }
+
+        return true;
+    }
+
+    public static GameLevelGridData GetLevelGridLayoutParts(
+        GameLevelGridData dataItems, List<GameDataLayoutPreset> presets, string loadTypeFilter = "default") {
+
+        foreach (GameDataLayoutPreset dataItem in presets) {
+
+            // If is is not a dynamic load type load on start, else skip load
+
+            if (!IsGameLevelLayoutType(dataItem.load_type, loadTypeFilter)) {
                 continue;
             }
 
-            GameLevelLayout gameLevelLayout = GameLevelLayouts.Instance.GetById(layoutDataItem.code);
+            // If the data_type is preset then get the preset from probability
+
+            string layoutCode = GetLevelLayoutCode(dataItem);
+
+            // Handle loading the preset assets meta informatino info data
+
+            GameLevelLayout gameLevelLayout = GameLevelLayouts.Instance.GetById(layoutCode);
 
             if (gameLevelLayout == null || gameLevelLayout.data == null) {
                 continue;
@@ -330,8 +374,8 @@ public class BaseGameLevels<T> : DataObjects<T> where T : DataObject, new() {
             if (gameLevelLayout.data.position_data == null) {
                 gameLevelLayout.data.position_data = new Vector3Data();
             }
-            
-            if (layoutDataItem.display_type == GameLevelLayoutDisplayType.layoutCentered) {   
+
+            if (dataItem.display_type == GameLevelLayoutDisplayType.layoutCentered) {
                 size = gameLevelLayout.data.position_data.GetVector3();
             }
 
@@ -346,47 +390,47 @@ public class BaseGameLevels<T> : DataObjects<T> where T : DataObject, new() {
             float offsetPlayerZ = 0;
 
             foreach (GameDataObject layoutObjectItem in layoutObjects) {
-                
+
                 if (layoutObjectItem.position_data == null) {
                     layoutObjectItem.position_data = new Vector3Data();
                 }
-                
+
                 if (layoutObjectItem.local_position_data == null) {
                     layoutObjectItem.local_position_data = new Vector3Data();
                 }
-                
+
                 if (layoutObjectItem.grid_data == null) {
                     layoutObjectItem.grid_data = new Vector3Data();
                 }
-                
-                if (layoutDataItem.grid_data == null) {
-                    layoutDataItem.grid_data = new Vector3Data();
+
+                if (dataItem.grid_data == null) {
+                    dataItem.grid_data = new Vector3Data();
                 }
 
-                if (layoutDataItem.type == GameLevelLayoutDisplayType.layoutCentered) {                    
+                if (dataItem.type == GameLevelLayoutDisplayType.layoutCentered) {
 
                     if (GameLevels.currentLevelData.grid_centered_x) {
-                        offsetX = 
-                            (float)((GameLevels.currentLevelData.grid_width / 2) + offsetPlayerX) - 
+                        offsetX =
+                            (float)((GameLevels.currentLevelData.grid_width / 2) + offsetPlayerX) -
                                 ((float)size.x / 2);
                     }
-                    
+
                     if (GameLevels.currentLevelData.grid_centered_y) {
-                        offsetY = 
-                            (float)((GameLevels.currentLevelData.grid_height / 2) + offsetPlayerY) - 
+                        offsetY =
+                            (float)((GameLevels.currentLevelData.grid_height / 2) + offsetPlayerY) -
                                 ((float)size.y / 2);
                     }
 
                     if (GameLevels.currentLevelData.grid_centered_z) {
-                        offsetZ = 
-                            (float)((GameLevels.currentLevelData.grid_depth / 2) + offsetPlayerZ) - 
+                        offsetZ =
+                            (float)((GameLevels.currentLevelData.grid_depth / 2) + offsetPlayerZ) -
                                 ((float)size.z / 2);
                     }
                 }
 
-                float gridX = offsetX + (float)(layoutObjectItem.grid_data.x) + (float)(layoutDataItem.grid_data.x);
-                float gridY = offsetY + (float)(layoutObjectItem.grid_data.y) + (float)(layoutDataItem.grid_data.y);
-                float gridZ = offsetZ + (float)(layoutObjectItem.grid_data.z) + (float)(layoutDataItem.grid_data.z);
+                float gridX = offsetX + (float)(layoutObjectItem.grid_data.x) + (float)(dataItem.grid_data.x);
+                float gridY = offsetY + (float)(layoutObjectItem.grid_data.y) + (float)(dataItem.grid_data.y);
+                float gridZ = offsetZ + (float)(layoutObjectItem.grid_data.z) + (float)(dataItem.grid_data.z);
 
                 Vector3 gridPos = Vector3.zero.WithX(gridX).WithY(gridY).WithZ(gridZ);
                 Vector3 gridScale = layoutObjectItem.scale_data.GetVector3();
@@ -401,25 +445,25 @@ public class BaseGameLevels<T> : DataObjects<T> where T : DataObject, new() {
 
                 if (assetCode != BaseDataObjectKeys.empty) {
                     Debug.Log("layoutObjectItem:" + " assetCode:" + assetCode + " gridPos:" + gridPos
-                        + " gridScale:" + gridScale + " gridRotation:" + gridRotation 
+                        + " gridScale:" + gridScale + " gridRotation:" + gridRotation
                         + " gridX:" + gridX + " gridY:" + gridY + " gridZ:" + gridZ
                         + " layoutObjectItem.grid_data:" + layoutObjectItem.grid_data.GetVector3()
                     );
                 }
-                
+
                 dataItems.SetAssetsInAssetMap(
                     assetCode,
                     assetType,
                     assetDataType,
                     assetDisplayType,
-                    gridPos, 
-                    gridScale, 
+                    gridPos,
+                    gridScale,
                     gridRotation,
                     localPosition);
             }
 
         }
-        
+
         /*
         dataItems.SetAssetsInAssetMap("wall-1", Vector3.zero.WithX(offsetX+2).WithY(1).WithZ(offsetZ+2), scale, Vector3.zero.WithY(90));
         dataItems.SetAssetsInAssetMap("wall-1", Vector3.zero.WithX(offsetX+2).WithY(1).WithZ(offsetZ+4), scale, Vector3.zero.WithY(90));
@@ -431,23 +475,159 @@ public class BaseGameLevels<T> : DataObjects<T> where T : DataObject, new() {
 */
         return dataItems;
     }
-       
+    
+    public static GameLevelGridData GetLevelGridLayouts(
+        GameLevelGridData dataItems, List<GameDataLayoutPreset> presets, string loadTypeFilter = "default") {
 
-    public static GameLevelGridData GetLevelGridAssets(GameLevelGridData dataItems, List<GameDataAssetPreset> presets) {        
-        
-        foreach (GameDataAssetPreset assetDataItem in presets) {
+        foreach (GameDataLayoutPreset dataItem in presets) {
+
+            // If is is not a dynamic load type load on start, else skip load
+
+            if (!IsGameLevelLayoutType(dataItem.load_type, loadTypeFilter)) {
+                continue;
+            }
+
+            // If the data_type is preset then get the preset from probability
             
+            string layoutCode = GetLevelLayoutCode(dataItem);
+
+            // Handle loading the preset assets meta informatino info data
+
+            GameLevelLayout gameLevelLayout = GameLevelLayouts.Instance.GetById(layoutCode);
+
+            if (gameLevelLayout == null || gameLevelLayout.data == null) {
+                continue;
+            }
+
+            List<GameDataObject> layoutObjects = gameLevelLayout.data.GetLayoutAssets();
+
+            if (layoutObjects == null) {
+                continue;
+            }
+
+            Vector3 size = Vector3.zero;
+
+            if (gameLevelLayout.data.position_data == null) {
+                gameLevelLayout.data.position_data = new Vector3Data();
+            }
+
+            if (dataItem.display_type == GameLevelLayoutDisplayType.layoutCentered) {
+                size = gameLevelLayout.data.position_data.GetVector3();
+            }
+
+            //Debug.Log("layoutObjects.Count:" + layoutObjects.Count);
+
+            float offsetX = 0;
+            float offsetZ = 0;
+            float offsetY = 0;// TODO 2d/3d type ((int)GameLevels.gridHeight / 2) + 3;
+
+            float offsetPlayerX = 3;
+            float offsetPlayerY = 3;
+            float offsetPlayerZ = 0;
+
+            foreach (GameDataObject layoutObjectItem in layoutObjects) {
+
+                if (layoutObjectItem.position_data == null) {
+                    layoutObjectItem.position_data = new Vector3Data();
+                }
+
+                if (layoutObjectItem.local_position_data == null) {
+                    layoutObjectItem.local_position_data = new Vector3Data();
+                }
+
+                if (layoutObjectItem.grid_data == null) {
+                    layoutObjectItem.grid_data = new Vector3Data();
+                }
+
+                if (dataItem.grid_data == null) {
+                    dataItem.grid_data = new Vector3Data();
+                }
+
+                if (dataItem.type == GameLevelLayoutDisplayType.layoutCentered) {
+
+                    if (GameLevels.currentLevelData.grid_centered_x) {
+                        offsetX =
+                            (float)((GameLevels.currentLevelData.grid_width / 2) + offsetPlayerX) -
+                                ((float)size.x / 2);
+                    }
+
+                    if (GameLevels.currentLevelData.grid_centered_y) {
+                        offsetY =
+                            (float)((GameLevels.currentLevelData.grid_height / 2) + offsetPlayerY) -
+                                ((float)size.y / 2);
+                    }
+
+                    if (GameLevels.currentLevelData.grid_centered_z) {
+                        offsetZ =
+                            (float)((GameLevels.currentLevelData.grid_depth / 2) + offsetPlayerZ) -
+                                ((float)size.z / 2);
+                    }
+                }
+
+                float gridX = offsetX + (float)(layoutObjectItem.grid_data.x) + (float)(dataItem.grid_data.x);
+                float gridY = offsetY + (float)(layoutObjectItem.grid_data.y) + (float)(dataItem.grid_data.y);
+                float gridZ = offsetZ + (float)(layoutObjectItem.grid_data.z) + (float)(dataItem.grid_data.z);
+
+                Vector3 gridPos = Vector3.zero.WithX(gridX).WithY(gridY).WithZ(gridZ);
+                Vector3 gridScale = layoutObjectItem.scale_data.GetVector3();
+                Vector3 gridRotation = layoutObjectItem.local_rotation_data.GetVector3();
+
+                Vector3 localPosition = layoutObjectItem.local_position_data.GetVector3();
+
+                string assetCode = layoutObjectItem.code;
+                string assetType = layoutObjectItem.type;
+                string assetDataType = layoutObjectItem.data_type;
+                string assetDisplayType = layoutObjectItem.display_type;
+
+                if (assetCode != BaseDataObjectKeys.empty) {
+                    Debug.Log("layoutObjectItem:" + " assetCode:" + assetCode + " gridPos:" + gridPos
+                        + " gridScale:" + gridScale + " gridRotation:" + gridRotation
+                        + " gridX:" + gridX + " gridY:" + gridY + " gridZ:" + gridZ
+                        + " layoutObjectItem.grid_data:" + layoutObjectItem.grid_data.GetVector3()
+                    );
+                }
+
+                dataItems.SetAssetsInAssetMap(
+                    assetCode,
+                    assetType,
+                    assetDataType,
+                    assetDisplayType,
+                    gridPos,
+                    gridScale,
+                    gridRotation,
+                    localPosition);
+            }
+
+        }
+
+        /*
+        dataItems.SetAssetsInAssetMap("wall-1", Vector3.zero.WithX(offsetX+2).WithY(1).WithZ(offsetZ+2), scale, Vector3.zero.WithY(90));
+        dataItems.SetAssetsInAssetMap("wall-1", Vector3.zero.WithX(offsetX+2).WithY(1).WithZ(offsetZ+4), scale, Vector3.zero.WithY(90));
+        dataItems.SetAssetsInAssetMap("wall-1", Vector3.zero.WithX(offsetX+2).WithY(1).WithZ(offsetZ+6), scale, Vector3.zero.WithY(90));
+        dataItems.SetAssetsInAssetMap("wall-1", Vector3.zero.WithX(offsetX+2).WithY(1).WithZ(offsetZ+8), scale, Vector3.zero.WithY(90));
+        dataItems.SetAssetsInAssetMap("wall-1", Vector3.zero.WithX(offsetX+4).WithY(1).WithZ(offsetZ+8), scale, Vector3.zero.WithY(0));
+        dataItems.SetAssetsInAssetMap("wall-1", Vector3.zero.WithX(offsetX+6).WithY(1).WithZ(offsetZ+8), scale, Vector3.zero.WithY(0));
+        dataItems.SetAssetsInAssetMap("wall-1", Vector3.zero.WithX(offsetX+8).WithY(1).WithZ(offsetZ+8), scale, Vector3.zero.WithY(0));
+*/
+        return dataItems;
+    }
+
+
+    public static GameLevelGridData GetLevelGridAssets(GameLevelGridData dataItems, List<GameDataAssetPreset> presets) {
+
+        foreach (GameDataAssetPreset assetDataItem in presets) {
+
             int minAssetLimit = (int)assetDataItem.min;
             int maxAssetLimit = (int)assetDataItem.max;
 
             int randomAssetLimit = UnityEngine.Random.Range(minAssetLimit, maxAssetLimit);
-            
+
             int totalAssetLimit = 0;
 
             bool isNestedLimitsType = assetDataItem.Get<string>(BaseDataObjectKeys.data_type) == "nested_limits" ? true : false;
 
             GamePreset assetPreset = GamePresets.Instance.GetById(assetDataItem.code);
-            
+
             if (assetPreset != null) {
 
                 if (!isNestedLimitsType) {
@@ -455,7 +635,7 @@ public class BaseGameLevels<T> : DataObjects<T> where T : DataObject, new() {
                     for (int i = 0; i < randomAssetLimit; i++) {
 
                         GamePresetItem presetItem = assetPreset.GetItemRandomByProbability(assetPreset.data.items);
-                        
+
                         if (presetItem != null) {
                             int amount = 1;
                             dataItems = GameLevelGridData.AddAssets(dataItems, presetItem.code, amount);
@@ -466,12 +646,12 @@ public class BaseGameLevels<T> : DataObjects<T> where T : DataObject, new() {
                 else {
 
                     foreach (GamePresetItem presetItem in assetPreset.data.items) {
-                    
+
                         int amount = UnityEngine.Random.Range((int)presetItem.min, (int)presetItem.max);
                         totalAssetLimit += amount;
-                        
+
                         dataItems = GameLevelGridData.AddAssets(dataItems, presetItem.code, amount);
-                        
+
                         if (totalAssetLimit > maxAssetLimit) {
                             // Too many for this set to add more...
                             break;
@@ -480,10 +660,44 @@ public class BaseGameLevels<T> : DataObjects<T> where T : DataObject, new() {
                 }
             }
         }
-        
+
         return dataItems;
     }
+
+
+    public static List<GameDataLayoutPreset> GetLevelLayoutPresets(string loadTypeFilter = "default") {
+        return GetLevelLayoutPresets(GameLevels.Current.code, loadTypeFilter);
+    }
+
+    public static List<GameDataLayoutPreset> GetLevelLayoutPresets(string levelCode, string loadTypeFilter = "default") {
+
+        List<GameDataLayoutPreset> filteredItems = new List<GameDataLayoutPreset>();
+        
+        GameLevel gameLevel = GameLevels.Instance.GetByCode(levelCode);
+
+        if (gameLevel == null) {
+            return filteredItems;
+        }
+
+        List<GameDataLayoutPreset> dataItems = gameLevel.data.layout_presets;
+
+        foreach (GameDataLayoutPreset dataItem in dataItems) {
+
+            if (!IsGameLevelLayoutType(dataItem.load_type, loadTypeFilter)) {
+                continue;
+            }
+
+            //if (dataItem.load_type.IsEqualLowercase(loadTypeFilter)
+            //    || (loadTypeFilter == BaseDataObjectKeys.defaultKey 
+            //        && dataItem.load_type.IsNullOrEmpty())) {
+            filteredItems.Add(dataItem);
+            //}
+        }
+              
+        return filteredItems;
+    }
 }
+
 
 public class BaseGameLevelKeys {
     public static string LEVEL_INITIAL_DIFFICULTY = "initial-diff";

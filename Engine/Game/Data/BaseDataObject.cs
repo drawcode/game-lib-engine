@@ -93,6 +93,7 @@ public class BaseDataObjectKeys {
     public static string star = "star";
     public static string stars = "stars";
     //
+    public static string dynamicKey = "dynamic";
     public static string data = "data";
     public static string data_suffix_list = "data_suffix_list";
     public static string data_list = "data_list";
@@ -310,6 +311,7 @@ public class BaseDataObjectKeys {
     public static string model = "model";
     public static string models = "models";
     public static string presets = "presets";
+    public static string preset = "preset";
     public static string roles = "roles";
     public static string sound = "sound";
     public static string sounds = "sounds";
