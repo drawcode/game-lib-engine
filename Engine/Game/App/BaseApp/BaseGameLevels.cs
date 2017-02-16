@@ -331,9 +331,13 @@ public class BaseGameLevels<T> : DataObjects<T> where T : DataObject, new() {
     }
 
     public static bool IsGameLevelLayoutType(string dataType, string filterType) {
-        if (!dataType.IsEqualLowercase(filterType)
-                && !(dataType.IsNullOrEmpty()
-                && !filterType.IsEqualLowercase(BaseDataObjectKeys.defaultKey))) {
+        
+        if (dataType.IsNullOrEmpty()
+               && filterType.IsEqualLowercase(BaseDataObjectKeys.defaultKey)) {
+            return true;
+        }
+
+        if (!dataType.IsEqualLowercase(filterType)) {
             return false;
         }
 
@@ -362,6 +366,14 @@ public class BaseGameLevels<T> : DataObjects<T> where T : DataObject, new() {
             if (gameLevelLayout == null || gameLevelLayout.data == null) {
                 continue;
             }
+            
+            List<GameDataObject> layoutObjects = gameLevelLayout.data.GetLayoutAssets();
+
+            if (layoutObjects == null) {
+                continue;
+            }
+
+            /*
 
             List<GameDataObject> layoutObjects = gameLevelLayout.data.GetLayoutAssets();
 
@@ -461,18 +473,10 @@ public class BaseGameLevels<T> : DataObjects<T> where T : DataObject, new() {
                     gridRotation,
                     localPosition);
             }
+            */
 
         }
-
-        /*
-        dataItems.SetAssetsInAssetMap("wall-1", Vector3.zero.WithX(offsetX+2).WithY(1).WithZ(offsetZ+2), scale, Vector3.zero.WithY(90));
-        dataItems.SetAssetsInAssetMap("wall-1", Vector3.zero.WithX(offsetX+2).WithY(1).WithZ(offsetZ+4), scale, Vector3.zero.WithY(90));
-        dataItems.SetAssetsInAssetMap("wall-1", Vector3.zero.WithX(offsetX+2).WithY(1).WithZ(offsetZ+6), scale, Vector3.zero.WithY(90));
-        dataItems.SetAssetsInAssetMap("wall-1", Vector3.zero.WithX(offsetX+2).WithY(1).WithZ(offsetZ+8), scale, Vector3.zero.WithY(90));
-        dataItems.SetAssetsInAssetMap("wall-1", Vector3.zero.WithX(offsetX+4).WithY(1).WithZ(offsetZ+8), scale, Vector3.zero.WithY(0));
-        dataItems.SetAssetsInAssetMap("wall-1", Vector3.zero.WithX(offsetX+6).WithY(1).WithZ(offsetZ+8), scale, Vector3.zero.WithY(0));
-        dataItems.SetAssetsInAssetMap("wall-1", Vector3.zero.WithX(offsetX+8).WithY(1).WithZ(offsetZ+8), scale, Vector3.zero.WithY(0));
-*/
+        
         return dataItems;
     }
     
