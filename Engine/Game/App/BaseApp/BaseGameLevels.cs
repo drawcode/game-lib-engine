@@ -344,8 +344,55 @@ public class BaseGameLevels<T> : DataObjects<T> where T : DataObject, new() {
         return true;
     }
 
+
+    public static GameLevelLayout GetGameLevelLayoutFromPresets(
+        List<GameDataLayoutPreset> presets, string loadTypeFilter = "default") {
+
+        // Get a part from the current presets from level or world to use
+        // as load_type ="dynamic"
+
+        // TODO make all or one select, if not preset then collect all and randomize
+        // Currently expects dynamic types to be preset data_type to select by proability
+
+        foreach (GameDataLayoutPreset dataItem in presets) {
+
+            // If is is not a dynamic load type load on start, else skip load
+
+            if (!IsGameLevelLayoutType(dataItem.load_type, loadTypeFilter)) {
+                continue;
+            }
+
+            // If the data_type is preset then get the preset from probability
+
+            string layoutCode = GetLevelLayoutCode(dataItem);
+
+            // Handle loading the preset assets meta information info data
+
+            return GameLevelLayouts.Instance.GetById(layoutCode);
+        }
+
+        return null;
+    }
+
+    public static List<GameDataObject> GetGameLevelLayoutObjects(
+        GameLevelLayout gameLevelLayout) {
+
+        if (gameLevelLayout == null || gameLevelLayout.data == null) {
+            return null;
+        }
+
+        List<GameDataObject> layoutObjects = gameLevelLayout.data.GetLayoutAssets();
+
+        if (layoutObjects == null) {
+            return null;
+        }
+
+        return layoutObjects;
+    }
+
     public static GameLevelGridData GetLevelGridLayoutParts(
-        GameLevelGridData dataItems, List<GameDataLayoutPreset> presets, string loadTypeFilter = "default") {
+        GameLevelGridData dataItems, List<GameDataLayoutPreset> presets, 
+        string loadTypeFilter = "default") {
 
         foreach (GameDataLayoutPreset dataItem in presets) {
 

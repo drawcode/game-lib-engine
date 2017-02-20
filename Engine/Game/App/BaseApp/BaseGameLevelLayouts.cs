@@ -313,7 +313,7 @@ public class GameLevelLayoutData : GameDataObject {
                         else {
                             SetGameDataObject(assetObject);                        
                         }
-                    }
+                    }  
                 }
 
                 x++;
@@ -348,6 +348,39 @@ public class BaseGameLevelLayout : GameDataObject {
     public override void Reset() {
         base.Reset();
     }
+
+    public int GetGridHeight() {
+
+        if (data == null) {
+            return 0;
+        }
+
+        if (data.data_list == null) {
+            return 0;
+        }
+
+        return data.data_list.Count;
+    }
+
+    public int GetGridWidth() {
+
+        if (data == null) {
+            return 0;
+        }
+
+        if (data.data_list == null) {
+            return 0;
+        }
+
+        if (data.data_list.Count == 0) {
+            return 0;
+        }
+
+        return data.data_list[0].Length;
+    }
+
+
+
 
     // Attributes that are added or changed after launch should be like this to prevent
     // profile conversions.
