@@ -140,7 +140,7 @@ public class BaseAppContentCollects<T> : DataObjects<T> where T : GameDataObject
     }
 
     // MISSION SETS CODE
-    
+     
     public static AppContentCollect GetMission(string code) {
         return AppContentCollects.Instance.getMission(code);
     }
@@ -296,6 +296,20 @@ public class BaseAppContentCollects<T> : DataObjects<T> where T : GameDataObject
         
         return collectData;
     }
+
+    // ---------------------------------------------------------
+
+    // COLLECTION
+
+    // GETS
+
+    public static List<AppContentCollect> GetCollections() {
+        return AppContentCollects.Instance.getCollections();
+    }
+
+    public List<AppContentCollect> getCollections() {
+        return GetByType(AppContentCollectType.action);
+    }
 }
 
 /*
@@ -355,6 +369,7 @@ public class AppContentCollectMessages {
 public class AppContentCollectType {
     public static string mission = "mission";
     public static string action = "action";
+    public static string collection = "collection";
 }
 
 public class AppContentCollectTypeProgress {
