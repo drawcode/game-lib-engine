@@ -346,6 +346,7 @@ public class BaseDataObjectKeys {
     public static string textures = "textures";
     public static string material = "material";
     public static string materials = "materials";
+    public static string main = "main";
     //
     // asset items
     public static string delay = "delay";
