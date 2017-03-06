@@ -279,6 +279,9 @@ public class BaseDataObjectKeys {
     //
     // custom
 
+    public static string terrain = "terrain";
+    public static string bumper = "bumper";
+    public static string environment = "environment";
     public static string custom_items = "custom_items";
     public static string custom_materials = "custom_materials";
     public static string custom_textures = "custom_textures";
