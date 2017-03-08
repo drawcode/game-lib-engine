@@ -907,7 +907,7 @@ public class BaseGameLevel : GameDataObject {
         get {
             return Get<GameLevelDataObjectItem>(BaseDataObjectKeys.data);
         }
-        
+
         set {
             Set<GameLevelDataObjectItem>(BaseDataObjectKeys.data, value);
         }

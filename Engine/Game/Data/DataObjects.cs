@@ -19,20 +19,60 @@ public enum DataObjectsStorage {
     SERVER
 }
 
+public enum DataObjectsType {
+    LIST,
+    OBJECT
+}
+
 public class DataObjects<T> where T : DataObject, new() {
-    public List<T> items;
+
+    public List<T> _items;
+    public Dictionary<string, int> _lookupCode;
+    
+    private static object syncRoot = new System.Object();
+
     public string pathKey = "";
     public string path = "";
     public List<string> packPaths;
     public List<string> packPathsVersioned;
     public DataObjectsStorage dataStorage = DataObjectsStorage.PERSISTENT;
+    public DataObjectsType dataType = DataObjectsType.LIST;
     public List<string> historyLevelItems = new List<string>();
-    //public static U inst;
+
+    // If data is stored as a list json dataset
+
+    public List<T> items {
+        get {
+            if (_items == null) {
+                _items = new List<T>();
+            }
+            return _items;
+        }
+        set {
+            _items = value;
+        }
+    }
+
+    // If data is stored as a list json dataset
+
+    public Dictionary<string, int> lookupCode {
+        get {
+            if (_lookupCode == null) {
+                _lookupCode = new Dictionary<string, int>();
+            }
+            return _lookupCode;
+        }
+        set {
+            _lookupCode = value;
+        }
+    }
 
     //private static volatile U current;
     //private static volatile U instance;
     //private static object syncRoot = new System.Object();
+
     /*
+     * 
     public static string DATA_KEY = "data-object";
     
     public static T Current {
@@ -66,6 +106,7 @@ public class DataObjects<T> where T : DataObject, new() {
             instance = value;
         }
     }
+
     */
 
     public DataObjects() {
@@ -181,6 +222,15 @@ public class DataObjects<T> where T : DataObject, new() {
         string data = LoadDataFromResources(pathResources);
         LoadDataFromString(data);
     }
+
+    public virtual string DataToJson() {
+
+        if (_items != null) {
+            return JsonMapper.ToJson(items);
+        }
+
+        return null;
+    }
     
     public virtual bool SaveDataItemsToResources() {
         return SaveDataItemsToResources(path);
@@ -198,11 +248,9 @@ public class DataObjects<T> where T : DataObject, new() {
 
         Debug.Log("SaveDataItemsToResources:path:" + path);
 
-        if (items == null) {
-            items = new List<T>();
+        if (_items != null) {
+            fileData = JsonMapper.ToJson(items);
         }
-
-        fileData = JsonMapper.ToJson(items);
 
         if (path.EndsWith(".json")) {
             path = path + ".txt";
@@ -284,7 +332,7 @@ public class DataObjects<T> where T : DataObject, new() {
         if (!prepared)
             return false;
 
-        fileData = JsonMapper.ToJson(items);
+        fileData = DataToJson();
 
         FileSystemUtil.WriteString(pathVersioned, fileData);
 
@@ -463,7 +511,10 @@ public class DataObjects<T> where T : DataObject, new() {
             }
         }
 
+        // TODO update dict lookups
+
         items.AddRange(appendList);
+
     }
 
     public string LoadDataFromResources(string resourcesPath) {
@@ -477,19 +528,45 @@ public class DataObjects<T> where T : DataObject, new() {
         }
 
         //LogUtil.Log("LoadDataFromResources:fileData:" + fileData + " " + pathKey);
-
+        
         return fileData;
     }
 
     public virtual void LoadDataFromString(string data) {
+
         if (!string.IsNullOrEmpty(data)) {
+
             items.Clear();
             items = LoadDataFromString(items, data);
+            
+            UpdateLookups();
         }
     }
 
-    public virtual List<T> LoadDataFromString(List<T> objs, string data) {
+    public virtual Dictionary<string, T> LoadDataFromString(Dictionary<string, T> objs, string data) {
+
         if (!string.IsNullOrEmpty(data)) {
+
+            try {
+                objs = JsonMapper.ToObject<Dictionary<string, T>>(data);
+            }
+            catch (Exception e) {
+                Debug.Log("LoadDataFromString:" + " e:" + e.Message + " data:" + data + " objs:" + objs.ToJson());
+            }
+
+            Debug.Log(objs.GetType().ToString() + " T loaded:" + objs.Count);
+
+            //for (int j = 0; j < objs.Count; j++) {
+            //    SetFieldValue(objs[j], "pack_code", "default");
+            //}
+        }
+
+        return objs;
+    }
+
+    public virtual List<T> LoadDataFromString(List<T> objs, string data) {
+
+         if (!string.IsNullOrEmpty(data)) {
 
             try {
                 objs = JsonMapper.ToObject<List<T>>(data);
@@ -598,6 +675,24 @@ public class DataObjects<T> where T : DataObject, new() {
 
     public T GetByStringKey(string key, string keyValue) {
 
+        if (keyValue.IsNullOrEmpty()) {
+            return default(T);
+        }
+
+        LoadAll();
+
+        if (key == "code") {
+
+            if (lookupCode.ContainsKey(keyValue)) {
+
+                int index = lookupCode.Get<int>(keyValue);
+                T t = GetAll()[index];
+                if (t != default(T)) {
+                    return t;
+                }
+            }
+        }
+        
         foreach (T obj in GetAll()) {
             
             if (Has(obj, key)) {
@@ -808,32 +903,15 @@ public class DataObjects<T> where T : DataObject, new() {
     //
 
     public List<T> SortList() {
-        if (items == null) {
-            return null;
-        }
-        items.Sort(
-                delegate(T c1, T c2) {
-            //LogUtil.Log("sorting:c1:", c1);
-            //LogUtil.Log("sorting:c2:", c2);
-            if (GetFieldValue<object>(c1, "sort_order") != null) {
-                int sort1 = (int)GetFieldValue<int>(c1, "sort_order");
-                int sort2 = (int)GetFieldValue<int>(c2, "sort_order");
-                //LogUtil.Log("sorting:sort1:", sort1);
-                //LogUtil.Log("sorting:sort2:", sort2);
-                return sort1.CompareTo(sort2);
-            }
-            else {
-                return -1;
-            }
-        }
-        );
-        return items;
+        return SortList(items);
     }
  
     public List<T> SortList(List<T> listItems) {
+
         if (listItems == null) {
             return null;
         }
+
         listItems.Sort(
             delegate(T c1, T c2) {
             //LogUtil.Log("sorting:c1:", c1);
@@ -850,12 +928,26 @@ public class DataObjects<T> where T : DataObject, new() {
             }
         }
         );
+
         return listItems;
     }
 
-    public List<T> GetAll() {
+    public void UpdateLookups() {
+
+        lookupCode.Clear();
+
+        for (int i = 0; i < items.Count(); i++) {
+            string _code = GetFieldValue<string>(items[i], "code");
+            lookupCode.Set<int>(_code, i);
+        }
+    }
+    
+    public void LoadAll() {
+
         //LogUtil.Log("GetAll:IsLoaded:", IsLoaded);
+
         if (!IsLoaded) {
+
             LoadData();
 
             List<T> itemsActive = new List<T>();
@@ -873,32 +965,51 @@ public class DataObjects<T> where T : DataObject, new() {
                 items.Add(t);
             }
 
-            items = SortList();
+            items = SortList(items);
 
             itemsActive.Clear();
             itemsActive = null;
+
+            UpdateLookups();
         }
+
+        if (lookupCode.Count != items.Count) {
+            UpdateLookups();
+        }
+    }
+
+    public List<T> GetAll() {
+
+        //LogUtil.Log("GetAll:IsLoaded:", IsLoaded);
+
+        LoadAll();
+
         return items;
     }
 
     public int CountAll() {
-        if (items == null) {
-            GetAll();
-        }
 
-        if (items == null) {
-            return 0;
-        }
+        LoadAll();
 
-        return items.Count;
+        if (_items != null) {
+
+            return items.Count;
+        }
+        
+        return 0;
     }
 
     public virtual bool IsLoaded {
         get {
-            if (items == null) {
-                return false;
+            //if (list == null && dict == null) {
+            //    return false;
+            //}
+
+            if (_items != null) {
+                return items.Count > 0 ? true : false;
             }
-            return items.Count > 0 ? true : false;
+
+            return false;
         }
     }
 
@@ -909,7 +1020,17 @@ public class DataObjects<T> where T : DataObject, new() {
     }
 
     public virtual void Reset() {
-        items = new List<T>();
+        
+        if (_lookupCode != null) {
+
+            lookupCode.Clear();
+        }
+
+        if (_items != null) {
+
+            items.Clear();
+        }
+
         packPaths = new List<string>();
     }
         

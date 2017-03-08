@@ -2648,7 +2648,7 @@ public class GameDataObject : DataObject {
                 if (keyValue == val) {
                     return dict;
                 }
-            }            
+            }
         }
 
         return null;
