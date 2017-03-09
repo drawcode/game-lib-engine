@@ -373,4 +373,58 @@ public class MathUtil {
             return 0.0f;
         }
     }
+    
+
+    // random range
+
+    public static Vector3 RandomRange(float min, float max) {
+        return RandomRange(min, max, min, max, min, max);
+    }
+
+    // x
+
+    public static Vector3 RandomRangeX(float val) {
+        return RandomRange(val, val, 0, 0, 0, 0);
+    }
+
+    public static Vector3 RandomRangeX(float min, float max) {
+        return RandomRange(min, max, 0, 0, 0, 0);
+    }
+
+    // y
+
+    public static Vector3 RandomRangeY(float val) {
+        return RandomRange(0, 0, val, val, 0, 0);
+    }
+
+    public static Vector3 RandomRangeY(float min, float max) {
+        return RandomRange(0, 0, min, max, 0, 0);
+    }
+
+
+    // z
+
+    public static Vector3 RandomRangeZ(float val) {
+        return RandomRange(0, 0, 0, 0, val, val);
+    }
+
+    public static Vector3 RandomRangeZ(float min, float max) {
+        return RandomRange(0, 0, 0, 0, min, max);
+    }
+
+    // all
+
+    public static Vector3 RandomRange(
+        float minX = 0, float maxX = 0,
+        float minY = 0, float maxY = 0,
+        float minZ = 0, float maxZ = 0) {
+
+        float rangeX = UnityEngine.Random.Range(minX, maxX);
+        float rangeY = UnityEngine.Random.Range(minY, maxY);
+        float rangeZ = UnityEngine.Random.Range(minZ, maxZ);
+
+        return Vector3.zero.WithX(rangeX).WithY(rangeY).WithZ(rangeZ);
+    }
+
+
 }
