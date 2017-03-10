@@ -72,8 +72,10 @@ namespace Engine.Game.Actor {
                         objectShadow.transform.position = shadowPos;
                         objectShadow.transform.up = Vector3.up;//surfaceNormal;
                         objectShadow.transform.LookAt(surfaceHitPoint - transform.right);
-                        
-                        
+
+                        Debug.Log("ActorShadow surfaceHitPoint:" + surfaceHitPoint);
+                        Debug.Log("ActorShadow shadowPos:" + shadowPos);
+
                         lastUpdate += Time.deltaTime;
                         if (lastUpdate > 10f) {
                             lastUpdate = 0;
@@ -116,6 +118,13 @@ namespace Engine.Game.Actor {
                     //Debug.Log("ActorShadow deltaPlayerHeight:" + deltaPlayerHeight);
 
                     Vector3 scaleChange = initialScale * ((5 - currentPlayerHeight) / 5);
+                    
+                    if(scaleChange.x < .3f 
+                        || scaleChange.y < .3f
+                        || scaleChange.z < .3f) {
+
+                        scaleChange = Vector3.zero.WithX(.3f).WithY(.3f).WithZ(.3f);
+                    }
 
                     if (scaleChange != objectShadow.transform.localScale) {
                         objectShadow.transform.localScale = scaleChange;
