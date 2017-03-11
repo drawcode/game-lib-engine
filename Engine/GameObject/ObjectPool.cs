@@ -17,7 +17,7 @@ public class ObjectPoolItem {
 
 public class ObjectPool : System.Object {
 
-    public int maxPoolItems = 5;
+    public int maxPoolItems = 5000;
 
     // The type of object this pool is handling
     public GameObject prefab;

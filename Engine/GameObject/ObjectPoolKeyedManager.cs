@@ -57,7 +57,7 @@ public class ObjectPoolKeyedManager : GameObjectBehavior {
 
 #endif
 
-    public int maxPerPool = 100;
+    public int maxPerPool = 5000;
 
     // This maps a prefab to its ObjectPool
     private Dictionary<string, ObjectPool> prefab2pool;

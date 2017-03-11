@@ -73,8 +73,8 @@ namespace Engine.Game.Actor {
                         objectShadow.transform.up = Vector3.up;//surfaceNormal;
                         objectShadow.transform.LookAt(surfaceHitPoint - transform.right);
 
-                        Debug.Log("ActorShadow surfaceHitPoint:" + surfaceHitPoint);
-                        Debug.Log("ActorShadow shadowPos:" + shadowPos);
+                        //Debug.Log("ActorShadow surfaceHitPoint:" + surfaceHitPoint);
+                        //Debug.Log("ActorShadow shadowPos:" + shadowPos);
 
                         lastUpdate += Time.deltaTime;
                         if (lastUpdate > 10f) {
