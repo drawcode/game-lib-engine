@@ -1817,9 +1817,8 @@ public static class GameObjectHelper {
 
         foreach (Transform t in transforms) {
             try {
-                if(t.gameObject.GetType() == typeof(GameObject)) {
-                
-                    //&& !t.IsPrefabGhost()) {
+                if (t.gameObject.GetType() == typeof(GameObject)
+                    && !t.IsPrefabGhost()) {
                     t.parent = null;
                     DestroyGameObject(t.gameObject);
                     //GameObject.Destroy(t.gameObject);
