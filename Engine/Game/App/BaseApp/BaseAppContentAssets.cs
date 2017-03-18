@@ -223,39 +223,46 @@ public class BaseAppContentAssets<T> : DataObjects<T> where T : DataObject, new(
     }
 
     public static GameObject LoadAssetPrefab(string key, string code) {
-        
+
         LogUtil.Log("LoadAssetPrefab:" + " key:" + key + " code:" + code);
         //LogUtil.Log("LoadAsset:" + " code:" + code);
-        
-        foreach (AppContentAsset asset in AppContentAssets.Instance.GetAll()) {
-            
-            if (asset.code == code 
-                && (asset.key == key || string.IsNullOrEmpty(key))) {
-                
-                LogUtil.Log("LoadAssetPrefab2:" + " key:" + key + " code:" + code);
-                
-                if (asset != null) {
 
-                    string path = GetLoadAssetPath(asset.key, asset.code, asset.type);                    
+        AppContentAsset asset = AppContentAssets.Instance.GetByCode(code);
 
-                    if (string.IsNullOrEmpty(path)) {
-                        return null;
-                    }
+        if(asset == null) {
 
-                    LogUtil.Log("LoadAssetPrefab:" + " path:" + path);
-                        
-                    GameObject prefabObject = PrefabsPool.PoolPrefab(path);
-                        
-                    LogUtil.Log("LoadAssetPrefab:" + " prefabObject:" + prefabObject != null);
-                        
-                    return prefabObject;
+            foreach(AppContentAsset assetItem in AppContentAssets.Instance.GetAll()) {
+
+                if(assetItem.code == code
+                    && (assetItem.key == key || string.IsNullOrEmpty(key))) {
+
+                    LogUtil.Log("LoadAssetPrefab2:" + " key:" + key + " code:" + code);
+
+                    asset = assetItem;
                 }
             }
         }
 
-        //Debug.Log("ERROR:LoadAssetPrefab:NOT FOUND IN ASSETS DATA: key:" + key + " code:" + code);
-                
-        return null;
+        if(asset == null) {
+            //Debug.Log("ERROR:LoadAssetPrefab:NOT FOUND IN ASSETS DATA: key:" + key + " code:" + code);
+            return null;
+        }
+
+        string path = GetLoadAssetPath(asset.key, asset.code, asset.type);
+
+        if(string.IsNullOrEmpty(path)) {
+            return null;
+        }
+
+        LogUtil.Log("LoadAssetPrefab:" + " path:" + path);
+
+        GameObject prefabObject = PrefabsPool.PoolPrefab(path);
+
+        LogUtil.Log("LoadAssetPrefab:" + " prefabObject:" + prefabObject != null);
+
+        return prefabObject;
+
+
     }
 }
 
