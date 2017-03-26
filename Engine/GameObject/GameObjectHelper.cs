@@ -581,6 +581,20 @@ public static class GameObjectHelper {
         return GetOrSet<T>(inst);
     }
 
+    public static T SetOnly<T>(GameObject inst) where T : Component {
+        if (inst == null) {
+            return null;
+        }
+
+        T t = inst.GetComponent<T>();
+
+        if (t == default(T)) {
+            return inst.AddComponent<T>();
+        }
+
+        return t;
+    }
+
     public static T Get<T>(GameObject inst) where T : Component {
         if (inst == null) {
             return null;
@@ -1779,6 +1793,11 @@ public static class GameObjectHelper {
     }
 
     public static void DestroyGameObject(GameObject go, float delay, bool pooled = true) {
+
+        if(go == null) {
+            return;
+        }
+
         if (!pooled || !go.Has<PoolGameObject>()) {
             DestroyDelayed(go, delay);
         }

@@ -691,6 +691,9 @@ public class DataObjects<T> where T : DataObject, new() {
                     return t;
                 }
             }
+            else {
+                return default(T);            
+            }
         }
         
         foreach (T obj in GetAll()) {

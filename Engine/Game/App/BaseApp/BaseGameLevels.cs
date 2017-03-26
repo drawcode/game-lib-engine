@@ -303,6 +303,8 @@ public class BaseGameLevels<T> : DataObjects<T> where T : DataObject, new() {
         return dataItems;
     }
 
+    // -----------------------------------------------------------------------
+    // GRID LEVEL LAYOUTS
 
     public static string GetLevelLayoutCode(GameDataLayoutPreset dataItem) {
 
@@ -343,7 +345,6 @@ public class BaseGameLevels<T> : DataObjects<T> where T : DataObject, new() {
 
         return true;
     }
-
 
     public static GameLevelLayout GetGameLevelLayoutFromPresets(
         List<GameDataLayoutPreset> presets, string loadTypeFilter = "default") {
@@ -663,10 +664,25 @@ public class BaseGameLevels<T> : DataObjects<T> where T : DataObject, new() {
         return dataItems;
     }
 
+    // -----------------------------------------------------------------------
+    // GAME LEVEL ASSETS
 
-    public static GameLevelGridData GetLevelGridAssets(GameLevelGridData dataItems, List<GameDataAssetPreset> presets) {
+    public static GameLevelGridData GetLevelGridAssets(
+        GameLevelGridData dataItems, List<GameDataAssetPreset> presets, string loadTypeFilter = "default") {
 
         foreach (GameDataAssetPreset assetDataItem in presets) {
+
+            // PRELOAD
+
+            if (IsGameLevelLayoutType(assetDataItem.load_type, BaseDataObjectKeys.dynamicKey)) {
+                GameController.PreloadLevelAssetPreset(assetDataItem);
+            }
+
+            // USE
+            
+            if (!IsGameLevelLayoutType(assetDataItem.load_type, loadTypeFilter)) {
+                continue;
+            }
 
             int minAssetLimit = (int)assetDataItem.min;
             int maxAssetLimit = (int)assetDataItem.max;
@@ -715,7 +731,6 @@ public class BaseGameLevels<T> : DataObjects<T> where T : DataObject, new() {
         return dataItems;
     }
 
-
     public static List<GameDataLayoutPreset> GetLevelLayoutPresets(string loadTypeFilter = "default") {
         return GetLevelLayoutPresets(GameLevels.Current.code, loadTypeFilter);
     }
@@ -747,6 +762,8 @@ public class BaseGameLevels<T> : DataObjects<T> where T : DataObject, new() {
               
         return filteredItems;
     }
+
+
 }
 
 

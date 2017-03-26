@@ -199,7 +199,7 @@ public class BaseAppContentAssets<T> : DataObjects<T> where T : DataObject, new(
         bool pool = true
         ) {
         
-        LogUtil.Log("LoadAsset:" + " key:" + key + " code:" + code);
+        //LogUtil.Log("LoadAsset:" + " key:" + key + " code:" + code);
         
         GameObject prefabObject = LoadAssetPrefab(key, code);
         
@@ -211,7 +211,7 @@ public class BaseAppContentAssets<T> : DataObjects<T> where T : DataObject, new(
             prefabObject, pos, rotate, 
             pool) as GameObject;
         
-        LogUtil.Log("LoadAsset:" + " go:" + go != null);
+        //LogUtil.Log("LoadAsset:" + " go:" + go != null);
         
         return go;
     }
@@ -222,21 +222,21 @@ public class BaseAppContentAssets<T> : DataObjects<T> where T : DataObject, new(
         return LoadAssetPrefab("", code);
     }
 
-    public static GameObject LoadAssetPrefab(string key, string code) {
+    public static GameObject LoadAssetPrefab(string key, string code, bool depth = false) {
 
-        LogUtil.Log("LoadAssetPrefab:" + " key:" + key + " code:" + code);
+        //LogUtil.Log("LoadAssetPrefab:" + " key:" + key + " code:" + code);
         //LogUtil.Log("LoadAsset:" + " code:" + code);
 
         AppContentAsset asset = AppContentAssets.Instance.GetByCode(code);
 
-        if(asset == null) {
+        if(asset == null && depth) {
 
             foreach(AppContentAsset assetItem in AppContentAssets.Instance.GetAll()) {
 
                 if(assetItem.code == code
                     && (assetItem.key == key || string.IsNullOrEmpty(key))) {
 
-                    LogUtil.Log("LoadAssetPrefab2:" + " key:" + key + " code:" + code);
+                    //LogUtil.Log("LoadAssetPrefab2:" + " key:" + key + " code:" + code);
 
                     asset = assetItem;
                 }
@@ -254,15 +254,13 @@ public class BaseAppContentAssets<T> : DataObjects<T> where T : DataObject, new(
             return null;
         }
 
-        LogUtil.Log("LoadAssetPrefab:" + " path:" + path);
+        //LogUtil.Log("LoadAssetPrefab:" + " path:" + path);
 
         GameObject prefabObject = PrefabsPool.PoolPrefab(path);
 
-        LogUtil.Log("LoadAssetPrefab:" + " prefabObject:" + prefabObject != null);
+        //LogUtil.Log("LoadAssetPrefab:" + " prefabObject:" + prefabObject != null);
 
         return prefabObject;
-
-
     }
 }
 

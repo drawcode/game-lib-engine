@@ -295,6 +295,7 @@ public class BaseDataObjectKeys {
     public static string weapon_presets = "weapon_presets";
     public static string terrain_presets = "terrain_presets";
     public static string asset_presets = "asset_presets";
+    public static string preload_presets = "preload_presets";
     public static string layout_presets = "layout_presets";
     public static string layout_part_presets = "layout_part_presets";
     public static string game_level_item_asset = "game_level_item_asset";

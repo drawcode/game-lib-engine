@@ -208,6 +208,13 @@ public static class BaseGameObjectExtensions {
         return GameObjectHelper.Set<T>(inst);
     }
 
+    public static T SetOnly<T>(this GameObject inst) where T : Component {
+        if (inst == null)
+            return null;
+
+        return GameObjectHelper.SetOnly<T>(inst);
+    }
+
     public static T Get<T>(this GameObject inst) where T : Component {
         if (inst == null)
             return null;

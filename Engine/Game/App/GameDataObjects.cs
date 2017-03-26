@@ -317,6 +317,16 @@ public class GameDataObjectItem : GameDataObject {
             Set<List<GameDataAssetPreset>>(BaseDataObjectKeys.asset_presets, value);
         }
     }
+
+    public virtual List<GameDataAssetPreset> preload_presets {
+        get {
+            return Get<List<GameDataAssetPreset>>(BaseDataObjectKeys.preload_presets);
+        }
+
+        set {
+            Set<List<GameDataAssetPreset>>(BaseDataObjectKeys.preload_presets, value);
+        }
+    }
     
     public virtual List<GameDataLayoutPreset> layout_presets {
         get {
