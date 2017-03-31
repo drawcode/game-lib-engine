@@ -12,13 +12,14 @@ public static class ParticleSystemExtension {
     }
 
     public static float GetEmissionRate(this ParticleSystem particleSystem) {
-        return particleSystem.emission.rate.constantMax;
+        var emission = particleSystem.emission;
+        return emission.rateOverTime.constantMax;
     }
 
     public static void SetEmissionRate(this ParticleSystem particleSystem, float emissionRate) {
         var emission = particleSystem.emission;
-        var rate = emission.rate;
+        var rate = emission.rateOverTime;
         rate.constantMax = emissionRate;
-        emission.rate = rate;
+        emission.rateOverTime = rate;
     }
 }
