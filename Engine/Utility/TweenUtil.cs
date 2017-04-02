@@ -207,41 +207,41 @@ namespace Engine.Utility {
 
             Type genericType = typeof(T);
 
-            if (genericType == typeof(LeanTweenType)) {
+            if(genericType == typeof(LeanTweenType)) {
 
-                if (loopType == TweenLoopType.once) {
+                if(loopType == TweenLoopType.once) {
                     libType = (T)(object)LeanTweenType.once;
                 }
-                else if (loopType == TweenLoopType.loop) {
+                else if(loopType == TweenLoopType.loop) {
                     libType = (T)(object)LeanTweenType.clamp;
                 }
-                else if (loopType == TweenLoopType.pingPong) {
+                else if(loopType == TweenLoopType.pingPong) {
                     libType = (T)(object)LeanTweenType.clamp;
                 }
             }
 
-            else if (genericType == typeof(iTween.LoopType)) {
+            else if(genericType == typeof(iTween.LoopType)) {
 
-                if (loopType == TweenLoopType.once) {
+                if(loopType == TweenLoopType.once) {
                     libType = (T)(object)iTween.LoopType.none;
                 }
-                else if (loopType == TweenLoopType.loop) {
+                else if(loopType == TweenLoopType.loop) {
                     libType = (T)(object)iTween.LoopType.loop;
                 }
-                else if (loopType == TweenLoopType.pingPong) {
+                else if(loopType == TweenLoopType.pingPong) {
                     libType = (T)(object)iTween.LoopType.pingPong;
                 }
             }
 
-            else if (genericType == typeof(UITweener.Style)) {
+            else if(genericType == typeof(UITweener.Style)) {
 
-                if (loopType == TweenLoopType.once) {
+                if(loopType == TweenLoopType.once) {
                     libType = (T)(object)UITweener.Style.Once;
                 }
-                else if (loopType == TweenLoopType.loop) {
+                else if(loopType == TweenLoopType.loop) {
                     libType = (T)(object)UITweener.Style.Loop;
                 }
-                else if (loopType == TweenLoopType.pingPong) {
+                else if(loopType == TweenLoopType.pingPong) {
                     libType = (T)(object)UITweener.Style.PingPong;
                 }
             }
@@ -255,45 +255,45 @@ namespace Engine.Utility {
 
             Type genericType = typeof(T);
 
-            if (genericType == typeof(LeanTweenType)) {
+            if(genericType == typeof(LeanTweenType)) {
 
                 LeanTweenType libType = (LeanTweenType)(object)genericType;
 
-                if (libType == LeanTweenType.once) {
+                if(libType == LeanTweenType.once) {
                     loopType = TweenLoopType.once;
                 }
-                else if (libType == LeanTweenType.clamp) {
+                else if(libType == LeanTweenType.clamp) {
                     loopType = TweenLoopType.loop;
                 }
-                else if (libType == LeanTweenType.pingPong) {
+                else if(libType == LeanTweenType.pingPong) {
                     loopType = TweenLoopType.pingPong;
                 }
             }
-            else if (genericType == typeof(iTween.LoopType)) {
+            else if(genericType == typeof(iTween.LoopType)) {
 
                 iTween.LoopType libType = (iTween.LoopType)(object)genericType;
 
-                if (libType == iTween.LoopType.none) {
+                if(libType == iTween.LoopType.none) {
                     loopType = TweenLoopType.once;
                 }
-                else if (libType == iTween.LoopType.loop) {
+                else if(libType == iTween.LoopType.loop) {
                     loopType = TweenLoopType.loop;
                 }
-                else if (libType == iTween.LoopType.pingPong) {
+                else if(libType == iTween.LoopType.pingPong) {
                     loopType = TweenLoopType.pingPong;
                 }
             }
-            else if (genericType == typeof(UITweener.Style)) {
+            else if(genericType == typeof(UITweener.Style)) {
 
                 UITweener.Style libType = (UITweener.Style)(object)genericType;
 
-                if (libType == UITweener.Style.Once) {
+                if(libType == UITweener.Style.Once) {
                     loopType = TweenLoopType.once;
                 }
-                else if (libType == UITweener.Style.Loop) {
+                else if(libType == UITweener.Style.Loop) {
                     loopType = TweenLoopType.loop;
                 }
-                else if (libType == UITweener.Style.PingPong) {
+                else if(libType == UITweener.Style.PingPong) {
                     loopType = TweenLoopType.pingPong;
                 }
             }
@@ -309,50 +309,50 @@ namespace Engine.Utility {
 
             Type genericType = typeof(T);
 
-            if (genericType == typeof(LeanTweenType)) {
+            if(genericType == typeof(LeanTweenType)) {
 
-                if (easeType == TweenEaseType.linear) {
+                if(easeType == TweenEaseType.linear) {
                     libType = (T)(object)LeanTweenType.linear;
                 }
-                else if (easeType == TweenEaseType.quadEaseInOut) {
+                else if(easeType == TweenEaseType.quadEaseInOut) {
                     libType = (T)(object)LeanTweenType.easeInOutQuad;
                 }
-                else if (easeType == TweenEaseType.quadEaseIn) {
+                else if(easeType == TweenEaseType.quadEaseIn) {
                     libType = (T)(object)LeanTweenType.easeInQuad;
                 }
-                else if (easeType == TweenEaseType.quadEaseOut) {
+                else if(easeType == TweenEaseType.quadEaseOut) {
                     libType = (T)(object)LeanTweenType.easeOutQuad;
                 }
             }
 
-            else if (genericType == typeof(iTween.EaseType)) {
+            else if(genericType == typeof(iTween.EaseType)) {
 
-                if (easeType == TweenEaseType.linear) {
+                if(easeType == TweenEaseType.linear) {
                     libType = (T)(object)iTween.EaseType.linear;
                 }
-                else if (easeType == TweenEaseType.quadEaseInOut) {
+                else if(easeType == TweenEaseType.quadEaseInOut) {
                     libType = (T)(object)iTween.EaseType.easeInOutQuad;
                 }
-                else if (easeType == TweenEaseType.quadEaseIn) {
+                else if(easeType == TweenEaseType.quadEaseIn) {
                     libType = (T)(object)iTween.EaseType.easeInQuad;
                 }
-                else if (easeType == TweenEaseType.quadEaseOut) {
+                else if(easeType == TweenEaseType.quadEaseOut) {
                     libType = (T)(object)iTween.EaseType.easeOutQuad;
                 }
             }
 
-            else if (genericType == typeof(UITweener.Method)) {
+            else if(genericType == typeof(UITweener.Method)) {
 
-                if (easeType == TweenEaseType.linear) {
+                if(easeType == TweenEaseType.linear) {
                     libType = (T)(object)UITweener.Method.Linear;
                 }
-                else if (easeType == TweenEaseType.quadEaseInOut) {
+                else if(easeType == TweenEaseType.quadEaseInOut) {
                     libType = (T)(object)UITweener.Method.EaseInOut;
                 }
-                else if (easeType == TweenEaseType.quadEaseIn) {
+                else if(easeType == TweenEaseType.quadEaseIn) {
                     libType = (T)(object)UITweener.Method.EaseIn;
                 }
-                else if (easeType == TweenEaseType.quadEaseOut) {
+                else if(easeType == TweenEaseType.quadEaseOut) {
                     libType = (T)(object)UITweener.Method.EaseOut;
                 }
             }
@@ -366,54 +366,54 @@ namespace Engine.Utility {
 
             Type genericType = typeof(T);
 
-            if (genericType == typeof(LeanTweenType)) {
+            if(genericType == typeof(LeanTweenType)) {
 
                 LeanTweenType libType = (LeanTweenType)(object)genericType;
 
-                if (libType == LeanTweenType.linear) {
+                if(libType == LeanTweenType.linear) {
                     easeType = TweenEaseType.linear;
                 }
-                else if (libType == LeanTweenType.easeInOutQuad) {
+                else if(libType == LeanTweenType.easeInOutQuad) {
                     easeType = TweenEaseType.quadEaseInOut;
                 }
-                else if (libType == LeanTweenType.easeOutQuad) {
+                else if(libType == LeanTweenType.easeOutQuad) {
                     easeType = TweenEaseType.quadEaseOut;
                 }
-                else if (libType == LeanTweenType.easeInQuad) {
+                else if(libType == LeanTweenType.easeInQuad) {
                     easeType = TweenEaseType.quadEaseIn;
                 }
             }
-            else if (genericType == typeof(iTween.LoopType)) {
+            else if(genericType == typeof(iTween.LoopType)) {
 
                 iTween.EaseType libType = (iTween.EaseType)(object)genericType;
 
-                if (libType == iTween.EaseType.linear) {
+                if(libType == iTween.EaseType.linear) {
                     easeType = TweenEaseType.linear;
                 }
-                else if (libType == iTween.EaseType.easeInOutQuad) {
+                else if(libType == iTween.EaseType.easeInOutQuad) {
                     easeType = TweenEaseType.quadEaseInOut;
                 }
-                else if (libType == iTween.EaseType.easeOutQuad) {
+                else if(libType == iTween.EaseType.easeOutQuad) {
                     easeType = TweenEaseType.quadEaseOut;
                 }
-                else if (libType == iTween.EaseType.easeInQuart) {
+                else if(libType == iTween.EaseType.easeInQuart) {
                     easeType = TweenEaseType.quadEaseIn;
                 }
             }
-            else if (genericType == typeof(UITweener.Style)) {
+            else if(genericType == typeof(UITweener.Style)) {
 
                 UITweener.Method libType = (UITweener.Method)(object)genericType;
 
-                if (libType == UITweener.Method.Linear) {
+                if(libType == UITweener.Method.Linear) {
                     easeType = TweenEaseType.linear;
                 }
-                else if (libType == UITweener.Method.EaseInOut) {
+                else if(libType == UITweener.Method.EaseInOut) {
                     easeType = TweenEaseType.quadEaseInOut;
                 }
-                else if (libType == UITweener.Method.EaseOut) {
+                else if(libType == UITweener.Method.EaseOut) {
                     easeType = TweenEaseType.quadEaseOut;
                 }
-                else if (libType == UITweener.Method.EaseIn) {
+                else if(libType == UITweener.Method.EaseIn) {
                     easeType = TweenEaseType.quadEaseIn;
                 }
             }
@@ -486,12 +486,12 @@ namespace Engine.Utility {
            GameObject go,
            Vector3 pos,
            float time = .5f, float delay = .5f,
-           bool stopCurrent = true, 
+           bool stopCurrent = true,
            TweenCoord coord = TweenCoord.world,
            TweenEaseType easeType = TweenEaseType.quadEaseInOut,
            TweenLoopType loopType = TweenLoopType.once) {
 
-            TweenMeta meta = 
+            TweenMeta meta =
                 GetMetaDefault(
                     lib, go, time, delay, stopCurrent, coord, easeType, loopType);
 
@@ -508,7 +508,7 @@ namespace Engine.Utility {
            TweenLoopType loopType = TweenLoopType.once) {
 
             MoveToObject(
-                TweenLib.leanTween, 
+                TweenLib.leanTween,
                 go,
                 pos, time, delay, stopCurrent, coord, easeType, loopType);
         }
@@ -547,10 +547,15 @@ namespace Engine.Utility {
             TweenMeta meta,
             Vector3 pos) {
 
-            if (meta.go == null) {
+            if(meta.go == null) {
                 return;
             }
-            
+
+
+#if USE_UI_NGUI_2_7 || USE_UI_NGUI_3
+            meta.lib = TweenLib.nguiUITweener;
+#endif
+
             Action onBegin = () => {
 
             };
@@ -563,25 +568,25 @@ namespace Engine.Utility {
 
             };
 
-            if (meta.onStart != null) {
+            if(meta.onStart != null) {
                 onBegin = onBegin.CombineAction(meta.onStart);
             }
 
-            if (meta.onComplete != null) {
+            if(meta.onComplete != null) {
                 onFinish = onFinish.CombineAction(meta.onComplete);
             }
 
-            if (meta.onFinal != null) {
+            if(meta.onFinal != null) {
                 onFinish = onFinish.CombineAction(meta.onFinal);
             }
 
-            if (meta.onUpdate != null) {
+            if(meta.onUpdate != null) {
                 onTick = onTick.CombineAction(meta.onUpdate);
             }
 
-            if (meta.lib == TweenLib.iTween) {
+            if(meta.lib == TweenLib.iTween) {
 
-                if (meta.stopCurrent) {
+                if(meta.stopCurrent) {
                     iTween.Stop(meta.go);
                 }
 
@@ -605,21 +610,21 @@ namespace Engine.Utility {
 
                 iTween.MoveTo(meta.go, hash);
             }
-            else if (meta.lib == TweenLib.leanTween) {
+            else if(meta.lib == TweenLib.leanTween) {
 
-                if (meta.stopCurrent) {
+                if(meta.stopCurrent) {
                     LeanTween.cancel(meta.go);
                 }
 
                 LTDescr info = null;
 
-                if (meta.coord == TweenCoord.local) {
-                    info = 
+                if(meta.coord == TweenCoord.local) {
+                    info =
                         LeanTween.moveLocal(meta.go, pos, meta.time)
                         .setDelay(meta.delay).pause();
                 }
                 else {
-                    info = 
+                    info =
                         LeanTween.move(meta.go, pos, meta.time)
                         .setDelay(meta.delay).pause();
                 }
@@ -637,17 +642,225 @@ namespace Engine.Utility {
                 info.setOnComplete(onFinish);
                 //info.setOnUpdate(onTick);
 
-                if (meta.onUpdate != null) {
+                if(meta.onUpdate != null) {
                     //info.setOnUpdate(onUpdate);
                 }
 
                 info.resume();
             }
-            else if (meta.lib == TweenLib.nguiUITweener) {
+            else if(meta.lib == TweenLib.nguiUITweener) {
+                
+                UITweener.Style loopTypeLib =
+                    ConvertLibLoopType<UITweener.Style>(meta.loopType);
+
+                UITweener.Method easeTypeLib =
+                    ConvertLibEaseType<UITweener.Method>(meta.easeType);
 
                 UITweenerUtil.MoveTo(
                     meta.go,
-                    UITweener.Method.EaseInOut, UITweener.Style.Loop,
+                    easeTypeLib, loopTypeLib,
+                    meta.time, meta.delay, pos);
+
+                //OnTweenBegin(onBegin);
+                //OnTweenFinish(onFinish);
+                //OnTweenTick(onTick);
+            }
+        }
+
+
+        // --------------------------------------------------------------------
+        // ROTATE
+
+        public static void RotateToObject(
+           GameObject go,
+           Vector3 pos,
+           float time = .5f, float delay = .5f,
+           bool stopCurrent = true,
+           TweenCoord coord = TweenCoord.world,
+           TweenEaseType easeType = TweenEaseType.quadEaseInOut,
+           TweenLoopType loopType = TweenLoopType.once) {
+
+            RotateToObjectLeanTween(
+                go, pos, time, delay, stopCurrent, coord, easeType, loopType);
+        }
+
+        public static void RotateToObject(
+           TweenLib lib,
+           GameObject go,
+           Vector3 pos,
+           float time = .5f, float delay = .5f,
+           bool stopCurrent = true,
+           TweenCoord coord = TweenCoord.world,
+           TweenEaseType easeType = TweenEaseType.quadEaseInOut,
+           TweenLoopType loopType = TweenLoopType.once) {
+
+            TweenMeta meta =
+                GetMetaDefault(
+                    lib, go, time, delay, stopCurrent, coord, easeType, loopType);
+
+            RotateToObject(meta, pos);
+        }
+
+        public static void RotateToObjectLeanTween(
+           GameObject go,
+           Vector3 pos,
+           float time = .5f, float delay = .5f,
+           bool stopCurrent = true,
+           TweenCoord coord = TweenCoord.world,
+           TweenEaseType easeType = TweenEaseType.quadEaseInOut,
+           TweenLoopType loopType = TweenLoopType.once) {
+
+            RotateToObject(
+                TweenLib.leanTween,
+                go,
+                pos, time, delay, stopCurrent, coord, easeType, loopType);
+        }
+
+        public static void RotateToObjectiTween(
+           GameObject go,
+           Vector3 pos,
+           float time = .5f, float delay = .5f,
+           bool stopCurrent = true,
+           TweenCoord coord = TweenCoord.world,
+           TweenEaseType easeType = TweenEaseType.quadEaseInOut,
+           TweenLoopType loopType = TweenLoopType.once) {
+
+            RotateToObject(
+                TweenLib.iTween,
+                go,
+                pos, time, delay, stopCurrent, coord, easeType, loopType);
+        }
+
+        public static void RotateToObjectUITweener(
+           GameObject go,
+           Vector3 pos,
+           float time = .5f, float delay = .5f,
+           bool stopCurrent = true,
+           TweenCoord coord = TweenCoord.world,
+           TweenEaseType easeType = TweenEaseType.quadEaseInOut,
+           TweenLoopType loopType = TweenLoopType.once) {
+
+            RotateToObject(
+                TweenLib.nguiUITweener,
+                go,
+                pos, time, delay, stopCurrent, coord, easeType, loopType);
+        }
+
+        public static void RotateToObject(
+            TweenMeta meta,
+            Vector3 pos) {
+
+            if(meta.go == null) {
+                return;
+            }
+            
+#if USE_UI_NGUI_2_7 || USE_UI_NGUI_3
+            meta.lib = TweenLib.nguiUITweener;
+#endif
+
+            Action onBegin = () => {
+
+            };
+
+            Action onFinish = () => {
+
+            };
+
+            Action onTick = () => {
+
+            };
+
+            if(meta.onStart != null) {
+                onBegin = onBegin.CombineAction(meta.onStart);
+            }
+
+            if(meta.onComplete != null) {
+                onFinish = onFinish.CombineAction(meta.onComplete);
+            }
+
+            if(meta.onFinal != null) {
+                onFinish = onFinish.CombineAction(meta.onFinal);
+            }
+
+            if(meta.onUpdate != null) {
+                onTick = onTick.CombineAction(meta.onUpdate);
+            }
+
+            if(meta.lib == TweenLib.iTween) {
+
+                if(meta.stopCurrent) {
+                    iTween.Stop(meta.go);
+                }
+
+                iTween.LoopType loopTypeLib =
+                    ConvertLibLoopType<iTween.LoopType>(meta.loopType);
+
+                iTween.EaseType easeTypeLib =
+                    ConvertLibEaseType<iTween.EaseType>(meta.easeType);
+
+                Hashtable hash = iTween.Hash(
+                    "rotation", pos,
+                    "time", meta.time,
+                    "delay", meta.delay,
+                    "looptype", loopTypeLib,
+                    "easetype", easeTypeLib,
+                    "islocal", meta.coord == TweenCoord.local,
+                    "onstart", "OnTweenBegin",
+                    "onstartparams", onBegin,
+                    "oncomplete", "OnTweenFinish",
+                    "oncompleteparams", onFinish);
+
+                iTween.RotateTo(meta.go, hash);
+            }
+            else if(meta.lib == TweenLib.leanTween) {
+
+                if(meta.stopCurrent) {
+                    LeanTween.cancel(meta.go);
+                }
+
+                LTDescr info = null;
+
+                if(meta.coord == TweenCoord.local) {
+                    info =
+                        LeanTween.rotateLocal(meta.go, pos, meta.time)
+                        .setDelay(meta.delay).pause();
+                }
+                else {
+                    info =
+                        LeanTween.rotate(meta.go, pos, meta.time)
+                        .setDelay(meta.delay).pause();
+                }
+
+                LeanTweenType loopTypeLib =
+                    ConvertLibLoopType<LeanTweenType>(meta.loopType);
+
+                LeanTweenType easeTypeLib =
+                    ConvertLibEaseType<LeanTweenType>(meta.easeType);
+
+                info.setLoopType(loopTypeLib);
+                info.setEase(easeTypeLib);
+
+                info.setOnStart(onBegin);
+                info.setOnComplete(onFinish);
+                //info.setOnUpdate(onTick);
+
+                if(meta.onUpdate != null) {
+                    //info.setOnUpdate(onUpdate);
+                }
+
+                info.resume();
+            }
+            else if(meta.lib == TweenLib.nguiUITweener) {
+
+                UITweener.Style loopTypeLib =
+                    ConvertLibLoopType<UITweener.Style>(meta.loopType);
+
+                UITweener.Method easeTypeLib =
+                    ConvertLibEaseType<UITweener.Method>(meta.easeType);
+
+                UITweenerUtil.RotateTo(
+                    meta.go,
+                    easeTypeLib, loopTypeLib,
                     meta.time, meta.delay, pos);
 
                 //OnTweenBegin(onBegin);
@@ -739,12 +952,17 @@ namespace Engine.Utility {
             TweenMeta meta,
             float alpha) {
 
-            if (meta.go == null) {
+            if(meta.go == null) {
                 return;
             }
 
+
+#if USE_UI_NGUI_2_7 || USE_UI_NGUI_3
+            meta.lib = TweenLib.nguiUITweener;
+#endif
+
             Action onBegin = () => {
-                
+
             };
 
             Action onFinish = () => {
@@ -755,37 +973,37 @@ namespace Engine.Utility {
 
             };
 
-            if (meta.onStart != null) {
+            if(meta.onStart != null) {
                 onBegin = onBegin.CombineAction(meta.onStart);
             }
 
-            if (meta.onComplete != null) {
+            if(meta.onComplete != null) {
                 onFinish = onFinish.CombineAction(meta.onComplete);
             }
 
-            if (meta.onFinal != null) {
+            if(meta.onFinal != null) {
                 onFinish = onFinish.CombineAction(meta.onFinal);
             }
 
-            if (meta.onUpdate != null) {
+            if(meta.onUpdate != null) {
                 onTick = onTick.CombineAction(meta.onUpdate);
             }
 
-            if (alpha > 0f) {
+            if(alpha > 0f) {
                 onBegin = onBegin.CombineAction(() => {
                     meta.go.Show();
                 });
             }
 
-            if (alpha == 0f) {
+            if(alpha == 0f) {
                 onFinish = onFinish.CombineAction(() => {
                     meta.go.Hide();
                 });
             }
 
-            if (meta.lib == TweenLib.iTween) {
+            if(meta.lib == TweenLib.iTween) {
 
-                if (meta.stopCurrent) {
+                if(meta.stopCurrent) {
                     iTween.Stop(meta.go);
                 }
 
@@ -809,21 +1027,21 @@ namespace Engine.Utility {
 
                 iTween.FadeTo(meta.go, hash);
             }
-            else if (meta.lib == TweenLib.leanTween) {
+            else if(meta.lib == TweenLib.leanTween) {
 
-                if (meta.stopCurrent) {
+                if(meta.stopCurrent) {
                     LeanTween.cancel(meta.go);
                 }
-                                
+
                 LTDescr info = null;
 
-                if (meta.go.Has<Image>()) {
+                if(meta.go.Has<Image>()) {
                     info = LeanTween.alpha(
                         meta.go.Get<Image>().rectTransform, alpha, meta.time).setDelay(meta.delay).pause();
                 }
-                else if (meta.go.Has<CanvasGroup>()) {
+                else if(meta.go.Has<CanvasGroup>()) {
                     info = LeanTween.alphaCanvas(
-                        meta.go.Get<CanvasGroup>(), alpha, meta.time).setDelay(meta.delay).pause();                    
+                        meta.go.Get<CanvasGroup>(), alpha, meta.time).setDelay(meta.delay).pause();
                 }
                 else {
                     info = LeanTween.alpha(
@@ -842,14 +1060,14 @@ namespace Engine.Utility {
                 info.setOnStart(onBegin);
                 info.setOnComplete(onFinish);
                 //info.setOnUpdate(onTick);
-                
-                if (meta.onUpdate != null) {
+
+                if(meta.onUpdate != null) {
                     //info.setOnUpdate(onUpdate);
                 }
 
                 info.resume();
             }
-            else if (meta.lib == TweenLib.nguiUITweener) {
+            else if(meta.lib == TweenLib.nguiUITweener) {
 
                 UITweener.Style loopTypeLib =
                     ConvertLibLoopType<UITweener.Style>(meta.loopType);
@@ -870,33 +1088,36 @@ namespace Engine.Utility {
              * ex: objectname-a-50 = alpha 50% on nested no matter parent
              * 
              */
-            foreach (Transform t in meta.go.transform) {
+            foreach(Transform t in meta.go.transform) {
                 string toLook = "-a-";
                 int alphaMarker = t.name.IndexOf(toLook);
                 //string alphaObject = t.name;
-                if (alphaMarker > -1) {
+                if(alphaMarker > -1) {
                     // Fade it immediately
                     //FadeToObject(t.gameObject, alpha, meta.time, meta.delay);
                     // Fade to the correct value after initial fade in
                     string val = t.name.Substring(alphaMarker + toLook.Length);
-                    if (!string.IsNullOrEmpty(val)) {
+                    if(!string.IsNullOrEmpty(val)) {
                         float valNumeric = 0f;
                         float.TryParse(val, out valNumeric);
 
-                        if (valNumeric > 0f) {
+                        if(valNumeric > 0f) {
                             valNumeric = valNumeric / 100f;
 
                             //FadeTo(t.gameObject, UITweener.Method.Linear, UITweener.Style.Once,
                             //    duration + .05f, duration + delay, valNumeric);
 
-                            FadeToObject(t.gameObject, valNumeric, meta.time, meta.delay + .05f);
+                            if(t.gameObject != null) {
+                                
+                                FadeToObject(meta.lib, t.gameObject, valNumeric, meta.time, meta.delay + .05f);
+                            }
                         }
                     }
                 }
                 //FadeToObject(t.gameObject, alpha, meta.time, meta.delay);
             }
         }
-        
+
         // --------------------------------------------------------------------
         // COLOR
 
@@ -980,9 +1201,13 @@ namespace Engine.Utility {
             TweenMeta meta,
             Color color) {
 
-            if (meta.go == null) {
+            if(meta.go == null) {
                 return;
             }
+
+#if USE_UI_NGUI_2_7 || USE_UI_NGUI_3
+            meta.lib = TweenLib.nguiUITweener;
+#endif
 
             Action onBegin = () => {
 
@@ -996,37 +1221,37 @@ namespace Engine.Utility {
 
             };
 
-            if (meta.onStart != null) {
+            if(meta.onStart != null) {
                 onBegin = onBegin.CombineAction(meta.onStart);
             }
 
-            if (meta.onComplete != null) {
+            if(meta.onComplete != null) {
                 onFinish = onFinish.CombineAction(meta.onComplete);
             }
 
-            if (meta.onFinal != null) {
+            if(meta.onFinal != null) {
                 onFinish = onFinish.CombineAction(meta.onFinal);
             }
 
-            if (meta.onUpdate != null) {
+            if(meta.onUpdate != null) {
                 onTick = onTick.CombineAction(meta.onUpdate);
             }
 
-            if (color.a > 0f) {
+            if(color.a > 0f) {
                 onBegin = onBegin.CombineAction(() => {
                     meta.go.Show();
                 });
             }
 
-            if (color.a == 0f) {
+            if(color.a == 0f) {
                 onFinish = onFinish.CombineAction(() => {
                     meta.go.Hide();
                 });
             }
 
-            if (meta.lib == TweenLib.iTween) {
+            if(meta.lib == TweenLib.iTween) {
 
-                if (meta.stopCurrent) {
+                if(meta.stopCurrent) {
                     iTween.Stop(meta.go);
                 }
 
@@ -1050,19 +1275,19 @@ namespace Engine.Utility {
 
                 iTween.FadeTo(meta.go, hash);
             }
-            else if (meta.lib == TweenLib.leanTween) {
+            else if(meta.lib == TweenLib.leanTween) {
 
-                if (meta.stopCurrent) {
+                if(meta.stopCurrent) {
                     LeanTween.cancel(meta.go);
                 }
 
                 LTDescr info = null;
 
-                if (meta.go.Has<Image>()) {
+                if(meta.go.Has<Image>()) {
                     info = LeanTween.color(
                         meta.go.Get<Image>().rectTransform, color, meta.time).setDelay(meta.delay).pause();
                 }
-                else if (meta.go.Has<CanvasGroup>()) {
+                else if(meta.go.Has<CanvasGroup>()) {
                     info = LeanTween.alphaCanvas(
                         meta.go.Get<CanvasGroup>(), color.a, meta.time).setDelay(meta.delay).pause();
                 }
@@ -1084,14 +1309,14 @@ namespace Engine.Utility {
                 info.setOnComplete(onFinish);
                 //info.setOnUpdate(onTick);
 
-                if (meta.onUpdate != null) {
+                if(meta.onUpdate != null) {
                     //info.setOnUpdate(onUpdate);
                 }
 
                 info.resume();
             }
-            else if (meta.lib == TweenLib.nguiUITweener) {
-
+            else if(meta.lib == TweenLib.nguiUITweener) {
+                
                 UITweener.Style loopTypeLib =
                     ConvertLibLoopType<UITweener.Style>(meta.loopType);
 
@@ -1111,20 +1336,20 @@ namespace Engine.Utility {
              * ex: objectname-a-50 = alpha 50% on nested no matter parent
              * 
              */
-            foreach (Transform t in meta.go.transform) {
+            foreach(Transform t in meta.go.transform) {
                 string toLook = "-a-";
                 int alphaMarker = t.name.IndexOf(toLook);
                 //string alphaObject = t.name;
-                if (alphaMarker > -1) {
+                if(alphaMarker > -1) {
                     // Fade it immediately
                     //FadeToObject(t.gameObject, alpha, meta.time, meta.delay);
                     // Fade to the correct value after initial fade in
                     string val = t.name.Substring(alphaMarker + toLook.Length);
-                    if (!string.IsNullOrEmpty(val)) {
+                    if(!string.IsNullOrEmpty(val)) {
                         float valNumeric = 0f;
                         float.TryParse(val, out valNumeric);
 
-                        if (valNumeric > 0f) {
+                        if(valNumeric > 0f) {
                             valNumeric = valNumeric / 100f;
 
                             color.a = valNumeric;
@@ -1146,14 +1371,14 @@ namespace Engine.Utility {
         // top
 
         public static void ShowObjectTop(
-            GameObject go, 
+            GameObject go,
             TweenCoord coord = TweenCoord.local, bool fade = true,
             float time = .5f, float delay = .55f) {
             ShowObject(go, Vector3.zero.WithY(topOpenY), coord, fade, time, delay);
         }
 
         public static void HideObjectTop(
-            GameObject go, 
+            GameObject go,
             TweenCoord coord = TweenCoord.local, bool fade = true,
             float time = .5f, float delay = 0f) {
             HideObject(go, Vector3.zero.WithY(topClosedY), coord, fade, time, delay);
@@ -1162,14 +1387,14 @@ namespace Engine.Utility {
         // bottom
 
         public static void ShowObjectBottom(
-            GameObject go, 
+            GameObject go,
             TweenCoord coord = TweenCoord.local, bool fade = true,
             float time = .5f, float delay = .55f) {
             ShowObject(go, Vector3.zero.WithY(bottomOpenY), coord, fade, time, delay);
         }
 
         public static void HideObjectBottom(
-            GameObject go, 
+            GameObject go,
             TweenCoord coord = TweenCoord.local, bool fade = true,
             float time = .5f, float delay = 0f) {
             HideObject(go, Vector3.zero.WithY(bottomClosedY), coord, fade, time, delay);
@@ -1178,14 +1403,14 @@ namespace Engine.Utility {
         // left
 
         public static void ShowObjectLeft(
-            GameObject go, 
+            GameObject go,
             TweenCoord coord = TweenCoord.local, bool fade = true,
             float time = .5f, float delay = .55f) {
             ShowObject(go, Vector3.zero.WithX(leftOpenX), coord, fade, time, delay);
         }
 
         public static void HideObjectLeft(
-            GameObject go, 
+            GameObject go,
             TweenCoord coord = TweenCoord.local, bool fade = true,
             float time = .5f, float delay = 0f) {
             HideObject(go, Vector3.zero.WithX(leftClosedX), coord, fade);
@@ -1194,14 +1419,14 @@ namespace Engine.Utility {
         // right
 
         public static void ShowObjectRight(
-            GameObject go, 
+            GameObject go,
             TweenCoord coord = TweenCoord.local, bool fade = true,
             float time = .5f, float delay = .55f) {
             ShowObject(go, Vector3.zero.WithX(rightOpenX), coord, fade, time, delay);
         }
 
         public static void HideObjectRight(
-            GameObject go, 
+            GameObject go,
             TweenCoord coord = TweenCoord.local, bool fade = true,
             float time = .5f, float delay = 0f) {
             HideObject(go, Vector3.zero.WithX(rightClosedX), coord, fade, time, delay);
@@ -1210,7 +1435,7 @@ namespace Engine.Utility {
         //
 
         public static void ShowObject(
-            GameObject go, Vector3 pos, 
+            GameObject go, Vector3 pos,
             TweenCoord coord = TweenCoord.local, bool fade = true,
             float time = .5f, float delay = .55f) {
 
@@ -1218,7 +1443,7 @@ namespace Engine.Utility {
         }
 
         public static void HideObject(
-            GameObject go, Vector3 pos, 
+            GameObject go, Vector3 pos,
             TweenCoord coord = TweenCoord.local, bool fade = true,
             float time = .5f, float delay = 0f) {
 
@@ -1228,11 +1453,11 @@ namespace Engine.Utility {
         //
 
         public static void TweenObjectState(
-            GameObject go, Vector3 pos, float alpha = 1f, 
+            GameObject go, Vector3 pos, float alpha = 1f,
             TweenCoord coord = TweenCoord.local, bool fade = true,
             float time = .5f, float delay = 0f) {
 
-            if (go == null) {
+            if(go == null) {
                 return;
             }
 
@@ -1249,12 +1474,30 @@ namespace Engine.Utility {
             //   //go.HideObjectDelayed(time + delay);
             //}
 
-            if (fade) {
+            if(fade) {
+
+                //bool found = false;
+
+#if USE_UI_NGUI_2_7 || USE_UI_NGUI_3
+
+                //if(go.Has<UISlicedSprite>()
+                //    || go.Has<UISprite>() || go.Has<UITiledSprite>()) {
+
+                //    found = true;
+                //    TweenUtil.FadeToObject(TweenLib.nguiUITweener, go, alpha, time, delay, true, coord);
+
+                //}
+
+#endif
+                //if(!found) {
+
                 TweenUtil.FadeToObject(go, alpha, time, delay, true, coord);
+               
+                //}
             }
 
             TweenUtil.MoveToObject(
                 go, pos, time, delay, false, coord);
-        }        
+        }
     }
 }

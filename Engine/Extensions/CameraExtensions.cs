@@ -1,7 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-
+using Engine.Utility;
 using UnityEngine;
 
 public static class CameraExtensions {
@@ -59,50 +59,56 @@ public static class CamerAnimationExtensions {
 
     public static void ShowCameraFadeIn(this Camera cam) {
 
-        if (cam == null) {
+        if(cam == null) {
             return;
         }
 
         CoroutineUtil.Start(showCameraCo(cam));
     }
-    
-    public static IEnumerator showCameraCo(Camera cam) {
-                
-        yield return new WaitForSeconds(1f);  
 
-        if (cam != null) {
-            if (cam.gameObject != null) {
+    public static IEnumerator showCameraCo(Camera cam) {
+
+        yield return new WaitForSeconds(1f);
+
+        if(cam != null) {
+            if(cam.gameObject != null) {
                 //cam.gameObject.Show();                
                 cam.enabled = true;
-                UITweenerUtil.FadeTo(cam.gameObject, UITweener.Method.EaseIn, UITweener.Style.Once, .5f, .5f, 1f);
+
+                TweenUtil.FadeToObject(cam.gameObject, 1f, .5f, .5f);
+
+                //UITweenerUtil.FadeTo(cam.gameObject, UITweener.Method.EaseIn, UITweener.Style.Once, .5f, .5f, 1f);
             }
-        }     
+        }
     }
 
     // HIDE 
 
     public static void HideCameraFadeOut(this Camera cam) {
-        
-        if (cam == null) {
+
+        if(cam == null) {
             return;
         }
 
         CoroutineUtil.Start(hideCameraCo(cam));
     }
-    
+
     public static IEnumerator hideCameraCo(Camera cam) {
 
-        if (cam != null) {
-            if (cam.gameObject != null) {
-                UITweenerUtil.FadeTo(cam.gameObject, UITweener.Method.EaseIn, UITweener.Style.Once, .5f, .5f, 0f);
+        if(cam != null) {
+            if(cam.gameObject != null) {
+
+                TweenUtil.FadeToObject(cam.gameObject, 0f, .5f, .5f);
+
+                //UITweenerUtil.FadeTo(cam.gameObject, UITweener.Method.EaseIn, UITweener.Style.Once, .5f, .5f, 0f);
             }
         }
 
         yield return new WaitForSeconds(1f);
-        
-        if (cam != null) {
+
+        if(cam != null) {
             cam.enabled = false;
-            if (cam.gameObject != null) {
+            if(cam.gameObject != null) {
                 //cam.gameObject.Hide();
             }
         }
