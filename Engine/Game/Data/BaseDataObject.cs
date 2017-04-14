@@ -281,6 +281,12 @@ public class BaseDataObjectKeys {
 
     public static string terrain = "terrain";
     public static string bumper = "bumper";
+    public static string block = "block";
+    public static string blocks = "blocks";
+    public static string tree = "tree";
+    public static string trees = "trees";
+    public static string plant = "plant";
+    public static string plants = "plants";
     public static string environment = "environment";
     public static string custom_items = "custom_items";
     public static string custom_materials = "custom_materials";
