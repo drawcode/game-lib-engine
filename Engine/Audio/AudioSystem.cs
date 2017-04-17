@@ -819,7 +819,7 @@ public class AudioSystem : GameObjectBehavior {
                 //}
             }
 
-            if (www.audioClip) {
+            if (www.GetAudioClip()) {
                 data.clip = www.GetAudioClip(!data.is2dSound);
             }
 
