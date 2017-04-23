@@ -491,6 +491,10 @@ namespace Engine.Utility {
            TweenEaseType easeType = TweenEaseType.quadEaseInOut,
            TweenLoopType loopType = TweenLoopType.once) {
 
+            if(go == null) {
+                return;
+            }
+
             TweenMeta meta =
                 GetMetaDefault(
                     lib, go, time, delay, stopCurrent, coord, easeType, loopType);
@@ -896,6 +900,10 @@ namespace Engine.Utility {
            TweenEaseType easeType = TweenEaseType.quadEaseInOut,
            TweenLoopType loopType = TweenLoopType.once) {
 
+            if(go == null) {
+                return;
+            }
+
             TweenMeta meta =
                 GetMetaDefault(
                     lib, go, time, delay, stopCurrent, coord, easeType, loopType);
@@ -1144,6 +1152,10 @@ namespace Engine.Utility {
            TweenCoord coord = TweenCoord.world,
            TweenEaseType easeType = TweenEaseType.quadEaseInOut,
            TweenLoopType loopType = TweenLoopType.once) {
+
+            if(go == null) {
+                return;
+            }
 
             TweenMeta meta =
                 GetMetaDefault(

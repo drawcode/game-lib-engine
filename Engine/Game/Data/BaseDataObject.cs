@@ -263,9 +263,10 @@ public class BaseDataObjectKeys {
     public static string item_skin_variation = "item_skin_variation";
     public static string item_data = "item_data";
     public static string item_items = "item_items";
+    public static string letter = "letter";
     //
     // locales
-    
+
     public static string any = "any";
     public static string all = "all";
     public static string en = "en";

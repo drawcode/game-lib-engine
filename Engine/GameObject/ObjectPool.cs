@@ -95,4 +95,13 @@ public class ObjectPool : System.Object {
             pool.Enqueue(obj);
         }
     }
+
+    public void clear() {
+
+        foreach(GameObject go in pool) {
+            go.DestroyNow();
+        }
+
+        pool.Clear();
+    }
 }
