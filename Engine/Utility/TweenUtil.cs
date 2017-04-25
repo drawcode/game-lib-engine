@@ -885,6 +885,10 @@ namespace Engine.Utility {
            TweenEaseType easeType = TweenEaseType.quadEaseInOut,
            TweenLoopType loopType = TweenLoopType.once) {
 
+            if(go == null) {
+                return;
+            }
+
             FadeToObjectLeanTween(
                 go,
                 alpha, time, delay, stopCurrent, coord, easeType, loopType);
@@ -1451,6 +1455,10 @@ namespace Engine.Utility {
             TweenCoord coord = TweenCoord.local, bool fade = true,
             float time = .5f, float delay = .55f) {
 
+            if(go == null) {
+                return;
+            }
+
             TweenObjectState(go, pos, 1f, coord, fade, time, delay);
         }
 
@@ -1458,6 +1466,10 @@ namespace Engine.Utility {
             GameObject go, Vector3 pos,
             TweenCoord coord = TweenCoord.local, bool fade = true,
             float time = .5f, float delay = 0f) {
+
+            if(go == null) {
+                return;
+            }
 
             TweenObjectState(go, pos, 0f, coord, fade, time, delay);
         }
