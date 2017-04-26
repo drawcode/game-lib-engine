@@ -130,7 +130,7 @@ public class ObjectPoolKeyedManager : GameObjectBehavior {
 
     public static bool clearPooled() {
 
-        if(!_instance) {
+        if(_instance != null) {
             return _instance.internalClear();
         }
 

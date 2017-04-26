@@ -101,7 +101,7 @@ public class ObjectPool : System.Object {
         foreach(GameObject go in pool) {
             go.DestroyNow();
         }
-
+        
         pool.Clear();
     }
 }
