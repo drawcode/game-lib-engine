@@ -695,11 +695,12 @@ public class BaseGameProfile : Profile {
         List<string> permissions = new List<string>();
         DataAttribute attribute = GetAttribute(BaseGameProfileAttributes.ATT_ACCESS_PERMISSIONS);
         if (attribute != null) {
-            permissions = attribute.val as List<string>;
-            if (permissions != null)
+            if(attribute.val != null) {
+                permissions = attribute.val.ToString().FromJson<List<string>>();
+            }
+            if(permissions != null) {
                 return permissions;
-            else
-                permissions = new List<string>();
+            }
         }
         return permissions;
     }
@@ -714,7 +715,7 @@ public class BaseGameProfile : Profile {
     public virtual void SetAccessPermissions(List<string> permissions) {
         DataAttribute attribute = new DataAttribute();
         attribute.code = BaseGameProfileAttributes.ATT_ACCESS_PERMISSIONS;
-        attribute.val = permissions;
+        attribute.val = permissions.ToJson();
         SetAttribute(attribute);
     }
 
