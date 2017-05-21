@@ -19,7 +19,7 @@ public static class GameObjectHelper {
             return false;
         }
 
-        Transform child = inst.transform.FindChild(name);
+        Transform child = inst.transform.Find(name);
 
         if (child != null) {
             return true;

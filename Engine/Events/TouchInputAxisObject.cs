@@ -16,7 +16,7 @@ namespace Engine.Events {
 
         private void FindPad() {
             if (pad == null) {
-                pad = gameObject.transform.FindChild("Pad");
+                pad = gameObject.transform.Find("Pad");
             }
         }
 
