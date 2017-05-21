@@ -128,6 +128,15 @@ public class ObjectPoolKeyedManager : GameObjectBehavior {
         instance.StartCoroutine(instance.internalDestroy(obj, delay));
     }
 
+    public static bool clearPooled() {
+
+        if(_instance != null) {
+            return _instance.internalClear();
+        }
+
+        return false;
+    }
+
     #endregion
 
     #region Private implementation
@@ -213,8 +222,7 @@ public class ObjectPoolKeyedManager : GameObjectBehavior {
         
         return obj;
     }
-
-
+    
     private void internalDestroy(GameObject obj) {
 
         string key = "";
@@ -246,6 +254,22 @@ public class ObjectPoolKeyedManager : GameObjectBehavior {
     private IEnumerator internalDestroy(GameObject obj, float delay) {
         yield return new WaitForSeconds(delay);
         internalDestroy(obj);
+    }
+
+    public bool internalClear() {
+
+        foreach(ObjectPool p in prefab2pool.Values) {
+            p.clear();
+        }
+
+        foreach(ObjectPool p in instance2pool.Values) {
+            p.clear();
+        }
+
+        prefab2pool.Clear();
+        instance2pool.Clear();
+
+        return true;
     }
 
     #endregion

@@ -27,6 +27,10 @@ public class StringUtil {
     public static string Slashed(params string[] keys) {
         return Combine("/", keys);
     }
+    
+    public static string Concat(params string[] keys) {
+        return Combine("", keys);
+    }
 
     public static string Combine(string delimiter = "-", params string[] keys) {
 

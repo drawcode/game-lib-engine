@@ -264,18 +264,18 @@ public class BaseGameState {
         string data = prepareLoad(key);
         
         if (!string.IsNullOrEmpty(data)) {
-            try {
+            try {  
                 obj = JsonMapper.ToObject<T>(data);
             }
             catch (Exception e) {
-                Debug.Log("Error content load:" + key + " " + obj.ToJson() + " e:" + e.ToJson());
+                Debug.LogError("Error content load:" + key + " " + obj.ToJson() + " e:" + e.ToJson());
             }
         }
         
         return obj;
     }
     
-    public virtual string prepareSave(object obj) {
+    public virtual string prepareSave(string keyTo, object obj) {
         string data = JsonMapper.ToJson(obj);
         
         if (ProfileConfigs.useStorageEncryption) {
@@ -285,12 +285,17 @@ public class BaseGameState {
         if (ProfileConfigs.useStorageCompression) {
             data = data.ToCompressed();
         }
-        
+
+        if(keyTo == key) {
+            Debug.Log("GameState::prepareSave data....");
+            Debug.Log(data);
+        }
+
         return data;
     }
     
     public virtual void save(string key, object obj, bool setSync = false) {        
-        string jsonString = prepareSave(obj);
+        string jsonString = prepareSave(key, obj);
         contentSave(key, jsonString);
         //LogUtil.Log("GameState::SaveProfile jsonString...." + jsonString);
 
@@ -305,7 +310,7 @@ public class BaseGameState {
         }
     }
     
-    public virtual string prepareLoad(string key) {
+    public virtual string prepareLoad(string keyTo) {
         
         string data = "";
         
@@ -324,7 +329,12 @@ public class BaseGameState {
         if (ProfileConfigs.useStorageEncryption) {
             data = data.ToDecrypted();
         }
-        
+
+        if(keyTo == key) {
+            Debug.Log("GameState::prepareLoad data....");
+            Debug.Log(data);
+        }
+
         return data;
     }
     

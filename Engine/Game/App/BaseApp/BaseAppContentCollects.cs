@@ -1053,6 +1053,15 @@ public class BaseAppContentCollect : GameDataObject {
         return false;
     }
 
+    public bool HasTypeCollection() {
+        foreach(AppContentCollectItem item in data.data) {
+            if(item.type.ToLower() == AppContentCollectType.collection) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     public string GetContentString(string key) {
         string content = "";
         if (content_attributes.ContainsKey(key)) {

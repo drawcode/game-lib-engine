@@ -263,9 +263,10 @@ public class BaseDataObjectKeys {
     public static string item_skin_variation = "item_skin_variation";
     public static string item_data = "item_data";
     public static string item_items = "item_items";
+    public static string letter = "letter";
     //
     // locales
-    
+
     public static string any = "any";
     public static string all = "all";
     public static string en = "en";
@@ -281,6 +282,12 @@ public class BaseDataObjectKeys {
 
     public static string terrain = "terrain";
     public static string bumper = "bumper";
+    public static string block = "block";
+    public static string blocks = "blocks";
+    public static string tree = "tree";
+    public static string trees = "trees";
+    public static string plant = "plant";
+    public static string plants = "plants";
     public static string environment = "environment";
     public static string custom_items = "custom_items";
     public static string custom_materials = "custom_materials";
