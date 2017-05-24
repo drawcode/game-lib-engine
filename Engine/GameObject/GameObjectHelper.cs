@@ -306,7 +306,7 @@ public static class GameObjectHelper {
     }
 
     public static void DumpGoToLog(GameObject go) {
-        LogUtil.Log("DUMP: go:" + go.name + "::::" + GameObjectHelper.DumpGo(go));
+        Debug.Log("DUMP: go:" + go.name + "::::" + GameObjectHelper.DumpGo(go));
     }
 
     public static string DumpGo(GameObject go) {
@@ -343,7 +343,7 @@ public static class GameObjectHelper {
         }
         */
 
-        sb.Append(string.Format("\r\n{0}+{1} - a:{2} - r:{3} - mid:{4} - loadedObj: {5} - scale: x:{6} y:{7} z:{8} - pos: x:{9} y:{10} z:{11}",
+        sb.Append(string.Format("\r\n{0}+{1} - a:{2} - r:{3} - mid:{4} - loadedObj: {5} - scale: x:{6} y:{7} z:{8} - pos: x:{9} y:{10} z:{11} - layer:{12}",
                                 indent,
                                 go.name,
                                 go.activeSelf,
@@ -355,7 +355,8 @@ public static class GameObjectHelper {
                                 go.transform.localScale.z,
                                 go.transform.position.x,
                                 go.transform.position.y,
-                                go.transform.position.z));
+                                go.transform.position.z,
+                                LayerMask.LayerToName(go.layer)));
 
         if (includeAllComponents) {
             foreach (Component component in go.GetComponents<Component>()) {
