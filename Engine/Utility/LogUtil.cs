@@ -35,7 +35,7 @@ public class LogUtil {
     private static volatile LogUtil instance;
     private static System.Object syncRoot = new System.Object();
 
-    public static bool loggingEnabled = true;
+    public static bool loggingEnabled = false;
 
     public static LogUtil Instance {
         get {

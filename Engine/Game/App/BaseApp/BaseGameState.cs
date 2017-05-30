@@ -287,8 +287,8 @@ public class BaseGameState {
         }
 
         if(keyTo == key) {
-            Debug.Log("GameState::prepareSave data....");
-            Debug.Log(data);
+            //Debug.Log("GameState::prepareSave data....");
+            //Debug.Log(data);
         }
 
         return data;
@@ -331,8 +331,8 @@ public class BaseGameState {
         }
 
         if(keyTo == key) {
-            Debug.Log("GameState::prepareLoad data....");
-            Debug.Log(data);
+            //Debug.Log("GameState::prepareLoad data....");
+            //Debug.Log(data);
         }
 
         return data;
