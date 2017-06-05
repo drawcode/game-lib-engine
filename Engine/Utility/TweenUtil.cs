@@ -673,6 +673,213 @@ namespace Engine.Utility {
 
 
         // --------------------------------------------------------------------
+        // SCALE
+
+        public static void ScaleToObject(
+           GameObject go,
+           Vector3 pos,
+           float time = .5f, float delay = .5f,
+           bool stopCurrent = true,
+           TweenCoord coord = TweenCoord.world,
+           TweenEaseType easeType = TweenEaseType.quadEaseInOut,
+           TweenLoopType loopType = TweenLoopType.once) {
+
+            ScaleToObjectLeanTween(
+                go, pos, time, delay, stopCurrent, coord, easeType, loopType);
+        }
+
+        public static void ScaleToObject(
+           TweenLib lib,
+           GameObject go,
+           Vector3 pos,
+           float time = .5f, float delay = .5f,
+           bool stopCurrent = true,
+           TweenCoord coord = TweenCoord.world,
+           TweenEaseType easeType = TweenEaseType.quadEaseInOut,
+           TweenLoopType loopType = TweenLoopType.once) {
+
+            if(go == null) {
+                return;
+            }
+
+            TweenMeta meta =
+                GetMetaDefault(
+                    lib, go, time, delay, stopCurrent, coord, easeType, loopType);
+
+            ScaleToObject(meta, pos);
+        }
+
+        public static void ScaleToObjectLeanTween(
+           GameObject go,
+           Vector3 pos,
+           float time = .5f, float delay = .5f,
+           bool stopCurrent = true,
+           TweenCoord coord = TweenCoord.world,
+           TweenEaseType easeType = TweenEaseType.quadEaseInOut,
+           TweenLoopType loopType = TweenLoopType.once) {
+
+            MoveToObject(
+                TweenLib.leanTween,
+                go,
+                pos, time, delay, stopCurrent, coord, easeType, loopType);
+        }
+
+        public static void ScaleToObjectiTween(
+           GameObject go,
+           Vector3 pos,
+           float time = .5f, float delay = .5f,
+           bool stopCurrent = true,
+           TweenCoord coord = TweenCoord.world,
+           TweenEaseType easeType = TweenEaseType.quadEaseInOut,
+           TweenLoopType loopType = TweenLoopType.once) {
+
+            MoveToObject(
+                TweenLib.iTween,
+                go,
+                pos, time, delay, stopCurrent, coord, easeType, loopType);
+        }
+
+        public static void ScaleToObjectUITweener(
+           GameObject go,
+           Vector3 pos,
+           float time = .5f, float delay = .5f,
+           bool stopCurrent = true,
+           TweenCoord coord = TweenCoord.world,
+           TweenEaseType easeType = TweenEaseType.quadEaseInOut,
+           TweenLoopType loopType = TweenLoopType.once) {
+
+            MoveToObject(
+                TweenLib.nguiUITweener,
+                go,
+                pos, time, delay, stopCurrent, coord, easeType, loopType);
+        }
+
+        public static void ScaleToObject(
+            TweenMeta meta,
+            Vector3 pos) {
+
+            if(meta.go == null) {
+                return;
+            }
+
+
+#if USE_UI_NGUI_2_7 || USE_UI_NGUI_3
+            meta.lib = TweenLib.nguiUITweener;
+#endif
+
+            Action onBegin = () => {
+
+            };
+
+            Action onFinish = () => {
+
+            };
+
+            Action onTick = () => {
+
+            };
+
+            if(meta.onStart != null) {
+                onBegin = onBegin.CombineAction(meta.onStart);
+            }
+
+            if(meta.onComplete != null) {
+                onFinish = onFinish.CombineAction(meta.onComplete);
+            }
+
+            if(meta.onFinal != null) {
+                onFinish = onFinish.CombineAction(meta.onFinal);
+            }
+
+            if(meta.onUpdate != null) {
+                onTick = onTick.CombineAction(meta.onUpdate);
+            }
+
+            if(meta.lib == TweenLib.iTween) {
+
+                if(meta.stopCurrent) {
+                    iTween.Stop(meta.go);
+                }
+
+                iTween.LoopType loopTypeLib =
+                    ConvertLibLoopType<iTween.LoopType>(meta.loopType);
+
+                iTween.EaseType easeTypeLib =
+                    ConvertLibEaseType<iTween.EaseType>(meta.easeType);
+
+                Hashtable hash = iTween.Hash(
+                    "position", pos,
+                    "time", meta.time,
+                    "delay", meta.delay,
+                    "looptype", loopTypeLib,
+                    "easetype", easeTypeLib,
+                    "islocal", meta.coord == TweenCoord.local,
+                    "onstart", "OnTweenBegin",
+                    "onstartparams", onBegin,
+                    "oncomplete", "OnTweenFinish",
+                    "oncompleteparams", onFinish);
+
+                iTween.ScaleTo(meta.go, hash);
+            }
+            else if(meta.lib == TweenLib.leanTween) {
+
+                if(meta.stopCurrent) {
+                    LeanTween.cancel(meta.go);
+                }
+
+                LTDescr info = null;
+
+                if(meta.coord == TweenCoord.local) {
+                    info =
+                        LeanTween.scale(meta.go, pos, meta.time)
+                        .setDelay(meta.delay).pause();
+                }
+                else {
+                    info =
+                        LeanTween.scale(meta.go, pos, meta.time)
+                        .setDelay(meta.delay).pause();
+                }
+
+                LeanTweenType loopTypeLib =
+                    ConvertLibLoopType<LeanTweenType>(meta.loopType);
+
+                LeanTweenType easeTypeLib =
+                    ConvertLibEaseType<LeanTweenType>(meta.easeType);
+
+                info.setLoopType(loopTypeLib);
+                info.setEase(easeTypeLib);
+
+                info.setOnStart(onBegin);
+                info.setOnComplete(onFinish);
+                //info.setOnUpdate(onTick);
+
+                if(meta.onUpdate != null) {
+                    //info.setOnUpdate(onUpdate);
+                }
+
+                info.resume();
+            }
+            else if(meta.lib == TweenLib.nguiUITweener) {
+
+                UITweener.Style loopTypeLib =
+                    ConvertLibLoopType<UITweener.Style>(meta.loopType);
+
+                UITweener.Method easeTypeLib =
+                    ConvertLibEaseType<UITweener.Method>(meta.easeType);
+
+                //UITweenerUtil.Scal(
+                //    meta.go,
+                //    easeTypeLib, loopTypeLib,
+                //    meta.time, meta.delay, pos);
+
+                //OnTweenBegin(onBegin);
+                //OnTweenFinish(onFinish);
+                //OnTweenTick(onTick);
+            }
+        }
+
+
+        // --------------------------------------------------------------------
         // ROTATE
 
         public static void RotateToObject(
