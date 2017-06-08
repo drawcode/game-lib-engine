@@ -217,7 +217,7 @@ public class DataObjects<T> where T : DataObject, new() {
             pathResources = sbPath.ToString();
         }
      
-        LogUtil.Log("LoadDataFromResources:pathResources:" + pathResources);
+        Debug.Log("LoadDataFromResources:pathResources:" + pathResources);
      
         string data = LoadDataFromResources(pathResources);
         LoadDataFromString(data);
@@ -520,25 +520,35 @@ public class DataObjects<T> where T : DataObject, new() {
     public string LoadDataFromResources(string resourcesPath) {
         string fileData = "";
 
-        //LogUtil.Log("LoadDataFromResources:string:resourcesPath:" + resourcesPath + " " + pathKey);
+        //Debug.Log("LoadDataFromResources:string:resourcesPath:" + resourcesPath + " " + pathKey);
 
         TextAsset textData = Resources.Load(resourcesPath, typeof(TextAsset)) as TextAsset;
-        if (textData != null) {
+
+        if(textData != null) {
+            //Debug.Log("LoadDataFromResources:textData.text:" + textData.text);
             fileData = textData.text;
+
+            //using(StreamReader sr = new StreamReader(new MemoryStream(level.bytes))) {
+            //
+            //}
         }
 
-        //LogUtil.Log("LoadDataFromResources:fileData:" + fileData + " " + pathKey);
-        
+        //Debug.Log("LoadDataFromResources:fileData:" + fileData + " " + pathKey);
+
         return fileData;
     }
 
     public virtual void LoadDataFromString(string data) {
 
+        Debug.Log("LoadDataFromString:hasData:" + !data.IsNullOrEmpty());
+
         if (!string.IsNullOrEmpty(data)) {
 
             items.Clear();
             items = LoadDataFromString(items, data);
-            
+
+            Debug.Log("LoadDataFromString:items.Count:" + items.Count);
+
             UpdateLookups();
         }
     }
