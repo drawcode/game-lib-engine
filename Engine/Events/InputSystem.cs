@@ -27,9 +27,7 @@ namespace Engine.Events {
         public static string inputAxisMoveVertical = "event-input-axis-move-vertical";
         public static string inputAxisAttack2DSide = "event-input-axis-attack-2d-side";
         public static string inputAxisAttack2DSide2 = "event-input-axis-attack-2d-side-2";
-
     }
-
 
     public class InputSystemKeys {
         public static string mainKey = "main";
@@ -169,7 +167,6 @@ namespace Engine.Events {
         }
 
         private void OnEnable() {
-
 
             Messenger<TapGesture>.AddListener(FingerGesturesMessages.OnTap,
              FingerGestures_OnTap);
@@ -1441,7 +1438,10 @@ namespace Engine.Events {
                             //LogUtil.Log("positionLastLaunch:" + positionLastLaunch);
                             //LogUtil.Log("powerDistance:" + powerDistance);
 
-                            Vector2 touchLaunch = Vector2.zero.WithX(-positionLastLaunchedNormalized.x).WithY(-positionLastLaunchedNormalized.y);
+                            Vector2 touchLaunch = 
+                                Vector2.zero
+                                    .WithX(-positionLastLaunchedNormalized.x)
+                                    .WithY(-positionLastLaunchedNormalized.y);
 
                             HandleTouchLaunch(touchLaunch);
 
@@ -1498,7 +1498,8 @@ namespace Engine.Events {
                     isCreatingStart = true;
                     if(prefabPointStart == null) {
                         prefabPointStart = Resources.Load(
-                                                    ContentPaths.appCacheVersionSharedPrefabWeapons + "GamePlayerWeaponCharacterLaunchPoint") as UnityEngine.Object;
+                            ContentPaths.appCacheVersionSharedPrefabWeapons + 
+                            "GamePlayerWeaponCharacterLaunchPoint") as UnityEngine.Object;
                     }
                     pointStartObject = Instantiate(prefabPointStart) as GameObject;
                 }
