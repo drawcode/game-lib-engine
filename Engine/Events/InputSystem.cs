@@ -1280,6 +1280,30 @@ namespace Engine.Events {
             }
         }
 
+        public void FindCameras() {
+            if(camHud == null) {
+                foreach(Camera camItem in Camera.allCameras) {
+                    if(camItem.cullingMask == LayerMask.NameToLayer("UIHUDScaled")) {
+                        camHud = camItem;
+                    }
+                    if(camItem.cullingMask == LayerMask.NameToLayer("HUDScaled")) {
+                        camHud = camItem;
+                    }
+
+                    if(camItem.name.IsEqualLowercase("hudcamera")) {
+                        camHud = camItem;
+                    }
+
+                    if(camItem.name.IsEqualLowercase("uicamera")) {
+                        camUI = camItem;
+                    }
+                }
+                //if(camHud == null) {
+                //    camHud = Camera.main;
+                //}
+            }
+        }
+
         public virtual void updateTouchLaunch() {
 
             if(!GameConfigs.isGameRunning) {
@@ -1301,16 +1325,7 @@ namespace Engine.Events {
                 //inHitArea = true;
             }
 
-            if(camHud == null) {
-                foreach(Camera camItem in Camera.allCameras) {
-                    if(camItem.cullingMask == LayerMask.NameToLayer("UIHUDScaled")) {
-                        camHud = camItem;
-                    }
-                }
-                if(camHud == null) {
-                    camHud = Camera.main;
-                }
-            }
+            FindCameras();
 
             bool hasTouches = false;
             //bool hasTouchesDown = false;
@@ -1532,7 +1547,10 @@ namespace Engine.Events {
         public virtual bool checkIfAllowedTouch(Vector3 pos) {
 
             if(camHud == null) {
-                return false;
+                FindCameras();
+                if(camHud == null) {
+                    return false;
+                }
             }
 
             Ray screenRay = camHud.ScreenPointToRay(pos);
@@ -1585,8 +1603,8 @@ namespace Engine.Events {
                     }
                 }
 
-                //LogUtil.Log("hit:" + hit);
-                //LogUtil.Log("hit.transform.name:" + hit.transform.name);
+                //Debug.Log("hit:" + hit);
+                Debug.Log("hit.transform.name:" + hit.transform.name);
             }
 
             return allowedTouch;

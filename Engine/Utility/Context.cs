@@ -134,19 +134,19 @@ public class Context {
 	
 	public bool isConsole {
 		get {
-			return isConsolePS3  || isConsoleXbox360;
+			return isConsolePS4 || isConsoleXboxOne;
 		}
 	}
 	
-	public bool isConsolePS3 {
+	public bool isConsolePS4 {
 		get {
-			return Application.platform == RuntimePlatform.PS3;
+			return Application.platform == RuntimePlatform.PS4;
 		}
 	}
 	
-	public bool isConsoleXbox360 {
+	public bool isConsoleXboxOne {
 		get {
-			return Application.platform == RuntimePlatform.XBOX360;
+			return Application.platform == RuntimePlatform.XboxOne;
 		}
 	}
 

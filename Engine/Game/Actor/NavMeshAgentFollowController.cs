@@ -21,7 +21,7 @@ namespace Engine.Game.Actor {
                     float distance = Vector3.Distance(agent.destination, targetFollow.position);
 
                     if (distance < 5) {
-                        agent.Stop();
+                        agent.isStopped = true;
                     }
                     else {
                         agent.destination = targetFollow.position;
@@ -36,7 +36,7 @@ namespace Engine.Game.Actor {
             if (!GameConfigs.isGameRunning) {
 
                 if (agent != null) {
-                    agent.Stop();
+                    agent.isStopped = true;
                 }
                 return;
             }

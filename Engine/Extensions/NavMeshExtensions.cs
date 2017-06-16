@@ -30,7 +30,7 @@ public static class NavMeshExtentions {
         if (navMeshAgent != null) {
             if (navMeshAgent.enabled) {
                 //navMeshAgent.Off();
-                navMeshAgent.Stop();
+                navMeshAgent.isStopped = true;
                 navMeshAgent.enabled = false;
             }
         }
@@ -45,7 +45,7 @@ public static class NavMeshExtentions {
                 navMeshAgent.enabled = true;
                 //navMeshAgent.Warp(navMeshAgent.gameObject.transform.position);
                 //navMeshAgent.On();
-                navMeshAgent.Resume();
+                navMeshAgent.isStopped = false;
             }
         }
     }

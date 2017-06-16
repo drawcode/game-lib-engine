@@ -861,11 +861,11 @@ namespace Engine.Utility {
             }
             else if(meta.lib == TweenLib.nguiUITweener) {
 
-                UITweener.Style loopTypeLib =
-                    ConvertLibLoopType<UITweener.Style>(meta.loopType);
+                //UITweener.Style loopTypeLib =
+                //    ConvertLibLoopType<UITweener.Style>(meta.loopType);
 
-                UITweener.Method easeTypeLib =
-                    ConvertLibEaseType<UITweener.Method>(meta.easeType);
+                //UITweener.Method easeTypeLib =
+                //    ConvertLibEaseType<UITweener.Method>(meta.easeType);
 
                 //UITweenerUtil.Scal(
                 //    meta.go,

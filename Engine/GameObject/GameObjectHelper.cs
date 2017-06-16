@@ -1246,7 +1246,9 @@ public static class GameObjectHelper {
 
         ParticleSystem particleSystemCurrent = inst.GetComponent<ParticleSystem>();
         if (particleSystemCurrent != null) {
-            particleSystemCurrent.startColor = startColor;
+            //particleSystemCurrent.startColor = startColor;
+            ParticleSystem.MainModule main = particleSystemCurrent.main;
+            main.startColor = startColor;
         }
 
         if (!includeChildren) {
@@ -1256,7 +1258,8 @@ public static class GameObjectHelper {
         ParticleSystem[] particleSystems = inst.GetComponentsInChildren<ParticleSystem>(true);
 
         foreach (ParticleSystem particleSystem in particleSystems) {
-            particleSystem.startColor = startColor;
+            ParticleSystem.MainModule main = particleSystem.main;
+            main.startColor = startColor;
         }
     }
 
