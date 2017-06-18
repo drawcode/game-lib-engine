@@ -29,7 +29,7 @@ public class DataObjects<T> where T : DataObject, new() {
     public List<T> _items;
     public Dictionary<string, int> _lookupCode;
     
-    private static object syncRoot = new System.Object();
+    //private static object syncRoot = new System.Object();
 
     public string pathKey = "";
     public string path = "";

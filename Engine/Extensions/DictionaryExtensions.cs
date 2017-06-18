@@ -16,7 +16,7 @@ public static class DictionaryExtensions {
         return true;
     }
 
-    public static void Merge<TKey, TValue>(
+    public static void MergeJoin<TKey, TValue>(
         this IDictionary<TKey, TValue> dict, IDictionary<TKey, TValue> dictNew) {
         if (dict != null && dictNew != null) {
             foreach (KeyValuePair<TKey, TValue> pair in dictNew) {
@@ -25,7 +25,7 @@ public static class DictionaryExtensions {
         }
     }
 
-    public static void Merge(
+    public static void MergeJoin(
         this IDictionary<string, object> dict, IDictionary<string, object> dictNew) {
 
         if (dict != null && dictNew != null) {
