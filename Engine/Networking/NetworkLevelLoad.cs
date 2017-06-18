@@ -27,7 +27,7 @@ namespace Engine.Networking {
             DontDestroyOnLoad(this);
             supportedNetworkLevels.Add("mylevel");
             networkView.group = 1;
-            Application.LoadLevel(disconnectedLevel);
+            UnityEngine.SceneManagement.SceneManager.LoadScene(disconnectedLevel);
         }
 
         private void OnGUI() {
@@ -72,7 +72,7 @@ namespace Engine.Networking {
             // All network views loaded from a level will get a prefix into their NetworkViewID.
             // This will prevent old updates from clients leaking into a newly created scene.
             Network.SetLevelPrefix(levelPrefix);
-            Application.LoadLevel(level);
+            UnityEngine.SceneManagement.SceneManager.LoadScene(level);
             yield return 0;
             yield return 0;
 
@@ -88,7 +88,7 @@ namespace Engine.Networking {
         }
 
         private void OnDisconnectedFromServer() {
-            Application.LoadLevel(disconnectedLevel);
+            UnityEngine.SceneManagement.SceneManager.LoadScene(disconnectedLevel);
         }
     }
 
