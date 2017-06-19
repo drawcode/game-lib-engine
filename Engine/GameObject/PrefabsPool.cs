@@ -52,7 +52,7 @@ public class PrefabsPool : GameObjectBehavior {
         if(!instance.prefabs.ContainsKey(key)) {
             GameObject prefab = Resources.Load(path) as GameObject;
             if(prefab != null) {
-                instance.prefabs.Add(key, Resources.Load(path) as GameObject);
+                instance.prefabs.Add(key, prefab);
             }
         }
         
