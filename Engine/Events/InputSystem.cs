@@ -78,6 +78,8 @@ namespace Engine.Events {
         public Vector3 lastTargetDirection2 = new Vector3(0f, 0f, 0f);
         public Vector3 lastAccelerometer = Vector3.zero;
         //
+        public bool mousePress = false;
+        public bool mouseSecondaryPress = false;
         public bool mousePressed = false;
         public bool mouseSecondaryPressed = false;
         public bool touchPressed = false;
@@ -354,13 +356,13 @@ namespace Engine.Events {
 
         public static bool isMousePressed {
             get {
-                return Instance.mousePressed;
+                return Instance.mousePress;
             }
         }
 
         public static bool isMouseSecondaryPressed {
             get {
-                return Instance.mouseSecondaryPressed;
+                return Instance.mouseSecondaryPress;
             }
         }
 
@@ -1255,7 +1257,7 @@ namespace Engine.Events {
             //}
 
             //LogUtil.Log("SWIPE:angleDiff2:" + angleDiff);
-            
+
             Debug.Log("SWIPE:force:" + force);
 
             var forceVector = Quaternion.AngleAxis(angleDiff, transform.up) *
@@ -1455,7 +1457,7 @@ namespace Engine.Events {
                             //LogUtil.Log("positionLastLaunch:" + positionLastLaunch);
                             //LogUtil.Log("powerDistance:" + powerDistance);
 
-                            Vector2 touchLaunch = 
+                            Vector2 touchLaunch =
                                 Vector2.zero
                                     .WithX(-positionLastLaunchedNormalized.x)
                                     .WithY(-positionLastLaunchedNormalized.y);
@@ -1515,7 +1517,7 @@ namespace Engine.Events {
                     isCreatingStart = true;
                     if(prefabPointStart == null) {
                         prefabPointStart = Resources.Load(
-                            ContentPaths.appCacheVersionSharedPrefabWeapons + 
+                            ContentPaths.appCacheVersionSharedPrefabWeapons +
                             "GamePlayerWeaponCharacterLaunchPoint") as UnityEngine.Object;
                     }
                     pointStartObject = Instantiate(prefabPointStart) as GameObject;
@@ -1942,8 +1944,17 @@ namespace Engine.Events {
                 IsInputTouchUp();
                 IsInputTouchDown();
 
-                mousePressed = Input.GetMouseButton(0);
-                mouseSecondaryPressed = Input.GetMouseButton(1);
+                mousePress = Input.GetMouseButton(0);
+                mousePressed = Input.GetMouseButtonDown(0);
+
+#if UNITY_IOS || UNITY_ANDROID
+                mouseSecondaryPress = false;
+                mouseSecondaryPressed = false;
+#else
+                mouseSecondaryPress = Input.GetMouseButton(1);
+                mouseSecondaryPressed = Input.GetMouseButtonDown(1);
+#endif
+
                 touchPressed = Input.touchCount > 0 ? true : false;
 
                 leftPress = Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.LeftArrow);
