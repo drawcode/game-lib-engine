@@ -540,14 +540,14 @@ public class DataObjects<T> where T : DataObject, new() {
 
     public virtual void LoadDataFromString(string data) {
 
-        Debug.Log("LoadDataFromString:hasData:" + !data.IsNullOrEmpty());
+        //Debug.Log("LoadDataFromString:hasData:" + !data.IsNullOrEmpty());
 
         if (!string.IsNullOrEmpty(data)) {
 
             items.Clear();
             items = LoadDataFromString(items, data);
 
-            Debug.Log("LoadDataFromString:items.Count:" + items.Count);
+            //Debug.Log("LoadDataFromString:items.Count:" + items.Count);
 
             UpdateLookups();
         }
