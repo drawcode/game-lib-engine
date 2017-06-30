@@ -1737,7 +1737,8 @@ public static class GameObjectHelper {
         mats.Add("_Color");
         mats.Add("_TintColor");
 
-        return SetMaterialColor(inst, name, color, all, true, mats, true);
+        //return SetMaterialColor(inst, name, color, all, true, mats, true);
+        return SetMaterialColor(inst, name, color, all, true, mats, false);
     }
 
     public static bool SetMaterialColorStandard(GameObject inst, string name, Color color, bool all = true) {
@@ -1746,7 +1747,8 @@ public static class GameObjectHelper {
         mats.Add("_SpecColor");
         //mats.Add("_EmissionColor");
 
-        return SetMaterialColor(inst, name, color, all, false, mats);
+        //return SetMaterialColor(inst, name, color, all, false, mats);
+        return SetMaterialColor(inst, name, color, all, false, mats, true);
     }
 
     public static GameObject CreateGameObject(
