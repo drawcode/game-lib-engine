@@ -1258,7 +1258,7 @@ namespace Engine.Events {
 
             //LogUtil.Log("SWIPE:angleDiff2:" + angleDiff);
 
-            Debug.Log("SWIPE:force:" + force);
+            //Debug.Log("SWIPE:force:" + force);
 
             var forceVector = Quaternion.AngleAxis(angleDiff, transform.up) *
                 GameController.CurrentGamePlayerController.transform.forward;
@@ -1266,20 +1266,20 @@ namespace Engine.Events {
             //forceVector.y = 0f;
 
             if(angleDiff > 320 || angleDiff <= 45) { // forwardish
-                Debug.Log("swipe controller: FORWARD :angleDiff:" + angleDiff);
+                //Debug.Log("swipe controller: FORWARD :angleDiff:" + angleDiff);
                 GameController.CurrentGamePlayerController.Boost(forceVector, force * 20f);
             }
             else if(angleDiff < 225 && angleDiff >= 135) { // backish
-                Debug.Log("swipe controller: BACK :angleDiff:" + angleDiff);
+                //Debug.Log("swipe controller: BACK :angleDiff:" + angleDiff);
                 GameController.CurrentGamePlayerController.Spin(forceVector, force * 25f);
                 GamePlayerProgress.Instance.ProcessProgressTotal(GameStatCodes.spins, 1f);
             }
             else if(angleDiff > 45 && angleDiff < 135) { // rightish
-                Debug.Log("swipe controller: RIGHT :angleDiff:" + angleDiff);
+               //Debug.Log("swipe controller: RIGHT :angleDiff:" + angleDiff);
                 GameController.CurrentGamePlayerController.Strafe(forceVector, force * 30f);
             }
             else if(angleDiff <= 320 && angleDiff >= 225) { // leftish
-                Debug.Log("swipe controller: LEFT :angleDiff:" + angleDiff);
+                //Debug.Log("swipe controller: LEFT :angleDiff:" + angleDiff);
                 GameController.CurrentGamePlayerController.Strafe(forceVector, force * 30f);
             }
         }
