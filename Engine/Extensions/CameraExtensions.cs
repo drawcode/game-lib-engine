@@ -72,10 +72,10 @@ public static class CamerAnimationExtensions {
 
         if(cam != null) {
             if(cam.gameObject != null) {
-                //cam.gameObject.Show();                
+                cam.gameObject.Show();                
                 cam.enabled = true;
 
-                //TweenUtil.FadeToObject(cam.gameObject, 1f, .5f, .5f);
+                TweenUtil.FadeToObject(cam.gameObject, 1f, .5f, .5f);
 
                 //UITweenerUtil.FadeTo(cam.gameObject, UITweener.Method.EaseIn, UITweener.Style.Once, .5f, .5f, 1f);
             }
@@ -98,7 +98,7 @@ public static class CamerAnimationExtensions {
         if(cam != null) {
             if(cam.gameObject != null) {
 
-                //TweenUtil.FadeToObject(cam.gameObject, 0f, .5f, .5f);
+                TweenUtil.FadeToObject(cam.gameObject, 0f, .5f, .5f);
 
                 //UITweenerUtil.FadeTo(cam.gameObject, UITweener.Method.EaseIn, UITweener.Style.Once, .5f, .5f, 0f);
             }
