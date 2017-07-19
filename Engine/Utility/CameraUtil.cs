@@ -93,7 +93,7 @@ public class CameraUtil {
             SetFilenameState(fileName + name, number);
         }
 
-        Application.CaptureScreenshot(savePath);
+        ScreenCapture.CaptureScreenshot(savePath);
 #endif
     }
 }
