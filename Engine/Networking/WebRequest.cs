@@ -535,7 +535,7 @@ namespace Engine.Networking {
             if (lastWWW != null && processing) {
                 if (lastWWW.isDone) {
                     contentItemStatus.downloaded = true;
-                    contentItemStatus.itemSize = lastWWW.size;
+                    contentItemStatus.itemSize = lastWWW.bytesDownloaded;// lastWWW.size;
                 }       
             
                 LogUtil.Log("progress:" + lastWWW.progress);

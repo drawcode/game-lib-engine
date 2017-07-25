@@ -2557,7 +2557,7 @@ public class Contents : GameObjectBehavior {
 		//string url = GetDownloadContentItemUrl(game, buildVersion, platform, pack);
 	
 		string lastPackUrlValue = GetLastPackState(pack);
-		
+        		
 		if(Caching.IsVersionCached(lastPackUrlValue, version)
 			&& !string.IsNullOrEmpty(lastPackUrlValue)) {
 			// Just load from the saved url
