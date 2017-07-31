@@ -67,15 +67,15 @@ public static class CamerAnimationExtensions {
     }
 
     public static IEnumerator showCameraCo(Camera cam) {
-
-        yield return new WaitForSeconds(1f);
+        
+        yield return new WaitForSeconds(.4f);
 
         if(cam != null) {
             if(cam.gameObject != null) {
                 cam.gameObject.Show();                
                 cam.enabled = true;
 
-                TweenUtil.FadeToObject(cam.gameObject, 1f, .5f, .5f);
+                TweenUtil.FadeToObject(cam.gameObject, 1f, .4f, 55f);
 
                 //UITweenerUtil.FadeTo(cam.gameObject, UITweener.Method.EaseIn, UITweener.Style.Once, .5f, .5f, 1f);
             }
@@ -98,13 +98,13 @@ public static class CamerAnimationExtensions {
         if(cam != null) {
             if(cam.gameObject != null) {
 
-                TweenUtil.FadeToObject(cam.gameObject, 0f, .5f, .5f);
+                TweenUtil.FadeToObject(cam.gameObject, 0f, .1f, 0f);
 
                 //UITweenerUtil.FadeTo(cam.gameObject, UITweener.Method.EaseIn, UITweener.Style.Once, .5f, .5f, 0f);
             }
         }
 
-        yield return new WaitForSeconds(1f);
+        yield return new WaitForSeconds(.3f);
 
         if(cam != null) {
             cam.enabled = false;

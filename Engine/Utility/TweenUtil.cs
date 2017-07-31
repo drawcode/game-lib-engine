@@ -653,7 +653,7 @@ namespace Engine.Utility {
                 info.resume();
             }
             else if(meta.lib == TweenLib.nguiUITweener) {
-                
+
                 UITweener.Style loopTypeLib =
                     ConvertLibLoopType<UITweener.Style>(meta.loopType);
 
@@ -964,7 +964,7 @@ namespace Engine.Utility {
             if(meta.go == null) {
                 return;
             }
-            
+
 #if USE_UI_NGUI_2_7 || USE_UI_NGUI_3
             meta.lib = TweenLib.nguiUITweener;
 #endif
@@ -1096,7 +1096,20 @@ namespace Engine.Utility {
                 return;
             }
 
-            FadeToObjectLeanTween(
+            TweenLib lib = TweenLib.leanTween; 
+
+
+#if USE_UI_NGUI_2_7 || USE_UI_NGUI_3
+
+            if(go.Has<UISlicedSprite>()
+                || go.Has<UISprite>()
+                || go.Has<UITiledSprite>()) {
+
+                lib = TweenLib.nguiUITweener;
+            }
+#endif
+
+            FadeToObject(lib,
                 go,
                 alpha, time, delay, stopCurrent, coord, easeType, loopType);
         }
@@ -1327,7 +1340,7 @@ namespace Engine.Utility {
                             //    duration + .05f, duration + delay, valNumeric);
 
                             if(t.gameObject != null) {
-                                
+
                                 FadeToObject(meta.lib, t.gameObject, valNumeric, meta.time, meta.delay + .05f);
                             }
                         }
@@ -1539,7 +1552,7 @@ namespace Engine.Utility {
                 info.resume();
             }
             else if(meta.lib == TweenLib.nguiUITweener) {
-                
+
                 UITweener.Style loopTypeLib =
                     ConvertLibLoopType<UITweener.Style>(meta.loopType);
 
@@ -1707,24 +1720,24 @@ namespace Engine.Utility {
 
             if(fade) {
 
-                //bool found = false;
+                bool found = false;
 
 #if USE_UI_NGUI_2_7 || USE_UI_NGUI_3
 
-                //if(go.Has<UISlicedSprite>()
-                //    || go.Has<UISprite>() || go.Has<UITiledSprite>()) {
+                if(go.Has<UISlicedSprite>()
+                    || go.Has<UISprite>() 
+                    || go.Has<UITiledSprite>()) {
 
-                //    found = true;
-                //    TweenUtil.FadeToObject(TweenLib.nguiUITweener, go, alpha, time, delay, true, coord);
+                    found = true;
 
-                //}
+                    TweenUtil.FadeToObject(TweenLib.nguiUITweener, go, alpha, time, delay, true, coord);
+                }
 
 #endif
-                //if(!found) {
+                if(!found) {
 
-                TweenUtil.FadeToObject(go, alpha, time, delay, true, coord);
-               
-                //}
+                    TweenUtil.FadeToObject(go, alpha, time, delay, true, coord);
+                }
             }
 
             TweenUtil.MoveToObject(
