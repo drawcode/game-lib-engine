@@ -1096,7 +1096,7 @@ namespace Engine.Utility {
                 return;
             }
 
-            TweenLib lib = TweenLib.leanTween; 
+            TweenLib lib = TweenLib.leanTween;
 
 
 #if USE_UI_NGUI_2_7 || USE_UI_NGUI_3
@@ -1320,33 +1320,37 @@ namespace Engine.Utility {
              * ex: objectname-a-50 = alpha 50% on nested no matter parent
              * 
              */
-            foreach(Transform t in meta.go.transform) {
-                string toLook = "-a-";
-                int alphaMarker = t.name.IndexOf(toLook);
-                //string alphaObject = t.name;
-                if(alphaMarker > -1) {
-                    // Fade it immediately
-                    //FadeToObject(t.gameObject, alpha, meta.time, meta.delay);
-                    // Fade to the correct value after initial fade in
-                    string val = t.name.Substring(alphaMarker + toLook.Length);
-                    if(!string.IsNullOrEmpty(val)) {
-                        float valNumeric = 0f;
-                        float.TryParse(val, out valNumeric);
 
-                        if(valNumeric > 0f) {
-                            valNumeric = valNumeric / 100f;
+            if(meta.lib != TweenLib.nguiUITweener) {
 
-                            //FadeTo(t.gameObject, UITweener.Method.Linear, UITweener.Style.Once,
-                            //    duration + .05f, duration + delay, valNumeric);
+                foreach(Transform t in meta.go.transform) {
+                    string toLook = "-a-";
+                    int alphaMarker = t.name.IndexOf(toLook);
+                    //string alphaObject = t.name;
+                    if(alphaMarker > -1) {
+                        // Fade it immediately
+                        //FadeToObject(t.gameObject, alpha, meta.time, meta.delay);
+                        // Fade to the correct value after initial fade in
+                        string val = t.name.Substring(alphaMarker + toLook.Length);
+                        if(!string.IsNullOrEmpty(val)) {
+                            float valNumeric = 0f;
+                            float.TryParse(val, out valNumeric);
 
-                            if(t.gameObject != null) {
+                            if(valNumeric > 0f) {
+                                valNumeric = valNumeric / 100f;
 
-                                FadeToObject(meta.lib, t.gameObject, valNumeric, meta.time, meta.delay + .05f);
+                                //FadeTo(t.gameObject, UITweener.Method.Linear, UITweener.Style.Once,
+                                //    duration + .05f, duration + delay, valNumeric);
+
+                                if(t.gameObject != null) {
+
+                                    FadeToObject(meta.lib, t.gameObject, valNumeric, meta.time, meta.delay + .05f);
+                                }
                             }
                         }
                     }
+                    //FadeToObject(t.gameObject, alpha, meta.time, meta.delay);
                 }
-                //FadeToObject(t.gameObject, alpha, meta.time, meta.delay);
             }
         }
 
@@ -1725,14 +1729,13 @@ namespace Engine.Utility {
 #if USE_UI_NGUI_2_7 || USE_UI_NGUI_3
 
                 if(go.Has<UISlicedSprite>()
-                    || go.Has<UISprite>() 
+                    || go.Has<UISprite>()
                     || go.Has<UITiledSprite>()) {
 
                     found = true;
 
                     TweenUtil.FadeToObject(TweenLib.nguiUITweener, go, alpha, time, delay, true, coord);
                 }
-
 #endif
                 if(!found) {
 

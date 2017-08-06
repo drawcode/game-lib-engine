@@ -75,7 +75,7 @@ public static class CamerAnimationExtensions {
                 cam.gameObject.Show();                
                 cam.enabled = true;
 
-                TweenUtil.FadeToObject(cam.gameObject, 1f, .4f, 55f);
+                TweenUtil.FadeToObject(cam.gameObject, 1f, .4f, .55f);
 
                 //UITweenerUtil.FadeTo(cam.gameObject, UITweener.Method.EaseIn, UITweener.Style.Once, .5f, .5f, 1f);
             }

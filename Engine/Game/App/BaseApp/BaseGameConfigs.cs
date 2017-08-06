@@ -81,7 +81,27 @@ public class BaseGameConfigs<T> : DataObjects<T> where T : DataObject, new() {
             return false;
         }
     }
-    
+
+    public static bool isGamePaused {
+        get {
+            if(GameController.IsGamePaused
+                && !isUIRunning) {
+                return true;
+            }
+            return false;
+        }
+    }
+
+    public static bool isGameContentDisplay {
+        get {
+            if(GameController.IsGameContentDisplay
+                && !isUIRunning) {
+                return true;
+            }
+            return false;
+        }
+    }
+
     public static bool isUIRunning {
         get {
             if(GameUIController.Instance == null) {

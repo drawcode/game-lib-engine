@@ -136,13 +136,19 @@ public class FileSystemUtil {
                 currentTime = Time.time;
             };
 
-            int length = file.bytes.Length;
+            if(file == null || file.bytes == null) {
+                exists = false;
+            }
+            else {
 
-            Debug.Log("CheckFileExists: Android: path:" + path);
-            Debug.Log("CheckFileExists: Android: file.bytes.length:" + length);
+                int length = file.bytes.Length;
 
-            if(file.bytes.Length > 0) {
-                exists = true;
+                Debug.Log("CheckFileExists: Android: path:" + path);
+                Debug.Log("CheckFileExists: Android: file.bytes.length:" + length);
+
+                if(file.bytes.Length > 0) {
+                    exists = true;
+                }
             }
         }
 
