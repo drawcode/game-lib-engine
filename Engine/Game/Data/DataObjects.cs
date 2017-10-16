@@ -28,11 +28,14 @@ public class DataObjects<T> where T : DataObject, new() {
 
     public List<T> _items;
     public Dictionary<string, int> _lookupCode;
-    
+
     //private static object syncRoot = new System.Object();
 
     public string pathKey = "";
     public string path = "";
+
+    public string currentStateCode = null;
+
     public List<string> packPaths;
     public List<string> packPathsVersioned;
     public DataObjectsStorage dataStorage = DataObjectsStorage.PERSISTENT;
@@ -43,7 +46,7 @@ public class DataObjects<T> where T : DataObject, new() {
 
     public List<T> items {
         get {
-            if (_items == null) {
+            if(_items == null) {
                 _items = new List<T>();
             }
             return _items;
@@ -57,7 +60,7 @@ public class DataObjects<T> where T : DataObject, new() {
 
     public Dictionary<string, int> lookupCode {
         get {
-            if (_lookupCode == null) {
+            if(_lookupCode == null) {
                 _lookupCode = new Dictionary<string, int>();
             }
             return _lookupCode;
@@ -114,32 +117,65 @@ public class DataObjects<T> where T : DataObject, new() {
     }
 
     public virtual void LoadData() {
-     
+
         dataStorage = AppConfigs.dataStorage;
 
-        switch (dataStorage) {
+        switch(dataStorage) {
 
-        case DataObjectsStorage.SERVER:
-            LogUtil.Log("LoadData:LoadDataFromServer:" + path + " " + pathKey);
-            LoadDataFromServer();
-            break;
+            case DataObjectsStorage.SERVER:
+                LogUtil.Log("LoadData:LoadDataFromServer:" + path + " " + pathKey);
+                LoadDataFromServer();
+                break;
 
-        case DataObjectsStorage.RESOURCES:
-            Debug.Log("LoadData:LoadDataFromResources:" + path + " " + pathKey);
-            LoadDataFromResources();
-            break;
+            case DataObjectsStorage.RESOURCES:
+                Debug.Log("LoadData:LoadDataFromResources:" + path + " " + pathKey);
+                LoadDataFromResources();
+                break;
 
-        case DataObjectsStorage.PREFERENCES:
-            LogUtil.Log("LoadData:LoadDataFromPrefs:" + path + " " + pathKey);
-            LoadDataFromPrefs();
-            break;
+            case DataObjectsStorage.PREFERENCES:
+                LogUtil.Log("LoadData:LoadDataFromPrefs:" + path + " " + pathKey);
+                LoadDataFromPrefs();
+                break;
 
-        default:
-            LogUtil.Log("LoadData:LoadDataFromPersistent:" + path + " " + pathKey);
-            LoadDataFromPersistent();
-            break;
+            default:
+                LogUtil.Log("LoadData:LoadDataFromPersistent:" + path + " " + pathKey);
+                LoadDataFromPersistent();
+                break;
 
         }
+
+        LoadState();
+    }
+
+    public virtual void LoadState() {
+
+        string val = GetStateCode();
+
+        SetStateCode(val);
+    }
+
+    public virtual string GetStateCode() {
+
+        string val = GameProfiles.Current.GetGameDataState(pathKey);
+
+        if(val.IsNullOrEmpty()
+            || val.IsEqualLowercase(BaseDataObjectKeys.defaultKey)) {
+            return null;
+        }
+
+        return val;
+    }
+
+    public virtual void SetStateCode(string val) {
+
+        if(val.IsNullOrEmpty()
+            || val.IsEqualLowercase(BaseDataObjectKeys.defaultKey)) {
+            return;
+        }
+
+        GameProfiles.Current.SetGameDataState(pathKey, val);
+
+        currentStateCode = val;
     }
 
     public virtual void LoadDataFromPersistent() {
@@ -147,11 +183,11 @@ public class DataObjects<T> where T : DataObject, new() {
     }
 
     public virtual void LoadDataFromResources() {
-        
+
         string pathResources = path;
 
-        if (!path.Contains(ContentsConfig.contentAppFolder)) {        
-            
+        if(!path.Contains(ContentsConfig.contentAppFolder)) {
+
             //Debug.Log("LoadDataFromResources:pathResources:" + pathResources);
             //Debug.Log("LoadDataFromResources:ContentsConfig.contentRootFolder:" + ContentsConfig.contentRootFolder);
             //Debug.Log("LoadDataFromResources:ContentsConfig.contentAppFolder:" + ContentsConfig.contentAppFolder);
@@ -205,33 +241,33 @@ public class DataObjects<T> where T : DataObject, new() {
             }
             */
 
-            
+
             System.Text.StringBuilder sbPath = new System.Text.StringBuilder();
-            
+
             sbPath.Append(ContentsConfig.contentRootFolder);
             sbPath.Append("/");
             sbPath.Append(ContentsConfig.contentAppFolder);
             sbPath.Append("/version/");
             sbPath.Append(pathResources);
-            
+
             pathResources = sbPath.ToString();
         }
-     
+
         Debug.Log("LoadDataFromResources:pathResources:" + pathResources);
-     
+
         string data = LoadDataFromResources(pathResources);
         LoadDataFromString(data);
     }
 
     public virtual string DataToJson() {
 
-        if (_items != null) {
+        if(_items != null) {
             return JsonMapper.ToJson(items);
         }
 
         return null;
     }
-    
+
     public virtual bool SaveDataItemsToResources() {
         return SaveDataItemsToResources(path);
     }
@@ -248,11 +284,11 @@ public class DataObjects<T> where T : DataObject, new() {
 
         Debug.Log("SaveDataItemsToResources:path:" + path);
 
-        if (_items != null) {
+        if(_items != null) {
             fileData = JsonMapper.ToJson(items);
         }
 
-        if (path.EndsWith(".json")) {
+        if(path.EndsWith(".json")) {
             path = path + ".txt";
         }
 
@@ -285,7 +321,7 @@ public class DataObjects<T> where T : DataObject, new() {
     public string LoadDataFromPrefs(string key) {
         string data = "";
 
-        if (!SystemPrefUtil.HasLocalSetting(key)) {
+        if(!SystemPrefUtil.HasLocalSetting(key)) {
             data = SystemPrefUtil.GetLocalSettingString(key);
         }
         return data;
@@ -297,7 +333,7 @@ public class DataObjects<T> where T : DataObject, new() {
 
     public string LoadDataFromPersistent(string path, bool versioned) {
         string fileData = "";
-                
+
         fileData = Contents.GetFileDataFromPersistentCache(path, versioned, false);
 
         LoadDataFromString(fileData);
@@ -329,7 +365,7 @@ public class DataObjects<T> where T : DataObject, new() {
 
         bool prepared = PreparePersistentFile(pathPart, pathVersioned);
 
-        if (!prepared)
+        if(!prepared)
             return false;
 
         fileData = DataToJson();
@@ -356,7 +392,7 @@ public class DataObjects<T> where T : DataObject, new() {
 
         bool prepared = PreparePersistentFile(pathPart, pathVersioned);
 
-        if (!prepared)
+        if(!prepared)
             return false;
 
         fileData = JsonMapper.ToJson(obj);
@@ -373,7 +409,7 @@ public class DataObjects<T> where T : DataObject, new() {
     public bool PreparePersistentFile(string pathPart, string pathVersioned) {
         bool prepared = true;
 
-        if (!FileSystemUtil.CheckFileExists(pathVersioned)) {
+        if(!FileSystemUtil.CheckFileExists(pathVersioned)) {
             prepared = false;
 
             //LogUtil.Log("LoadDataFromPersistent:pathVersioned not exist:" + pathVersioned + " " + pathKey);
@@ -381,7 +417,7 @@ public class DataObjects<T> where T : DataObject, new() {
             // copy from streaming assets
             string pathToCopy = PathUtil.Combine(ContentPaths.appCacheVersionPath, pathPart.TrimStart('/'));
             //LogUtil.Log("LoadDataFromPersistent:pathToCopy:" + pathToCopy + " " + pathKey);
-            if (FileSystemUtil.CheckFileExists(pathToCopy)) {
+            if(FileSystemUtil.CheckFileExists(pathToCopy)) {
                 FileSystemUtil.MoveFile(pathToCopy, pathVersioned);
                 //LogUtil.Log("LoadDataFromPersistent:file moved:" + pathToCopy + " " + pathKey);
                 prepared = true;
@@ -401,7 +437,7 @@ public class DataObjects<T> where T : DataObject, new() {
         List<T> appendList = new List<T>();
         List<T> appendItemList = new List<T>();
 
-        foreach (string packPath in ContentPaths.GetPackPathsVersioned()) {
+        foreach(string packPath in ContentPaths.GetPackPathsVersioned()) {
             string data = "";
             string pathData = PathUtil.Combine(packPath, path.TrimStart('/'));
             FileSystemUtil.EnsureDirectory(pathData);
@@ -410,26 +446,26 @@ public class DataObjects<T> where T : DataObject, new() {
             string packDirName = packDirs[packDirs.Length - 1];
 
             string fileVersioned = Contents.GetFullPathVersioned(pathData);
-                        
+
             FileSystemUtil.EnsureDirectory(fileVersioned);
 
-            if (FileSystemUtil.CheckFileExists(fileVersioned)) {
+            if(FileSystemUtil.CheckFileExists(fileVersioned)) {
                 data = Contents.GetFileDataFromPersistentCache(pathData, true, true);
             }
 
-            if (!string.IsNullOrEmpty(data)) {
+            if(!string.IsNullOrEmpty(data)) {
                 List<T> objs = new List<T>();
 
                 objs = LoadDataFromString(appendItemList, data);
 
                 int i = 0;
 
-                for (int j = 0; j < objs.Count; j++) {
+                for(int j = 0; j < objs.Count; j++) {
                     SetFieldValue(objs[j], "pack_code", packDirName);
                     SetFieldValue(objs[j], "pack_sort", i++);
                 }
 
-                if (objs != null && objs.Count > 0) {
+                if(objs != null && objs.Count > 0) {
                     appendList.AddRange(objs);
                 }
             }
@@ -437,7 +473,7 @@ public class DataObjects<T> where T : DataObject, new() {
 
         ////LogUtil.Log("!!!!!! PackPathsVersionShared:" + Contents.GetPackPathsVersionedShared().Count);
 
-        foreach (string packPath in ContentPaths.GetPackPathsVersionedShared()) {
+        foreach(string packPath in ContentPaths.GetPackPathsVersionedShared()) {
             string data = "";
             string pathData = PathUtil.Combine(packPath, path.TrimStart('/'));
             FileSystemUtil.EnsureDirectory(pathData);
@@ -448,29 +484,29 @@ public class DataObjects<T> where T : DataObject, new() {
             string fileVersioned = Contents.GetFullPathVersioned(pathData);
             FileSystemUtil.EnsureDirectory(fileVersioned);
 
-            if (FileSystemUtil.CheckFileExists(fileVersioned)) {
+            if(FileSystemUtil.CheckFileExists(fileVersioned)) {
                 data = Contents.GetFileDataFromPersistentCache(pathData, true, true);
             }
 
-            if (!string.IsNullOrEmpty(data)) {
+            if(!string.IsNullOrEmpty(data)) {
                 List<T> objs = new List<T>();
 
                 objs = LoadDataFromString(appendItemList, data);
 
                 int i = 0;
 
-                for (int j = 0; j < objs.Count; j++) {
+                for(int j = 0; j < objs.Count; j++) {
                     SetFieldValue(objs[j], "pack_code", packDirName);
                     SetFieldValue(objs[j], "pack_sort", i++);
                 }
 
-                if (objs != null && objs.Count > 0) {
+                if(objs != null && objs.Count > 0) {
                     appendList.AddRange(objs);
                 }
             }
         }
 
-        foreach (string packPath in ContentPaths.GetPackPathsNonVersioned()) {
+        foreach(string packPath in ContentPaths.GetPackPathsNonVersioned()) {
             string data = "";
             string pathData = PathUtil.Combine(packPath, path.TrimStart('/'));
             FileSystemUtil.EnsureDirectory(pathData);
@@ -478,33 +514,33 @@ public class DataObjects<T> where T : DataObject, new() {
             string[] packDirs = packPath.TrimEnd('/').Replace("data", "").TrimEnd('/').Split('/');
             string packDirName = packDirs[packDirs.Length - 1];
 
-            if (string.IsNullOrEmpty(packDirName)) {
+            if(string.IsNullOrEmpty(packDirName)) {
                 packDirName = "";
             }
 
             string fileVersioned = Contents.GetFullPathVersioned(pathData);
             FileSystemUtil.EnsureDirectory(fileVersioned);
 
-            if (FileSystemUtil.CheckFileExists(fileVersioned)) {
+            if(FileSystemUtil.CheckFileExists(fileVersioned)) {
                 ////LogUtil.Log(">> PACK FILE EXISTS: " + pathData);
                 data = Contents.GetFileDataFromPersistentCache(pathData, true, true);
                 ////LogUtil.Log(">> PACK FILE DATA: " + data);
             }
 
-            if (!string.IsNullOrEmpty(data)) {
-                if (!string.IsNullOrEmpty(data)) {
+            if(!string.IsNullOrEmpty(data)) {
+                if(!string.IsNullOrEmpty(data)) {
                     List<T> objs = new List<T>();
 
                     objs = LoadDataFromString(appendItemList, data);
 
                     int i = 0;
 
-                    for (int j = 0; j < objs.Count; j++) {
+                    for(int j = 0; j < objs.Count; j++) {
                         SetFieldValue(objs[j], "pack_code", packDirName);
                         SetFieldValue(objs[j], "pack_sort", i++);
                     }
 
-                    if (objs != null && objs.Count > 0) {
+                    if(objs != null && objs.Count > 0) {
                         appendList.AddRange(objs);
                     }
                 }
@@ -542,7 +578,7 @@ public class DataObjects<T> where T : DataObject, new() {
 
         //Debug.Log("LoadDataFromString:hasData:" + !data.IsNullOrEmpty());
 
-        if (!string.IsNullOrEmpty(data)) {
+        if(!string.IsNullOrEmpty(data)) {
 
             items.Clear();
             items = LoadDataFromString(items, data);
@@ -555,12 +591,12 @@ public class DataObjects<T> where T : DataObject, new() {
 
     public virtual Dictionary<string, T> LoadDataFromString(Dictionary<string, T> objs, string data) {
 
-        if (!string.IsNullOrEmpty(data)) {
+        if(!string.IsNullOrEmpty(data)) {
 
             try {
                 objs = JsonMapper.ToObject<Dictionary<string, T>>(data);
             }
-            catch (Exception e) {
+            catch(Exception e) {
                 Debug.Log("LoadDataFromString:" + " e:" + e.Message + " data:" + data + " objs:" + objs.ToJson());
             }
 
@@ -576,18 +612,18 @@ public class DataObjects<T> where T : DataObject, new() {
 
     public virtual List<T> LoadDataFromString(List<T> objs, string data) {
 
-         if (!string.IsNullOrEmpty(data)) {
+        if(!string.IsNullOrEmpty(data)) {
 
             try {
                 objs = JsonMapper.ToObject<List<T>>(data);
             }
-            catch (Exception e) {
-                Debug.Log("LoadDataFromString:" + " e:" + e.Message + " data:" + data + " objs:" + objs.ToJson()); 
+            catch(Exception e) {
+                Debug.Log("LoadDataFromString:" + " e:" + e.Message + " data:" + data + " objs:" + objs.ToJson());
             }
 
             Debug.Log(objs.GetType().ToString() + " T loaded:" + objs.Count);
 
-            for (int j = 0; j < objs.Count; j++) {
+            for(int j = 0; j < objs.Count; j++) {
                 SetFieldValue(objs[j], "pack_code", "default");
             }
         }
@@ -636,15 +672,15 @@ public class DataObjects<T> where T : DataObject, new() {
 
         // harvest the properties, fields and keys if not already done.
 
-        if (attributes == null) {
+        if(attributes == null) {
 
             attributes = new Dictionary<string, string>();
-            
-            if (typeof(BaseDataObject).IsAssignableFrom(obj.GetType())) {
 
-                foreach (string key in ((BaseDataObject)obj).Keys) {
-                    
-                    if (attributes.ContainsKey(key)) {
+            if(typeof(BaseDataObject).IsAssignableFrom(obj.GetType())) {
+
+                foreach(string key in ((BaseDataObject)obj).Keys) {
+
+                    if(attributes.ContainsKey(key)) {
                         attributes[key] = "dict";
                     }
                     else {
@@ -654,11 +690,11 @@ public class DataObjects<T> where T : DataObject, new() {
             }
 
             // add fields
-            foreach (System.Reflection.FieldInfo fieldInfo in obj.GetType().GetFields()) {
+            foreach(System.Reflection.FieldInfo fieldInfo in obj.GetType().GetFields()) {
 
                 string key = fieldInfo.Name;
 
-                if (attributes.ContainsKey(key)) {
+                if(attributes.ContainsKey(key)) {
                     attributes[key] = "field";
                 }
                 else {
@@ -667,11 +703,11 @@ public class DataObjects<T> where T : DataObject, new() {
             }
 
             // add properties
-            foreach (System.Reflection.PropertyInfo propInfo in obj.GetType().GetProperties()) {
-                
+            foreach(System.Reflection.PropertyInfo propInfo in obj.GetType().GetProperties()) {
+
                 string key = propInfo.Name;
-                
-                if (attributes.ContainsKey(key)) {
+
+                if(attributes.ContainsKey(key)) {
                     attributes[key] = "property";
                 }
                 else {
@@ -685,32 +721,32 @@ public class DataObjects<T> where T : DataObject, new() {
 
     public T GetByStringKey(string key, string keyValue) {
 
-        if (keyValue.IsNullOrEmpty()) {
+        if(keyValue.IsNullOrEmpty()) {
             return default(T);
         }
 
         LoadAll();
 
-        if (key == "code") {
+        if(key == "code") {
 
-            if (lookupCode.ContainsKey(keyValue)) {
+            if(lookupCode.ContainsKey(keyValue)) {
 
                 int index = lookupCode.Get<int>(keyValue);
                 T t = GetAll()[index];
-                if (t != default(T)) {
+                if(t != default(T)) {
                     return t;
                 }
             }
             else {
-                return default(T);            
+                return default(T);
             }
         }
-        
-        foreach (T obj in GetAll()) {
-            
-            if (Has(obj, key)) {
 
-                if (keyValue == GetFieldValue<string>(obj, key)) {
+        foreach(T obj in GetAll()) {
+
+            if(Has(obj, key)) {
+
+                if(keyValue == GetFieldValue<string>(obj, key)) {
                     return obj;
                 }
             }
@@ -723,9 +759,9 @@ public class DataObjects<T> where T : DataObject, new() {
     }
 
     public bool Has(T obj, string key) {
-        
+
         Inspect<T>(obj);
-        if (attributes.ContainsKey(key)) {
+        if(attributes.ContainsKey(key)) {
             return true;
         }
         return false;
@@ -734,38 +770,38 @@ public class DataObjects<T> where T : DataObject, new() {
     public U GetFieldValue<U>(T obj, string fieldName) {
 
         object val = null;
-        
-        if (Has(obj, fieldName)) {
+
+        if(Has(obj, fieldName)) {
 
             string type = attributes[fieldName];
 
-            if (type == "dict") {
-                if (typeof(BaseDataObject).IsAssignableFrom(obj.GetType())) {                                         
-                    if (((BaseDataObject)obj).ContainsKey(fieldName)) {                        
+            if(type == "dict") {
+                if(typeof(BaseDataObject).IsAssignableFrom(obj.GetType())) {
+                    if(((BaseDataObject)obj).ContainsKey(fieldName)) {
                         val = ((BaseDataObject)obj)[fieldName];
-                    } 
+                    }
                 }
             }
-            else if (type == "field") {
+            else if(type == "field") {
                 System.Reflection.FieldInfo field = obj.GetType().GetField(fieldName);
-                if (field != null) {
+                if(field != null) {
                     val = field.GetValue(obj);
                 }
             }
-            else if (type == "property") {
-                System.Reflection.PropertyInfo prop = obj.GetType().GetProperty(fieldName);                
-                if (prop != null) {
-                    if (prop.Name == fieldName) {
+            else if(type == "property") {
+                System.Reflection.PropertyInfo prop = obj.GetType().GetProperty(fieldName);
+                if(prop != null) {
+                    if(prop.Name == fieldName) {
                         val = prop.GetValue(obj, null);
                     }
                 }
             }
         }
 
-        try { 
+        try {
             return (U)val;
         }
-        catch (Exception e) {
+        catch(Exception e) {
             LogUtil.Log(e);
             return default(U);
         }
@@ -773,26 +809,26 @@ public class DataObjects<T> where T : DataObject, new() {
 
     public void SetFieldValue(T obj, string fieldName, object fieldValue) {
         //bool hasSet = false;
-        
-        if (Has(obj, fieldName)) {
+
+        if(Has(obj, fieldName)) {
             string type = attributes[fieldName];
-            if (type == "dict") {
-                if (typeof(BaseDataObject).IsAssignableFrom(obj.GetType())) {                                         
-                    if (((BaseDataObject)obj).ContainsKey(fieldName)) {                        
+            if(type == "dict") {
+                if(typeof(BaseDataObject).IsAssignableFrom(obj.GetType())) {
+                    if(((BaseDataObject)obj).ContainsKey(fieldName)) {
                         ((BaseDataObject)obj)[fieldName] = fieldValue;
-                    }   
+                    }
                 }
             }
-            else if (type == "field") {
+            else if(type == "field") {
                 System.Reflection.FieldInfo field = obj.GetType().GetField(fieldName);
-                if (field != null) {
+                if(field != null) {
                     field.SetValue(obj, fieldValue);
                 }
             }
-            else if (type == "property") {
-                System.Reflection.PropertyInfo prop = obj.GetType().GetProperty(fieldName);                
-                if (prop != null) {
-                    if (prop.Name == fieldName) {
+            else if(type == "property") {
+                System.Reflection.PropertyInfo prop = obj.GetType().GetProperty(fieldName);
+                if(prop != null) {
+                    if(prop.Name == fieldName) {
                         prop.SetValue(obj, fieldValue, null);
                     }
                 }
@@ -802,13 +838,13 @@ public class DataObjects<T> where T : DataObject, new() {
 
     public bool CheckByStringKey(string key, string keyValue) {
 
-        foreach (T obj in GetAll()) {
-            
+        foreach(T obj in GetAll()) {
+
             Inspect<T>(obj);
-            
-            if (attributes.ContainsKey(key)) {
+
+            if(attributes.ContainsKey(key)) {
                 string val = GetFieldValue<string>(obj, key);
-                if (val != keyValue && !string.IsNullOrEmpty(val)) {
+                if(val != keyValue && !string.IsNullOrEmpty(val)) {
                     return true;
                 }
             }
@@ -820,11 +856,11 @@ public class DataObjects<T> where T : DataObject, new() {
     public List<T> GetList(string key, object val) {
         //LogUtil.Log("GetList:" + " key:" + key + " val:" + val);
         List<T> list = new List<T>();
-        foreach (T t in GetAll()) {
+        foreach(T t in GetAll()) {
             object obj = GetFieldValue<object>(t, key);
             //LogUtil.Log("GetList:" + " obj:" + obj);
-            if (obj != null) {
-                if (obj.Equals(val)) {
+            if(obj != null) {
+                if(obj.Equals(val)) {
                     //LogUtil.Log("GetList: adding t:" + t);
                     list.Add(t);
                 }
@@ -832,31 +868,31 @@ public class DataObjects<T> where T : DataObject, new() {
         }
         return list;
     }
-     
+
     public List<T> GetListPack(string key, object val, bool all) {
         //LogUtil.Log("GetList:" + " key:" + key + " val:" + val);
         List<T> list = new List<T>();
-        foreach (T t in GetAll()) {
+        foreach(T t in GetAll()) {
             object obj = GetFieldValue<object>(t, key);
             string strObj = "";
-            if (obj != null) { 
+            if(obj != null) {
                 strObj = obj.ToString();
-                if (strObj != null) {
+                if(strObj != null) {
                     strObj = strObj.ToLower();
                 }
             }
             string strVal = "";
-            if (val != null) { 
+            if(val != null) {
                 strVal = val.ToString();
-                if (strVal != null) {
+                if(strVal != null) {
                     strVal = strVal.ToLower();
                 }
             }
             //LogUtil.Log("GetList:" + " obj:" + obj);
-            if (obj != null) {
-                if ((obj.Equals(val) 
+            if(obj != null) {
+                if((obj.Equals(val)
                     || strObj == strVal)
-                    || (all 
+                    || (all
                     && (
                      obj.Equals("*")
                     || obj.Equals("all")
@@ -865,7 +901,7 @@ public class DataObjects<T> where T : DataObject, new() {
                     || obj.Equals("app-pack-all")
                      )
                  )) {
-                    
+
                     //LogUtil.Log("GetList: adding t:" + t);
                     list.Add(t);
                 }
@@ -881,7 +917,7 @@ public class DataObjects<T> where T : DataObject, new() {
     public List<T> GetListByCode(string val) {
         return GetList("code", val);
     }
- 
+
     public List<T> GetListByPack(string val) {
         return GetListPack(val, true);
     }
@@ -889,11 +925,11 @@ public class DataObjects<T> where T : DataObject, new() {
     public List<T> GetListByParentCode(string val) {
         return GetList("parent_code", val);
     }
- 
+
     public List<T> GetListPack(object val, bool all) {
         return GetListPack("pack_code", val, all);
     }
- 
+
     public List<T> GetListByPackExplicit(string val) {
         return GetListPack(val, false);
     }
@@ -901,10 +937,10 @@ public class DataObjects<T> where T : DataObject, new() {
     public List<T> GetListByType(string val) {
         return GetList("type", val);
     }
- 
+
     //
     //  
-        
+
     public List<T> GetList(Predicate<T> match) {
         return items.FindAll(match);
     }
@@ -918,28 +954,28 @@ public class DataObjects<T> where T : DataObject, new() {
     public List<T> SortList() {
         return SortList(items);
     }
- 
+
     public List<T> SortList(List<T> listItems) {
 
-        if (listItems == null) {
+        if(listItems == null) {
             return null;
         }
 
         listItems.Sort(
-            delegate(T c1, T c2) {
-            //LogUtil.Log("sorting:c1:", c1);
-            //LogUtil.Log("sorting:c2:", c2);
-            if (GetFieldValue<object>(c1, "sort_order") != null) {
-                int sort1 = (int)GetFieldValue<int>(c1, "sort_order");
-                int sort2 = (int)GetFieldValue<int>(c2, "sort_order");
-                //LogUtil.Log("sorting:sort1:", sort1);
-                //LogUtil.Log("sorting:sort2:", sort2);
-                return sort1.CompareTo(sort2);
+            delegate (T c1, T c2) {
+                //LogUtil.Log("sorting:c1:", c1);
+                //LogUtil.Log("sorting:c2:", c2);
+                if(GetFieldValue<object>(c1, "sort_order") != null) {
+                    int sort1 = (int)GetFieldValue<int>(c1, "sort_order");
+                    int sort2 = (int)GetFieldValue<int>(c2, "sort_order");
+                    //LogUtil.Log("sorting:sort1:", sort1);
+                    //LogUtil.Log("sorting:sort2:", sort2);
+                    return sort1.CompareTo(sort2);
+                }
+                else {
+                    return -1;
+                }
             }
-            else {
-                return -1;
-            }
-        }
         );
 
         return listItems;
@@ -949,32 +985,32 @@ public class DataObjects<T> where T : DataObject, new() {
 
         lookupCode.Clear();
 
-        for (int i = 0; i < items.Count(); i++) {
+        for(int i = 0; i < items.Count(); i++) {
             string _code = GetFieldValue<string>(items[i], "code");
             lookupCode.Set<int>(_code, i);
         }
     }
-    
+
     public void LoadAll() {
 
         //LogUtil.Log("GetAll:IsLoaded:", IsLoaded);
 
-        if (!IsLoaded) {
+        if(!IsLoaded) {
 
             LoadData();
 
             List<T> itemsActive = new List<T>();
 
-            foreach (T t in items) {
+            foreach(T t in items) {
                 bool active = GetFieldValue<bool>(t, "active");
-                if (active) {
+                if(active) {
                     itemsActive.Add(t);
                 }
             }
 
             items.Clear();
 
-            foreach (T t in itemsActive) {
+            foreach(T t in itemsActive) {
                 items.Add(t);
             }
 
@@ -986,7 +1022,7 @@ public class DataObjects<T> where T : DataObject, new() {
             UpdateLookups();
         }
 
-        if (lookupCode.Count != items.Count) {
+        if(lookupCode.Count != items.Count) {
             UpdateLookups();
         }
     }
@@ -1004,11 +1040,11 @@ public class DataObjects<T> where T : DataObject, new() {
 
         LoadAll();
 
-        if (_items != null) {
+        if(_items != null) {
 
             return items.Count;
         }
-        
+
         return 0;
     }
 
@@ -1018,7 +1054,7 @@ public class DataObjects<T> where T : DataObject, new() {
             //    return false;
             //}
 
-            if (_items != null) {
+            if(_items != null) {
                 return items.Count > 0 ? true : false;
             }
 
@@ -1033,20 +1069,20 @@ public class DataObjects<T> where T : DataObject, new() {
     }
 
     public virtual void Reset() {
-        
-        if (_lookupCode != null) {
+
+        if(_lookupCode != null) {
 
             lookupCode.Clear();
         }
 
-        if (_items != null) {
+        if(_items != null) {
 
             items.Clear();
         }
 
         packPaths = new List<string>();
     }
-        
+
     public string GetPathItem(string key, string code, string folder) {
         string path = PathUtil.Combine(ContentPaths.appCachePathData, folder.TrimStart('/'));
         return GetPathItem(key, code, folder, path);
@@ -1060,7 +1096,7 @@ public class DataObjects<T> where T : DataObject, new() {
         fullPath = PathUtil.Combine(fullPath, pathCode.TrimStart('/'));
         return fullPath;
     }
-    
+
     //public T LoadItem<U>(string key, string code) {
     public T LoadItem(string key, string code) {
         // Load from file individually not a list
@@ -1070,7 +1106,7 @@ public class DataObjects<T> where T : DataObject, new() {
 
         DataObject item = new DataObject();
 
-        if (!FileSystemUtil.CheckFileExists(path)) {
+        if(!FileSystemUtil.CheckFileExists(path)) {
             SaveItem(key, code, item);
         }
 
@@ -1078,7 +1114,7 @@ public class DataObjects<T> where T : DataObject, new() {
 
         string jsonData = item.LoadData(path);
         T itemReturn = JsonMapper.ToObject<T>(jsonData);
-        if (itemReturn != null) {
+        if(itemReturn != null) {
             return itemReturn;
         }
         else {
@@ -1095,11 +1131,11 @@ public class DataObjects<T> where T : DataObject, new() {
         string jsonData = JsonMapper.ToJson(obj);
 
         historyLevelItems.Insert(0, jsonData);
-        if (historyLevelItems.Count > 20) {
+        if(historyLevelItems.Count > 20) {
             historyLevelItems.RemoveAt(historyLevelItems.Count);
         }
 
         obj.SaveData(path, jsonData);
 
-    }       
+    }
 }

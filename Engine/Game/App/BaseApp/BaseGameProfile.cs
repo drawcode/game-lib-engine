@@ -31,6 +31,8 @@ public class BaseGameProfileAttributes {
     // MODES
 
     public static string ATT_CURRENT_GAME_MODE = "game-mode";
+    public static string ATT_CURRENT_GAME_WORLD = "game-world";
+    public static string ATT_CURRENT_GAME_LEVEL = "game-level";
     public static string ATT_CURRENT_CAMERA_MODE = "camera-mode";
     public static string ATT_CURRENT_APP_MODE = "app-mode";
     public static string ATT_CURRENT_APP_MODE_TYPE = "app-mode-type";
@@ -316,6 +318,42 @@ public class BaseGameProfile : Profile {
     public virtual void SetCurrentAppContentState(string attValue) {
         string key = BaseGameProfileAttributes.ATT_CURRENT_APP_CONTENT_STATE;
         SetAttributeStringValue(key, attValue);
+    }
+    
+    // GAME WORLD CURRENT
+
+    public virtual string GetCurrentGameWorld() {
+        return GetCurrentGameWorld(GameConfigs.defaultGameWorldCode);
+    }
+
+    public virtual string GetCurrentGameWorld(string defaultValue) {
+        string attValue = defaultValue;
+        string key = BaseGameProfileAttributes.ATT_CURRENT_GAME_WORLD;
+        if(CheckIfAttributeExists(key))
+            attValue = GetAttributeStringValue(key);
+        return attValue;
+    }
+
+    public virtual void SetCurrentGameWorld(string attValue) {
+        string key = BaseGameProfileAttributes.ATT_CURRENT_GAME_WORLD;
+        SetAttributeStringValue(key, attValue);
+    }
+
+    // GAME DATA STATE
+
+    public virtual string GetGameDataState(string attKey) {
+        if(CheckIfAttributeExists(attKey))
+            return GetAttributeStringValue(attKey);
+        return null;
+    }
+
+    public virtual void SetGameDataState(string attKey, string attValue) {
+
+        if(attValue.IsNullOrEmpty()) {
+            return;
+        }
+
+        SetAttributeStringValue(attKey, attValue);
     }
 
     // CAMERA MODES

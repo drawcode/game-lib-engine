@@ -15,8 +15,9 @@ public class BaseGameConfigs<T> : DataObjects<T> where T : DataObject, new() {
     public static string MULTIPLAYER_GAME_TYPE = "default";
 
     public static string defaultGameLevelCode = "1-1";
+    public static string defaultGameWorldCode = "default";
 
-	public static bool usePooledGamePlayers = true;
+    public static bool usePooledGamePlayers = true;
 	public static bool usePooledIndicators = false;
 	public static bool usePooledProjectiles = true;
     public static bool usePooledItems = true;

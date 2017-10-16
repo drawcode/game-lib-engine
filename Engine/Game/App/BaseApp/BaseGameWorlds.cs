@@ -42,7 +42,7 @@ public class BaseGameWorlds<T> : DataObjects<T> where T : DataObject, new() {
     public BaseGameWorlds() {
         Reset();
     }
-
+        
     public BaseGameWorlds(bool loadData) {
         Reset();
         path = "data/" + BASE_DATA_KEY + ".json";
@@ -50,10 +50,18 @@ public class BaseGameWorlds<T> : DataObjects<T> where T : DataObject, new() {
         LoadData();
     }
     
+    public override void LoadState() {
+        base.LoadState();
+
+        if(!currentStateCode.IsNullOrEmpty()) {
+            ChangeCurrent(currentStateCode);
+        }
+    }
+    
     public void ChangeCurrentAbsolute(string code) {
         //GameWorlds.Current.code = "changeme";
         ChangeCurrent(code);
-    }
+     }
     
     public void ChangeCurrent(string code) {
         if (GameWorlds.Current.code != code) {
@@ -63,7 +71,12 @@ public class BaseGameWorlds<T> : DataObjects<T> where T : DataObject, new() {
             //string originalCode = code;
             if (string.IsNullOrEmpty(GameWorlds.Current.code)) {
                 GameWorlds.Current = GameWorlds.Instance.GetById(code);
-            }   
+            }
+
+            if(GameWorlds.Current != null) {
+                GameProfiles.Current.SetCurrentGameWorld(GameWorlds.Current.code);
+                //GameState.SaveProfile();
+            }
         }
     }
 
