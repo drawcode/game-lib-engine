@@ -36,7 +36,7 @@ namespace Engine.UI {
 
             Instance = this;
 
-            currentSceneName = Application.srcValue.Replace(".unity3d", "");
+            currentSceneName = Context.Current.ApplicationLoadedLevelName();// Application.srcValue.Replace(".unity3d", "");
         }
 
         public void LoadSceneTransition(string sceneName) {
