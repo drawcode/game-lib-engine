@@ -70,7 +70,7 @@ public class DataKeyedObjects<T> {
 
         if(!path.Contains(ContentsConfig.contentAppFolder)) {            
 
-            if(Application.isWebPlayer) {
+            if(Context.Current.isWebGL) {
 
                 System.Text.StringBuilder sbPath = new System.Text.StringBuilder();
 
