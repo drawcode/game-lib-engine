@@ -337,7 +337,8 @@ public class BaseGameLocalizations<T> : DataObjects<T> where T : DataObject, new
         return null;
     }
 
-    public void ChangeCurrent(string code) {
+    public override void ChangeCurrent(string code) {
+        base.ChangeCurrent(code);
 
         //Debug.Log("ChangeCurrent:" + 
         //          " currentLocale:" + currentLocale +

@@ -178,6 +178,10 @@ public class DataObjects<T> where T : DataObject, new() {
         currentStateCode = val;
     }
 
+    public virtual void ChangeCurrent(string codeTo) {
+        SetStateCode(codeTo);
+    }
+
     public virtual void LoadDataFromPersistent() {
         LoadDataFromPersistent(path);
     }

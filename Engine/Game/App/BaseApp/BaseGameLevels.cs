@@ -182,7 +182,8 @@ public class BaseGameLevels<T> : DataObjects<T> where T : DataObject, new() {
         ChangeCurrent(code);
     }
 
-    public void ChangeCurrent(string code) {
+    public override void ChangeCurrent(string code) {
+        base.ChangeCurrent(code);
 
         Debug.Log("GameLevels:ChangeCurrent:" + " code:" + code);
 

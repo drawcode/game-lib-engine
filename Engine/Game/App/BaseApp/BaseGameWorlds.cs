@@ -43,7 +43,7 @@ public class BaseGameWorlds<T> : DataObjects<T> where T : DataObject, new() {
         Reset();
     }
         
-    public BaseGameWorlds(bool loadData) {
+    public BaseGameWorlds(bool loadData) {     
         Reset();
         path = "data/" + BASE_DATA_KEY + ".json";
         pathKey = BASE_DATA_KEY;
@@ -53,29 +53,35 @@ public class BaseGameWorlds<T> : DataObjects<T> where T : DataObject, new() {
     public override void LoadState() {
         base.LoadState();
 
+    }
+
+    public void HandleStateLoaded() {
+
         if(!currentStateCode.IsNullOrEmpty()) {
             ChangeCurrent(currentStateCode);
         }
     }
     
-    public void ChangeCurrentAbsolute(string code) {
+    public void ChangeCurrentAbsolute(string code) {  
         //GameWorlds.Current.code = "changeme";
         ChangeCurrent(code);
      }
     
-    public void ChangeCurrent(string code) {
+    public override void ChangeCurrent(string code) {
+
         if (GameWorlds.Current.code != code) {
                     UnityEngine.Debug.Log("BaseGameWorlds:ChangeCurrent:" + code);
 
-            GameWorlds.Current = GameWorlds.Instance.GetById(code);
+            GameWorld world = GameWorlds.Instance.GetById(code); 
             //string originalCode = code;
-            if (string.IsNullOrEmpty(GameWorlds.Current.code)) {
-                GameWorlds.Current = GameWorlds.Instance.GetById(code);
+            if (!string.IsNullOrEmpty(world.code)) {
+                GameWorlds.Current = world;
             }
 
             if(GameWorlds.Current != null) {
-                GameProfiles.Current.SetCurrentGameWorld(GameWorlds.Current.code);
+                //GameProfiles.Current.SetCurrentGameWorld(GameWorlds.Current.code);
                 //GameState.SaveProfile();
+                base.ChangeCurrent(code);
             }
         }
     }

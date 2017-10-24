@@ -149,8 +149,9 @@ public class BaseGameLevelItems<T> : DataObjects<T> where T : DataObject, new() 
         GameLevelItems.Current.code = "changeme";
         GameLevelItems.Instance.ChangeCurrent(code);
     }
-    
-    public virtual void ChangeCurrent(string code) {        
+
+    public override void ChangeCurrent(string code) {
+        base.ChangeCurrent(code);     
         //GameLevelItems.Instance.Save(Current.code);       
         GameLevelItems.Instance.Load(code);
     }    

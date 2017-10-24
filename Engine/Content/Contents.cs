@@ -2558,7 +2558,7 @@ public class Contents : GameObjectBehavior {
 	
 		string lastPackUrlValue = GetLastPackState(pack);
         		
-		if(Caching.IsVersionCached(lastPackUrlValue, version)
+		if(Caching.IsVersionCached(lastPackUrlValue, Hash128.Parse(version.ToString()))
 			&& !string.IsNullOrEmpty(lastPackUrlValue)) {
 			// Just load from the saved url
 			StartCoroutine(

@@ -53,7 +53,8 @@ public class BaseGameTeams<T> : DataObjects<T> where T : DataObject, new() {
         LoadData();
     }
 
-    public void ChangeCurrent(string code) {
+    public override void ChangeCurrent(string code) {
+        base.ChangeCurrent(code);
         if (GameTeams.Current.code != code) {
             GameTeam team = GameTeams.Instance.GetByCode(code);
             if (team != null) {

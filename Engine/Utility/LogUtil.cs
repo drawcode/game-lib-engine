@@ -1,4 +1,5 @@
-﻿using System;
+﻿#pragma warning disable 0618
+using System;
 using System.Collections.Generic;
 using System.Security;
 using System.Security.Cryptography;
@@ -147,6 +148,8 @@ public class LogUtil {
         // Log default
         LogDefaultKeyInternal(message);
     }
+
+    // https://docs.unity3d.com/Manual/webgl-interactingwithbrowserscripting.html
 
     public void LogErrorInternal(object message) {
         Debug.LogError(message + "\r\n\r\n\r\n");
