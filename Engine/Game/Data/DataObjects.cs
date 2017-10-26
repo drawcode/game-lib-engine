@@ -24,6 +24,11 @@ public enum DataObjectsType {
     OBJECT
 }
 
+
+public class DataObjectsMessages {
+    public static string dataObjectLoaded = "data-object-loaded";
+}
+
 public class DataObjects<T> where T : DataObject, new() {
 
     public List<T> _items;
@@ -114,6 +119,8 @@ public class DataObjects<T> where T : DataObject, new() {
 
     public DataObjects() {
         Reset();
+
+        //Messenger<string>.AddListener(DataObjectsMessages.dataObjectLoaded, OnDataLoaded);
     }
 
     public virtual void LoadData() {
@@ -144,12 +151,28 @@ public class DataObjects<T> where T : DataObject, new() {
 
         }
 
-        LoadState();
+        //BroadcastDataLoaded();
+    }
+
+    public virtual void BroadcastDataLoaded() {
+
+        Messenger<string>.Broadcast(DataObjectsMessages.dataObjectLoaded, pathKey);
+    }
+
+    public void OnDataLoaded(string key) {
+
+        if(key.IsEqualLowercase(pathKey)) {
+            LoadState();
+        }
     }
 
     public virtual void LoadState() {
 
         string val = GetStateCode();
+
+        if(val.IsNullOrEmpty()) {
+            return;
+        }
 
         SetStateCode(val);
     }

@@ -53,10 +53,6 @@ public class BaseGameWorlds<T> : DataObjects<T> where T : DataObject, new() {
     public override void LoadState() {
         base.LoadState();
 
-    }
-
-    public void HandleStateLoaded() {
-
         if(!currentStateCode.IsNullOrEmpty()) {
             ChangeCurrent(currentStateCode);
         }
@@ -67,6 +63,7 @@ public class BaseGameWorlds<T> : DataObjects<T> where T : DataObject, new() {
         ChangeCurrent(code);
      }
     
+    /*
     public override void ChangeCurrent(string code) {
 
         if (GameWorlds.Current.code != code) {
@@ -85,6 +82,7 @@ public class BaseGameWorlds<T> : DataObjects<T> where T : DataObject, new() {
             }
         }
     }
+    */
 
     public GameWorld GetByWorldNum(int worldNum) {
         foreach (GameWorld item in GameWorlds.Instance.GetAll()) {
