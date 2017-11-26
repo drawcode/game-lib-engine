@@ -17,6 +17,7 @@ public class BaseDataObjectKeys {
     public static string game_id = "game_id";
     public static string uuid = "uuid";
     public static string code = "code";
+    public static string codeThirdParty = "code_third_party";
     public static string name = "name";
     public static string data_type = "data_type";
     public static string load_type = "load_type";
@@ -404,6 +405,8 @@ public class BaseDataObjectKeys {
     public static string xp = "xp";
     public static string power = "power";
     public static string currency = "currency";
+    public static string receipt = "receipt";
+    public static string signature = "signature";
     public static string access = "access";
     //
     // content
@@ -419,6 +422,7 @@ public class BaseDataObjectKeys {
     //
     // missions
 
+    public static string quantity = "quantity";
     public static string amount = "amount";
     public static string run = "run";
     public static string run_enemies = "run_enemies";
