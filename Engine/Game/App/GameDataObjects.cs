@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using Engine.Data.Json;
+// using Engine.Data.Json;
 using Engine.Utility;
 
 public class GameDataModel : GameDataObject {
@@ -154,7 +154,7 @@ public class GameDataAnimation : GameDataObject {
 public class GameDataSound : GameDataObject {
 
 
-    [JsonIgnore]
+    //[NonSerialized]
     public bool isPlayTypeLoop {
         get {
             return data_type == GameDataPlayType.loop
@@ -165,7 +165,7 @@ public class GameDataSound : GameDataObject {
         }
     }
 
-    [JsonIgnore]
+    //[JsonIgnore]
     public bool isPlayTypeOnce {
         get {
             return data_type == GameDataPlayType.once
@@ -402,21 +402,21 @@ public class GameDataObjectItem : GameDataObject {
 
     // roles
 
-    [JsonIgnore]
+    //[NonSerialized]
     public bool isHero {
         get {
             return IsRole("hero");
         }
     }
     
-    [JsonIgnore]
+    //[JsonIgnore]
     public bool isEnemy {
         get {
             return IsRole("enemy");
         }
     }
     
-    [JsonIgnore]
+    //[JsonIgnore]
     public bool isSidekick {
         get {
             return IsRole("sidekick");

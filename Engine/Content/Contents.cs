@@ -9,7 +9,7 @@ using System.IO;
 using UnityEngine;
 
 using Engine.Events;
-using Engine.Data.Json;
+// using Engine.Data.Json;
 using Engine.Networking;
 
 public class ContentConfig {
@@ -152,7 +152,7 @@ public class ContentItemAccessDictionary : DataObjectItem {
 		CheckDictionary();
 		string contentItemAccessString = "";
 		string settingKey = "ssg-cal";
-		contentItemAccessString = JsonMapper.ToJson(accessItems);
+        contentItemAccessString = accessItems.ToJson();
 		LogUtil.LogAccess("Save: access:" + contentItemAccessString);
 		SystemPrefUtil.SetLocalSettingString(settingKey, contentItemAccessString);
 		SystemPrefUtil.Save();
@@ -164,7 +164,7 @@ public class ContentItemAccessDictionary : DataObjectItem {
 			// Load from persistence
 			string keyValue = SystemPrefUtil.GetLocalSettingString(settingKey);
 			LogUtil.LogAccess("Load: access:" + keyValue);
-			accessItems = JsonMapper.ToObject<Dictionary<string, ContentItemAccess>>(keyValue);
+			accessItems = keyValue.FromJson<Dictionary<string, ContentItemAccess>>();
 			CheckDictionary();
 		}
 	}
@@ -1830,7 +1830,7 @@ public class Contents : GameObjectBehavior {
 				
 				try {
 					DownloadableContentItemListResponse responseData 
-						= JsonMapper.ToObject<DownloadableContentItemListResponse>(dataToParse);
+						= dataToParse.FromJson<DownloadableContentItemListResponse>();
 					
 					foreach(KeyValuePair<string, DownloadableContentUrlObject> item 
 						in responseData.data.url_objs) {
@@ -1887,7 +1887,7 @@ public class Contents : GameObjectBehavior {
 				
 				try {
 					DownloadableContentItemListResponse responseData 
-						= JsonMapper.ToObject<DownloadableContentItemListResponse>(dataToParse);
+						= dataToParse.FromJson<DownloadableContentItemListResponse>();
 					
 					foreach(KeyValuePair<string, DownloadableContentUrlObject> item 
 						in responseData.data.url_objs) {
@@ -2015,7 +2015,7 @@ public class Contents : GameObjectBehavior {
 				
 				try {
 					DownloadableContentItemResponse responseData 
-						= JsonMapper.ToObject<DownloadableContentItemResponse>(dataToParse);
+						= dataToParse.FromJson<DownloadableContentItemResponse>();
 					dlcItem = responseData.data;
 				}
 				catch(Exception e) {							
@@ -2081,7 +2081,7 @@ public class Contents : GameObjectBehavior {
 				
 				try {
 					DownloadableContentItemResponse responseData 
-						= JsonMapper.ToObject<DownloadableContentItemResponse>(dataToParse);
+						= dataToParse.FromJson<DownloadableContentItemResponse>();
 					
 					dlcItem = responseData.data;
 				}
@@ -2145,7 +2145,7 @@ public class Contents : GameObjectBehavior {
 				
 				try {
 					DownloadableContentItemResponse responseData 
-						= JsonMapper.ToObject<DownloadableContentItemResponse>(dataToParse);
+						= dataToParse.FromJson<DownloadableContentItemResponse>();
 					
 					dlcItem = responseData.data;
 				}
@@ -2209,17 +2209,15 @@ public class Contents : GameObjectBehavior {
 		
 		// Manages common response object parsing to get to object
 		if(responseObject.dataValueText != null) {
-			
-			JsonData data = JsonMapper.ToObject(responseObject.dataValueText);
+
+            Dictionary<string, object> data = responseObject.dataValueText.FromJsonToDict();
 						
-			if(data.IsObject) {
+			if(data != null && data.Count > 0) {
 				
 				string code = "9999";
 				
 				try{
-					if(data["code"] != null) {
-						code = (string)data["code"];
-					}
+                    code = data.Get<string>("code");
 				}
 				catch(Exception e) {
 					responseObject.error = 1;
@@ -2228,10 +2226,8 @@ public class Contents : GameObjectBehavior {
 				
 				string message = "Failure to parse response.";
 				
-				try{
-					if(data["message"] != null) {
-						message = (string)data["message"];
-					}
+				try {
+                    message = data.Get<string>("message");
 				}
 				catch(Exception e) {
 					responseObject.error = 1;

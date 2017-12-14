@@ -5,7 +5,7 @@ using System.Linq;
 using UnityEngine;
 
 using Engine.Events;
-using Engine.Data.Json;
+// using Engine.Data.Json;
 
 public class BaseDataObjectKeys {  
     
@@ -659,14 +659,15 @@ public class BaseDataObject : Dictionary<string, object> {
 
         if (!string.IsNullOrEmpty(dataValue)) {
             dataValue = DataPrepareLoad(dataValue);
-            return JsonMapper.ToObject<T>(dataValue);
+            //return JsonMapper.ToObject<T>(dataValue);
+            return dataValue.FromJson<T>();
         }
         
         return default(T);
     }
     
     public void SaveData(string folderPath, string fileKey, object obj) {
-        string dataValue = JsonMapper.ToJson(obj);
+        string dataValue = obj.ToJson();
         string path = PathUtil.Combine(folderPath, (fileKey + ".json").TrimStart('/'));
         SaveData(path, dataValue);
     }

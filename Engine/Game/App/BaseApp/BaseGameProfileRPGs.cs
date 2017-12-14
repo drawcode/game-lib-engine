@@ -5,7 +5,7 @@ using System.IO;
 
 using UnityEngine;
 
-using Engine.Data.Json;
+// using Engine.Data.Json;
 using Engine.Events;
 using Engine.Utility;
 
@@ -1445,7 +1445,7 @@ public class BaseGameProfileRPG : Profile {
     }
 
     public virtual void SetGamePlayerProgressPointDatas(GamePlayerProgressPointDatas points) {
-        string pointsText = JsonMapper.ToJson(points);
+        string pointsText = points.ToJson();//JsonMapper.ToJson(points);
         LogUtil.Log("SetGamePlayerProgressPointDatas: " + pointsText);
         SetAttributeStringValue(BaseGameProfileRPGAttributes.ATT_PROGRESS_POINTS, pointsText);
         SyncGamePlayerProgressPointDataStats();
@@ -1466,7 +1466,7 @@ public class BaseGameProfileRPG : Profile {
         if (!string.IsNullOrEmpty(json)) {
             try {
                 LogUtil.Log("GetGamePlayerProgressPoints: " + json);
-                points = JsonMapper.ToObject<GamePlayerProgressPointDatas>(json);
+                points = json.FromJson<GamePlayerProgressPointDatas>();// JsonMapper.ToObject<GamePlayerProgressPointDatas>(json);
             }
             catch (Exception e) {
                 points = new GamePlayerProgressPointDatas();

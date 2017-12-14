@@ -4,6 +4,8 @@ using System.Collections.Generic;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.IO;
 
+using Engine.Data.Json;
+
 using UnityEngine;
 
 public static class ObjectExtensions {
@@ -14,7 +16,8 @@ public static class ObjectExtensions {
         }
 
         try {
-            return Engine.Data.Json.JsonMapper.ToJson(inst).FilterJson();
+            //return Engine.Data.Json.JsonMapper.ToJson(inst).FilterJson();
+            return JsonUtility.ToJson(inst).FilterJson();
         }
         catch (Exception e) {
             LogUtil.LogError("ToJson:FAILED:" + e);
@@ -28,20 +31,33 @@ public static class ObjectExtensions {
         }
         
         try {
-            return Engine.Data.Json.JsonMapper.ToJson(inst).FilterJson();
+            //return Engine.Data.Json.JsonMapper.ToJson(inst).FilterJson();
+            return JsonUtility.ToJson(inst).FilterJson();
         }
         catch (Exception e) {
             LogUtil.LogError("ToJson:FAILED:" + e);
             return null;
         }
     }
-    
+
+    public static Dictionary<string,object> FromJsonToDict(this string inst) {
+        return JsonMapper.ToObject<Dictionary<string, object>>(inst.FilterJson());
+        //return JsonUtility.FromJson<Dictionary<string,object>>(inst.FilterJson());
+    }
+
+    public static List<Dictionary<string, object>> FromJsonToDictList(this string inst) {
+        return JsonMapper.ToObject<List<Dictionary<string, object>>>(inst.FilterJson());
+        //return JsonUtility.FromJson<List<Dictionary<string, object>>>(inst.FilterJson());
+    }
+
     public static T FromJson<T>(this string inst) {
-        return Engine.Data.Json.JsonMapper.ToObject<T>(inst.FilterJson());
+        return JsonMapper.ToObject<T>(inst.FilterJson());
+        //return JsonUtility.FromJson<T>(inst.FilterJson());
     }
     
     public static object FromJson(this string inst) {
-        return Engine.Data.Json.JsonMapper.ToObject<object>(inst.FilterJson());
+        return JsonMapper.ToObject<object>(inst.FilterJson());
+        //return JsonUtility.FromJson<object>(inst.FilterJson());
     }
 
     //

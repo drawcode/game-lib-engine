@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 
 using System.Net;
-using Engine.Data.Json;
+// using Engine.Data.Json;
 using Engine.Utility;
 
 using UnityEngine;
@@ -60,7 +60,7 @@ namespace Engine.Networking {
             public string data;
             public string code;
             public string dataValueText;
-            public JsonData dataValue;
+            public object dataValue;
 
             public ResponseObject() {
                 validResponse = false;
@@ -71,7 +71,7 @@ namespace Engine.Networking {
                 code = "";
                 dataValueText = "";
                 data = "";
-                dataValue = new JsonData();
+                dataValue = new object();
             }
         }
 

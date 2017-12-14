@@ -10,7 +10,7 @@ using System.IO;
 
 #endif
 using Engine.Events;
-using Engine.Data.Json;
+// using Engine.Data.Json;
 
 public enum DataObjectsStorage {
     RESOURCES,
@@ -289,7 +289,7 @@ public class DataObjects<T> where T : DataObject, new() {
     public virtual string DataToJson() {
 
         if(_items != null) {
-            return JsonMapper.ToJson(items);
+            return items.ToJson();
         }
 
         return null;
@@ -312,7 +312,7 @@ public class DataObjects<T> where T : DataObject, new() {
         Debug.Log("SaveDataItemsToResources:path:" + path);
 
         if(_items != null) {
-            fileData = JsonMapper.ToJson(items);
+            fileData = items.ToJson();
         }
 
         if(path.EndsWith(".json")) {
@@ -422,7 +422,7 @@ public class DataObjects<T> where T : DataObject, new() {
         if(!prepared)
             return false;
 
-        fileData = JsonMapper.ToJson(obj);
+        fileData = obj.ToJson();
 
         FileSystemUtil.WriteString(pathVersioned, fileData);
 
@@ -621,7 +621,7 @@ public class DataObjects<T> where T : DataObject, new() {
         if(!string.IsNullOrEmpty(data)) {
 
             try {
-                objs = JsonMapper.ToObject<Dictionary<string, T>>(data);
+                objs = data.FromJson<Dictionary<string, T>>();
             }
             catch(Exception e) {
                 Debug.Log("LoadDataFromString:" + " e:" + e.Message + " data:" + data + " objs:" + objs.ToJson());
@@ -642,7 +642,7 @@ public class DataObjects<T> where T : DataObject, new() {
         if(!string.IsNullOrEmpty(data)) {
 
             try {
-                objs = JsonMapper.ToObject<List<T>>(data);
+                objs = data.FromJson<List<T>>();
             }
             catch(Exception e) {
                 Debug.Log("LoadDataFromString:" + " e:" + e.Message + " data:" + data + " objs:" + objs.ToJson());
@@ -1140,7 +1140,7 @@ public class DataObjects<T> where T : DataObject, new() {
         historyLevelItems.Clear();
 
         string jsonData = item.LoadData(path);
-        T itemReturn = JsonMapper.ToObject<T>(jsonData);
+        T itemReturn = jsonData.FromJson<T>();
         if(itemReturn != null) {
             return itemReturn;
         }
@@ -1155,7 +1155,7 @@ public class DataObjects<T> where T : DataObject, new() {
         string path = GetPathItem(key, code, "items");
         path = Contents.GetFileVersioned(path);
 
-        string jsonData = JsonMapper.ToJson(obj);
+        string jsonData = obj.ToJson();
 
         historyLevelItems.Insert(0, jsonData);
         if(historyLevelItems.Count > 20) {

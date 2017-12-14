@@ -5,7 +5,7 @@ using System.Linq;
 using UnityEngine;
 
 using Engine.Events;
-using Engine.Data.Json;
+// using Engine.Data.Json;
 
 
 public class DataObject : BaseDataObject {  
@@ -23,7 +23,7 @@ using System.Linq;
 using UnityEngine;
 
 using Engine.Events;
-using Engine.Data.Json;
+// using Engine.Data.Json;
 
 public class DataObject {  
 

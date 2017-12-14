@@ -15,7 +15,7 @@ using System.Linq;
 
 using UnityEngine;
 
-using Engine.Data.Json;
+// using Engine.Data.Json;
 
 public class DataKeyedObjectLeaf : DataKeyedObject {
 
@@ -2056,12 +2056,12 @@ public class TestsData {
         obj1.active = true;
         
         obj1.display_name = "tester";
-        
-        string obj1Data = JsonMapper.ToJson(obj1);
+
+        string obj1Data = obj1.ToJson();
                 
-        obj2 = JsonMapper.ToObject<GameCharacterSkin>(obj1Data);
-        
-        string obj2Data = JsonMapper.ToJson(obj2);
+        obj2 = obj1Data.FromJson<GameCharacterSkin>();
+
+        string obj2Data = obj1.ToJson();
 
         AssertEquals(name, obj1, obj2);
     }

@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 
-using Engine.Data.Json;
+// using Engine.Data.Json;
 
 /*
 AppContentStates
@@ -274,7 +274,8 @@ public class BaseAppContentState : GameDataObject {
         //UnityEngine.LogUtil.LogWarning("json:" + json.Replace("\\\"", "\""));
         if (!string.IsNullOrEmpty(json)) {
             try {
-                return JsonMapper.ToObject<DataPlatformStoreMeta>(json);
+                //return JsonMapper.ToObject<DataPlatformStoreMeta>(json);
+                return json.FromJson<DataPlatformStoreMeta>();
             }
             catch (Exception e) {
                 LogUtil.LogWarning("Error parsing DataPlatformStoreMeta" + e);

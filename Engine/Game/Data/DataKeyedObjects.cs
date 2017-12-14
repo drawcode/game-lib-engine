@@ -10,7 +10,7 @@ using System.IO;
 #endif
 
 using Engine.Events;
-using Engine.Data.Json;
+// using Engine.Data.Json;
 
 public class DataKeyedObjects<T> {
     public List<T> items;
@@ -178,7 +178,7 @@ public class DataKeyedObjects<T> {
         if(!prepared)
             return false;
 
-        fileData = JsonMapper.ToJson(items);
+        fileData = items.ToJson();//JsonMapper.ToJson(items);
 
         FileSystemUtil.WriteString(pathVersioned, fileData);
 
@@ -205,7 +205,7 @@ public class DataKeyedObjects<T> {
         if(!prepared)
             return false;
 
-        fileData = JsonMapper.ToJson(obj);
+        fileData = obj.ToJson();//JsonMapper.ToJson(obj);
 
         FileSystemUtil.WriteString(pathVersioned, fileData);
 
@@ -401,7 +401,7 @@ public class DataKeyedObjects<T> {
 
     public virtual List<T> LoadDataFromString(List<T> objs, string data) {
         if(!string.IsNullOrEmpty(data)) {
-            objs = JsonMapper.ToObject<List<T>>(data);
+            objs = data.FromJson<List<T>>();
 
             //LogUtil.Log("T loaded:" + objs.Count);
             for(int j = 0; j < objs.Count; j++) {
@@ -794,7 +794,7 @@ public class DataKeyedObjects<T> {
         historyLevelItems.Clear();
 
         string jsonData = item.LoadData(path);
-        T itemReturn = JsonMapper.ToObject<T>(jsonData);
+        T itemReturn = jsonData.FromJson<T>();
         if(itemReturn != null) {
             return itemReturn;
         }
@@ -809,7 +809,7 @@ public class DataKeyedObjects<T> {
         string path = GetPathItem(key, code, "items");
         path = Contents.GetFileVersioned(path);
 
-        string jsonData = JsonMapper.ToJson(obj);
+        string jsonData = obj.ToJson();
 
         historyLevelItems.Insert(0, jsonData);
         if(historyLevelItems.Count > 20) {

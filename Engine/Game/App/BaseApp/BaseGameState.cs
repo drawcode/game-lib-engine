@@ -7,7 +7,7 @@ using System.Threading;
 
 using UnityEngine;
 
-using Engine.Data.Json;
+// using Engine.Data.Json;
 using Engine.Events;
 using Engine.Utility;
 
@@ -112,7 +112,7 @@ public class BaseGameState {
     }
     
     public virtual void saveConfig() {
-        string jsonString = JsonMapper.ToJson(config);
+        string jsonString = config.ToJson();// JsonMapper.ToJson(config);
         SystemPrefUtil.SetLocalSettingString(KEY_CONFIG, jsonString);
         SystemPrefUtil.Save();
     }
@@ -126,7 +126,7 @@ public class BaseGameState {
     public virtual void loadConfig() {
         string data = SystemPrefUtil.GetLocalSettingString(KEY_CONFIG);
         if (!string.IsNullOrEmpty(data)) {
-            config = JsonMapper.ToObject<GameConfig>(data);
+            config = data.FromJson<GameConfig>();//JsonMapper.ToObject<GameConfig>(data);
         }
         
         profile.ChangeUser(config.lastLoggedOnUser);
@@ -264,8 +264,8 @@ public class BaseGameState {
         string data = prepareLoad(key);
         
         if (!string.IsNullOrEmpty(data)) {
-            try {  
-                obj = JsonMapper.ToObject<T>(data);
+            try {
+                obj = data.FromJson<T>();// JsonMapper.ToObject<T>(data);
             }
             catch (Exception e) {
                 Debug.LogError("Error content load:" + key + " " + obj.ToJson() + " e:" + e.ToJson());
@@ -276,7 +276,7 @@ public class BaseGameState {
     }
     
     public virtual string prepareSave(string keyTo, object obj) {
-        string data = JsonMapper.ToJson(obj);
+        string data = obj.ToJson();//JsonMapper.ToJson(obj);
         
         if (ProfileConfigs.useStorageEncryption) {
             data = data.ToEncrypted();

@@ -2,7 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
-using Engine.Data.Json;
+// using Engine.Data.Json;
 using Engine.Events;
 using Engine.Utility;
 
@@ -478,7 +478,7 @@ public class BaseGameProfile : Profile {
     */
 
     public virtual void SetCustomAudio(CustomPlayerAudio audio) {
-        string audioText = JsonMapper.ToJson(audio);
+        string audioText = audio.ToJson();//JsonMapper.ToJson(audio);
         LogUtil.Log("SetCustomAudio: " + audioText);
         SetAttributeStringValue(BaseGameProfileAttributes.ATT_CUSTOM_AUDIO, audioText);
     }
@@ -489,7 +489,7 @@ public class BaseGameProfile : Profile {
         if (!string.IsNullOrEmpty(json)) {
             try {
                 LogUtil.Log("GetCustomAudio: " + json);
-                audio = JsonMapper.ToObject<CustomPlayerAudio>(json);
+                audio = json.FromJson<CustomPlayerAudio>();//JsonMapper.ToObject<CustomPlayerAudio>(json);
             }
             catch (Exception e) {
                 audio = new CustomPlayerAudio();

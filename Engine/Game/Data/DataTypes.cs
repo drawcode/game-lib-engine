@@ -42,7 +42,7 @@ using System.Collections.Generic;
         a:1
  */
 
-using Engine.Data.Json;
+// using Engine.Data.Json;
 using Engine.Events;
 using Engine.Utility;
 using UnityEngine;
@@ -760,7 +760,7 @@ public class BaseSerializable<T> {
 
     public void Save(string fileName) {
 #if !UNITY_WEBPLAYER
-        string objectString = JsonMapper.ToJson(this);
+        string objectString = this.ToJson();
         FileSystemUtil.WriteString(fileName, objectString);
 #endif
     }

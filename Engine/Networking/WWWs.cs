@@ -1,7 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using Engine.Data.Json;
+// using Engine.Data.Json;
 using System.Net;
 using System.Text;
 using Engine.Utility;
@@ -43,7 +43,7 @@ public class WWWs : GameObjectBehavior {
         public string data;
         public string code;
         public string dataValueText;
-        public JsonData dataValue;
+        public object dataValue;
     
         public ResponseObject() {
             validResponse = false;
@@ -54,7 +54,7 @@ public class WWWs : GameObjectBehavior {
             code = "";
             dataValueText = "";
             data = "";
-            dataValue = new JsonData();
+            dataValue = new object();
         }
     }
 
@@ -80,7 +80,7 @@ public class WWWs : GameObjectBehavior {
         public string url = ""; // url to request
         public string channel = ""; // request channel - maps to new www class
         
-        [JsonIgnore]
+        [NonSerialized]
         public string status = StatusMessages.notStarted;
         public string dataType = DataType.text;
 
@@ -88,10 +88,10 @@ public class WWWs : GameObjectBehavior {
 
         public Dictionary<string, object> paramHash = null;
 
-        [JsonIgnore]
+        [NonSerialized]
         public WWWForm form = null;
         
-        [JsonIgnore]
+        [NonSerialized]
         public bool processing = false;
 
         public object content = null;
@@ -126,7 +126,7 @@ public class WWWs : GameObjectBehavior {
 
         //
         
-        [JsonIgnore]
+        //[JsonIgnore]
         public bool POST {
 
             get {
@@ -140,7 +140,7 @@ public class WWWs : GameObjectBehavior {
             }
         }
         
-        [JsonIgnore]
+        //[JsonIgnore]
         public bool GET {
             
             get {

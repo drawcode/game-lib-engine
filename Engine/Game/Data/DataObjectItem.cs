@@ -6,7 +6,7 @@ using System.Linq;
 using UnityEngine;
 
 using Engine.Events;
-using Engine.Data.Json;
+// using Engine.Data.Json;
 
 public class DataObjectItem {  
     
@@ -60,14 +60,14 @@ public class DataObjectItem {
         }        
         #endif   
         if(!string.IsNullOrEmpty(fileData)) {
-            return JsonMapper.ToObject<T>(fileData);
+            return fileData.FromJson<T>();
         }
         
         return default(T);
     }
     
     public void SaveData(string folderPath, string fileKey, object obj) {
-        string data = JsonMapper.ToJson(obj);
+        string data = obj.ToJson();
         string path = PathUtil.Combine(folderPath, (fileKey + ".json").TrimStart('/'));
         SaveData(path, data);
     }

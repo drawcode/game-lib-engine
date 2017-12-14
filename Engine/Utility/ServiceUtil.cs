@@ -1,7 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using Engine;
-using Engine.Data.Json;
+// using Engine.Data.Json;
 using UnityEngine;
 
 namespace Engine.Utility {
@@ -46,7 +46,7 @@ namespace Engine.Utility {
             public int error;
             public string message;
             public string data;
-            public JsonData dataValue;
+            public object dataValue;
 
             public ResponseObject() {
                 validResponse = false;
@@ -55,7 +55,7 @@ namespace Engine.Utility {
                 error = 0;
                 message = "";
                 data = "";
-                dataValue = new JsonData();
+                dataValue = new object();
             }
         }
 

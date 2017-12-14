@@ -1,7 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using Engine.Data.Json;
+// using Engine.Data.Json;
 using Engine.Utility;
 using UnityEngine;
 
@@ -91,6 +91,6 @@ public class GameRaceResultsData {
     }
 
     public string ToJson() {
-        return JsonMapper.ToJson(this);
+        return this.ToJson();
     }
 }

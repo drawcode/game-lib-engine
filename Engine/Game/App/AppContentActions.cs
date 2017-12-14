@@ -10,7 +10,7 @@ using System.IO;
 
 #endif
 using Engine.Events;
-using Engine.Data.Json;
+// using Engine.Data.Json;
 
 public class AppContentActions : BaseAppContentActions<AppContentAction> {
     private static volatile AppContentAction current;
@@ -1669,7 +1669,7 @@ public class AppContentAction : BaseAppContentAction {
                 string jsonData = "";
                 try {
                     jsonData = o.obj.Replace("\\\"", "\"");
-                    ts.Add(JsonMapper.ToObject<T>(jsonData));
+                    ts.Add(jsonData.FromJson<T>());
                 }
                 catch (Exception e) {
                     LogUtil.Log("ERROR converting achievement filter: " + e + " ::: " + jsonData);
