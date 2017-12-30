@@ -605,6 +605,11 @@ public static class BaseGameObjectExtensions {
         return GameObjectHelper.GetMaterials(go, name);
     }
 
+    public static void SetMaterialValue<T>(
+        this GameObject go, string name, string key, T val) {
+        GameObjectHelper.SetMaterialValue<T>(go, name, key, val);
+    }
+
     public static void SetMaterialSwap(
         this GameObject inst, string nameFind, string materialResourcesPath) {
         GameObjectHelper.SetMaterialSwap(inst, nameFind, materialResourcesPath);
@@ -614,7 +619,8 @@ public static class BaseGameObjectExtensions {
         GameObjectHelper.SetMaterialColor(go, name, color);
     }
 
-    public static void SetMaterialColorStandard(this GameObject go, string name, Color color, bool all = true) {
+    public static void SetMaterialColorStandard(
+        this GameObject go, string name, Color color, bool all = true) {
         GameObjectHelper.SetMaterialColorStandard(go, name, color, all);
     }
 
