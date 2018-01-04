@@ -593,9 +593,13 @@ public static class BaseGameObjectExtensions {
         GameObjectHelper.RotateObject(go, rotateBy);
     }
 
+    //
+
     public static void TrackObject(this GameObject go, GameObject target) {
         GameObjectHelper.TrackObject(go, target);
     }
+
+    //
 
     public static Material GetMaterial(this GameObject go, string name) {
         return GameObjectHelper.GetMaterial(go, name);
@@ -605,9 +609,16 @@ public static class BaseGameObjectExtensions {
         return GameObjectHelper.GetMaterials(go, name);
     }
 
+    //
+
+    public static T GetMaterialValue<T>(
+        this GameObject go, string key, string materialNameFind = "*") {
+        return GameObjectHelper.GetMaterialValue<T>(go, key, materialNameFind);
+    }
+
     public static void SetMaterialValue<T>(
-        this GameObject go, string name, string key, T val) {
-        GameObjectHelper.SetMaterialValue<T>(go, name, key, val);
+        this GameObject go, string key, T val, string materialNameFind = "*") {
+        GameObjectHelper.SetMaterialValue<T>(go, key, val, materialNameFind);
     }
 
     public static void SetMaterialSwap(
@@ -631,6 +642,8 @@ public static class BaseGameObjectExtensions {
         bool pooled) {
         return GameObjectHelper.CreateGameObject(go, pos, rotate, pooled);
     }
+
+    //
 
     public static void DestroyGameObject(this GameObject go, float delay = 0f, bool pooled = true) {
         GameObjectHelper.DestroyGameObject(go, delay, pooled);

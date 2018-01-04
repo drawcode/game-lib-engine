@@ -1463,7 +1463,7 @@ public static class GameObjectHelper {
     }
 
     // MATERIAL VALUES
-
+    
     public class MaterialTextureOffset {
         public Vector2 val = new Vector2();
     }
@@ -1472,16 +1472,168 @@ public static class GameObjectHelper {
         public Vector2 val = new Vector2();
     }
 
-    public static bool SetMaterialValue<T>(Material mat, string name, string key, T val) {
+    public static T GetMaterialValue<T>(
+        GameObject inst, string key, string materialNameFind = "*") {
+
+        T t = default(T);
+
+        MeshRenderer[] renderers =
+            inst.GetComponents<MeshRenderer>();
+
+        foreach(MeshRenderer mesh in renderers) {
+            foreach(Material m in mesh.materials) {
+                t = GetMaterialValue<T>(m, key, materialNameFind);
+
+                if(!t.Equals(default(T))) {
+                    return t;
+                }
+            }
+        }
+
+        MeshRenderer[] renderersChildren =
+            inst.GetComponentsInChildren<MeshRenderer>(true);
+
+        foreach(MeshRenderer mesh in renderersChildren) {
+            foreach(Material m in mesh.materials) {
+                t = GetMaterialValue<T>(m, key, materialNameFind);
+
+                if(!t.Equals(default(T))) {
+                    return t;
+                }
+            }
+        }
+
+        SkinnedMeshRenderer[] skinnedRenderers =
+            inst.GetComponents<SkinnedMeshRenderer>();
+
+        foreach(SkinnedMeshRenderer mesh in skinnedRenderers) {
+            foreach(Material m in mesh.materials) {
+                t = GetMaterialValue<T>(m, key, materialNameFind);
+
+                if(!t.Equals(default(T))) {
+                    return t;
+                }
+            }
+        }
+
+        SkinnedMeshRenderer[] skinnedRenderersChildren =
+            inst.GetComponentsInChildren<SkinnedMeshRenderer>(true);
+
+        foreach(SkinnedMeshRenderer mesh in skinnedRenderersChildren) {
+            foreach(Material m in mesh.materials) {
+                t = GetMaterialValue<T>(m, key, materialNameFind);
+
+                if(!t.Equals(default(T))) {
+                    return t;
+                }
+            }
+        }
+
+        return t;
+    }
+
+    public static T GetMaterialValue<T>(
+        Material mat, string key, string materialNameFind = "*") {
+
+        T val = default(T);
+
+        if(!mat.HasProperty(key)) {
+            return val;
+        }
+
+        string matCurrentName = FilterMaterialName(mat.name);
+        string matContainsName = FilterMaterialName(materialNameFind);
+
+        if(matCurrentName.Contains(matContainsName) || materialNameFind == "*") {
+
+            // float
+
+            if(typeof(T) == typeof(float)) {
+
+                val = (T)(object)mat.GetFloat(key);
+            }
+
+            else if(typeof(T) == typeof(List<Color>)) {
+
+                val = (T)(object)mat.GetFloatArray(key);
+            }
+
+            // texture
+
+            else if(typeof(T) == typeof(Texture)) {
+
+                val = (T)(object)mat.GetTexture(key);
+            }
+            else if(typeof(T) == typeof(MaterialTextureOffset)) {
+
+                MaterialTextureOffset item = new MaterialTextureOffset();
+                item.val = (Vector2)(object)mat.GetTextureOffset(key);
+                val = (T)(object)item;
+            }
+            else if(typeof(T) == typeof(MaterialTextureScale)) {
+
+                MaterialTextureScale item = new MaterialTextureScale();
+                item.val = (Vector2)(object)mat.GetTextureScale(key);
+                val = (T)(object)item;
+            }
+
+            // vec4
+
+            else if(typeof(T) == typeof(Vector4)) {
+
+                val = (T)(object)mat.GetVector(key);
+            }
+            else if(typeof(T) == typeof(List<Vector4>)) {
+
+                val = (T)(object)mat.GetVectorArray(key);
+            }
+
+            // int
+
+            else if(typeof(T) == typeof(int)) {
+
+                val = (T)(object)mat.GetInt(key);
+            }
+
+            // matrix4x4
+
+            else if(typeof(T) == typeof(Matrix4x4)) {
+
+                val = (T)(object)mat.GetMatrix(key);
+            }
+            else if(typeof(T) == typeof(List<Matrix4x4>)) {
+
+                val = (T)(object)mat.GetMatrixArray(key);
+            }
+
+            // color
+
+            else if(typeof(T) == typeof(Color)) {
+
+                val = (T)(object)mat.GetColor(key);
+            }
+            else if(typeof(T) == typeof(List<Color>)) {
+
+                val = (T)(object)mat.GetColorArray(key);
+            }
+        }
+
+        return val;
+    }
+
+    // material values set
+
+    public static bool SetMaterialValue<T>(
+        Material mat, string key, T val, string matNameLike = "*") {
 
         if(!mat.HasProperty(key)) {
             return false;
         }
         
         string matCurrentName = FilterMaterialName(mat.name);
-        string matContainsName = FilterMaterialName(name);
+        string matContainsName = FilterMaterialName(matNameLike);
 
-        if(matCurrentName.Contains(matContainsName) || name == "*") {
+        if(matCurrentName.Contains(matContainsName) || matNameLike == "*") {
 
             object v = (object)val;
 
@@ -1563,15 +1715,16 @@ public static class GameObjectHelper {
         }
         return false;
     }
-    
-    public static bool SetMaterialValue<T>(GameObject inst, string name, string key, T val) {
+        
+    public static bool SetMaterialValue<T>(
+        GameObject inst, string key, T val, string name = "*") {
 
         MeshRenderer[] renderers =
             inst.GetComponents<MeshRenderer>();
 
         foreach(MeshRenderer mesh in renderers) {
-            foreach(Material m in mesh.materials) {                
-                SetMaterialValue<T>(m, name, key, val);
+            foreach(Material m in mesh.materials) {
+                SetMaterialValue<T>(m, key, val, name);
             }
         }
 
@@ -1580,7 +1733,7 @@ public static class GameObjectHelper {
 
         foreach(MeshRenderer mesh in renderersChildren) {
             foreach(Material m in mesh.materials) {
-                SetMaterialValue<T>(m, name, key, val);
+                SetMaterialValue<T>(m, key, val, name);
             }
         }
 
@@ -1589,7 +1742,7 @@ public static class GameObjectHelper {
 
         foreach(SkinnedMeshRenderer mesh in skinnedRenderers) {
             foreach(Material m in mesh.materials) {
-                SetMaterialValue<T>(m, name, key, val);
+                SetMaterialValue<T>(m, key, val, name);
             }
         }
 
@@ -1598,12 +1751,14 @@ public static class GameObjectHelper {
 
         foreach(SkinnedMeshRenderer mesh in skinnedRenderersChildren) {
             foreach(Material m in mesh.materials) {
-                SetMaterialValue<T>(m, name, key, val);
+                SetMaterialValue<T>(m, key, val, name);
             }
         }
 
         return false;
     }
+
+    // material swap/change
 
     public static void SetMaterialSwap(GameObject inst, string nameFind, string materialResourcesPath) {
 
@@ -1756,7 +1911,7 @@ public static class GameObjectHelper {
     }
     */
 
-
+    // material color
 
     public static bool SetMaterialColor(
         GameObject inst, string name, Color color, 
@@ -1896,6 +2051,9 @@ public static class GameObjectHelper {
         //return SetMaterialColor(inst, name, color, all, false, mats);
         return SetMaterialColor(inst, name, color, all, false, mats, true);
     }
+
+    // ------------------------------------------------------------------------
+    // game object
 
     public static GameObject CreateGameObject(
         GameObject go,
@@ -2045,6 +2203,7 @@ public static class GameObjectHelper {
         return null;
     }
 
+    // ------------------------------------------------------------------------
     // RIGIDBODY
 
     public static void FreezeRigidbodies(GameObject inst) {
@@ -2142,7 +2301,7 @@ public static class GameObjectHelper {
         ResetRigidBodiesVelocity(inst, Vector3.zero);
     }
 
-    public static void Reset(GameObject inst) {
+    public static void ResetRigidBodies(GameObject inst) {
 
         if (inst == null) {
             return;
