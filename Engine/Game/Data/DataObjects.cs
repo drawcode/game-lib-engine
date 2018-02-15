@@ -896,6 +896,26 @@ public class DataObjects<T> where T : DataObject, new() {
         return list;
     }
 
+    public List<T> GetListLike(string key, object val) {
+        //LogUtil.Log("GetList:" + " key:" + key + " val:" + val);
+        List<T> list = new List<T>();
+        foreach (T t in GetAll()) {
+            object obj = GetFieldValue<object>(t, key);
+            //LogUtil.Log("GetList:" + " obj:" + obj);
+            if (obj != null) {
+                if(obj.GetType() == typeof(string)) {
+                    string objString = Convert.ToString(obj);
+                    string valString = Convert.ToString(val);
+                    if (objString.Contains(valString)) {
+                        //LogUtil.Log("GetList: adding t:" + t);
+                        list.Add(t);
+                    }
+                }
+            }
+        }
+        return list;
+    }
+
     public List<T> GetListPack(string key, object val, bool all) {
         //LogUtil.Log("GetList:" + " key:" + key + " val:" + val);
         List<T> list = new List<T>();
