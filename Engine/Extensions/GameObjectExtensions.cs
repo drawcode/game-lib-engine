@@ -684,6 +684,12 @@ public static class BaseGameObjectExtensions {
             go, desiredMaxWidth, desiredMaxHeight);
     }
 
+    // POSITION RELATIVE
+
+    public static float Distance(this GameObject inst, GameObject to) {
+        return GameObjectHelper.Distance(inst, to);
+    }
+
     // CUSTOM
 
     /*

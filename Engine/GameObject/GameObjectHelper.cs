@@ -2355,4 +2355,10 @@ public static class GameObjectHelper {
             = inst.transform.localScale
                 .WithX(currentWidth).WithY(currentHeight);
     }
+
+    // POSITION RELATIVE
+
+    public static float Distance(GameObject inst, GameObject to) {
+        return Vector3.Distance(inst.transform.position, to.transform.position);
+    }
 }

@@ -25,4 +25,8 @@ public static class TransformExtensions {
             UnityEngine.Object.Destroy(tmp);
         }
     }
+
+    public static float Distance(this Transform inst, Transform to) {
+        return Vector3.Distance(inst.position, to.position);
+    }
 }

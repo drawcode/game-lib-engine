@@ -81,4 +81,16 @@ public static class VectorExtensions {
 
         return angle;
     }
+
+    //public static float Distance(this Vector2 inst, Vector2 to) {
+    //    return Vector2.Distance(inst, to);
+    //}
+
+    //public static float Distance(this Vector3 inst, Vector3 to) {
+    //    return Vector3.Distance(inst, to);
+    //}
+
+    //public static float Distance(this Vector4 inst, Vector4 to) {
+    //    return Vector4.Distance(inst, to);
+    //}
 }
