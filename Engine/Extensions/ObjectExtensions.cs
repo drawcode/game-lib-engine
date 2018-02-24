@@ -16,8 +16,8 @@ public static class ObjectExtensions {
         }
 
         try {
-            //return Engine.Data.Json.JsonMapper.ToJson(inst).FilterJson();
-            return JsonUtility.ToJson(inst).FilterJson();
+            return JsonMapper.ToJson(inst).FilterJson();
+            //return JsonUtility.ToJson(inst).FilterJson();
         }
         catch (Exception e) {
             LogUtil.LogError("ToJson:FAILED:" + e);
@@ -31,8 +31,8 @@ public static class ObjectExtensions {
         }
         
         try {
-            //return Engine.Data.Json.JsonMapper.ToJson(inst).FilterJson();
-            return JsonUtility.ToJson(inst).FilterJson();
+            return JsonMapper.ToJson(inst).FilterJson();
+            //return JsonUtility.ToJson(inst).FilterJson();
         }
         catch (Exception e) {
             LogUtil.LogError("ToJson:FAILED:" + e);

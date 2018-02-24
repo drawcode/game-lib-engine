@@ -23,6 +23,8 @@ public class BaseGameConfigs<T> : DataObjects<T> where T : DataObject, new() {
     public static bool usePooledItems = true;
     public static bool usePooledLevelItems = true;
 
+    public static bool useShadowStatic = false;
+
     public static bool globalReady = false;
 
     public static bool useCoinRewardsForAchievements = true;

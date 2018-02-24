@@ -7,8 +7,8 @@ using System.IO;
 using Engine.Events;
 using Engine.Utility;
 
-public class BaseGameProfileCharacterAttributes {    
-    
+public class BaseGameProfileCharacterAttributes {
+
     public static string ATT_CURRENT_CHARACTER_PROFILE_CODE = "att-current-character-profile-code";
     public static string ATT_CURRENT_CHARACTER_CODE = "att-current-character-code";
     public static string ATT_CHARACTER_CODE = "att-character-code";
@@ -21,38 +21,38 @@ public class BaseGameProfileCharacters {
     private static volatile BaseGameProfileCharacters instance;
     private static object syncRoot = new Object();
     public static string DEFAULT_USERNAME = "Player";
- 
+
     public static BaseGameProfileCharacter BaseCurrent {
         get {
             if (current == null) {
                 lock (syncRoot) {
-                    if (current == null) 
+                    if (current == null)
                         current = new BaseGameProfileCharacter();
                 }
             }
- 
+
             return current;
         }
         set {
             current = value;
         }
     }
-     
+
     public static BaseGameProfileCharacters BaseInstance {
         get {
             if (instance == null) {
                 lock (syncRoot) {
-                    if (instance == null) 
+                    if (instance == null)
                         instance = new BaseGameProfileCharacters();
                 }
             }
- 
+
             return instance;
         }
     }
- 
+
     // TODO: Common profile actions, lookup, count, etc
-    
+
     public static GameProfileCharacterItem currentCharacter = null;
 
     public static GameProfilePlayerProgressItem currentProgress {
@@ -108,13 +108,13 @@ public class BaseGameProfileCharacters {
 }
 
 public class GameProfileCharacterItems {
- 
+
     public List<GameProfileCharacterItem> items;
-  
+
     public GameProfileCharacterItems() {
         Reset();
     }
- 
+
     public void Reset() {
         items = new List<GameProfileCharacterItem>();
     }
@@ -138,10 +138,10 @@ public class GameProfileCharacterItems {
         }
         return null;
     }
- 
+
     public void SetCharacter(string code, GameProfileCharacterItem item) {
         bool found = false;
-     
+
         for (int i = 0; i < items.Count; i++) {
             if (items[i].code.ToLower() == code.ToLower()) {
                 items[i] = item;
@@ -149,7 +149,7 @@ public class GameProfileCharacterItems {
                 break;
             }
         }
-     
+
         if (!found) {
             items.Add(item);
         }
@@ -206,12 +206,12 @@ public class GameProfileCharacterItem : DataObject {
     // profile specific code
 
     public virtual string code {
-        get { 
+        get {
             return Get<string>(
-                GameProfileCharacterItemKeys.code, 
+                GameProfileCharacterItemKeys.code,
                 ProfileConfigs.defaultProfileCharacterCode);
         }
-        
+
         set {
             Set(GameProfileCharacterItemKeys.code, value);
         }
@@ -220,73 +220,73 @@ public class GameProfileCharacterItem : DataObject {
     // game character code
 
     public virtual string characterCode {
-        get { 
+        get {
             return Get<string>(
-                GameProfileCharacterItemKeys.characterCode, 
+                GameProfileCharacterItemKeys.characterCode,
                 ProfileConfigs.defaultGameCharacterCode);
         }
-        
+
         set {
             Set(GameProfileCharacterItemKeys.characterCode, value);
         }
     }
 
     // user visible name
-    
+
     public virtual string characterDisplayName {
-        get { 
+        get {
             return Get<string>(
-                GameProfileCharacterItemKeys.characterDisplayName, 
+                GameProfileCharacterItemKeys.characterDisplayName,
                 ProfileConfigs.defaultGameCharacterDisplayName);
         }
-        
+
         set {
             Set(GameProfileCharacterItemKeys.characterDisplayName, value);
         }
     }
 
     // user visible number
-    
+
     public virtual string characterDisplayCode {
-        get { 
+        get {
             return Get<string>(
-                GameProfileCharacterItemKeys.characterDisplayCode, 
+                GameProfileCharacterItemKeys.characterDisplayCode,
                 ProfileConfigs.defaultGameCharacterDisplayCode);
         }
-        
+
         set {
             Set(GameProfileCharacterItemKeys.characterDisplayCode, value);
         }
     }
-    
+
     public virtual GameProfileRPGItem profileRPGItem {
-        get { 
+        get {
             return Get<GameProfileRPGItem>(
                 GameProfileCharacterItemKeys.profileRPGItem, new GameProfileRPGItem());
         }
-        
+
         set {
             Set(GameProfileCharacterItemKeys.profileRPGItem, value);
         }
     }
-    
+
     public virtual GameProfilePlayerProgressItem profilePlayerProgress {
-        get { 
+        get {
             return Get<GameProfilePlayerProgressItem>(
                 GameProfileCharacterItemKeys.profilePlayerProgress, new GameProfilePlayerProgressItem());
         }
-        
+
         set {
             Set(GameProfileCharacterItemKeys.profilePlayerProgress, value);
         }
     }
-    
+
     public virtual GameProfileCustomItem profileCustomItem {
-        get { 
+        get {
             return Get<GameProfileCustomItem>(
                 GameProfileCharacterItemKeys.profileCustomItem, new GameProfileCustomItem());
         }
-        
+
         set {
             Set(GameProfileCharacterItemKeys.profileCustomItem, value);
         }
@@ -295,7 +295,7 @@ public class GameProfileCharacterItem : DataObject {
     public GameProfileCharacterItem() {
         Reset();
     }
-    
+
     public override void Reset() {
         base.Reset();
 
@@ -310,7 +310,7 @@ public class GameProfileCharacterItem : DataObject {
     public GameCharacter GetCharacterData() {
         return GameCharacters.Instance.GetById(characterCode);
     }
-    
+
     public string GetCharacterDataModel() {
         GameCharacter gameCharacter = GetCharacterData();
 
@@ -323,7 +323,7 @@ public class GameProfileCharacterItem : DataObject {
         }
 
         GameDataModel gameModelData = gameCharacter.data.GetModel();
-        
+
         if (gameModelData == null) {
             return ProfileConfigs.defaultGameCharacterCode;
         }
@@ -337,28 +337,28 @@ public class BaseGameProfileCharacter : Profile {
     // Best way to add items to the profile is the GetAttribute and SetAttribute class as 
     // that stores as a generic DataAttribute class.  Booleans, strings, objects, serialized json objects etc
     // all work well and cause no need to convert profile on updates. 
-     
+
     public BaseGameProfileCharacter() {
         Reset();
     }
- 
+
     public override void Reset() {
         base.Reset();
         username = ProfileConfigs.defaultPlayerName;
     }
- 
+
     // characters
 
     public virtual GameProfileCharacterItems character_items {
         get {
             return Get<GameProfileCharacterItems>(BaseDataObjectKeys.character_items);
         }
-        
+
         set {
             Set(BaseDataObjectKeys.character_items, value);
         }
     }
- 
+
     public virtual void SetCharacters(GameProfileCharacterItems obj) {
 
         character_items = obj;
@@ -366,23 +366,23 @@ public class BaseGameProfileCharacter : Profile {
         Messenger.Broadcast(BaseGameProfileMessages.ProfileShouldBeSaved);
     }
 
-    public virtual GameProfileCharacterItems GetCharacters() {       
+    public virtual GameProfileCharacterItems GetCharacters() {
         GameProfileCharacterItems obj = new GameProfileCharacterItems();
-                
+
         obj = character_items;
 
         //UnityEngine.LogUtil.Log("GameProfileCharacterItems:obj:" + obj.ToJson());
-     
+
         if (obj == null) {
             obj = new GameProfileCharacterItems();
         }
-     
+
         if (obj.items.Count == 0) {
             // add default
-            obj.SetCharacter(GameProfileCharacters.Current.GetCurrentCharacterProfileCode(), 
+            obj.SetCharacter(GameProfileCharacters.Current.GetCurrentCharacterProfileCode(),
                              new GameProfileCharacterItem());
-        }        
-     
+        }
+
         return obj;
     }
 
@@ -424,9 +424,9 @@ public class BaseGameProfileCharacter : Profile {
         character.profilePlayerProgress.AddGamePlayerProgressHealth(val);
         SetCharacter(character);
     }
- 
+
     // character 
- 
+
     public GameProfileRPGItem GetCurrentCharacterRPG() {
         return GetCurrentCharacter().profileRPGItem;
     }
@@ -438,11 +438,11 @@ public class BaseGameProfileCharacter : Profile {
     public GameProfilePlayerProgressItem GetCurrentCharacterProgress() {
         return GetCurrentCharacter().profilePlayerProgress;
     }
- 
+
     public GameProfileCharacterItem GetCurrentCharacter() {
         return GetCharacter(GameProfileCharacters.Current.GetCurrentCharacterProfileCode());
     }
- 
+
     public GameProfileRPGItem GetCharacterRPG(string code) {
         return GetCharacter(code).profileRPGItem;
     }
@@ -454,21 +454,21 @@ public class BaseGameProfileCharacter : Profile {
     public GameProfilePlayerProgressItem GetCharacterProgress(string code) {
         return GetCharacter(code).profilePlayerProgress;
     }
- 
+
     public GameProfileCharacterItem GetCharacter(string code) {
-        
+
         if (BaseGameProfileCharacters.currentCharacter != null) {
             if (BaseGameProfileCharacters.currentCharacter.code == code) {
                 return BaseGameProfileCharacters.currentCharacter;
             }
-            else  {
+            else {
                 BaseGameProfileCharacters.currentCharacter = null;
             }
         }
 
         if (BaseGameProfileCharacters.currentCharacter == null) {
             GameProfileCharacterItem item = GetCharacters().GetCharacter(code);
-    
+
             // TODO check this to be sure initing is no problem in sync
             if (item == null && code != "default") {
                 item = new GameProfileCharacterItem();
@@ -477,7 +477,7 @@ public class BaseGameProfileCharacter : Profile {
 
             if (item != null) {
                 if (item.profileCustomItem != null && GameCustomController.Instance != null) {
-                    item.profileCustomItem = 
+                    item.profileCustomItem =
                         GameCustomController.CheckCustomColorInit(item.profileCustomItem, BaseDataObjectKeys.character);
                 }
                 BaseGameProfileCharacters.currentCharacter = item;
@@ -512,11 +512,11 @@ public class BaseGameProfileCharacter : Profile {
             SetCharacter(item.code, item);
         }
     }
-    
+
     public void SetCharacter(string code, GameProfileCharacterItem item) {
         SetCharacter(code, item, true);
     }
- 
+
     public void SetCharacter(string code, GameProfileCharacterItem item, bool setAsCurrent) {
 
         GameProfileCharacterItems characters = GetCharacters();
@@ -559,9 +559,9 @@ public class BaseGameProfileCharacter : Profile {
     public void SetCharacterCustom(GameProfileCustomItem item) {
         SetCharacterCustom(GameProfileCharacters.Current.GetCurrentCharacterProfileCode(), item);
     }
-     
+
     // customizations        
- 
+
     public virtual void SetValue(string code, object value) {
         DataAttribute att = new DataAttribute();
         att.val = value;
@@ -571,34 +571,34 @@ public class BaseGameProfileCharacter : Profile {
         att.otype = "character";
         SetAttribute(att);
     }
- 
+
     public virtual bool GetValue(string code) {
         bool currentValue = false;
         object objectValue = GetAttribute(code).val;
         if (objectValue != null) {
             currentValue = Convert.ToBoolean(objectValue);
         }
-     
+
         return currentValue;
     }
- 
+
     public virtual List<DataAttribute> GetList() {
         return GetAttributesList("character");
-    }    
- 
+    }
+
     // CHARACTER - Player specific 
- 
+
     public string GetCurrentCharacterProfileCode() {
         return GetCurrentCharacterProfileCode(ProfileConfigs.defaultProfileCharacterCode);
     }
- 
+
     public string GetCurrentCharacterProfileCode(string defaultValue) {
         string attValue = defaultValue;
         if (CheckIfAttributeExists(BaseGameProfileCharacterAttributes.ATT_CURRENT_CHARACTER_PROFILE_CODE))
             attValue = GetAttributeStringValue(BaseGameProfileCharacterAttributes.ATT_CURRENT_CHARACTER_PROFILE_CODE);
         return attValue;
     }
- 
+
     public void SetCurrentCharacterProfileCode(string attValue) {
         SetAttributeStringValue(BaseGameProfileCharacterAttributes.ATT_CURRENT_CHARACTER_PROFILE_CODE, attValue);
     }

@@ -1463,7 +1463,7 @@ public static class GameObjectHelper {
     }
 
     // MATERIAL VALUES
-    
+
     public class MaterialTextureOffset {
         public Vector2 val = new Vector2();
     }
@@ -1480,11 +1480,11 @@ public static class GameObjectHelper {
         MeshRenderer[] renderers =
             inst.GetComponents<MeshRenderer>();
 
-        foreach(MeshRenderer mesh in renderers) {
-            foreach(Material m in mesh.materials) {
+        foreach (MeshRenderer mesh in renderers) {
+            foreach (Material m in mesh.materials) {
                 t = GetMaterialValue<T>(m, key, materialNameFind);
 
-                if(!t.Equals(default(T))) {
+                if (!t.Equals(default(T))) {
                     return t;
                 }
             }
@@ -1493,11 +1493,11 @@ public static class GameObjectHelper {
         MeshRenderer[] renderersChildren =
             inst.GetComponentsInChildren<MeshRenderer>(true);
 
-        foreach(MeshRenderer mesh in renderersChildren) {
-            foreach(Material m in mesh.materials) {
+        foreach (MeshRenderer mesh in renderersChildren) {
+            foreach (Material m in mesh.materials) {
                 t = GetMaterialValue<T>(m, key, materialNameFind);
 
-                if(!t.Equals(default(T))) {
+                if (!t.Equals(default(T))) {
                     return t;
                 }
             }
@@ -1506,11 +1506,11 @@ public static class GameObjectHelper {
         SkinnedMeshRenderer[] skinnedRenderers =
             inst.GetComponents<SkinnedMeshRenderer>();
 
-        foreach(SkinnedMeshRenderer mesh in skinnedRenderers) {
-            foreach(Material m in mesh.materials) {
+        foreach (SkinnedMeshRenderer mesh in skinnedRenderers) {
+            foreach (Material m in mesh.materials) {
                 t = GetMaterialValue<T>(m, key, materialNameFind);
 
-                if(!t.Equals(default(T))) {
+                if (!t.Equals(default(T))) {
                     return t;
                 }
             }
@@ -1519,11 +1519,11 @@ public static class GameObjectHelper {
         SkinnedMeshRenderer[] skinnedRenderersChildren =
             inst.GetComponentsInChildren<SkinnedMeshRenderer>(true);
 
-        foreach(SkinnedMeshRenderer mesh in skinnedRenderersChildren) {
-            foreach(Material m in mesh.materials) {
+        foreach (SkinnedMeshRenderer mesh in skinnedRenderersChildren) {
+            foreach (Material m in mesh.materials) {
                 t = GetMaterialValue<T>(m, key, materialNameFind);
 
-                if(!t.Equals(default(T))) {
+                if (!t.Equals(default(T))) {
                     return t;
                 }
             }
@@ -1537,40 +1537,40 @@ public static class GameObjectHelper {
 
         T val = default(T);
 
-        if(!mat.HasProperty(key)) {
+        if (!mat.HasProperty(key)) {
             return val;
         }
 
         string matCurrentName = FilterMaterialName(mat.name);
         string matContainsName = FilterMaterialName(materialNameFind);
 
-        if(matCurrentName.Contains(matContainsName) || materialNameFind == "*") {
+        if (matCurrentName.Contains(matContainsName) || materialNameFind == "*") {
 
             // float
 
-            if(typeof(T) == typeof(float)) {
+            if (typeof(T) == typeof(float)) {
 
                 val = (T)(object)mat.GetFloat(key);
             }
 
-            else if(typeof(T) == typeof(List<Color>)) {
+            else if (typeof(T) == typeof(List<Color>)) {
 
                 val = (T)(object)mat.GetFloatArray(key);
             }
 
             // texture
 
-            else if(typeof(T) == typeof(Texture)) {
+            else if (typeof(T) == typeof(Texture)) {
 
                 val = (T)(object)mat.GetTexture(key);
             }
-            else if(typeof(T) == typeof(MaterialTextureOffset)) {
+            else if (typeof(T) == typeof(MaterialTextureOffset)) {
 
                 MaterialTextureOffset item = new MaterialTextureOffset();
                 item.val = (Vector2)(object)mat.GetTextureOffset(key);
                 val = (T)(object)item;
             }
-            else if(typeof(T) == typeof(MaterialTextureScale)) {
+            else if (typeof(T) == typeof(MaterialTextureScale)) {
 
                 MaterialTextureScale item = new MaterialTextureScale();
                 item.val = (Vector2)(object)mat.GetTextureScale(key);
@@ -1579,40 +1579,40 @@ public static class GameObjectHelper {
 
             // vec4
 
-            else if(typeof(T) == typeof(Vector4)) {
+            else if (typeof(T) == typeof(Vector4)) {
 
                 val = (T)(object)mat.GetVector(key);
             }
-            else if(typeof(T) == typeof(List<Vector4>)) {
+            else if (typeof(T) == typeof(List<Vector4>)) {
 
                 val = (T)(object)mat.GetVectorArray(key);
             }
 
             // int
 
-            else if(typeof(T) == typeof(int)) {
+            else if (typeof(T) == typeof(int)) {
 
                 val = (T)(object)mat.GetInt(key);
             }
 
             // matrix4x4
 
-            else if(typeof(T) == typeof(Matrix4x4)) {
+            else if (typeof(T) == typeof(Matrix4x4)) {
 
                 val = (T)(object)mat.GetMatrix(key);
             }
-            else if(typeof(T) == typeof(List<Matrix4x4>)) {
+            else if (typeof(T) == typeof(List<Matrix4x4>)) {
 
                 val = (T)(object)mat.GetMatrixArray(key);
             }
 
             // color
 
-            else if(typeof(T) == typeof(Color)) {
+            else if (typeof(T) == typeof(Color)) {
 
                 val = (T)(object)mat.GetColor(key);
             }
-            else if(typeof(T) == typeof(List<Color>)) {
+            else if (typeof(T) == typeof(List<Color>)) {
 
                 val = (T)(object)mat.GetColorArray(key);
             }
@@ -1626,87 +1626,87 @@ public static class GameObjectHelper {
     public static bool SetMaterialValue<T>(
         Material mat, string key, T val, string matNameLike = "*") {
 
-        if(!mat.HasProperty(key)) {
+        if (!mat.HasProperty(key)) {
             return false;
         }
-        
+
         string matCurrentName = FilterMaterialName(mat.name);
         string matContainsName = FilterMaterialName(matNameLike);
 
-        if(matCurrentName.Contains(matContainsName) || matNameLike == "*") {
+        if (matCurrentName.Contains(matContainsName) || matNameLike == "*") {
 
             object v = (object)val;
 
             // float
 
-            if(typeof(T) == typeof(float)) {
+            if (typeof(T) == typeof(float)) {
 
                 mat.SetFloat(key, (float)v);
             }
 
-            else if(typeof(T) == typeof(List<Color>)) {
+            else if (typeof(T) == typeof(List<Color>)) {
 
                 mat.SetFloatArray(key, (List<float>)v);
             }
 
             // texture
 
-            else if(typeof(T) == typeof(Texture)) {
+            else if (typeof(T) == typeof(Texture)) {
 
                 mat.SetTexture(key, (Texture)v);
-            }            
-            else if(typeof(T) == typeof(MaterialTextureOffset)) {
+            }
+            else if (typeof(T) == typeof(MaterialTextureOffset)) {
 
                 mat.SetTextureOffset(key, ((MaterialTextureOffset)v).val);
             }
-            else if(typeof(T) == typeof(MaterialTextureScale)) {
+            else if (typeof(T) == typeof(MaterialTextureScale)) {
 
                 mat.SetTextureScale(key, ((MaterialTextureScale)v).val);
             }
 
             // vec4
 
-            else if(typeof(T) == typeof(Vector4)) {
+            else if (typeof(T) == typeof(Vector4)) {
 
                 mat.SetVector(key, (Vector4)v);
             }
-            else if(typeof(T) == typeof(List<Vector4>)) {
+            else if (typeof(T) == typeof(List<Vector4>)) {
 
                 mat.SetVectorArray(key, (List<Vector4>)v);
             }
 
             // compute buffer
 
-            else if(typeof(T) == typeof(ComputeBuffer)) {
+            else if (typeof(T) == typeof(ComputeBuffer)) {
 
                 mat.SetBuffer(key, (ComputeBuffer)v);
             }
 
             // int
 
-            else if(typeof(T) == typeof(int)) {
+            else if (typeof(T) == typeof(int)) {
 
                 mat.SetInt(key, (int)v);
             }
 
             // matrix4x4
 
-            else if(typeof(T) == typeof(Matrix4x4)) {
+            else if (typeof(T) == typeof(Matrix4x4)) {
 
                 mat.SetMatrix(key, (Matrix4x4)v);
             }
-            else if(typeof(T) == typeof(List<Matrix4x4>)) {
+            else if (typeof(T) == typeof(List<Matrix4x4>)) {
 
                 mat.SetMatrixArray(key, (List<Matrix4x4>)v);
             }
 
             // color
 
-            else if(typeof(T) == typeof(Color)) {
+            else if (typeof(T) == typeof(Color)) {
 
                 mat.SetColor(key, (Color)v);
             }
-            else if(typeof(T) == typeof(List<Color>)) {
+            else if (typeof(T) == typeof(List<Color>)) {
 
                 mat.SetColorArray(key, (List<Color>)v);
             }
@@ -1715,42 +1715,42 @@ public static class GameObjectHelper {
         }
         return false;
     }
-        
+
     public static bool SetMaterialValue<T>(
         GameObject inst, string key, T val, string name = "*") {
 
         MeshRenderer[] renderers =
             inst.GetComponents<MeshRenderer>();
 
-        foreach(MeshRenderer mesh in renderers) {
-            foreach(Material m in mesh.materials) {
+        foreach (MeshRenderer mesh in renderers) {
+            foreach (Material m in mesh.materials) {
                 SetMaterialValue<T>(m, key, val, name);
             }
         }
 
-        MeshRenderer[] renderersChildren = 
+        MeshRenderer[] renderersChildren =
             inst.GetComponentsInChildren<MeshRenderer>(true);
 
-        foreach(MeshRenderer mesh in renderersChildren) {
-            foreach(Material m in mesh.materials) {
+        foreach (MeshRenderer mesh in renderersChildren) {
+            foreach (Material m in mesh.materials) {
                 SetMaterialValue<T>(m, key, val, name);
             }
         }
 
-        SkinnedMeshRenderer[] skinnedRenderers = 
+        SkinnedMeshRenderer[] skinnedRenderers =
             inst.GetComponents<SkinnedMeshRenderer>();
 
-        foreach(SkinnedMeshRenderer mesh in skinnedRenderers) {
-            foreach(Material m in mesh.materials) {
+        foreach (SkinnedMeshRenderer mesh in skinnedRenderers) {
+            foreach (Material m in mesh.materials) {
                 SetMaterialValue<T>(m, key, val, name);
             }
         }
 
-        SkinnedMeshRenderer[] skinnedRenderersChildren = 
+        SkinnedMeshRenderer[] skinnedRenderersChildren =
             inst.GetComponentsInChildren<SkinnedMeshRenderer>(true);
 
-        foreach(SkinnedMeshRenderer mesh in skinnedRenderersChildren) {
-            foreach(Material m in mesh.materials) {
+        foreach (SkinnedMeshRenderer mesh in skinnedRenderersChildren) {
+            foreach (Material m in mesh.materials) {
                 SetMaterialValue<T>(m, key, val, name);
             }
         }
@@ -1914,8 +1914,8 @@ public static class GameObjectHelper {
     // material color
 
     public static bool SetMaterialColor(
-        GameObject inst, string name, Color color, 
-        bool all, bool includeColor, 
+        GameObject inst, string name, Color color,
+        bool all, bool includeColor,
         List<string> matProps, bool standard = false) {
 
         //LogUtil.Log("SetMaterialColor name:" + name + " color:" + color );
@@ -2104,7 +2104,7 @@ public static class GameObjectHelper {
 
     public static void DestroyGameObject(GameObject go, float delay, bool pooled = true) {
 
-        if(go == null) {
+        if (go == null) {
             return;
         }
 
