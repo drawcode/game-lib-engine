@@ -100,9 +100,9 @@ namespace Engine.Game.Actor {
 
                     if (gamePlayerObject.IsRenderersVisibleByCamera(Camera.main)) {
 
-                        if (gamePlayerController.IsAgentState()) {
-                            Debug.Log("ActorShadow IsRenderersVisibleByCamera:gamePlayerController.IsAgentState:" + gamePlayerController.IsAgentState());
-                        }
+                        //if (gamePlayerController.IsAgentState()) {
+                            //Debug.Log("ActorShadow IsRenderersVisibleByCamera:gamePlayerController.IsAgentState:" + gamePlayerController.IsAgentState());
+                        //}
 
                         // Get location to put shadow at using parent normal and terrain mask
                         //float distance = Vector3.Distance(
