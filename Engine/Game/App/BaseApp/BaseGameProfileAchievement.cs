@@ -47,7 +47,7 @@ public class BaseGameProfileAchievements {
     // TODO: Common profile actions, lookup, count, etc
 }
 
-public class BaseGameProfileAchievement : Profile {
+public class BaseGameProfileAchievement : DataObject {
 
     // BE CAREFUL adding properties as they will cause a need for a profile conversion
     // Best way to add items to the profile is the GetAttribute and SetAttribute class as
@@ -55,12 +55,12 @@ public class BaseGameProfileAchievement : Profile {
     // all work well and cause no need to convert profile on updates.
 
     public BaseGameProfileAchievement() {
-        Reset();
+        //Reset();
     }
 
     public override void Reset() {
         base.Reset();
-        username = ProfileConfigs.defaultPlayerName;
+        //username = ProfileConfigs.defaultPlayerName;
     }
 
     // ACHIEVEMENTS

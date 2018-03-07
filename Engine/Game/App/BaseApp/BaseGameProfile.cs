@@ -189,7 +189,7 @@ public class BaseGameProfile : Profile {
     // all work well and cause no need to convert profile on updates.
 
     public BaseGameProfile() {
-        Reset();
+        //Reset();
     }
 
     public override void Reset() {

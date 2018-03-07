@@ -523,41 +523,41 @@ public class BaseGameState {
             saveProfile();
         }
         
-        if (profileAchievement != null) {
-            profileAchievement.username = profile.username;
-        }
+        //if (profileAchievement != null) {
+        //    profileAchievement.username = profile.username;
+        //}
         
-        if (profileStatistic != null) {
-            profileStatistic.username = profile.username;
-        }       
+        //if (profileStatistic != null) {
+        //    profileStatistic.username = profile.username;
+        //}       
         
-        if (profileCharacter != null) {
-            profileCharacter.username = profile.username;
-        }
+        //if (profileCharacter != null) {
+        //    profileCharacter.username = profile.username;
+        //}
         
-        if (profileCustomization != null) {
-            profileCustomization.username = profile.username;
-        }
+        //if (profileCustomization != null) {
+        //    profileCustomization.username = profile.username;
+        //}
         
-        if (profileMode != null) {
-            profileMode.username = profile.username;
-        }
+        //if (profileMode != null) {
+        //    profileMode.username = profile.username;
+        //}
         
-        if (profileProduct != null) {
-            profileProduct.username = profile.username;
-        }
+        //if (profileProduct != null) {
+        //    profileProduct.username = profile.username;
+        //}
         
-        if (profileRPG != null) {
-            profileRPG.username = profile.username;
-        }
+        //if (profileRPG != null) {
+        //    profileRPG.username = profile.username;
+        //}
         
-        if (profileTeam != null) {
-            profileTeam.username = profile.username;
-        }
+        //if (profileTeam != null) {
+        //    profileTeam.username = profile.username;
+        //}
         
-        if (profileVehicle != null) {
-            profileVehicle.username = profile.username;
-        }
+        //if (profileVehicle != null) {
+        //    profileVehicle.username = profile.username;
+        //}
     }
 }
 

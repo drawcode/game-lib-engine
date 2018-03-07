@@ -49,7 +49,7 @@ public class BaseGameProfileStatistics {
     // TODO: Common profile actions, lookup, count, etc
 }
 
-public class BaseGameProfileStatistic : Profile {
+public class BaseGameProfileStatistic : DataObject {
 
     // BE CAREFUL adding properties as they will cause a need for a profile conversion
     // Best way to add items to the profile is the GetAttribute and SetAttribute class as
@@ -57,7 +57,7 @@ public class BaseGameProfileStatistic : Profile {
     // all work well and cause no need to convert profile on updates.
 
     public BaseGameProfileStatistic() {
-        Reset();
+        //Reset();
     }
 
     public override void Reset() {

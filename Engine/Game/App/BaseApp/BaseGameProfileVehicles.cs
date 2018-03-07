@@ -48,19 +48,19 @@ public class BaseGameProfileVehicles {
     // TODO: Common profile actions, lookup, count, etc
 }
 
-public class BaseGameProfileVehicle : Profile {
+public class BaseGameProfileVehicle : DataObject {
     // BE CAREFUL adding properties as they will cause a need for a profile conversion
     // Best way to add items to the profile is the GetAttribute and SetAttribute class as 
     // that stores as a generic DataAttribute class.  Booleans, strings, objects, serialized json objects etc
     // all work well and cause no need to convert profile on updates. 
      
     public BaseGameProfileVehicle() {
-        Reset();
+        //Reset();
     }
  
     public override void Reset() {
         base.Reset();
-        username = ProfileConfigs.defaultPlayerName;
+        //username = ProfileConfigs.defaultPlayerName;
     }
      
     // customizations        

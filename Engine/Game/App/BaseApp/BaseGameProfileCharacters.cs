@@ -332,19 +332,19 @@ public class GameProfileCharacterItem : DataObject {
     }
 }
 
-public class BaseGameProfileCharacter : Profile {
+public class BaseGameProfileCharacter : DataObject {
     // BE CAREFUL adding properties as they will cause a need for a profile conversion
     // Best way to add items to the profile is the GetAttribute and SetAttribute class as 
     // that stores as a generic DataAttribute class.  Booleans, strings, objects, serialized json objects etc
     // all work well and cause no need to convert profile on updates. 
 
     public BaseGameProfileCharacter() {
-        Reset();
+        //Reset();
     }
 
     public override void Reset() {
         base.Reset();
-        username = ProfileConfigs.defaultPlayerName;
+        //username = ProfileConfigs.defaultPlayerName;
     }
 
     // characters
