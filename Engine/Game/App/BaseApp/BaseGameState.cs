@@ -13,17 +13,17 @@ using Engine.Utility;
 
 public class BaseGameState {
     
-    public GameConfig config;
-    public GameProfile profile;
-    public GameProfileStatistic profileStatistic;
-    public GameProfileAchievement profileAchievement;
-    public GameProfileCharacter profileCharacter;
-    public GameProfileCustomization profileCustomization;
-    public GameProfileMode profileMode;
-    public GameProfileProduct profileProduct;
-    public GameProfileRPG profileRPG;
-    public GameProfileTeam profileTeam;
-    public GameProfileVehicle profileVehicle;
+    //public GameConfig config;
+    //public GameProfile profile;
+    //public GameProfileStatistic profileStatistic;
+    //public GameProfileAchievement profileAchievement;
+    //public GameProfileCharacter profileCharacter;
+    //public GameProfileCustomization profileCustomization;
+    //public GameProfileMode profileMode;
+    //public GameProfileProduct profileProduct;
+    //public GameProfileRPG profileRPG;
+    //public GameProfileTeam profileTeam;
+    //public GameProfileVehicle profileVehicle;
     
     //public GameCareer career;
     public GameData gameData;
@@ -33,7 +33,7 @@ public class BaseGameState {
     
     private static volatile BaseGameState instance;
     private static System.Object syncRoot = new System.Object();
-    public Thread saveThread;
+    //public Thread saveThread;
     public string KEY_CONFIG;
     public string KEY_PROFILE;
     public string KEY_CAREER;
@@ -78,18 +78,18 @@ public class BaseGameState {
     
     public virtual void InitState() {
 
-        config = GameConfigs.Current;
-        profile = GameProfiles.Current;
-        profileStatistic = GameProfileStatistics.Current;
-        profileAchievement = GameProfileAchievements.Current;
+        //config = GameConfigs.Current;
+        //profile = GameProfiles.Current;
+        //profileStatistic = GameProfileStatistics.Current;
+        //profileAchievement = GameProfileAchievements.Current;
         
-        profileCharacter = GameProfileCharacters.Current;
-        profileCustomization = GameProfileCustomizations.Current;
-        profileMode = GameProfileModes.Current;
-        profileProduct = GameProfileProducts.Current;
-        profileRPG = GameProfileRPGs.Current;
-        profileTeam = GameProfileTeams.Current;
-        profileVehicle = GameProfileVehicles.Current;
+        //profileCharacter = GameProfileCharacters.Current;
+        //profileCustomization = GameProfileCustomizations.Current;
+        //profileMode = GameProfileModes.Current;
+        //profileProduct = GameProfileProducts.Current;
+        //profileRPG = GameProfileRPGs.Current;
+        //profileTeam = GameProfileTeams.Current;
+        //profileVehicle = GameProfileVehicles.Current;
 
         gameData = GameDatas.Current;
         
@@ -112,7 +112,7 @@ public class BaseGameState {
     }
     
     public virtual void saveConfig() {
-        string jsonString = config.ToJson();// JsonMapper.ToJson(config);
+        string jsonString = GameConfigs.Current.ToJson();// JsonMapper.ToJson(config);
         SystemPrefUtil.SetLocalSettingString(KEY_CONFIG, jsonString);
         SystemPrefUtil.Save();
     }
@@ -126,10 +126,10 @@ public class BaseGameState {
     public virtual void loadConfig() {
         string data = SystemPrefUtil.GetLocalSettingString(KEY_CONFIG);
         if (!string.IsNullOrEmpty(data)) {
-            config = data.FromJson<GameConfig>();//JsonMapper.ToObject<GameConfig>(data);
+            GameConfigs.Current = data.FromJson<GameConfig>();//JsonMapper.ToObject<GameConfig>(data);
         }
-        
-        profile.ChangeUser(config.lastLoggedOnUser);
+
+        GameProfiles.Current.ChangeUser(GameConfigs.Current.lastLoggedOnUser);
         //career.ChangeUser(config.lastLoggedOnUser);
     }
     
@@ -137,61 +137,61 @@ public class BaseGameState {
 
     public string key {
         get {
-            return getProfileKey(profile.username);
+            return getProfileKey(GameProfiles.Current.username);
         }
     }
     
     public string keyAchievement {
         get {
-            return getProfileAchievementKey(profile.username);
+            return getProfileAchievementKey(GameProfiles.Current.username);
         }
     }
     
     public string keyStatistic {
         get {
-            return getProfileStatisticKey(profile.username);
+            return getProfileStatisticKey(GameProfiles.Current.username);
         }
     }
     
     public string keyCharacter {
         get {
-            return getProfileCharacterKey(profile.username);
+            return getProfileCharacterKey(GameProfiles.Current.username);
         }
     }
 
     public string keyCustomization {
         get {
-            return getProfileCustomizationKey(profile.username);
+            return getProfileCustomizationKey(GameProfiles.Current.username);
         }
     }
 
     public string keyMode {
         get {
-            return getProfileModeKey(profile.username);
+            return getProfileModeKey(GameProfiles.Current.username);
         }
     }
 
     public string keyProduct {
         get {
-            return getProfileProductKey(profile.username);
+            return getProfileProductKey(GameProfiles.Current.username);
         }
     }
 
     public string keyRPG {
         get {
-            return getProfileRPGKey(profile.username);
+            return getProfileRPGKey(GameProfiles.Current.username);
         }
     }
 
     public string keyTeam {
         get {
-            return getProfileTeamKey(profile.username);
+            return getProfileTeamKey(GameProfiles.Current.username);
         }
     }
 
     public string keyVehicle {
         get {
-            return getProfileVehicleKey(profile.username);
+            return getProfileVehicleKey(GameProfiles.Current.username);
         }
     }
     
@@ -371,16 +371,16 @@ public class BaseGameState {
 
         GameSync.ResetProfileSyncObject();
         
-        save(key, profile, true);
-        save(keyAchievement, profileAchievement, true);
-        save(keyStatistic, profileStatistic, true);
-        save(keyCharacter, profileCharacter, true);
-        save(keyCustomization, profileCustomization, true);
-        save(keyMode, profileMode, true);
-        save(keyProduct, profileProduct, true);
-        save(keyRPG, profileRPG, true);
-        save(keyTeam, profileTeam, true);
-        save(keyVehicle, profileVehicle, true);
+        save(key, GameProfiles.Current, true);
+        save(keyAchievement, GameProfileAchievements.Current, true);
+        save(keyStatistic, GameProfileStatistics.Current, true);
+        save(keyCharacter, GameProfileCharacters.Current, true);
+        save(keyCustomization, GameProfileCustomizations.Current, true);
+        save(keyMode, GameProfileModes.Current, true);
+        save(keyProduct, GameProfileProducts.Current, true);
+        save(keyRPG, GameProfileRPGs.Current, true);
+        save(keyTeam, GameProfileTeams.Current, true);
+        save(keyVehicle, GameProfileVehicles.Current, true);
 
         // prepare and upload any files changed
 
@@ -407,17 +407,17 @@ public class BaseGameState {
             //LogUtil.Log("SaveProfile: keyStatistic: " + keyStatistic);
 
             Debug.Log("BaseGameState::saveProfile username:" + profile.username);
-            
-            save(key, profile);
-            save(keyAchievement, profileAchievement);
-            save(keyStatistic, profileStatistic);
-            save(keyCharacter, profileCharacter);
-            save(keyCustomization, profileCustomization);
-            save(keyMode, profileMode);
-            save(keyProduct, profileProduct);
-            save(keyRPG, profileRPG);
-            save(keyTeam, profileTeam);
-            save(keyVehicle, profileVehicle);
+
+            save(key, GameProfiles.Current);
+            save(keyAchievement, GameProfileAchievements.Current);
+            save(keyStatistic, GameProfileStatistics.Current);
+            save(keyCharacter, GameProfileCharacters.Current);
+            save(keyCustomization, GameProfileCustomizations.Current);
+            save(keyMode, GameProfileModes.Current);
+            save(keyProduct, GameProfileProducts.Current);
+            save(keyRPG, GameProfileRPGs.Current);
+            save(keyTeam, GameProfileTeams.Current);
+            save(keyVehicle, GameProfileVehicles.Current);
 
             //CoroutineUtil.Start(SaveProfileCo(profile));
         }
@@ -427,8 +427,8 @@ public class BaseGameState {
         
         //LogUtil.Log("SaveProfile");
         
-        if (profile != null) {
-            saveProfile(profile);
+        if (GameProfiles.Current != null) {
+            saveProfile(GameProfiles.Current);
         }
     }
     
@@ -447,38 +447,48 @@ public class BaseGameState {
     
     public virtual void loadProfile() {
         
-        if (profile != null) {
+        if (GameProfiles.Current != null) {
             
-            LogUtil.Log("LoadProfile: username: " + profile.username);
+            LogUtil.Log("LoadProfile: username: " + GameProfiles.Current.username);
             //LogUtil.Log("LoadProfile: key: " + key);
             //profile.LoadData(Application.persistentDataPath + "/" + key);
-            
-            profile = contentLoad<GameProfile>(key, profile);
-            
-            profile.login_count++;
-            profile.SyncAccessPermissions();
-            
-            profileAchievement = contentLoad<GameProfileAchievement>(keyAchievement, profileAchievement);
-            profileStatistic = contentLoad<GameProfileStatistic>(keyStatistic, profileStatistic);
-            profileCharacter = contentLoad<GameProfileCharacter>(keyCharacter, profileCharacter);
-            profileCustomization = contentLoad<GameProfileCustomization>(keyCustomization, profileCustomization);
-            profileMode = contentLoad<GameProfileMode>(keyMode, profileMode);
-            profileProduct = contentLoad<GameProfileProduct>(keyProduct, profileProduct);
-            profileRPG = contentLoad<GameProfileRPG>(keyRPG, profileRPG);
-            profileTeam = contentLoad<GameProfileTeam>(keyTeam, profileTeam);
-            profileVehicle = contentLoad<GameProfileVehicle>(keyVehicle, profileVehicle);
-            
-            GameProfiles.Current = profile;
-            GameProfileAchievements.Current = profileAchievement;
-            GameProfileStatistics.Current = profileStatistic;
-            
-            GameProfileCharacters.Current = profileCharacter;
-            GameProfileCustomizations.Current = profileCustomization;
-            GameProfileModes.Current = profileMode;
-            GameProfileProducts.Current = profileProduct;
-            GameProfileRPGs.Current = profileRPG;
-            GameProfileTeams.Current = profileTeam;
-            GameProfileVehicles.Current = profileVehicle;
+
+            GameProfiles.Current = contentLoad<GameProfile>(key, GameProfiles.Current);
+
+            GameProfiles.Current.login_count++;
+            GameProfiles.Current.SyncAccessPermissions();
+
+            GameProfileAchievements.Current = contentLoad<GameProfileAchievement>(keyAchievement, GameProfileAchievements.Current);
+            GameProfileStatistics.Current = contentLoad<GameProfileStatistic>(keyStatistic, GameProfileStatistics.Current);
+            GameProfileCharacters.Current = contentLoad<GameProfileCharacter>(keyCharacter, GameProfileCharacters.Current);
+            GameProfileCustomizations.Current = contentLoad<GameProfileCustomization>(keyCustomization, GameProfileCustomizations.Current);
+            GameProfileModes.Current = contentLoad<GameProfileMode>(keyMode, GameProfileModes.Current);
+            GameProfileProducts.Current = contentLoad<GameProfileProduct>(keyProduct, GameProfileProducts.Current);
+            GameProfileRPGs.Current = contentLoad<GameProfileRPG>(keyRPG, GameProfileRPGs.Current);
+            GameProfileTeams.Current = contentLoad<GameProfileTeam>(keyTeam, GameProfileTeams.Current);
+            GameProfileVehicles.Current = contentLoad<GameProfileVehicle>(keyVehicle, GameProfileVehicles.Current);
+
+            //profileAchievement = contentLoad<GameProfileAchievement>(keyAchievement, profileAchievement);
+            //profileStatistic = contentLoad<GameProfileStatistic>(keyStatistic, profileStatistic);
+            //profileCharacter = contentLoad<GameProfileCharacter>(keyCharacter, profileCharacter);
+            //profileCustomization = contentLoad<GameProfileCustomization>(keyCustomization, profileCustomization);
+            //profileMode = contentLoad<GameProfileMode>(keyMode, profileMode);
+            //profileProduct = contentLoad<GameProfileProduct>(keyProduct, profileProduct);
+            //profileRPG = contentLoad<GameProfileRPG>(keyRPG, profileRPG);
+            //profileTeam = contentLoad<GameProfileTeam>(keyTeam, profileTeam);
+            //profileVehicle = contentLoad<GameProfileVehicle>(keyVehicle, profileVehicle);
+
+            //GameProfiles.Current = profile;
+            //GameProfileAchievements.Current = profileAchievement;
+            //GameProfileStatistics.Current = profileStatistic;
+
+            //GameProfileCharacters.Current = profileCharacter;
+            //GameProfileCustomizations.Current = profileCustomization;
+            //GameProfileModes.Current = profileMode;
+            //GameProfileProducts.Current = profileProduct;
+            //GameProfileRPGs.Current = profileRPG;
+            //GameProfileTeams.Current = profileTeam;
+            //GameProfileVehicles.Current = profileVehicle;
         }
     }
     
@@ -502,21 +512,21 @@ public class BaseGameState {
         LogUtil.Log("ChangeUser: username: " + username);
         LogUtil.Log("ChangeUser: key: " + getProfileKey(username));
         
-        if (profile.username != username) {
-            
-            config.lastLoggedOnUser = username;
+        if (GameProfiles.Current.username != username) {
+
+            GameConfigs.Current.lastLoggedOnUser = username;
             saveConfig();
             
-            string originalProfileUser = profile.username.ToLower();
+            string originalProfileUser = GameProfiles.Current.username.ToLower();
             
             if (originalProfileUser.ToLower() == "player"
                 || keepExisting) {
                 // Keep all progress from defualt player if they decide to log into gamecenter
                 // Has cheating problems but can be resolved after bug.
-                profile.ChangeUserNoReset(username);
+                GameProfiles.Current.ChangeUserNoReset(username);
             }
             else {
-                profile.ChangeUser(username);
+                GameProfiles.Current.ChangeUser(username);
             }
             
             loadProfile();
