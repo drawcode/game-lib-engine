@@ -89,12 +89,12 @@ namespace Engine.UI {
                 //}
             }
 
-            if (async) {
-                SceneManager.LoadSceneAsync(sceneName);
-            }
-            else {
+            //if (async) {
+            //    SceneManager.LoadSceneAsync(sceneName);
+            //}
+            //else {
                 SceneManager.LoadScene(sceneName);
-            }
+            //}
             LogUtil.Log("Loaded scene: " + sceneName);
 
             //foreach (UnityEngine.Object obj in GameObject.FindObjectsOfType(typeof(ScreenScaler))) {

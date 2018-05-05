@@ -201,31 +201,31 @@ public class Context {
 	}
 
 	public int ApplicationTotalLevels() {
-		return SceneManager.sceneCount;
+        return UnityEngine.SceneManagement.SceneManager.sceneCount;
 	}
 
 	public int ApplicationLoadedLevelNumber() {
-		return SceneManager.GetActiveScene().buildIndex;
+        return UnityEngine.SceneManagement.SceneManager.GetActiveScene().buildIndex;
 	}
 
 	public string ApplicationLoadedLevelName() {
-		return SceneManager.GetActiveScene().name;
+        return UnityEngine.SceneManagement.SceneManager.GetActiveScene().name;
 	}
 
 	public void ApplicationLoadLevelByNumber(int levelNumber) {
-        SceneManager.LoadScene(levelNumber);
+        UnityEngine.SceneManagement.SceneManager.LoadScene(levelNumber);
 	}
 
 	public void ApplicationLoadLevelByName(string levelName) {
-        SceneManager.LoadScene(levelName);
+        UnityEngine.SceneManagement.SceneManager.LoadScene(levelName);
 	}
 
 	public void ApplicationStreamLevelByNumber(int levelNumber) {
-        SceneManager.LoadScene(levelNumber, LoadSceneMode.Additive);
+        UnityEngine.SceneManagement.SceneManager.LoadScene(levelNumber, LoadSceneMode.Additive);
 	}
 
 	public void ApplicationStreamLevelByName(string levelName) {
-        SceneManager.LoadScene(levelName, LoadSceneMode.Additive);
+        UnityEngine.SceneManagement.SceneManager.LoadScene(levelName, LoadSceneMode.Additive);
     }
 
 	public void ApplicationOpenURL(string url) {
