@@ -457,14 +457,14 @@ public class BaseDataObjectKeys {
 
 }
 
-public class BaseDataObject : Dictionary<string, object> {  
+public class BaseDataObject : Dictionary<string, object> {
 
     //public Dictionary<string, DataAttribute> attributes;
 
     public BaseDataObject() {
-        
+
     }
-    
+
     // VALUES
     // use keyed dictionaries for all data objects to prevent
     // serialize and deserialize issues with keys on versions.    
@@ -472,13 +472,14 @@ public class BaseDataObject : Dictionary<string, object> {
     //[JsonIgnore(JsonIgnoreWhen.Deserializing)]
     public virtual Dictionary<string, DataAttribute> attributes {
         get {
-            return Get<Dictionary<string, DataAttribute>>(BaseDataObjectKeys.attributes);
+            return Get<Dictionary<string, DataAttribute>>(
+                BaseDataObjectKeys.attributes);
         }
-        
+
         set {
             Set(BaseDataObjectKeys.attributes, value);
         }
-    } 
+    }
 
     // -----------------------------------------------------------------------
     // VALUE ACCESSORS
@@ -488,16 +489,21 @@ public class BaseDataObject : Dictionary<string, object> {
     public virtual T Get<T>(string code) {
         return Get<T>(code, default(T));
     }
-    
-    public virtual T Get<T>(string code, T defaultValue) {                
+
+    public virtual T Get<T>(string code, T defaultValue) {
+
         try {
-            if (!ContainsKey(code)) {
+
+            if(!ContainsKey(code)) {
                 Set(code, defaultValue);
             }
+
             return (T)this[code];
         }
-        catch (Exception e) {
+        catch(Exception e) {
+
             LogUtil.Log(e);
+
             return default(T);
         }
     }
@@ -515,9 +521,10 @@ public class BaseDataObject : Dictionary<string, object> {
     */
 
     // sets
-    
+
     public virtual void Set<T>(string code, T val) {
-        if (ContainsKey(code)) {
+
+        if(ContainsKey(code)) {
             this[code] = val;
         }
         else {
@@ -526,21 +533,22 @@ public class BaseDataObject : Dictionary<string, object> {
     }
 
     public virtual void Set(string code, object val) {
-        if (ContainsKey(code)) {
+
+        if(ContainsKey(code)) {
             this[code] = val;
         }
         else {
             Add(code, val);
         }
     }
-    
+
     public virtual void Set(string code, DataAttribute val) {
-        if (attributes == null) {
-            attributes = new Dictionary<string, DataAttribute>();                        
+
+        if(attributes == null) {
+            attributes = new Dictionary<string, DataAttribute>();
         }
 
-
-        if (attributes.ContainsKey(code)) {
+        if(attributes.ContainsKey(code)) {
             attributes[code] = val;
         }
         else {
@@ -549,40 +557,44 @@ public class BaseDataObject : Dictionary<string, object> {
     }
 
     //
-    
+
     public virtual void Clone(DataObject toCopy) {
         attributes = toCopy.attributes;
     }
-    
+
     // -----------------------------------------------------------------------
     // LOADING/SAVING
 
     public string DataPrepareSave(string dataValue) {
-        
-        #if !UNITY_WEBPLAYER
-        if (AppConfigs.useStorageEncryption) {
+
+#if !UNITY_WEBPLAYER
+        if(AppConfigs.useStorageEncryption) {
+
             dataValue = dataValue.ToEncrypted();
         }
-        
-        if (AppConfigs.useStorageCompression) {
+
+        if(AppConfigs.useStorageCompression) {
+
             dataValue = dataValue.ToCompressed();
         }
-        #endif
+#endif
 
         return dataValue;
     }
 
     public string DataPrepareLoad(string dataValue) {
-        
-        #if !UNITY_WEBPLAYER
-        if (AppConfigs.useStorageCompression) { /// || data.IsCompressed()) {
+
+#if !UNITY_WEBPLAYER
+        if(AppConfigs.useStorageCompression) { /// || data.IsCompressed()) {
+
             dataValue = dataValue.ToDecompressed();
         }
-        
-        if (AppConfigs.useStorageEncryption) {
+
+        if(AppConfigs.useStorageEncryption) {
+
             dataValue = dataValue.ToDecrypted();
         }
-        #endif
+#endif
 
         return dataValue;
     }
@@ -590,25 +602,26 @@ public class BaseDataObject : Dictionary<string, object> {
     public string LoadDataFromResources(string path) {
 
         string dataValue = "";
-        
-        TextAsset textData = AssetUtil.LoadAsset<TextAsset>(path);      
-        if (textData != null) {
+
+        TextAsset textData = AssetUtil.LoadAsset<TextAsset>(path);
+
+        if(textData != null) {
             dataValue = textData.text;
         }
-        
+
         dataValue = DataPrepareLoad(dataValue);
 
         return dataValue;
     }
-    
+
     public string LoadDataFromPrefs(string key) {
 
         string dataValue = "";
-        
-        if (!SystemPrefUtil.HasLocalSetting(key)) {
+
+        if(!SystemPrefUtil.HasLocalSetting(key)) {
             dataValue = SystemPrefUtil.GetLocalSettingString(key);
         }
-        
+
         dataValue = DataPrepareLoad(dataValue);
 
         return dataValue;
@@ -616,326 +629,403 @@ public class BaseDataObject : Dictionary<string, object> {
 
     public string GetWebPath(string path) {
 
-        if (!string.IsNullOrEmpty(Application.dataPath)) {
+        if(!string.IsNullOrEmpty(Application.dataPath)) {
             path = path.Replace(Application.dataPath, "");
         }
 
-        if (!string.IsNullOrEmpty(Application.persistentDataPath)) {
+        if(!string.IsNullOrEmpty(Application.persistentDataPath)) {
             path = path.Replace(Application.persistentDataPath, "");
         }
 
         return path;
     }
-    
+
     public string LoadData(string fileFullPath) {
 
         string dataValue = "";
-        
-        #if !UNITY_WEBPLAYER 
-        if (FileSystemUtil.CheckFileExists(fileFullPath)) {       
+
+#if !UNITY_WEBPLAYER
+
+        if(FileSystemUtil.CheckFileExists(fileFullPath)) {
+
             dataValue = FileSystemUtil.ReadString(fileFullPath);
         }
-        #else
+#else
+
         string fileWebPath = GetWebPath(fileFullPath);
         dataValue = SystemPrefUtil.GetLocalSettingString(fileWebPath);
-        #endif  
-        
+
+#endif
+
         dataValue = DataPrepareLoad(dataValue);
 
         return dataValue;
     }
-    
+
     public T LoadData<T>(string fileFullPath, string fileKey) {
+
         string dataValue = "";
-        #if !UNITY_WEBPLAYER
+
+#if !UNITY_WEBPLAYER
         string path = PathUtil.Combine(fileFullPath, (fileKey + ".json").TrimStart('/'));
-        if (FileSystemUtil.CheckFileExists(path)) {       
+
+        if(FileSystemUtil.CheckFileExists(path)) {
             dataValue = FileSystemUtil.ReadString(path);
         }
-        #else
+
+#else
         string fileWebPath = GetWebPath(fileFullPath);
         dataValue = SystemPrefUtil.GetLocalSettingString(fileWebPath);
-        #endif 
+#endif
 
-        if (!string.IsNullOrEmpty(dataValue)) {
+        if(!string.IsNullOrEmpty(dataValue)) {
+
             dataValue = DataPrepareLoad(dataValue);
             //return JsonMapper.ToObject<T>(dataValue);
+
             return dataValue.FromJson<T>();
         }
-        
+
         return default(T);
     }
-    
+
     public void SaveData(string folderPath, string fileKey, object obj) {
+
         string dataValue = obj.ToJson();
+
         string path = PathUtil.Combine(folderPath, (fileKey + ".json").TrimStart('/'));
+
         SaveData(path, dataValue);
     }
-    
+
     public void SaveData(string fileFullPath, string dataValue) {
-        #if !UNITY_WEBPLAYER
-        
-        if (fileFullPath.Contains(Application.dataPath)
+#if !UNITY_WEBPLAYER
+
+        if(fileFullPath.Contains(Application.dataPath)
             || fileFullPath.Contains(Application.persistentDataPath)) {
 
             dataValue = DataPrepareSave(dataValue);
 
             FileSystemUtil.WriteString(fileFullPath, dataValue);
         }
-        #else
+#else
         
         string fileWebPath = GetWebPath(fileFullPath);
         SystemPrefUtil.SetLocalSettingString(fileWebPath, dataValue);
-        #endif
+#endif
     }
-    
+
     // -----------------------------------------------------------------------
     // HELPERS, REFLECT
-    
+
     public object GetFieldValue(object obj, string fieldName) {
         ////LogUtil.Log("GetFieldValue:obj.GetType():" + obj.GetType());
-        
+
         bool hasGet = false;
 
-        if (obj == null) {
+        if(obj == null) {
             return obj;
         }
-        
-        foreach (var prop in fieldName.Split('.').Select(s => obj.GetType().GetField(s))) {
+
+        foreach(var prop
+            in fieldName.Split('.').Select(s => obj.GetType().GetField(s))) {
+
             obj = prop.GetValue(obj);
             hasGet = true;
         }
-        
-        if (!hasGet) {
-            foreach (System.Reflection.PropertyInfo prop in obj.GetType().GetProperties()) {
-                if (prop.Name == fieldName) {
+
+        if(!hasGet) {
+
+            foreach(System.Reflection.PropertyInfo prop
+                in obj.GetType().GetProperties()) {
+
+                if(prop.Name == fieldName) {
                     obj = prop.GetValue(obj, null);
                 }
             }
         }
-        
+
         return obj;
     }
-    
-    public void SetFieldValue(object obj, string fieldName, object fieldValue) {
+
+    public void SetFieldValue(
+        object obj, string fieldName, object fieldValue) {
+
         ////LogUtil.Log("SetFieldValue:obj.GetType():" + obj.GetType());
-        
+
         //bool hasSet = false;
-                
-        if (obj == null) {
+
+        if(obj == null) {
             return;
         }
-        
-        foreach (System.Reflection.FieldInfo field in fieldName.Split('.').Select(s => obj.GetType().GetField(s))) {
-            if (field != null) {
+
+        foreach(System.Reflection.FieldInfo field in
+            fieldName.Split('.').Select(s => obj.GetType().GetField(s))) {
+
+            if(field != null) {
                 field.SetValue(obj, fieldValue);
-                
+
                 //hasSet = true;
             }
         }
-        
+
         //if(!hasSet) {
-        foreach (System.Reflection.PropertyInfo prop in obj.GetType().GetProperties()) {
-            if (prop.Name == fieldName) {
+
+        foreach(System.Reflection.PropertyInfo prop in
+            obj.GetType().GetProperties()) {
+
+            if(prop.Name == fieldName) {
                 prop.SetValue(obj, fieldValue, null);
             }
         }
-        
+
         //}
     }
-    
+
     public virtual void Reset() {
         attributes = new Dictionary<string, DataAttribute>();
     }
-    
+
     // -----------------------------------------------------------------------
     // ATTRIBUTES
-    
+
     public void SetAttribute(DataAttribute attribute) {
-        
-        if (CheckIfAttributeExists(attribute.code)) {
+
+        if(attributes == null) {
+            attributes = new Dictionary<string, DataAttribute>();
+        }
+
+        if(CheckIfAttributeExists(attribute.code)) {
             attributes[attribute.code] = attribute;
         }
         else {
             attributes.Add(attribute.code, attribute);
         }
+
         Set(BaseDataObjectKeys.attributes, attributes);
     }
-    
+
     public bool CheckIfAttributeExists(string code) {
-        if (attributes != null) {
+
+        if(attributes != null) {
             //code = UniqueUtil.Instance.GetStringHash(code);
-            if (attributes.ContainsKey(code)) {
+
+            if(attributes.ContainsKey(code)) {
                 return true;
             }
         }
+
         return false;
     }
-    
+
     public DataAttribute GetAttribute(string code) {
+
         DataAttribute attribute = new DataAttribute();
-        
+
         //code = UniqueUtil.Instance.GetStringHash(code);
-        
-        if (CheckIfAttributeExists(code)) {
+
+        if(CheckIfAttributeExists(code)) {
             attribute = attributes[code];
         }
-        
+
         return attribute;
     }
-        
+
     public List<DataAttribute> GetAttributesList() {
+
         List<DataAttribute> attributesList = new List<DataAttribute>();
-        foreach (DataAttribute attribute in attributes.Values) {
+
+        foreach(DataAttribute attribute in attributes.Values) {
             attributesList.Add(attribute);
         }
+
         return attributesList;
     }
-    
+
     public List<DataAttribute> GetAttributesList(string objectType) {
+
         List<DataAttribute> attributesFiltered = new List<DataAttribute>();
-        foreach (DataAttribute attribute in attributes.Values) {
-            if (attribute.otype == objectType) {
+
+        foreach(DataAttribute attribute in attributes.Values) {
+
+            if(attribute.otype == objectType) {
                 attributesFiltered.Add(attribute);
             }
         }
+
         return attributesFiltered;
     }
-    
+
     public Dictionary<string, DataAttribute> GetAttributesDictionary() {
-        return attributes;   
+        return attributes;
     }
-    
+
     public Dictionary<string, DataAttribute> GetAttributesDictionary(string objectType) {
+
         Dictionary<string, DataAttribute> attributesFiltered = new Dictionary<string, DataAttribute>();
-        foreach (KeyValuePair<string, DataAttribute> pair in attributes) {
-            if (pair.Value.otype == objectType) {
+
+        foreach(KeyValuePair<string, DataAttribute> pair in attributes) {
+
+            if(pair.Value.otype == objectType) {
                 attributesFiltered.Add(pair.Value.code, pair.Value);
             }
         }
+
         return attributesFiltered;
     }
-    
+
     public void SetAttributeBoolValue(string code, bool val) {
+
         DataAttribute att = new DataAttribute();
+
         att.val = val;
         att.code = code;
         att.name = code;
         att.type = "bool";
         att.otype = "attribute";
+
         SetAttribute(att);
     }
-    
+
     public bool GetAttributeBoolValue(string code) {
+
         bool currentValue = false;
+
         object objectValue = GetAttribute(code).val;
-        if (objectValue != null) {
+
+        if(objectValue != null) {
             currentValue = Convert.ToBoolean(objectValue);
         }
-        
+
         return currentValue;
     }
-    
+
     public void SetAttributeStringValue(string code, string val) {
+
         DataAttribute att = new DataAttribute();
+
         att.val = val;
         att.code = code;
         att.name = code;
         att.type = "string";
         att.otype = "attribute";
+
         SetAttribute(att);
     }
-    
+
     public string GetAttributeStringValue(string code) {
+
         string currentValue = "";
+
         object objectValue = GetAttribute(code).val;
-        if (objectValue != null) {
+
+        if(objectValue != null) {
             currentValue = Convert.ToString(objectValue);
         }
-        
+
         return currentValue;
     }
-    
+
     public void SetAttributeDoubleValue(string code, double val) {
+
         DataAttribute att = new DataAttribute();
+
         att.val = val;
         att.code = code;
         att.name = code;
         att.type = "double";
         att.otype = "attribute";
+
         SetAttribute(att);
     }
-    
+
     public double GetAttributeDoubleValue(string code) {
+
         double currentValue = 0.0;
+
         object objectValue = GetAttribute(code).val;
+
         if(objectValue != null) {
             currentValue = Convert.ToDouble(objectValue);
         }
-        
+
         return currentValue;
     }
-    
+
     public void SetAttributeIntValue(string code, int val) {
+
         DataAttribute att = new DataAttribute();
+
         att.val = val;
         att.code = code;
         att.name = code;
         att.type = "int";
         att.otype = "attribute";
+
         SetAttribute(att);
     }
-    
+
     public int GetAttributeIntValue(string code) {
+
         int currentValue = 0;
+
         object objectValue = GetAttribute(code).val;
-        if (objectValue != null) {
+
+        if(objectValue != null) {
             currentValue = Convert.ToInt32(objectValue);
         }
-        
+
         return currentValue;
     }
-    
+
     public void SetAttributeObjectValue(string code, object val) {
+
         DataAttribute att = new DataAttribute();
+
         att.val = val;
         att.code = code;
         att.name = code;
         att.type = "object";
         att.otype = "attribute";
+
         SetAttribute(att);
     }
 
     public T GetAttributeObjectValue<T>(string code) {
+
         object objectValue = GetAttribute(code).val;
-        if (objectValue != null) {
+
+        if(objectValue != null) {
+
             try {
                 return (T)objectValue;
             }
-            catch (Exception e) {
+            catch(Exception e) {
                 LogUtil.Log(e);
                 LogUtil.Log("ERROR:GetAttributeObjectValue:code:" + code);
             }
         }
-        
+
         return default(T);
     }
 
     public object GetAttributeObjectValue(string code) {
+
         object objectValue = GetAttribute(code).val;
+
         return objectValue;
     }
-    
+
     public string GetPlatformAttributeKey(string key) {
+
         string keyto = key;
-        
-        #if UNITY_IPHONE
-        keyto = "platform-ios-" + keyto;    
-        #endif
-        #if UNITY_ANDROID
+
+#if UNITY_IPHONE
+        keyto = "platform-ios-" + keyto;
+#endif
+#if UNITY_ANDROID
         keyto = "platform-android-" + keyto;
-        #endif
+#endif
         return keyto;
     }
-    
 }

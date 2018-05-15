@@ -379,8 +379,11 @@ public class BaseGameProfileCharacter : DataObject {
 
         if (obj.items.Count == 0) {
             // add default
-            obj.SetCharacter(GameProfileCharacters.Current.GetCurrentCharacterProfileCode(),
-                             new GameProfileCharacterItem());
+            obj.SetCharacter(
+                GameProfileCharacters.Current.GetCurrentCharacterProfileCode(),
+                new GameProfileCharacterItem());
+
+            SetCharacters(obj);
         }
 
         return obj;

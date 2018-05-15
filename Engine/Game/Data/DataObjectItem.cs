@@ -26,7 +26,7 @@ public class DataObjectItem {
 
         TextAsset textData = AssetUtil.LoadAsset<TextAsset>(path);
 
-        if (textData != null) {
+        if(textData != null) {
             fileData = textData.text;
         }
 
@@ -37,7 +37,7 @@ public class DataObjectItem {
 
         string data = "";
 
-        if (!SystemPrefUtil.HasLocalSetting(key)) {
+        if(!SystemPrefUtil.HasLocalSetting(key)) {
             data = SystemPrefUtil.GetLocalSettingString(key);
         }
 
@@ -50,7 +50,7 @@ public class DataObjectItem {
 
 #if !UNITY_WEBPLAYER
 
-        if (FileSystemUtil.CheckFileExists(fileFullPath)) {
+        if(FileSystemUtil.CheckFileExists(fileFullPath)) {
             fileData = FileSystemUtil.ReadString(fileFullPath);
         }
 
@@ -68,13 +68,13 @@ public class DataObjectItem {
         string path = PathUtil.Combine(
             folderPath, (fileKey + ".json").TrimStart('/'));
 
-        if (FileSystemUtil.CheckFileExists(path)) {
+        if(FileSystemUtil.CheckFileExists(path)) {
             fileData = FileSystemUtil.ReadString(path);
         }
 
 #endif
 
-        if (!string.IsNullOrEmpty(fileData)) {
+        if(!string.IsNullOrEmpty(fileData)) {
             return fileData.FromJson<T>();
         }
 
@@ -94,7 +94,7 @@ public class DataObjectItem {
     public void SaveData(string fileFullPath, string data) {
 #if !UNITY_WEBPLAYER
 
-        if (fileFullPath.Contains(Application.dataPath)
+        if(fileFullPath.Contains(Application.dataPath)
            || fileFullPath.Contains(Application.persistentDataPath)) {
 
             FileSystemUtil.WriteString(fileFullPath, data);
@@ -107,18 +107,18 @@ public class DataObjectItem {
 
         bool hasGet = false;
 
-        foreach (var prop in
+        foreach(var prop in
                 fieldName.Split('.').Select(s => obj.GetType().GetField(s))) {
-            if (obj != null) {
+            if(obj != null) {
                 obj = prop.GetValue(obj);
                 hasGet = true;
             }
         }
 
-        if (!hasGet) {
-            foreach (System.Reflection.PropertyInfo prop in
+        if(!hasGet) {
+            foreach(System.Reflection.PropertyInfo prop in
                     obj.GetType().GetProperties()) {
-                if (prop.Name == fieldName) {
+                if(prop.Name == fieldName) {
                     obj = prop.GetValue(obj, null);
                 }
             }
@@ -132,9 +132,9 @@ public class DataObjectItem {
 
         //bool hasSet = false;
 
-        foreach (System.Reflection.FieldInfo field in
+        foreach(System.Reflection.FieldInfo field in
                 fieldName.Split('.').Select(s => obj.GetType().GetField(s))) {
-            if (field != null) {
+            if(field != null) {
                 field.SetValue(obj, fieldValue);
 
                 //hasSet = true;
@@ -142,9 +142,9 @@ public class DataObjectItem {
         }
 
         //if(!hasSet) {
-        foreach (System.Reflection.PropertyInfo prop in
+        foreach(System.Reflection.PropertyInfo prop in
                 obj.GetType().GetProperties()) {
-            if (prop.Name == fieldName) {
+            if(prop.Name == fieldName) {
                 prop.SetValue(obj, fieldValue, null);
             }
         }
@@ -164,12 +164,12 @@ public class DataObjectItem {
         string code = attribute.code;
         //UniqueUtil.Instance.GetStringHash(attribute.code);
 
-        if (attributes == null) {
+        if(attributes == null) {
             attributes = new Dictionary<string, DataAttribute>();
         }
 
         // UPSERT        
-        if (CheckIfAttributeExists(code)) {
+        if(CheckIfAttributeExists(code)) {
             // UPDATE
             attributes[code] = attribute;
         }
@@ -180,9 +180,9 @@ public class DataObjectItem {
     }
 
     public bool CheckIfAttributeExists(string code) {
-        if (attributes != null) {
+        if(attributes != null) {
             //code = UniqueUtil.Instance.GetStringHash(code);
-            if (attributes.ContainsKey(code)) {
+            if(attributes.ContainsKey(code)) {
                 return true;
             }
         }
@@ -194,7 +194,7 @@ public class DataObjectItem {
 
         //code = UniqueUtil.Instance.GetStringHash(code);
 
-        if (CheckIfAttributeExists(code)) {
+        if(CheckIfAttributeExists(code)) {
             attribute = attributes[code];
         }
 
@@ -208,7 +208,7 @@ public class DataObjectItem {
 
         List<DataAttribute> attributesList = new List<DataAttribute>();
 
-        foreach (DataAttribute attribute in attributes.Values) {
+        foreach(DataAttribute attribute in attributes.Values) {
             attributesList.Add(attribute);
         }
         return attributesList;
@@ -218,8 +218,8 @@ public class DataObjectItem {
 
         List<DataAttribute> attributesFiltered = new List<DataAttribute>();
 
-        foreach (DataAttribute attribute in attributes.Values) {
-            if (attribute.otype == objectType) {
+        foreach(DataAttribute attribute in attributes.Values) {
+            if(attribute.otype == objectType) {
                 attributesFiltered.Add(attribute);
             }
         }
@@ -235,8 +235,8 @@ public class DataObjectItem {
         Dictionary<string, DataAttribute> attributesFiltered =
             new Dictionary<string, DataAttribute>();
 
-        foreach (KeyValuePair<string, DataAttribute> pair in attributes) {
-            if (pair.Value.otype == objectType) {
+        foreach(KeyValuePair<string, DataAttribute> pair in attributes) {
+            if(pair.Value.otype == objectType) {
                 attributesFiltered.Add(pair.Value.code, pair.Value);
             }
         }
@@ -260,7 +260,7 @@ public class DataObjectItem {
 
         object objectValue = GetAttribute(code).val;
 
-        if (objectValue != null) {
+        if(objectValue != null) {
             currentValue = Convert.ToBoolean(objectValue);
         }
 
@@ -284,7 +284,7 @@ public class DataObjectItem {
 
         object objectValue = GetAttribute(code).val;
 
-        if (objectValue != null) {
+        if(objectValue != null) {
             currentValue = Convert.ToString(objectValue);
         }
 
@@ -308,7 +308,7 @@ public class DataObjectItem {
 
         object objectValue = GetAttribute(code).val;
 
-        if (objectValue != null) {
+        if(objectValue != null) {
             currentValue = Convert.ToDouble(objectValue);
         }
 
@@ -332,7 +332,7 @@ public class DataObjectItem {
 
         object objectValue = GetAttribute(code).val;
 
-        if (objectValue != null) {
+        if(objectValue != null) {
             currentValue = Convert.ToInt32(objectValue);
         }
 
@@ -369,5 +369,4 @@ public class DataObjectItem {
 #endif
         return keyto;
     }
-
 }

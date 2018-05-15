@@ -26,31 +26,30 @@ public class DataKeyedObjects<T> {
     }
 
     public virtual void LoadData() {
-     
+
         dataStorage = AppConfigs.dataStorage;
 
         switch(dataStorage) {
 
-        case DataObjectsStorage.SERVER:
-            LogUtil.Log("LoadData:LoadDataFromServer:" + path + " " + pathKey);
-            LoadDataFromServer();
-            break;
+            case DataObjectsStorage.SERVER:
+                LogUtil.Log("LoadData:LoadDataFromServer:" + path + " " + pathKey);
+                LoadDataFromServer();
+                break;
 
-        case DataObjectsStorage.RESOURCES:
-            LogUtil.Log("LoadData:LoadDataFromResources:" + path + " " + pathKey);
-            LoadDataFromResources();
-            break;
+            case DataObjectsStorage.RESOURCES:
+                LogUtil.Log("LoadData:LoadDataFromResources:" + path + " " + pathKey);
+                LoadDataFromResources();
+                break;
 
-        case DataObjectsStorage.PREFERENCES:
-            LogUtil.Log("LoadData:LoadDataFromPrefs:" + path + " " + pathKey);
-            LoadDataFromPrefs();
-            break;
+            case DataObjectsStorage.PREFERENCES:
+                LogUtil.Log("LoadData:LoadDataFromPrefs:" + path + " " + pathKey);
+                LoadDataFromPrefs();
+                break;
 
-        default:
-            LogUtil.Log("LoadData:LoadDataFromPersistent:" + path + " " + pathKey);
-            LoadDataFromPersistent();
-            break;
-
+            default:
+                LogUtil.Log("LoadData:LoadDataFromPersistent:" + path + " " + pathKey);
+                LoadDataFromPersistent();
+                break;
         }
     }
 
@@ -59,7 +58,7 @@ public class DataKeyedObjects<T> {
     }
 
     public virtual void LoadDataFromResources() {
-        
+
         string pathResources = path;
 
         LogUtil.Log("LoadDataFromResources:pathResources:" + pathResources);
@@ -68,7 +67,7 @@ public class DataKeyedObjects<T> {
         LogUtil.Log("LoadDataFromResources:Application.persistentDataPath:" + Application.persistentDataPath);
         LogUtil.Log("LoadDataFromResources:Application.dataPath:" + Application.dataPath);
 
-        if(!path.Contains(ContentsConfig.contentAppFolder)) {            
+        if(!path.Contains(ContentsConfig.contentAppFolder)) {
 
             if(Context.Current.isWebGL) {
 
@@ -92,23 +91,23 @@ public class DataKeyedObjects<T> {
                  PathUtil.Combine(ContentPaths.appCachePathData, pathResources)
                      .Replace(Application.persistentDataPath, "")
                      .Replace(Application.dataPath, "");
-             
+
                 if(pathResources.EndsWith(".json")) {
                     //pathResources += ".txt";
                 }
-    
+
                 if(pathResources.StartsWith("/")) {
                     pathResources = pathResources.TrimStart('/');
                 }
-    
+
                 if(pathResources.Contains("/" + ContentsConfig.contentVersion + "/")) {
                     pathResources = pathResources.Replace("/" + ContentsConfig.contentVersion + "/", "/version/");
                 }
             }
         }
-     
+
         LogUtil.Log("LoadDataFromResources:void:" + pathResources);
-     
+
         string data = LoadDataFromResources(pathResources);
         LoadDataFromString(data);
     }
@@ -143,7 +142,7 @@ public class DataKeyedObjects<T> {
 
     public string LoadDataFromPersistent(string path, bool versioned) {
         string fileData = "";
-                
+
         fileData = Contents.GetFileDataFromPersistentCache(path, versioned, false);
 
         LoadDataFromString(fileData);
@@ -256,7 +255,7 @@ public class DataKeyedObjects<T> {
             string packDirName = packDirs[packDirs.Length - 1];
 
             string fileVersioned = Contents.GetFullPathVersioned(pathData);
-                        
+
             FileSystemUtil.EnsureDirectory(fileVersioned);
 
             if(FileSystemUtil.CheckFileExists(fileVersioned)) {
@@ -381,8 +380,8 @@ public class DataKeyedObjects<T> {
         string fileData = "";
 
         LogUtil.Log("LoadDataFromResources:string:resourcesPath:" + resourcesPath + " " + pathKey);
-                
-        TextAsset textData = AssetUtil.LoadAsset<TextAsset>(path); 
+
+        TextAsset textData = AssetUtil.LoadAsset<TextAsset>(path);
         if(textData != null) {
             fileData = textData.text;
         }
@@ -629,21 +628,21 @@ public class DataKeyedObjects<T> {
         }
         return list;
     }
-     
+
     public List<T> GetListPack(string key, object val, bool all) {
         //LogUtil.Log("GetList:" + " key:" + key + " val:" + val);
         List<T> list = new List<T>();
         foreach(T t in GetAll()) {
             object obj = GetFieldValue(t, key);
             string strObj = "";
-            if(obj != null) { 
+            if(obj != null) {
                 strObj = obj.ToString();
                 if(strObj != null) {
                     strObj = strObj.ToLower();
                 }
             }
             string strVal = "";
-            if(val != null) { 
+            if(val != null) {
                 strVal = val.ToString();
                 if(strVal != null) {
                     strVal = strVal.ToLower();
@@ -651,9 +650,9 @@ public class DataKeyedObjects<T> {
             }
             //LogUtil.Log("GetList:" + " obj:" + obj);
             if(obj != null) {
-                if((obj.Equals(val) 
+                if((obj.Equals(val)
                  || strObj == strVal)
-                 || (all 
+                 || (all
                      && (
                      obj.Equals("*")
                      || obj.Equals("all")
@@ -662,7 +661,7 @@ public class DataKeyedObjects<T> {
                      || obj.Equals("app-pack-all")
                      )
                  )) {
-                    
+
                     //LogUtil.Log("GetList: adding t:" + t);
                     list.Add(t);
                 }
@@ -678,7 +677,7 @@ public class DataKeyedObjects<T> {
     public List<T> GetListByCode(string val) {
         return GetList("code", val);
     }
- 
+
     public List<T> GetListByPack(string val) {
         return GetListPack(val, true);
     }
@@ -686,11 +685,11 @@ public class DataKeyedObjects<T> {
     public List<T> GetListByParentCode(string val) {
         return GetList("parent_code", val);
     }
- 
+
     public List<T> GetListPack(object val, bool all) {
         return GetListPack("pack_code", val, all);
     }
- 
+
     public List<T> GetListByPackExplicit(string val) {
         return GetListPack(val, false);
     }
@@ -698,49 +697,49 @@ public class DataKeyedObjects<T> {
     public List<T> GetListByType(string val) {
         return GetList("type", val);
     }
- 
+
     public List<T> SortList() {
         if(items == null) {
             return null;
         }
         items.Sort(
-                delegate(T c1, T c2) {
-            //LogUtil.Log("sorting:c1:", c1);
-            //LogUtil.Log("sorting:c2:", c2);
-            if(GetFieldValue(c1, "sort_order") != null) {
-                int sort1 = (int)GetFieldValue(c1, "sort_order");
-                int sort2 = (int)GetFieldValue(c2, "sort_order");
-                //LogUtil.Log("sorting:sort1:", sort1);
-                //LogUtil.Log("sorting:sort2:", sort2);
-                return sort1.CompareTo(sort2);
-            }
-            else {
-                return -1;
-            }
-        }
+                delegate (T c1, T c2) {
+                    //LogUtil.Log("sorting:c1:", c1);
+                    //LogUtil.Log("sorting:c2:", c2);
+                    if(GetFieldValue(c1, "sort_order") != null) {
+                        int sort1 = (int)GetFieldValue(c1, "sort_order");
+                        int sort2 = (int)GetFieldValue(c2, "sort_order");
+                        //LogUtil.Log("sorting:sort1:", sort1);
+                        //LogUtil.Log("sorting:sort2:", sort2);
+                        return sort1.CompareTo(sort2);
+                    }
+                    else {
+                        return -1;
+                    }
+                }
             );
         return items;
     }
- 
+
     public List<T> SortList(List<T> listItems) {
         if(listItems == null) {
             return null;
         }
         listItems.Sort(
-            delegate(T c1, T c2) {
-            //LogUtil.Log("sorting:c1:", c1);
-            //LogUtil.Log("sorting:c2:", c2);
-            if(GetFieldValue(c1, "sort_order") != null) {
-                int sort1 = (int)GetFieldValue(c1, "sort_order");
-                int sort2 = (int)GetFieldValue(c2, "sort_order");
-                //LogUtil.Log("sorting:sort1:", sort1);
-                //LogUtil.Log("sorting:sort2:", sort2);
-                return sort1.CompareTo(sort2);
+            delegate (T c1, T c2) {
+                //LogUtil.Log("sorting:c1:", c1);
+                //LogUtil.Log("sorting:c2:", c2);
+                if(GetFieldValue(c1, "sort_order") != null) {
+                    int sort1 = (int)GetFieldValue(c1, "sort_order");
+                    int sort2 = (int)GetFieldValue(c2, "sort_order");
+                    //LogUtil.Log("sorting:sort1:", sort1);
+                    //LogUtil.Log("sorting:sort2:", sort2);
+                    return sort1.CompareTo(sort2);
+                }
+                else {
+                    return -1;
+                }
             }
-            else {
-                return -1;
-            }
-        }
             );
         return listItems;
     }
@@ -764,7 +763,7 @@ public class DataKeyedObjects<T> {
         items = new List<T>();
         packPaths = new List<string>();
     }
-        
+
     public string GetPathItem(string key, string code, string folder) {
         string path = PathUtil.Combine(ContentPaths.appCachePathData, folder.TrimStart('/'));
         return GetPathItem(key, code, folder, path);
@@ -778,7 +777,7 @@ public class DataKeyedObjects<T> {
         fullPath = PathUtil.Combine(fullPath, pathCode.TrimStart('/'));
         return fullPath;
     }
-        
+
     public T LoadItem<U>(string key, string code) {
         // Load from file individually not a list
 
@@ -818,5 +817,5 @@ public class DataKeyedObjects<T> {
 
         obj.SaveData(path, jsonData);
 
-    }       
+    }
 }

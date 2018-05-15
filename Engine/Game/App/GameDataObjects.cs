@@ -2268,14 +2268,14 @@ public class GameDataObject : DataObject {
             double valFinal = 0;
             object valObj = Get<object>(BaseDataObjectKeys.points);
 
-            if (valObj == null) {
+            if(valObj == null) {
                 return valFinal;
             }
 
-            if (valObj.GetType() == typeof(double)) {
+            if(valObj.GetType() == typeof(double)) {
                 valFinal = Get<double>(BaseDataObjectKeys.points);
             }
-            else if (valObj.GetType() == typeof(int)) {
+            else if(valObj.GetType() == typeof(int)) {
                 valFinal = (double)Get<int>(BaseDataObjectKeys.points);
             }
 
@@ -2283,10 +2283,10 @@ public class GameDataObject : DataObject {
         }
 
         set {
-            if (value.GetType() == typeof(double)) {
+            if(value.GetType() == typeof(double)) {
                 Set<double>(BaseDataObjectKeys.points, value);
             }
-            else if (value.GetType() == typeof(int)) {
+            else if(value.GetType() == typeof(int)) {
                 Set<double>(BaseDataObjectKeys.points, (double)value);
             }
         }
@@ -2449,7 +2449,7 @@ public class GameDataObject : DataObject {
 
         bool isTypes = false;
 
-        if (types != null) {
+        if(types != null) {
             isTypes = types.Contains(typeTo) ? true : false;
         }
 
@@ -2459,7 +2459,7 @@ public class GameDataObject : DataObject {
     }
 
     public bool HasTag(string tagTo) {
-        if (tags == null) {
+        if(tags == null) {
             return false;
         }
 
@@ -2475,7 +2475,7 @@ public class GameDataObject : DataObject {
     }
 
     public bool IsValGreaterThanOrEqual(double valTo) {
-        if (valDouble >= valTo) {
+        if(valDouble >= valTo) {
             return true;
         }
 
@@ -2500,11 +2500,11 @@ public class GameDataObject : DataObject {
 
         List<T> items = GetItems<T>(list, type);
 
-        foreach (T item in items) {
-            if (item.data_type == "preset") {
+        foreach(T item in items) {
+            if(item.data_type == "preset") {
                 // lookup preset
                 GamePreset preset = GamePresets.Get(item.code);
-                if (preset != null) {
+                if(preset != null) {
                     GamePresetItem presetItem = GetItemRandomByProbability(preset.data.items);
                     T obj = new T();
                     obj.type = item.type;
@@ -2530,11 +2530,11 @@ public class GameDataObject : DataObject {
 
         List<T> items = GetItems<T>(list, type);
 
-        foreach (T item in items) {
-            if (item.data_type == "preset") {
+        foreach(T item in items) {
+            if(item.data_type == "preset") {
                 // lookup preset
                 GamePreset preset = GamePresets.Get(item.code);
-                if (preset != null) {
+                if(preset != null) {
                     GamePresetItem presetItem = GetItemRandomByProbability(preset.data.items);
                     obj = new T();
                     obj.type = item.type;
@@ -2557,7 +2557,7 @@ public class GameDataObject : DataObject {
         T obj = default(T);
 
         List<float> probs = new List<float>();
-        foreach (T item in list) {
+        foreach(T item in list) {
             probs.Add((float)item.probability);
         }
 
@@ -2573,7 +2573,7 @@ public class GameDataObject : DataObject {
         List<T> items = GetItems<T>(list, type);
 
         List<float> probs = new List<float>();
-        foreach (T item in items) {
+        foreach(T item in items) {
             probs.Add((float)item.probability);
         }
 
@@ -2588,8 +2588,8 @@ public class GameDataObject : DataObject {
 
         List<T> items = GetItems<T>(list, type);
 
-        if (items != null) {
-            if (items.Count > 0) {
+        if(items != null) {
+            if(items.Count > 0) {
                 int index = UnityEngine.Random.Range(0, items.Count);
                 obj = items[index];
             }
@@ -2602,12 +2602,12 @@ public class GameDataObject : DataObject {
 
         List<T> filteredList = new List<T>();
 
-        if (list == null)
+        if(list == null)
             return filteredList;
 
-        if (list.Count > 0) {
-            foreach (T item in list) {
-                if (item.type == type) {
+        if(list.Count > 0) {
+            foreach(T item in list) {
+                if(item.type == type) {
                     filteredList.Add(item);
                 }
             }
@@ -2618,17 +2618,17 @@ public class GameDataObject : DataObject {
 
     public T GetItem<T>(List<T> list, string code) where T : GameDataObject {
 
-        if (list == null)
+        if(list == null)
             return default(T);
 
-        if (list.Count > 0) {
-            foreach (T item in list) {
-                if (item.code == code) {
+        if(list.Count > 0) {
+            foreach(T item in list) {
+                if(item.code == code) {
                     return item;
                 }
             }
 
-            foreach (T item in list) {
+            foreach(T item in list) {
                 return item;
             }
         }
@@ -2638,8 +2638,8 @@ public class GameDataObject : DataObject {
 
     public T GetDataDictValue<T>(string key) {
 
-        if (data_dict != null) {
-            if (data_dict.ContainsKey(key)) {
+        if(data_dict != null) {
+            if(data_dict.ContainsKey(key)) {
                 return data_dict.Get<T>(key);
             }
         }
@@ -2649,13 +2649,13 @@ public class GameDataObject : DataObject {
 
     public Dictionary<string, object> GetDataDictsDictByKeyValue(string key, string val) {
 
-        if (data_dicts != null) {
+        if(data_dicts != null) {
 
-            foreach (Dictionary<string, object> dict in data_dicts) {
+            foreach(Dictionary<string, object> dict in data_dicts) {
 
                 string keyValue = dict.Get<string>(key);
 
-                if (keyValue == val) {
+                if(keyValue == val) {
                     return dict;
                 }
             }

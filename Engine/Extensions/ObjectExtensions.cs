@@ -7,6 +7,7 @@ using System.IO;
 using Engine.Data.Json;
 
 using UnityEngine;
+using System.Text;
 
 public enum JsonUtilType {
     JsonMapper,
@@ -17,6 +18,7 @@ public static class ObjectExtensions {
 
     public static string ToJson(
         this object inst,
+        bool prettyPrint = true,
         bool filter = true,
         JsonUtilType jsonUtilType = JsonUtilType.JsonMapper) {
 
@@ -28,18 +30,29 @@ public static class ObjectExtensions {
 
             if (jsonUtilType == JsonUtilType.UnityJsonUtility) {
                 if (filter) {
-                    return JsonUtility.ToJson(inst).FilterJson();
+                    return JsonUtility.ToJson(inst, prettyPrint).FilterJson();
                 }
                 else {
-                    return JsonUtility.ToJson(inst);
+                    return JsonUtility.ToJson(inst, prettyPrint);
                 }
             }
             else {
+
+                StringBuilder val = new StringBuilder();
+                
+                JsonWriter writer = new JsonWriter(val);
+                writer.PrettyPrint = prettyPrint; 
+                writer.IndentValue = 2;
+                
+                JsonMapper.ToJson(inst, writer);
+
+                string valString = val.ToString();
+
                 if (filter) {
-                    return JsonMapper.ToJson(inst).FilterJson();
+                    return valString.FilterJson();
                 }
                 else {
-                    return JsonMapper.ToJson(inst);
+                    return valString;
                 }
             }
         }
@@ -182,7 +195,7 @@ public static class ObjectExtensions {
             return default(T);
         }
 
-        return val.ToJson(filter, jsonUtilType).FromJson<T>(filter, jsonUtilType);
+        return val.ToJson(true, filter, jsonUtilType).FromJson<T>(filter, jsonUtilType);
     }
 
     public static string FilterJson(this string val) {
