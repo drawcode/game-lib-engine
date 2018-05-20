@@ -10,7 +10,7 @@ using Engine.Events;
 using Engine.Utility;
 
 public class BaseGameProfileRPGAttributes {
- 
+
     public static string ATT_PROGRESS_CURRENCY = "progress-currency";
     public static string ATT_PROGRESS_XP = "progress-xp";
     public static string ATT_PROGRESS_HEALTH = "progress-health";
@@ -28,32 +28,32 @@ public class BaseGameProfileRPGs {
     private static volatile BaseGameProfileRPGs instance;
     private static System.Object syncRoot = new System.Object();
     public static string DEFAULT_USERNAME = "Player";
- 
+
     public static BaseGameProfileRPG BaseCurrent {
         get {
-            if (current == null) {
-                lock (syncRoot) {
-                    if (current == null) 
+            if(current == null) {
+                lock(syncRoot) {
+                    if(current == null)
                         current = new BaseGameProfileRPG();
                 }
             }
- 
+
             return current;
         }
         set {
             current = value;
         }
     }
-     
+
     public static BaseGameProfileRPGs BaseInstance {
         get {
-            if (instance == null) {
-                lock (syncRoot) {
-                    if (instance == null) 
+            if(instance == null) {
+                lock(syncRoot) {
+                    if(instance == null)
                         instance = new BaseGameProfileRPGs();
                 }
             }
- 
+
             return instance;
         }
     }
@@ -62,195 +62,195 @@ public class BaseGameProfileRPGs {
 }
 
 public class GameDataItemRPG : GameDataObject {
-    
-    
+
+
     // RPG
-    
+
     public virtual double duration {
         get {
             return Get<double>(BaseDataObjectKeys.duration, 0.0);
         }
-        
+
         set {
             Set<double>(BaseDataObjectKeys.duration, value);
         }
     }
-    
+
     public virtual double scale {
         get {
             return Get<double>(BaseDataObjectKeys.scale, 1.0);
         }
-        
+
         set {
             Set<double>(BaseDataObjectKeys.scale, value);
         }
     }
-    
+
     public virtual double speed {
         get {
             return Get<double>(BaseDataObjectKeys.speed, 1.0);
         }
-        
+
         set {
             Set<double>(BaseDataObjectKeys.speed, value);
         }
     }
-    
+
     public virtual double attack {
         get {
             return Get<double>(BaseDataObjectKeys.attack, 1.0);
         }
-        
+
         set {
             Set<double>(BaseDataObjectKeys.attack, value);
         }
     }
-    
+
     public virtual double defense {
         get {
             return Get<double>(BaseDataObjectKeys.defense, 1.0);
         }
-        
+
         set {
             Set<double>(BaseDataObjectKeys.defense, value);
         }
     }
-    
+
     public virtual double health {
         get {
             return Get<double>(BaseDataObjectKeys.health, 1.0);
         }
-        
+
         set {
             Set<double>(BaseDataObjectKeys.health, value);
         }
     }
-    
+
     public virtual double energy {
         get {
             return Get<double>(BaseDataObjectKeys.energy, 1.0);
         }
-        
+
         set {
             Set<double>(BaseDataObjectKeys.energy, value);
         }
     }
-    
+
     public virtual double jump {
         get {
             return Get<double>(BaseDataObjectKeys.jump, 1.0);
         }
-        
+
         set {
             Set<double>(BaseDataObjectKeys.jump, value);
         }
     }
-    
+
     public virtual double fly {
         get {
             return Get<double>(BaseDataObjectKeys.fly, 1.0);
         }
-        
+
         set {
             Set<double>(BaseDataObjectKeys.fly, value);
         }
     }
-    
+
     public virtual double boost {
         get {
             return Get<double>(BaseDataObjectKeys.boost, 1.0);
         }
-        
+
         set {
             Set<double>(BaseDataObjectKeys.boost, value);
         }
     }
-    
+
     public virtual double attack_speed {
         get {
             return Get<double>(BaseDataObjectKeys.attack_speed, 1.0);
         }
-        
+
         set {
             Set<double>(BaseDataObjectKeys.attack_speed, value);
         }
     }
-    
+
     public virtual double recharge_speed {
         get {
             return Get<double>(BaseDataObjectKeys.recharge_speed, 1.0);
         }
-        
+
         set {
             Set<double>(BaseDataObjectKeys.recharge_speed, value);
         }
     }
-    
+
     public virtual double upgrades_applied {
         get {
             return Get<double>(BaseDataObjectKeys.upgrades_applied, 0.0);
         }
-        
+
         set {
             Set<double>(BaseDataObjectKeys.upgrades_applied, value);
         }
     }
-    
+
     public virtual double upgrades {
         get {
             return Get<double>(BaseDataObjectKeys.upgrades, 0.0);
         }
-        
+
         set {
             Set<double>(BaseDataObjectKeys.upgrades, value);
         }
     }
-    
+
     public virtual double xp {
         get {
             return Get<double>(BaseDataObjectKeys.xp, 0.0);
         }
-        
+
         set {
             Set<double>(BaseDataObjectKeys.xp, value);
         }
     }
-    
+
     public virtual double level {
         get {
             return Get<double>(BaseDataObjectKeys.level, 1.0);
         }
-        
+
         set {
             Set<double>(BaseDataObjectKeys.level, value);
         }
     }
-        
+
     public virtual double power {
         get {
             return Get<double>(BaseDataObjectKeys.power, 1.0);
         }
-        
+
         set {
             Set<double>(BaseDataObjectKeys.power, value);
         }
     }
-    
+
     public virtual double currency {
         get {
             return Get<double>(BaseDataObjectKeys.currency, 0.0);
         }
-        
+
         set {
             Set<double>(BaseDataObjectKeys.currency, value);
         }
     }
-        
+
     public virtual string data {
         get {
             return Get<string>(BaseDataObjectKeys.data);
         }
-        
+
         set {
             Set<string>(BaseDataObjectKeys.data, value);
         }
@@ -314,10 +314,10 @@ public class GameProfilePlayerProgressItem : DataObjectItem {
     }
  
     public double GetGamePlayerProgressXP(double defaultValue) {
-        double attValue = defaultValue;
+        //double attValue = defaultValue;
         if (CheckIfAttributeExists(BaseGameProfileRPGAttributes.ATT_PROGRESS_XP))
-            attValue = GetAttributeDoubleValue(BaseGameProfileRPGAttributes.ATT_PROGRESS_XP);
-        return attValue;
+            return GetAttributeDoubleValue(BaseGameProfileRPGAttributes.ATT_PROGRESS_XP);
+        return defaultValue;
     }
  
     public void SetGamePlayerProgressXP(double attValue) {
@@ -345,10 +345,10 @@ public class GameProfilePlayerProgressItem : DataObjectItem {
  
     public double GetGamePlayerProgressLevel(double defaultValue) {
      
-        double attValue = defaultValue;
+        //double attValue = defaultValue;
         if (CheckIfAttributeExists(BaseGameProfileRPGAttributes.ATT_PROGRESS_LEVEL))
-            attValue = GetAttributeDoubleValue(BaseGameProfileRPGAttributes.ATT_PROGRESS_LEVEL);
-        return attValue;
+            return GetAttributeDoubleValue(BaseGameProfileRPGAttributes.ATT_PROGRESS_LEVEL);
+        return defaultValue;
     }
  
     public void SetGamePlayerProgressLevel(double attValue) {
@@ -377,10 +377,10 @@ public class GameProfilePlayerProgressItem : DataObjectItem {
  
     public double GetGamePlayerProgressHealth(double defaultValue) {
      
-        double attValue = defaultValue;
+        //double attValue = defaultValue;
         if (CheckIfAttributeExists(BaseGameProfileRPGAttributes.ATT_PROGRESS_HEALTH))
-            attValue = GetAttributeDoubleValue(BaseGameProfileRPGAttributes.ATT_PROGRESS_HEALTH);
-        return attValue;
+            return GetAttributeDoubleValue(BaseGameProfileRPGAttributes.ATT_PROGRESS_HEALTH);
+        return defaultValue;
     }
  
     public void SetGamePlayerProgressHealth(double attValue) {
@@ -409,10 +409,10 @@ public class GameProfilePlayerProgressItem : DataObjectItem {
  
     public double GetGamePlayerProgressEnergy(double defaultValue) {
      
-        double attValue = defaultValue;
+        //double attValue = defaultValue;
         if (CheckIfAttributeExists(BaseGameProfileRPGAttributes.ATT_PROGRESS_ENERGY))
-            attValue = GetAttributeDoubleValue(BaseGameProfileRPGAttributes.ATT_PROGRESS_ENERGY);
-        return attValue;
+            return GetAttributeDoubleValue(BaseGameProfileRPGAttributes.ATT_PROGRESS_ENERGY);
+        return defaultValue;
     }
  
     public void SetGamePlayerProgressEnergy(double attValue) {
@@ -479,10 +479,10 @@ public class GameProfileRPGItem : DataObjectItem {
     }
 
     public double GetXP(double defaultValue) {
-        double attValue = defaultValue;
+        //double attValue = defaultValue;
         if (CheckIfAttributeExists(GameDataItemRPGAttributes.xp))
-            attValue = GetAttributeDoubleValue(GameDataItemRPGAttributes.xp);
-        return attValue;
+            return GetAttributeDoubleValue(GameDataItemRPGAttributes.xp);
+        return defaultValue;
     }
 
     public void SetXP(double val) {
@@ -496,10 +496,10 @@ public class GameProfileRPGItem : DataObjectItem {
     }
 
     public double GetLevel(double defaultValue) {
-        double attValue = defaultValue;
+        //double attValue = defaultValue;
         if (CheckIfAttributeExists(GameDataItemRPGAttributes.level))
-            attValue = GetAttributeDoubleValue(GameDataItemRPGAttributes.level);
-        return attValue;
+            return GetAttributeDoubleValue(GameDataItemRPGAttributes.level);
+        return defaultValue;
     }
 
     public void SetLevel(double val) {
@@ -513,10 +513,10 @@ public class GameProfileRPGItem : DataObjectItem {
     }
 
     public double GetCurrency(double defaultValue) {
-        double attValue = defaultValue;
+        //double attValue = defaultValue;
         if (CheckIfAttributeExists(GameDataItemRPGAttributes.xp))
-            attValue = GetAttributeDoubleValue(GameDataItemRPGAttributes.xp);
-        return attValue;
+            return GetAttributeDoubleValue(GameDataItemRPGAttributes.xp);
+        return defaultValue;
     }
 
     public void SetCurrency(double val) {
@@ -530,10 +530,10 @@ public class GameProfileRPGItem : DataObjectItem {
     }
  
     public double GetUpgradesApplied(double defaultValue) {      
-        double attValue = defaultValue;
+        //double attValue = defaultValue;
         if (CheckIfAttributeExists(GameDataItemRPGAttributes.upgrades_applied))
-            attValue = GetAttributeDoubleValue(GameDataItemRPGAttributes.upgrades_applied);
-        return attValue;
+            return GetAttributeDoubleValue(GameDataItemRPGAttributes.upgrades_applied);
+        return defaultValue;
     }
      
     public void SetUpgradesApplied(double val) {
@@ -547,10 +547,10 @@ public class GameProfileRPGItem : DataObjectItem {
     }
  
     public double GetUpgrades(double defaultValue) {     
-        double attValue = defaultValue;
+        //double attValue = defaultValue;
         if (CheckIfAttributeExists(GameDataItemRPGAttributes.upgrades))
-            attValue = GetAttributeDoubleValue(GameDataItemRPGAttributes.upgrades);
-        return attValue;
+            return GetAttributeDoubleValue(GameDataItemRPGAttributes.upgrades);
+        return defaultValue;
     }
      
     public void SetUpgrades(double val) {
@@ -564,10 +564,10 @@ public class GameProfileRPGItem : DataObjectItem {
     }
 
     public double GetJump(double defaultValue) {
-        double attValue = defaultValue;
+        //double attValue = defaultValue;
         if (CheckIfAttributeExists(GameDataItemRPGAttributes.jump))
-            attValue = GetAttributeDoubleValue(GameDataItemRPGAttributes.jump);
-        return attValue;
+            return GetAttributeDoubleValue(GameDataItemRPGAttributes.jump);
+        return defaultValue;
     }
 
     public void SetJump(double val) {
@@ -581,10 +581,10 @@ public class GameProfileRPGItem : DataObjectItem {
     }
 
     public double GetFly(double defaultValue) {
-        double attValue = defaultValue;
+        //double attValue = defaultValue;
         if (CheckIfAttributeExists(GameDataItemRPGAttributes.fly))
-            attValue = GetAttributeDoubleValue(GameDataItemRPGAttributes.fly);
-        return attValue;
+            return GetAttributeDoubleValue(GameDataItemRPGAttributes.fly);
+        return defaultValue;
     }
 
     public void SetFly(double val) {
@@ -598,10 +598,10 @@ public class GameProfileRPGItem : DataObjectItem {
     }
  
     public double GetSpeed(double defaultValue) {        
-        double attValue = defaultValue;
+        //double attValue = defaultValue;
         if (CheckIfAttributeExists(GameDataItemRPGAttributes.speed))
-            attValue = GetAttributeDoubleValue(GameDataItemRPGAttributes.speed);
-        return attValue;
+            return GetAttributeDoubleValue(GameDataItemRPGAttributes.speed);
+        return defaultValue;
     }
      
     public void SetSpeed(double val) {
@@ -615,10 +615,10 @@ public class GameProfileRPGItem : DataObjectItem {
     }
     
     public double GetScale(double defaultValue) {        
-        double attValue = defaultValue;
+        //double attValue = defaultValue;
         if (CheckIfAttributeExists(GameDataItemRPGAttributes.scale))
-            attValue = GetAttributeDoubleValue(GameDataItemRPGAttributes.scale);
-        return attValue;
+            return GetAttributeDoubleValue(GameDataItemRPGAttributes.scale);
+        return defaultValue;
     }
     
     public void SetScale(double val) {
@@ -632,10 +632,10 @@ public class GameProfileRPGItem : DataObjectItem {
     }
  
     public double GetAttack(double defaultValue) {       
-        double attValue = defaultValue;
+        //double attValue = defaultValue;
         if (CheckIfAttributeExists(GameDataItemRPGAttributes.attack))
-            attValue = GetAttributeDoubleValue(GameDataItemRPGAttributes.attack);
-        return attValue;
+            return GetAttributeDoubleValue(GameDataItemRPGAttributes.attack);
+        return defaultValue;
     }
      
     public void SetAttack(double val) {
@@ -649,10 +649,10 @@ public class GameProfileRPGItem : DataObjectItem {
     }
  
     public double GetDefense(double defaultValue) {      
-        double attValue = defaultValue;
+        //double attValue = defaultValue;
         if (CheckIfAttributeExists(GameDataItemRPGAttributes.defense))
-            attValue = GetAttributeDoubleValue(GameDataItemRPGAttributes.defense);
-        return attValue;
+            return GetAttributeDoubleValue(GameDataItemRPGAttributes.defense);
+        return defaultValue;
     }
      
     public void SetDefense(double val) {
@@ -666,10 +666,10 @@ public class GameProfileRPGItem : DataObjectItem {
     }
  
     public double GetHealth(double defaultValue) {       
-        double attValue = defaultValue;
+        //double attValue = defaultValue;
         if (CheckIfAttributeExists(GameDataItemRPGAttributes.health))
-            attValue = GetAttributeDoubleValue(GameDataItemRPGAttributes.health);
-        return attValue;
+            return GetAttributeDoubleValue(GameDataItemRPGAttributes.health);
+        return defaultValue;
     }
      
     public void SetHealth(double val) {
@@ -683,10 +683,10 @@ public class GameProfileRPGItem : DataObjectItem {
     }
  
     public double GetEnergy(double defaultValue) {       
-        double attValue = defaultValue;
+        //double attValue = defaultValue;
         if (CheckIfAttributeExists(GameDataItemRPGAttributes.energy))
-            attValue = GetAttributeDoubleValue(GameDataItemRPGAttributes.energy);
-        return attValue;
+            return GetAttributeDoubleValue(GameDataItemRPGAttributes.energy);
+        return defaultValue;
     }
      
     public void SetEnergy(double val) {
@@ -700,10 +700,10 @@ public class GameProfileRPGItem : DataObjectItem {
     }
  
     public double GetAttackSpeed(double defaultValue) {      
-        double attValue = defaultValue;
+        //double attValue = defaultValue;
         if (CheckIfAttributeExists(GameDataItemRPGAttributes.attack_speed))
-            attValue = GetAttributeDoubleValue(GameDataItemRPGAttributes.attack_speed);
-        return attValue;
+            return GetAttributeDoubleValue(GameDataItemRPGAttributes.attack_speed);
+        return defaultValue;
     }
  
     public void SetAttackSpeed(double val) {
@@ -717,10 +717,10 @@ public class GameProfileRPGItem : DataObjectItem {
     }
  
     public double GetRechargeSpeed(double defaultValue) {        
-        double attValue = defaultValue;
+        //double attValue = defaultValue;
         if (CheckIfAttributeExists(GameDataItemRPGAttributes.recharge_speed))
-            attValue = GetAttributeDoubleValue(GameDataItemRPGAttributes.recharge_speed);
-        return attValue;
+            return GetAttributeDoubleValue(GameDataItemRPGAttributes.recharge_speed);
+        return defaultValue;
     }
      
     public void SetRechargeSpeed(double val) {
@@ -734,10 +734,10 @@ public class GameProfileRPGItem : DataObjectItem {
     }
  
     public string GetData(string defaultValue) {     
-        string attValue = defaultValue;
+        //string attValue = defaultValue;
         if (CheckIfAttributeExists(GameDataItemRPGAttributes.data))
-            attValue = GetAttributeStringValue(GameDataItemRPGAttributes.data);
-        return attValue;
+            return GetAttributeStringValue(GameDataItemRPGAttributes.data);
+        return defaultValue;
     }
          
     public void SetData(string val) {
@@ -1137,11 +1137,11 @@ public class BaseGameProfileRPG : DataObject {
     // Best way to add items to the profile is the GetAttribute and SetAttribute class as 
     // that stores as a generic DataAttribute class.  Booleans, strings, objects, serialized json objects etc
     // all work well and cause no need to convert profile on updates. 
-     
+
     public BaseGameProfileRPG() {
         //Reset();
     }
- 
+
     public override void Reset() {
         base.Reset();
         //username = ProfileConfigs.defaultPlayerName;
@@ -1149,18 +1149,18 @@ public class BaseGameProfileRPG : DataObject {
 
     // ----------------------------------------------------------
     // UPGRADES_APPLIED
- 
+
     public virtual double GetUpgradesApplied() {
         return GetUpgradesApplied(0.0);
     }
- 
+
     public virtual double GetUpgradesApplied(double defaultValue) {
-        double attValue = defaultValue;
-        if (CheckIfAttributeExists(GameDataItemRPGAttributes.upgrades_applied))
-            attValue = GetAttributeDoubleValue(GameDataItemRPGAttributes.upgrades_applied);
-        return attValue;
+        //double attValue = defaultValue;
+        if(CheckIfAttributeExists(GameDataItemRPGAttributes.upgrades_applied))
+            return GetAttributeDoubleValue(GameDataItemRPGAttributes.upgrades_applied);
+        return defaultValue;
     }
-     
+
     public virtual void SetUpgradesApplied(double val) {
         SetAttributeDoubleValue(GameDataItemRPGAttributes.upgrades_applied, val);
     }
@@ -1177,7 +1177,7 @@ public class BaseGameProfileRPG : DataObject {
 
     public virtual double SubtractUpgrades(double val) {
         double upgrades = GetUpgrades();
-        if (val > 0) {
+        if(val > 0) {
             val = -val;
         }
         upgrades += val;
@@ -1188,21 +1188,21 @@ public class BaseGameProfileRPG : DataObject {
     public virtual double GetUpgrades() {
         return GetUpgrades(3.0);
     }
- 
-    public virtual double GetUpgrades(double defaultValue) {     
-        double attValue = defaultValue;
-        if (CheckIfAttributeExists(GameDataItemRPGAttributes.upgrades))
-            attValue = GetAttributeDoubleValue(GameDataItemRPGAttributes.upgrades);
-        return attValue;
+
+    public virtual double GetUpgrades(double defaultValue) {
+        //double attValue = defaultValue;
+        if(CheckIfAttributeExists(GameDataItemRPGAttributes.upgrades))
+            return GetAttributeDoubleValue(GameDataItemRPGAttributes.upgrades);
+        return defaultValue;
     }
-     
+
     public virtual void SetUpgrades(double val) {
         SetAttributeDoubleValue(GameDataItemRPGAttributes.upgrades, val);
     }
 
     // ----------------------------------------------------------
     // CUSTOMIZATIONS
- 
+
     public virtual void SetValue(string code, object value) {
         DataAttribute att = new DataAttribute();
         att.val = value;
@@ -1212,7 +1212,7 @@ public class BaseGameProfileRPG : DataObject {
         att.otype = "rpg";
         SetAttribute(att);
     }
-     
+
     public virtual List<DataAttribute> GetList() {
         return GetAttributesList("rpg");
     }
@@ -1230,31 +1230,31 @@ public class BaseGameProfileRPG : DataObject {
     public virtual double SubtractCurrency(double val) {
         return AddCurrency(-val);
     }
- 
+
     public virtual double GetCurrency() {
         return GetCurrency(10.0);
     }
 
     public virtual double GetCurrency(double defaultValue) {
-        double attValue = defaultValue;
-        if (CheckIfAttributeExists(BaseGameProfileAttributes.ATT_CURRENCY))
-            attValue = GetAttributeDoubleValue(BaseGameProfileAttributes.ATT_CURRENCY);
-        return attValue;
+        //double attValue = defaultValue;
+        if(CheckIfAttributeExists(BaseGameProfileAttributes.ATT_CURRENCY))
+            return GetAttributeDoubleValue(BaseGameProfileAttributes.ATT_CURRENCY);
+        return defaultValue;
     }
 
     public virtual void SetCurrency(double attValue) {
         SetAttributeDoubleValue(BaseGameProfileAttributes.ATT_CURRENCY, attValue);
     }
-     
+
     public virtual double GetGamePlayerProgressCurrency() {
         return GetGamePlayerProgressCurrency(10.0);
     }
 
     public virtual double GetGamePlayerProgressCurrency(double defaultValue) {
-        double attValue = defaultValue;
-        if (CheckIfAttributeExists(BaseGameProfileRPGAttributes.ATT_PROGRESS_CURRENCY))
-            attValue = GetAttributeDoubleValue(BaseGameProfileRPGAttributes.ATT_PROGRESS_CURRENCY);
-        return attValue;
+        //double attValue = defaultValue;
+        if(CheckIfAttributeExists(BaseGameProfileRPGAttributes.ATT_PROGRESS_CURRENCY))
+            return GetAttributeDoubleValue(BaseGameProfileRPGAttributes.ATT_PROGRESS_CURRENCY);
+        return defaultValue;
     }
 
     public virtual void SetGamePlayerProgressCurrency(double attValue) {
@@ -1277,18 +1277,18 @@ public class BaseGameProfileRPG : DataObject {
     public virtual double SubtractGamePlayerProgressXP(double val) {
         return AddGamePlayerProgressXP(-val);
     }
- 
+
     public double GetGamePlayerProgressXP() {
         return GetGamePlayerProgressXP(10.0);
     }
- 
+
     public double GetGamePlayerProgressXP(double defaultValue) {
-        double attValue = defaultValue;
-        if (CheckIfAttributeExists(BaseGameProfileRPGAttributes.ATT_PROGRESS_XP))
-            attValue = GetAttributeDoubleValue(BaseGameProfileRPGAttributes.ATT_PROGRESS_XP);
-        return attValue;
+        //double attValue = defaultValue;
+        if(CheckIfAttributeExists(BaseGameProfileRPGAttributes.ATT_PROGRESS_XP))
+            return GetAttributeDoubleValue(BaseGameProfileRPGAttributes.ATT_PROGRESS_XP);
+        return defaultValue;
     }
- 
+
     public void SetGamePlayerProgressXP(double attValue) {
         SetAttributeDoubleValue(BaseGameProfileRPGAttributes.ATT_PROGRESS_XP, attValue);
     }
@@ -1306,19 +1306,19 @@ public class BaseGameProfileRPG : DataObject {
     public virtual double SubtractGamePlayerProgressLevel(double val) {
         return AddGamePlayerProgressLevel(-val);
     }
- 
+
     public double GetGamePlayerProgressLevel() {
         return GetGamePlayerProgressLevel(0.0);
     }
- 
+
     public double GetGamePlayerProgressLevel(double defaultValue) {
-     
-        double attValue = defaultValue;
-        if (CheckIfAttributeExists(BaseGameProfileRPGAttributes.ATT_PROGRESS_LEVEL))
-            attValue = GetAttributeDoubleValue(BaseGameProfileRPGAttributes.ATT_PROGRESS_LEVEL);
-        return attValue;
+
+        //double attValue = defaultValue;
+        if(CheckIfAttributeExists(BaseGameProfileRPGAttributes.ATT_PROGRESS_LEVEL))
+            return GetAttributeDoubleValue(BaseGameProfileRPGAttributes.ATT_PROGRESS_LEVEL);
+        return defaultValue;
     }
- 
+
     public void SetGamePlayerProgressLevel(double attValue) {
         SetAttributeDoubleValue(BaseGameProfileRPGAttributes.ATT_PROGRESS_LEVEL, attValue);
     }
@@ -1337,19 +1337,19 @@ public class BaseGameProfileRPG : DataObject {
     public virtual double SubtractGamePlayerProgressHealth(double val) {
         return AddGamePlayerProgressHealth(-val);
     }
- 
+
     public double GetGamePlayerProgressHealth() {
         return GetGamePlayerProgressHealth(1.0);
     }
- 
+
     public double GetGamePlayerProgressHealth(double defaultValue) {
-     
-        double attValue = defaultValue;
-        if (CheckIfAttributeExists(BaseGameProfileRPGAttributes.ATT_PROGRESS_HEALTH))
-            attValue = GetAttributeDoubleValue(BaseGameProfileRPGAttributes.ATT_PROGRESS_HEALTH);
-        return attValue;
+
+        //double attValue = defaultValue;
+        if(CheckIfAttributeExists(BaseGameProfileRPGAttributes.ATT_PROGRESS_HEALTH))
+            return GetAttributeDoubleValue(BaseGameProfileRPGAttributes.ATT_PROGRESS_HEALTH);
+        return defaultValue;
     }
- 
+
     public void SetGamePlayerProgressHealth(double attValue) {
         SetAttributeDoubleValue(BaseGameProfileRPGAttributes.ATT_PROGRESS_HEALTH, attValue);
     }
@@ -1358,125 +1358,149 @@ public class BaseGameProfileRPG : DataObject {
     // ENERGY
 
     public virtual double AddGamePlayerProgressEnergy(double val) {
+
         double v = GetGamePlayerProgressEnergy();
+
         v += val;
         v = Mathf.Clamp((float)v, 0, 1);
+
         SetGamePlayerProgressEnergy(v);
+
         return v;
     }
 
     public virtual double SubtractGamePlayerProgressEnergy(double val) {
         return AddGamePlayerProgressEnergy(-val);
     }
- 
+
     public double GetGamePlayerProgressEnergy() {
         return GetGamePlayerProgressEnergy(0.0);
     }
- 
+
     public double GetGamePlayerProgressEnergy(double defaultValue) {
-     
-        double attValue = defaultValue;
-        if (CheckIfAttributeExists(BaseGameProfileRPGAttributes.ATT_PROGRESS_ENERGY))
-            attValue = GetAttributeDoubleValue(BaseGameProfileRPGAttributes.ATT_PROGRESS_ENERGY);
-        return attValue;
+
+        //double attValue = defaultValue;
+        if(CheckIfAttributeExists(BaseGameProfileRPGAttributes.ATT_PROGRESS_ENERGY))
+            return GetAttributeDoubleValue(BaseGameProfileRPGAttributes.ATT_PROGRESS_ENERGY);
+        return defaultValue;
     }
- 
+
     public void SetGamePlayerProgressEnergy(double attValue) {
         SetAttributeDoubleValue(BaseGameProfileRPGAttributes.ATT_PROGRESS_ENERGY, attValue);
     }
-    
+
     // -------------
     // POINTS
 
     // point-uuids
 
     public virtual void SetGamePlayerProgressPointData(string uuid, double points) {
+
         GamePlayerProgressPointDatas datas = GetGamePlayerProgressPointDatas();
 
         GamePlayerProgressPointData data = datas.GetGamePlayerProgressData(uuid);
-        if (data != null) {
+
+        if(data != null) {
+
             data.collected = true;
             data.uuid = uuid;
             data.points = points;
         }
         else {
+
             data = new GamePlayerProgressPointData();
             data.collected = true;
             data.uuid = uuid;
             data.points = points;
         }
+
         datas.SetGamePlayerProgressData(uuid, data);
+
         SetGamePlayerProgressPointDatas(datas);
     }
 
     public virtual GamePlayerProgressPointData GetGamePlayerProgressPointData(string uuid) {
+
         GamePlayerProgressPointDatas datas = GetGamePlayerProgressPointDatas();
+
         GamePlayerProgressPointData data = datas.GetGamePlayerProgressData(uuid);
+
         return data;
     }
 
     public double GetGamePlayerProgressPointDataTotal() {
+
         GamePlayerProgressPointDatas datas = GetGamePlayerProgressPointDatas();
+
         double totalPoints = 0.0;
-        if (datas.pointItems != null) {
-            foreach (GamePlayerProgressPointData data in datas.pointItems.Values) {
+
+        if(datas.pointItems != null) {
+            foreach(GamePlayerProgressPointData data in datas.pointItems.Values) {
                 totalPoints += data.points;
             }
         }
+
         return totalPoints;
     }
 
     public void SyncGamePlayerProgressPointDataStats() {
+
         double totalPoints = GetGamePlayerProgressPointDataTotal();
+
         UpdateGamePlayerProgressPointDataStats(totalPoints);
     }
 
     public void UpdateGamePlayerProgressPointDataStats(double totalPoints) {
+
         GameProfileStatistics.Current.SetAttributeDoubleValue(
             GameProfileStatisticAttributes.ATT_TOTAL_POINTS, totalPoints);
     }
 
     public virtual bool CheckGamePlayerProgressPointData(string uuid) {
+
         GamePlayerProgressPointData data = GetGamePlayerProgressPointData(uuid);
-        if (!string.IsNullOrEmpty(data.uuid)) {
+
+        if(!string.IsNullOrEmpty(data.uuid)) {
             return true;
         }
         return false;
     }
 
     public virtual void SetGamePlayerProgressPointDatas(GamePlayerProgressPointDatas points) {
+
         string pointsText = points.ToJson();//JsonMapper.ToJson(points);
+
         LogUtil.Log("SetGamePlayerProgressPointDatas: " + pointsText);
+
         SetAttributeStringValue(BaseGameProfileRPGAttributes.ATT_PROGRESS_POINTS, pointsText);
+
         SyncGamePlayerProgressPointDataStats();
     }
 
     public virtual GamePlayerProgressPointDatas GetGamePlayerProgressPointDatas() {
+
         GamePlayerProgressPointDatas points = new GamePlayerProgressPointDatas();
 
         string key = BaseGameProfileRPGAttributes.ATT_PROGRESS_POINTS;
 
-        if (!CheckIfAttributeExists(key)) {
+        if(!CheckIfAttributeExists(key)) {
             // add default colors
             SetGamePlayerProgressPointDatas(points);
             Messenger.Broadcast(BaseGameProfileMessages.ProfileShouldBeSaved);
         }
 
         string json = GetAttributeStringValue(key);
-        if (!string.IsNullOrEmpty(json)) {
+
+        if(!string.IsNullOrEmpty(json)) {
             try {
                 LogUtil.Log("GetGamePlayerProgressPoints: " + json);
                 points = json.FromJson<GamePlayerProgressPointDatas>();// JsonMapper.ToObject<GamePlayerProgressPointDatas>(json);
             }
-            catch (Exception e) {
+            catch(Exception e) {
                 points = new GamePlayerProgressPointDatas();
                 LogUtil.Log(e);
             }
         }
         return points;
     }
-
-
 }
-
-
