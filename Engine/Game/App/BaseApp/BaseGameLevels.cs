@@ -13,8 +13,8 @@ public class BaseGameLevels<T> : DataObjects<T> where T : DataObject, new() {
     private static System.Object syncRoot = new System.Object();
     public static string BASE_DATA_KEY = "game-level-data";
     //
-    public static GameLevelData defaultLevelData;
-    public static GameLevelData currentLevelData;
+    //public static GameLevelData defaultLevelData;
+    //public static GameLevelData currentLevelData;
     //
     public static T BaseCurrent {
         get {
@@ -63,8 +63,8 @@ public class BaseGameLevels<T> : DataObjects<T> where T : DataObject, new() {
     public override void Reset() {
         base.Reset();
 
-        defaultLevelData = new GameLevelData();
-        currentLevelData = new GameLevelData();
+        //defaultLevelData = new GameLevelData();
+        //currentLevelData = new GameLevelData();
     }
 
     public virtual T GetDefaultLevel() {
@@ -224,12 +224,13 @@ public class BaseGameLevels<T> : DataObjects<T> where T : DataObject, new() {
                 GameLevelData levelData = GameLevels.Current.data.level_data;
 
                 if (levelData != null) {
-
-                    currentLevelData.Copy(levelData);
+                    GameLevels.Current.data.level_data.Copy(levelData);
+                    //currentLevelData.Copy(levelData);
                 }
                 else {
 
-                    currentLevelData.Copy(defaultLevelData);
+                    //currentLevelData.Copy(defaultLevelData);
+                    GameLevels.Current.data.level_data.Copy(new GameLevelData());
                 }
             }
 
@@ -261,16 +262,16 @@ public class BaseGameLevels<T> : DataObjects<T> where T : DataObject, new() {
                 float offsetY = 0;
                 float offsetZ = 0;
 
-                if (GameLevels.currentLevelData.grid_centered_x) {
-                    offsetX = (float)(GameLevels.currentLevelData.grid_width / 2);
+                if (GameLevels.Current.data.level_data.grid_centered_x) {
+                    offsetX = (float)(GameLevels.Current.data.level_data.grid_width / 2);
                 }
 
-                if (GameLevels.currentLevelData.grid_centered_y) {
-                    offsetY = (float)(GameLevels.currentLevelData.grid_height / 2);
+                if (GameLevels.Current.data.level_data.grid_centered_y) {
+                    offsetY = (float)(GameLevels.Current.data.level_data.grid_height / 2);
                 }
 
-                if (GameLevels.currentLevelData.grid_centered_z) {
-                    offsetZ = (float)(GameLevels.currentLevelData.grid_depth / 2);
+                if (GameLevels.Current.data.level_data.grid_centered_z) {
+                    offsetZ = (float)(GameLevels.Current.data.level_data.grid_depth / 2);
                 }
 
                 float gridX = offsetX;// + (float)(layoutObjectItem.grid_data.x);
@@ -598,21 +599,21 @@ public class BaseGameLevels<T> : DataObjects<T> where T : DataObject, new() {
 
                 if (dataItem.type == GameLevelLayoutDisplayType.layoutCentered) {
 
-                    if (GameLevels.currentLevelData.grid_centered_x) {
+                    if (GameLevels.Current.data.level_data.grid_centered_x) {
                         offsetX =
-                            (float)((GameLevels.currentLevelData.grid_width / 2) + offsetPlayerX) -
+                            (float)((GameLevels.Current.data.level_data.grid_width / 2) + offsetPlayerX) -
                                 ((float)size.x / 2);
                     }
 
-                    if (GameLevels.currentLevelData.grid_centered_y) {
+                    if (GameLevels.Current.data.level_data.grid_centered_y) {
                         offsetY =
-                            (float)((GameLevels.currentLevelData.grid_height / 2) + offsetPlayerY) -
+                            (float)((GameLevels.Current.data.level_data.grid_height / 2) + offsetPlayerY) -
                                 ((float)size.y / 2);
                     }
 
-                    if (GameLevels.currentLevelData.grid_centered_z) {
+                    if (GameLevels.Current.data.level_data.grid_centered_z) {
                         offsetZ =
-                            (float)((GameLevels.currentLevelData.grid_depth / 2) + offsetPlayerZ) -
+                            (float)((GameLevels.Current.data.level_data.grid_depth / 2) + offsetPlayerZ) -
                                 ((float)size.z / 2);
                     }
                 }
