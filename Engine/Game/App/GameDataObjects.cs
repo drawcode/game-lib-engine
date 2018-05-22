@@ -77,6 +77,8 @@ public class GameDataAssetPreset : GameDataObject {
 }
 
 public class GameDataLayoutPreset : GameDataObject {
+
+    
     
 }
 
@@ -1231,7 +1233,7 @@ public class GameDataObject : DataObject {
     //[JsonIgnore(JsonIgnoreWhen.Deserializing)]
     public virtual string uuid {
         get {
-            return Get<string>(BaseDataObjectKeys.uuid, "");//UniqueUtil.CreateUUID4());
+            return Get<string>(BaseDataObjectKeys.uuid);//UniqueUtil.CreateUUID4());
         }
 
         set {
@@ -1241,7 +1243,7 @@ public class GameDataObject : DataObject {
 
     public virtual string uid {
         get {
-            return Get<string>(BaseDataObjectKeys.uid, "");
+            return Get<string>(BaseDataObjectKeys.uid);
         }
 
         set {
@@ -1251,7 +1253,7 @@ public class GameDataObject : DataObject {
 
     public virtual string profile_id {
         get {
-            return Get<string>(BaseDataObjectKeys.profile_id, "");
+            return Get<string>(BaseDataObjectKeys.profile_id);
         }
 
         set {
@@ -1261,7 +1263,7 @@ public class GameDataObject : DataObject {
 
     public virtual string game_id {
         get {
-            return Get<string>(BaseDataObjectKeys.game_id, "");
+            return Get<string>(BaseDataObjectKeys.game_id);
         }
 
         set {
@@ -1280,11 +1282,10 @@ public class GameDataObject : DataObject {
         }
     }
 
-
     //[JsonIgnore(JsonIgnoreWhen.Deserializing)]
     public virtual string hash {
         get {
-            return Get<string>(BaseDataObjectKeys.hash, "");
+            return Get<string>(BaseDataObjectKeys.hash);
         }
 
         set {
@@ -1305,7 +1306,7 @@ public class GameDataObject : DataObject {
     //[JsonIgnore(JsonIgnoreWhen.Deserializing)]
     public virtual string display_name {
         get {
-            return Get<string>(BaseDataObjectKeys.display_name, "");
+            return Get<string>(BaseDataObjectKeys.display_name);
         }
 
         set {
@@ -1315,7 +1316,7 @@ public class GameDataObject : DataObject {
 
     public virtual string action_display_name {
         get {
-            return Get<string>(BaseDataObjectKeys.action_display_name, "");
+            return Get<string>(BaseDataObjectKeys.action_display_name);
         }
 
         set {
@@ -1326,7 +1327,7 @@ public class GameDataObject : DataObject {
     //[JsonIgnore(JsonIgnoreWhen.Deserializing)]
     public virtual string name {
         get {
-            return Get<string>(BaseDataObjectKeys.name, "");//Get<string>(BaseDataObjectKeys.name);
+            return Get<string>(BaseDataObjectKeys.name);//Get<string>(BaseDataObjectKeys.name);
         }
 
         set {
@@ -1337,7 +1338,7 @@ public class GameDataObject : DataObject {
     //[JsonIgnore(JsonIgnoreWhen.Deserializing)]
     public virtual string description {
         get {
-            return Get<string>(BaseDataObjectKeys.description, "");//Get<string>(BaseDataObjectKeys.description);
+            return Get<string>(BaseDataObjectKeys.description);//Get<string>(BaseDataObjectKeys.description);
         }
 
         set {
@@ -1347,7 +1348,7 @@ public class GameDataObject : DataObject {
 
     public virtual string action_description {
         get {
-            return Get<string>(BaseDataObjectKeys.action_description, "");//Get<string>(BaseDataObjectKeys.action_description);
+            return Get<string>(BaseDataObjectKeys.action_description);//Get<string>(BaseDataObjectKeys.action_description);
         }
 
         set {
@@ -1358,7 +1359,7 @@ public class GameDataObject : DataObject {
     //[JsonIgnore(JsonIgnoreWhen.Deserializing)]
     public virtual string url {
         get {
-            return Get<string>(BaseDataObjectKeys.url, "");
+            return Get<string>(BaseDataObjectKeys.url);
         }
 
         set {
@@ -1378,7 +1379,7 @@ public class GameDataObject : DataObject {
 
     public virtual string content {
         get {
-            return Get<string>(BaseDataObjectKeys.content, "");//Get<string>(BaseDataObjectKeys.content);
+            return Get<string>(BaseDataObjectKeys.content);//Get<string>(BaseDataObjectKeys.content);
         }
 
         set {
@@ -1391,7 +1392,7 @@ public class GameDataObject : DataObject {
     //[JsonIgnore(JsonIgnoreWhen.Deserializing)]
     public virtual string host {
         get {
-            return Get<string>(BaseDataObjectKeys.host, "");
+            return Get<string>(BaseDataObjectKeys.host);
         }
 
         set {
@@ -1415,7 +1416,7 @@ public class GameDataObject : DataObject {
     //[JsonIgnore(JsonIgnoreWhen.Deserializing)]
     public virtual int sort_order {
         get {
-            return Get<int>(BaseDataObjectKeys.sort_order, 0);
+            return Get<int>(BaseDataObjectKeys.sort_order);
         }
 
         set {
@@ -1426,7 +1427,7 @@ public class GameDataObject : DataObject {
     //[JsonIgnore(JsonIgnoreWhen.Deserializing)]
     public virtual int sort_order_type {
         get {
-            return Get<int>(BaseDataObjectKeys.sort_order_type, 0);
+            return Get<int>(BaseDataObjectKeys.sort_order_type);
         }
 
         set {
@@ -1448,7 +1449,7 @@ public class GameDataObject : DataObject {
     //[JsonIgnore(JsonIgnoreWhen.Deserializing)]
     public virtual string key {
         get {
-            return Get<string>(BaseDataObjectKeys.key, "");
+            return Get<string>(BaseDataObjectKeys.key);
         }
 
         set {
@@ -1468,7 +1469,7 @@ public class GameDataObject : DataObject {
 
     public virtual string network_username {
         get {
-            return Get<string>(BaseDataObjectKeys.network_username, "");
+            return Get<string>(BaseDataObjectKeys.network_username);
         }
 
         set {
@@ -1478,7 +1479,7 @@ public class GameDataObject : DataObject {
 
     public virtual string network_type {
         get {
-            return Get<string>(BaseDataObjectKeys.network_type, "");
+            return Get<string>(BaseDataObjectKeys.network_type);
         }
 
         set {
@@ -1488,7 +1489,7 @@ public class GameDataObject : DataObject {
 
     public virtual string network_token {
         get {
-            return Get<string>(BaseDataObjectKeys.network_token, "");
+            return Get<string>(BaseDataObjectKeys.network_token);
         }
 
         set {
@@ -1510,7 +1511,7 @@ public class GameDataObject : DataObject {
 
     public virtual string mission_type {
         get {
-            return Get<string>(BaseDataObjectKeys.mission_type, "");
+            return Get<string>(BaseDataObjectKeys.mission_type);
         }
 
         set {
@@ -1520,7 +1521,7 @@ public class GameDataObject : DataObject {
 
     public virtual string mission_key {
         get {
-            return Get<string>(BaseDataObjectKeys.mission_key, "");
+            return Get<string>(BaseDataObjectKeys.mission_key);
         }
 
         set {
@@ -1530,7 +1531,7 @@ public class GameDataObject : DataObject {
 
     public virtual string mission_code {
         get {
-            return Get<string>(BaseDataObjectKeys.mission_code, "");
+            return Get<string>(BaseDataObjectKeys.mission_code);
         }
 
         set {
@@ -1540,7 +1541,7 @@ public class GameDataObject : DataObject {
 
     public virtual object mission_data {
         get {
-            return Get<object>(BaseDataObjectKeys.mission_data, null);
+            return Get<object>(BaseDataObjectKeys.mission_data);
         }
 
         set {
@@ -1550,10 +1551,9 @@ public class GameDataObject : DataObject {
 
     // 
 
-
     public virtual string action_type {
         get {
-            return Get<string>(BaseDataObjectKeys.action_type, "");
+            return Get<string>(BaseDataObjectKeys.action_type);
         }
 
         set {
@@ -1563,7 +1563,7 @@ public class GameDataObject : DataObject {
 
     public virtual string action_key {
         get {
-            return Get<string>(BaseDataObjectKeys.action_key, "");
+            return Get<string>(BaseDataObjectKeys.action_key);
         }
 
         set {
@@ -1573,7 +1573,7 @@ public class GameDataObject : DataObject {
 
     public virtual string action_code {
         get {
-            return Get<string>(BaseDataObjectKeys.action_code, "");
+            return Get<string>(BaseDataObjectKeys.action_code);
         }
 
         set {
@@ -1583,7 +1583,7 @@ public class GameDataObject : DataObject {
 
     public virtual object action_data {
         get {
-            return Get<object>(BaseDataObjectKeys.action_data, null);
+            return Get<object>(BaseDataObjectKeys.action_data);
         }
 
         set {
@@ -1595,7 +1595,7 @@ public class GameDataObject : DataObject {
 
     public virtual string collection_type {
         get {
-            return Get<string>(BaseDataObjectKeys.collection_type, "");
+            return Get<string>(BaseDataObjectKeys.collection_type);
         }
 
         set {
@@ -1605,7 +1605,7 @@ public class GameDataObject : DataObject {
 
     public virtual string collection_code {
         get {
-            return Get<string>(BaseDataObjectKeys.collection_code, "");
+            return Get<string>(BaseDataObjectKeys.collection_code);
         }
 
         set {
@@ -1615,7 +1615,7 @@ public class GameDataObject : DataObject {
 
     public virtual object collection_data {
         get {
-            return Get<object>(BaseDataObjectKeys.collection_data, null);
+            return Get<object>(BaseDataObjectKeys.collection_data);
         }
 
         set {
@@ -1627,7 +1627,7 @@ public class GameDataObject : DataObject {
 
     public virtual string choice_type {
         get {
-            return Get<string>(BaseDataObjectKeys.choice_type, "");
+            return Get<string>(BaseDataObjectKeys.choice_type);
         }
 
         set {
@@ -1637,7 +1637,7 @@ public class GameDataObject : DataObject {
 
     public virtual string choice_code {
         get {
-            return Get<string>(BaseDataObjectKeys.choice_code, "");
+            return Get<string>(BaseDataObjectKeys.choice_code);
         }
 
         set {
@@ -1647,7 +1647,7 @@ public class GameDataObject : DataObject {
 
     public virtual object choice_data {
         get {
-            return Get<object>(BaseDataObjectKeys.choice_data, null);
+            return Get<object>(BaseDataObjectKeys.choice_data);
         }
 
         set {
@@ -1659,7 +1659,7 @@ public class GameDataObject : DataObject {
 
     public virtual int level_num {
         get {
-            return Get<int>(BaseDataObjectKeys.level_num, 1);
+            return Get<int>(BaseDataObjectKeys.level_num);
         }
 
         set {
@@ -1669,7 +1669,7 @@ public class GameDataObject : DataObject {
 
     public virtual string level_code {
         get {
-            return Get<string>(BaseDataObjectKeys.level_code, "");
+            return Get<string>(BaseDataObjectKeys.level_code);
         }
 
         set {
@@ -1681,7 +1681,7 @@ public class GameDataObject : DataObject {
 
     public virtual int world_num {
         get {
-            return Get<int>(BaseDataObjectKeys.world_num, 1);
+            return Get<int>(BaseDataObjectKeys.world_num);
         }
 
         set {
@@ -1691,7 +1691,7 @@ public class GameDataObject : DataObject {
 
     public virtual string world_code {
         get {
-            return Get<string>(BaseDataObjectKeys.world_code, "");
+            return Get<string>(BaseDataObjectKeys.world_code);
         }
 
         set {
@@ -1701,7 +1701,7 @@ public class GameDataObject : DataObject {
 
     public virtual string world_type {
         get {
-            return Get<string>(BaseDataObjectKeys.world_type, null);
+            return Get<string>(BaseDataObjectKeys.world_type);
         }
 
         set {
@@ -1711,7 +1711,7 @@ public class GameDataObject : DataObject {
 
     public virtual object world_data {
         get {
-            return Get<object>(BaseDataObjectKeys.world_data, "");
+            return Get<object>(BaseDataObjectKeys.world_data);
         }
 
         set {
@@ -1722,7 +1722,7 @@ public class GameDataObject : DataObject {
     //[JsonIgnore(JsonIgnoreWhen.Deserializing)]
     public virtual string type {
         get {
-            return Get<string>(BaseDataObjectKeys.type, "");
+            return Get<string>(BaseDataObjectKeys.type);
         }
 
         set {
@@ -1732,7 +1732,7 @@ public class GameDataObject : DataObject {
 
     public virtual string compare_type {
         get {
-            return Get<string>(BaseDataObjectKeys.compare_type, "");
+            return Get<string>(BaseDataObjectKeys.compare_type);
         }
 
         set {
@@ -1742,7 +1742,7 @@ public class GameDataObject : DataObject {
 
     public virtual string data_type {
         get {
-            return Get<string>(BaseDataObjectKeys.data_type, "");
+            return Get<string>(BaseDataObjectKeys.data_type);
         }
 
         set {
@@ -1752,7 +1752,7 @@ public class GameDataObject : DataObject {
 
     public virtual string display_type {
         get {
-            return Get<string>(BaseDataObjectKeys.display_type, "");
+            return Get<string>(BaseDataObjectKeys.display_type);
         }
 
         set {
@@ -1762,7 +1762,7 @@ public class GameDataObject : DataObject {
 
     public virtual string load_type {
         get {
-            return Get<string>(BaseDataObjectKeys.load_type, "");
+            return Get<string>(BaseDataObjectKeys.load_type);
         }
 
         set {
@@ -1772,7 +1772,7 @@ public class GameDataObject : DataObject {
 
     public virtual string ui {
         get {
-            return Get<string>(BaseDataObjectKeys.ui, "");
+            return Get<string>(BaseDataObjectKeys.ui);
         }
 
         set {
@@ -1783,7 +1783,7 @@ public class GameDataObject : DataObject {
     //[JsonIgnore(JsonIgnoreWhen.Deserializing)]
     public virtual string order_by {
         get {
-            return Get<string>(BaseDataObjectKeys.order_by, "");
+            return Get<string>(BaseDataObjectKeys.order_by);
         }
 
         set {
@@ -1794,7 +1794,7 @@ public class GameDataObject : DataObject {
     //[JsonIgnore(JsonIgnoreWhen.Deserializing)]
     public virtual string status {
         get {
-            return Get<string>(BaseDataObjectKeys.status, "");
+            return Get<string>(BaseDataObjectKeys.status);
         }
 
         set {
@@ -1805,7 +1805,7 @@ public class GameDataObject : DataObject {
     //[JsonIgnore(JsonIgnoreWhen.Deserializing)]
     public virtual string pack_code {
         get {
-            return Get<string>(BaseDataObjectKeys.pack_code, "");
+            return Get<string>(BaseDataObjectKeys.pack_code);
         }
 
         set {
@@ -1816,7 +1816,7 @@ public class GameDataObject : DataObject {
     //[JsonIgnore(JsonIgnoreWhen.Deserializing)]
     public virtual int pack_sort {
         get {
-            return Get<int>(BaseDataObjectKeys.pack_sort, 0);
+            return Get<int>(BaseDataObjectKeys.pack_sort);
         }
 
         set {
@@ -2343,6 +2343,8 @@ public class GameDataObject : DataObject {
         }
     }
 
+    //
+
     public virtual Vector3Data grid_data {
         get {
             return Get<Vector3Data>(BaseDataObjectKeys.grid_data);
@@ -2352,6 +2354,8 @@ public class GameDataObject : DataObject {
             Set<Vector3Data>(BaseDataObjectKeys.grid_data, value);
         }
     }
+
+    //
 
     public virtual Vector3Data rotation_data {
         get {
@@ -2364,6 +2368,48 @@ public class GameDataObject : DataObject {
         }
     }
 
+    public virtual double rotation_min {
+        get {
+            return Get<double>(BaseDataObjectKeys.rotation_min);
+        }
+
+        set {
+            Set<double>(BaseDataObjectKeys.rotation_min, value);
+        }
+    }
+
+    public virtual double rotation_max {
+        get {
+            return Get<double>(BaseDataObjectKeys.rotation_max);
+        }
+
+        set {
+            Set<double>(BaseDataObjectKeys.rotation_max, value);
+        }
+    }
+
+    public virtual Vector3Data rotation_data_min {
+        get {
+            return Get<Vector3Data>(BaseDataObjectKeys.rotation_data_min);
+        }
+
+        set {
+            Set<Vector3Data>(BaseDataObjectKeys.rotation_data_min, value);
+        }
+    }
+
+    public virtual Vector3Data rotation_data_max {
+        get {
+            return Get<Vector3Data>(BaseDataObjectKeys.rotation_data_max);
+        }
+
+        set {
+            Set<Vector3Data>(BaseDataObjectKeys.rotation_data_max, value);
+        }
+    }
+
+    //
+
     public virtual Vector3Data scale_data {
         get {
             return Get<Vector3Data>(BaseDataObjectKeys.scale_data);
@@ -2373,6 +2419,48 @@ public class GameDataObject : DataObject {
             Set<Vector3Data>(BaseDataObjectKeys.scale_data, value);
         }
     }
+
+    public virtual double scale_min {
+        get {
+            return Get<double>(BaseDataObjectKeys.scale_min);
+        }
+
+        set {
+            Set<double>(BaseDataObjectKeys.scale_min, value);
+        }
+    }
+
+    public virtual double scale_max {
+        get {
+            return Get<double>(BaseDataObjectKeys.scale_max);
+        }
+
+        set {
+            Set<double>(BaseDataObjectKeys.scale_max, value);
+        }
+    }
+
+    public virtual Vector3Data scale_data_min {
+        get {
+            return Get<Vector3Data>(BaseDataObjectKeys.scale_data_min);
+        }
+
+        set {
+            Set<Vector3Data>(BaseDataObjectKeys.scale_data_min, value);
+        }
+    }
+
+    public virtual Vector3Data scale_data_max {
+        get {
+            return Get<Vector3Data>(BaseDataObjectKeys.scale_data_max);
+        }
+
+        set {
+            Set<Vector3Data>(BaseDataObjectKeys.scale_data_max, value);
+        }
+    }
+
+    //
 
     public virtual List<string> data_list {
         get {
@@ -2434,6 +2522,20 @@ public class GameDataObject : DataObject {
         }
     }
 
+    //
+
+    public GameDataObject() {
+        Reset();
+    }
+
+    public override void Reset() {
+        base.Reset();
+
+        //scale_data_min = new Vector3Data(1, 1, 1);
+        //scale_data_max = new Vector3Data(1, 1, 1);
+        //rotation_data_max = new Vector3Data(0, 0, 0);
+        //rotation_data_max = new Vector3Data(0, 0, 0);
+    }
 
     // helpers
 
@@ -2480,16 +2582,6 @@ public class GameDataObject : DataObject {
         }
 
         return false;
-    }
-
-    //
-
-    public GameDataObject() {
-        Reset();
-    }
-
-    public override void Reset() {
-        base.Reset();
     }
 
     // helpers

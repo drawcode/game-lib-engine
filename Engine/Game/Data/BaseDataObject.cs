@@ -371,7 +371,15 @@ public class BaseDataObjectKeys {
     public static string position_data = "position_data";
     public static string grid_data = "grid_data";
     public static string rotation_data = "rotation_data";
+    public static string rotation_min = "rotation_min";
+    public static string rotation_max = "rotation_max";
+    public static string rotation_data_min = "rotation_data_min";
+    public static string rotation_data_max = "rotation_data_max";
     public static string scale_data = "scale_data";
+    public static string scale_data_min = "scale_data_min";
+    public static string scale_data_max = "scale_data_max";
+    public static string scale_min = "scale_min";
+    public static string scale_max = "scale_max";
     public static string volume = "volume";
     public static string loop = "loop";
     public static string go = "go";

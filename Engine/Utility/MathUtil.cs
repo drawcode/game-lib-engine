@@ -436,5 +436,15 @@ public class MathUtil {
         return Vector3.zero.WithX(range).WithY(range).WithZ(range);
     }
 
+    public static Vector3 RandomRangeConstrain(
+        Vector3 min, Vector3 max) {
+
+        float rangeX = UnityEngine.Random.Range(min.x, max.x);
+        float rangeY = UnityEngine.Random.Range(min.y, max.y);
+        float rangeZ = UnityEngine.Random.Range(min.z, max.z);
+
+        return Vector3.zero.WithX(rangeX).WithY(rangeY).WithZ(rangeZ);
+    }
+
 
 }

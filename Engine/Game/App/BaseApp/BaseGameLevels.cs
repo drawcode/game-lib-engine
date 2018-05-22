@@ -622,6 +622,11 @@ public class BaseGameLevels<T> : DataObjects<T> where T : DataObject, new() {
                 float gridY = offsetY + (float)(layoutObjectItem.grid_data.y) + (float)(dataItem.grid_data.y);
                 float gridZ = offsetZ + (float)(layoutObjectItem.grid_data.z) + (float)(dataItem.grid_data.z);
 
+                double scaleMin = dataItem.scale_min;
+                double scaleMax = dataItem.scale_max;
+
+                //Vector3 gridScaleRandom = MathUtil.RandomRangeConstrain((float)scaleMin, (float)scaleMax);
+
                 Vector3 gridPos = Vector3.zero.WithX(gridX).WithY(gridY).WithZ(gridZ);
                 Vector3 gridScale = layoutObjectItem.scale_data.GetVector3();
                 Vector3 gridRotation = layoutObjectItem.local_rotation_data.GetVector3();
@@ -675,6 +680,11 @@ public class BaseGameLevels<T> : DataObjects<T> where T : DataObject, new() {
         GameLevelGridData dataItems, List<GameDataAssetPreset> presets, string loadTypeFilter = "default") {
 
         foreach (GameDataAssetPreset assetDataItem in presets) {
+            
+            double scaleMin = assetDataItem.scale_min;
+            double scaleMax = assetDataItem.scale_max;
+
+            Vector3 gridScaleRandom = MathUtil.RandomRangeConstrain((float)scaleMin, (float)scaleMax);
 
             // PRELOAD
 
