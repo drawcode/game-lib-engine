@@ -1050,6 +1050,78 @@ public static class GameObjectHelper {
         }
     }
 
+    public static List<AnimationState> GetAnimationsList(GameObject inst) {
+
+        List<AnimationState> anims = new List<AnimationState>();
+
+        if(inst == null) {
+            return anims;
+        }
+
+        Animation anim = inst.GetComponent<Animation>();
+
+        if(anim == null) {
+            anim = inst.GetComponentInChildren<Animation>();
+        }
+
+        foreach(AnimationState state in anim) {
+            anims.Add(state);
+        }
+
+        return anims;
+    }
+
+    public static AnimationState GetAnimationsRandom(GameObject inst) {
+
+        List<AnimationState> anims = GetAnimationsList(inst);
+
+        if(anims == null || anims.Count == 0) {
+            return null;
+        }
+
+        int animIndex = UnityEngine.Random.Range(0, anims.Count - 1);
+
+        return anims[animIndex];
+    }
+
+    public static void PlayAnimationBlendRandom(GameObject inst, 
+        float speed = 1, float targetWeight = 0.9f, float fadeLength = 0.5f) {
+
+        if(inst == null) {
+            return;
+        }
+
+        foreach(Animation anim in inst.GetComponentsInChildren<Animation>()) {
+
+            AnimationState animationState = GetAnimationsRandom(inst);
+
+            if(animationState == null) {
+                continue;
+            }
+
+            anim.gameObject.PlayAnimationBlend(animationState.name, speed, targetWeight, fadeLength);
+        }
+    }
+
+    public static void PlayAnimationCrossFadeRandom(GameObject inst,
+        float speed = 1, float fadeLength = 0.5f) {
+
+        if(inst == null) {
+            return;
+        }
+
+        foreach(Animation anim in inst.GetComponentsInChildren<Animation>()) {
+
+            AnimationState animationState = GetAnimationsRandom(inst);
+
+            if(animationState == null) {
+                continue;
+            }
+
+            anim.gameObject.PlayAnimationCrossFade(animationState.name, speed, fadeLength);
+        }
+    }
+
     // PARTICLE SYSTEMS
 
     public static void SetParticleSystemEmission(GameObject inst, bool emissionEnabled, bool includeChildren) {
