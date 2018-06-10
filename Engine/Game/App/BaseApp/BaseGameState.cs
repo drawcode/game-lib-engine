@@ -256,6 +256,9 @@ public class BaseGameState {
             ContentPaths.appCachePathAllSharedUserData,
             key + ".json");
         FileSystemUtil.WriteString(path, data);
+#if DEBUG
+        Debug.Log("contentSave: " + path);
+#endif
 #endif
     }
 
