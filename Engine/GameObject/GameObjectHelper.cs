@@ -656,11 +656,27 @@ public static class GameObjectHelper {
         return list;
     }
 
-    public static T[] GetList<T>(GameObject inst) where T : Component {
-        if (inst == null) {
+    public static List<T> GetList<T>(GameObject inst) where T : Component {
+        //if (inst == null) {
+        //    return null;
+        //}
+        //return inst.GetComponentsInChildren<T>(true);
+
+        if(inst == null) {
             return null;
         }
-        return inst.GetComponentsInChildren<T>(true);
+
+        List<T> list = new List<T>();
+
+        foreach(T obj in inst.GetComponents<T>()) {
+            list.Add(obj);
+        }
+
+        foreach(T obj in inst.GetComponentsInChildren<T>(true)) {
+            list.Add(obj);
+        }
+
+        return list;
     }
 
     public static bool Has<T>(GameObject inst) where T : Component {
@@ -1830,77 +1846,55 @@ public static class GameObjectHelper {
         return false;
     }
 
-    // material swap/change
+    public static void SetMaterialSwapItem<T>(
+        GameObject inst, string regexNameFind, Material materialTo) where T : Renderer {
 
-    public static void SetMaterialSwap(GameObject inst, string nameFind, string materialResourcesPath) {
+        List<T> renderers = inst.GetList<T>();
 
-        //LogUtil.Log("SetMaterialColor name:" + name + " color:" + color );
-
-        Material materialTo = MaterialUtil.LoadMaterialFromResources(materialResourcesPath);
-        if (materialTo == null) {
-            LogUtil.Log("Material not found:" + materialResourcesPath);
-            return;
-        }
-
-        //LogUtil.Log("SetMaterialSwap:" + " materialTo:" + materialTo.name);
-
-        MeshRenderer[] renderers = inst.GetComponents<MeshRenderer>();
         //LogUtil.Log("SetMaterialColor renderers:" + renderers.Length );
 
-        for (int i = 0; i < renderers.Length; i++) {
-            for (int j = 0; j < renderers[i].materials.Length; j++) {
-                if (FilterMaterialName(renderers[i].materials[j].name).Contains(nameFind)) {
+        for(int i = 0; i < renderers.Count; i++) {
+
+            for(int j = 0; j < renderers[i].materials.Length; j++) {
+
+                string matName = renderers[i].materials[j].name;
+
+                if(FilterMaterialName(matName).RegexIsMatch(regexNameFind)) {
+
                     Material[] materialsTo = renderers[i].materials;
+
                     materialsTo[j] = materialTo;
                     renderers[i].materials = materialsTo;
+
                     //LogUtil.Log("SetMaterialSwap:" + " materialTo2:" + materialTo.name);
-                }
-            }
-        }
-
-        MeshRenderer[] renderersChildren = inst.GetComponentsInChildren<MeshRenderer>(true);
-        //LogUtil.Log("SetMaterialColor renderersChildren:" + renderersChildren.Length );
-
-        for (int i = 0; i < renderersChildren.Length; i++) {
-            for (int j = 0; j < renderersChildren[i].materials.Length; j++) {
-                if (FilterMaterialName(renderersChildren[i].materials[j].name).Contains(nameFind)) {
-                    Material[] materialsTo = renderersChildren[i].materials;
-                    materialsTo[j] = materialTo;
-                    renderersChildren[i].materials = materialsTo;
-                    //LogUtil.Log("SetMaterialSwap:" + " materialTo3:" + materialTo.name);
-                }
-            }
-        }
-
-        SkinnedMeshRenderer[] skinnedRenderers = inst.GetComponents<SkinnedMeshRenderer>();
-        //LogUtil.Log("SetMaterialColor renderers:" + renderers.Length );
-
-        for (int i = 0; i < skinnedRenderers.Length; i++) {
-            for (int j = 0; j < skinnedRenderers[i].materials.Length; j++) {
-                if (FilterMaterialName(skinnedRenderers[i].materials[j].name).Contains(nameFind)) {
-                    Material[] materialsTo = skinnedRenderers[i].materials;
-                    materialsTo[j] = materialTo;
-                    skinnedRenderers[i].materials = materialsTo;
-                    //LogUtil.Log("SetMaterialSwap:" + " materialTo4:" + materialTo.name);
-                }
-            }
-        }
-
-        SkinnedMeshRenderer[] skinnedRenderersChildren = inst.GetComponentsInChildren<SkinnedMeshRenderer>(true);
-        //LogUtil.Log("SetMaterialColor renderersChildren:" + renderersChildren.Length );
-
-        for (int i = 0; i < skinnedRenderersChildren.Length; i++) {
-            for (int j = 0; j < skinnedRenderersChildren[i].materials.Length; j++) {
-                if (FilterMaterialName(skinnedRenderersChildren[i].materials[j].name).Contains(nameFind)) {
-                    Material[] materialsTo = skinnedRenderersChildren[i].materials;
-                    materialsTo[j] = materialTo;
-                    skinnedRenderersChildren[i].materials = materialsTo;
-                    //LogUtil.Log("SetMaterialSwap:" + " materialTo5:" + materialTo.name);
                 }
             }
         }
     }
 
+    // material swap/change
+
+    public static void SetMaterialSwap(
+        GameObject inst, string nameFind, string materialResourcesPath) {
+
+        //LogUtil.Log("SetMaterialColor name:" + name + " color:" + color );
+
+        Material materialTo = 
+            MaterialUtil.LoadMaterialFromResources(materialResourcesPath);
+
+        if (materialTo == null) {
+            LogUtil.Log("Material not found:" + materialResourcesPath);
+            return;
+        }
+
+        if(inst.Has<MeshRenderer>()) {
+            SetMaterialSwapItem<MeshRenderer>(inst, nameFind, materialTo);
+        }
+
+        if(inst.Has<SkinnedMeshRenderer>()) {
+            SetMaterialSwapItem<SkinnedMeshRenderer>(inst, nameFind, materialTo);
+        }        
+    }
 
     /*
     public static bool SetMaterialColor(GameObject inst, string name, Color color, bool all) {
