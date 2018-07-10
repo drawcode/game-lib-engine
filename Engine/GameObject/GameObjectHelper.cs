@@ -33,6 +33,23 @@ public static class GameObjectHelper {
         return false;
     }
 
+    public static bool ContainsChildLike(GameObject inst, string nameLike) {
+        if(inst == null) {
+            return false;
+        }
+
+        foreach(Transform t in inst.transform) {
+
+            if(t.name.Contains(nameLike)) {
+                return true;
+            }
+
+            //return ContainsChildLike(t.gameObject, nameLike);
+        }
+
+        return false;
+    }
+
     // LAYER
 
     public static void SetLayerRecursively(GameObject inst, int layer) {
@@ -2121,6 +2138,22 @@ public static class GameObjectHelper {
     // ------------------------------------------------------------------------
     // game object
 
+    public static GameObject CleanGameObjectName(
+        GameObject go) {
+
+        if(go.name.Contains(" (Clone)")) {
+            go.name = go.name.Replace(" (Clone)", "");
+        }
+        if(go.name.Contains("(Clone)")) {
+            go.name = go.name.Replace("(Clone)", "");
+        }
+        if(go.name.Contains("(clone)")) {
+            go.name = go.name.Replace("(clone)", "");
+        }
+
+        return go;
+    }
+
     public static GameObject CreateGameObject(
         GameObject go,
         Vector3 pos,
@@ -2160,6 +2193,8 @@ public static class GameObjectHelper {
                 }
             }
         }
+
+        obj = CleanGameObjectName(obj);
 
         return obj;
     }

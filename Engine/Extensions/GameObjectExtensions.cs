@@ -20,6 +20,14 @@ public static class BaseGameObjectExtensions {
         return GameObjectHelper.ContainsChild(inst, name);
     }
 
+    public static bool ContainsChildLike(this GameObject inst, string nameLike) {
+        if(inst == null) {
+            return false;
+        }
+
+        return GameObjectHelper.ContainsChildLike(inst, nameLike);
+    }
+
     public static void SetLayerRecursively(this GameObject inst, int layer) {
         if(inst == null)
             return;
@@ -668,6 +676,13 @@ public static class BaseGameObjectExtensions {
         this GameObject go, string name, Color color, bool all = true) {
         GameObjectHelper.SetMaterialColorStandard(go, name, color, all);
     }
+
+    //
+
+    public static GameObject CleanGameObjectName(
+       this GameObject go) {
+        return GameObjectHelper.CleanGameObjectName(go);
+    }       
 
     public static GameObject CreateGameObject(
         this GameObject go,

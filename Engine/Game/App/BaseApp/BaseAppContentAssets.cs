@@ -60,33 +60,36 @@ public class BaseAppContentAssets<T> : DataObjects<T> where T : DataObject, new(
         
         LogUtil.Log("LoadAsset:" + " assetCode:" + assetCode + " type:" + type);
 
-        if (key.StartsWith(BaseDataObjectKeys.level) 
-            || key.StartsWith(BaseDataObjectKeys.levelAssets)) {                    
+        if(key.StartsWith(BaseDataObjectKeys.level)
+            || key.StartsWith(BaseDataObjectKeys.levelAssets)) {
             path = ContentPaths.appCacheVersionSharedPrefabLevelAssets;
         }
-        else if (key.StartsWith(BaseDataObjectKeys.character)
-                 || key.StartsWith(BaseDataObjectKeys.characters)) {                    
+        else if(key.StartsWith(BaseDataObjectKeys.character)
+                 || key.StartsWith(BaseDataObjectKeys.characters)) {
             path = ContentPaths.appCacheVersionSharedPrefabCharacters;
         }
-        else if (key.StartsWith(BaseDataObjectKeys.weapon)
-                 || key.StartsWith(BaseDataObjectKeys.weapons)) {                    
+        else if(key.StartsWith(BaseDataObjectKeys.weapon)
+                 || key.StartsWith(BaseDataObjectKeys.weapons)) {
             path = ContentPaths.appCacheVersionSharedPrefabWeapons;
         }
-        else if (key.StartsWith(BaseDataObjectKeys.world)
-                 || key.StartsWith(BaseDataObjectKeys.worlds)) {                    
+        else if(key.StartsWith(BaseDataObjectKeys.world)
+                 || key.StartsWith(BaseDataObjectKeys.worlds)) {
             path = ContentPaths.appCacheVersionSharedPrefabWorlds;
         }
-        else if (key.StartsWith(BaseDataObjectKeys.vehicle)
-                 || key.StartsWith(BaseDataObjectKeys.vehicles)) {                    
+        else if(key.StartsWith(BaseDataObjectKeys.vehicle)
+                 || key.StartsWith(BaseDataObjectKeys.vehicles)) {
             path = ContentPaths.appCacheVersionSharedPrefabVehicles;
         }
-        else if (key.StartsWith(BaseDataObjectKeys.effect)
-                 || key.StartsWith(BaseDataObjectKeys.effects)) {                    
+        else if(key.StartsWith(BaseDataObjectKeys.effect)
+                 || key.StartsWith(BaseDataObjectKeys.effects)) {
             path = ContentPaths.appCacheVersionSharedPrefabEffects;
         }
-        else if (key.StartsWith(BaseDataObjectKeys.item)
+        else if(key.StartsWith(BaseDataObjectKeys.item)
                  || key.StartsWith(BaseDataObjectKeys.items)) {
             path = ContentPaths.appCacheVersionSharedPrefabLevelItems;
+        }
+        else if(key.StartsWith(BaseDataObjectKeys.ui)) {
+            path = ContentPaths.appCacheVersionSharedPrefabLevelUI;
         }
 
         path += assetCode;
@@ -190,7 +193,17 @@ public class BaseAppContentAssets<T> : DataObjects<T> where T : DataObject, new(
         return LoadAsset(BaseDataObjectKeys.vehicles, code,
                          pos, rotate, pool);
     }
-    
+
+    public static GameObject LoadAssetUI(
+        string code,
+        Vector3 pos = default(Vector3),
+        Quaternion rotate = default(Quaternion),
+        bool pool = true) {
+
+        return LoadAsset(BaseDataObjectKeys.ui, code,
+                         pos, rotate, pool);
+    }
+
     public static GameObject LoadAsset(
         string key, 
         string code,
@@ -210,8 +223,9 @@ public class BaseAppContentAssets<T> : DataObjects<T> where T : DataObject, new(
         GameObject go = GameObjectHelper.CreateGameObject(
             prefabObject, pos, rotate, 
             pool) as GameObject;
-        
+
         //LogUtil.Log("LoadAsset:" + " go:" + go != null);
+
         
         return go;
     }

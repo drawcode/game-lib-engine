@@ -42,6 +42,7 @@ public class BaseDataObjectKeys {
     public static string files = "files";
     public static string host = "host";
     public static string ui = "ui";
+    public static string panel = "panel";
     public static string video = "video";
     //
     public static string hud = "hud";
