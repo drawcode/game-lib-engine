@@ -10,8 +10,12 @@ public class FileSystemUtil {
     public static void CreateDirectoryIfNeededAndAllowed(string path) {
 
 #if !UNITY_WEBPLAYER
+        
+        Debug.Log("FileSystemUtil::CreateDirectoryIfNeededAndAllowed:path:" + path);
 
         if(!Directory.Exists(path)) {
+
+            Debug.Log("FileSystemUtil::CreateDirectoryIfNeededAndAllowed:pathnotexists:" + path);
 
             if(DirectoryAllowed(path)) {
 
@@ -100,11 +104,22 @@ public class FileSystemUtil {
 
         //LogUtil.Log("filePath:" + filePath);
 
+        Debug.Log("FileSystemUtil::EnsureDirectory:filePath:" + filePath);
+
         string directory = filePath;
+
         if(filePath.IndexOf('.') > -1 && filterFileName) {
+
             directory = filePath.Replace(Path.GetFileName(filePath), "");
+
+            Debug.Log("FileSystemUtil::EnsureDirectory:directory:" + directory);
+
         }
+        
+        Debug.Log("FileSystemUtil::EnsureDirectory:directory:" + directory);
+
         //LogUtil.Log("directory:" + directory);
+
         CreateDirectoryIfNeededAndAllowed(directory);
     }
 
@@ -430,7 +445,10 @@ public class FileSystemUtil {
         SystemPrefUtil.SetLocalSettingString(fileName, data);
         SystemPrefUtil.Save();
 #else
+        Debug.Log("FileSystemUtil::WriteString:EnsureDirectory:fileName:" + fileName);
+
         EnsureDirectory(fileName);
+
         StreamWriter sw = new StreamWriter(fileName, append);
         sw.Write(data);
         sw.Flush();
