@@ -3,9 +3,11 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public static class CanvasExtensions {
-    
+
     public static Rect RectTransformToScreenSpace(RectTransform transform) {
+
         Vector2 size = Vector2.Scale(transform.rect.size, transform.lossyScale);
+
         return new Rect((Vector2)transform.position - (size * 0.5f), size);
     }
 
@@ -43,14 +45,20 @@ public static class CanvasExtensions {
     /// <param name="pos">Position of in world space of the "Transform" you want the "RectTransform" to be.</param>
     /// <param name="cam">The Camera which is used. Note this is useful for split screen and both RenderModes of the Canvas.</param>
     /// <returns></returns>
-    public static Vector3 CalculatePositionFromTransformToRectTransform(this Canvas canvas, Vector3 pos, Camera cam) {
+    public static Vector3 CalculatePositionFromTransformToRectTransform(
+        this Canvas canvas, Vector3 pos, Camera cam) {
+
         Vector3 val = Vector3.zero;
-        if (canvas.renderMode == RenderMode.ScreenSpaceOverlay) {
+
+        if(canvas.renderMode == RenderMode.ScreenSpaceOverlay) {
             val = cam.WorldToScreenPoint(pos);
         }
-        else if (canvas.renderMode == RenderMode.ScreenSpaceCamera) {
+        else if(canvas.renderMode == RenderMode.ScreenSpaceCamera) {
+
             Vector2 tempVector = Vector2.zero;
-            RectTransformUtility.ScreenPointToLocalPointInRectangle(canvas.transform as RectTransform, cam.WorldToScreenPoint(pos), cam, out tempVector);
+            RectTransformUtility.ScreenPointToLocalPointInRectangle(
+                canvas.transform as RectTransform, cam.WorldToScreenPoint(pos), cam, out tempVector);
+
             val = canvas.transform.TransformPoint(tempVector);
         }
 
@@ -64,18 +72,22 @@ public static class CanvasExtensions {
     /// <param name="cam">The Camera which is used. Note this is useful for split screen and both RenderModes of the Canvas.</param>
     /// <returns></returns>
     public static Vector3 CalculatePositionFromMouseToRectTransform(this Canvas canvas, Camera cam) {
-        Vector3 Return = Vector3.zero;
 
-        if (canvas.renderMode == RenderMode.ScreenSpaceOverlay) {
-            Return = Input.mousePosition;
+        Vector3 val = Vector3.zero;
+
+        if(canvas.renderMode == RenderMode.ScreenSpaceOverlay) {
+            val = Input.mousePosition;
         }
-        else if (canvas.renderMode == RenderMode.ScreenSpaceCamera) {
+        else if(canvas.renderMode == RenderMode.ScreenSpaceCamera) {
+
             Vector2 tempVector = Vector2.zero;
-            RectTransformUtility.ScreenPointToLocalPointInRectangle(canvas.transform as RectTransform, Input.mousePosition, cam, out tempVector);
-            Return = canvas.transform.TransformPoint(tempVector);
+            RectTransformUtility.ScreenPointToLocalPointInRectangle(
+                canvas.transform as RectTransform, Input.mousePosition, cam, out tempVector);
+
+            val = canvas.transform.TransformPoint(tempVector);
         }
 
-        return Return;
+        return val;
     }
 
     /// <summary>
@@ -85,16 +97,21 @@ public static class CanvasExtensions {
     /// <param name="pos">Position of the "RectTransform" UI element you want the "Transform" object to be placed to.</param>
     /// <param name="cam">The Camera which is used. Note this is useful for split screen and both RenderModes of the Canvas.</param>
     /// <returns></returns>
-    public static Vector3 CalculatePositionFromRectTransformToTransform(this Canvas canvas, Vector3 pos, Camera cam) {
-        Vector3 Return = Vector3.zero;
-        if (canvas.renderMode == RenderMode.ScreenSpaceOverlay) {
-            Return = cam.ScreenToWorldPoint(pos);
+    public static Vector3 CalculatePositionFromRectTransformToTransform(
+        this Canvas canvas, Vector3 pos, Camera cam) {
+
+        Vector3 val = Vector3.zero;
+
+        if(canvas.renderMode == RenderMode.ScreenSpaceOverlay) {
+
+            val = cam.ScreenToWorldPoint(pos);
         }
-        else if (canvas.renderMode == RenderMode.ScreenSpaceCamera) {
-            RectTransformUtility.ScreenPointToWorldPointInRectangle(canvas.transform as RectTransform, cam.WorldToScreenPoint(pos), cam, out Return);
+        else if(canvas.renderMode == RenderMode.ScreenSpaceCamera) {
+
+            RectTransformUtility.ScreenPointToWorldPointInRectangle(canvas.transform as RectTransform, cam.WorldToScreenPoint(pos), cam, out val);
         }
-        return Return;
+
+        return val;
     }
     #endregion
-
 }

@@ -22,42 +22,49 @@ public static class ObjectExtensions {
         bool filter = true,
         JsonUtilType jsonUtilType = JsonUtilType.JsonMapper) {
 
-        if (inst == null) {
+        if(inst == null) {
             return null;
         }
 
         try {
 
-            if (jsonUtilType == JsonUtilType.UnityJsonUtility) {
-                if (filter) {
+            if(jsonUtilType == JsonUtilType.UnityJsonUtility) {
+
+                if(filter) {
+
                     return JsonUtility.ToJson(inst, prettyPrint).FilterJson();
                 }
                 else {
+
                     return JsonUtility.ToJson(inst, prettyPrint);
                 }
             }
             else {
 
                 StringBuilder val = new StringBuilder();
-                
+
                 JsonWriter writer = new JsonWriter(val);
-                writer.PrettyPrint = prettyPrint; 
+                writer.PrettyPrint = prettyPrint;
                 writer.IndentValue = 2;
-                
+
                 JsonMapper.ToJson(inst, writer);
 
                 string valString = val.ToString();
 
-                if (filter) {
+                if(filter) {
+
                     return valString.FilterJson();
                 }
                 else {
+
                     return valString;
                 }
             }
         }
-        catch (Exception e) {
+        catch(Exception e) {
+
             Debug.LogError("ToJson:FAILED:" + e);
+
             return null;
         }
     }
@@ -82,24 +89,28 @@ public static class ObjectExtensions {
         bool filter = true,
         JsonUtilType jsonUtilType = JsonUtilType.JsonMapper) {
 
-        if (jsonUtilType == JsonUtilType.UnityJsonUtility) {
+        if(jsonUtilType == JsonUtilType.UnityJsonUtility) {
 
-            if (filter) {
+            if(filter) {
+
                 return JsonUtility.FromJson<Dictionary<string, object>>(
                     inst.FilterJson());
             }
             else {
+
                 return JsonUtility.FromJson<Dictionary<string, object>>(
                     inst);
             }
         }
         else {
 
-            if (filter) {
+            if(filter) {
+
                 return JsonMapper.ToObject<Dictionary<string, object>>(
                     inst.FilterJson());
             }
             else {
+
                 return JsonMapper.ToObject<Dictionary<string, object>>(
                     inst);
             }
@@ -111,24 +122,28 @@ public static class ObjectExtensions {
         bool filter = true,
         JsonUtilType jsonUtilType = JsonUtilType.JsonMapper) {
 
-        if (jsonUtilType == JsonUtilType.UnityJsonUtility) {
+        if(jsonUtilType == JsonUtilType.UnityJsonUtility) {
 
-            if (filter) {
+            if(filter) {
+
                 return JsonUtility.FromJson<List<Dictionary<string, object>>>(
                     inst.FilterJson());
             }
             else {
+
                 return JsonUtility.FromJson<List<Dictionary<string, object>>>(
                     inst);
             }
         }
         else {
 
-            if (filter) {
+            if(filter) {
+
                 return JsonMapper.ToObject<List<Dictionary<string, object>>>(
                     inst.FilterJson());
             }
             else {
+
                 return JsonMapper.ToObject<List<Dictionary<string, object>>>(
                     inst);
             }
@@ -140,21 +155,25 @@ public static class ObjectExtensions {
         bool filter = true,
         JsonUtilType jsonUtilType = JsonUtilType.JsonMapper) {
 
-        if (jsonUtilType == JsonUtilType.UnityJsonUtility) {
+        if(jsonUtilType == JsonUtilType.UnityJsonUtility) {
 
-            if (filter) {
+            if(filter) {
+
                 return JsonUtility.FromJson<T>(inst.FilterJson());
             }
             else {
+
                 return JsonUtility.FromJson<T>(inst);
             }
         }
         else {
 
-            if (filter) {
+            if(filter) {
+
                 return JsonMapper.ToObject<T>(inst.FilterJson());
             }
             else {
+
                 return JsonMapper.ToObject<T>(inst);
             }
         }
@@ -165,20 +184,25 @@ public static class ObjectExtensions {
         bool filter = true,
         JsonUtilType jsonUtilType = JsonUtilType.JsonMapper) {
 
-        if (jsonUtilType == JsonUtilType.UnityJsonUtility) {
+        if(jsonUtilType == JsonUtilType.UnityJsonUtility) {
 
-            if (filter) {
+            if(filter) {
+
                 return JsonUtility.FromJson<object>(inst.FilterJson());
             }
             else {
+
                 return JsonUtility.FromJson<object>(inst);
             }
         }
         else {
-            if (filter) {
+
+            if(filter) {
+
                 return JsonMapper.ToObject<object>(inst.FilterJson());
             }
             else {
+
                 return JsonMapper.ToObject<object>(inst);
             }
         }
@@ -191,7 +215,7 @@ public static class ObjectExtensions {
         bool filter = true,
         JsonUtilType jsonUtilType = JsonUtilType.JsonMapper) {
 
-        if (val == null) {
+        if(val == null) {
             return default(T);
         }
 
@@ -199,8 +223,11 @@ public static class ObjectExtensions {
     }
 
     public static string FilterJson(this string val) {
-        if (string.IsNullOrEmpty(val))
+
+        if(string.IsNullOrEmpty(val)) {
             return val;
+        }
+
         return val
             .Replace("\\\"", "\"")
             //.Replace("\\\"", "\"")
@@ -214,18 +241,23 @@ public static class ObjectExtensions {
     }
 
     public static object ConvertJson(this string val) {
-        if (val.StartsWith("{") || val.StartsWith("[")) {
+
+        if(val.StartsWith("{") || val.StartsWith("[")) {
+
             try {
 
-                if (val.TrimStart().StartsWith("{")) {
+                if(val.TrimStart().StartsWith("{")) {
+
                     return val.FilterJson().FromJson<Dictionary<string, object>>();
                 }
-                else if (val.TrimStart().StartsWith("[")) {
+                else if(val.TrimStart().StartsWith("[")) {
+
                     return val.FilterJson().FromJson<List<object>>();
                 }
 
             }
-            catch (Exception e) {
+            catch(Exception e) {
+
                 UnityEngine.Debug.Log("ERROR parsing attribute:" + e);
             }
         }
@@ -251,7 +283,8 @@ public static class ObjectExtensions {
     public static long GetObjectSize(this object o) {
 
         long size = 0;
-        using (Stream s = new MemoryStream()) {
+
+        using(Stream s = new MemoryStream()) {
             BinaryFormatter formatter = new BinaryFormatter();
             formatter.Serialize(s, o);
             size = s.Length;

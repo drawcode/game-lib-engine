@@ -8,10 +8,15 @@ using UnityEngine;
 public class FileSystemUtil {
 
     public static void CreateDirectoryIfNeededAndAllowed(string path) {
+
 #if !UNITY_WEBPLAYER
+
         if(!Directory.Exists(path)) {
+
             if(DirectoryAllowed(path)) {
-                LogUtil.Log("CreateDirectoryIfNeededAndAllowed:" + path);
+
+                Debug.Log("CreateDirectoryIfNeededAndAllowed:" + path);
+
                 Directory.CreateDirectory(path);
             }
         }
@@ -57,6 +62,7 @@ public class FileSystemUtil {
         //int curr = 0;
 
         foreach(FileInfo file in files) {
+
             if(file.Extension != ".meta"
                 && file.Extension != ".DS_Store") {
 
@@ -77,6 +83,7 @@ public class FileSystemUtil {
         if(copySubDirs) {
 
             foreach(DirectoryInfo subdir in dirs) {
+
                 string temppath = PathUtil.Combine(destDirName, subdir.Name);
                 LogUtil.Log("Copying Directory: " + temppath);
                 DirectoryCopy(subdir.FullName, temppath, copySubDirs, versioned);

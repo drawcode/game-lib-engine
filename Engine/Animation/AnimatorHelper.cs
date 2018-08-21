@@ -7,31 +7,31 @@ using UnityEngine;
 public static class AnimatorHelper {
 
     public static void SetBool(Animator animator, string key, bool val) {
-        
-        if (animator == null) {
+
+        if(animator == null) {
             return;
         }
-        
-        if (animator != null
+
+        if(animator != null
             && animator.enabled
             && animator.gameObject.activeInHierarchy
             && animator.gameObject.activeSelf) {
-            
+
             animator.SetBool(key, val);
         }
     }
-    
+
     public static void SetFloat(Animator animator, string key, float val) {
-        
-        if (animator == null) {
+
+        if(animator == null) {
             return;
         }
-        
-        if (animator != null
+
+        if(animator != null
             && animator.enabled
             && animator.gameObject.activeInHierarchy
             && animator.gameObject.activeSelf) {
-            
+
             animator.SetFloat(key, val);
         }
     }
@@ -41,7 +41,7 @@ public static class AnimatorHelper {
     }
 
     public static IEnumerator PlayOneShotBoolCo(Animator animator, string paramName) {
-        if (animator != null
+        if(animator != null
             && animator.enabled
             && animator.gameObject.activeInHierarchy
             && animator.gameObject.activeSelf) {
@@ -60,7 +60,7 @@ public static class AnimatorHelper {
     }
 
     public static IEnumerator PlayOneShotFloatCo(Animator animator, string paramName, float startValue, float endValue) {
-        if (animator != null
+        if(animator != null
             && animator.enabled
             && animator.gameObject.activeInHierarchy
             && animator.gameObject.activeSelf) {
@@ -70,5 +70,3 @@ public static class AnimatorHelper {
         }
     }
 }
-
-

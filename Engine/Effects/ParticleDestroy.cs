@@ -3,21 +3,31 @@ using System.Collections;
 
 //[RequireComponent(typeof(ParticleSystem))]
 public class ParticleDestroy : MonoBehaviour {
+
     public bool OnlyDeactivate;
 
     void OnEnable() {
+
         StartCoroutine(CheckIfAlive());
     }
 
     IEnumerator CheckIfAlive() {
-        while (true) {
+
+        while(true) {
+
             yield return new WaitForSeconds(0.5f);
-            if (!gameObject.Get<ParticleSystem>().IsAlive(true)) {
-                if (OnlyDeactivate) {
+
+            if(!gameObject.Get<ParticleSystem>().IsAlive(true)) {
+
+                if(OnlyDeactivate) {
+
                     gameObject.Hide();
                 }
-                else
+                else {
+
                     GameObjectHelper.DestroyGameObject(this.gameObject);
+                }
+
                 break;
             }
         }

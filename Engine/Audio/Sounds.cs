@@ -4,7 +4,9 @@ using Engine.Utility;
 using UnityEngine;
 
 namespace Engine.Audio {
+
     public class Sounds : GameObjectBehavior {
+
         private AudioSource loop;
         private AudioSource intro;
         private AudioSource[] effects;
@@ -62,28 +64,37 @@ namespace Engine.Audio {
         }
 
         public void StartAmbience() {
+
             ambienceActive = true;
+
             StartCoroutine(StartAmbienceCoroutine());
         }
 
         public void SetEffectsVolume(double volume) {
+
             effectSoundVolume = volume;
         }
 
         public double GetEffectsVolume() {
+
             return effectSoundVolume;
         }
 
         public void SetAmbienceVolume(double volume) {
+
             musicSoundVolume = volume;
 
             LogUtil.Log("Sounds::SetAmbienceVolume::" + volume);
 
-            if (intro != null)
-                intro.volume = (float)musicSoundVolume;
+            if(intro != null) {
 
-            if (loop != null)
+                intro.volume = (float)musicSoundVolume;
+            }
+
+            if(loop != null) {
+
                 loop.volume = (float)musicSoundVolume;
+            }
         }
 
         public double GetAmbienceVolume() {
@@ -91,14 +102,20 @@ namespace Engine.Audio {
         }
 
         public void PlayEffect(int soundNumber) {
+
             if (effectsSoundsObject != null) {
+
                 if (effects == null) {
+
                     effects = effectsSoundsObject.GetComponentsInChildren<AudioSource>();
                 }
 
                 int effectsLength = effects.Length;
+
                 if (effectsLength > 0) {
+
                     if (soundNumber <= effectsLength) {
+
                         AudioSource effectSource = effects[soundNumber - 1];
                         effectSource.loop = false;
                         effectSource.volume = (float)effectSoundVolume;
@@ -123,6 +140,7 @@ namespace Engine.Audio {
                 int randomAmbience = UnityEngine.Random.Range(1, loopClipCount) - 1;
 
                 if (randomAmbience < introSoundsObject.GetComponentsInChildren<AudioSource>().Length) {
+
                     intro = introSoundsObject.GetComponentsInChildren<AudioSource>()[randomAmbience];
                     intro.loop = false;
                     intro.volume = (float)musicSoundVolume;
@@ -130,6 +148,7 @@ namespace Engine.Audio {
                 }
 
                 if (randomAmbience < loopSoundsObject.GetComponentsInChildren<AudioSource>().Length) {
+
                     loop = loopSoundsObject.GetComponentsInChildren<AudioSource>()[randomAmbience];
                     loop.loop = true;
                     loop.volume = (float)musicSoundVolume;
@@ -138,8 +157,9 @@ namespace Engine.Audio {
                     yield return new WaitForSeconds(intro.clip.length);
 
                     //Did somebody call stop while we were waiting?
-                    if (stopping)
+                    if(stopping) {
                         yield break;
+                    }
 
                     loop.Play();
                 }
@@ -147,12 +167,16 @@ namespace Engine.Audio {
         }
 
         public void StopAmbience() {
+
             ambienceActive = false;
+
             StartCoroutine(StopAmbienceRoutine());
         }
 
         private IEnumerator StopAmbienceRoutine() {
+
             stopping = true;
+
             bool wait = false;
 
             if (loop != null) {
@@ -174,21 +198,29 @@ namespace Engine.Audio {
             }
 
             //If nothing was playing exit
-            if (!wait)
+            if(!wait) {
+
                 yield break;
+            }
 
             //Wait for fade out
             yield return new WaitForSeconds(1.5f);
 
             //Did somebody call start while we were waiting?
-            if (!stopping)
+            if(!stopping) {
+
                 yield break;
+            }
 
-            if (intro != null)
+            if(intro != null) {
+
                 intro.Stop();
+            }
 
-            if (loop != null)
+            if(loop != null) {
+
                 loop.Stop();
+            }
         }
     }
 }

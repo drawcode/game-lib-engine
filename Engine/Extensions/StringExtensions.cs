@@ -33,8 +33,9 @@ public static class StringExtensions {
     }
     
     public static string UnescapeXML(this string s) {
-        if (string.IsNullOrEmpty(s))
+        if(string.IsNullOrEmpty(s)) {
             return s;
+        }
         
         string returnString = s;
         returnString = returnString.Replace("&apos;", "'");
@@ -47,6 +48,7 @@ public static class StringExtensions {
     }
     
     public static bool IsCompressed(this string val) {
+
         if (string.IsNullOrEmpty(val)) {
             return false;
         }
@@ -55,24 +57,30 @@ public static class StringExtensions {
     }
 
     public static bool IsBase64(this string val) {
+
         return FormatUtil.IsStringBase64(val);
     }
 
     public static string ToBase64(this string val) {
+
         if (string.IsNullOrEmpty(val)) {
             return val;
         }
+
         return FormatUtil.StringToBase64(val);
     }
         
     public static string FromBase64(this string val) {
+
         if (string.IsNullOrEmpty(val)) {
             return val;
         }
+
         return FormatUtil.StringFromBase64(val);
     }
 
     public static byte[] FromBase64Bytes(this string val) {
+
         return FormatUtil.BytesFromBase64(val);
     }
 
@@ -124,63 +132,81 @@ public static class StringExtensions {
 
     // REGEX
 
-    public static bool RegexIsMatch(this string val, string regex) {
+    public static bool RegexIsMatch(
+        this string val, string regex) {
         
         return RegexUtil.RegexIsMatch(val, regex);
         
     }
 
-    public static MatchCollection RegexMatches(this string val, string regex) {
+    public static MatchCollection RegexMatches(
+        this string val, string regex) {
 
         return RegexUtil.RegexMatches(val, regex);
 
     }
 
-    public static string RegexMatchesReplace(this string val, string regex, string replacement) {
+    public static string RegexMatchesReplace(
+        this string val, string regex, string replacement) {
+
         return RegexUtil.RegexReplace(val, regex, replacement);
     }
 
     // 
     public static string LineBreaksToHtml(this string val) {
+
         if (!string.IsNullOrEmpty(val)) {
+
             val = val.Replace("\\r\\n", "<br>");
             val = val.Replace("\\r", "<br>");
             val = val.Replace("\\n", "<br>");
         }
+
         return val;
     }
     
     public static string ToBase36(this string val) {
+
         return FormatUtil.ConvertToBase36(val);
     }
     
     public static string ToPascalCase(this string val) {
+
         string output = "";
         char[] chars = val.ToCharArray();
         bool firstUpper = true;
         bool upperNext = false;
+
         foreach (char ch in chars) {
+
             if (char.IsUpper(ch)) {
+
                 if (firstUpper) {
+
                     firstUpper = false;
                     output += ch.ToString().ToLower();
                     
                 }
                 else if (ch == '-' || ch == '_') {
+
                     // skip but cap next
                     upperNext = true;
                 }
                 else {
+
                     if (upperNext) {
+
                         upperNext = false;
                         output += ch.ToString().ToUpper();
                     }
                 }
             }
             else {
+
                 output += ch.ToString();
             }
         }
+
         return output;
     }
     
@@ -197,31 +223,43 @@ public static class StringExtensions {
     }
         
     public static string ToDelimited(this string val, string delimiter = "-") {
+
         string output = "";
         char[] chars = val.ToCharArray();
+
         foreach (char ch in chars) {
+
             if (char.IsUpper(ch)) {
+
                 if (output.Length > 0) {
+
                     output += delimiter;
                 }
+
                 output += ch.ToString().ToLower();
             }
             else {
+
                 output += ch.ToString();
             }
         }
         return output;
     }
     
-    public static string ToNonDelimited(this string val, string replaceDelimeter = " ", string delimiter = "-") {
+    public static string ToNonDelimited(
+        this string val, string replaceDelimeter = " ", string delimiter = "-") {
+
         if (val == null) {
             return null;
         }
+
         val = val.Replace(delimiter, replaceDelimeter);
+
         return val;
     }
 
     public static string StripToAlphanumerics(this string input) {
+
         string output = "";
         output = Regex.Replace(input, @"[^\w\s _-]|", "");
         //.replace(/\s+/g, " ");
@@ -229,6 +267,7 @@ public static class StringExtensions {
     }
     
     public static bool IsRegexMatch(this string input, string pattern) {
+
         if (string.IsNullOrEmpty(input)) {
             return false;
         }
@@ -237,6 +276,7 @@ public static class StringExtensions {
         if (Regex.IsMatch(input, pattern)) {
             return true;
         }
+
         return false;
     }
     
@@ -249,11 +289,14 @@ public static class StringExtensions {
     }
     
     public static string Substring(this string str, string StartString, string EndString) {
+
         if (str.Contains(StartString)) {
+
             int iStart = str.IndexOf(StartString) + StartString.Length;
             int iEnd = str.IndexOf(EndString, iStart);
             return str.Substring(iStart, (iEnd - iStart));
         }
+
         return null;
     }
     

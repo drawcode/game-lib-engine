@@ -5,6 +5,7 @@ using Engine.Utility;
 using UnityEngine;
 
 namespace Game {
+
     public class AudioAPI : BaseEngineObject {
 
         // -------------------------------------------------------------------
@@ -18,9 +19,9 @@ namespace Game {
 
         public static AudioAPI Instance {
             get {
-                if (instance == null) {
-                    lock (syncRoot) {
-                        if (instance == null)
+                if(instance == null) {
+                    lock(syncRoot) {
+                        if(instance == null)
                             instance = new AudioAPI();
                     }
                 }

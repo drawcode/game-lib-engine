@@ -5,11 +5,11 @@ public static class RigidbodyExtensions {
 
     public static void Freeze(this Rigidbody inst) {
 
-        if (inst == null) {
+        if(inst == null) {
             return;
         }
 
-        if (inst != null) {
+        if(inst != null) {
             //inst.freezeRotation = true;
             //inst.angularDrag = 0;
             //inst.angularVelocity = Vector3.zero;
@@ -21,11 +21,11 @@ public static class RigidbodyExtensions {
 
     public static void UnFreeze(this Rigidbody inst) {
 
-        if (inst == null) {
+        if(inst == null) {
             return;
         }
 
-        if (inst != null) {
+        if(inst != null) {
             //inst.freezeRotation = false;
             //inst.angularDrag = 0;
             //inst.angularVelocity = Vector3.zero;
@@ -35,4 +35,3 @@ public static class RigidbodyExtensions {
         }
     }
 }
-

@@ -5,38 +5,51 @@ using UnityEngine;
 public static class AudioSourceExtensions {
 
     public static void StopIfPlaying(this AudioSource audioSource) {
-        if (audioSource == null) {
+
+        if(audioSource == null) {
             return;
         }
 
-        if (audioSource.isPlaying) {
+        if(audioSource.isPlaying) {
             audioSource.Stop();
         }
     }
-    
-    public static void FadeOut(this AudioSource audioSource, float duration) {
-        CoroutineUtil.Start(audioSource.fadeOut(duration, () => audioSource.StopIfPlaying()));
+
+    public static void FadeOut(
+        this AudioSource audioSource, float duration) {
+
+        CoroutineUtil.Start(
+            audioSource.fadeOut(duration, () => audioSource.StopIfPlaying()));
     }
 
-    public static IEnumerator fadeOut(this AudioSource audioSource, float duration, Action onComplete) {
+    public static IEnumerator fadeOut(
+        this AudioSource audioSource, float duration, Action onComplete) {
+
         float startingVolume = audioSource.volume;
 
         // fade out the volume
-        while (audioSource.volume > 0.0f) {
+        while(audioSource.volume > 0.0f) {
+
             audioSource.volume -= Time.deltaTime * startingVolume / duration;
+
             yield return null;
         }
 
         // all done fading out
-        if (onComplete != null)
+        if(onComplete != null) {
             onComplete();
+        }
     }
 
-    public static void FadeIn(this AudioSource audioSource, float volumeTo, float duration) {
-        CoroutineUtil.Start(audioSource.fadeIn(volumeTo, duration, null));
+    public static void FadeIn(
+        this AudioSource audioSource, float volumeTo, float duration) {
+
+        CoroutineUtil.Start(
+            audioSource.fadeIn(volumeTo, duration, null));
     }
 
-    public static IEnumerator fadeIn(this AudioSource audioSource, float volumeTo, float duration, Action onComplete) {
+    public static IEnumerator fadeIn(
+        this AudioSource audioSource, float volumeTo, float duration, Action onComplete) {
 
         audioSource.volume = 0f;
 
@@ -44,16 +57,16 @@ public static class AudioSourceExtensions {
 
         //float startingVolume = audioSource.volume;
         float endingVolume = volumeTo;
-        
+
         // fade out the volume
-        while (audioSource.volume < volumeTo) {
+        while(audioSource.volume < volumeTo) {
             audioSource.volume += Time.deltaTime * endingVolume / duration;
             yield return null;
         }
-        
+
         // all done fading out
-        if (onComplete != null)
+        if(onComplete != null) {
             onComplete();
+        }
     }
-    
 }

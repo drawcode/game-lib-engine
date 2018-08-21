@@ -30,11 +30,14 @@ public class ContentConfig {
 
 public class ContentProgressItemStatus {
 
-    public Dictionary<string, List<string>> contentItems = new Dictionary<string, List<string>>();
+    public Dictionary<string, List<string>> contentItems = 
+        new Dictionary<string, List<string>>();
+
     public string contentMessage = "";
 }
 
 public class ContentItemStatus {
+
     public double itemSize = 0;
     public double itemProgress = 0;
     public string url = "";
@@ -55,6 +58,7 @@ public class ContentItemStatus {
 }
 
 public class ContentItemAccess : DataObjectItem {
+
     public bool globalItem = true;
     public string code = "";
     public string profileId = "";
@@ -65,41 +69,61 @@ public class ContentItemAccess : DataObjectItem {
 }
 
 public class ContentItemAccessDictionary : DataObjectItem {
-    public Dictionary<string, ContentItemAccess> accessItems = new Dictionary<string, ContentItemAccess>();
 
-    public void CheckDictionary() {
-        if (accessItems == null)
-            accessItems = new Dictionary<string, ContentItemAccess>();
+    Dictionary<string, ContentItemAccess> _accessItems = null;
+
+    public Dictionary<string, ContentItemAccess> accessItems {
+        get {
+
+            if(_accessItems == null) {
+
+                _accessItems = new Dictionary<string, ContentItemAccess>();
+            }
+
+            return _accessItems;
+        }
+        set {
+            _accessItems = value;
+        }
     }
 
     public bool CheckAccess(string key) {
-        CheckDictionary();
+        
         bool hasAccess = accessItems.ContainsKey(key);
+
         if (key.ToLower() == "default") {
+
             //|| !GameProducts.enableProductLocks) {
             hasAccess = true;
         }
+
         LogUtil.LogAccess("CheckAccess:: key: " + key + " hasAccess: " + hasAccess);
+
         return hasAccess;
     }
 
     public ContentItemAccess GetContentAccess(string key) {
-        CheckDictionary();
+        
         if (CheckAccess(key)) {
+
             if (accessItems != null) {
+
                 if (accessItems.ContainsKey(key)) {
+
                     return accessItems[key];
                 }
             }
         }
+
         return null;
     }
 
     public void SetContentAccess(string key) {
-        CheckDictionary();
+
         ContentItemAccess itemAccess;
 
         if (CheckAccess(key) && accessItems.ContainsKey(key)) {
+
             itemAccess = GetContentAccess(key);
             itemAccess.code = key;
             itemAccess.globalItem = true;
@@ -111,6 +135,7 @@ public class ContentItemAccessDictionary : DataObjectItem {
             SetContentAccess(itemAccess);
         }
         else {
+
             itemAccess = new ContentItemAccess();
             itemAccess.code = key;
             itemAccess.globalItem = true;
@@ -124,48 +149,63 @@ public class ContentItemAccessDictionary : DataObjectItem {
     }
 
     public void SetContentAccess(ContentItemAccess itemAccess) {
-
-        CheckDictionary();
-
+        
         if (CheckAccess(itemAccess.code)) {
+
             accessItems[itemAccess.code] = itemAccess;
         }
         else {
+
             accessItems.Add(itemAccess.code, itemAccess);
         }
     }
 
-    public void SetContentAccessTransaction(string key, string productId, string receipt, int quantity, bool save) {
+    public void SetContentAccessTransaction(
+        string key, string productId, string receipt, int quantity, bool save) {
+
         ContentItemAccess itemAccess = GetContentAccess(key);
+
         if (itemAccess != null) {
+
             itemAccess.receipt = receipt;
             itemAccess.productCode = productId;
             itemAccess.quantity = quantity;
+
             SetContentAccess(itemAccess);
+
             if (save) {
+
                 Save();
             }
         }
     }
 
     public void Save() {
-        CheckDictionary();
+
         string contentItemAccessString = "";
         string settingKey = "ssg-cal";
+
         contentItemAccessString = accessItems.ToJson();
+
         LogUtil.LogAccess("Save: access:" + contentItemAccessString);
+
         SystemPrefUtil.SetLocalSettingString(settingKey, contentItemAccessString);
         SystemPrefUtil.Save();
     }
 
     public void Load() {
+
         string settingKey = "ssg-cal";
+
         if (SystemPrefUtil.HasLocalSetting(settingKey)) {
+
             // Load from persistence
             string keyValue = SystemPrefUtil.GetLocalSettingString(settingKey);
+
             LogUtil.LogAccess("Load: access:" + keyValue);
+
             accessItems = keyValue.FromJson<Dictionary<string, ContentItemAccess>>();
-            CheckDictionary();
+            
         }
     }
 
@@ -177,7 +217,9 @@ public class ContentItemAccessDictionary : DataObjectItem {
 // {"download_urls": ["https://s3.amazonaws.com/game-ssc/1.1/ios/sx-2012-pack-1.unity3d?Signature=rJ%2Fe863up9wgAutleNY%2F%2B7OSy%2BU%3D&Expires=1332496714&AWSAccessKeyId=0YAPDVPCN85QV96YR382"], "access_allowed": true, "date_modified": "2012-03-21T10:58:34.919000", "udid": "[udid]", "tags": ["test", "fun"], "content": "this is \"real\"...", "url": "ffff", "version": "1.1", "increment": 1, "active": true, "date_created": "2012-03-21T10:58:34.919000", "type": "application/octet-stream"}}
 
 public class DownloadableContentItem {
+
     public List<string> download_urls = new List<string>();
+
     //public DateTime date_modified = DateTime.Now;
     //public string udid = "";
     //public List<string> tags = new List<string>();
@@ -193,11 +235,14 @@ public class DownloadableContentItem {
 }
 
 public class DownloadableContentItemList {
+
     public Dictionary<string, DownloadableContentUrlObject> url_objs
         = new Dictionary<string, DownloadableContentUrlObject>();
+
 }
 
 public class DownloadableContentUrlObject {
+
     public string file_key = ""; // hashed url part
     public string url = ""; // amazon url
     public string path = ""; // path for lookup in local content list
@@ -205,19 +250,24 @@ public class DownloadableContentUrlObject {
 
 
 public class DownloadableContentItemResponse : BaseObjectResponse {
+
     public DownloadableContentItem data = new DownloadableContentItem();
 
     public DownloadableContentItemResponse() {
+
         Reset();
     }
 
     public override void Reset() {
+
         base.Reset();
+
         data = new DownloadableContentItem();
     }
 }
 
 public class DownloadableContentItemListResponse : BaseObjectResponse {
+
     public DownloadableContentItemList data
         = new DownloadableContentItemList();
 
@@ -233,6 +283,7 @@ public class DownloadableContentItemListResponse : BaseObjectResponse {
 }
 
 public class BaseObjectResponse {
+
     public string info = "";
     public string status = "";
     public string code = "0";
@@ -240,10 +291,12 @@ public class BaseObjectResponse {
     public string message = "Success";
 
     public BaseObjectResponse() {
+
         Reset();
     }
 
     public virtual void Reset() {
+
         info = "";
         status = "";
         code = "0";
@@ -257,12 +310,11 @@ public class BaseObjectResponse {
 //"info": "ssg_ssc_1_1", "status": "", "code": "0", "action": "pack-1", "message": "Success!", "data": {"download_urls": ["http://s3.amazonaws.com/game-[app]/1.1/ios/sx-2012-pack-1.unity3d?Signature=9VJYzvaLZjeVcakz4DBDDg51Fwo%3D&Expires=1332704684&AWSAccessKeyId=0YAPDVPCN85QV96YR382"]}
 
 public class ContentMessages {
+
     public static string ContentFileDownloadSuccess = "content-file-download-success";
     public static string ContentFileDownloadError = "content-file-download-error";
     public static string ContentFileDownloadStarted = "content-file-download-started";
-
-
-
+    
     public static string ContentSetSuccess = "content-set-success";
     public static string ContentSetError = "content-set-error";
     public static string ContentSetStarted = "content-set-started";
@@ -330,20 +382,21 @@ public class ContentMessages {
 
 }
 
-
 public class ContentEndpoints {
-    public static string contentVerification = ContentsConfig.contentEndpoint + "api/v1/en/file/{0}/{1}/{2}/{3}"; // 0 = game, version, platform, pack
+
+    public static string contentVerification = 
+        ContentsConfig.contentEndpoint + "api/v1/en/file/{0}/{1}/{2}/{3}"; // 0 = game, version, platform, pack
 
     public static string contentDownloadPrimary = "http://s3.amazonaws.com/static/{0}/{1}/{2}/{3}";
     public static string contentDownloadAmazon = "http://s3.amazonaws.com/{0}/{1}/{2}/{3}";
+
     public static string contentDownloadFileAsset = ContentsConfig.contentEndpoint + "api/v1/en/file/{0}/{1}/{2}/{3}"; // 0 = game, version, platform, pack;
     public static string contentSyncContentSet = ContentsConfig.contentEndpoint + "api/v1/sync/en/content-list/{0}/{1}/{2}/{3}"; // 0 = game, version, platform, pack;
     public static string contentDownloadAppContentListFiles = ContentsConfig.contentEndpoint + "api/v1/en/app-content-list/file/{0}/{1}/{2}/"; // 0 = game, version, platform, pack;
-                                                                                                                                               //http://content1.host.com/api/v1/en/app-content-list/file/app-viewer/1.0/ios/?paths=1.0/data/app-content-list-item-data-1-0-5.json&app_id=85366ecb7429c19839e6900a1cfcedc18342f775
-
 }
 
 public class ContentItem {
+
     public string uid = "";
     public string name = "";
     public int version = 0;
@@ -351,6 +404,7 @@ public class ContentItem {
 }
 
 public class ContentItemError {
+
     public string uid = "";
     public string name = "";
     public string message = "";
@@ -685,17 +739,23 @@ public class ContentPaths {
     }
 
     public static List<string> GetPackPathsNonVersioned() {
+
         LoadPackPaths();
+
         return ContentPaths.packPaths;
     }
 
     public static List<string> GetPackPathsVersioned() {
+
         LoadPackPaths();
+
         return ContentPaths.packPathsVersioned;
     }
 
     public static List<string> GetPackPathsVersionedShared() {
+
         LoadPackPaths();
+
         return ContentPaths.packPathsVersionedShared;
     }
 
@@ -712,11 +772,16 @@ public class ContentPaths {
             //LogUtil.Log("Loading packPathsNONVersioned: " + appCachePathPacks);
 
             if (!string.IsNullOrEmpty(appCachePathPacks)) {
+
 #if !UNITY_WEBPLAYER
                 foreach (string path in Directory.GetDirectories(ContentPaths.appCachePathPacks)) {
+
                     string pathToAdd = PathUtil.Combine(appCachePathPacks, path);
+
                     if (!string.IsNullOrEmpty(pathToAdd)) {
+
                         if (!ContentPaths.packPaths.Contains(pathToAdd)) {
+
                             ContentPaths.packPaths.Add(pathToAdd);
                             //LogUtil.Log("Adding packPathsNONVersioned: pathToAdd:" + pathToAdd);
                         }
@@ -730,11 +795,16 @@ public class ContentPaths {
             //LogUtil.Log("Loading packPathsVersionedShared: " + appCachePathSharedPacks);
 
             if (!string.IsNullOrEmpty(appCachePathSharedPacks)) {
+
 #if !UNITY_WEBPLAYER
                 foreach (string path in Directory.GetDirectories(appCachePathSharedPacks)) {
+
                     string pathToAdd = PathUtil.Combine(appCachePathSharedPacks, path);
+
                     if (!string.IsNullOrEmpty(pathToAdd)) {
+
                         if (!packPathsVersionedShared.Contains(pathToAdd)) {
+
                             packPathsVersionedShared.Add(pathToAdd);
                             //LogUtil.Log("Adding packPathsVersionedShared: pathToAdd:" + pathToAdd);
                         }
@@ -745,13 +815,19 @@ public class ContentPaths {
         }
 
         if (packPathsVersioned.Count == 0) {
+
             //LogUtil.Log("Loading packPathsVersioned: " + appCachePathAllPlatformPacks);
             if (!string.IsNullOrEmpty(appCachePathAllPlatformPacks)) {
+
 #if !UNITY_WEBPLAYER
                 foreach (string path in Directory.GetDirectories(appCachePathAllPlatformPacks)) {
+
                     string pathToAdd = PathUtil.Combine(appCachePathAllPlatformPacks, path);
+
                     if (!string.IsNullOrEmpty(pathToAdd)) {
+
                         if (!packPathsVersioned.Contains(pathToAdd)) {
+
                             packPathsVersioned.Add(pathToAdd);
                             //LogUtil.Log("Adding packPathsVersioned: pathToAdd:" + pathToAdd);
                         }
@@ -801,10 +877,13 @@ public class Contents : GameObjectBehavior {
 
     public bool isReady {
         get {
+
             if(!string.IsNullOrEmpty(ContentPaths.appCachePath)
                 && !string.IsNullOrEmpty(ContentPaths.appShipCachePath)) {
+
                 return true;
             }
+
             return false;
         }
     }
@@ -881,7 +960,7 @@ public class Contents : GameObjectBehavior {
         Messenger<object>.AddListener(
             ContentMessages.ContentSyncFullPrepare,
             OnContentSyncFullPrepare);
-        
+
         // Content Sync Initial
 
         Messenger<object>.AddListener(
@@ -909,7 +988,7 @@ public class Contents : GameObjectBehavior {
         Messenger<object>.AddListener(
             ContentMessages.ContentSyncPackSuccess,
             OnContentSyncPackSuccess);
-        
+
         //Messenger<object>.AddListener(
         //	ContentMessages.ContentAppContentListFileDownloadError, 
         //	OnContentAppContentListFileSuccess);
@@ -921,7 +1000,7 @@ public class Contents : GameObjectBehavior {
         //Messenger<object>.AddListener(
         //	ContentMessages.ContentAppContentListFileError, 
         //	OnContentAppContentListFileError);
-        
+
         // Content List Sync Pack
 
         Messenger<object>.AddListener(
@@ -935,7 +1014,7 @@ public class Contents : GameObjectBehavior {
         Messenger<object>.AddListener(
             ContentMessages.ContentAppContentListSyncSuccess,
             OnContentAppContentListSyncSuccess);
-        
+
         // Has content list
 
         Messenger<object>.AddListener(
@@ -949,7 +1028,7 @@ public class Contents : GameObjectBehavior {
         Messenger<object>.AddListener(
             ContentMessages.ContentAppContentListFilesError,
             OnContentAppContentListFilesError);
-        
+
         // Has content list
 
         Messenger<object>.AddListener(
@@ -1074,9 +1153,11 @@ public class Contents : GameObjectBehavior {
         ChangeSyncState(ContentSyncState.SyncProcessDownloadFiles);
 
         if(displayState == ContentSyncDisplayState.SyncContentListsPack) {
+
             displayState = ContentSyncDisplayState.SyncContentListsPackDownload;
         }
         else if(displayState == ContentSyncDisplayState.SyncContentListsDefault) {
+
             displayState = ContentSyncDisplayState.SyncContentListsDefaultDownload;
         }
 
@@ -1129,9 +1210,11 @@ public class Contents : GameObjectBehavior {
         // Start downloading the new files
 
         if(displayState == ContentSyncDisplayState.SyncContentListsPack) {
+
             displayState = ContentSyncDisplayState.SyncContentListsPackDownload;
         }
         else if(displayState == ContentSyncDisplayState.SyncContentListsDefault) {
+
             displayState = ContentSyncDisplayState.SyncContentListsDefaultDownload;
         }
 
@@ -1156,9 +1239,11 @@ public class Contents : GameObjectBehavior {
         // Start downloading the new files
 
         if(displayState == ContentSyncDisplayState.SyncContentListsPack) {
+
             displayState = ContentSyncDisplayState.SyncContentListsPackDownload;
         }
         else if(displayState == ContentSyncDisplayState.SyncContentListsDefault) {
+
             displayState = ContentSyncDisplayState.SyncContentListsDefaultDownload;
         }
 
@@ -1169,14 +1254,18 @@ public class Contents : GameObjectBehavior {
     // -----------------------------------------------------------------------
 
     public static void ChangeSyncState(ContentSyncState syncStateTo) {
+
         if(isInst) {
             Instance.changeSyncState(syncStateTo);
         }
     }
 
     public void changeSyncState(ContentSyncState syncStateTo) {
+
         if(syncState != syncStateTo) {
+
             syncState = syncStateTo;
+
             if(syncState == ContentSyncState.SyncNotStarted) {
 
             }
@@ -1224,19 +1313,25 @@ public class Contents : GameObjectBehavior {
     // -----------------------------------------------------------------------
 
     public static void ProcessDownloadableContentUrlQueue() {
+
         if(isInst) {
             Instance.processDownloadableContentUrlQueue();
         }
     }
 
     public void processDownloadableContentUrlQueue() {
+
         StartCoroutine(processDownloadableContentUrlQueueCo());
     }
 
     public IEnumerator processDownloadableContentUrlQueueCo() {
+
         if(downloadUrlObjects != null) {
+
             if(downloadUrlObjects.Count > 0) {
+
                 currentUrlObject = downloadUrlObjects.Dequeue();
+
                 if(currentUrlObject != null) {
                     // download file...
 
@@ -1273,12 +1368,14 @@ public class Contents : GameObjectBehavior {
     // -----------------------------------------------------------------------
 
     public static void ChangePackAndLoadMainScene(string pack) {
+
         if(isInst) {
             Instance.changePackAndLoadMainScene(pack);
         }
     }
 
     public void changePackAndLoadMainScene(string pack) {
+
         GamePacks.Instance.ChangeCurrentGamePack(pack);
         //GameLevels.Instance.ChangeCurrentGameLevel(pack + "-main");
         // scene bundle based with unity caching
@@ -1288,36 +1385,44 @@ public class Contents : GameObjectBehavior {
 
 
     public static bool CheckGlobalContentAccess(string pack) {
+
         if(isInst) {
             return Instance.checkGlobalContentAccess(pack);
         }
+
         return false;
     }
 
     public bool checkGlobalContentAccess(string pack) {
+
         if(contentItemAccess.CheckAccess(pack)) {
             return true;
         }
+
         return false;
     }
 
     public static void SaveGlobalContentAccess() {
+
         if(isInst) {
             Instance.saveGlobalContentAccess();
         }
     }
 
     public void saveGlobalContentAccess() {
+
         contentItemAccess.Save();
     }
 
     public static void SetGlobalContentAccess(string pack) {
+
         if(isInst) {
             Instance.setGlobalContentAccess(pack);
         }
     }
 
     public void setGlobalContentAccess(string pack) {
+
         pack = pack.Replace(GamePacks.currentGameBundle + ".", "");
         contentItemAccess.SetContentAccess(pack);
         contentItemAccess.SetContentAccess(pack.Replace("-", "_"));
@@ -1327,22 +1432,28 @@ public class Contents : GameObjectBehavior {
         LogUtil.LogAccess("GameStore::SetContentAccessPermissions pack _ :" + pack.Replace("-", "_"));
         LogUtil.LogAccess("GameStore::SetContentAccessPermissions pack - :" + pack.Replace("_", "-"));
         LogUtil.LogAccess("GameStore::SetContentAccessPermissions pack - :" + pack.Replace("_", "-"));
+
         contentItemAccess.Save();
     }
 
-    public static void SetContentAccessTransaction(string key, string productId, string receipt, int quantity, bool save) {
+    public static void SetContentAccessTransaction(
+        string key, string productId, string receipt, int quantity, bool save) {
+
         if(isInst) {
             Instance.setContentAccessTransaction(key, productId, receipt, quantity, save);
         }
     }
 
-    public void setContentAccessTransaction(string key, string productId, string receipt, int quantity, bool save) {
+    public void setContentAccessTransaction(
+        string key, string productId, string receipt, int quantity, bool save) {
+
         contentItemAccess.SetContentAccessTransaction(key, productId, receipt, quantity, save);
     }
 
     // -----------------------------------------------------------------------
 
     public static void ProcessLoad(bool runtime) {
+
         if(isInst) {
             Instance.processLoad(runtime);
         }
@@ -1380,24 +1491,30 @@ public class Contents : GameObjectBehavior {
     }
 
     public static void ProcessPackLoad(string packCode, bool runtime) {
+
         if(isInst) {
             Instance.processPackLoad(packCode, runtime);
         }
     }
 
     public void processPackLoad(string packCode, bool runtime) {
+
         runtimeUpdate = true;
+
         processPackLoad(packCode);
     }
 
     public static void ProcessPackLoad(string packCode) {
+
         if(isInst) {
             Instance.processPackLoad(packCode);
         }
     }
 
     public void processPackLoad(string packCode) {
+
         runtimeUpdate = false;
+
         StartCoroutine(processPackLoadCo(packCode));
     }
 
@@ -1419,6 +1536,7 @@ public class Contents : GameObjectBehavior {
     }
 
     public static void ProcessAppContentListSync(string packCode) {
+
         if(isInst) {
             Instance.processAppContentList(packCode);
         }
@@ -1431,6 +1549,7 @@ public class Contents : GameObjectBehavior {
         resetQueues();
 
         List<string> paths = collectAppContentListSync(packCode);
+
         if(paths.Count > 0) {
             requestDownloadableAppContentListSync(paths);
         }
@@ -1451,12 +1570,15 @@ public class Contents : GameObjectBehavior {
 	*/
 
     IEnumerator processSyncUpdateCo() {
+
         if(processUrlObjects != null) {
+
             yield return StartCoroutine(processSyncedFilesCo());
         }
     }
 
     public static void ProcessAppContentList(string packCode) {
+
         if(isInst) {
             Instance.processAppContentList(packCode);
         }
@@ -1471,6 +1593,7 @@ public class Contents : GameObjectBehavior {
         resetQueues();
 
         List<string> paths = collectAppContentListFiles(packCode);
+
         if(paths.Count > 0) {
             requestDownloadableAppContentListFiles(paths);
         }
@@ -1483,41 +1606,54 @@ public class Contents : GameObjectBehavior {
     }
 
     public static bool IsDefault(string code) {
+
         if(isInst) {
             return Instance.isDefault(code);
         }
+
         return true;
     }
 
     public bool isDefault(string code) {
+
         if(!string.IsNullOrEmpty(code)) {
+
             if(code.ToLower() == "default"
                     && code.ToLower() == "*"
                     && code.ToLower() == "all") {
+
                 return true;
             }
         }
+
         return false;
     }
 
     public static bool CheckHashVerified(string pathVersioned, string hashData) {
+
         if(isInst) {
             return Instance.checkHashVerified(pathVersioned, hashData);
         }
+
         return false;
     }
 
     public bool checkHashVerified(string pathVersioned, string hashData) {
+
         string currentHash = ChecksumHash(pathVersioned);
         string dataHash = hashData;
+
         bool hashVerified = currentHash.ToLower() == dataHash.ToLower() ? true : false;
+
         return hashVerified;
     }
 
     public static List<string> CollectAppContentListFiles(string packCode) {
+
         if(isInst) {
             return Instance.collectAppContentListFiles(packCode);
         }
+
         return new System.Collections.Generic.List<string>();
     }
 
@@ -1531,6 +1667,7 @@ public class Contents : GameObjectBehavior {
         List<string> paths = new List<string>();
 
         foreach(AppContentListItem item in appContentListItems) {
+
             string path = PathUtil.Combine(item.data.directoryFull, item.data.fileName);
             string pathVersioned = getFullPathVersioned(path);
             string pathHashed = getFileVersioned(path, item.data.hash);
@@ -1602,14 +1739,18 @@ public class Contents : GameObjectBehavior {
         return paths;
     }
 
-    public static string CollectAppContentListSharedPacksPathData(string packCode, string key, string ext, bool versioned, bool synced) {
+    public static string CollectAppContentListSharedPacksPathData(
+        string packCode, string key, string ext, bool versioned, bool synced) {
+
         if(isInst) {
             return Instance.collectAppContentListPlatformPacksPathData(packCode, key, ext, versioned, synced);
         }
+
         return "";
     }
 
-    public string collectAppContentListSharedPacksPathData(string packCode, string key, string ext, bool versioned, bool synced) {
+    public string collectAppContentListSharedPacksPathData(
+        string packCode, string key, string ext, bool versioned, bool synced) {
 
         string pathPack = "";
 
@@ -1632,14 +1773,18 @@ public class Contents : GameObjectBehavior {
         return pathPack;
     }
 
-    public static string CollectAppContentListPlatformPacksPathData(string packCode, string key, string ext, bool versioned, bool synced) {
+    public static string CollectAppContentListPlatformPacksPathData(
+        string packCode, string key, string ext, bool versioned, bool synced) {
+
         if(isInst) {
             return Instance.collectAppContentListPlatformPacksPathData(packCode, key, ext, versioned, synced);
         }
+
         return "";
     }
 
-    public string collectAppContentListPlatformPacksPathData(string packCode, string key, string ext, bool versioned, bool synced) {
+    public string collectAppContentListPlatformPacksPathData(
+        string packCode, string key, string ext, bool versioned, bool synced) {
 
         string pathPack = "";
 
@@ -1661,14 +1806,19 @@ public class Contents : GameObjectBehavior {
 
         return pathPack;
     }
-    public static string CollectAppContentListSharedPacksPathContent(string packCode, string key, string ext, bool versioned, bool synced) {
+    public static string CollectAppContentListSharedPacksPathContent(
+        string packCode, string key, string ext, bool versioned, bool synced) {
+
         if(isInst) {
-            return Instance.collectAppContentListSharedPacksPathContent(packCode, key, ext, versioned, synced);
+            return Instance.collectAppContentListSharedPacksPathContent(
+                packCode, key, ext, versioned, synced);
         }
+
         return "";
     }
 
-    public string collectAppContentListSharedPacksPathContent(string packCode, string key, string ext, bool versioned, bool synced) {
+    public string collectAppContentListSharedPacksPathContent(
+        string packCode, string key, string ext, bool versioned, bool synced) {
 
         string pathPack = "";
 
@@ -1690,14 +1840,19 @@ public class Contents : GameObjectBehavior {
         return pathPack;
     }
 
-    public static string CollectAppContentListSharedPacksPath(string packCode, string key, string ext, bool versioned, bool synced) {
+    public static string CollectAppContentListSharedPacksPath(
+        string packCode, string key, string ext, bool versioned, bool synced) {
+
         if(isInst) {
-            return Instance.collectAppContentListSharedPacksPath(packCode, key, ext, versioned, synced);
+            return Instance.collectAppContentListSharedPacksPath(
+                packCode, key, ext, versioned, synced);
         }
+
         return "";
     }
 
-    public string collectAppContentListSharedPacksPath(string packCode, string key, string ext, bool versioned, bool synced) {
+    public string collectAppContentListSharedPacksPath(
+        string packCode, string key, string ext, bool versioned, bool synced) {
 
         string pathPack = "";
 
@@ -1720,9 +1875,11 @@ public class Contents : GameObjectBehavior {
     }
 
     public static List<string> CollectAppContentListSync(string packCode) {
+
         if(isInst) {
             return Instance.collectAppContentListSync(packCode);
         }
+
         return new List<string>();
     }
 
@@ -1765,6 +1922,7 @@ public class Contents : GameObjectBehavior {
     // -----------------------------------------------------------------------
 
     public static void ResetQueues() {
+
         if(isInst) {
             Instance.resetQueues();
         }
@@ -1781,27 +1939,33 @@ public class Contents : GameObjectBehavior {
         if(processUrlObjects == null) {
             processUrlObjects = new Queue<DownloadableContentUrlObject>();
         }
+
         processUrlObjects.Clear();
     }
 
     public static string GetPathUpdatedVersion(string url) {
+
         if(isInst) {
             return Instance.getPathUpdatedVersion(url);
         }
+
         return url;
     }
 
     public string getPathUpdatedVersion(string url) {
+
         if(url.Contains("version/")) {
             url = url.Replace("version/", ContentsConfig.contentVersion + "/");
         }
+
         return url;
     }
 
     // ----------------------------------------------------------------------------------
     // HANDLERS	
 
-    void handleDownloadableAppContentListFilesCallback(Engine.Networking.WebRequests.ResponseObject response) {
+    void handleDownloadableAppContentListFilesCallback(
+        Engine.Networking.WebRequests.ResponseObject response) {
 
         response = handleResponseObject(response);
 
@@ -1851,14 +2015,17 @@ public class Contents : GameObjectBehavior {
         }
 
         if(serverError) {
+
             reset();
+
             Messenger<object>.Broadcast(
                 ContentMessages.ContentAppContentListFilesError,
                 "Error on server, please try again.");
         }
     }
 
-    void handleDownloadableAppContentListSyncCallback(Engine.Networking.WebRequests.ResponseObject response) {
+    void handleDownloadableAppContentListSyncCallback(
+        Engine.Networking.WebRequests.ResponseObject response) {
 
         response = handleResponseObject(response);
 
@@ -1880,6 +2047,7 @@ public class Contents : GameObjectBehavior {
 
                     foreach(KeyValuePair<string, DownloadableContentUrlObject> item
                         in responseData.data.url_objs) {
+
                         DownloadableContentUrlObject urlData = item.Value;
                         downloadUrlObjects.Enqueue(urlData);
                     }
@@ -1908,7 +2076,9 @@ public class Contents : GameObjectBehavior {
         }
 
         if(serverError) {
+
             reset();
+
             Messenger<object>.Broadcast(
                 ContentMessages.ContentAppContentListSyncError,
                 "Error on server, please try again.");
@@ -1918,7 +2088,8 @@ public class Contents : GameObjectBehavior {
     // ----------------------------------------------------------------------------------
     // HANDLERS - DEFAULT
 
-    void handleDownloadAssetBundleCallback(Engine.Networking.WebRequests.ResponseObject response) {
+    void handleDownloadAssetBundleCallback(
+        Engine.Networking.WebRequests.ResponseObject response) {
 
         /*
 		 * 
@@ -1986,7 +2157,8 @@ public class Contents : GameObjectBehavior {
 		*/
     }
 
-    void handleDownloadableContentInfoCallback(Engine.Networking.WebRequests.ResponseObject response) {
+    void handleDownloadableContentInfoCallback(
+        Engine.Networking.WebRequests.ResponseObject response) {
 
         response = handleResponseObject(response);
 
@@ -2003,12 +2175,16 @@ public class Contents : GameObjectBehavior {
             if(!string.IsNullOrEmpty(dataToParse)) {
 
                 try {
+
                     DownloadableContentItemResponse responseData
                         = dataToParse.FromJson<DownloadableContentItemResponse>();
+
                     dlcItem = responseData.data;
                 }
                 catch(Exception e) {
+
                     serverError = true;
+
                     LogUtil.LogAccess("Parsing error:"
                         + e.Message + e.StackTrace + e.Source);
                 }
@@ -2028,21 +2204,27 @@ public class Contents : GameObjectBehavior {
                     }
                 }
                 else {
+
                     serverError = true;
                 }
             }
             else {
+
                 serverError = true;
             }
         }
         else {
+
             // There was a problem with the response.
             LogUtil.LogAccess("NON-SUCCESSFUL DOWNLOAD");
+
             serverError = true;
         }
 
         if(serverError) {
+
             reset();
+
             Messenger<string>.Broadcast(
                 ContentMessages.ContentItemVerifyError,
                 "Error on server, please try again.");
@@ -2069,13 +2251,16 @@ public class Contents : GameObjectBehavior {
             if(!string.IsNullOrEmpty(dataToParse)) {
 
                 try {
+
                     DownloadableContentItemResponse responseData
                         = dataToParse.FromJson<DownloadableContentItemResponse>();
 
                     dlcItem = responseData.data;
                 }
                 catch(Exception e) {
+
                     serverError = true;
+
                     LogUtil.LogAccess("Parsing error:"
                         + e.Message + e.StackTrace + e.Source);
                 }
@@ -2085,31 +2270,38 @@ public class Contents : GameObjectBehavior {
                     List<string> downloadUrls = dlcItem.download_urls;
 
                     foreach(string url in downloadUrls) {
+
                         Messenger<string>.Broadcast(
                             ContentMessages.ContentItemVerifySuccess,
                             "Content verified, downloading and loading pack.");
 
                         StartCoroutine(
                             sceneLoadFromCacheOrDownloadCo(url));
+
                         break;
                     }
                 }
                 else {
+
                     serverError = true;
                 }
             }
             else {
+
                 serverError = true;
             }
         }
         else {
             // There was a problem with the response.
             LogUtil.LogAccess("NON-SUCCESSFUL DOWNLOAD");
+
             serverError = true;
         }
 
         if(serverError) {
+
             reset();
+
             Messenger<string>.Broadcast(
                 ContentMessages.ContentItemVerifyError,
                 "Error on server, please try again.");
@@ -2139,7 +2331,9 @@ public class Contents : GameObjectBehavior {
                     dlcItem = responseData.data;
                 }
                 catch(Exception e) {
+
                     serverError = true;
+
                     LogUtil.LogAccess("Parsing error:"
                         + e.Message + e.StackTrace + e.Source);
                 }
@@ -2149,6 +2343,7 @@ public class Contents : GameObjectBehavior {
                     List<string> downloadUrls = dlcItem.download_urls;
 
                     if(downloadUrls.Count > 0) {
+
                         Messenger<string>.Broadcast(
                             ContentMessages.ContentItemVerifySuccess,
                             "Content verified, downloading and loading pack.");
@@ -2168,11 +2363,14 @@ public class Contents : GameObjectBehavior {
         else {
             // There was a problem with the response.
             LogUtil.LogAccess("NON-SUCCESSFUL DOWNLOAD");
+
             serverError = true;
         }
 
         if(serverError) {
+
             reset();
+
             Messenger<string>.Broadcast(
                 ContentMessages.ContentItemVerifyError,
                 "Error on server, please try again.");
@@ -2259,6 +2457,7 @@ public class Contents : GameObjectBehavior {
                 LogUtil.LogAccess("STATUS/CODE MESSAGE:" + message);
 
                 if(code == "0") {
+
                     LogUtil.LogAccess("STATUS/DATA NODE:" + data);
 
                     LogUtil.LogAccess("dataValue:" + data["data"]);
@@ -2270,6 +2469,7 @@ public class Contents : GameObjectBehavior {
                     responseObject.validResponse = true;
                 }
                 else {
+
                     LogUtil.Log(
                         "ERROR - Good response but problem with data, see message.");
 
@@ -2297,12 +2497,14 @@ public class Contents : GameObjectBehavior {
     // REQUESTS		
 
     public static void RequestDownloadableContent(string pack) {
+
         if(isInst) {
             Instance.requestDownloadableContent(pack);
         }
     }
 
     public void requestDownloadableContent(string pack) {
+
         RequestDownloadableContent(
             GamePacks.currentPacksGame,
             GamePacks.currentPacksVersion,
@@ -2386,6 +2588,7 @@ public class Contents : GameObjectBehavior {
     }
 
     public static Dictionary<string, object> GetDefaultPostParams() {
+
         if(isInst) {
             return Instance.getDefaultPostParams();
         }
@@ -2393,14 +2596,19 @@ public class Contents : GameObjectBehavior {
     }
 
     public Dictionary<string, object> getDefaultPostParams() {
+
         Dictionary<string, object> data = new Dictionary<string, object>();
+
         string udid = UniqueUtil.Instance.currentUniqueId;
+
         data.Add("device_id", udid);
         data.Add("app_id", ContentsConfig.contentApiKey);
+
         return data;
     }
 
     public static void RequestDownloadableAppContentListSync(List<string> paths) {
+
         if(isInst) {
             Instance.requestDownloadableAppContentListSync(paths);
         }
@@ -2470,17 +2678,22 @@ public class Contents : GameObjectBehavior {
 
     public static string GetDownloadContentItemUrl(
         string game, string buildVersion, string platform, string pack) {
+
         if(isInst) {
+
             return Instance.getDownloadContentItemUrl(
                 game, buildVersion, platform, pack);
         }
+
         return "";
     }
 
     public string getDownloadContentItemUrl(
         string game, string buildVersion, string platform, string pack) {
+
         // add increment to the pack name
         pack = pack + "-" + Convert.ToString(GamePacks.currentPacksIncrement);
+
         return String.Format(
             ContentEndpoints.contentDownloadFileAsset,
             game, buildVersion, platform, pack);
@@ -2488,16 +2701,20 @@ public class Contents : GameObjectBehavior {
 
     public static string GetDownloadAppContentListFilesUrl(
         string game, string buildVersion, string platform) {
+
         if(isInst) {
+
             return Instance.getDownloadAppContentListFilesUrl(
                 game, buildVersion, platform);
         }
+
         return "";
     }
 
     //contentDownloadAppContentListFiles
     public string getDownloadAppContentListFilesUrl(
         string game, string buildVersion, string platform) {
+
         return String.Format(
             ContentEndpoints.contentDownloadAppContentListFiles,
             game, buildVersion, platform);
@@ -2505,14 +2722,18 @@ public class Contents : GameObjectBehavior {
 
     public static string GetContentSetUrl(
         string game, string buildVersion, string platform) {
+
         if(isInst) {
+
             return Instance.getContentSetUrl(game, buildVersion, platform);
         }
+
         return "";
     }
 
     public string getContentSetUrl(
         string game, string buildVersion, string platform) {
+
         // add increment to the pack name
         //pack = pack + "-" + Convert.ToString(GamePacks.currentPacksIncrement);
         return String.Format(
@@ -2521,12 +2742,14 @@ public class Contents : GameObjectBehavior {
     }
 
     public static void LoadSceneOrDownloadScenePackAndLoad(string pack) {
+
         if(isInst) {
             Instance.loadSceneOrDownloadScenePackAndLoad(pack);
         }
     }
 
     public void loadSceneOrDownloadScenePackAndLoad(string pack) {
+
         loadSceneOrDownloadScenePackAndLoad(
             GamePacks.currentPacksGame,
             GamePacks.currentPacksVersion,
@@ -2536,7 +2759,9 @@ public class Contents : GameObjectBehavior {
 
     public static void LoadSceneOrDownloadScenePackAndLoad(
         string game, string buildVersion, string platform, string pack) {
+
         if(isInst) {
+
             Instance.loadSceneOrDownloadScenePackAndLoad(
                 game, buildVersion, platform, pack);
         }
@@ -2546,7 +2771,9 @@ public class Contents : GameObjectBehavior {
         string game, string buildVersion, string platform, string pack) {
 
         bool isDownloadableContent = IsDownloadableContent(pack);
+
         LogUtil.LogAccess("isDownloadableContent:" + isDownloadableContent);
+
         int version = GamePacks.currentPacksIncrement;
 
         //string url = GetDownloadContentItemUrl(game, buildVersion, platform, pack);
@@ -2566,9 +2793,11 @@ public class Contents : GameObjectBehavior {
     }
 
     public static bool IsDownloadableContent(string pack) {
+
         if(isInst) {
             return Instance.isDownloadableContent(pack);
         }
+
         return false;
     }
 
@@ -2580,6 +2809,7 @@ public class Contents : GameObjectBehavior {
     }
 
     public static void SetLastPackState(string packName, string url) {
+
         if(isInst) {
             Instance.setLastPackState(packName, url);
         }
@@ -2588,6 +2818,7 @@ public class Contents : GameObjectBehavior {
     public void setLastPackState(string packName, string url) {
 
         if(IsDownloadableContent(packName)) {
+
             string lastPackUrlKey = "last-pack-" + packName;
             string lastPackUrlValue = url;
 
@@ -2599,14 +2830,18 @@ public class Contents : GameObjectBehavior {
     }
 
     public static string GetLastPackState(string packName) {
+
         if(isInst) {
             return Instance.getLastPackState(packName);
         }
+
         return "";
     }
 
     public string getLastPackState(string packName) {
+
         if(IsDownloadableContent(packName)) {
+
             string lastPackUrlKey = "last-pack-" + packName;
             if(SystemPrefUtil.HasLocalSetting(lastPackUrlKey)) {
                 return SystemPrefUtil.GetLocalSettingString(lastPackUrlKey);
@@ -2622,6 +2857,7 @@ public class Contents : GameObjectBehavior {
     // Individual file downloading
 
     public static string GetHashCodeFromFile(string url) {
+
         if(isInst) {
             return Instance.getHashCodeFromFile(url);
         }
@@ -2629,22 +2865,29 @@ public class Contents : GameObjectBehavior {
     }
 
     public string getHashCodeFromFile(string url) {
+
         string hash = "";
+
         if(!url.Contains(ContentPaths.appCachePath)) {
             url = PathUtil.Combine(ContentPaths.appCachePath, url);
         }
+
         hash = ChecksumHash(url);
+
         return hash;
     }
 
     public static string GetHashCodeFromFilePath(string url) {
+
         if(isInst) {
             return Instance.getHashCodeFromFilePath(url);
         }
+
         return url;
     }
 
     public string getHashCodeFromFilePath(string url) {
+
         string hash = "";
 
         string text = url;
@@ -2681,13 +2924,17 @@ public class Contents : GameObjectBehavior {
 
     // BINARY SAVING	
 
-    public static void HandleSyncedFileBinary(byte[] bytes, DownloadableContentUrlObject urlObject) {
+    public static void HandleSyncedFileBinary(
+        byte[] bytes, DownloadableContentUrlObject urlObject) {
+
         if(isInst) {
             Instance.handleSyncedFileBinary(bytes, urlObject);
         }
     }
 
-    public void handleSyncedFileBinary(byte[] bytes, DownloadableContentUrlObject urlObject) {
+    public void handleSyncedFileBinary(
+        byte[] bytes, DownloadableContentUrlObject urlObject) {
+
         if(bytes != null) {
 
             string path = urlObject.path;
@@ -2756,9 +3003,11 @@ public class Contents : GameObjectBehavior {
 	*/
 
     public static string GetUnversionedDisplayFile(string val) {
+
         if(isInst) {
             return Instance.getUnversionedDisplayFile(val);
         }
+
         return "";
     }
 
@@ -2813,8 +3062,11 @@ public class Contents : GameObjectBehavior {
     float validatingInc = 0;
 
     IEnumerator processSyncedFilesRecursiveCo() {
+
         if(processUrlObjects != null) {
+
             if(validatingTotal > 0) {
+
                 DownloadableContentUrlObject urlObject = processUrlObjects.Dequeue();
                 broadcastProgressMessage("Validating Files", GetUnversionedDisplayFile(urlObject.path), validatingInc++ / validatingTotal);
                 processSyncedFile(urlObject);
@@ -2829,6 +3081,7 @@ public class Contents : GameObjectBehavior {
     public static string processMarker = "____process";
 
     public static void ProcessSyncedFile(DownloadableContentUrlObject urlObject) {
+
         if(isInst) {
             Instance.processSyncedFile(urlObject);
         }
@@ -2914,6 +3167,7 @@ public class Contents : GameObjectBehavior {
                     FileSystemUtil.RemoveFile(pathSave);
                 }
                 else {
+
                     if(updateFile) {
 
                         if(isAllType) {
@@ -2997,6 +3251,7 @@ public class Contents : GameObjectBehavior {
             }
         }
         else {
+
             FileSystemUtil.RemoveFile(pathSave);
         }
     }
@@ -3025,6 +3280,7 @@ public class Contents : GameObjectBehavior {
     }
 
     public static void RequestDownloadBytes(string url) {
+
         if(isInst) {
             Instance.requestDownloadBytes(url);
         }
@@ -3035,6 +3291,7 @@ public class Contents : GameObjectBehavior {
         Messenger<object>.Broadcast(
             ContentMessages.ContentAppContentListFileDownloadStarted,
                 "Download Started");
+
         WebRequests.Instance.RequestBytes(url, handleRequestDownloadBytesCallback);
     }
 
@@ -3056,12 +3313,14 @@ public class Contents : GameObjectBehavior {
     //}
 
     public static void BroadcastProgressMessage(string title, string description, float progress) {
+
         if(isInst) {
             Instance.broadcastProgressMessage(title, description, progress);
         }
     }
 
     public void broadcastProgressMessage(string title, string description, float progress) {
+
         Messenger<string, string, float>.Broadcast(ContentMessages.ContentProgressMessage,
             title,
             description,
@@ -3076,11 +3335,14 @@ public class Contents : GameObjectBehavior {
     }
 
     public static void InitCache(bool syncFolders, bool syncServer) {
+
         if(isInst) {
             Instance.initCache(syncFolders, syncServer);
         }
     }
+
     public void initCache(bool syncFolders, bool syncServer) {
+
         StartCoroutine(initCacheCo(syncFolders, syncServer));
     }
 
@@ -3120,9 +3382,11 @@ public class Contents : GameObjectBehavior {
 
     public static string GetFileDataFromPersistentCache(
         string path, bool versioned, bool absolute) {
+
         if(isInst) {
             return Instance.getFileDataFromPersistentCache(path, versioned, absolute);
         }
+
         return "";
     }
 
@@ -3160,8 +3424,10 @@ public class Contents : GameObjectBehavior {
         //LogUtil.Log("GetFileDataFromPersistentCache:absolute:" + absolute);
 
         if(!versionedExists && !absolute) {
+
             // copy from streaming assets	
             bool shipExists = FileSystemUtil.CheckFileExists(pathToCopy);
+
             if(shipExists) {
                 FileSystemUtil.CopyFile(pathToCopy, pathVersioned);
             }
@@ -3169,7 +3435,9 @@ public class Contents : GameObjectBehavior {
                 return "";
             }
         }
+
         fileData = FileSystemUtil.ReadString(pathVersioned);
+
         return fileData;
     }
 
@@ -3183,6 +3451,7 @@ public class Contents : GameObjectBehavior {
     public static IEnumerator SyncContentListItemDataCo(
         ContentStorageLocation locationFrom,
         ContentStorageLocation locationTo) {
+
         if(isInst) {
             yield return Instance.StartCoroutine(Instance.syncContentListItemDataCo(locationFrom, locationTo));
         }
@@ -3200,6 +3469,7 @@ public class Contents : GameObjectBehavior {
             locationFrom.ToString() + " locationTo:" + locationTo.ToString());
 
         List<AppContentListItem> contentListItems = AppContentListItems.Instance.GetAll();
+
         int totalItems = contentListItems.Count;
         float inc = 0f;
 
@@ -3271,6 +3541,7 @@ public class Contents : GameObjectBehavior {
     public static IEnumerator DirectoryCopyCo(
         string sourceDirName, string destDirName,
         bool copySubDirs, bool versioned) {
+
         if(isInst) {
             yield return Instance.StartCoroutine(Instance.directoryCopyCo(
                 sourceDirName, destDirName, copySubDirs, versioned));
@@ -3278,7 +3549,6 @@ public class Contents : GameObjectBehavior {
         else {
             yield break;
         }
-
     }
 
     public IEnumerator directoryCopyCo(
@@ -3391,7 +3661,6 @@ public class Contents : GameObjectBehavior {
 
     public IEnumerator syncFoldersCo(bool syncFolders, bool syncServer) {
 
-
         LogUtil.Log("Contents::syncFoldersCo:", " syncFolders:" + syncFolders + " syncServer:" + syncServer);
 
         yield return new WaitForEndOfFrame();
@@ -3429,9 +3698,11 @@ public class Contents : GameObjectBehavior {
     }
 
     public static string GetFullPathVersioned(string fullPath) {
+
         if(isInst) {
             return Instance.getFullPathVersioned(fullPath);
         }
+
         return fullPath;
     }
 
@@ -3453,37 +3724,47 @@ public class Contents : GameObjectBehavior {
     //}
 
     public static string GetFullPathVersionedSync(string fullPath) {
+
         if(isInst) {
             return Instance.getFullPathVersionedSync(fullPath);
         }
+
         return fullPath;
     }
 
     public string getFullPathVersionedSync(string fullPath) {
+
         string fileHash = ChecksumHash(fullPath);
         return GetFileVersioned(fullPath, fileHash);
     }
 
     public static string ChecksumHash(string fullPath) {
+
         if(isInst) {
             return Instance.checksumHash(fullPath);
         }
+
         return "";
     }
 
     public string checksumHash(string fullPath) {
+
         return CryptoUtil.CalculateMD5HashFromFile(fullPath);
     }
 
     public static string GetFullPathVersionedSync(string hashPath, string pathToVersion) {
+
         if(isInst) {
             return Instance.getFullPathVersionedSync(hashPath, pathToVersion);
         }
+
         return "";
     }
 
     public string getFullPathVersionedSync(string hashPath, string pathToVersion) {
+
         if(FileSystemUtil.CheckFileExists(hashPath)) {
+
             string fileHash = ChecksumHash(hashPath);
             return GetFileVersioned(pathToVersion, fileHash);
         }
@@ -3493,31 +3774,40 @@ public class Contents : GameObjectBehavior {
     }
 
     public static string GetFileVersioned(string path) {
+
         if(isInst) {
             return Instance.getFileVersioned(path);
         }
+
         return path;
     }
 
     public string getFileVersioned(string path) {
+
         return GetFileVersioned(path, null);
     }
 
     public static string GetFileVersioned(string path, string hash) {
+
         if(isInst) {
             return Instance.getFileVersioned(path, hash);
         }
+
         return path;
     }
 
     public string getFileVersioned(string path, string hash) {
+
         string fileVersioned = "";
+
         if(!string.IsNullOrEmpty(path)) {
+
             string[] arrpath = path.Split('/');
 
             fileVersioned = path;
 
             if(arrpath != null) {
+
                 string filepart = arrpath[arrpath.Length - 1];
                 string arttpathrest = path.Replace(filepart, "");
                 string[] arrfilepart = filepart.Split('.');
@@ -3528,6 +3818,7 @@ public class Contents : GameObjectBehavior {
                 string appIncrement = ContentsConfig.contentIncrement.ToString();
 
                 if(!string.IsNullOrEmpty(hash)) {
+
                     fileVersioned = PathUtil.Combine(arttpathrest, filepartbare
                         + "-" + appVersion
                         + "-"
@@ -3536,6 +3827,7 @@ public class Contents : GameObjectBehavior {
                         + "." + ext);
                 }
                 else {
+
                     fileVersioned = PathUtil.Combine(arttpathrest, filepartbare
                         + "-" + appVersion
                         + "-"
@@ -3549,15 +3841,20 @@ public class Contents : GameObjectBehavior {
     }
 
     public static string GetDisplayFileUnversioned(string path) {
+
         if(isInst) {
             return Instance.getDisplayFileUnversioned(path);
         }
+
         return path;
     }
 
     public string getDisplayFileUnversioned(string path) {
+
         string fileVersioned = path;
+
         if(!string.IsNullOrEmpty(path)) {
+
             string[] arrpath = path.Split('/');
 
             fileVersioned = path;
@@ -3579,26 +3876,34 @@ public class Contents : GameObjectBehavior {
     }
 
     public static string GetFileUnversioned(string path) {
+
         if(isInst) {
             return Instance.getFileUnversioned(path);
         }
+
         return path;
     }
 
     public string getFileUnversioned(string path) {
+
         return GetFileUnversioned(path, null);
     }
 
     public static string GetFileUnversioned(string path, string hash) {
+
         if(isInst) {
             return Instance.getFileUnversioned(path, hash);
         }
+
         return path;
     }
 
     public string getFileUnversioned(string path, string hash) {
+
         string fileVersioned = path;
+
         if(!string.IsNullOrEmpty(path)) {
+
             string[] arrpath = path.Split('/');
 
             fileVersioned = path;
@@ -3617,6 +3922,7 @@ public class Contents : GameObjectBehavior {
                         + "-" + hash, "");
                 }
                 else {
+
                     fileVersioned = fileVersioned.Replace(
                         "-" + appVersion
                         + "-"
@@ -3631,6 +3937,7 @@ public class Contents : GameObjectBehavior {
     // SCENE / CONTENT SET FILES
 
     public static void CheckContentSetFiles() {
+
         if(isInst) {
             Instance.checkContentSetFiles();
         }
@@ -3693,6 +4000,7 @@ public class Contents : GameObjectBehavior {
 
             // Handle error
             if(downloader.error != null) {
+
                 LogUtil.LogError("Error downloading");
                 LogUtil.LogError(downloader.error);
                 LogUtil.LogError(url);
@@ -3728,35 +4036,45 @@ public class Contents : GameObjectBehavior {
         }
 
         if(ready) {
+
             //GameLoadingObject.Instance.LoadLevelHandler();
+
             reset();
         }
         else {
+
             // Show download error...
             Messenger<string>.Broadcast(
                 ContentMessages.ContentItemDownloadError,
                 "Error unloading pack, please try again.");
+
             reset();
         }
     }
 
     public static void LoadLevelBundle(string pack, int increment) {
+
         if(isInst) {
             Instance.loadLevelBundle(pack, increment);
         }
     }
 
     public void loadLevelBundle(string pack, int increment) {
+
         string pathPack = PathUtil.Combine(ContentPaths.appCachePathAllPlatformPacks, pack);
+
         pathPack = PathUtil.Combine(pathPack, ContentConfig.contentCacheScenes);
 
         GamePacks.Instance.ChangeCurrentGamePack(pack);
+
 #if !UNITY_WEBPLAYER
         if(Directory.Exists(pathPack)) {
+
             string pathUrl = PathUtil.Combine(
                 pathPack, pack + "-" + increment.ToString() + ".unity3d");
 
             if(FileSystemUtil.CheckFileExists(pathUrl)) {
+
                 LoadLevelBundle("file://" + pathUrl);
             }
             else {
@@ -3770,12 +4088,14 @@ public class Contents : GameObjectBehavior {
     }
 
     public static void LoadLevelBundle(string sceneUrl) {
+
         if(isInst) {
             Instance.loadLevelBundle(sceneUrl);
         }
     }
 
     public void loadLevelBundle(string sceneUrl) {
+
         StartCoroutine(loadLevelBundleCo(sceneUrl));
     }
 
@@ -3804,6 +4124,7 @@ public class Contents : GameObjectBehavior {
 
         // Handle error
         if(downloader.error != null) {
+
             LogUtil.LogError("Error downloading");
             LogUtil.LogError(downloader.error);
             LogUtil.LogError(sceneUrl);
@@ -3832,6 +4153,7 @@ public class Contents : GameObjectBehavior {
             SetLastPackState(GamePacks.Current.code, sceneUrl);
 
             downloadInProgress = false;
+
             string sceneName = GamePacks.Current.code + "-main";
 
             //AsyncOperation asyncLoad = Application.LoadLevelAsync(sceneName);
@@ -3846,49 +4168,58 @@ public class Contents : GameObjectBehavior {
     }
 
     public static void UnloadLevelBundle(bool unloadAll) {
+
         if(isInst) {
             Instance.unloadLevelBundle(unloadAll);
         }
     }
 
     public void unloadLevelBundle(bool unloadAll) {
+
         if(bundle != null) {
             bundle.Unload(unloadAll);
         }
     }
 
     public static void UnloadLevelBundle() {
+
         if(isInst) {
             Instance.unloadLevelBundle();
         }
     }
 
     public void unloadLevelBundle() {
+
         unloadLevelBundle(false);
     }
 
     public static void Reset() {
+
         if(isInst) {
             Instance.reset();
         }
     }
 
     public void reset() {
+
         downloader = null;
         contentItemStatus = new ContentItemStatus();
         downloadInProgress = false;
     }
 
     public static ContentItemStatus ProgressStatus() {
+
         if(isInst) {
             return Instance.progressStatus();
         }
+
         return null;
     }
 
     public ContentItemStatus progressStatus() {
 
         if(downloader != null && downloadInProgress) {
+
             if(downloader.isDone) {
                 contentItemStatus.downloaded = true;
             }
@@ -3901,8 +4232,7 @@ public class Contents : GameObjectBehavior {
 
         return contentItemStatus;
     }
-
-
+    
     /*
         public static IEnumerator SceneLoadFromCacheOrDownloadCo(
         string packName, string sceneName) {

@@ -3,10 +3,12 @@ using Engine;
 using UnityEngine;
 
 namespace Engine.Events {
+
     public class DraggableGUIElement : GameObjectBehavior {
 
         [System.Serializable]
         public class Border {
+
             public float minX, maxX, minY, maxY;
         }
 
@@ -14,10 +16,12 @@ namespace Engine.Events {
         private Vector3 lastMousePosition;
 
         private void OnMouseDown() {
+
             lastMousePosition = GetClampedMousePosition();
         }
 
         private Vector3 GetClampedMousePosition() {
+
             Vector3 mousePosition = Input.mousePosition;
             mousePosition.x = Mathf.Clamp(mousePosition.x, 0f, Screen.width);
             mousePosition.y = Mathf.Clamp(mousePosition.y, 0f, Screen.height);
@@ -26,6 +30,7 @@ namespace Engine.Events {
         }
 
         private void OnMouseDrag() {
+
             Vector3 delta = GetClampedMousePosition() - lastMousePosition;
 
             delta = Camera.main.ScreenToViewportPoint(delta);

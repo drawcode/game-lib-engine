@@ -574,7 +574,6 @@ public class BaseGameState {
     }
 }
 
-
 /*
     public void HandleLegacyProfileAndCareer() {    
         

@@ -66,7 +66,7 @@ public class Sound {
         yield return new WaitForSeconds(audioSource.clip.length + 0.1f);
 
         // Should we destory ourself after playing?
-        if (destroyAfterPlay)
+        if(destroyAfterPlay)
             this.destroySelf();
 
         available = true;

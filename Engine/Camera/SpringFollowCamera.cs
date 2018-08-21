@@ -5,13 +5,14 @@ using Engine.Game.Controllers;
 using Engine.Networking;
 using Engine.Utility;
 
-// This camera is similar to the one used in Jak & Dexter
+// This camera is similar to the one used in Jak & Dexter + Super Mario 64 3D
 using UnityEngine;
 
 namespace Engine.Cameras {
 
     [AddComponentMenu("Third Person Camera/Spring Follow Camera")]
     public class SpringFollowCamera : BaseEngineBehavior {
+
         public Transform target;
         public float distance = 4.0f;
         public float height = 1.0f;
@@ -33,33 +34,43 @@ namespace Engine.Cameras {
         }
 
         private void DidChangeTarget() {
-            if (target) {
-                CharacterController characterController = (CharacterController)target.GetComponent<CharacterController>();
-                if (characterController) {
+
+            if(target) {
+
+                CharacterController characterController =
+                    (CharacterController)target.GetComponent<CharacterController>();
+
+                if(characterController) {
+
                     centerOffset = characterController.bounds.center - target.position;
                     headOffset = centerOffset;
                     headOffset.y = characterController.bounds.max.y - target.position.y;
                 }
 
-                if (target) {
+                if(target) {
+
                     controller = target.GetComponent<BaseThirdPersonController>();
                 }
 
-                if (!controller)
+                if(!controller) {
+
                     LogUtil.Log("Please assign a target to the camera that has a super mario controller.");
+                }
             }
         }
 
         private void Apply(Transform dummyTarget, Vector3 dummyCenter) {
+
             Vector3 targetCenter = target.position + centerOffset;
             Vector3 targetHead = target.position + headOffset;
 
             // When jumping don't move camera upwards but only down!
-            if (controller.IsJumping()) {
+            if(controller.IsJumping()) {
 
                 // We'd be moving the camera upwards, do that only if it's really high
                 var newTargetHeight = targetCenter.y + height;
-                if (newTargetHeight < targetHeight || newTargetHeight - targetHeight > 5)
+
+                if(newTargetHeight < targetHeight || newTargetHeight - targetHeight > 5)
                     targetHeight = targetCenter.y + height;
             }
 
@@ -69,60 +80,74 @@ namespace Engine.Cameras {
             }
 
             // We start snapping when user pressed Fire2!
-            if (Input.GetButton("Fire2") && !isSnapping) {
+            if(Input.GetButton("Fire2") && !isSnapping) {
+
                 velocity = Vector3.zero;
                 isSnapping = true;
             }
 
-            if (isSnapping) {
+            if(isSnapping) {
                 ApplySnapping(targetCenter);
             }
             else {
-                ApplyPositionDamping(new Vector3(targetCenter.x, targetHeight, targetCenter.z));
+                ApplyPositionDamping(
+                    new Vector3(targetCenter.x, targetHeight, targetCenter.z));
             }
 
             SetUpRotation(targetCenter, targetHead);
         }
 
         private void LateUpdate() {
-            if (target)
+            if(target)
                 Apply(null, Vector3.zero);
         }
 
         private void ApplySnapping(Vector3 targetCenter) {
+
             Vector3 position = transform.position;
             Vector3 offset = position - targetCenter;
             offset.y = 0;
+
             float currentDistance = offset.magnitude;
 
             float targetAngle = target.eulerAngles.y;
             float currentAngle = transform.eulerAngles.y;
 
-            currentAngle = Mathf.SmoothDampAngle(currentAngle, targetAngle, ref velocity.x, snapLag);
-            currentDistance = Mathf.SmoothDamp(currentDistance, distance, ref velocity.z, snapLag);
+            currentAngle = Mathf.SmoothDampAngle(
+                currentAngle, targetAngle, ref velocity.x, snapLag);
+
+            currentDistance = Mathf.SmoothDamp(
+                currentDistance, distance, ref velocity.z, snapLag);
 
             var newPosition = targetCenter;
-            newPosition += Quaternion.Euler(0, currentAngle, 0) * Vector3.back * currentDistance;
+            newPosition += Quaternion.Euler(
+                0, currentAngle, 0) * Vector3.back * currentDistance;
 
-            newPosition.y = Mathf.SmoothDamp(position.y, targetCenter.y + height, ref velocity.y, smoothLag, maxSpeed);
+            newPosition.y = Mathf.SmoothDamp(
+                position.y, targetCenter.y + height,
+                ref velocity.y, smoothLag, maxSpeed);
 
             newPosition = AdjustLineOfSight(newPosition, targetCenter);
 
             transform.position = newPosition;
 
             // We are close to the target, so we can stop snapping now!
-            if (AngleDistance(currentAngle, targetAngle) < 3.0) {
+            if(AngleDistance(currentAngle, targetAngle) < 3.0) {
+
                 isSnapping = false;
                 velocity = Vector3.zero;
             }
         }
 
         private Vector3 AdjustLineOfSight(Vector3 newPosition, Vector3 target) {
+
             RaycastHit hit;
-            if (Physics.Linecast(target, newPosition, out hit, lineOfSightMask.value)) {
+
+            if(Physics.Linecast(target, newPosition, out hit, lineOfSightMask.value)) {
                 velocity = Vector3.zero;
                 return hit.point;
             }
+
             return newPosition;
         }
 
@@ -131,11 +156,14 @@ namespace Engine.Cameras {
             // We try to maintain a constant distance on the x-z plane with a spring.
             // Y position is handled with a seperate spring
             Vector3 position = transform.position;
+
             Vector3 offset = position - targetCenter;
             offset.y = 0;
+
             Vector3 newTargetPos = offset.normalized * distance + targetCenter;
 
             Vector3 newPosition;
+
             newPosition.x = Mathf.SmoothDamp(position.x, newTargetPos.x, ref velocity.x, smoothLag, maxSpeed);
             newPosition.z = Mathf.SmoothDamp(position.z, newTargetPos.z, ref velocity.z, smoothLag, maxSpeed);
             newPosition.y = Mathf.SmoothDamp(position.y, targetCenter.y, ref velocity.y, smoothLag, maxSpeed);
@@ -179,7 +207,8 @@ namespace Engine.Cameras {
             float heightToAngle = centerToTopAngle / (centerRayPos.y - topRayPos.y);
 
             float extraLookAngle = heightToAngle * (centerRayPos.y - centerPos.y);
-            if (extraLookAngle < centerToTopAngle) {
+
+            if(extraLookAngle < centerToTopAngle) {
                 extraLookAngle = 0;
             }
             else {
@@ -189,6 +218,7 @@ namespace Engine.Cameras {
         }
 
         private float AngleDistance(float a, float b) {
+
             a = Mathf.Repeat(a, 360);
             b = Mathf.Repeat(b, 360);
 

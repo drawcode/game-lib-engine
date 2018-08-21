@@ -5,17 +5,21 @@ using Engine.Utility;
 
 public static class NavMeshExtentions {
 
-    public static void On(this UnityEngine.AI.NavMeshAgent navMeshAgent) {
-        if (navMeshAgent == null) {
+    public static void On(
+        this UnityEngine.AI.NavMeshAgent navMeshAgent) {
+
+        if(navMeshAgent == null) {
             return;
         }
-        
+
         //navMeshAgent.updatePosition = true;
         //navMeshAgent.updateRotation = true;        
     }
 
-    public static void Off(this UnityEngine.AI.NavMeshAgent navMeshAgent) {
-        if (navMeshAgent == null) {
+    public static void Off(
+        this UnityEngine.AI.NavMeshAgent navMeshAgent) {
+
+        if(navMeshAgent == null) {
             return;
         }
 
@@ -23,12 +27,17 @@ public static class NavMeshExtentions {
         //navMeshAgent.updateRotation = false;
     }
 
-    public static void StopAgent(this UnityEngine.AI.NavMeshAgent navMeshAgent) {
-        if (navMeshAgent == null) {
+    public static void StopAgent(
+        this UnityEngine.AI.NavMeshAgent navMeshAgent) {
+
+        if(navMeshAgent == null) {
             return;
         }
-        if (navMeshAgent != null) {
-            if (navMeshAgent.enabled) {
+
+        if(navMeshAgent != null) {
+
+            if(navMeshAgent.enabled) {
+
                 //navMeshAgent.Off();
                 navMeshAgent.isStopped = true;
                 navMeshAgent.enabled = false;
@@ -36,12 +45,17 @@ public static class NavMeshExtentions {
         }
     }
 
-    public static void StartAgent(this UnityEngine.AI.NavMeshAgent navMeshAgent) {
-        if (navMeshAgent == null) {
+    public static void StartAgent(
+        this UnityEngine.AI.NavMeshAgent navMeshAgent) {
+
+        if(navMeshAgent == null) {
             return;
         }
-        if (navMeshAgent != null) {
-            if (!navMeshAgent.enabled) {
+
+        if(navMeshAgent != null) {
+
+            if(!navMeshAgent.enabled) {
+
                 navMeshAgent.enabled = true;
                 //navMeshAgent.Warp(navMeshAgent.gameObject.transform.position);
                 //navMeshAgent.On();
@@ -50,4 +64,3 @@ public static class NavMeshExtentions {
         }
     }
 }
-

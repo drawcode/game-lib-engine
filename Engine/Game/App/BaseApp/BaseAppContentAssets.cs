@@ -6,6 +6,7 @@ using System.IO;
 using UnityEngine;
 
 public class BaseAppContentAssets<T> : DataObjects<T> where T : DataObject, new() {
+
     private static T current;
     private static volatile BaseAppContentAssets<T> instance;
     private static System.Object syncRoot = new System.Object();
@@ -15,8 +16,9 @@ public class BaseAppContentAssets<T> : DataObjects<T> where T : DataObject, new(
         get {
             if (current == null) {
                 lock (syncRoot) {
-                    if (current == null)
+                    if(current == null) {
                         current = new T();
+                    }
                 }
             }
 
@@ -31,8 +33,9 @@ public class BaseAppContentAssets<T> : DataObjects<T> where T : DataObject, new(
         get {
             if (instance == null) {
                 lock (syncRoot) {
-                    if (instance == null)
+                    if(instance == null) {
                         instance = new BaseAppContentAssets<T>(true);
+                    }
                 }
             }
 
@@ -62,33 +65,41 @@ public class BaseAppContentAssets<T> : DataObjects<T> where T : DataObject, new(
 
         if(key.StartsWith(BaseDataObjectKeys.level)
             || key.StartsWith(BaseDataObjectKeys.levelAssets)) {
+
             path = ContentPaths.appCacheVersionSharedPrefabLevelAssets;
         }
         else if(key.StartsWith(BaseDataObjectKeys.character)
                  || key.StartsWith(BaseDataObjectKeys.characters)) {
+
             path = ContentPaths.appCacheVersionSharedPrefabCharacters;
         }
         else if(key.StartsWith(BaseDataObjectKeys.weapon)
                  || key.StartsWith(BaseDataObjectKeys.weapons)) {
+
             path = ContentPaths.appCacheVersionSharedPrefabWeapons;
         }
         else if(key.StartsWith(BaseDataObjectKeys.world)
                  || key.StartsWith(BaseDataObjectKeys.worlds)) {
+
             path = ContentPaths.appCacheVersionSharedPrefabWorlds;
         }
         else if(key.StartsWith(BaseDataObjectKeys.vehicle)
                  || key.StartsWith(BaseDataObjectKeys.vehicles)) {
+
             path = ContentPaths.appCacheVersionSharedPrefabVehicles;
         }
         else if(key.StartsWith(BaseDataObjectKeys.effect)
                  || key.StartsWith(BaseDataObjectKeys.effects)) {
+
             path = ContentPaths.appCacheVersionSharedPrefabEffects;
         }
         else if(key.StartsWith(BaseDataObjectKeys.item)
                  || key.StartsWith(BaseDataObjectKeys.items)) {
+
             path = ContentPaths.appCacheVersionSharedPrefabLevelItems;
         }
         else if(key.StartsWith(BaseDataObjectKeys.ui)) {
+
             path = ContentPaths.appCacheVersionSharedPrefabLevelUI;
         }
 

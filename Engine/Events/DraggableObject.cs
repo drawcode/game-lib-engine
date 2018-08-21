@@ -3,8 +3,10 @@ using Engine;
 using UnityEngine;
 
 namespace Engine.Events {
+
     [RequireComponent(typeof(Rigidbody))]
     public class DraggableObject : GameObjectBehavior {
+
         public int normalCollisionCount = 1;
         public float moveLimit = .5f;
         public float collisionMoveFactor = .01f;
@@ -18,15 +20,18 @@ namespace Engine.Events {
 
         //private float sqrMoveLimit;
         private int collisionCount = 0;
+
         Rigidbody rb;
 
         //private Transform camTransform;
 
         private void Start() {
-            if (!cam) {
+
+            if(!cam) {
                 cam = Camera.main;
             }
-            if (!cam) {
+
+            if(!cam) {
                 LogUtil.LogError("Can't find camera tagged MainCamera");
                 return;
             }
@@ -38,6 +43,7 @@ namespace Engine.Events {
         }
 
         private void OnMouseDown() {
+
             canMove = true;
             gameObject.transform.Translate(Vector3.up * addHeightWhenClicked);
             gravitySetting = rb.useGravity;
@@ -48,10 +54,12 @@ namespace Engine.Events {
         }
 
         private void OnMouseUp() {
+
             canMove = false;
             rb.useGravity = gravitySetting;
             rb.freezeRotation = freezeRotationSetting;
-            if (!rb.useGravity) {
+
+            if(!rb.useGravity) {
                 float _y = yPos - addHeightWhenClicked;
 
                 LogUtil.Log(_y);
@@ -69,8 +77,11 @@ namespace Engine.Events {
         }
 
         private void FixedUpdate() {
-            if (!canMove)
+
+            if(!canMove) {
+
                 return;
+            }
             /*
             gameObject.rigidbody.velocity = Vector3.zero;
             gameObject.rigidbody.angularVelocity = Vector3.zero;

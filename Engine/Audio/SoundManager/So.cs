@@ -17,7 +17,7 @@ public class So : GameObjectBehavior {
     private void Awake() {
 
         // avoid duplicates
-        if (und != null) {
+        if(und != null) {
             Destroy(gameObject);
             return;
         }
@@ -28,17 +28,17 @@ public class So : GameObjectBehavior {
         // Create the _soundList to speed up sound playing in game
         _soundList = new List<Sound>(initialCapacity);
 
-        for (int i = 0; i < initialCapacity; i++)
+        for(int i = 0; i < initialCapacity; i++)
             _soundList.Add(new Sound(this));
     }
 
     private void OnApplicationPause(bool didPause) {
 
         // are we pausing or unpausing?
-        if (didPause) {
+        if(didPause) {
 
             // if we have a bgSound, save it
-            if (_bgSound != null) {
+            if(_bgSound != null) {
                 _audioWasPlaying = true;
                 _audioTime = _bgSound.audioSource.time;
             }
@@ -46,7 +46,7 @@ public class So : GameObjectBehavior {
         else {
 
             // unpausing.  restart background music
-            if (_audioWasPlaying) {
+            if(_audioWasPlaying) {
                 _audioWasPlaying = false;
                 _bgSound.audioSource.time = _audioTime;
                 _bgSound.audioSource.Play();
@@ -55,13 +55,13 @@ public class So : GameObjectBehavior {
     }
 
     public void playBGMusic(AudioClip audioClip, float volume, bool loop) {
-        if (_bgSound == null)
+        if(_bgSound == null)
             _bgSound = new Sound(this);
 
         _bgSound.loop = loop;
         StartCoroutine(_bgSound.playAudioClip(audioClip, AudioRolloffMode.Linear, volume, Vector3.zero));
     }
-	
+
     public Sound playSound(AudioClip audioClip) {
         return playSound(audioClip, AudioRolloffMode.Linear, 0.9f, Vector3.zero);
     }
@@ -90,13 +90,13 @@ public class So : GameObjectBehavior {
         bool clipLoaded = false;
         bool foundEmpty = false;
 
-        foreach (var s in _soundList) {
+        foreach(var s in _soundList) {
 
             // dont care about sounds that arent available
-            if (!s.available)
+            if(!s.available)
                 continue;
 
-            if (s.gameObject.name == audioClip.name) {
+            if(s.gameObject.name == audioClip.name) {
                 _sound = s;
                 clipLoaded = true;
                 break;
@@ -104,11 +104,11 @@ public class So : GameObjectBehavior {
             else {
 
                 // if we already found an empty no need to check any further
-                if (foundEmpty)
+                if(foundEmpty)
                     continue;
 
                 // empties are preferred if we didnt find a Sound with the clip already loaded
-                if (s.gameObject.name == "empty")
+                if(s.gameObject.name == "empty")
                     foundEmpty = true;
 
                 _sound = s;
@@ -123,14 +123,14 @@ public class So : GameObjectBehavior {
         */
 
         // if we didnt find an available found, bail out
-        if (_sound == null) {
+        if(_sound == null) {
             _sound = new Sound(this);
             _sound.destroyAfterPlay = true;
             _soundList.Add(_sound);
         }
 
         // if we found a preloaded clip then use it
-        if (clipLoaded)
+        if(clipLoaded)
             StartCoroutine(_sound.play(rolloff, volume, position));
         else
             StartCoroutine(_sound.playAudioClip(audioClip, rolloff, volume, position));
