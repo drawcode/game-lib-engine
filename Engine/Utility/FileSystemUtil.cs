@@ -21,7 +21,18 @@ public class FileSystemUtil {
 
                 Debug.Log("CreateDirectoryIfNeededAndAllowed:" + path);
 
-                Directory.CreateDirectory(path);
+                path = path.TrimEnd('/');
+
+                Debug.Log("CreateDirectoryIfNeededAndAllowed:trimmed:path:" + path);
+
+                //Directory.CreateDirectory(path);
+
+                DirectoryInfo dir = new DirectoryInfo(path);
+
+                if(!dir.Exists) {
+                    dir.Create();
+                    Debug.Log("CreateDirectoryIfNeededAndAllowed:info:path:" + path);
+                }
             }
         }
 #endif
