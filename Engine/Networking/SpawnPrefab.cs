@@ -5,7 +5,7 @@ using UnityEngine;
 namespace Engine.Networking {
     public class SpawnPrefab : BaseEngineBehavior {
         
-        #if NETWORK_UNITY
+        #if NETWORK_USE_UNITY
 
         public Transform playerPrefab;
 

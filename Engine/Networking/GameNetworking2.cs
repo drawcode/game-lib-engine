@@ -14,7 +14,7 @@ namespace Engine.Networking {
 
     public class GameNetworking2 : GameObjectBehavior {
         
-        #if NETWORK_UNITY
+        #if NETWORK_USE_UNITY
 
         // TODO move to downloadable config.
         public string masterserverGameName = "defaultgame";

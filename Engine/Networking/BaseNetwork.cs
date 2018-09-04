@@ -10,7 +10,7 @@ using UnityEngine;
 namespace Engine.Networking {
 
     public class BaseNetwork : BaseEngineObject, INetwork {
-#if !UNITY_FLASH && NETWORK_UNITY
+#if !UNITY_FLASH && NETWORK_USE_UNITY
         public static int DEFAULT_PORT = 25010;
         public static int DEFAULT_FACILITATOR_PORT = 25011;
 

@@ -10,7 +10,7 @@ namespace Engine.Networking {
 
     public class NetworkInterpolatedTransform : BaseEngineBehavior {
         
-        #if NETWORK_UNITY
+        #if NETWORK_USE_UNITY
         public double interpolationBackTime = 0.1;
 
         internal struct State {

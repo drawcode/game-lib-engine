@@ -22,7 +22,7 @@ namespace Engine.Networking {
     public class GraduallyUpdateState : GameObjectBehavior {
 #if !UNITY_FLASH
         
-        #if NETWORK_UNITY
+        #if NETWORK_USE_UNITY
 
         private Component targetController;
         private FieldInfo isMovingFieldInfo;

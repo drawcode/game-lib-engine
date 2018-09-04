@@ -10,7 +10,7 @@ namespace Engine.Networking {
 
     public class CarNetworkInit : BaseEngineBehavior {
         
-        #if NETWORK_UNITY
+        #if NETWORK_USE_UNITY
 
         private void OnNetworkInstantiate(NetworkMessageInfo msg) {
 

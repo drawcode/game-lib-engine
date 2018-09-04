@@ -7,7 +7,7 @@ using UnityEngine;
 namespace Engine.Networking {
 
     public interface INetwork {
-#if !UNITY_FLASH && NETWORK_UNITY
+#if !UNITY_FLASH && NETWORK_USE_UNITY
 
         UnityEngine.Network currentNetwork { get; set; }
 

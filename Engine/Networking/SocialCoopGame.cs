@@ -22,7 +22,7 @@ namespace Engine.Networking {
 
     public class NetworkPlayerInfoCoop {
         
-        #if NETWORK_UNITY
+        #if NETWORK_USE_UNITY
         public NetworkPlayer networkPlayer;
         public string name;
         public Transform transform;

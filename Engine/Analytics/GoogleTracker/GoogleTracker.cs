@@ -49,7 +49,7 @@ public class GoogleTracker
         TrackingDomain = trackingDomain;
         GoogleTrackerAnalyticsSession = googleTrackerAnalyticsSession;
         string hostname = "";
-#if NETWORK_UNITY
+#if NETWORK_USE_UNITY
         hostname = Network.player.ipAddress;
 #endif
         string osversionstring = SystemInfo.operatingSystem;
