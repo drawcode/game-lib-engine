@@ -5,7 +5,9 @@ using System.Collections.Generic;
 using UnityEngine;
 
 namespace Engine.Game.Actor {
+
     public class ActorShadow : GameObjectBehavior {
+
         public GameObject objectShadow;
         public GameObject objectParent;
         private Vector3 surfaceNormal;
@@ -14,7 +16,10 @@ namespace Engine.Game.Actor {
         public Vector3 surfaceForwardVector;
         float lastUpdate = 0f;
         public GameObject gamePlayerObject;
+
+#if USE_GAME_LIB_GAMES
         public GamePlayerController gamePlayerController;
+#endif
         //
         public Vector3 initialPlayerPosition = Vector3.zero.WithY(-1);
         public Vector3 currentPlayerPosition = Vector3.zero;
@@ -43,8 +48,9 @@ namespace Engine.Game.Actor {
                 return;
             }
 
+#if USE_GAME_LIB_GAMES
             if (gamePlayerObject == null) {
-
+            
                 gamePlayerObject = gameObject.FindTypeAboveObjectRecursive<GamePlayerController>();
 
                 if (gamePlayerObject != null) {
@@ -59,7 +65,9 @@ namespace Engine.Game.Actor {
                 return;
             }
 
-            if (objectParent != null && objectShadow != null) {
+#endif
+
+            if(objectParent != null && objectShadow != null) {
 
                 // Adjust size
 

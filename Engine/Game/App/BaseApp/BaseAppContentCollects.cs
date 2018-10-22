@@ -667,6 +667,7 @@ public class AppContentCollectItem : GameDataObject {
             AppContentCollectActionDataScope.levelScope ? true : false;
     }
 
+#if USE_GAME_LIB_GAMES
     public double ScoreCompleted(
         GameGameRuntimeData gameRuntimeData, 
         GamePlayerRuntimeData playerRuntimeData) {
@@ -837,6 +838,7 @@ public class AppContentCollectItem : GameDataObject {
         
         return state;
     }
+#endif
 
     public bool CompareCollectData(string compareType, double val, double valNeeded) {
 
@@ -992,6 +994,9 @@ public class BaseAppContentCollect : GameDataObject {
         base.Reset();
     }
 
+
+#if USE_GAME_LIB_GAMES
+
     public bool IsCompleted(
         GameGameRuntimeData gameRuntimeData, 
         GamePlayerRuntimeData playerRuntimeData) {
@@ -1034,6 +1039,7 @@ public class BaseAppContentCollect : GameDataObject {
         
         return points;
     }
+#endif
 
     public bool HasTypeMission() {
         foreach (AppContentCollectItem item in data.data) {

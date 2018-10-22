@@ -206,7 +206,10 @@ public class BaseGameLevels<T> : DataObjects<T> where T : DataObject, new() {
                 gameLevel.description = originalCode;
                 gameLevel.display_name = code;
                 gameLevel.name = originalCode;
+
+#if USE_GAME_LIB_CONTENT
                 gameLevel.game_id = ContentsConfig.contentAppFolder;
+#endif
                 gameLevel.key = originalCode;
                 gameLevel.world_code = GameWorlds.Current.code;
                 gameLevel.data = new GameLevelDataObjectItem();
@@ -245,6 +248,8 @@ public class BaseGameLevels<T> : DataObjects<T> where T : DataObject, new() {
     }
 
     //
+
+#if USE_GAME_LIB_GAMES
 
     public static GameLevelGridData GetLevelGridTerrains(
         GameLevelGridData dataItems, List<GameDataTerrainPreset> presets) {
@@ -304,6 +309,8 @@ public class BaseGameLevels<T> : DataObjects<T> where T : DataObject, new() {
 
         return dataItems;
     }
+
+#endif
 
     // -----------------------------------------------------------------------
     // GRID LEVEL LAYOUTS
@@ -393,6 +400,7 @@ public class BaseGameLevels<T> : DataObjects<T> where T : DataObject, new() {
         return layoutObjects;
     }
 
+#if USE_GAME_LIB_GAMES
     public static GameLevelGridData GetLevelGridLayoutParts(
         GameLevelGridData dataItems, List<GameDataLayoutPreset> presets,
         string loadTypeFilter = "default") {
@@ -529,7 +537,10 @@ public class BaseGameLevels<T> : DataObjects<T> where T : DataObject, new() {
 
         return dataItems;
     }
+#endif
 
+
+#if USE_GAME_LIB_GAMES
     public static GameLevelGridData GetLevelGridLayouts(
         GameLevelGridData dataItems, List<GameDataLayoutPreset> presets, string loadTypeFilter = "default") {
 
@@ -672,10 +683,12 @@ public class BaseGameLevels<T> : DataObjects<T> where T : DataObject, new() {
 */
         return dataItems;
     }
+#endif
 
-    // -----------------------------------------------------------------------
-    // GAME LEVEL ASSETS
+// -----------------------------------------------------------------------
+// GAME LEVEL ASSETS
 
+#if USE_GAME_LIB_GAMES
     public static GameLevelGridData GetLevelGridAssets(
         GameLevelGridData dataItems, List<GameDataAssetPreset> presets, string loadTypeFilter = "default") {
 
@@ -744,6 +757,7 @@ public class BaseGameLevels<T> : DataObjects<T> where T : DataObject, new() {
 
         return dataItems;
     }
+#endif
 
     public static List<GameDataLayoutPreset> GetLevelLayoutPresets(string loadTypeFilter = "default") {
         return GetLevelLayoutPresets(GameLevels.Current.code, loadTypeFilter);
