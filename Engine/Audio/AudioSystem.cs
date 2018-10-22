@@ -431,11 +431,13 @@ public class AudioSystem : GameObjectBehavior {
 
             goClip.AddComponent<AudioSource>();
 
+#if USE_GAME_LIB_GAMES
             GameObjectAudio obj = goClip.AddComponent<GameObjectAudio>();
             obj.code = code;
             obj.type = type;
             obj.file = file;
             obj.path = path;
+#endif
         }
 
         goClip.transform.parent = FindOrCreateSoundContainer().transform;
