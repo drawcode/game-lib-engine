@@ -466,6 +466,13 @@ public class BaseDataObjectKeys {
 
 }
 
+public class GameDataPlayType {
+    public static string loop = "loop";
+    public static string loop_reverse = "loop_reverse";
+    public static string once = "once";
+    public static string once_reverse = "once_reverse";
+}
+
 public class BaseDataObject : Dictionary<string, object> {
 
     //public Dictionary<string, DataAttribute> attributes;

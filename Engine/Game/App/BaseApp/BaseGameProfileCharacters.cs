@@ -394,7 +394,9 @@ public class BaseGameProfileCharacter : DataObject {
     public void CurrentCharacterAddGamePlayerProgressXP(double val) {
         GameProfileCharacterItem character = GetCurrentCharacter();
         character.profilePlayerProgress.AddGamePlayerProgressXP(val);
+#if USE_GAME_LIB_GAMES
         GamePlayerProgress.SetStatXP(val);
+#endif
         SetCharacter(character);
     }
 
@@ -479,10 +481,13 @@ public class BaseGameProfileCharacter : DataObject {
             }
 
             if (item != null) {
+                
+#if USE_GAME_LIB_GAMES
                 if (item.profileCustomItem != null && GameCustomController.Instance != null) {
                     item.profileCustomItem =
                         GameCustomController.CheckCustomColorInit(item.profileCustomItem, BaseDataObjectKeys.character);
                 }
+#endif
                 BaseGameProfileCharacters.currentCharacter = item;
             }
         }

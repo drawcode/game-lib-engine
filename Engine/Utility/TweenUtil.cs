@@ -16,6 +16,7 @@ using UnityEngine.UI;
 namespace Engine.Utility {
 
     public enum TweenLib {
+        none,
         iTween,
         leanTween,
         nguiUITweener
@@ -213,7 +214,12 @@ namespace Engine.Utility {
 
             Type genericType = typeof(T);
 
-            if(genericType == typeof(LeanTweenType)) {
+            if(genericType == null) {
+
+            }
+
+#if USE_EASING_LEANTWEEN
+            else if(genericType == typeof(LeanTweenType)) {
 
                 if(loopType == TweenLoopType.once) {
                     libType = (T)(object)LeanTweenType.once;
@@ -225,7 +231,9 @@ namespace Engine.Utility {
                     libType = (T)(object)LeanTweenType.clamp;
                 }
             }
+#endif
 
+#if USE_EASING_ITWEEN
             else if(genericType == typeof(iTween.LoopType)) {
 
                 if(loopType == TweenLoopType.once) {
@@ -238,7 +246,9 @@ namespace Engine.Utility {
                     libType = (T)(object)iTween.LoopType.pingPong;
                 }
             }
+#endif
 
+#if USE_EASING_NGUI
             else if(genericType == typeof(UITweener.Style)) {
 
                 if(loopType == TweenLoopType.once) {
@@ -251,6 +261,7 @@ namespace Engine.Utility {
                     libType = (T)(object)UITweener.Style.PingPong;
                 }
             }
+#endif
 
             return libType;
         }
@@ -261,7 +272,12 @@ namespace Engine.Utility {
 
             Type genericType = typeof(T);
 
-            if(genericType == typeof(LeanTweenType)) {
+            if(genericType == null) {
+
+            }
+
+#if USE_EASING_LEANTWEEN
+            else if(genericType == typeof(LeanTweenType)) {
 
                 LeanTweenType libType = (LeanTweenType)(object)genericType;
 
@@ -275,6 +291,9 @@ namespace Engine.Utility {
                     loopType = TweenLoopType.pingPong;
                 }
             }
+#endif
+
+#if USE_EASING_ITWEEN
             else if(genericType == typeof(iTween.LoopType)) {
 
                 iTween.LoopType libType = (iTween.LoopType)(object)genericType;
@@ -289,6 +308,9 @@ namespace Engine.Utility {
                     loopType = TweenLoopType.pingPong;
                 }
             }
+#endif
+
+#if USE_EASING_NGUI
             else if(genericType == typeof(UITweener.Style)) {
 
                 UITweener.Style libType = (UITweener.Style)(object)genericType;
@@ -303,6 +325,7 @@ namespace Engine.Utility {
                     loopType = TweenLoopType.pingPong;
                 }
             }
+#endif
 
             return loopType;
         }
@@ -315,7 +338,12 @@ namespace Engine.Utility {
 
             Type genericType = typeof(T);
 
-            if(genericType == typeof(LeanTweenType)) {
+            if(genericType == null) {
+
+            }
+
+#if USE_EASING_LEANTWEEN
+            else if(genericType == typeof(LeanTweenType)) {
 
                 if(easeType == TweenEaseType.linear) {
                     libType = (T)(object)LeanTweenType.linear;
@@ -330,7 +358,9 @@ namespace Engine.Utility {
                     libType = (T)(object)LeanTweenType.easeOutQuad;
                 }
             }
+#endif
 
+#if USE_EASING_ITWEEN
             else if(genericType == typeof(iTween.EaseType)) {
 
                 if(easeType == TweenEaseType.linear) {
@@ -346,7 +376,9 @@ namespace Engine.Utility {
                     libType = (T)(object)iTween.EaseType.easeOutQuad;
                 }
             }
+#endif
 
+#if USE_EASING_NGUI
             else if(genericType == typeof(UITweener.Method)) {
 
                 if(easeType == TweenEaseType.linear) {
@@ -362,6 +394,7 @@ namespace Engine.Utility {
                     libType = (T)(object)UITweener.Method.EaseOut;
                 }
             }
+#endif
 
             return libType;
         }
@@ -372,7 +405,12 @@ namespace Engine.Utility {
 
             Type genericType = typeof(T);
 
-            if(genericType == typeof(LeanTweenType)) {
+            if(genericType == null) {
+
+            }
+
+#if USE_EASING_LEANTWEEN
+            else if(genericType == typeof(LeanTweenType)) {
 
                 LeanTweenType libType = (LeanTweenType)(object)genericType;
 
@@ -389,6 +427,9 @@ namespace Engine.Utility {
                     easeType = TweenEaseType.quadEaseIn;
                 }
             }
+#endif
+
+#if USE_EASING_ITWEEN
             else if(genericType == typeof(iTween.LoopType)) {
 
                 iTween.EaseType libType = (iTween.EaseType)(object)genericType;
@@ -406,6 +447,9 @@ namespace Engine.Utility {
                     easeType = TweenEaseType.quadEaseIn;
                 }
             }
+#endif
+
+#if USE_EASING_NGUI
             else if(genericType == typeof(UITweener.Style)) {
 
                 UITweener.Method libType = (UITweener.Method)(object)genericType;
@@ -423,11 +467,11 @@ namespace Engine.Utility {
                     easeType = TweenEaseType.quadEaseIn;
                 }
             }
+#endif
 
             return easeType;
         }
-
-
+        
         // --------------------------------------------------------------------
         // META
 
@@ -560,9 +604,8 @@ namespace Engine.Utility {
             if(meta.go == null) {
                 return;
             }
-
-
-#if USE_UI_NGUI_2_7 || USE_UI_NGUI_3
+            
+#if USE_UI_NGUI_2_7 || USE_UI_NGUI_3 || USE_EASING_NGUI
             meta.lib = TweenLib.nguiUITweener;
 #endif
 
@@ -594,7 +637,12 @@ namespace Engine.Utility {
                 onTick = onTick.CombineAction(meta.onUpdate);
             }
 
-            if(meta.lib == TweenLib.iTween) {
+            if(meta.lib == TweenLib.none) {
+
+            }
+
+#if USE_EASING_ITWEEN
+            else if(meta.lib == TweenLib.iTween) {
 
                 if(meta.stopCurrent) {
                     iTween.Stop(meta.go);
@@ -620,6 +668,9 @@ namespace Engine.Utility {
 
                 iTween.MoveTo(meta.go, hash);
             }
+#endif
+
+#if USE_EASING_LEANTWEEN
             else if(meta.lib == TweenLib.leanTween) {
 
                 if(meta.stopCurrent) {
@@ -658,6 +709,9 @@ namespace Engine.Utility {
 
                 info.resume();
             }
+#endif
+
+#if USE_EASING_NGUI
             else if(meta.lib == TweenLib.nguiUITweener) {
 
                 UITweener.Style loopTypeLib =
@@ -675,9 +729,9 @@ namespace Engine.Utility {
                 //OnTweenFinish(onFinish);
                 //OnTweenTick(onTick);
             }
+#endif
         }
-
-
+        
         // --------------------------------------------------------------------
         // SCALE
 
@@ -769,7 +823,7 @@ namespace Engine.Utility {
             }
 
 
-#if USE_UI_NGUI_2_7 || USE_UI_NGUI_3
+#if USE_UI_NGUI_2_7 || USE_UI_NGUI_3 || USE_EASING_NGUI
             meta.lib = TweenLib.nguiUITweener;
 #endif
 
@@ -801,7 +855,12 @@ namespace Engine.Utility {
                 onTick = onTick.CombineAction(meta.onUpdate);
             }
 
-            if(meta.lib == TweenLib.iTween) {
+            if(meta.lib == TweenLib.none) {
+
+            }
+
+#if USE_EASING_ITWEEN
+            else if(meta.lib == TweenLib.iTween) {
 
                 if(meta.stopCurrent) {
                     iTween.Stop(meta.go);
@@ -827,6 +886,9 @@ namespace Engine.Utility {
 
                 iTween.ScaleTo(meta.go, hash);
             }
+#endif
+
+#if USE_EASING_LEANTWEEN
             else if(meta.lib == TweenLib.leanTween) {
 
                 if(meta.stopCurrent) {
@@ -865,6 +927,9 @@ namespace Engine.Utility {
 
                 info.resume();
             }
+#endif
+
+#if USE_EASING_NGUI
             else if(meta.lib == TweenLib.nguiUITweener) {
 
                 //UITweener.Style loopTypeLib =
@@ -882,9 +947,9 @@ namespace Engine.Utility {
                 //OnTweenFinish(onFinish);
                 //OnTweenTick(onTick);
             }
+#endif
         }
-
-
+        
         // --------------------------------------------------------------------
         // ROTATE
 
@@ -971,7 +1036,7 @@ namespace Engine.Utility {
                 return;
             }
 
-#if USE_UI_NGUI_2_7 || USE_UI_NGUI_3
+#if USE_UI_NGUI_2_7 || USE_UI_NGUI_3 || USE_EASING_NGUI
             meta.lib = TweenLib.nguiUITweener;
 #endif
 
@@ -1003,7 +1068,12 @@ namespace Engine.Utility {
                 onTick = onTick.CombineAction(meta.onUpdate);
             }
 
-            if(meta.lib == TweenLib.iTween) {
+            if(meta.lib == TweenLib.none) {
+
+            }
+
+#if USE_EASING_ITWEEN
+            else if(meta.lib == TweenLib.iTween) {
 
                 if(meta.stopCurrent) {
                     iTween.Stop(meta.go);
@@ -1029,6 +1099,9 @@ namespace Engine.Utility {
 
                 iTween.RotateTo(meta.go, hash);
             }
+#endif
+
+#if USE_EASING_LEANTWEEN
             else if(meta.lib == TweenLib.leanTween) {
 
                 if(meta.stopCurrent) {
@@ -1067,6 +1140,9 @@ namespace Engine.Utility {
 
                 info.resume();
             }
+#endif
+
+#if USE_EASING_NGUI
             else if(meta.lib == TweenLib.nguiUITweener) {
 
                 UITweener.Style loopTypeLib =
@@ -1084,6 +1160,7 @@ namespace Engine.Utility {
                 //OnTweenFinish(onFinish);
                 //OnTweenTick(onTick);
             }
+#endif
         }
 
         // --------------------------------------------------------------------
@@ -1105,7 +1182,7 @@ namespace Engine.Utility {
             TweenLib lib = TweenLib.leanTween;
 
 
-#if USE_UI_NGUI_2_7 || USE_UI_NGUI_3
+#if USE_UI_NGUI_2_7 || USE_UI_NGUI_3 || USE_EASING_NGUI
 
             if(go.Has<UISlicedSprite>()
                 || go.Has<UISprite>()
@@ -1193,9 +1270,8 @@ namespace Engine.Utility {
             if(meta.go == null) {
                 return;
             }
-
-
-#if USE_UI_NGUI_2_7 || USE_UI_NGUI_3
+            
+#if USE_UI_NGUI_2_7 || USE_UI_NGUI_3 || USE_EASING_NGUI
             meta.lib = TweenLib.nguiUITweener;
 #endif
 
@@ -1239,7 +1315,12 @@ namespace Engine.Utility {
                 });
             }
 
-            if(meta.lib == TweenLib.iTween) {
+            if(meta.lib == TweenLib.none) {
+
+            }
+
+#if USE_EASING_ITWEEN
+            else if(meta.lib == TweenLib.iTween) {
 
                 if(meta.stopCurrent) {
                     iTween.Stop(meta.go);
@@ -1265,6 +1346,9 @@ namespace Engine.Utility {
 
                 iTween.FadeTo(meta.go, hash);
             }
+#endif
+
+#if USE_EASING_LEANTWEEN
             else if(meta.lib == TweenLib.leanTween) {
 
                 if(meta.stopCurrent) {
@@ -1305,6 +1389,9 @@ namespace Engine.Utility {
 
                 info.resume();
             }
+#endif
+
+#if USE_EASING_NGUI
             else if(meta.lib == TweenLib.nguiUITweener) {
 
                 UITweener.Style loopTypeLib =
@@ -1320,6 +1407,8 @@ namespace Engine.Utility {
                 //OnTweenFinish(onFinish);
                 //OnTweenTick(onTick);
             }
+            
+#endif
 
             /*
              * TODO nested -a- marked objects to keep alpha on on nested when needed
@@ -1451,7 +1540,7 @@ namespace Engine.Utility {
                 return;
             }
 
-#if USE_UI_NGUI_2_7 || USE_UI_NGUI_3
+#if USE_UI_NGUI_2_7 || USE_UI_NGUI_3 || USE_EASING_NGUI
             meta.lib = TweenLib.nguiUITweener;
 #endif
 
@@ -1495,7 +1584,12 @@ namespace Engine.Utility {
                 });
             }
 
-            if(meta.lib == TweenLib.iTween) {
+            if(meta.lib == TweenLib.none) {
+
+            }
+
+#if USE_EASING_ITWEEN
+            else if(meta.lib == TweenLib.iTween) {
 
                 if(meta.stopCurrent) {
                     iTween.Stop(meta.go);
@@ -1521,6 +1615,9 @@ namespace Engine.Utility {
 
                 iTween.FadeTo(meta.go, hash);
             }
+#endif
+
+#if USE_EASING_LEANTWEEN
             else if(meta.lib == TweenLib.leanTween) {
 
                 if(meta.stopCurrent) {
@@ -1561,6 +1658,9 @@ namespace Engine.Utility {
 
                 info.resume();
             }
+#endif
+
+#if USE_EASING_NGUI
             else if(meta.lib == TweenLib.nguiUITweener) {
 
                 UITweener.Style loopTypeLib =
@@ -1576,6 +1676,7 @@ namespace Engine.Utility {
                 //OnTweenFinish(onFinish);
                 //OnTweenTick(onTick);
             }
+#endif
 
             /*
              * TODO nested -a- marked objects to keep alpha on on nested when needed
@@ -1732,7 +1833,7 @@ namespace Engine.Utility {
 
                 bool found = false;
 
-#if USE_UI_NGUI_2_7 || USE_UI_NGUI_3
+#if USE_UI_NGUI_2_7 || USE_UI_NGUI_3 || USE_EASING_NGUI
 
                 if(go.Has<UISlicedSprite>()
                     || go.Has<UISprite>()

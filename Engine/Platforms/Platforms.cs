@@ -3,7 +3,9 @@
 using System;
 using UnityEngine;
 
+#if USE_FEATURE_ETCETERA
 using Prime31;
+#endif
 
 public class PlatformKeys {
     public static string any = "any";

@@ -309,9 +309,12 @@ public class BaseGameState {
     }
 
     public virtual void sync(string key, string data) {
+
+#if USE_GAME_LIB_GAMEVERSES
         if(AppConfigs.gameCloudSyncEnabled) {
             GameSync.SetProfileSyncContent(key, key, data);
         }
+#endif
     }
 
     public virtual string prepareLoad(string keyTo) {
@@ -362,9 +365,11 @@ public class BaseGameState {
 
     public virtual void syncProfile() {
 
+#if USE_GAME_LIB_GAMEVERSES
         if(AppConfigs.gameCloudSyncEnabled) {
             CoroutineUtil.Start(syncProfileCo());
         }
+#endif
     }
 
     public IEnumerator syncProfileCo() {
@@ -373,7 +378,9 @@ public class BaseGameState {
 
         Debug.Log("syncProfileCo");
 
+#if USE_GAME_LIB_GAMEVERSES
         GameSync.ResetProfileSyncObject();
+#endif
 
         save(keyProfile, GameProfiles.Current, true);
         save(keyProfileAchievement, GameProfileAchievements.Current, true);
@@ -388,7 +395,9 @@ public class BaseGameState {
 
         // prepare and upload any files changed
 
+#if USE_GAME_LIB_GAMEVERSES
         GameSync.SyncProfile();
+#endif
 
         // validate on server
 
