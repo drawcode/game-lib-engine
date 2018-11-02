@@ -1,4 +1,10 @@
-﻿using System;
+﻿// #USE_
+
+// USE_EASING_ITWEEN
+// USE_EASING_LEANTWEEN
+// USE_EASING_NGUI
+
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;

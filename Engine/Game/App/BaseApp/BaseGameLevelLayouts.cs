@@ -117,7 +117,9 @@ public class BaseGameLevelLayouts<T> : DataObjects<T> where T : DataObject, new(
                 obj.description = originalCode;
                 obj.display_name = code;
                 obj.name = originalCode;
+#if USE_GAMEVERSES
                 obj.game_id = GameversesConfig.apiGameId;
+#endif
                 obj.key = originalCode;
                 GameLevelLayouts.Instance.items.Add(obj);
             }

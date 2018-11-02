@@ -764,7 +764,10 @@ namespace Engine.Events {
                 if(allowSwipe) {
                     //AppViewerAppController.Instance.ChangeActionPrevious();
                 }
+
+#if USE_GAME_LIB_GAMES
                 GamePlayerProgress.Instance.ProcessProgressSwipes();
+#endif
                 //}
             }
             else if(direction == FingerGestures.SwipeDirection.Left
@@ -773,7 +776,10 @@ namespace Engine.Events {
                 if(allowSwipe) {
                     //AppViewerAppController.Instance.ChangeActionNext();
                 }
+
+#if USE_GAME_LIB_GAMES
                 GamePlayerProgress.Instance.ProcessProgressSwipes();
+#endif
                 //}
             }
 
@@ -1204,24 +1210,29 @@ namespace Engine.Events {
 
         public virtual void ScaleCurrentObject(float delta) {
 
+#if USE_GAME_LIB_GAMES
             GameObject go = GameDraggableEditor.GetCurrentSpriteObject();
 
             if(go != null) {
                 GameObjectHelper.ScaleObject(go, delta);
             }
+#endif
         }
 
         public virtual void RotateCurrentObject(float delta) {
 
+#if USE_GAME_LIB_GAMES
             GameObject go = GameDraggableEditor.GetCurrentSpriteObject();
 
             if(go != null) {
                 GameObjectHelper.RotateObjectZ(go, delta);
             }
+#endif
         }
 
         public virtual void SpinCurrentObject(Vector2 fingerPos, Vector2 delta) {
 
+#if USE_GAME_LIB_GAMES
             GameObject go = GameDraggableEditor.GetCurrentSpriteObject();
 
             if(go != null) {
@@ -1229,10 +1240,12 @@ namespace Engine.Events {
                 GameObjectHelper.deferTap = true;
                 GamePlayerProgress.Instance.ProcessProgressSpins();
             }
+#endif
         }
 
         public virtual void ResetCurrentObject(Vector2 pos) {
 
+#if USE_GAME_LIB_GAMES
             GameObject go = GameDraggableEditor.GetCurrentSpriteObject();
 
             if(go != null) {
@@ -1247,6 +1260,7 @@ namespace Engine.Events {
 
                 GameObjectHelper.ResetObject(go);
             }
+#endif
         }
 
         public virtual void FingerGestures_OnTap(Vector2 fingerPos) {
@@ -1255,11 +1269,15 @@ namespace Engine.Events {
                 return;
             }
 
+#if USE_GAME_LIB_GAMES
             TapObject(GameDraggableEditor.GetCurrentSpriteObject(), fingerPos, true);
+#endif
         }
 
         public virtual void handleTouchLaunch(Vector2 move) {
 
+#if USE_GAME_LIB_GAMES
+                    // TODO MOVE TO EVENTS
             float force = 20f;
             //LogUtil.Log("SWIPE:move:" + move);
             float angleGesture = move.CrossAngle();
@@ -1318,6 +1336,7 @@ namespace Engine.Events {
                 //Debug.Log("swipe controller: LEFT :angleDiff:" + angleDiff);
                 GameController.CurrentGamePlayerController.Strafe(forceVector, force * 30f);
             }
+#endif
         }
 
         public void FindCameras() {
@@ -1450,6 +1469,8 @@ namespace Engine.Events {
                     //LogUtil.Log("GetMouseButtonDown:positionLastLaunch:" + positionLastLaunch);
                 }
 
+#if USE_GAME_LIB_GAMES
+                    // TODO MOVE TO EVENTS
                 if(GameController.CurrentGamePlayerController != null) {
 
                     if(GameController.CurrentGamePlayerController.IsPlayerControlled) {
@@ -1461,6 +1482,7 @@ namespace Engine.Events {
                         showPoints = true;
                     }
                 }
+#endif
             }
             else if(inputGestureUp) {
                 if(positionEnd == Vector3.zero
@@ -1499,6 +1521,8 @@ namespace Engine.Events {
                         return;
                     }
 
+#if USE_GAME_LIB_GAMES
+                    // TODO MOVE TO EVENTS
                     if(GameController.CurrentGamePlayerController != null) {
 
                         if(GameController.CurrentGamePlayerController.IsPlayerControlled) {
@@ -1526,6 +1550,7 @@ namespace Engine.Events {
                             //ResetAimDelayed(.8f);
                         }
                     }
+#endif
 
                     showPoints = true;
                     positionStart = Vector3.zero;
@@ -1658,6 +1683,7 @@ namespace Engine.Events {
 
                 if(allowedTouch) {
 
+#if USE_GAME_LIB_GAMES
                     if(hit.transform.gameObject.Has<GameTouchInputAxis>()) {
                         // not over axis controller
                         inputAxisDown = true;
@@ -1671,7 +1697,10 @@ namespace Engine.Events {
                         shouldTouch = false;
                         allowedTouch = false;
                     }
+#endif
 
+#if USE_GAME_LIB_GAMES
+                    // TODO NGUI or UNITY UI
                     if(hit.transform.gameObject.Has<UIButton>()) {
                         // not over button
                         inputButtonDown = true;
@@ -1685,6 +1714,7 @@ namespace Engine.Events {
                         shouldTouch = false;
                         allowedTouch = false;
                     }
+#endif
                 }
 
                 //Debug.Log("hit:" + hit);
@@ -2112,8 +2142,8 @@ namespace Engine.Events {
             mouseSecondaryPress = false;
             mouseSecondaryPressed = false;
 #else
-                mouseSecondaryPress = Input.GetMouseButton(1);
-                mouseSecondaryPressed = Input.GetMouseButtonDown(1);
+            mouseSecondaryPress = Input.GetMouseButton(1);
+            mouseSecondaryPressed = Input.GetMouseButtonDown(1);
 #endif
 
             touchPressed = Input.touchCount > 0 ? true : false;

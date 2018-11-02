@@ -77,42 +77,61 @@ public class BaseGameConfigs<T> : DataObjects<T> where T : DataObject, new() {
     
     public static bool isGameRunning {
         get {
+
+#if USE_GAME_LIB_GAMES
+
             if (GameController.IsGameRunning
                 && !isUIRunning) {
                 return true;
             }
+#endif
+
             return false;
         }
     }
 
     public static bool isGamePaused {
         get {
+
+#if USE_GAME_LIB_GAMES
+            
             if(GameController.IsGamePaused
                 && !isUIRunning) {
                 return true;
             }
+
+#endif
             return false;
         }
     }
 
     public static bool isGameContentDisplay {
         get {
+
+#if USE_GAME_LIB_GAMES
+
             if(GameController.IsGameContentDisplay
                 && !isUIRunning) {
                 return true;
             }
+#endif
             return false;
         }
     }
 
     public static bool isUIRunning {
         get {
+
+#if USE_GAME_LIB_GAMES
+
             if(GameUIController.Instance == null) {
                 return false;
             }
+
             if (GameUIController.Instance.uiVisible) {
                 return true;
             }
+#endif
             return false;
         }
     }
@@ -161,7 +180,7 @@ public class BaseGameConfig : Config {
         get {
             return Get<GameLeaderboardData>(BaseDataObjectKeys.data);
         }
-        
+
         set {
             Set(BaseDataObjectKeys.data, value);
         }
