@@ -172,7 +172,11 @@ public class GameObjectTimer {
     }
 
     public bool IsFPSLessThan(float val) {
+#if USE_GAME_LIB_GAMES
         return FPSDisplay.IsFPSLessThan(val);
+#else
+        return false;
+#endif
     }
 
     public float GetFPSOffset(float desiredFPS = 30f) {
@@ -181,7 +185,11 @@ public class GameObjectTimer {
 
     public float currentFPS {
         get {
+#if USE_GAME_LIB_GAMES
             return FPSDisplay.GetCurrentFPS();
+#else
+            return 30;
+#endif
         }
     }
 

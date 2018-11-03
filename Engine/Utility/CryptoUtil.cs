@@ -6,9 +6,15 @@ using System.Security.Cryptography;
 using System.Text;
 
 public class CryptoUtil {
-        
-    private static byte[] _salt = Encoding.ASCII.GetBytes(AppConfigs.cryptoSharedSecret);
-    private static string _sharedSecret = AppConfigs.cryptoSharedSecret;
+
+#if USE_CONFIGS_APP
+    private static string _sharedSecretSource = AppConfigs.cryptoSharedSecret;
+#else
+    private static string _sharedSecretSource = "sharedsecrethere";
+#endif
+
+    private static byte[] _salt = Encoding.ASCII.GetBytes(_sharedSecretSource);
+    private static string _sharedSecret = _sharedSecretSource;
 
     public static string NewGuid() {
         string puid = "";
