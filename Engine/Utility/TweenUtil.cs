@@ -471,7 +471,7 @@ namespace Engine.Utility {
 
             return easeType;
         }
-        
+
         // --------------------------------------------------------------------
         // META
 
@@ -604,7 +604,7 @@ namespace Engine.Utility {
             if(meta.go == null) {
                 return;
             }
-            
+
 #if USE_UI_NGUI_2_7 || USE_UI_NGUI_3 || USE_EASING_NGUI
             meta.lib = TweenLib.nguiUITweener;
 #endif
@@ -731,7 +731,7 @@ namespace Engine.Utility {
             }
 #endif
         }
-        
+
         // --------------------------------------------------------------------
         // SCALE
 
@@ -949,7 +949,7 @@ namespace Engine.Utility {
             }
 #endif
         }
-        
+
         // --------------------------------------------------------------------
         // ROTATE
 
@@ -1270,7 +1270,7 @@ namespace Engine.Utility {
             if(meta.go == null) {
                 return;
             }
-            
+
 #if USE_UI_NGUI_2_7 || USE_UI_NGUI_3 || USE_EASING_NGUI
             meta.lib = TweenLib.nguiUITweener;
 #endif
