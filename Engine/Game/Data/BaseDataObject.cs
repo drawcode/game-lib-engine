@@ -584,6 +584,8 @@ public class BaseDataObject : Dictionary<string, object> {
     public string DataPrepareSave(string dataValue) {
 
 #if !UNITY_WEBPLAYER
+
+#if USE_CONFIG_APP
         if(AppConfigs.useStorageEncryption) {
 
             dataValue = dataValue.ToEncrypted();
@@ -594,6 +596,7 @@ public class BaseDataObject : Dictionary<string, object> {
             dataValue = dataValue.ToCompressed();
         }
 #endif
+#endif
 
         return dataValue;
     }
@@ -601,6 +604,8 @@ public class BaseDataObject : Dictionary<string, object> {
     public string DataPrepareLoad(string dataValue) {
 
 #if !UNITY_WEBPLAYER
+
+#if USE_CONFIG_APP
         if(AppConfigs.useStorageCompression) { /// || data.IsCompressed()) {
 
             dataValue = dataValue.ToDecompressed();
@@ -610,6 +615,7 @@ public class BaseDataObject : Dictionary<string, object> {
 
             dataValue = dataValue.ToDecrypted();
         }
+#endif
 #endif
 
         return dataValue;

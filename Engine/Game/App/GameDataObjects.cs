@@ -554,7 +554,9 @@ public class GameDataObjectItem : GameDataObject {
         GameDataSound gameDataSound = GetSoundByType(GameDataActionKeys.reward);
 
         if (gameDataSound != null) {
+#if USE_GAME_LIB_GAMES
             GameAudio.PlayEffect(gameDataSound.code);
+#endif
         }
     }
 
