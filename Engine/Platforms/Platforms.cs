@@ -91,18 +91,20 @@ public class Platforms {
 #endif
     }
 
-    public static void ShowReviewAskView() {        
+    public static void ShowReviewAskView() {
+#if USE_CONFIG_APP
 #if UNITY_ANDROID
         Platforms.AskForReview(
             AppConfigs.appGameDisplayName, 
             AppConfigs.appBundleId);
-#elif UNITY_IPHONE  
+#elif UNITY_IPHONE
         Platforms.AskForReview(
             AppConfigs.appGameDisplayName, 
             AppConfigs.appStoreId);
-#endif     
+#endif
+#endif
     }
-    
+
     public static void AskForReview(string appName, string bundleId) {
         Instance.askForReview(appName, bundleId);
     }

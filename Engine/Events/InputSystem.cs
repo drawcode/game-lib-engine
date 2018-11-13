@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using Engine.Utility;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace Engine.Events {
 
@@ -1277,7 +1278,7 @@ namespace Engine.Events {
         public virtual void handleTouchLaunch(Vector2 move) {
 
 #if USE_GAME_LIB_GAMES
-                    // TODO MOVE TO EVENTS
+            // TODO MOVE TO EVENTS
             float force = 20f;
             //LogUtil.Log("SWIPE:move:" + move);
             float angleGesture = move.CrossAngle();
@@ -1470,7 +1471,7 @@ namespace Engine.Events {
                 }
 
 #if USE_GAME_LIB_GAMES
-                    // TODO MOVE TO EVENTS
+                // TODO MOVE TO EVENTS
                 if(GameController.CurrentGamePlayerController != null) {
 
                     if(GameController.CurrentGamePlayerController.IsPlayerControlled) {
@@ -1575,8 +1576,7 @@ namespace Engine.Events {
                 //hidePoints();
             }
         }
-
-
+        
         public virtual void hidePoints() {
 
             hideStartPoint();
@@ -1699,22 +1699,12 @@ namespace Engine.Events {
                     }
 #endif
 
-#if USE_GAME_LIB_GAMES
-                    // TODO NGUI or UNITY UI
-                    if(hit.transform.gameObject.Has<UIButton>()) {
+                    if(UIUtil.IsButton(hit.transform.gameObject)) {
                         // not over button
                         inputButtonDown = true;
                         shouldTouch = false;
                         allowedTouch = false;
                     }
-
-                    if(hit.transform.gameObject.Has<UIImageButton>()) {
-                        // not over button
-                        inputButtonDown = true;
-                        shouldTouch = false;
-                        allowedTouch = false;
-                    }
-#endif
                 }
 
                 //Debug.Log("hit:" + hit);
