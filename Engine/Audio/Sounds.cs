@@ -53,12 +53,12 @@ namespace Engine.Audio {
         }
 
         public void CheckAmbiencePlaying() {
-            if (loop != null) {
-                if (!loop.isPlaying)
+            if(loop != null) {
+                if(!loop.isPlaying)
                     StartAmbience();
             }
 
-            if (!ambienceActive) {
+            if(!ambienceActive) {
                 StartAmbience();
             }
         }
@@ -103,18 +103,18 @@ namespace Engine.Audio {
 
         public void PlayEffect(int soundNumber) {
 
-            if (effectsSoundsObject != null) {
+            if(effectsSoundsObject != null) {
 
-                if (effects == null) {
+                if(effects == null) {
 
                     effects = effectsSoundsObject.GetComponentsInChildren<AudioSource>();
                 }
 
                 int effectsLength = effects.Length;
 
-                if (effectsLength > 0) {
+                if(effectsLength > 0) {
 
-                    if (soundNumber <= effectsLength) {
+                    if(soundNumber <= effectsLength) {
 
                         AudioSource effectSource = effects[soundNumber - 1];
                         effectSource.loop = false;
@@ -133,13 +133,13 @@ namespace Engine.Audio {
             int loopClipCount = loopSoundsObject.GetComponentsInChildren<AudioSource>().Length;
             int introClipCount = introSoundsObject.GetComponentsInChildren<AudioSource>().Length;
 
-            if (loopClipCount > 0 && introClipCount > 0) {
+            if(loopClipCount > 0 && introClipCount > 0) {
 
                 // Randomize the selected loop and intro.. if only one it will pick one;
 
                 int randomAmbience = UnityEngine.Random.Range(1, loopClipCount) - 1;
 
-                if (randomAmbience < introSoundsObject.GetComponentsInChildren<AudioSource>().Length) {
+                if(randomAmbience < introSoundsObject.GetComponentsInChildren<AudioSource>().Length) {
 
                     intro = introSoundsObject.GetComponentsInChildren<AudioSource>()[randomAmbience];
                     intro.loop = false;
@@ -147,7 +147,7 @@ namespace Engine.Audio {
                     intro.Play();
                 }
 
-                if (randomAmbience < loopSoundsObject.GetComponentsInChildren<AudioSource>().Length) {
+                if(randomAmbience < loopSoundsObject.GetComponentsInChildren<AudioSource>().Length) {
 
                     loop = loopSoundsObject.GetComponentsInChildren<AudioSource>()[randomAmbience];
                     loop.loop = true;
@@ -179,18 +179,18 @@ namespace Engine.Audio {
 
             bool wait = false;
 
-            if (loop != null) {
+            if(loop != null) {
 
                 // Fade out sounds and reset
-                if (loop.isPlaying) {
+                if(loop.isPlaying) {
 
                     //loop.gameObject.AudioTo(0f, 1f, 1.5f, 0f);
                     wait = true;
                 }
             }
 
-            if (intro != null) {
-                if (intro.isPlaying) {
+            if(intro != null) {
+                if(intro.isPlaying) {
 
                     //intro.gameObject.AudioTo(0f, 1f, 1.5f, 0f);
                     wait = true;

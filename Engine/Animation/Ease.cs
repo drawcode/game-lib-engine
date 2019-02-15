@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Text;
 using UnityEngine;
 
-
 public delegate double EaseDelegate(double t, double b, double c, double d);
 
 abstract class Ease {
