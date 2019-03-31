@@ -21,7 +21,9 @@ namespace Engine.UI {
         private float sampleInterval = 1f;
 
         public Vector2 Scale {
-            get { return new Vector2(camera.pixelRect.width / originalSize.x, camera.pixelRect.height / originalSize.y); }
+            get {
+                return new Vector2(camera.pixelRect.width / originalSize.x, camera.pixelRect.height / originalSize.y);
+            }
         }
 
         private void Start() {
@@ -47,12 +49,12 @@ namespace Engine.UI {
 
         private void Update() {
             currentTimeBlock += Time.deltaTime;
-            if (currentTimeBlock > sampleInterval) {
+            if(currentTimeBlock > sampleInterval) {
                 currentTimeBlock = 0.0f;
                 UpdateViewport();
 
                 //Disable in non-realtime situations
-                if (!Application.isEditor && !realtime) {
+                if(!Application.isEditor && !realtime) {
                     run = false;
                 }
             }
@@ -69,7 +71,7 @@ namespace Engine.UI {
 
             //LogUtil.Log("screenRatio:" + screenRatio);
 
-            if (screenRatio < 1.4) {
+            if(screenRatio < 1.4) {
 
                 // adjust 4:3 and above to fit better.
                 Vector3 scaleTo = gameObject.transform.localScale;

@@ -28,7 +28,7 @@ namespace Engine.UI {
             CheckBoundaries();
 
             // Make sure the user pressed the mouse down
-            if (!Input.GetMouseButtonDown(0)) {	 // will work on device and desktop
+            if(!Input.GetMouseButtonDown(0)) {	 // will work on device and desktop
                 return;
             }
 
@@ -38,14 +38,14 @@ namespace Engine.UI {
 
             RaycastHit hit;
 
-            if (!Physics.Raycast(mainCamera.ScreenPointToRay(Input.mousePosition), out hit, 100))
+            if(!Physics.Raycast(mainCamera.ScreenPointToRay(Input.mousePosition), out hit, 100))
                 return;
 
             // We need to hit a rigidbody that is not kinematic
-            if (!hit.rigidbody || hit.rigidbody.isKinematic)
+            if(!hit.rigidbody || hit.rigidbody.isKinematic)
                 return;
 
-            if (!springJoint) {
+            if(!springJoint) {
                 LogUtil.Log("Adding rigidbody and joint for draggable");
                 var go = new GameObject("Rigidbody dragger");
                 var body = go.AddComponent<Rigidbody>();
@@ -55,7 +55,7 @@ namespace Engine.UI {
 
             springJoint.transform.position = hit.point;
 
-            if (attachToCenterOfMass) {
+            if(attachToCenterOfMass) {
                 var anchor = transform.TransformDirection(hit.rigidbody.centerOfMass) + hit.rigidbody.transform.position;
                 anchor = springJoint.transform.InverseTransformPoint(anchor);
                 springJoint.anchor = anchor;
@@ -78,7 +78,7 @@ namespace Engine.UI {
             springJoint.connectedBody.drag = drag;
             springJoint.connectedBody.angularDrag = angularDrag;
             var mainCamera = FindCamera();
-            while (Input.GetMouseButton(0)) {
+            while(Input.GetMouseButton(0)) {
                 var ray = mainCamera.ScreenPointToRay(Input.mousePosition);
                 springJoint.transform.position = ray.GetPoint(distance);
 
@@ -87,7 +87,7 @@ namespace Engine.UI {
                 yield return new WaitForSeconds(.1f);
             }
 
-            if (springJoint.connectedBody) {
+            if(springJoint.connectedBody) {
                 springJoint.connectedBody.drag = oldDrag;
                 springJoint.connectedBody.angularDrag = oldAngularDrag;
                 springJoint.connectedBody = null;
@@ -112,19 +112,19 @@ namespace Engine.UI {
 
             //LogUtil.Log("currentPosition:" + currentPosition);
 
-            if (currentPosition.x > boundaryXLeft) {
+            if(currentPosition.x > boundaryXLeft) {
                 currentPosition.x = boundaryXLeft;
                 angularVelocityBody.x = 0;
             }
-            if (currentPosition.x < boundaryXRight) {
+            if(currentPosition.x < boundaryXRight) {
                 currentPosition.x = boundaryXRight;
                 angularVelocityBody.x = 0;
             }
-            if (currentPosition.y < boundaryYTop) {
+            if(currentPosition.y < boundaryYTop) {
                 currentPosition.y = boundaryYTop;
                 angularVelocityBody.y = 0;
             }
-            if (currentPosition.y > boundaryYBottom) {
+            if(currentPosition.y > boundaryYBottom) {
                 currentPosition.y = boundaryYBottom;
                 angularVelocityBody.y = 0;
             }
@@ -134,7 +134,7 @@ namespace Engine.UI {
         }
 
         public Camera FindCamera() {
-            if (cameraScrollable != null)
+            if(cameraScrollable != null)
                 return cameraScrollable;
             else
                 return Camera.main;

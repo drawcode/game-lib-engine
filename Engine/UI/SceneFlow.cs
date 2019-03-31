@@ -27,7 +27,7 @@ namespace Engine.UI {
             // Mark parents
             FindParentsOfNodes(null, roots);
 
-            if (roots.Count > 0)
+            if(roots.Count > 0)
                 currentNode = roots[0];
         }
 
@@ -36,34 +36,40 @@ namespace Engine.UI {
         }
 
         public Node CurrentNode {
-            get { return currentNode; }
+            get {
+                return currentNode;
+            }
         }
 
         public Node ParentNode {
-            get { return currentNode.parent; }
+            get {
+                return currentNode.parent;
+            }
         }
 
         public List<Node> ChildNodes {
             get {
                 List<Node> nodes = new List<Node>();
-                if (currentNode.children.Count > 0)
+                if(currentNode.children.Count > 0)
                     nodes = currentNode.children;
                 return nodes;
             }
         }
 
         public bool IsLastNodeAChildNode {
-            get { return currentNode.parent != null ? true : false; }
+            get {
+                return currentNode.parent != null ? true : false;
+            }
         }
 
         public Node Next(int nodeIdx) {
-            if (currentNode.children.Count > nodeIdx)
+            if(currentNode.children.Count > nodeIdx)
                 currentNode = currentNode.children[nodeIdx];
             return currentNode;
         }
 
         public Node Back() {
-            if (currentNode.parent != null)
+            if(currentNode.parent != null)
                 currentNode = currentNode.parent;
             return currentNode;
         }
@@ -94,26 +100,26 @@ namespace Engine.UI {
             // ok for small lists, larger ones can just
             // reference node.name and can be in a flat list
             // in a hash to get parent and children by name/code/id
-            foreach (Node node in nodes) {
-                if (node.name == name) {
+            foreach(Node node in nodes) {
+                if(node.name == name) {
                     found = true;
                     currentNode = node;
                     break;
                 }
-                if (node.children.Count > 0)
+                if(node.children.Count > 0)
                     FindNodeByName(name, node.children);
             }
             return found;
         }
 
         public void FindParentsOfNodes(Node parent, List<Node> nodes) {
-            foreach (Node node in nodes) {
+            foreach(Node node in nodes) {
 
                 // Just set name in a hash dictionary in next version
                 // lookup by hash and tag parent name, id, or uuid to
                 // have a unique path or id for nodes.
                 node.parent = parent;
-                if (node.children.Count > 0)
+                if(node.children.Count > 0)
                     FindParentsOfNodes(node, node.children);
             }
         }

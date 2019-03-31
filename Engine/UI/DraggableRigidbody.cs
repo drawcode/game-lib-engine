@@ -17,7 +17,7 @@ namespace Engine.UI {
         private void Update() {
 
             // Make sure the user pressed the mouse down
-            if (!Input.GetMouseButtonDown(0)) {
+            if(!Input.GetMouseButtonDown(0)) {
 
                 //LogUtil.Log("No input");
                 return;
@@ -31,14 +31,14 @@ namespace Engine.UI {
 
             RaycastHit hit;
 
-            if (!Physics.Raycast(mainCamera.ScreenPointToRay(Input.mousePosition), out hit, 100))
+            if(!Physics.Raycast(mainCamera.ScreenPointToRay(Input.mousePosition), out hit, 100))
                 return;
 
             // We need to hit a rigidbody that is not kinematic
-            if (!hit.rigidbody || hit.rigidbody.isKinematic)
+            if(!hit.rigidbody || hit.rigidbody.isKinematic)
                 return;
 
-            if (!springJoint) {
+            if(!springJoint) {
                 LogUtil.Log("Adding rigidbody and joint for draggable");
                 var go = new GameObject("Rigidbody dragger");
                 var body = go.AddComponent<Rigidbody>();
@@ -48,7 +48,7 @@ namespace Engine.UI {
 
             springJoint.transform.position = hit.point;
 
-            if (attachToCenterOfMass) {
+            if(attachToCenterOfMass) {
                 var anchor = transform.TransformDirection(hit.rigidbody.centerOfMass) + hit.rigidbody.transform.position;
                 anchor = springJoint.transform.InverseTransformPoint(anchor);
                 springJoint.anchor = anchor;
@@ -71,13 +71,13 @@ namespace Engine.UI {
             springJoint.connectedBody.drag = drag;
             springJoint.connectedBody.angularDrag = angularDrag;
             var mainCamera = FindCamera();
-            while (Input.GetMouseButton(0)) {
+            while(Input.GetMouseButton(0)) {
                 var ray = mainCamera.ScreenPointToRay(Input.mousePosition);
                 springJoint.transform.position = ray.GetPoint(distance);
                 yield return new WaitForSeconds(.1f);
             }
 
-            if (springJoint.connectedBody) {
+            if(springJoint.connectedBody) {
                 springJoint.connectedBody.drag = oldDrag;
                 springJoint.connectedBody.angularDrag = oldAngularDrag;
                 springJoint.connectedBody = null;
@@ -85,7 +85,7 @@ namespace Engine.UI {
         }
 
         public Camera FindCamera() {
-            if (camera)
+            if(camera)
                 return camera;
             else
                 return Camera.main;

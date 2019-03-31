@@ -27,23 +27,21 @@ public class UICheckbox : UIToggle {
 
 public delegate void UIButtonEventTap();
 
-
 public class UIUtil {
 
     /*
-        public static void Show<T>(T obj) {
-                if(obj != null) {
-                        obj.gameObject.Show();
-                }
-        }
+    public static void Show<T>(T obj) {
+            if(obj != null) {
+                    obj.gameObject.Show();
+            }
+    }
         
-        public static void Hide<T>(T obj) {
-                if(obj != null) {
-                        obj.gameObject.Hide();
-                }
-        }
-        */
-
+    public static void Hide<T>(T obj) {
+            if(obj != null) {
+                    obj.gameObject.Hide();
+            }
+    }
+    */
 
 #if USE_UI_NGUI_2_7 || USE_UI_NGUI_3
     public static void ShowInput(UIInput obj) {

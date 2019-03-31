@@ -23,7 +23,7 @@ namespace Engine.UI {
         private void HandleScroll() {
 
             //check for player moving finger across screen
-            if (Input.touchCount == 1 && Input.GetTouch(0).phase == TouchPhase.Moved) {
+            if(Input.touchCount == 1 && Input.GetTouch(0).phase == TouchPhase.Moved) {
 
                 //get distance to move
                 Vector2 positionDelta = GetPositionDeltaWithinBoundary(Input.GetTouch(0).deltaPosition);
@@ -64,7 +64,7 @@ namespace Engine.UI {
             float boundaryMaxPixelsDestination = recMax + Mathf.Abs(axisDelta);
 
             //check to see if you're within the border
-            if ((boundaryMinPixelsDestination <= boundaryMinPixels && axisDelta > 0) ||
+            if((boundaryMinPixelsDestination <= boundaryMinPixels && axisDelta > 0) ||
                 (boundaryMaxPixelsDestination >= boundaryMaxPixels && axisDelta < 0)) {
                 axisDelta = 0;
             }
