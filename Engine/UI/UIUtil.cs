@@ -1029,6 +1029,7 @@ public class UIUtil {
         }
         return false;
     }
+
 #endif
 
     public static bool IsButtonClicked(Image button, string buttonClickedName) {
@@ -1052,6 +1053,10 @@ public class UIUtil {
 
             if(obj.Has<UIImageButton>()) {
                 return IsButtonClicked(obj.Get<UIImageButton>(), buttonClickedName);
+            }
+
+            if(obj.Has<UIButton>()) {
+                return IsButtonClicked(obj.Get<UIButton>(), buttonClickedName);
             }
 #endif
             if(obj.Has<Image>()) {
