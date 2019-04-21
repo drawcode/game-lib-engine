@@ -261,6 +261,15 @@ public static class BaseGameObjectExtensions {
 
         return GameObjectHelper.SetOnly<T>(inst);
     }
+    
+    public static GameObject GetAsGameObject<T>(this GameObject inst) where T : Component {
+
+        if(inst == null) {
+            return null;
+        }
+
+        return GameObjectHelper.GetAsGameObject<T>(inst);
+    }
 
     public static T Get<T>(this GameObject inst) where T : Component {
 

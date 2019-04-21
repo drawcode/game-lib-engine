@@ -439,6 +439,21 @@ public class UIUtil {
 
     //
 
+    public T FindLabel<T>(GameObject gameObject) {
+
+        T item = default(T);
+        
+        //if(item == null) {
+        //    item = gameObject.Get<UILabel>();
+        //}
+
+        //if (item == null) {
+        //    item = gameObject.Get<Text>();
+        //}
+
+        return item;
+    }
+
 #if USE_UI_NGUI_2_7 || USE_UI_NGUI_3
     public static string GetLabelValue(UILabel obj) {
         if(obj != null) {
@@ -893,6 +908,47 @@ public class UIUtil {
         }
         return false;
     }
+
+    // LIST
+
+#if USE_UI_NGUI_2_7 || USE_UI_NGUI_3
+    public static void GridReposition(UIGrid grid) {
+
+        if(grid == null) {
+            return;
+        }
+
+        grid.Reposition();
+    }
+
+#endif
+
+    public static void GridReposition(Grid grid) {
+
+        if(grid == null) {
+            return;
+        }
+
+        //grid.Reposition();
+    }
+
+    public static void GridReposition(GameObject grid) {
+
+        if(grid == null) {
+            return;
+        }
+
+#if USE_UI_NGUI_2_7 || USE_UI_NGUI_3
+        if(grid.Has<UIGrid>()) {
+            GridReposition(grid.Get<UIGrid>());
+        }
+#endif
+        if(grid.Has<Grid>()) {
+            GridReposition(grid.Get<Grid>());
+        }
+    }
+    
+    // 
 
 #if USE_UI_NGUI_2_7
     public static bool IsToggleOn(UICheckbox toggle, string toggleName) {

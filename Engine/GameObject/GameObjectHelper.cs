@@ -613,6 +613,22 @@ public static class GameObjectHelper {
         return t;
     }
 
+    // 
+    
+    public static GameObject GetAsGameObject<T>(
+        GameObject inst) where T : Component {
+
+        if(inst == null) {
+            return null;
+        }
+
+        if(inst.Has<T>()) {
+            return inst.Get<T>().gameObject;
+        }
+
+        return null;
+    }
+
     public static T Get<T>(GameObject inst) where T : Component {
         if (inst == null) {
             return null;
