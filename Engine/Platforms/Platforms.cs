@@ -68,7 +68,7 @@ public class Platforms {
         Application.OpenURL(url);
 #elif UNITY_ANDROID && USE_FEATURE_ETCETERA
         EtceteraAndroid.showWebView(url);
-#elif UNITY_IPHONE      
+#elif UNITY_IPHONE && USE_FEATURE_ETCETERA
         EtceteraBinding.showWebPage(url, false);
 #else
         Application.OpenURL(url);
