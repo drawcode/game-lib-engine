@@ -9,12 +9,13 @@ using Engine.Utility;
 using UnityEngine;
 
 using Engine.Events;
+using UnityEngine.Networking;
 
 namespace Engine.Networking {
     public class WebRequests : GameObjectBehavior {
-    
+
         public bool processing = false;
-        public WWW lastWWW = null;
+        public UnityWebRequest lastWWW = null;
 
         public delegate void HandleResponseTextCallback(string data);
 
@@ -54,7 +55,7 @@ namespace Engine.Networking {
         public class ResponseObject {
             public bool validResponse;
             public string type;
-            public WWW www;
+            public UnityWebRequest www;
             public int error;
             public string message;
             public string data;
@@ -77,30 +78,30 @@ namespace Engine.Networking {
 
         // -------------------------------------------------------------------
         // Singleton access
-        
+
         // Only one GameCloudSync can exist. We use a singleton pattern to enforce this.
         private static WebRequests _instance = null;
-        
+
         public static WebRequests Instance {
             get {
                 if (!_instance) {
-                    
+
                     // check if an ObjectPoolManager is already available in the scene graph
                     _instance = FindObjectOfType(typeof(WebRequests)) as WebRequests;
-                    
+
                     // nope, create a new one
                     if (!_instance) {
                         var obj = new GameObject("_WebRequests");
                         _instance = obj.AddComponent<WebRequests>();
                     }
                 }
-                
+
                 return _instance;
             }
         }
-                
+
         public void Awake() {
-        
+
             if (Instance != null && this != Instance) {
                 //There is already a copy of this script running
                 Destroy(this);
@@ -187,12 +188,12 @@ namespace Engine.Networking {
             }
             return url;
         }
-    
+
         // DELEGATE BASED
-    
+
         // -------------------------------------
         // RESPONSE OBJECTS
-    
+
         public void Request(string url, HandleResponseObjectCallback callback) {
             Request(RequestType.HTTP_GET, url, null, callback);
         }
@@ -200,7 +201,7 @@ namespace Engine.Networking {
         public void Request(RequestType requestType, string url, HandleResponseObjectCallback callback) {
             Request(requestType, url, null, callback);
         }
-    
+
         public void Request(RequestType requestType, string url, Dictionary<string, object> paramHash, HandleResponseObjectCallback callback) {
             if (requestType == RequestType.HTTP_POST) {
                 RequestPost(url, paramHash, callback);
@@ -216,26 +217,26 @@ namespace Engine.Networking {
                 if (paramHash.Count > 0) {
                     // append param types
                     foreach (KeyValuePair<string, object> pair in paramHash) {
-                        if (paramValues.Length == 0 
+                        if (paramValues.Length == 0
                             && !url.Contains("?")) {
-                            paramValues.Append("?");    
+                            paramValues.Append("?");
                         }
                         else {
                             paramValues.Append("&");
                         }
-                    
+
                         paramValues.Append(pair.Key);
-                        paramValues.Append("=");                    
+                        paramValues.Append("=");
                         paramValues.Append(Uri.EscapeDataString(pair.Value.ToString()));
                     }
                 }
             }
-        
+
             string urlAppend = paramValues.ToString();
             url = url + urlAppend;
-        
+
             //LogUtil.Log("url:" + url);
-        
+
             RequestStartCoroutineEnumerator(url, callback);
         }
 
@@ -256,12 +257,12 @@ namespace Engine.Networking {
         }
 
         public void RequestStartCoroutineEnumerator(string url, HandleResponseObjectCallback callback, WWWForm form) {
-        
+
             if (Context.Current.hasNetworkAccess) {
                 //LogUtil.Log("WebRequests: url:" + url);
                 StartCoroutine(WaitForResponse(url, form, callback));
             }
-            else {          
+            else {
                 ResponseObject responseObject = new ResponseObject();
                 responseObject.type = "";
                 responseObject.dataValueText = "";
@@ -271,21 +272,25 @@ namespace Engine.Networking {
                 callback(responseObject);
             }
         }
-    
+
         public IEnumerator WaitForResponse(string url, WWWForm form, HandleResponseObjectCallback callback) {
-        
-            WWW www = null;
+
+            UnityWebRequest www = null;
+
             if (form != null) {
-                www = new WWW(url, form);
+                www = UnityWebRequest.Post(url, form);
             }
             else {
-                www = new WWW(url);
+                www = UnityWebRequest.Get(url);
             }
-        
+
+            www.downloadHandler = new DownloadHandlerBuffer();
+
             lastWWW = www;
-        
+
             processing = true;
-            yield return www;
+
+            yield return www.SendWebRequest();
 
             ResponseObject responseObject = new ResponseObject();
             responseObject.www = www;
@@ -298,12 +303,12 @@ namespace Engine.Networking {
                 responseObject.message = www.error;
                 responseObject.dataValueText = "";
             }
-                
+
             try {
-                responseObject.dataValueText = www.text;
-                LogUtil.Log("WWW Text Output:" + www.text);
+                responseObject.dataValueText = www.downloadHandler.text;
+                LogUtil.Log("WWW Text Output:" + www.downloadHandler.text);
             }
-            catch (System.Exception e) {            
+            catch (System.Exception e) {
                 responseObject.validResponse = false;
                 responseObject.message = www.error;
                 responseObject.dataValueText = "";
@@ -314,11 +319,11 @@ namespace Engine.Networking {
             //callback = null;
             processing = false;
         }
-    
-    
+
+
         // -----------------------------------------------------
         // BYTES
-    
+
         public void RequestBytes(string url, HandleResponseBytesCallback callback) {
             RequestBytes(RequestType.HTTP_GET, url, null, callback);
         }
@@ -326,8 +331,12 @@ namespace Engine.Networking {
         public void RequestBytes(RequestType requestType, string url, HandleResponseBytesCallback callback) {
             RequestBytes(requestType, url, null, callback);
         }
-    
-        public void RequestBytes(RequestType requestType, string url, Dictionary<string, object> paramHash, HandleResponseBytesCallback callback) {
+
+        public void RequestBytes(
+            RequestType requestType,
+            string url, Dictionary<string, object> paramHash,
+            HandleResponseBytesCallback callback) {
+
             if (requestType == RequestType.HTTP_POST) {
                 RequestPostBytes(url, paramHash, callback);
             }
@@ -336,102 +345,147 @@ namespace Engine.Networking {
             }
         }
 
-        public void RequestGetBytes(string url, Dictionary<string, object> paramHash, HandleResponseBytesCallback callback) {
+        public void RequestGetBytes(
+            string url,
+            Dictionary<string, object> paramHash,
+            HandleResponseBytesCallback callback) {
+
             System.Text.StringBuilder paramValues = new System.Text.StringBuilder();
+
             if (paramHash != null) {
+
                 if (paramHash.Count > 0) {
+
                     // append param types
                     foreach (KeyValuePair<string, object> pair in paramHash) {
-                        if (paramValues.Length == 0 
+
+                        if (paramValues.Length == 0
                             && !url.Contains("?")) {
-                            paramValues.Append("?");    
+                            paramValues.Append("?");
                         }
                         else {
                             paramValues.Append("&");
                         }
-                    
+
                         paramValues.Append(pair.Key);
-                        paramValues.Append("=");                    
-                        paramValues.Append(Uri.EscapeDataString(pair.Value.ToString()));
+                        paramValues.Append("=");
+                        paramValues.Append(
+                            Uri.EscapeDataString(pair.Value.ToString()));
                     }
                 }
             }
-        
+
             string urlAppend = paramValues.ToString();
             url = url + urlAppend;
-        
+
             //LogUtil.Log("url:" + url);
-        
+
             RequestStartBytesCoroutineEnumerator(url, callback);
         }
-    
-        public void RequestPostBytes(string url, Dictionary<string, object> paramHash, HandleResponseBytesCallback callback) {
+
+        public void RequestPostBytes(
+            string url, Dictionary<string, object> paramHash,
+            HandleResponseBytesCallback callback) {
+
             WWWForm form = new WWWForm();
+
             if (paramHash != null) {
+
                 if (paramHash.Count > 0) {
-                    foreach (KeyValuePair<string, object> pair in paramHash) {
-                        form.AddField(pair.Key, pair.Value.ToString());
+
+                    foreach (KeyValuePair<string, object> pair
+                        in paramHash) {
+
+                        form.AddField(
+                            pair.Key, pair.Value.ToString());
                     }
                 }
             }
-            RequestStartBytesCoroutineEnumerator(url, callback, form);
-        }
-    
-        public void RequestStartBytesCoroutineEnumerator(string url, HandleResponseBytesCallback callback) {
-            RequestStartBytesCoroutineEnumerator(url, callback, null);
+            RequestStartBytesCoroutineEnumerator(
+                url, callback, form);
         }
 
-        public void RequestStartBytesCoroutineEnumerator(string url, HandleResponseBytesCallback callback, WWWForm form) {
-        
+        public void RequestStartBytesCoroutineEnumerator(
+            string url, HandleResponseBytesCallback callback) {
+
+            RequestStartBytesCoroutineEnumerator(
+                url, callback, null);
+        }
+
+        public void RequestStartBytesCoroutineEnumerator(
+            string url, HandleResponseBytesCallback callback,
+            WWWForm form) {
+
             if (Context.Current.hasNetworkAccess) {
                 //LogUtil.Log("WebRequests: url:" + url);
-                StartCoroutine(WaitForResponseBytes(url, form, callback));
+                StartCoroutine(WaitForResponseBytes(
+                    url, form, callback));
             }
-            else {          
+            else {
                 byte[] bytes = new byte[0];
                 callback(bytes);
             }
         }
-    
-        public IEnumerator WaitForResponseBytes(string url, WWWForm form, HandleResponseBytesCallback callback) {
-        
-            WWW www = null;
+
+        public IEnumerator WaitForResponseBytes(
+            string url,
+            WWWForm form,
+            HandleResponseBytesCallback callback) {
+
+            UnityWebRequest www = null;
+
             if (form != null) {
-                www = new WWW(url, form);
+                www = UnityWebRequest.Post(url, form);
             }
             else {
-                www = new WWW(url);
+                www = UnityWebRequest.Get(url);
             }
+
+            www.downloadHandler = new DownloadHandlerBuffer();
+
             lastWWW = www;
-        
+
             processing = true;
-            yield return www;
-        
-            byte[] bytes = www.bytes;
+
+            yield return www.SendWebRequest();
+
+            byte[] bytes = www.downloadHandler.data;// downloadedBytes;//.bytes;
 
             if (www.error != null) {
                 LogUtil.LogError("WWW Error:" + www.error + " url:" + url);
             }
             // Call callback after yield
             callback(bytes);
-            
+
             //callback = null;
             processing = false;
         }
-    
-    
+
+
         // -----------------------------------------------------
         // TEXT
-    
-        public void RequestText(string url, HandleResponseTextCallback callback) {
+
+        public void RequestText(
+            string url,
+            HandleResponseTextCallback callback) {
+
             RequestText(RequestType.HTTP_GET, url, null, callback);
         }
 
-        public void RequestText(RequestType requestType, string url, HandleResponseTextCallback callback) {
+        public void RequestText(
+            RequestType requestType,
+            string url,
+            HandleResponseTextCallback callback) {
+
             RequestText(requestType, url, null, callback);
         }
-    
-        public void RequestText(RequestType requestType, string url, Dictionary<string, object> paramHash, HandleResponseTextCallback callback) {
+
+        public void RequestText(
+            RequestType requestType,
+            string url,
+            Dictionary<string, object> paramHash,
+            HandleResponseTextCallback callback) {
+
             if (requestType == RequestType.HTTP_POST) {
                 RequestPostText(url, paramHash, callback);
             }
@@ -440,112 +494,139 @@ namespace Engine.Networking {
             }
         }
 
-        public void RequestGetText(string url, Dictionary<string, object> paramHash, HandleResponseTextCallback callback) {
-            System.Text.StringBuilder paramValues = new System.Text.StringBuilder();
+        public void RequestGetText(
+            string url,
+            Dictionary<string, object> paramHash,
+            HandleResponseTextCallback callback) {
+
+            System.Text.StringBuilder paramValues =
+                new System.Text.StringBuilder();
+
             if (paramHash != null) {
+
                 if (paramHash.Count > 0) {
+
                     // append param types
                     foreach (KeyValuePair<string, object> pair in paramHash) {
-                        if (paramValues.Length == 0 
+
+                        if (paramValues.Length == 0
                             && !url.Contains("?")) {
-                            paramValues.Append("?");    
+                            paramValues.Append("?");
                         }
                         else {
                             paramValues.Append("&");
                         }
-                    
+
                         paramValues.Append(pair.Key);
-                        paramValues.Append("=");                    
+                        paramValues.Append("=");
                         paramValues.Append(Uri.EscapeDataString(pair.Value.ToString()));
                     }
                 }
             }
-        
+
             string urlAppend = paramValues.ToString();
             url = url + urlAppend;
-        
+
             //LogUtil.Log("url:" + url);
-        
-            RequestStartTextCoroutineEnumerator(url, callback);
+
+            RequestStartTextCoroutineEnumerator(
+                url, callback);
         }
-    
-        public void RequestPostText(string url, Dictionary<string, object> paramHash, HandleResponseTextCallback callback) {
+
+        public void RequestPostText(
+            string url,
+            Dictionary<string, object> paramHash,
+            HandleResponseTextCallback callback) {
+
             WWWForm form = new WWWForm();
+
             if (paramHash != null) {
+
                 if (paramHash.Count > 0) {
+
                     foreach (KeyValuePair<string, object> pair in paramHash) {
                         form.AddField(pair.Key, pair.Value.ToString());
                     }
                 }
             }
-            RequestStartTextCoroutineEnumerator(url, callback, form);
+            RequestStartTextCoroutineEnumerator(
+                url, callback, form);
         }
-    
-        public void RequestStartTextCoroutineEnumerator(string url, HandleResponseTextCallback callback) {
+
+        public void RequestStartTextCoroutineEnumerator(
+            string url, HandleResponseTextCallback callback) {
+
             RequestStartTextCoroutineEnumerator(url, callback, null);
         }
 
-        public void RequestStartTextCoroutineEnumerator(string url, HandleResponseTextCallback callback, WWWForm form) {
-        
+        public void RequestStartTextCoroutineEnumerator(
+            string url, HandleResponseTextCallback callback, WWWForm form) {
+
             if (Context.Current.hasNetworkAccess) {
                 //LogUtil.Log("WebRequests: url:" + url);
                 StartCoroutine(WaitForResponseText(url, form, callback));
             }
-            else {          
+            else {
                 string text = "";
                 callback(text);
             }
         }
-    
-        public IEnumerator WaitForResponseText(string url, WWWForm form, HandleResponseTextCallback callback) {
-        
-            WWW www = null;
+
+        public IEnumerator WaitForResponseText(
+            string url, WWWForm form, HandleResponseTextCallback callback) {
+
+            UnityWebRequest www = null;
+
             if (form != null) {
-                www = new WWW(url, form);
+                www = UnityWebRequest.Post(url, form);
             }
             else {
-                www = new WWW(url);
+                www = UnityWebRequest.Get(url);
             }
+
+            www.downloadHandler = new DownloadHandlerBuffer();
+
             lastWWW = www;
-        
+
             processing = true;
-            yield return www;
-        
-            string text = www.text;
+
+            yield return www.SendWebRequest();
+
+            string text = www.downloadHandler.text;
 
             if (www.error != null) {
                 LogUtil.LogError("WWW Error:" + www.error + " url:" + url);
             }
             // Call callback after yield
             callback(text);
-            
+
             //callback = null;
             processing = false;
         }
-    
+
         void Update() {
-        
+
             ProgressStatus();
         }
-    
+
         public ContentItemStatus contentItemStatus = new ContentItemStatus();
-    
+
         public ContentItemStatus ProgressStatus() {
-                
+
             if (lastWWW != null && processing) {
                 if (lastWWW.isDone) {
                     contentItemStatus.downloaded = true;
-                    contentItemStatus.itemSize = lastWWW.bytesDownloaded;// lastWWW.size;
-                }       
-            
-                LogUtil.Log("progress:" + lastWWW.progress);
-            
-                contentItemStatus.itemProgress = lastWWW.progress;
+                    contentItemStatus.itemSize = lastWWW.downloadedBytes;// bytesDownloaded;// lastWWW.size;
+                }
+
+                LogUtil.Log("progress:" + lastWWW.downloadProgress);//.progress
+
+                contentItemStatus.itemProgress = lastWWW.downloadProgress;
                 contentItemStatus.url = lastWWW.url;
-            
-                Messenger<ContentItemStatus>.Broadcast("content-item-status", contentItemStatus);           
+
+                Messenger<ContentItemStatus>.Broadcast("content-item-status", contentItemStatus);
             }
-        
+
             return contentItemStatus;
         }
 

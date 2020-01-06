@@ -19,13 +19,13 @@ public class GamePacks : DataObjects<GamePack> {
 #endif
     
 #if UNITY_IPHONE    
-    public static int currentPacksIncrement = 3007; // Used for unity cache
-#elif UNITY_ANDROID 
-    public static int currentPacksIncrement = 1001; // Used for unity cache
+    public static uint currentPacksIncrement = 3007; // Used for unity cache
+#elif UNITY_ANDROID
+    public static uint currentPacksIncrement = 1001; // Used for unity cache
 #else
-    public static int currentPacksIncrement = 50; // Used for unity cache
+    public static uint currentPacksIncrement = 50; // Used for unity cache
 #endif
-    
+
     public static string currentPacksVersion = "1.1"; // used for actual version and on dlc storage
     public static string currentPacksGame = "game-[app]";
     public static string currentGameBundle = "com.[app].[app]";

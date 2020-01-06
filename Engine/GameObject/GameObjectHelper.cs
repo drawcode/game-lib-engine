@@ -2153,6 +2153,41 @@ public static class GameObjectHelper {
 
     // ------------------------------------------------------------------------
     // game object
+    public static bool IsPrefab(GameObject inst) {
+
+        if(inst == null) {
+            return false;
+        }
+
+        return inst.scene.rootCount == 0 || inst.scene.name == null;
+    }
+
+    public static bool IsPrefabGhost(Transform inst) {
+
+        if (inst == null) {
+            return false;
+        }
+
+        var tmp = new GameObject();
+
+        try {
+            tmp.transform.parent = inst.parent;
+
+            var index = inst.GetSiblingIndex();
+
+            inst.SetSiblingIndex(int.MaxValue);
+            if (inst.GetSiblingIndex() == 0)
+                return true;
+
+            inst.SetSiblingIndex(index);
+            return false;
+        }
+        finally {
+            //UnityEngine.Object.DestroyImmediate(tmp);
+            UnityEngine.Object.Destroy(tmp);
+        }
+    }
+
 
     public static GameObject CleanGameObjectName(
         GameObject go) {
@@ -2264,6 +2299,7 @@ public static class GameObjectHelper {
         foreach (Transform t in transforms) {
             try {
                 if (t.gameObject.GetType() == typeof(GameObject)
+                    && !t.gameObject.IsPrefab()
                     ) {
                     //&& !t.IsPrefabGhost()) {
                         t.parent = null;

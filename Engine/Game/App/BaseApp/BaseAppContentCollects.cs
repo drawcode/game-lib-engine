@@ -56,24 +56,28 @@ public class BaseAppContentCollects<T> : DataObjects<T> where T : GameDataObject
         LoadData();
     }
 
-    public static void ChangeCurrent(string code) {
+    public override void ChangeCurrent(string code) {
+
         if (AppContentCollects.Current.code != code) {
+
             AppContentCollects.Current = AppContentCollects.Instance.GetById(code);
+
+            base.ChangeCurrent(code);
         }
     }
-    
+
     // -------------------------------------------------------
     // UPDATE DISPLAYS
-    
+
     public static List<AppContentCollect> UpdateCollectItemData(List<AppContentCollect> list) {
         return AppContentCollects.Instance.updateCollectItemData(list);
     }
 
     public List<AppContentCollect> updateCollectItemData(List<AppContentCollect> list) {
-    
+
         foreach (AppContentCollect obj in list) {
             foreach (AppContentCollectItem item in obj.data.data) {
-                if (item.data != null) {                    
+                if (item.data != null) {
                     if (item.IsType(AppContentCollectType.action)) {
                         item.UpdateDisplayValues();
                     }
@@ -83,17 +87,17 @@ public class BaseAppContentCollects<T> : DataObjects<T> where T : GameDataObject
 
         return list;
     }
-    
+
     // TYPE
-    
+
     public static List<AppContentCollect> GetByType(string type) {
         return AppContentCollects.Instance.getByType(type);
     }
-    
+
     public List<AppContentCollect> getByType(string type) {
 
         List<AppContentCollect> objs = AppContentCollects.Instance.GetAll().FindAll(
-            u => 
+            u =>
             u.type == type);
 
         // Handle
@@ -101,70 +105,70 @@ public class BaseAppContentCollects<T> : DataObjects<T> where T : GameDataObject
 
         return objs;
     }
-    
+
     // CODE
-    
+
     public static AppContentCollect GetByTypeAndCode(string type, string code) {
         return AppContentCollects.Instance.getByTypeAndCode(type, code);
     }
-    
+
     public AppContentCollect getByTypeAndCode(string type, string code) {
         return AppContentCollects.Instance.GetAll().Find(
-            u => 
-            u.type == type 
+            u =>
+            u.type == type
             && u.code == code);
     }
 
     // WORLD
-    
+
     public static List<AppContentCollect> GetByTypeAndWorld(string type, string code) {
         return AppContentCollects.Instance.getByTypeAndWorld(type, code);
     }
-    
+
     public List<AppContentCollect> getByTypeAndWorld(string type, string code) {
         return AppContentCollects.Instance.GetAll().FindAll(
-            u => 
-            u.type == type 
+            u =>
+            u.type == type
             && (u.world_code == code || u.HasTag("all")));
     }
-    
+
     // ---------------------------------------------------------
     // MISSIONS
 
     public static List<AppContentCollect> GetMissions() {
         return AppContentCollects.Instance.getMissions();
     }
-    
+
     public List<AppContentCollect> getMissions() {
         return GetByType(AppContentCollectType.mission);
     }
 
     // MISSION SETS CODE
-     
+
     public static AppContentCollect GetMission(string code) {
         return AppContentCollects.Instance.getMission(code);
     }
-    
+
     public AppContentCollect getMission(string code) {
         return GetByTypeAndCode(AppContentCollectType.mission, code);
     }
 
     // MISSION SET BY WORLD
-    
+
     public static List<AppContentCollect> GetMissionsByWorld(string code) {
         return AppContentCollects.Instance.getMissionsByWorld(code);
     }
-    
+
     public List<AppContentCollect> getMissionsByWorld(string code) {
         return GetByTypeAndWorld(AppContentCollectType.mission, code);
     }
 
     // MISSION SET DEFAULT AND BY WORLD
-    
+
     //public static List<AppContentCollect> GetMissionsByWorld(string code) {
     //    return AppContentCollects.Instance.getMissionsByWorld(code);
     //}
-    
+
     //public List<AppContentCollect> getMissionsByWorld(string code) {
     //   return GetByTypeAndWorld(AppContentCollectType.mission, code);
     //}
@@ -188,11 +192,11 @@ public class BaseAppContentCollects<T> : DataObjects<T> where T : GameDataObject
     public static bool HasAction(string code) {
         return AppContentCollects.Instance.hasAction(code);
     }
-    
+
     public bool hasAction(string code) {
 
-        foreach(AppContentCollect appContentCollect in getActions()) {
-            if(appContentCollect.code.ToLower() == code.ToLower()) {
+        foreach (AppContentCollect appContentCollect in getActions()) {
+            if (appContentCollect.code.ToLower() == code.ToLower()) {
                 return true;
             }
         }
@@ -205,33 +209,33 @@ public class BaseAppContentCollects<T> : DataObjects<T> where T : GameDataObject
     public static bool HasActionItemCurrent(string code) {
         return AppContentCollects.Instance.hasActionItemCurrent(code);
     }
-    
+
     public bool hasActionItemCurrent(string code) {
-        
+
         AppContentCollect appContentCollect = AppContentCollects.Current;
-                
+
         return AppContentCollects.HasActionItem(appContentCollect, code);
     }
-    
+
     // HAS ACTION ITEM
 
     public static bool HasActionItem(AppContentCollect appContentCollect, string code) {
         return AppContentCollects.Instance.hasActionItem(appContentCollect, code);
     }
-    
+
     public bool hasActionItem(AppContentCollect appContentCollect, string code) {
 
-        if(appContentCollect != null) {
-            
+        if (appContentCollect != null) {
+
             List<AppContentCollectItem> appContentCollectItems = appContentCollect.GetItemsData();
 
-            foreach(AppContentCollectItem appContentCollectItem in appContentCollectItems) {
-                if(appContentCollectItem.code.ToLower() == code.ToLower()) {
+            foreach (AppContentCollectItem appContentCollectItem in appContentCollectItems) {
+                if (appContentCollectItem.code.ToLower() == code.ToLower()) {
                     return true;
                 }
             }
         }
-        
+
         return false;
     }
 
@@ -251,49 +255,49 @@ public class BaseAppContentCollects<T> : DataObjects<T> where T : GameDataObject
         return AppContentCollects.Instance.getCompleted(
             collectType, collectTypeCode);
     }
-        
+
     public List<GameProfileContentCollectItem> getCompleted(
         string collectType, string collectTypeCode) {
 
-        AppContentCollect collect = 
+        AppContentCollect collect =
             AppContentCollects.Instance.GetById(collectTypeCode);
-        
+
         if (collect == null) {
             return null;
         }
 
-        List<GameProfileContentCollectItem> items = 
+        List<GameProfileContentCollectItem> items =
             new List<GameProfileContentCollectItem>();
-                
+
         foreach (AppContentCollectItem collectItem in collect.GetItemsData()) {
 
-            GameProfileContentCollectItem profileItem = 
+            GameProfileContentCollectItem profileItem =
                 getProfileCollectData(collectType, collectTypeCode, collectItem.uid);
 
             if (profileItem != null) {
                 items.Add(profileItem);
             }
         }
-        
+
         return items;
     }
 
     // GetItem
-    
+
     public static GameProfileContentCollectItem GetProfileCollectData(
         string collectType, string collectTypeCode, string actionUid) {
         return AppContentCollects.Instance.getProfileCollectData(
             collectType, collectTypeCode, actionUid);
     }
-    
+
     public GameProfileContentCollectItem getProfileCollectData(
         string collectType, string collectTypeCode, string actionUid) {
 
         string key = GameProfileModes.GetAppContentCollectItemKey(collectTypeCode, actionUid);
 
-        GameProfileContentCollectItem collectData = 
+        GameProfileContentCollectItem collectData =
             GameProfileModes.Current.GetContentCollectItem(collectType, key);
-        
+
         return collectData;
     }
 
@@ -386,7 +390,7 @@ public class AppContentCollectActionType {
     public static string actionBuild = "action-build";
     public static string actionAttack = "action-attack";
     public static string actionDefend = "action-defend";
-    public static string actionRepair = "action-repair";    
+    public static string actionRepair = "action-repair";
 }
 
 public class AppCompareType {
@@ -422,14 +426,14 @@ public class AppContentCollectItemKeys {
 public class AppContentCollectItemMission : GameDataObject {
 
     public AppContentCollectItemMission() {
-       
+
     }
 }
 
 public class AppContentCollectItemAction : GameDataObject {
-    
+
     public AppContentCollectItemAction() {
-        
+
     }
 }
 
@@ -439,7 +443,7 @@ public class AppContentCollectData : GameDataObject {
         get {
             return Get<List<int>>(BaseDataObjectKeys.level_num_suffix_list, new List<int>());
         }
-        
+
         set {
             Set<List<int>>(BaseDataObjectKeys.level_num_suffix_list, value);
         }
@@ -449,7 +453,7 @@ public class AppContentCollectData : GameDataObject {
         get {
             return Get<List<int>>(BaseDataObjectKeys.world_num_list, new List<int>());
         }
-        
+
         set {
             Set<List<int>>(BaseDataObjectKeys.world_num_list, value);
         }
@@ -459,7 +463,7 @@ public class AppContentCollectData : GameDataObject {
         get {
             return Get<List<string>>(BaseDataObjectKeys.world_list, new List<string>());
         }
-        
+
         set {
             Set<List<string>>(BaseDataObjectKeys.world_list, value);
         }
@@ -469,7 +473,7 @@ public class AppContentCollectData : GameDataObject {
         get {
             return Get<List<string>>(BaseDataObjectKeys.level_list, new List<string>());
         }
-        
+
         set {
             Set<List<string>>(BaseDataObjectKeys.level_list, value);
         }
@@ -479,7 +483,7 @@ public class AppContentCollectData : GameDataObject {
         get {
             return Get<List<AppContentCollectItem>>(BaseDataObjectKeys.data, new List<AppContentCollectItem>());
         }
-        
+
         set {
             Set<List<AppContentCollectItem>>(BaseDataObjectKeys.data, value);
         }
@@ -501,7 +505,7 @@ public class AppContentCollectItem : GameDataObject {
         get {
             return Get<GameDataObject>(BaseDataObjectKeys.data, new GameDataObject());
         }
-        
+
         set {
             Set<GameDataObject>(BaseDataObjectKeys.data, value);
         }
@@ -527,7 +531,7 @@ public class AppContentCollectItem : GameDataObject {
     }
 
     // code
-                  
+
     public bool IsCodeActionCollect() {
         return IsCode(AppContentCollectActionType.actionCollect);
     }
@@ -535,27 +539,27 @@ public class AppContentCollectItem : GameDataObject {
     public bool IsCodeActionKill() {
         return IsCode(AppContentCollectActionType.actionKill);
     }
-    
+
     public bool IsCodeActionSave() {
         return IsCode(AppContentCollectActionType.actionSave);
     }
-        
+
     public bool IsCodeActionWin() {
         return IsCode(AppContentCollectActionType.actionWin);
     }
-    
+
     public bool IsCodeActionBuild() {
         return IsCode(AppContentCollectActionType.actionBuild);
     }
-    
+
     public bool IsCodeActionRepair() {
         return IsCode(AppContentCollectActionType.actionRepair);
     }
-    
+
     public bool IsCodeActionAttack() {
         return IsCode(AppContentCollectActionType.actionAttack);
     }
-    
+
     public bool IsCodeActionDefend() {
         return IsCode(AppContentCollectActionType.actionDefend);
     }
@@ -566,22 +570,22 @@ public class AppContentCollectItem : GameDataObject {
         if (data == null) {
             return null;
         }
-        
+
         return data.code;
     }
-    
+
     public bool IsDataCodeAction(string dataCode) {
         return GetDataCodeAction() == dataCode ? true : false;
     }
 
     // data / type
 
-    
+
     public string GetDataTypeAction() {
         if (data == null) {
             return null;
         }
-        
+
         return data.type;
     }
 
@@ -592,58 +596,58 @@ public class AppContentCollectItem : GameDataObject {
     public bool IsDataTypeActionAchievement() {
         return IsDataTypeAction(AppContentCollectActionDataType.achievementType);
     }
-    
+
     public bool IsDataTypeActionCharacter() {
         return IsDataTypeAction(AppContentCollectActionDataType.achievementType);
     }
-    
+
     public bool IsDataTypeActionItem() {
         return IsDataTypeAction(AppContentCollectActionDataType.itemType);
     }
-    
+
     public bool IsDataTypeActionStatistic() {
         return IsDataTypeAction(AppContentCollectActionDataType.statisticType);
     }
-        
+
     // data / compare_type    
-    
+
     public string GetDataCompareType() {
         if (data == null) {
             return null;
         }
-        
+
         return data.compare_type;
     }
-    
+
     public bool IsDataCompareType(string dataType) {
         return GetDataCompareType() == dataType ? true : false;
     }
-    
+
     public bool IsDataCompareTypeGreaterThan() {
         return IsDataCompareType(AppCompareType.greaterThan);
     }
-    
+
     public bool IsDataCompareTypeGreaterThanOrEqualTo() {
         return IsDataCompareType(AppCompareType.greaterThanOrEqualTo);
     }
-    
+
     public bool IsDataCompareTypeLessThan() {
         return IsDataCompareType(AppCompareType.lessThan);
     }
-    
+
     public bool IsDataCompareTypeLessThanOrEqualTo() {
         return IsDataCompareType(AppCompareType.lessThanOrEqualTo);
     }
-    
+
     public bool IsDataCompareTypeEqualTo() {
         return IsDataCompareType(AppCompareType.equalTo);
-    }        
-    
+    }
+
     // data / data_type
 
-    
+
     public bool IsDataTypeActionDataType() {
-        return GetDataTypeActionDataScope() == 
+        return GetDataTypeActionDataScope() ==
             AppContentCollectActionDataScope.alltimeScope ? true : false;
     }
 
@@ -656,23 +660,23 @@ public class AppContentCollectItem : GameDataObject {
 
         return data.data_type;
     }
-    
+
     public bool IsDataTypeActionDataScopeAlltime() {
-        return GetDataTypeActionDataScope() == 
+        return GetDataTypeActionDataScope() ==
             AppContentCollectActionDataScope.alltimeScope ? true : false;
     }
-    
+
     public bool IsDataTypeActionDataScopeLevel() {
-        return GetDataTypeActionDataScope() == 
+        return GetDataTypeActionDataScope() ==
             AppContentCollectActionDataScope.levelScope ? true : false;
     }
 
 #if USE_GAME_LIB_GAMES
     public double ScoreCompleted(
-        GameGameRuntimeData gameRuntimeData, 
+        GameGameRuntimeData gameRuntimeData,
         GamePlayerRuntimeData playerRuntimeData) {
 
-        AppContentCollectItemState state = 
+        AppContentCollectItemState state =
             ProcessCompleted(gameRuntimeData, playerRuntimeData);
 
         if (state.completed) {
@@ -681,7 +685,7 @@ public class AppContentCollectItem : GameDataObject {
 
         return 0;
     }
-        
+
     public bool IsCompleted(
         GameGameRuntimeData gameRuntimeData,
         GamePlayerRuntimeData playerRuntimeData) {
@@ -689,9 +693,9 @@ public class AppContentCollectItem : GameDataObject {
     }
 
     // action/mission/complete state
-        
+
     public AppContentCollectItemState ProcessCompleted(
-        GameGameRuntimeData gameRuntimeData, 
+        GameGameRuntimeData gameRuntimeData,
         GamePlayerRuntimeData playerRuntimeData) {
         // check each action to see if completed
 
@@ -700,25 +704,25 @@ public class AppContentCollectItem : GameDataObject {
         if (gameRuntimeData == null || playerRuntimeData == null) {
             return state;
         }
-        
+
         if (IsTypeMission()) {
             // Check all data items
-            
-            
+
+
         }
         else if (IsTypeAction()) {
-            
+
         }
-        
+
         // check action by default
-        
+
         if (IsCodeActionSave()) {
             if (IsDataTypeActionDataScopeLevel()) {
 
                 double val = playerRuntimeData.saves;
 
                 double valNeeded = data.valDouble;
-                    
+
                 if (CompareCollectData(data.compare_type, val, valNeeded)) {
                     state.completed = true;
                     state.points = (val) * (valNeeded * 25);
@@ -728,11 +732,11 @@ public class AppContentCollectItem : GameDataObject {
         }
         else if (IsCodeActionBuild()) {
             if (IsDataTypeActionDataScopeLevel()) {
-                
+
                 double val = playerRuntimeData.builds;
-                
+
                 double valNeeded = data.valDouble;
-                
+
                 if (CompareCollectData(data.compare_type, val, valNeeded)) {
                     state.completed = true;
                     state.points = (val) * (valNeeded * 100);
@@ -742,11 +746,11 @@ public class AppContentCollectItem : GameDataObject {
         }
         else if (IsCodeActionRepair()) {
             if (IsDataTypeActionDataScopeLevel()) {
-                
+
                 double val = playerRuntimeData.repairs;
-                
+
                 double valNeeded = data.valDouble;
-                
+
                 if (CompareCollectData(data.compare_type, val, valNeeded)) {
                     state.completed = true;
                     state.points = (val) * (valNeeded * 75);
@@ -756,11 +760,11 @@ public class AppContentCollectItem : GameDataObject {
         }
         else if (IsCodeActionAttack()) {
             if (IsDataTypeActionDataScopeLevel()) {
-                
+
                 double val = playerRuntimeData.attacks;
-                
+
                 double valNeeded = data.valDouble;
-                
+
                 if (CompareCollectData(data.compare_type, val, valNeeded)) {
                     state.completed = true;
                     state.points = (val) * (valNeeded * 100);
@@ -770,11 +774,11 @@ public class AppContentCollectItem : GameDataObject {
         }
         else if (IsCodeActionDefend()) {
             if (IsDataTypeActionDataScopeLevel()) {
-                
+
                 double val = playerRuntimeData.defends;
-                
+
                 double valNeeded = data.valDouble;
-                
+
                 if (CompareCollectData(data.compare_type, val, valNeeded)) {
                     state.completed = true;
                     state.points = (val) * (valNeeded * 75);
@@ -784,11 +788,11 @@ public class AppContentCollectItem : GameDataObject {
         }
         else if (IsCodeActionKill()) {
             if (IsDataTypeActionDataScopeLevel()) {
-                
+
                 double val = playerRuntimeData.kills;
-                
+
                 double valNeeded = data.valDouble;
-                                
+
                 if (CompareCollectData(data.compare_type, val, valNeeded)) {
                     state.completed = true;
                     state.points = (val) * (valNeeded * 10);
@@ -804,7 +808,7 @@ public class AppContentCollectItem : GameDataObject {
                 if (data.code == AppContentCollectActionDataCode.itemCoin) {
                     val = playerRuntimeData.coins;
                 }
-                
+
                 double valNeeded = data.valDouble;
 
                 if (CompareCollectData(data.compare_type, val, valNeeded)) {
@@ -821,13 +825,13 @@ public class AppContentCollectItem : GameDataObject {
 
                 // time expired and still alive
                 val = gameRuntimeData.timeExpired ? 1 : 0;
-                    
+
                 double valNeeded = data.valDouble;
-                
+
                 if (valNeeded == 0) {
                     valNeeded = (double)data.valInt;
                 }
-                
+
                 if (CompareCollectData(data.compare_type, val, valNeeded)) {
                     state.completed = true;
                     state.points = (val) * (valNeeded * 50);
@@ -835,7 +839,7 @@ public class AppContentCollectItem : GameDataObject {
                 }
             }
         }
-        
+
         return state;
     }
 #endif
@@ -878,7 +882,7 @@ public class AppContentCollectItem : GameDataObject {
         // get the action and object
         // format using collect item meta
 
-        AppContentCollect collectItem = 
+        AppContentCollect collectItem =
                 AppContentCollects.GetByTypeAndCode(type, code);
 
         if (collectItem != null) {
@@ -890,7 +894,7 @@ public class AppContentCollectItem : GameDataObject {
             string dataCode = data.code;
 
             if (dataType == AppContentCollectActionDataType.itemType) {
-            
+
                 GameItem obj = GameItems.Instance.GetById(dataCode);
 
                 if (obj != null) {
@@ -899,18 +903,18 @@ public class AppContentCollectItem : GameDataObject {
                 }
             }
             else if (dataType == AppContentCollectActionDataType.statisticType) {
-                
+
                 GameStatistic obj = GameStatistics.Instance.GetById(dataCode);
-                
+
                 if (obj != null) {
                     data.action_display_name = obj.display_name;
                     data.action_description = obj.description;
                 }
             }
             else if (dataType == AppContentCollectActionDataType.characterType) {
-                
+
                 GameCharacter obj = GameCharacters.Instance.GetById(dataCode);
-                
+
                 if (obj != null) {
                     data.action_display_name = obj.display_name;
                     data.action_description = obj.description;
@@ -919,33 +923,33 @@ public class AppContentCollectItem : GameDataObject {
 
             data.display_name = ReplaceTemplated(itemDisplayName);
             data.description = ReplaceTemplated(itemDescription);
-                
+
         }
     }
-    
+
     public string ReplaceTemplated(string content) {
 
         // If string contains mustache/handlebars {{ [code] }} then get all 
         // matches and replace with localized content
 
         string regexTemplate = @"\{\{[ ]*(.*?)[ ]*\}\}";
-        
+
         if (content.RegexIsMatch(regexTemplate)) {
-            
+
             MatchCollection matches = content.RegexMatches(regexTemplate);
-            
+
             foreach (Match match in matches) {
-                
+
                 //string valCodeMatch = match.Value;
                 string valCodeGroup = match.Value;
 
                 foreach (Group group in match.Groups) {
                     valCodeGroup = group.Value;
                 }
-                                
+
                 if (data != null) {
 
-                    string regexCode = @"(\{\{[ ]*" + valCodeGroup + @"[ ]*\}\})"; 
+                    string regexCode = @"(\{\{[ ]*" + valCodeGroup + @"[ ]*\}\})";
                     object replaceObj = data.Get<object>(valCodeGroup);
 
                     if (replaceObj != null) {
@@ -955,8 +959,8 @@ public class AppContentCollectItem : GameDataObject {
                 }
             }
         }
-        
-        return content;        
+
+        return content;
     }
 
 
@@ -969,13 +973,13 @@ public class AppContentCollectItem : GameDataObject {
     //}
 }
 
-public class BaseAppContentCollect : GameDataObject {    
+public class BaseAppContentCollect : GameDataObject {
 
     public virtual AppContentCollectData data {
         get {
             return Get<AppContentCollectData>(BaseDataObjectKeys.data, new AppContentCollectData());
         }
-        
+
         set {
             Set<AppContentCollectData>(BaseDataObjectKeys.data, value);
         }
@@ -998,28 +1002,28 @@ public class BaseAppContentCollect : GameDataObject {
 #if USE_GAME_LIB_GAMES
 
     public bool IsCompleted(
-        GameGameRuntimeData gameRuntimeData, 
+        GameGameRuntimeData gameRuntimeData,
         GamePlayerRuntimeData playerRuntimeData) {
-        
+
         foreach (AppContentCollectItem item in GetItemsData()) {
             if (!item.IsCompleted(gameRuntimeData, playerRuntimeData)) {
                 return false;
             }
         }
-        
+
         return true;
     }
-        
+
     public double ScoreCompleted(
-        string collectType, 
-        GameGameRuntimeData gameRuntimeData, 
+        string collectType,
+        GameGameRuntimeData gameRuntimeData,
         GamePlayerRuntimeData playerRuntimeData) {
 
         double points = 0;
 
         foreach (AppContentCollectItem item in GetItemsData()) {
 
-            AppContentCollectItemState itemState = 
+            AppContentCollectItemState itemState =
                 item.ProcessCompleted(gameRuntimeData, playerRuntimeData);
 
             if (itemState.completed) {
@@ -1033,10 +1037,10 @@ public class BaseAppContentCollect : GameDataObject {
                     collectType, collectKey, BaseDataObjectKeys.points, itemState.points);
 
             }
-            
+
             points += itemState.points;
         }
-        
+
         return points;
     }
 #endif
@@ -1049,7 +1053,7 @@ public class BaseAppContentCollect : GameDataObject {
         }
         return false;
     }
-        
+
     public bool HasTypeAction() {
         foreach (AppContentCollectItem item in data.data) {
             if (item.type.ToLower() == AppContentCollectType.action) {
@@ -1060,8 +1064,8 @@ public class BaseAppContentCollect : GameDataObject {
     }
 
     public bool HasTypeCollection() {
-        foreach(AppContentCollectItem item in data.data) {
-            if(item.type.ToLower() == AppContentCollectType.collection) {
+        foreach (AppContentCollectItem item in data.data) {
+            if (item.type.ToLower() == AppContentCollectType.collection) {
                 return true;
             }
         }
@@ -1077,9 +1081,9 @@ public class BaseAppContentCollect : GameDataObject {
     }
 
     public void UpdateCollectItemData() {
-        
+
         foreach (AppContentCollectItem item in data.data) {
-            if (item.data != null) {                    
+            if (item.data != null) {
                 if (item.IsType(AppContentCollectType.action)) {
                     item.UpdateDisplayValues();
                 }
@@ -1095,7 +1099,7 @@ public class BaseAppContentCollect : GameDataObject {
     public List<int> GetAllowedLevelSuffixList() {
         return data.level_num_suffix_list;
     }
-        
+
     public int GetLevelSuffixRandom() {
         IList<int> levels = data.level_num_suffix_list.Shuffle();
 
@@ -1123,9 +1127,9 @@ public class BaseAppContentCollect : GameDataObject {
     }
 
     public bool IsAllowedWorld(string world_code) {
-        
+
         bool allowed = data.world_list.Contains(world_code);
-        
+
         if (!allowed) {
             GameWorld gameWorld = GameWorlds.Instance.GetById(world_code);
             if (gameWorld != null) {
@@ -1133,36 +1137,36 @@ public class BaseAppContentCollect : GameDataObject {
                 allowed = IsAllowedWorld(world_num);
             }
         }
-        
+
         return allowed;
     }
 
     //
-        
+
     public bool IsAllowedLevel(int level_num) {
         return data.level_num_suffix_list.Contains(level_num);
     }
-    
+
     public string GetVersion() {
         return GetContentString(AppContentAssetAttributes.version);
     }
-    
+
     public string GetVersionFileIncrement() {
         return GetContentString(AppContentAssetAttributes.version_file_increment);
     }
-    
+
     public string GetVersionRequiredApp() {
         return GetContentString(AppContentAssetAttributes.version_required_app);
     }
-    
+
     public string GetVersionType() {
         return GetContentString(AppContentAssetAttributes.version_type);
     }
-    
+
     public string GetVersionFileType() {
         return GetContentString(AppContentAssetAttributes.version_file_type);
     }
-    
+
     public string GetVersionFileExt() {
         return GetContentString(AppContentAssetAttributes.version_file_ext);
     }

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Engine;
 // using Engine.Data.Json;
 using UnityEngine;
+using UnityEngine.Networking;
 
 namespace Engine.Utility {
 
@@ -42,7 +43,7 @@ namespace Engine.Utility {
         public class ResponseObject {
             public bool validResponse;
             public string type;
-            public WWW www;
+            public UnityWebRequest www;
             public int error;
             public string message;
             public string data;
@@ -108,7 +109,7 @@ namespace Engine.Utility {
         // CUSTOM Methods
 
         public void ServiceResponseObjectCallback(ServiceUtil.ResponseObject responseObject) {
-            LogUtil.Log("ServiceResponseTextCallback:" + responseObject.www.text);
+            LogUtil.Log("ServiceResponseTextCallback:" + responseObject.www.downloadHandler.text);
         }
 
         //public void RequestText(string url, HandleResponseTextCallback callback) {
@@ -217,21 +218,23 @@ namespace Engine.Utility {
         }
 
         public void RequestStartCoroutineEnumerator(string url, HandleResponseObjectCallback callback, WWWForm form) {
-            WWW www;
+            UnityWebRequest www;
 
             if (form != null) {
-                www = new WWW(url, form);
+                www = UnityWebRequest.Post(url, form);
             }
             else {
-                www = new WWW(url);
+                www = UnityWebRequest.Get(url);
             }
+
+            www.downloadHandler = new DownloadHandlerBuffer();
 
             StartCoroutine(WaitForResponse(www, callback));
         }
 
-        public IEnumerator WaitForResponse(WWW www, HandleResponseObjectCallback callback) {
+        public IEnumerator WaitForResponse(UnityWebRequest www, HandleResponseObjectCallback callback) {
             processing = true;
-            yield return www;
+            yield return www.SendWebRequest();
 
             ResponseObject responseObject = new ResponseObject();
             responseObject.www = www;
@@ -243,7 +246,7 @@ namespace Engine.Utility {
                 responseObject.validResponse = false;
             }
 
-            LogUtil.Log("WWW Output:" + www.text);
+            LogUtil.Log("WWW Output:" + www.downloadHandler.text);
 
             // Call callback after yeild
             callback(responseObject);

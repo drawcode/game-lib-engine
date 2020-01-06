@@ -9,20 +9,21 @@ using Engine.Utility;
 using UnityEngine;
 
 using Engine.Events;
+using UnityEngine.Networking;
 
 public class WWWs : GameObjectBehavior {
 
-    public Dictionary<string,WWW> wwws;
+    public Dictionary<string, UnityWebRequest> wwws;
 
     public bool processing = false;
-    public WWW lastWWW = null;
+    public UnityWebRequest lastWWW = null;
 
     public delegate void HandleResponseTextCallback(string data);
 
     public delegate void HandleResponseObjectCallback(ResponseObject responseObject);
 
     public delegate void HandleResponseBytesCallback(byte[] bytes);
-    
+
     public delegate void HandleResponseErrorCallback(ResponseObject responseObject);
 
     public HandleResponseBytesCallback callbackBytes;
@@ -37,14 +38,14 @@ public class WWWs : GameObjectBehavior {
     public class ResponseObject {
         public bool validResponse;
         public string type;
-        public WWW www;
+        public UnityWebRequest www;
         public int error;
         public string message;
         public string data;
         public string code;
         public string dataValueText;
         public object dataValue;
-    
+
         public ResponseObject() {
             validResponse = false;
             type = "";
@@ -64,7 +65,7 @@ public class WWWs : GameObjectBehavior {
         public static string success = "wwws-success";
         public static string error = "wwws-error";
     }
-    
+
     public class DataType {
         public static string text = "text";
         public static string binary = "binary";
@@ -72,14 +73,14 @@ public class WWWs : GameObjectBehavior {
         public static string responseObject = "response-object";
 
     }
-    
+
     public class RequestItem {
-        
+
         public string uuid = ""; // message name
         public string code = ""; // message name
         public string url = ""; // url to request
         public string channel = ""; // request channel - maps to new www class
-        
+
         [NonSerialized]
         public string status = StatusMessages.notStarted;
         public string dataType = DataType.text;
@@ -90,7 +91,7 @@ public class WWWs : GameObjectBehavior {
 
         [NonSerialized]
         public WWWForm form = null;
-        
+
         [NonSerialized]
         public bool processing = false;
 
@@ -99,7 +100,7 @@ public class WWWs : GameObjectBehavior {
         public RequestItem() {
             Reset();
         }
-        
+
         public void Reset() {
             uuid = UniqueUtil.CreateUUID4();
             url = "";
@@ -119,13 +120,13 @@ public class WWWs : GameObjectBehavior {
         public bool IsRequestType(string reqType) {
             return requestType == reqType ? true : false;
         }
-        
+
         public void SetRequestType(string reqType) {
             requestType = reqType;
         }
 
         //
-        
+
         //[JsonIgnore]
         public bool POST {
 
@@ -134,21 +135,21 @@ public class WWWs : GameObjectBehavior {
             }
 
             set {
-                if(value) {
+                if (value) {
                     SetRequestType(RequestType.post);
                 }
             }
         }
-        
+
         //[JsonIgnore]
         public bool GET {
-            
+
             get {
                 return IsRequestType(RequestType.get);
             }
-            
+
             set {
-                if(value) {
+                if (value) {
                     SetRequestType(RequestType.get);
                 }
             }
@@ -161,10 +162,10 @@ public class WWWs : GameObjectBehavior {
         // ACTIONS
 
         public void PrepareParams() {
-            if(GET) {
+            if (GET) {
                 PrepareParamsGet();
             }
-            else if(POST) {
+            else if (POST) {
                 PrepareParamsPost();
             }
         }
@@ -183,7 +184,7 @@ public class WWWs : GameObjectBehavior {
         }
 
         public void PrepareParamsPost() {
-            
+
             if (paramHash == null) {
                 return;
             }
@@ -203,7 +204,7 @@ public class WWWs : GameObjectBehavior {
 
             string val = "";
 
-            if(value != null) {            
+            if (value != null) {
                 if (typeof(string) == value.GetType()
                     || typeof(float) == value.GetType()
                     || typeof(double) == value.GetType()
@@ -216,68 +217,68 @@ public class WWWs : GameObjectBehavior {
                 }
             }
 
-            if(POST) {
-                if(form == null) {
+            if (POST) {
+                if (form == null) {
                     form = new WWWForm();
                 }
 
-                if(val != null) {
+                if (val != null) {
                     form.AddField(key, val);
                 }
             }
-            else if(GET) {
-                if(url.Contains(key + "=")) {
-                    return; 
+            else if (GET) {
+                if (url.Contains(key + "=")) {
+                    return;
                 }
-                
-                System.Text.StringBuilder paramValues = 
+
+                System.Text.StringBuilder paramValues =
                     new System.Text.StringBuilder();
 
                 if (!url.Contains("?")) {
-                    paramValues.Append("?");    
+                    paramValues.Append("?");
                 }
                 else {
                     paramValues.Append("&");
                 }
-                
-                if(val != null) {
+
+                if (val != null) {
                     paramValues.Append(key);
-                    paramValues.Append("=");  
+                    paramValues.Append("=");
                     paramValues.Append(
                         Uri.EscapeDataString(val.ToString()));
                 }
-                
+
                 string urlAppend = paramValues.ToString();
                 url = url + urlAppend;
             }
         }
     }
-// -------------------------------------------------------------------
-// Singleton access
+    // -------------------------------------------------------------------
+    // Singleton access
 
-// Only one GameCloudSync can exist. We use a singleton pattern to enforce this.
+    // Only one GameCloudSync can exist. We use a singleton pattern to enforce this.
     private static WWWs _instance = null;
 
     public static WWWs Instance {
         get {
             if (!_instance) {
-            
+
                 // check if an ObjectPoolManager is already available in the scene graph
                 _instance = FindObjectOfType(typeof(WWWs)) as WWWs;
-            
+
                 // nope, create a new one
                 if (!_instance) {
                     var obj = new GameObject("_WWWs");
                     _instance = obj.AddComponent<WWWs>();
                 }
             }
-        
+
             return _instance;
         }
     }
 
     public void Awake() {
-    
+
         if (Instance != null && this != Instance) {
             //There is already a copy of this script running
             Destroy(this);
@@ -288,7 +289,7 @@ public class WWWs : GameObjectBehavior {
     public void Init() {
         LogUtil.Log("WWWs Init");
 
-        wwws = new Dictionary<string, WWW>();
+        wwws = new Dictionary<string, UnityWebRequest>();
     }
 
     void Start() {
@@ -300,12 +301,13 @@ public class WWWs : GameObjectBehavior {
         _instance = null;
     }
 
-// -------------------------------------------------------------------
-// CUSTOM Methods
+    // -------------------------------------------------------------------
+    // CUSTOM Methods
 
-// Core Request Helpers
+    // Core Request Helpers
 
     public string EnsureUrlUniqueByTime(string url) {
+
         if (url.IndexOf('?') > -1) {
             url = url + "&timestamp=" + System.DateTime.Now.Ticks.ToString();
         }
@@ -317,32 +319,32 @@ public class WWWs : GameObjectBehavior {
 
     // -----------------------------------------------------
     // MESSAGE BASED
-    
+
     public void BroadcastStarted(RequestItem requestItem) {
-        
+
         requestItem.status = StatusMessages.started;
-        Messenger<RequestItem>.Broadcast(StatusMessages.started, requestItem);        
+        Messenger<RequestItem>.Broadcast(StatusMessages.started, requestItem);
     }
-    
+
     public void BroadcastSuccess(RequestItem requestItem) {
-        
+
         requestItem.status = StatusMessages.success;
-        Messenger<RequestItem>.Broadcast(StatusMessages.success, requestItem);        
+        Messenger<RequestItem>.Broadcast(StatusMessages.success, requestItem);
     }
 
     public void BroadcastError(RequestItem requestItem, string error) {
-        
+
         requestItem.status = StatusMessages.error;
-        Messenger<RequestItem,string>.Broadcast(StatusMessages.error, requestItem, error);        
+        Messenger<RequestItem, string>.Broadcast(StatusMessages.error, requestItem, error);
     }
-    
+
     public static void Request(RequestItem requestItem) {
         Instance.request(requestItem);
     }
 
     public void Request(
-        string requestType, 
-        string url, 
+        string requestType,
+        string url,
         Dictionary<string, object> paramHash) {
 
         RequestItem requestItem = new RequestItem();
@@ -353,18 +355,18 @@ public class WWWs : GameObjectBehavior {
     }
 
     public void request(RequestItem requestItem) {
-    
-        if(requestItem == null) {
+
+        if (requestItem == null) {
             return;
         }
-                
+
         requestItem.PrepareParams();
 
         RequestStart(requestItem);
     }
 
     public void RequestStart(RequestItem requestItem) {
-    
+
         if (Context.Current.hasNetworkAccess) {
             BroadcastStarted(requestItem);
             StartCoroutine(WaitForResponse(requestItem));
@@ -375,84 +377,86 @@ public class WWWs : GameObjectBehavior {
     }
 
     public IEnumerator WaitForResponse(RequestItem requestItem) {
-    
-        WWW www = null;
+
+        UnityWebRequest www = null;
 
         requestItem.url = EnsureUrlUniqueByTime(requestItem.url);
 
         if (requestItem.form != null) {
-            www = new WWW(requestItem.url, requestItem.form);
+            www = UnityWebRequest.Post(requestItem.url, requestItem.form);
         }
         else {
-            www = new WWW(requestItem.url);
+            www = UnityWebRequest.Get(requestItem.url);
         }
+
+        www.downloadHandler = new DownloadHandlerBuffer();
 
         wwws.Set(requestItem.channel, www);
 
         requestItem.processing = true;
-    
-        yield return www;    
-                                
+
+        yield return www.SendWebRequest();
+
         if (www.error != null) {
             Debug.LogError("WWW Error:" + www.error + " requestItem.url:" + requestItem.url);
             requestItem.content = www.error;
-            requestItem.content += www.text;
+            requestItem.content += www.downloadHandler.text;
             requestItem.processing = false;
             BroadcastError(requestItem, "Error on sync");
             yield break;
         }
 
-        if(requestItem.dataType == DataType.text) {
-            
-            string text = www.text;
+        if (requestItem.dataType == DataType.text) {
+
+            string text = www.downloadHandler.text;
 
             requestItem.content = text;
 
             BroadcastSuccess(requestItem);
         }
-        else if(requestItem.dataType == DataType.binary) {
-            
-            byte[] bytes = www.bytes;
+        else if (requestItem.dataType == DataType.binary) {
+
+            byte[] bytes = www.downloadHandler.data;
 
             requestItem.content = bytes;
-            
+
             BroadcastSuccess(requestItem);
         }
-        else if(requestItem.dataType == DataType.responseObject) {
+        else if (requestItem.dataType == DataType.responseObject) {
 
             ResponseObject responseObject = new ResponseObject();
             responseObject.www = www;
             responseObject.validResponse = true;
             responseObject.type = "";
-            
+
             if (www.error != null) {
                 LogUtil.LogError("WWW Error:" + www.error + " requestItem.url:" + requestItem.url);
                 responseObject.validResponse = false;
                 responseObject.message = www.error;
                 responseObject.dataValueText = "";
             }
-            
+
             try {
-                responseObject.dataValueText = www.text;
-                LogUtil.Log("WWW Text Output:" + www.text);
+                responseObject.dataValueText = www.downloadHandler.text;
+                LogUtil.Log("WWW Text Output:" + www.downloadHandler.text);
             }
-            catch (System.Exception e) {            
+            catch (System.Exception e) {
                 responseObject.validResponse = false;
                 responseObject.message = www.error;
                 responseObject.dataValueText = "";
                 LogUtil.Log("ERROR:" + e);
             }
-                        
+
             requestItem.content = responseObject;
-            
+
             BroadcastSuccess(requestItem);
         }
-    
+
         requestItem.processing = false;
     }
 
     void Update() {
-    
+
         //ProgressStatus();
     }
 
@@ -478,5 +482,4 @@ public class WWWs : GameObjectBehavior {
         return contentItemStatus;
     }
     */
-
 }

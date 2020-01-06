@@ -4,6 +4,7 @@ using Engine;
 
 // Saves screenshot as PNG file.
 using UnityEngine;
+using UnityEngine.Networking;
 
 public class ScreenUtil {
 
@@ -116,8 +117,10 @@ public class ScreenUtil {
         form.AddBinaryData("fileUpload", bytes);
 
         // Upload to a cgi script
-        WWW w = new WWW("http://tools.host.com/screenshots/upload", form);
-        yield return w;
+        UnityWebRequest w = UnityWebRequest.Post("http://tools.host.com/screenshots/upload", form);
+
+        yield return w.SendWebRequest();
+
         if (w.error != null) {
 
             //print(w.error);

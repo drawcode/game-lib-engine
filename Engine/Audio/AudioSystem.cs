@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.IO;
 using Engine.Utility;
 using UnityEngine;
+using UnityEngine.Networking;
 
 public class AudioSetItem {
     public AudioSource audioSource;
@@ -920,9 +921,9 @@ public class AudioSystem : GameObjectBehavior {
 
             var file = "file://" + data.filename;
 
-            var www = new WWW(file);
-
-            yield return www;
+            var www = UnityWebRequestMultimedia.GetAudioClip(file, AudioType.OGGVORBIS);
+                       
+            yield return www.SendWebRequest();
 
             if(www.error != null) {
                 //if( onFailure != null ) {
@@ -930,9 +931,13 @@ public class AudioSystem : GameObjectBehavior {
                 //}
             }
 
-            if(www.GetAudioClip()) {
+            AudioClip clip = DownloadHandlerAudioClip.GetContent(www);
 
-                data.clip = www.GetAudioClip(!data.is2dSound);
+            if (clip != null) {
+                //clip.loadType = AudioClipLoadType.
+                //clip.
+                data.clip = clip;
+                //data.clip = www.GetAudioClip(!data.is2dSound);
             }
 
             www.Dispose();

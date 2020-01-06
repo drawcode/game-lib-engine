@@ -4,25 +4,26 @@ using System.Net;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Networking;
 
 public enum ContentBundleDownloadState {
-	InProgress,
-	Failure,
-	Success
+    InProgress,
+    Failure,
+    Success
 }
 
 public class ContentBundleDownloadHandle {
 
-	public ContentBundleDownloadState state = ContentBundleDownloadState.InProgress;
-	public Uri uri;
-	public AssetBundle asset;
-	public string error = null;
-	public bool fromCache = false;
+    public ContentBundleDownloadState state = ContentBundleDownloadState.InProgress;
+    public Uri uri;
+    public AssetBundle asset;
+    public string error = null;
+    public bool fromCache = false;
 
-	public ContentBundleDownloadHandle (string url) {
+    public ContentBundleDownloadHandle(string url) {
 
-		uri = new Uri (url);
-	}
+        uri = new Uri(url);
+    }
 }
 
 public class ContentBundleLoader : GameObjectBehavior {
@@ -36,7 +37,7 @@ public class ContentBundleLoader : GameObjectBehavior {
 
             var g = GameObject.Find("/_content_bundle_loader");
 
-            if(g == null) {
+            if (g == null) {
 
                 g = new GameObject("_content_bundle_loader");
             }
@@ -45,7 +46,7 @@ public class ContentBundleLoader : GameObjectBehavior {
 
             var c = g.GetComponent<ContentBundleLoader>();
 
-            if(c == null) {
+            if (c == null) {
 
                 c = g.AddComponent<ContentBundleLoader>();
             }
@@ -63,13 +64,13 @@ public class ContentBundleLoader : GameObjectBehavior {
         return handle;
     }
 
-    bool HandleDownload(ContentBundleDownloadHandle handle, WWW www) {
+    bool HandleDownload(ContentBundleDownloadHandle handle, UnityWebRequest www) {
+        
+        if (www.error == null) {
 
-        if(www.error == null) {
+            handle.asset = DownloadHandlerAssetBundle.GetContent(www);//www.downloadHandle.assetBundle;
 
-            handle.asset = www.assetBundle;
-
-            if(www.error != null) {
+            if (www.error != null) {
 
                 handle.error = www.error;
 
@@ -77,7 +78,7 @@ public class ContentBundleLoader : GameObjectBehavior {
             }
             else {
 
-                if(handle.asset == null) {
+                if (handle.asset == null) {
 
                     handle.error = "Failed to load asset bundle";
 
@@ -98,7 +99,7 @@ public class ContentBundleLoader : GameObjectBehavior {
 
     IEnumerator _Download(ContentBundleDownloadHandle handle) {
 
-        if(cachePath == null) {
+        if (cachePath == null) {
 
             cachePath = PathUtil.Combine(Application.persistentDataPath, "bundlecache");
         }
@@ -114,29 +115,29 @@ public class ContentBundleLoader : GameObjectBehavior {
         var file = Path.GetFileName(uri.AbsolutePath);
         var path = PathUtil.Combine(dir, file);
 
-        if(File.Exists(path)) {
+        if (File.Exists(path)) {
 
-            var www = new WWW("file://" + path);
+            var www = UnityWebRequest.Get("file://" + path);
 
-            yield return www;
+            yield return www.SendWebRequest();
 
-            if(HandleDownload(handle, www)) {
+            if (HandleDownload(handle, www)) {
 
                 handle.state = ContentBundleDownloadState.Success;
                 handle.fromCache = true;
             }
         }
-        if(handle.state != ContentBundleDownloadState.Success) {
+        if (handle.state != ContentBundleDownloadState.Success) {
 
-            var www = new WWW(uri.ToString());
+            var www = UnityWebRequest.Get(uri.ToString());
 
-            yield return www;
+            yield return www.SendWebRequest();
 
-            if(HandleDownload(handle, www)) {
+            if (HandleDownload(handle, www)) {
 
                 Directory.CreateDirectory(dir);
 
-                FileSystemUtil.WriteAllBytes(path, www.bytes);
+                FileSystemUtil.WriteAllBytes(path, www.downloadHandler.data);//.bytes);
 
                 handle.error = null;
                 handle.state = ContentBundleDownloadState.Success;

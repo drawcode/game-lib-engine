@@ -14,7 +14,7 @@ public static class BaseGameObjectExtensions {
 
     public static bool ContainsChild(this GameObject inst, string name) {
 
-        if(inst == null) {
+        if (inst == null) {
             return false;
         }
 
@@ -23,7 +23,7 @@ public static class BaseGameObjectExtensions {
 
     public static bool ContainsChildLike(this GameObject inst, string nameLike) {
 
-        if(inst == null) {
+        if (inst == null) {
             return false;
         }
 
@@ -32,7 +32,7 @@ public static class BaseGameObjectExtensions {
 
     public static void SetLayerRecursively(this GameObject inst, int layer) {
 
-        if(inst == null) {
+        if (inst == null) {
             return;
         }
 
@@ -41,7 +41,7 @@ public static class BaseGameObjectExtensions {
 
     public static void SetLayerRecursively(this GameObject inst, string name) {
 
-        if(inst == null) {
+        if (inst == null) {
             return;
         }
 
@@ -52,7 +52,7 @@ public static class BaseGameObjectExtensions {
 
         var go = Resources.Load(path) as GameObject;
 
-        foreach(var src in go.GetComponents<Component>()) {
+        foreach (var src in go.GetComponents<Component>()) {
 
             var dst = inst.AddComponent(src.GetType()) as Behaviour;
             dst.enabled = false;
@@ -66,7 +66,7 @@ public static class BaseGameObjectExtensions {
 
         var go = Resources.Load(path) as GameObject;
 
-        if(go == null) {
+        if (go == null) {
             throw new ArgumentException("Invalid component path", "path");
         }
 
@@ -87,7 +87,7 @@ public static class BaseGameObjectExtensions {
     public static GameObject FindTypeAboveObject<T>(this GameObject inst)
         where T : Component {
 
-        if(inst == null) {
+        if (inst == null) {
 
             return inst;
         }
@@ -98,19 +98,19 @@ public static class BaseGameObjectExtensions {
     public static GameObject FindTypeAboveObjectRecursive<T>(this GameObject inst)
         where T : Component {
 
-        if(inst == null) {
+        if (inst == null) {
             return null;
         }
 
-        if(inst != null) {
+        if (inst != null) {
 
             T instItem = inst.GetComponent<T>();
 
-            if(instItem != null) {
+            if (instItem != null) {
                 return inst;
             }
 
-            if(inst.transform.parent != null) {
+            if (inst.transform.parent != null) {
                 return FindTypeAboveObjectRecursive<T>(inst.transform.parent.gameObject);
             }
         }
@@ -121,20 +121,20 @@ public static class BaseGameObjectExtensions {
     public static T FindTypeBelowRecursive<T>(this GameObject inst, string name)
         where T : Component {
 
-        if(inst == null) {
+        if (inst == null) {
             return null;
         }
 
-        if(inst != null) {
+        if (inst != null) {
 
-            foreach(T instItem in inst.GetComponents<T>()) {
+            foreach (T instItem in inst.GetComponents<T>()) {
 
-                if(instItem != null && instItem.name == name) {
+                if (instItem != null && instItem.name == name) {
                     return instItem;
                 }
             }
 
-            foreach(Transform t in inst.transform) {
+            foreach (Transform t in inst.transform) {
                 return FindTypeAboveRecursive<T>(t.gameObject);
             }
         }
@@ -145,20 +145,20 @@ public static class BaseGameObjectExtensions {
     public static GameObject FindTypeBelowObjectRecursive<T>(this GameObject inst, string name)
         where T : Component {
 
-        if(inst == null) {
+        if (inst == null) {
             return null;
         }
 
-        if(inst != null) {
+        if (inst != null) {
 
-            foreach(T instItem in inst.GetComponents<T>()) {
+            foreach (T instItem in inst.GetComponents<T>()) {
 
-                if(instItem != null && instItem.name == name) {
+                if (instItem != null && instItem.name == name) {
                     return inst;
                 }
             }
 
-            foreach(Transform t in inst.transform) {
+            foreach (Transform t in inst.transform) {
                 return FindTypeAboveObjectRecursive<T>(t.gameObject);
             }
         }
@@ -169,7 +169,7 @@ public static class BaseGameObjectExtensions {
     public static T FindTypeAbove<T>(this GameObject inst)
         where T : Component {
 
-        if(inst == null) {
+        if (inst == null) {
             return default(T);
         }
 
@@ -179,19 +179,19 @@ public static class BaseGameObjectExtensions {
     public static T FindTypeAboveRecursive<T>(this GameObject inst)
         where T : Component {
 
-        if(inst == null) {
+        if (inst == null) {
             return null;
         }
 
-        if(inst != null) {
+        if (inst != null) {
 
             T instItem = inst.GetComponent<T>();
 
-            if(instItem != null) {
+            if (instItem != null) {
                 return instItem;
             }
 
-            if(inst.transform.parent != null) {
+            if (inst.transform.parent != null) {
                 return FindTypeAboveRecursive<T>(inst.transform.parent.gameObject);
             }
         }
@@ -201,25 +201,25 @@ public static class BaseGameObjectExtensions {
 
     public static Transform FindBelow(this GameObject inst, string name) {
 
-        if(inst == null) {
+        if (inst == null) {
             return null;
         }
 
-        if(inst.transform.childCount == 0) {
+        if (inst.transform.childCount == 0) {
             return null;
         }
 
         var child = inst.transform.Find(name);
 
-        if(child != null) {
+        if (child != null) {
             return child;
         }
 
-        foreach(GameObject t in inst.transform) {
+        foreach (GameObject t in inst.transform) {
 
             child = FindBelow(t, name);
 
-            if(child != null) {
+            if (child != null) {
                 return child;
             }
         }
@@ -228,7 +228,7 @@ public static class BaseGameObjectExtensions {
 
     public static bool Remove<T>(this GameObject inst) where T : Component {
 
-        if(inst == null) {
+        if (inst == null) {
             return false;
         }
 
@@ -237,7 +237,7 @@ public static class BaseGameObjectExtensions {
 
     public static T GetOrSet<T>(this GameObject inst) where T : Component {
 
-        if(inst == null) {
+        if (inst == null) {
             return null;
         }
 
@@ -246,7 +246,7 @@ public static class BaseGameObjectExtensions {
 
     public static T Set<T>(this GameObject inst) where T : Component {
 
-        if(inst == null) {
+        if (inst == null) {
             return null;
         }
 
@@ -255,16 +255,16 @@ public static class BaseGameObjectExtensions {
 
     public static T SetOnly<T>(this GameObject inst) where T : Component {
 
-        if(inst == null) {
+        if (inst == null) {
             return null;
         }
 
         return GameObjectHelper.SetOnly<T>(inst);
     }
-    
+
     public static GameObject GetAsGameObject<T>(this GameObject inst) where T : Component {
 
-        if(inst == null) {
+        if (inst == null) {
             return null;
         }
 
@@ -273,7 +273,7 @@ public static class BaseGameObjectExtensions {
 
     public static T Get<T>(this GameObject inst) where T : Component {
 
-        if(inst == null) {
+        if (inst == null) {
             return null;
         }
 
@@ -282,7 +282,7 @@ public static class BaseGameObjectExtensions {
 
     public static T Get<T>(this GameObject inst, string name) where T : Component {
 
-        if(inst == null) {
+        if (inst == null) {
             return null;
         }
 
@@ -291,7 +291,7 @@ public static class BaseGameObjectExtensions {
 
     public static List<T> GetList<T>(this GameObject inst, string name) where T : Component {
 
-        if(inst == null) {
+        if (inst == null) {
             return null;
         }
 
@@ -300,7 +300,7 @@ public static class BaseGameObjectExtensions {
 
     public static List<T> GetList<T>(this GameObject inst) where T : Component {
 
-        if(inst == null) {
+        if (inst == null) {
             return null;
         }
 
@@ -309,7 +309,7 @@ public static class BaseGameObjectExtensions {
 
     public static bool Has<T>(this GameObject inst) where T : Component {
 
-        if(inst == null) {
+        if (inst == null) {
             return false;
         }
 
@@ -318,7 +318,7 @@ public static class BaseGameObjectExtensions {
 
     public static void Show(this GameObject inst) {
 
-        if(inst == null) {
+        if (inst == null) {
             return;
         }
 
@@ -327,7 +327,7 @@ public static class BaseGameObjectExtensions {
 
     public static void Hide(this GameObject inst) {
 
-        if(inst == null) {
+        if (inst == null) {
             return;
         }
 
@@ -336,7 +336,7 @@ public static class BaseGameObjectExtensions {
 
     public static void ShowObjectDelayed(this GameObject inst, float delay) {
 
-        if(inst == null) {
+        if (inst == null) {
             return;
         }
 
@@ -345,7 +345,7 @@ public static class BaseGameObjectExtensions {
 
     public static void HideObjectDelayed(this GameObject inst, float delay) {
 
-        if(inst == null) {
+        if (inst == null) {
             return;
         }
 
@@ -358,7 +358,7 @@ public static class BaseGameObjectExtensions {
 
     public static void StopSounds(this GameObject inst) {
 
-        if(inst == null) {
+        if (inst == null) {
             return;
         }
 
@@ -367,7 +367,7 @@ public static class BaseGameObjectExtensions {
 
     public static void PauseSounds(this GameObject inst) {
 
-        if(inst == null) {
+        if (inst == null) {
             return;
         }
 
@@ -376,7 +376,7 @@ public static class BaseGameObjectExtensions {
 
     public static void PlaySounds(this GameObject inst) {
 
-        if(inst == null) {
+        if (inst == null) {
             return;
         }
 
@@ -385,7 +385,7 @@ public static class BaseGameObjectExtensions {
 
     public static void PlayAnimations(this GameObject inst) {
 
-        if(inst == null) {
+        if (inst == null) {
             return;
         }
 
@@ -394,7 +394,7 @@ public static class BaseGameObjectExtensions {
 
     public static void StopAnimations(this GameObject inst) {
 
-        if(inst == null) {
+        if (inst == null) {
             return;
         }
 
@@ -403,7 +403,7 @@ public static class BaseGameObjectExtensions {
 
     public static void PlayAnimation(this GameObject inst, string name, float speed = 1f) {
 
-        if(inst == null) {
+        if (inst == null) {
             return;
         }
 
@@ -412,7 +412,7 @@ public static class BaseGameObjectExtensions {
 
     public static void PlayAnimationBlend(this GameObject inst, string name, float speed = 1f, float targetWeight = .9f, float fadeLength = .5f) {
 
-        if(inst == null) {
+        if (inst == null) {
             return;
         }
 
@@ -421,7 +421,7 @@ public static class BaseGameObjectExtensions {
 
     public static void PlayAnimationCrossFade(this GameObject inst, string name, float speed = 1f, float fadeLength = .5f) {
 
-        if(inst == null) {
+        if (inst == null) {
             return;
         }
 
@@ -432,7 +432,7 @@ public static class BaseGameObjectExtensions {
         this GameObject inst, string name, float time,
         bool normalizedTime = true, bool stopPlaying = true) {
 
-        if(inst == null) {
+        if (inst == null) {
             return;
         }
 
@@ -441,7 +441,7 @@ public static class BaseGameObjectExtensions {
 
     public static void StopAnimation(this GameObject inst, string name) {
 
-        if(inst == null) {
+        if (inst == null) {
             return;
         }
 
@@ -450,7 +450,7 @@ public static class BaseGameObjectExtensions {
 
     public static List<AnimationState> GetAnimationsList(this GameObject inst) {
 
-        if(inst == null) {
+        if (inst == null) {
             return null;
         }
 
@@ -459,7 +459,7 @@ public static class BaseGameObjectExtensions {
 
     public static AnimationState GetAnimationsRandom(this GameObject inst) {
 
-        if(inst == null) {
+        if (inst == null) {
             return null;
         }
 
@@ -469,7 +469,7 @@ public static class BaseGameObjectExtensions {
     public static void PlayAnimationBlendRandom(this GameObject inst,
         float speed = 1, float targetWeight = 0.5f, float fadeLength = 0.5f) {
 
-        if(inst == null) {
+        if (inst == null) {
             return;
         }
 
@@ -479,7 +479,7 @@ public static class BaseGameObjectExtensions {
     public static void PlayAnimationCrossFadeRandom(this GameObject inst,
         float speed = 1, float fadeLength = 0.5f) {
 
-        if(inst == null) {
+        if (inst == null) {
             return;
         }
 
@@ -491,7 +491,7 @@ public static class BaseGameObjectExtensions {
 
     public static bool IsRenderersVisible(this GameObject inst) {
 
-        if(inst == null) {
+        if (inst == null) {
             return false;
         }
 
@@ -500,7 +500,7 @@ public static class BaseGameObjectExtensions {
 
     public static bool IsRenderersVisibleByCamera(this GameObject inst) {
 
-        if(inst == null) {
+        if (inst == null) {
             return false;
         }
 
@@ -509,7 +509,7 @@ public static class BaseGameObjectExtensions {
 
     public static bool IsRenderersVisibleByCamera(this GameObject inst, Camera cam) {
 
-        if(inst == null) {
+        if (inst == null) {
             return false;
         }
 
@@ -518,7 +518,7 @@ public static class BaseGameObjectExtensions {
 
     public static void ShowRenderers(this GameObject inst) {
 
-        if(inst == null) {
+        if (inst == null) {
             return;
         }
 
@@ -527,7 +527,7 @@ public static class BaseGameObjectExtensions {
 
     public static void HideRenderers(this GameObject inst) {
 
-        if(inst == null) {
+        if (inst == null) {
             return;
         }
 
@@ -536,7 +536,7 @@ public static class BaseGameObjectExtensions {
 
     public static void ShowChildren(this GameObject inst) {
 
-        if(inst == null) {
+        if (inst == null) {
             return;
         }
 
@@ -545,7 +545,7 @@ public static class BaseGameObjectExtensions {
 
     public static void ShowChildren(this GameObject inst, bool applyGameObjectInactive) {
 
-        if(inst == null) {
+        if (inst == null) {
             return;
         }
 
@@ -554,7 +554,7 @@ public static class BaseGameObjectExtensions {
 
     public static void HideChildren(this GameObject inst) {
 
-        if(inst == null) {
+        if (inst == null) {
             return;
         }
 
@@ -563,7 +563,7 @@ public static class BaseGameObjectExtensions {
 
     public static void HideChildren(this GameObject inst, bool applyGameObjectInactive) {
 
-        if(inst == null) {
+        if (inst == null) {
             return;
         }
 
@@ -572,7 +572,7 @@ public static class BaseGameObjectExtensions {
 
     public static void HitObject(this GameObject inst, Vector3 pos) {
 
-        if(inst == null) {
+        if (inst == null) {
             return;
         }
 
@@ -584,7 +584,7 @@ public static class BaseGameObjectExtensions {
 
     public static bool IsAudioSourcePlaying(this GameObject inst) {
 
-        if(inst == null) {
+        if (inst == null) {
             return false;
         }
 
@@ -597,7 +597,7 @@ public static class BaseGameObjectExtensions {
     public static void SetParticleSystemStartColor(
         this GameObject inst, Color startColor, bool includeChildren) {
 
-        if(inst == null) {
+        if (inst == null) {
             return;
         }
 
@@ -607,7 +607,7 @@ public static class BaseGameObjectExtensions {
     public static void PlayParticleSystem(
         this GameObject inst, bool includeChildren) {
 
-        if(inst == null) {
+        if (inst == null) {
             return;
         }
 
@@ -617,7 +617,7 @@ public static class BaseGameObjectExtensions {
     public static void StopParticleSystem(
         this GameObject inst, bool includeChildren) {
 
-        if(inst == null) {
+        if (inst == null) {
             return;
         }
 
@@ -627,7 +627,7 @@ public static class BaseGameObjectExtensions {
     public static void SetParticleSystemEmissionRate(
         this GameObject inst, float emissionRate, bool includeChildren) {
 
-        if(inst == null) {
+        if (inst == null) {
             return;
         }
 
@@ -637,7 +637,7 @@ public static class BaseGameObjectExtensions {
     public static void SetParticleSystemEmissionRateNormalized(
         this GameObject inst, float emissionRate, bool includeChildren) {
 
-        if(inst == null) {
+        if (inst == null) {
             return;
         }
 
@@ -647,7 +647,7 @@ public static class BaseGameObjectExtensions {
     public static void SetParticleSystemEmissionRateNormalizedFlipped(
         this GameObject inst, float emissionRate, bool includeChildren) {
 
-        if(inst == null) {
+        if (inst == null) {
             return;
         }
 
@@ -657,7 +657,7 @@ public static class BaseGameObjectExtensions {
     public static void SetParticleSystemEmission(
         this GameObject inst, bool emissionEnabled, bool includeChildren) {
 
-        if(inst == null) {
+        if (inst == null) {
             return;
         }
 
@@ -685,11 +685,11 @@ public static class BaseGameObjectExtensions {
 
     public static void ChangeLayersRecursively(this GameObject inst, string name) {
 
-        if(inst == null) {
+        if (inst == null) {
             return;
         }
 
-        foreach(Transform child in inst.transform) {
+        foreach (Transform child in inst.transform) {
 
             child.gameObject.layer = LayerMask.NameToLayer(name);
             ChangeLayersRecursively(child.gameObject, name);
@@ -833,10 +833,14 @@ public static class BaseGameObjectExtensions {
 
     //
 
-    public static GameObject CleanGameObjectName(
-       this GameObject go) {
+    public static bool IsPrefab(this GameObject inst) {
 
-        return GameObjectHelper.CleanGameObjectName(go);
+        return GameObjectHelper.IsPrefab(inst);
+    }
+
+    public static bool IsPrefabGhost(this Transform inst) {
+
+        return GameObjectHelper.IsPrefabGhost(inst);
     }
 
     public static GameObject CreateGameObject(
