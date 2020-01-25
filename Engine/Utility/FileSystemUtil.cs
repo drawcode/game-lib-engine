@@ -165,6 +165,7 @@ public class FileSystemUtil {
 
 
             UnityWebRequest www = new UnityWebRequest();
+            www.downloadHandler = new DownloadHandlerBuffer();
             www.url = path;
 
             UnityWebRequestAsyncOperation asyncOp = www.SendWebRequest();
@@ -250,6 +251,7 @@ public class FileSystemUtil {
                 //}
 
                 UnityWebRequest www = new UnityWebRequest();
+                www.downloadHandler = new DownloadHandlerBuffer();
                 www.url = dataFilePath;
 
                 UnityWebRequestAsyncOperation asyncOp = www.SendWebRequest();
@@ -389,6 +391,7 @@ public class FileSystemUtil {
                 dataFilePath = GetFileLocalPath(dataFilePath);
 
                 UnityWebRequest www = new UnityWebRequest();
+                www.downloadHandler = new DownloadHandlerBuffer();
                 www.url = dataFilePath;
 
                 UnityWebRequestAsyncOperation asyncOp = www.SendWebRequest();
