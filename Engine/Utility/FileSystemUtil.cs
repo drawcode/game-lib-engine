@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 using UnityEngine;
+using UnityEngine.Networking;
 
 public class FileSystemUtil {
 
@@ -161,25 +163,33 @@ public class FileSystemUtil {
 
             path = GetFileLocalPath(path);
 
-            WWW file = new WWW(path);
+
+            UnityWebRequest www = new UnityWebRequest();
+            www.url = path;
+
+            UnityWebRequestAsyncOperation asyncOp = www.SendWebRequest();
+
+            //WWW file = new WWW(dataFilePath);
 
             float currentTime = Time.time;
             float endTime = currentTime + 6f; // only allow some seconds for file check
-            while(!file.isDone && currentTime < endTime) {
+
+            while (!asyncOp.isDone && currentTime < endTime) {
                 currentTime = Time.time;
             };
 
-            if(file == null || file.bytes == null) {
-                exists = false;
+            if (www.isNetworkError || www.isHttpError) {
+                Debug.LogWarning($"Network error whilst downloading [{path}] Error: [{www.error}]");
+                //Debug.Log(www.error);
             }
             else {
-
-                int length = file.bytes.Length;
+                //int length = file.bytes.Length;
+                int length = www.downloadHandler.data.Length;
 
                 Debug.Log("CheckFileExists: Android: path:" + path);
                 Debug.Log("CheckFileExists: Android: file.bytes.length:" + length);
 
-                if(file.bytes.Length > 0) {
+                if(www.downloadHandler.data.Length > 0) {
                     exists = true;
                 }
             }
@@ -228,23 +238,52 @@ public class FileSystemUtil {
 
                 dataFilePath = GetFileLocalPath(dataFilePath);
 
-                WWW file = new WWW(dataFilePath);
+                //using (UnityWebRequest www = UnityWebRequest.Get(dataFilePath)) {
+                //    UnityWebRequestAsyncOperation asyncOp = www.SendWebRequest();
+                //    while (asyncOp.isDone == false) {
+                //        await Task.Delay(30);
+                //    }
+                //    if (www.isNetworkError || www.isHttpError) {
+                //        Debug.LogWarning($"Network error whilst downloading [{url}] Error: [{www.error}]");
+                //        return null;
+                //    }
+                //}
+
+                UnityWebRequest www = new UnityWebRequest();
+                www.url = dataFilePath;
+
+                UnityWebRequestAsyncOperation asyncOp = www.SendWebRequest();
+
+                //WWW file = new WWW(dataFilePath);
 
                 float currentTime = Time.time;
                 float endTime = currentTime + 6f; // only allow some seconds for file check
-                while(!file.isDone && currentTime < endTime) {
+
+                while(!asyncOp.isDone && currentTime < endTime) {
                     currentTime = Time.time;
                 };
 
-                int length = file.bytes.Length;
+                if (www.isNetworkError || www.isHttpError) {
+                    Debug.LogWarning($"Network error whilst downloading [{dataFilePath}] Error: [{www.error}]");
+                    //Debug.Log(www.error);
+                }
+                else {
+                    //int length = file.bytes.Length;
+                    int length = www.downloadHandler.data.Length;
 
-                Debug.Log("CopyFile: Android: dataFilePath:" + dataFilePath);
-                Debug.Log("CopyFile: Android: persistenceFilePath:" + persistenceFilePath);
-                Debug.Log("CopyFile: Android: file.bytes.length:" + length);
+                    Debug.Log("CopyFile: Android: dataFilePath:" + dataFilePath);
+                    Debug.Log("CopyFile: Android: persistenceFilePath:" + persistenceFilePath);
+                    Debug.Log("CopyFile: Android: file.bytes.length:" + length);
 
-                if(file.bytes.Length > 0) {
-                    // Save file contents to new location                   
-                    FileSystemUtil.WriteAllBytes(persistenceFilePath, file.bytes);
+                    //if(file.bytes.Length > 0) {
+                    //    // Save file contents to new location                   
+                    //    FileSystemUtil.WriteAllBytes(persistenceFilePath, file.bytes);
+                    //}
+
+                    if (www.downloadHandler.data.Length > 0) {
+                        // Save file contents to new location                   
+                        FileSystemUtil.WriteAllBytes(persistenceFilePath, www.downloadHandler.data);
+                    }
                 }
             }
             else {
@@ -349,23 +388,36 @@ public class FileSystemUtil {
 
                 dataFilePath = GetFileLocalPath(dataFilePath);
 
-                WWW file = new WWW(dataFilePath);
+                UnityWebRequest www = new UnityWebRequest();
+                www.url = dataFilePath;
+
+                UnityWebRequestAsyncOperation asyncOp = www.SendWebRequest();
+
+                //WWW file = new WWW(dataFilePath);
 
                 float currentTime = Time.time;
                 float endTime = currentTime + 6f; // only allow some seconds for file check
-                while(!file.isDone && currentTime < endTime) {
+
+                while (!asyncOp.isDone && currentTime < endTime) {
                     currentTime = Time.time;
                 };
 
-                int length = file.bytes.Length;
+                if (www.isNetworkError || www.isHttpError) {
+                    Debug.LogWarning($"Network error whilst downloading [{dataFilePath}] Error: [{www.error}]");
+                    //Debug.Log(www.error);
+                }
+                else {
 
-                LogUtil.Log("CopyFile: Android: dataFilePath:" + dataFilePath);
-                LogUtil.Log("CopyFile: Android: persistenceFilePath:" + persistenceFilePath);
-                LogUtil.Log("CopyFile: Android: file.bytes.length:" + length);
+                    int length = www.downloadHandler.data.Length;
 
-                if(file.bytes.Length > 0) {
-                    // Save file contents to new location                   
-                    FileSystemUtil.WriteAllBytes(persistenceFilePath, file.bytes);
+                    LogUtil.Log("CopyFile: Android: dataFilePath:" + dataFilePath);
+                    LogUtil.Log("CopyFile: Android: persistenceFilePath:" + persistenceFilePath);
+                    LogUtil.Log("CopyFile: Android: file.bytes.length:" + length);
+
+                    if (www.downloadHandler.data.Length > 0) {
+                        // Save file contents to new location                   
+                        FileSystemUtil.WriteAllBytes(persistenceFilePath, www.downloadHandler.data);
+                    }
                 }
             }
             else {
