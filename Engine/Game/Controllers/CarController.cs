@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using Engine;
 using Engine.Game.Controllers;
 using UnityEngine;
+using UnityEngine.UI;
 
 //namespace Engine.Game.Controllers {
 [RequireComponent(typeof(Rigidbody))]
@@ -85,12 +86,12 @@ public class CarController : GameObjectBehavior {
     //===================================================================
 
     //return a status string for the vehicle
-    public void GetStatus(GUIText gui) {
+    public void GetStatus(Text gui) {
         gui.text = "v=" + (rigidbody.velocity.magnitude * 3.6f).ToString("f1") + " km/h\ngear= " + gear + "\nrpm= " + engineRPM.ToString("f0");
     }
 
     //return an information string for the vehicle
-    public void GetControlString(GUIText gui) {
+    public void GetControlString(Text gui) {
         gui.text = "Use arrow keys to control the jeep,\nspace for handbrake.";
     }
 
