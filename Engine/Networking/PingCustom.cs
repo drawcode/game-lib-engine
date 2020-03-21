@@ -10,91 +10,93 @@ using UnityEngine;
 namespace Engine.Networking {
     public class PingCustom : BaseEngineBehavior {
 
-#if !UNITY_FLASH && !UNITY_WEBGL && !UNITY_IPHONE && !UNITY_ANDROID
+//#if !UNITY_FLASH && !UNITY_WEBGL && !UNITY_IPHONE && !UNITY_ANDROID
 
         private void Start() {
         }
 
         public int Ping(string host, int timeout) {
-            //double startTime = 0;
-            //int pingTime = -1;
-            //int pingDataSize = 4;               // Ping packet payload, dummy data
-            //int packetSize = pingDataSize + 8;  // Ping payload + ICMP header
+            double startTime = 0;
+            int pingTime = -1;
+            int pingDataSize = 4;               // Ping packet payload, dummy data
+            int packetSize = pingDataSize + 8;  // Ping payload + ICMP header
 
-            //// Convert IP address string to something we can use
-            //IPEndPoint ipepServer;
-            //try {
-            //    ipepServer = new IPEndPoint(IPAddress.Parse(host), 0);
-            //}
-            //catch (Exception e) {
-            //    LogUtil.Log("Error parsing IP address: " + e.ToString());
-            //    return -1;
-            //}
-            //EndPoint epServer = (ipepServer);
+            // Convert IP address string to something we can use
+            IPEndPoint ipepServer;
+            try {
+                ipepServer = new IPEndPoint(IPAddress.Parse(host), 0);
+            }
+            catch (Exception e) {
+                LogUtil.Log("Error parsing IP address: " + e.ToString());
+                return -1;
+            }
+            EndPoint epServer = (ipepServer);
 
-            //Socket socket = new Socket(ipepServer.AddressFamily, SocketType.Dgram, ProtocolType.Icmp);
-            //socket.ReceiveTimeout = timeout;
+            Socket socket = new Socket(ipepServer.AddressFamily, SocketType.Dgram, ProtocolType.Icmp);
+            socket.ReceiveTimeout = timeout;
 
-            //// Create packet
-            //IcmpPacket packet = new IcmpPacket();
-            //packet.type = 8;        // ICMP echo request
-            //packet.subCode = 0;
-            //packet.checkSum = 0;
-            //packet.identifier = 1;
-            //packet.sequenceNumber = 0;
-            //packet.data = new Byte[pingDataSize];
-            //for (int i = 0; i < pingDataSize; i++) {
-            //    packet.data[i] = (byte)'.';
-            //}
+            // Create packet
+            IcmpPacket packet = new IcmpPacket();
+            packet.type = 8;        // ICMP echo request
+            packet.subCode = 0;
+            packet.checkSum = 0;
+            packet.identifier = 1;
+            packet.sequenceNumber = 0;
+            packet.data = new Byte[pingDataSize];
+            for (int i = 0; i < pingDataSize; i++) {
+                packet.data[i] = (byte)'.';
+            }
 
-            //Byte[] icmpPacket = new Byte[packetSize];
+            Byte[] icmpPacket = new Byte[packetSize];
 
-            //// Populate buffer
-            //Serialize(packet, icmpPacket, pingDataSize);
+            // Populate buffer
+            Serialize(packet, icmpPacket, pingDataSize);
 
-            //// Generate checksum
-            //UInt16[] checksum = new UInt16[(int)((float)packetSize / 2)];
+            // Generate checksum
+            UInt16[] checksum = new UInt16[(int)((float)packetSize / 2)];
 
-            ////LogUtil.Log("Checksum length is " + checksum.Length);
-            //int icmpPacketIndex = 0;
-            //for (int i = 0; i < checksum.Length; i++) {
-            //    checksum[i] = BitConverter.ToUInt16(icmpPacket, icmpPacketIndex);
-            //    icmpPacketIndex += 2;
-            //}
-            //packet.checkSum = generateChecksum(checksum, checksum.Length);
+            //LogUtil.Log("Checksum length is " + checksum.Length);
+            int icmpPacketIndex = 0;
+            for (int i = 0; i < checksum.Length; i++) {
+                checksum[i] = BitConverter.ToUInt16(icmpPacket, icmpPacketIndex);
+                icmpPacketIndex += 2;
+            }
+            packet.checkSum = generateChecksum(checksum, checksum.Length);
 
-            //// Repopulate packet with generated checksum
-            //Byte[] sendBuffer = new Byte[packetSize];
-            //Serialize(packet, sendBuffer, pingDataSize);
+            // Repopulate packet with generated checksum
+            Byte[] sendBuffer = new Byte[packetSize];
+            Serialize(packet, sendBuffer, pingDataSize);
 
-            //// Send the ping packet
+            // Send the ping packet
+            startTime = Time.deltaTime;// Network.time;
             //startTime = Network.time;
-            //if (socket.SendTo(sendBuffer, packetSize, 0, epServer) == 0) {
-            //    LogUtil.Log("Socket Error cannot Send Packet");
-            //}
+            if (socket.SendTo(sendBuffer, packetSize, 0, epServer) == 0) {
+                LogUtil.Log("Socket Error cannot Send Packet");
+            }
 
-            //// Receive ping response
-            //Byte[] rcvBuffer = new Byte[256];
-            //try {
+            // Receive ping response
+            Byte[] rcvBuffer = new Byte[256];
+            try {
 
-            //    //socket.ReceiveFrom(rcvBuffer, ref epServer);
-            //    socket.Receive(rcvBuffer);
-            //    double stopTime = Network.time;
-            //    pingTime = (int)((stopTime - startTime) * 1000);
+                //socket.ReceiveFrom(rcvBuffer, ref epServer);
+                socket.Receive(rcvBuffer);
+                //double stopTime = Network.time;
+                double stopTime = Time.deltaTime;// Network.time;
+                pingTime = (int)((stopTime - startTime) * 1000);
 
-            //    //LogUtil.Log("Reply from "+epServer.ToString()+" containing "+rcvBytes+" bytes in "+pingTime+" ms");
-            //}
-            //catch (SocketException e) {
-            //    LogUtil.Log("Socket error: " + e.ToString());
-            //}
-            //catch (Exception e) {
-            //    LogUtil.Log("Exception occured when receiving " + e.ToString());
-            //}
+                //LogUtil.Log("Reply from "+epServer.ToString()+" containing "+rcvBytes+" bytes in "+pingTime+" ms");
+            }
+            catch (SocketException e) {
+                LogUtil.Log("Socket error: " + e.ToString());
+            }
+            catch (Exception e) {
+                LogUtil.Log("Exception occured when receiving " + e.ToString());
+            }
 
-            //socket.Close();
-            //return pingTime;
+            socket.Close();
+            return pingTime;
 
-            return 0;
+            //return 0;
         }
 
         // Move contents of packet to a byte array (buffer). pingDataSize defines how large
@@ -131,6 +133,6 @@ namespace Engine.Networking {
             public Byte[] data;
         }
 
-#endif
+//#endif
     }
 }
