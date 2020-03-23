@@ -123,14 +123,15 @@ public class BaseGameConfigs<T> : DataObjects<T> where T : DataObject, new() {
         get {
 
 #if USE_GAME_LIB_GAMES
-
-            if(GameUIController.Instance == null) {
+#if USE_GAME_LIB_GAMES_UI
+            if (GameUIController.Instance == null) {
                 return false;
             }
 
             if (GameUIController.Instance.uiVisible) {
                 return true;
             }
+#endif
 #endif
             return false;
         }
