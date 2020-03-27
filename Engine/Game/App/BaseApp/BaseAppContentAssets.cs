@@ -16,7 +16,7 @@ public class BaseAppContentAssets<T> : DataObjects<T> where T : DataObject, new(
         get {
             if (current == null) {
                 lock (syncRoot) {
-                    if(current == null) {
+                    if (current == null) {
                         current = new T();
                     }
                 }
@@ -33,7 +33,7 @@ public class BaseAppContentAssets<T> : DataObjects<T> where T : DataObject, new(
         get {
             if (instance == null) {
                 lock (syncRoot) {
-                    if(instance == null) {
+                    if (instance == null) {
                         instance = new BaseAppContentAssets<T>(true);
                     }
                 }
@@ -60,53 +60,53 @@ public class BaseAppContentAssets<T> : DataObjects<T> where T : DataObject, new(
     public static string GetLoadAssetPath(string key, string assetCode, string type) {
 
         string path = "";
-        
+
         LogUtil.Log("LoadAsset:" + " assetCode:" + assetCode + " type:" + type);
 
-        if(key.StartsWith(BaseDataObjectKeys.level)
+        if (key.StartsWith(BaseDataObjectKeys.level)
             || key.StartsWith(BaseDataObjectKeys.levelAssets)) {
 
             path = ContentPaths.appCacheVersionSharedPrefabLevelAssets;
         }
-        else if(key.StartsWith(BaseDataObjectKeys.character)
+        else if (key.StartsWith(BaseDataObjectKeys.character)
                  || key.StartsWith(BaseDataObjectKeys.characters)) {
 
             path = ContentPaths.appCacheVersionSharedPrefabCharacters;
         }
-        else if(key.StartsWith(BaseDataObjectKeys.weapon)
+        else if (key.StartsWith(BaseDataObjectKeys.weapon)
                  || key.StartsWith(BaseDataObjectKeys.weapons)) {
 
             path = ContentPaths.appCacheVersionSharedPrefabWeapons;
         }
-        else if(key.StartsWith(BaseDataObjectKeys.world)
+        else if (key.StartsWith(BaseDataObjectKeys.world)
                  || key.StartsWith(BaseDataObjectKeys.worlds)) {
 
             path = ContentPaths.appCacheVersionSharedPrefabWorlds;
         }
-        else if(key.StartsWith(BaseDataObjectKeys.vehicle)
+        else if (key.StartsWith(BaseDataObjectKeys.vehicle)
                  || key.StartsWith(BaseDataObjectKeys.vehicles)) {
 
             path = ContentPaths.appCacheVersionSharedPrefabVehicles;
         }
-        else if(key.StartsWith(BaseDataObjectKeys.effect)
+        else if (key.StartsWith(BaseDataObjectKeys.effect)
                  || key.StartsWith(BaseDataObjectKeys.effects)) {
 
             path = ContentPaths.appCacheVersionSharedPrefabEffects;
         }
-        else if(key.StartsWith(BaseDataObjectKeys.item)
+        else if (key.StartsWith(BaseDataObjectKeys.item)
                  || key.StartsWith(BaseDataObjectKeys.items)) {
 
             path = ContentPaths.appCacheVersionSharedPrefabLevelItems;
         }
-        else if(key.StartsWith(BaseDataObjectKeys.ui)) {
+        else if (key.StartsWith(BaseDataObjectKeys.ui)) {
 
             path = ContentPaths.appCacheVersionSharedPrefabLevelUI;
         }
 
         path += assetCode;
-        
+
         LogUtil.Log("LoadAsset:" + " path:" + path);
-        
+
         if (type == "resource") {
             // Load from resources                        
         }
@@ -114,7 +114,7 @@ public class BaseAppContentAssets<T> : DataObjects<T> where T : DataObject, new(
             // TODO update path for streaming folder
         }
         else if (type == "server") {
-            // TODO udpate path for download and process
+            // TODO update path for download and process
         }
         else {
             // Load from other
@@ -124,7 +124,7 @@ public class BaseAppContentAssets<T> : DataObjects<T> where T : DataObject, new(
     }
 
     // LOAD ASSET
-    
+
     public static GameObject LoadAsset(
         string code,
         Vector3 pos = default(Vector3),
@@ -144,7 +144,7 @@ public class BaseAppContentAssets<T> : DataObjects<T> where T : DataObject, new(
         return LoadAsset(BaseDataObjectKeys.levelAssets, code,
                          pos, rotate, pool);
     }
-    
+
     public static GameObject LoadAssetCharacters(
         string code,
         Vector3 pos = default(Vector3),
@@ -184,7 +184,7 @@ public class BaseAppContentAssets<T> : DataObjects<T> where T : DataObject, new(
         return LoadAsset(BaseDataObjectKeys.effects, code,
                          pos, rotate, pool);
     }
-    
+
     public static GameObject LoadAssetWorlds(
         string code,
         Vector3 pos = default(Vector3),
@@ -194,7 +194,7 @@ public class BaseAppContentAssets<T> : DataObjects<T> where T : DataObject, new(
         return LoadAsset(BaseDataObjectKeys.worlds, code,
                          pos, rotate, pool);
     }
-    
+
     public static GameObject LoadAssetVehicles(
         string code,
         Vector3 pos = default(Vector3),
@@ -216,33 +216,33 @@ public class BaseAppContentAssets<T> : DataObjects<T> where T : DataObject, new(
     }
 
     public static GameObject LoadAsset(
-        string key, 
+        string key,
         string code,
         Vector3 pos = default(Vector3),
         Quaternion rotate = default(Quaternion),
         bool pool = true
         ) {
-        
+
         //LogUtil.Log("LoadAsset:" + " key:" + key + " code:" + code);
-        
+
         GameObject prefabObject = LoadAssetPrefab(key, code);
-        
+
         if (prefabObject == null) {
             return null;
         }
-        
+
         GameObject go = GameObjectHelper.CreateGameObject(
-            prefabObject, pos, rotate, 
+            prefabObject, pos, rotate,
             pool) as GameObject;
 
         //LogUtil.Log("LoadAsset:" + " go:" + go != null);
 
-        
+
         return go;
     }
 
     // LOAD ASSET PREFAB
-    
+
     public static GameObject LoadAssetPrefab(string code) {
         return LoadAssetPrefab("", code);
     }
@@ -254,11 +254,11 @@ public class BaseAppContentAssets<T> : DataObjects<T> where T : DataObject, new(
 
         AppContentAsset asset = AppContentAssets.Instance.GetByCode(code);
 
-        if(asset == null && depth) {
+        if (asset == null && depth) {
 
-            foreach(AppContentAsset assetItem in AppContentAssets.Instance.GetAll()) {
+            foreach (AppContentAsset assetItem in AppContentAssets.Instance.GetAll()) {
 
-                if(assetItem.code == code
+                if (assetItem.code == code
                     && (assetItem.key == key || string.IsNullOrEmpty(key))) {
 
                     //LogUtil.Log("LoadAssetPrefab2:" + " key:" + key + " code:" + code);
@@ -268,14 +268,14 @@ public class BaseAppContentAssets<T> : DataObjects<T> where T : DataObject, new(
             }
         }
 
-        if(asset == null) {
+        if (asset == null) {
             //Debug.Log("ERROR:LoadAssetPrefab:NOT FOUND IN ASSETS DATA: key:" + key + " code:" + code);
             return null;
         }
 
         string path = GetLoadAssetPath(asset.key, asset.code, asset.type);
 
-        if(string.IsNullOrEmpty(path)) {
+        if (string.IsNullOrEmpty(path)) {
             return null;
         }
 
