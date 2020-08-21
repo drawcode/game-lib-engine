@@ -32,11 +32,15 @@ public class FileSystemUtil {
                 DirectoryInfo dir = new DirectoryInfo(path);
 
                 if(!dir.Exists) {
+
                     dir.Create();
+
                     Debug.Log("CreateDirectoryIfNeededAndAllowed:info:path:" + path);
                 }
+
             }
         }
+
 #endif
     }
 
@@ -50,6 +54,37 @@ public class FileSystemUtil {
         }
 #endif
         return allowCreate;
+    }
+
+    public static void CreateDirectoryHolderFile(
+        string path, string filename = "dirinfo.json.txt", string filedata = "") {
+
+        string filepath = StringUtil.Combine("/", path, filename);
+
+        Dictionary<string, object> dirInfo = null;
+
+        if(CheckFileExists(filepath)) {
+            dirInfo = FileSystemUtil.ReadString(filepath).FromJsonToDict();
+        }
+       
+        if(dirInfo == null) {
+
+            dirInfo = new Dictionary<string, object>();
+        }
+
+        if(filedata.IsNullOrEmpty()) {
+            filedata = "DIRECTORY HOLDER file for:" + path;
+        }
+
+        dirInfo.Set("path", path);
+        dirInfo.Set("filename", filename);
+        dirInfo.Set("data", filedata);
+
+        string data = dirInfo.ToString();
+
+        WriteString(filepath, data);
+
+        Debug.Log("CreateDirectoryHolderFile:data:" + data);
     }
 
     public static void DirectoryCopy(string sourceDirName, string destDirName, bool copySubDirs, bool versioned) {
@@ -128,12 +163,16 @@ public class FileSystemUtil {
             Debug.Log("FileSystemUtil::EnsureDirectory:directory:" + directory);
 
         }
-        
+
         Debug.Log("FileSystemUtil::EnsureDirectory:directory:" + directory);
 
         //LogUtil.Log("directory:" + directory);
 
         CreateDirectoryIfNeededAndAllowed(directory);
+
+        //if(createFileEmptyFileInFolder) {
+        //    CreateDirectoryHolderFile(directory);
+        //}
     }
 
     public static string GetFileLocalPath(string path) {
