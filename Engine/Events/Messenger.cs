@@ -29,13 +29,13 @@ namespace Engine.Events {
 
         public static void OnListenerAdding(string eventType, Delegate listenerBeingAdded) {
 
-            if(!eventTable.ContainsKey(eventType)) {
+            if (!eventTable.ContainsKey(eventType)) {
                 eventTable.Add(eventType, null);
             }
 
             Delegate d = eventTable[eventType];
 
-            if(d != null && d.GetType() != listenerBeingAdded.GetType()) {
+            if (d != null && d.GetType() != listenerBeingAdded.GetType()) {
                 throw new ListenerException(
                     string.Format("Attempting to add listener with inconsistent signature for event type {0}. Current listeners have type {1} and listener being added has type {2}", eventType, d.GetType().Name, listenerBeingAdded.GetType().Name));
             }
@@ -43,15 +43,15 @@ namespace Engine.Events {
 
         public static void OnListenerRemoving(string eventType, Delegate listenerBeingRemoved) {
 
-            if(eventTable.ContainsKey(eventType)) {
+            if (eventTable.ContainsKey(eventType)) {
 
                 Delegate d = eventTable[eventType];
 
-                if(d == null) {
+                if (d == null) {
                     throw new ListenerException(
                         string.Format("Attempting to remove listener with for event type {0} but current listener is null.", eventType));
                 }
-                else if(d.GetType() != listenerBeingRemoved.GetType()) {
+                else if (d.GetType() != listenerBeingRemoved.GetType()) {
                     throw new ListenerException(
                         string.Format("Attempting to remove listener with inconsistent signature for event type {0}. Current listeners have type {1} and listener being removed has type {2}", eventType, d.GetType().Name, listenerBeingRemoved.GetType().Name));
                 }
@@ -64,14 +64,14 @@ namespace Engine.Events {
 
         public static void OnListenerRemoved(string eventType) {
 
-            if(eventTable[eventType] == null) {
+            if (eventTable[eventType] == null) {
                 eventTable.Remove(eventType);
             }
         }
 
         public static void OnBroadcasting(string eventType, MessengerMode mode) {
 
-            if(mode == MessengerMode.REQUIRE_LISTENER && !eventTable.ContainsKey(eventType)) {
+            if (mode == MessengerMode.REQUIRE_LISTENER && !eventTable.ContainsKey(eventType)) {
                 throw new MessengerInternal.BroadcastException(
                     string.Format("Broadcasting message {0} but no listener found.", eventType));
             }
@@ -126,11 +126,11 @@ namespace Engine.Events {
             MessengerInternal.OnBroadcasting(eventType, mode);
             Delegate d;
 
-            if(eventTable.TryGetValue(eventType, out d)) {
+            if (eventTable.TryGetValue(eventType, out d)) {
 
                 Callback callback = d as Callback;
 
-                if(callback != null) {
+                if (callback != null) {
                     callback();
                 }
                 else {
@@ -167,11 +167,11 @@ namespace Engine.Events {
             MessengerInternal.OnBroadcasting(eventType, mode);
             Delegate d;
 
-            if(eventTable.TryGetValue(eventType, out d)) {
+            if (eventTable.TryGetValue(eventType, out d)) {
 
                 Callback<T> callback = d as Callback<T>;
 
-                if(callback != null) {
+                if (callback != null) {
                     callback(arg1);
                 }
                 else {
@@ -208,11 +208,11 @@ namespace Engine.Events {
             MessengerInternal.OnBroadcasting(eventType, mode);
             Delegate d;
 
-            if(eventTable.TryGetValue(eventType, out d)) {
+            if (eventTable.TryGetValue(eventType, out d)) {
 
                 Callback<T, U> callback = d as Callback<T, U>;
 
-                if(callback != null) {
+                if (callback != null) {
                     callback(arg1, arg2);
                 }
                 else {
@@ -250,11 +250,11 @@ namespace Engine.Events {
             MessengerInternal.OnBroadcasting(eventType, mode);
             Delegate d;
 
-            if(eventTable.TryGetValue(eventType, out d)) {
+            if (eventTable.TryGetValue(eventType, out d)) {
 
                 Callback<T, U, V> callback = d as Callback<T, U, V>;
 
-                if(callback != null) {
+                if (callback != null) {
                     callback(arg1, arg2, arg3);
                 }
                 else {
