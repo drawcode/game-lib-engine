@@ -59,7 +59,7 @@ public class PathUtil {
     public static string AppPersistencePath {
         get {
             if (Application.platform == RuntimePlatform.IPhonePlayer)
-                return GetAppPersistencePathIPhone();
+                return GetAppPersistencePath();// GetAppPersistencePathIPhone();
             else
                 return GetAppPersistencePath();
         }
@@ -100,6 +100,15 @@ public class PathUtil {
     public static string GetAppPersistencePath() {
         //return Context.Current.ApplicationPersistentPath;
 		return Application.persistentDataPath;
+    }
+
+    /// <summary>
+    /// Returns the standard application persistence path
+    /// </summary>
+    ///
+    public static string GetAppTemporaryCachePath() {
+        //return Context.Current.ApplicationTemporaryCachePath;
+        return Application.temporaryCachePath;
     }
 
     /* iPhone path management functions which work on the following premise:

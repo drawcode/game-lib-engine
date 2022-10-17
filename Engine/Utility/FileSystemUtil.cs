@@ -175,6 +175,26 @@ public class FileSystemUtil {
         //}
     }
 
+    public static bool CheckDirectoryExists(string filePath, bool filterFileName = true) {
+
+        Debug.Log("FileSystemUtil::CheckDirectoryExists:filePath:" + filePath);
+
+        string directory = filePath;
+
+        if (filePath.IndexOf('.') > -1 && filterFileName) {
+
+            directory = filePath.Replace(Path.GetFileName(filePath), "");
+
+            Debug.Log("FileSystemUtil::CheckDirectoryExists:directory:" + directory);
+
+        }
+
+        Debug.Log("FileSystemUtil::CheckDirectoryExists:directory:" + directory);
+
+        return Directory.Exists(directory);
+
+    }
+
     public static string GetFileLocalPath(string path) {
         if(!path.Contains("file://")) {
 
@@ -263,10 +283,21 @@ public class FileSystemUtil {
 
         Debug.Log("dataFilePath: " + dataFilePath);
         Debug.Log("persistenceFilePath: " + persistenceFilePath);
+        Debug.Log("Application.dataPath: " + Application.dataPath);
+        Debug.Log("Application.persistentDataPath: " + Application.persistentDataPath);
+        Debug.Log("Application.temporaryCachePath: " + Application.temporaryCachePath);
         Debug.Log("Application.streamingAssetsPath: " + Application.streamingAssetsPath);
 
         Debug.Log("CheckFileExists(dataFilePath): " + CheckFileExists(dataFilePath));
         Debug.Log("!CheckFileExists(persistenceFilePath): " + !CheckFileExists(persistenceFilePath));
+        Debug.Log("CheckDirectoryExists(dataFilePath): " + CheckDirectoryExists(dataFilePath));
+        Debug.Log("CheckDirectoryExists(dataPath): " + CheckDirectoryExists(Application.dataPath));
+        Debug.Log("CheckDirectoryExists(Application.persistentDataPath): " + CheckDirectoryExists(Application.persistentDataPath));
+        Debug.Log("CheckDirectoryExists(Application.persistentDataPath): " + CheckDirectoryExists(Application.persistentDataPath));
+        Debug.Log("CheckDirectoryExists(Application.temporaryCachePath): " + CheckDirectoryExists(Application.temporaryCachePath));
+        Debug.Log("CheckDirectoryExists(Application.streamingAssetsPath): " + CheckDirectoryExists(Application.streamingAssetsPath));
+
+
         Debug.Log("force: " + force);
 
         if(CheckFileExists(dataFilePath) && (!CheckFileExists(persistenceFilePath) || force)) {
@@ -331,7 +362,14 @@ public class FileSystemUtil {
                 File.Copy(dataFilePath, persistenceFilePath, true);
             }
 #else
-            File.Copy(dataFilePath, persistenceFilePath, true);
+            try {
+                File.Copy(dataFilePath, persistenceFilePath, true);
+            }
+            catch(Exception e) {
+
+                Debug.Log("ERROR File.Copy ERROR (dataFilePath,persistenceFilePath):  " + dataFilePath + " : " + persistenceFilePath);
+                Debug.Log(e);
+            }
 #endif  
             ////SystemHelper.SetNoBackupFlag(persistenceFilePath);
         }
