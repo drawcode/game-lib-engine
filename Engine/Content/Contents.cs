@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Text;
 using System.Text.RegularExpressions;
-#if !UNITY_WEBPLAYER
+#if !UNITY_WEBGL
 using System.IO;
 #endif
 using UnityEngine;
@@ -774,7 +774,7 @@ public class ContentPaths {
 
             if (!string.IsNullOrEmpty(appCachePathPacks)) {
 
-#if !UNITY_WEBPLAYER
+#if !UNITY_WEBGL
                 foreach (string path in Directory.GetDirectories(ContentPaths.appCachePathPacks)) {
 
                     string pathToAdd = PathUtil.Combine(appCachePathPacks, path);
@@ -797,7 +797,7 @@ public class ContentPaths {
 
             if (!string.IsNullOrEmpty(appCachePathSharedPacks)) {
 
-#if !UNITY_WEBPLAYER
+#if !UNITY_WEBGL
                 foreach (string path in Directory.GetDirectories(appCachePathSharedPacks)) {
 
                     string pathToAdd = PathUtil.Combine(appCachePathSharedPacks, path);
@@ -820,7 +820,7 @@ public class ContentPaths {
             //LogUtil.Log("Loading packPathsVersioned: " + appCachePathAllPlatformPacks);
             if (!string.IsNullOrEmpty(appCachePathAllPlatformPacks)) {
 
-#if !UNITY_WEBPLAYER
+#if !UNITY_WEBGL
                 foreach (string path in Directory.GetDirectories(appCachePathAllPlatformPacks)) {
 
                     string pathToAdd = PathUtil.Combine(appCachePathAllPlatformPacks, path);
@@ -2780,7 +2780,7 @@ public class Contents : GameObjectBehavior {
         //string url = GetDownloadContentItemUrl(game, buildVersion, platform, pack);
 
         string lastPackUrlValue = GetLastPackState(pack);
-
+#if !UNITY_WEBGL
         if (Caching.IsVersionCached(lastPackUrlValue, Hash128.Parse(version.ToString()))
             && !string.IsNullOrEmpty(lastPackUrlValue)) {
             // Just load from the saved url
@@ -2791,6 +2791,7 @@ public class Contents : GameObjectBehavior {
             // Do download verification and download
             requestDownloadableContent(game, buildVersion, platform, pack);
         }
+#endif
     }
 
     public static bool IsDownloadableContent(string pack) {
@@ -3013,7 +3014,7 @@ public class Contents : GameObjectBehavior {
     }
 
     public string getUnversionedDisplayFile(string val) {
-#if !UNITY_WEBPLAYER
+#if !UNITY_WEBGL
         val = Path.GetFileName(val);
 #endif
         val = GetDisplayFileUnversioned(val);
@@ -3557,7 +3558,7 @@ public class Contents : GameObjectBehavior {
         bool copySubDirs, bool versioned) {
 
 
-#if !UNITY_WEBPLAYER
+#if !UNITY_WEBGL
         LogUtil.Log("DirectoryCopy:" +
             " sourceDirName:" + sourceDirName +
             " destDirName:" + destDirName +
@@ -3647,7 +3648,7 @@ public class Contents : GameObjectBehavior {
             }
         }
 #else
-		yield break;
+        yield break;
 #endif
     }
 
@@ -4068,7 +4069,7 @@ public class Contents : GameObjectBehavior {
 
         GamePacks.Instance.ChangeCurrentGamePack(pack);
 
-#if !UNITY_WEBPLAYER
+#if !UNITY_WEBGL
         if (Directory.Exists(pathPack)) {
 
             string pathUrl = PathUtil.Combine(
