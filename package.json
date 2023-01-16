@@ -1,6 +1,6 @@
 {
   "name": "com.drawlabs.game-lib-engine",
-  "version": "1.0.1.1",
+  "version": "1.0.1",
   "displayName": "Game Lib Engine",
   "description": "Game base library",
   "unity": "2019.1",
