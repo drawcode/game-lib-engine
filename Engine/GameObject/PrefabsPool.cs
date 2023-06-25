@@ -13,7 +13,7 @@ public class PrefabsPool : GameObjectBehavior {
     public static PrefabsPool instance {
         get {
             if (!_instance) {
-                _instance = FindObjectOfType(typeof(PrefabsPool)) as PrefabsPool;
+                _instance = FindAnyObjectByType(typeof(PrefabsPool)) as PrefabsPool;
 
                 if (!_instance) {
                     var obj = new GameObject("_PrefabsPool");

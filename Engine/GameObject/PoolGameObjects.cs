@@ -13,7 +13,7 @@ public class PoolGameObjects : GameObjectBehavior {
     public static PoolGameObjects instance {
         get {
             if (!_instance) {
-                _instance = FindObjectOfType(typeof(PoolGameObjects)) as PoolGameObjects;
+                _instance = FindAnyObjectByType(typeof(PoolGameObjects)) as PoolGameObjects;
 
                 if (!_instance) {
                     var obj = new GameObject("_PoolGameObjects");

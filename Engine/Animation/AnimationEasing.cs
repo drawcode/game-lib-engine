@@ -30,13 +30,13 @@ public class AnimationEasing : MonoBehaviour {
 
     public static AnimationEasing Instance {
         get {
-            if(!_instance) {
+            if (!_instance) {
 
                 // check if an ObjectPoolManager is already available in the scene graph
-                _instance = FindObjectOfType(typeof(AnimationEasing)) as AnimationEasing;
+                _instance = FindAnyObjectByType(typeof(AnimationEasing)) as AnimationEasing;
 
                 // nope, create a new one
-                if(!_instance) {
+                if (!_instance) {
                     var obj = new GameObject("_AnimationEasing");
                     _instance = obj.AddComponent<AnimationEasing>();
                 }
@@ -121,12 +121,12 @@ public class AnimationEasing : MonoBehaviour {
 
     public void Update() {
 
-        if(queueRemove.Count > 0) {
+        if (queueRemove.Count > 0) {
             string key = queueRemove.Dequeue();
             easeRemove(key);
         }
 
-        foreach(KeyValuePair<string, AnimationItem> item in getAnimationItems()) {
+        foreach (KeyValuePair<string, AnimationItem> item in getAnimationItems()) {
             easeUpdate(item.Value);
         }
     }
@@ -139,7 +139,7 @@ public class AnimationEasing : MonoBehaviour {
 
     public bool easeRemove(string key) {
 
-        if(getAnimationItems().ContainsKey(key)) {
+        if (getAnimationItems().ContainsKey(key)) {
             return animationItems.Remove(key);
         }
 
@@ -154,7 +154,7 @@ public class AnimationEasing : MonoBehaviour {
 
     public bool easeExists(string key) {
 
-        if(getAnimationItems().ContainsKey(key)) {
+        if (getAnimationItems().ContainsKey(key)) {
             return true;
         }
 
@@ -169,7 +169,7 @@ public class AnimationEasing : MonoBehaviour {
 
     public Dictionary<string, AnimationItem> getAnimationItems() {
 
-        if(animationItems == null) {
+        if (animationItems == null) {
             animationItems = new Dictionary<string, AnimationItem>();
         }
 
@@ -184,7 +184,7 @@ public class AnimationEasing : MonoBehaviour {
 
         AnimationItem item = easeGet(key);
 
-        if(item == null) {
+        if (item == null) {
             return defaultValue;
         }
 
@@ -197,7 +197,7 @@ public class AnimationEasing : MonoBehaviour {
 
     public AnimationItem easeGet(string key) {
 
-        if(getAnimationItems().ContainsKey(key)) {
+        if (getAnimationItems().ContainsKey(key)) {
             return animationItems[key];
         }
 
@@ -212,21 +212,21 @@ public class AnimationEasing : MonoBehaviour {
 
     public AnimationItem easeUpdate(AnimationItem animationItem) {
 
-        if(animationItem == null) {
+        if (animationItem == null) {
             return null;
         }
 
-        if(!animationItems.ContainsKey(animationItem.key)) {
+        if (!animationItems.ContainsKey(animationItem.key)) {
             easeAdd(animationItem);
         }
 
-        if(animationItem.timeStart == 0) {
+        if (animationItem.timeStart == 0) {
             animationItem.timeStart = Time.time;
         }
 
         float tickDuration = Time.time - (float)animationItem.timeStart;
 
-        if(tickDuration <= animationItem.timeDuration) {
+        if (tickDuration <= animationItem.timeDuration) {
 
             double valTo = (float)AnimationEasing.QuadEaseInOut(
                 tickDuration,
@@ -236,20 +236,20 @@ public class AnimationEasing : MonoBehaviour {
 
             double valAdjust = valTo;
 
-            if(animationItem.valEnd > animationItem.valStart) {
+            if (animationItem.valEnd > animationItem.valStart) {
                 valAdjust = valAdjust + .005;
-                if(valAdjust > animationItem.valEnd) {
+                if (valAdjust > animationItem.valEnd) {
                     valTo = animationItem.valEnd;
                 }
             }
             else {
                 valAdjust = valAdjust - .005;
-                if(valAdjust < animationItem.valEnd) {
+                if (valAdjust < animationItem.valEnd) {
                     valTo = animationItem.valEnd;
                 }
             }
 
-            if(valTo == animationItem.valEnd) {
+            if (valTo == animationItem.valEnd) {
                 queueRemove.Enqueue(animationItem.key);
             }
             else {
@@ -272,13 +272,13 @@ public class AnimationEasing : MonoBehaviour {
 
     public void easeAdd(AnimationItem animationItem) {
 
-        if(animationItem == null) {
+        if (animationItem == null) {
             return;
         }
 
         string key = animationItem.key;
 
-        if(animationItems.ContainsKey(key)) {
+        if (animationItems.ContainsKey(key)) {
             animationItems[key] = animationItem;
         }
         else {
@@ -311,7 +311,7 @@ public class AnimationEasing : MonoBehaviour {
 
         AnimationItem animationItem = null;
 
-        if(animationItems.ContainsKey(key)) {
+        if (animationItems.ContainsKey(key)) {
             animationItem = animationItems[key];
         }
         else {
@@ -390,13 +390,13 @@ public class AnimationEasing : MonoBehaviour {
     /// <param name="d">Duration of animation.</param>
     /// <returns>The correct value.</returns>
     public static double ExpoEaseInOut(double t, double b, double c, double d) {
-        if(t == 0)
+        if (t == 0)
             return b;
 
-        if(t == d)
+        if (t == d)
             return b + c;
 
-        if((t /= d / 2) < 1)
+        if ((t /= d / 2) < 1)
             return c / 2 * Math.Pow(2, 10 * (t - 1)) + b;
 
         return c / 2 * (-Math.Pow(2, -10 * --t) + 2) + b;
@@ -412,7 +412,7 @@ public class AnimationEasing : MonoBehaviour {
     /// <param name="d">Duration of animation.</param>
     /// <returns>The correct value.</returns>
     public static double ExpoEaseOutIn(double t, double b, double c, double d) {
-        if(t < d / 2)
+        if (t < d / 2)
             return ExpoEaseOut(t * 2, b, c / 2, d);
 
         return ExpoEaseIn((t * 2) - d, b + c / 2, c / 2, d);
@@ -458,7 +458,7 @@ public class AnimationEasing : MonoBehaviour {
     /// <param name="d">Duration of animation.</param>
     /// <returns>The correct value.</returns>
     public static double CircEaseInOut(double t, double b, double c, double d) {
-        if((t /= d / 2) < 1)
+        if ((t /= d / 2) < 1)
             return -c / 2 * (Math.Sqrt(1 - t * t) - 1) + b;
 
         return c / 2 * (Math.Sqrt(1 - (t -= 2) * t) + 1) + b;
@@ -474,7 +474,7 @@ public class AnimationEasing : MonoBehaviour {
     /// <param name="d">Duration of animation.</param>
     /// <returns>The correct value.</returns>
     public static double CircEaseOutIn(double t, double b, double c, double d) {
-        if(t < d / 2)
+        if (t < d / 2)
             return CircEaseOut(t * 2, b, c / 2, d);
 
         return CircEaseIn((t * 2) - d, b + c / 2, c / 2, d);
@@ -520,7 +520,7 @@ public class AnimationEasing : MonoBehaviour {
     /// <param name="d">Duration of animation.</param>
     /// <returns>The correct value.</returns>
     public static double QuadEaseInOut(double t, double b, double c, double d) {
-        if((t /= d / 2) < 1)
+        if ((t /= d / 2) < 1)
             return c / 2 * t * t + b;
 
         return -c / 2 * ((--t) * (t - 2) - 1) + b;
@@ -536,7 +536,7 @@ public class AnimationEasing : MonoBehaviour {
     /// <param name="d">Duration of animation.</param>
     /// <returns>The correct value.</returns>
     public static double QuadEaseOutIn(double t, double b, double c, double d) {
-        if(t < d / 2)
+        if (t < d / 2)
             return QuadEaseOut(t * 2, b, c / 2, d);
 
         return QuadEaseIn((t * 2) - d, b + c / 2, c / 2, d);
@@ -582,7 +582,7 @@ public class AnimationEasing : MonoBehaviour {
     /// <param name="d">Duration of animation.</param>
     /// <returns>The correct value.</returns>
     public static double SineEaseInOut(double t, double b, double c, double d) {
-        if((t /= d / 2) < 1)
+        if ((t /= d / 2) < 1)
             return c / 2 * (Math.Sin(Math.PI * t / 2)) + b;
 
         return -c / 2 * (Math.Cos(Math.PI * --t / 2) - 2) + b;
@@ -598,7 +598,7 @@ public class AnimationEasing : MonoBehaviour {
     /// <param name="d">Duration of animation.</param>
     /// <returns>The correct value.</returns>
     public static double SineEaseOutIn(double t, double b, double c, double d) {
-        if(t < d / 2)
+        if (t < d / 2)
             return SineEaseOut(t * 2, b, c / 2, d);
 
         return SineEaseIn((t * 2) - d, b + c / 2, c / 2, d);
@@ -644,7 +644,7 @@ public class AnimationEasing : MonoBehaviour {
     /// <param name="d">Duration of animation.</param>
     /// <returns>The correct value.</returns>
     public static double CubicEaseInOut(double t, double b, double c, double d) {
-        if((t /= d / 2) < 1)
+        if ((t /= d / 2) < 1)
             return c / 2 * t * t * t + b;
 
         return c / 2 * ((t -= 2) * t * t + 2) + b;
@@ -660,7 +660,7 @@ public class AnimationEasing : MonoBehaviour {
     /// <param name="d">Duration of animation.</param>
     /// <returns>The correct value.</returns>
     public static double CubicEaseOutIn(double t, double b, double c, double d) {
-        if(t < d / 2)
+        if (t < d / 2)
             return CubicEaseOut(t * 2, b, c / 2, d);
 
         return CubicEaseIn((t * 2) - d, b + c / 2, c / 2, d);
@@ -706,7 +706,7 @@ public class AnimationEasing : MonoBehaviour {
     /// <param name="d">Duration of animation.</param>
     /// <returns>The correct value.</returns>
     public static double QuartEaseInOut(double t, double b, double c, double d) {
-        if((t /= d / 2) < 1)
+        if ((t /= d / 2) < 1)
             return c / 2 * t * t * t * t + b;
 
         return -c / 2 * ((t -= 2) * t * t * t - 2) + b;
@@ -722,7 +722,7 @@ public class AnimationEasing : MonoBehaviour {
     /// <param name="d">Duration of animation.</param>
     /// <returns>The correct value.</returns>
     public static double QuartEaseOutIn(double t, double b, double c, double d) {
-        if(t < d / 2)
+        if (t < d / 2)
             return QuartEaseOut(t * 2, b, c / 2, d);
 
         return QuartEaseIn((t * 2) - d, b + c / 2, c / 2, d);
@@ -768,7 +768,7 @@ public class AnimationEasing : MonoBehaviour {
     /// <param name="d">Duration of animation.</param>
     /// <returns>The correct value.</returns>
     public static double QuintEaseInOut(double t, double b, double c, double d) {
-        if((t /= d / 2) < 1)
+        if ((t /= d / 2) < 1)
             return c / 2 * t * t * t * t * t + b;
         return c / 2 * ((t -= 2) * t * t * t * t + 2) + b;
     }
@@ -783,7 +783,7 @@ public class AnimationEasing : MonoBehaviour {
     /// <param name="d">Duration of animation.</param>
     /// <returns>The correct value.</returns>
     public static double QuintEaseOutIn(double t, double b, double c, double d) {
-        if(t < d / 2)
+        if (t < d / 2)
             return QuintEaseOut(t * 2, b, c / 2, d);
         return QuintEaseIn((t * 2) - d, b + c / 2, c / 2, d);
     }
@@ -802,7 +802,7 @@ public class AnimationEasing : MonoBehaviour {
     /// <param name="d">Duration of animation.</param>
     /// <returns>The correct value.</returns>
     public static double ElasticEaseOut(double t, double b, double c, double d) {
-        if((t /= d) == 1)
+        if ((t /= d) == 1)
             return b + c;
 
         double p = d * .3;
@@ -821,7 +821,7 @@ public class AnimationEasing : MonoBehaviour {
     /// <param name="d">Duration of animation.</param>
     /// <returns>The correct value.</returns>
     public static double ElasticEaseIn(double t, double b, double c, double d) {
-        if((t /= d) == 1)
+        if ((t /= d) == 1)
             return b + c;
 
         double p = d * .3;
@@ -840,13 +840,13 @@ public class AnimationEasing : MonoBehaviour {
     /// <param name="d">Duration of animation.</param>
     /// <returns>The correct value.</returns>
     public static double ElasticEaseInOut(double t, double b, double c, double d) {
-        if((t /= d / 2) == 2)
+        if ((t /= d / 2) == 2)
             return b + c;
 
         double p = d * (.3 * 1.5);
         double s = p / 4;
 
-        if(t < 1)
+        if (t < 1)
             return -.5 * (c * Math.Pow(2, 10 * (t -= 1)) * Math.Sin((t * d - s) * (2 * Math.PI) / p)) + b;
         return c * Math.Pow(2, -10 * (t -= 1)) * Math.Sin((t * d - s) * (2 * Math.PI) / p) * .5 + c + b;
     }
@@ -861,7 +861,7 @@ public class AnimationEasing : MonoBehaviour {
     /// <param name="d">Duration of animation.</param>
     /// <returns>The correct value.</returns>
     public static double ElasticEaseOutIn(double t, double b, double c, double d) {
-        if(t < d / 2)
+        if (t < d / 2)
             return ElasticEaseOut(t * 2, b, c / 2, d);
         return ElasticEaseIn((t * 2) - d, b + c / 2, c / 2, d);
     }
@@ -880,11 +880,11 @@ public class AnimationEasing : MonoBehaviour {
     /// <param name="d">Duration of animation.</param>
     /// <returns>The correct value.</returns>
     public static double BounceEaseOut(double t, double b, double c, double d) {
-        if((t /= d) < (1 / 2.75))
+        if ((t /= d) < (1 / 2.75))
             return c * (7.5625 * t * t) + b;
-        else if(t < (2 / 2.75))
+        else if (t < (2 / 2.75))
             return c * (7.5625 * (t -= (1.5 / 2.75)) * t + .75) + b;
-        else if(t < (2.5 / 2.75))
+        else if (t < (2.5 / 2.75))
             return c * (7.5625 * (t -= (2.25 / 2.75)) * t + .9375) + b;
         else
             return c * (7.5625 * (t -= (2.625 / 2.75)) * t + .984375) + b;
@@ -913,7 +913,7 @@ public class AnimationEasing : MonoBehaviour {
     /// <param name="d">Duration of animation.</param>
     /// <returns>The correct value.</returns>
     public static double BounceEaseInOut(double t, double b, double c, double d) {
-        if(t < d / 2)
+        if (t < d / 2)
             return BounceEaseIn(t * 2, 0, c, d) * .5 + b;
         else
             return BounceEaseOut(t * 2 - d, 0, c, d) * .5 + c * .5 + b;
@@ -929,7 +929,7 @@ public class AnimationEasing : MonoBehaviour {
     /// <param name="d">Duration of animation.</param>
     /// <returns>The correct value.</returns>
     public static double BounceEaseOutIn(double t, double b, double c, double d) {
-        if(t < d / 2)
+        if (t < d / 2)
             return BounceEaseOut(t * 2, b, c / 2, d);
         return BounceEaseIn((t * 2) - d, b + c / 2, c / 2, d);
     }
@@ -975,7 +975,7 @@ public class AnimationEasing : MonoBehaviour {
     /// <returns>The correct value.</returns>
     public static double BackEaseInOut(double t, double b, double c, double d) {
         double s = 1.70158;
-        if((t /= d / 2) < 1)
+        if ((t /= d / 2) < 1)
             return c / 2 * (t * t * (((s *= (1.525)) + 1) * t - s)) + b;
         return c / 2 * ((t -= 2) * t * (((s *= (1.525)) + 1) * t + s) + 2) + b;
     }
@@ -990,7 +990,7 @@ public class AnimationEasing : MonoBehaviour {
     /// <param name="d">Duration of animation.</param>
     /// <returns>The correct value.</returns>
     public static double BackEaseOutIn(double t, double b, double c, double d) {
-        if(t < d / 2)
+        if (t < d / 2)
             return BackEaseOut(t * 2, b, c / 2, d);
         return BackEaseIn((t * 2) - d, b + c / 2, c / 2, d);
     }

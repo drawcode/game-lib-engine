@@ -68,7 +68,7 @@ namespace Engine.Utility {
         public static ServiceUtil instance {
             get {
                 if (_instance == null) {
-                    _instance = FindObjectOfType(typeof(ServiceUtil)) as ServiceUtil;
+                    _instance = FindAnyObjectByType(typeof(ServiceUtil)) as ServiceUtil;
                     if (_instance == null)
                         LogUtil.Log("Could not locate an ServiceUtil object. You have to have exactly one ServiceUtil in the scene.");
                 }

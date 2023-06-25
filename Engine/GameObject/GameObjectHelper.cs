@@ -34,13 +34,13 @@ public static class GameObjectHelper {
     }
 
     public static bool ContainsChildLike(GameObject inst, string nameLike) {
-        if(inst == null) {
+        if (inst == null) {
             return false;
         }
 
-        foreach(Transform t in inst.transform) {
+        foreach (Transform t in inst.transform) {
 
-            if(t.name.Contains(nameLike)) {
+            if (t.name.Contains(nameLike)) {
                 return true;
             }
 
@@ -313,7 +313,7 @@ public static class GameObjectHelper {
     // DEBUG
 
     public static void DumpRootTransforms() {
-        UnityEngine.Object[] objs = UnityEngine.GameObject.FindObjectsOfType(typeof(GameObject));
+        UnityEngine.Object[] objs = UnityEngine.GameObject.FindObjectsByType(typeof(GameObject), FindObjectsSortMode.None);
         foreach (UnityEngine.Object obj in objs) {
             GameObject go = obj as GameObject;
             if (go.transform.parent == null) {
@@ -614,15 +614,15 @@ public static class GameObjectHelper {
     }
 
     // 
-    
+
     public static GameObject GetAsGameObject<T>(
         GameObject inst) where T : Component {
 
-        if(inst == null) {
+        if (inst == null) {
             return null;
         }
 
-        if(inst.Has<T>()) {
+        if (inst.Has<T>()) {
             return inst.Get<T>().gameObject;
         }
 
@@ -695,17 +695,17 @@ public static class GameObjectHelper {
         //}
         //return inst.GetComponentsInChildren<T>(true);
 
-        if(inst == null) {
+        if (inst == null) {
             return null;
         }
 
         List<T> list = new List<T>();
 
-        foreach(T obj in inst.GetComponents<T>()) {
+        foreach (T obj in inst.GetComponents<T>()) {
             list.Add(obj);
         }
 
-        foreach(T obj in inst.GetComponentsInChildren<T>(true)) {
+        foreach (T obj in inst.GetComponentsInChildren<T>(true)) {
             list.Add(obj);
         }
 
@@ -1103,17 +1103,17 @@ public static class GameObjectHelper {
 
         List<AnimationState> anims = new List<AnimationState>();
 
-        if(inst == null) {
+        if (inst == null) {
             return anims;
         }
 
         Animation anim = inst.GetComponent<Animation>();
 
-        if(anim == null) {
+        if (anim == null) {
             anim = inst.GetComponentInChildren<Animation>();
         }
 
-        foreach(AnimationState state in anim) {
+        foreach (AnimationState state in anim) {
             anims.Add(state);
         }
 
@@ -1124,7 +1124,7 @@ public static class GameObjectHelper {
 
         List<AnimationState> anims = GetAnimationsList(inst);
 
-        if(anims == null || anims.Count == 0) {
+        if (anims == null || anims.Count == 0) {
             return null;
         }
 
@@ -1133,18 +1133,18 @@ public static class GameObjectHelper {
         return anims[animIndex];
     }
 
-    public static void PlayAnimationBlendRandom(GameObject inst, 
+    public static void PlayAnimationBlendRandom(GameObject inst,
         float speed = 1, float targetWeight = 0.9f, float fadeLength = 0.5f) {
 
-        if(inst == null) {
+        if (inst == null) {
             return;
         }
 
-        foreach(Animation anim in inst.GetComponentsInChildren<Animation>()) {
+        foreach (Animation anim in inst.GetComponentsInChildren<Animation>()) {
 
             AnimationState animationState = GetAnimationsRandom(inst);
 
-            if(animationState == null) {
+            if (animationState == null) {
                 continue;
             }
 
@@ -1155,15 +1155,15 @@ public static class GameObjectHelper {
     public static void PlayAnimationCrossFadeRandom(GameObject inst,
         float speed = 1, float fadeLength = 0.5f) {
 
-        if(inst == null) {
+        if (inst == null) {
             return;
         }
 
-        foreach(Animation anim in inst.GetComponentsInChildren<Animation>()) {
+        foreach (Animation anim in inst.GetComponentsInChildren<Animation>()) {
 
             AnimationState animationState = GetAnimationsRandom(inst);
 
-            if(animationState == null) {
+            if (animationState == null) {
                 continue;
             }
 
@@ -1886,13 +1886,13 @@ public static class GameObjectHelper {
 
         //LogUtil.Log("SetMaterialColor renderers:" + renderers.Length );
 
-        for(int i = 0; i < renderers.Count; i++) {
+        for (int i = 0; i < renderers.Count; i++) {
 
-            for(int j = 0; j < renderers[i].materials.Length; j++) {
+            for (int j = 0; j < renderers[i].materials.Length; j++) {
 
                 string matName = renderers[i].materials[j].name;
 
-                if(FilterMaterialName(matName).RegexIsMatch(regexNameFind)) {
+                if (FilterMaterialName(matName).RegexIsMatch(regexNameFind)) {
 
                     Material[] materialsTo = renderers[i].materials;
 
@@ -1912,7 +1912,7 @@ public static class GameObjectHelper {
 
         //LogUtil.Log("SetMaterialColor name:" + name + " color:" + color );
 
-        Material materialTo = 
+        Material materialTo =
             MaterialUtil.LoadMaterialFromResources(materialResourcesPath);
 
         if (materialTo == null) {
@@ -1920,13 +1920,13 @@ public static class GameObjectHelper {
             return;
         }
 
-        if(inst.Has<MeshRenderer>()) {
+        if (inst.Has<MeshRenderer>()) {
             SetMaterialSwapItem<MeshRenderer>(inst, nameFind, materialTo);
         }
 
-        if(inst.Has<SkinnedMeshRenderer>()) {
+        if (inst.Has<SkinnedMeshRenderer>()) {
             SetMaterialSwapItem<SkinnedMeshRenderer>(inst, nameFind, materialTo);
-        }        
+        }
     }
 
     /*
@@ -2155,7 +2155,7 @@ public static class GameObjectHelper {
     // game object
     public static bool IsPrefab(GameObject inst) {
 
-        if(inst == null) {
+        if (inst == null) {
             return false;
         }
 
@@ -2192,13 +2192,13 @@ public static class GameObjectHelper {
     public static GameObject CleanGameObjectName(
         GameObject go) {
 
-        if(go.name.Contains(" (Clone)")) {
+        if (go.name.Contains(" (Clone)")) {
             go.name = go.name.Replace(" (Clone)", "");
         }
-        if(go.name.Contains("(Clone)")) {
+        if (go.name.Contains("(Clone)")) {
             go.name = go.name.Replace("(Clone)", "");
         }
-        if(go.name.Contains("(clone)")) {
+        if (go.name.Contains("(clone)")) {
             go.name = go.name.Replace("(clone)", "");
         }
 
@@ -2302,7 +2302,7 @@ public static class GameObjectHelper {
                     && !t.gameObject.IsPrefab()
                     ) {
                     //&& !t.IsPrefabGhost()) {
-                        t.parent = null;
+                    t.parent = null;
                     DestroyGameObject(t.gameObject);
                     //GameObject.Destroy(t.gameObject);
                 }

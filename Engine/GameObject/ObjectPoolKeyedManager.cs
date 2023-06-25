@@ -73,7 +73,7 @@ public class ObjectPoolKeyedManager : GameObjectBehavior {
             if (!_instance) {
 
                 // check if an ObjectPoolManager is already available in the scene graph
-                _instance = FindObjectOfType(typeof(ObjectPoolKeyedManager)) as ObjectPoolKeyedManager;
+                _instance = FindAnyObjectByType(typeof(ObjectPoolKeyedManager)) as ObjectPoolKeyedManager;
 
                 // nope, create a new one
                 if (!_instance) {

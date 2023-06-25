@@ -13,7 +13,7 @@ public class JobManager : GameObjectBehavior {
             if (!_instance) {
 
                 // check if an JobManager is already available in the scene graph
-                _instance = FindObjectOfType(typeof(JobManager)) as JobManager;
+                _instance = FindAnyObjectByType(typeof(JobManager)) as JobManager;
 
                 // nope, create a new one
                 if (!_instance) {

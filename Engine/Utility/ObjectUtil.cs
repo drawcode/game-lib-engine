@@ -6,12 +6,12 @@ public static class ObjectUtil {
     
     public static T FindObject<T>()
         where T : UnityEngine.Object {
-        return UnityEngine.Object.FindObjectOfType(typeof(T)) as T;
+        return UnityEngine.Object.FindAnyObjectByType(typeof(T)) as T;
     }
 
     public static T[] FindObjects<T>()
         where T : UnityEngine.Object {
-        return UnityEngine.Object.FindObjectsOfType(typeof(T)) as T[];
+        return UnityEngine.Object.FindAnyObjectByType(typeof(T)) as T[];
     }
 
     /*

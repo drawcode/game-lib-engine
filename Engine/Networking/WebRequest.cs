@@ -87,7 +87,7 @@ namespace Engine.Networking {
                 if (!_instance) {
 
                     // check if an ObjectPoolManager is already available in the scene graph
-                    _instance = FindObjectOfType(typeof(WebRequests)) as WebRequests;
+                    _instance = FindAnyObjectByType(typeof(WebRequests)) as WebRequests;
 
                     // nope, create a new one
                     if (!_instance) {

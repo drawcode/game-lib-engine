@@ -13,7 +13,7 @@ public class This : GameObjectBehavior {
             if (!_instance) {
                 
                 // check if an This is already available in the scene graph
-                _instance = FindObjectOfType(typeof(This)) as This;
+                _instance = FindAnyObjectByType(typeof(This)) as This;
                 
                 // nope, create a new one
                 if (!_instance) {

@@ -58,7 +58,7 @@ public class ObjectPoolManager : GameObjectBehavior {
             if (!_instance) {
 
                 // check if an ObjectPoolManager is already available in the scene graph
-                _instance = FindObjectOfType(typeof(ObjectPoolManager)) as ObjectPoolManager;
+                _instance = FindAnyObjectByType(typeof(ObjectPoolManager)) as ObjectPoolManager;
 
                 // nope, create a new one
                 if (!_instance) {

@@ -264,7 +264,7 @@ public class WWWs : GameObjectBehavior {
             if (!_instance) {
 
                 // check if an ObjectPoolManager is already available in the scene graph
-                _instance = FindObjectOfType(typeof(WWWs)) as WWWs;
+                _instance = FindAnyObjectByType(typeof(WWWs)) as WWWs;
 
                 // nope, create a new one
                 if (!_instance) {

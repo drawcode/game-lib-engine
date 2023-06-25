@@ -150,9 +150,9 @@ namespace Engine.Events {
             get {
                 if(!_instance) {
 
-                    _instance = FindObjectOfType(typeof(InputSystem)) as InputSystem;
+                    _instance = FindAnyObjectByType(typeof(InputSystem)) as InputSystem;
 
-                    if(!_instance) {
+                    if (!_instance) {
 
                         var obj = new GameObject("_InputSystem");
 
