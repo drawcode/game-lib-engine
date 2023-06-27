@@ -1,0 +1,26 @@
+{
+  "name": "com.drawlabs.game-lib-engine",
+  "version": "1.0.1",
+  "displayName": "Game Lib Engine",
+  "description": "Game base library",
+  "unity": "2019.1",
+  "unityRelease": "0b5",
+  "documentationUrl": "https://drawlabs.com/products/packages/libs/game-lib-engine/",
+  "changelogUrl": "https://drawlabs.com/products/packages/libs/game-lib-engine/changelog/",
+  "licensesUrl": "https://drawlabs.com/products/packages/libs/game-lib-engine/licensing/",
+  "dependencies": {
+ },
+ "keywords": [
+    "drawlabs",
+    "game",
+    "engine",
+    "tools",
+    "base",
+    "extensions"
+  ],
+  "author": {
+    "name": "Drawlabs Game Studio",
+    "email": "info@drawlabs.com",
+    "url": "https://drawlabs.com"
+  }
+}
