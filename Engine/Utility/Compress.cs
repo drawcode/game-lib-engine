@@ -5,7 +5,7 @@
 using System;
 using System.IO;
 #if ZIP_USE_SYSTEM
-//using System.IO.Compression;
+using System.IO.Compression;
 #elif ZIP_USE_IONIC
 using Ionic.Zlib;
 #elif ZIP_USE_SHARPZIPLIB
