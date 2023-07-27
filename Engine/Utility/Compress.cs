@@ -1,6 +1,6 @@
-//#define ZIP_USE_SYSTEM
+#define ZIP_USE_SYSTEM
 //#define ZIP_USE_IONIC
-#define ZIP_USE_SHARPZIPLIB
+//#define ZIP_USE_SHARPZIPLIB
 
 using System;
 using System.IO;
