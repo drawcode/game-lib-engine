@@ -30,13 +30,23 @@ public static class UnityObjectUtil {
         return obj;
     }
 
-    public static T FindObject<T>()
+    public static T FindObject<T>(
+        FindObjectsInactive findObjectsInactive = FindObjectsInactive.Include, 
+        FindObjectsSortMode findObjectsSortMode = FindObjectsSortMode.None)
         where T : UnityEngine.Object {
-        return UnityEngine.Object.FindAnyObjectByType(typeof(T)) as T;
+
+            foreach(T obj in FindObjects<T>(findObjectsInactive, findObjectsSortMode)) {
+                return obj;
+            }
+            
+        return default(T);
     }
 
-    public static T[] FindObjects<T>()
+    public static T[] FindObjects<T>(
+        FindObjectsInactive findObjectsInactive = FindObjectsInactive.Include, 
+        FindObjectsSortMode findObjectsSortMode = FindObjectsSortMode.None)
         where T : UnityEngine.Object {
-        return UnityEngine.Object.FindAnyObjectByType(typeof(T)) as T[];
+        return UnityEngine.Object.FindObjectsByType(
+            typeof(T), findObjectsInactive, findObjectsSortMode) as T[];
     }
 }
