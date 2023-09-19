@@ -55,6 +55,120 @@ public class BaseGameAchievements<T> : DataObjects<T> where T : DataObject, new(
         pathKey = BASE_DATA_KEY;
         LoadData();
     }
+
+
+    /*
+    public List<GameAchievement> GetListByPack(string packCode) {
+        return GetAll().FindAll(
+            item => 
+                item.pack_code.ToLower() == packCode.ToLower()
+            );
+    }
+    */
+
+    public GameAchievement GetByCodeAndPack(string code, string packCode) {
+        List<GameAchievement> items = GetListByPack(packCode) as List<GameAchievement>;
+        if (items != null) {
+            items = items.FindAll(
+                item =>
+                    item.code == code
+            );
+
+            if (items != null) {
+                foreach (GameAchievement item in items) {
+                    return item;
+                }
+            }
+        }
+
+        return null;
+    }
+
+    public string FormatAchievementTags(AppState app_state, AppContentState app_content_state, string textToRender) {
+
+        if (!string.IsNullOrEmpty(textToRender)) {
+            textToRender = textToRender.Replace(
+                "___app_content_state___",
+                app_content_state.display_name
+            );
+            textToRender = textToRender.Replace(
+                "___app_state___",
+                app_state.display_name
+            );
+        }
+
+        return textToRender;
+    }
+
+    public string FormatAchievementTags(string textToRender) {
+
+        return FormatAchievementTags(AppStates.Current, AppContentStates.Current, textToRender);
+    }
+
+    public GameAchievement GetByCodeAndPack(string code, string packCode, string app_content_state) {
+        List<GameAchievement> items = GetListByPackByAppContentState(packCode, app_content_state);
+        if (items != null) {
+            items = items.FindAll(
+                item =>
+                    item.code == code
+            );
+
+            if (items != null) {
+                foreach (GameAchievement item in items) {
+                    return item;
+                }
+            }
+        }
+
+        return null;
+    }
+
+    /*
+    public string FormatAchievementTags(string app_state, string app_content_state, string textToRender) {
+        AppState app_stateTo = AppStates.Instance.GetById(app_state);
+        AppContentState app_content_stateTo = AppContentStates.Instance.GetById(app_content_state);     
+        return FormatAchievementTags(app_stateTo, app_content_stateTo, textToRender);
+    }
+    
+    public string FormatAchievementTags(AppState app_state, AppContentState app_content_state, string textToRender) {
+        if(app_state == null) 
+            return textToRender;
+        
+        if(app_content_state == null) 
+            return textToRender;
+        
+        if(!string.IsNullOrEmpty(textToRender)){
+            textToRender = textToRender.Replace(
+                "___app_content_state___", 
+                app_content_state.display_name
+            );
+            textToRender = textToRender.Replace(
+                "___app_state___", 
+                app_state.display_name
+            );
+        }
+        
+        return textToRender;
+    }
+    */
+
+    public List<GameAchievement> GetListByPackByAppContentState(string appPackCode, string app_content_state) {
+        List<GameAchievement> achievements = new List<GameAchievement>();
+        //foreach(GameAchievement achievement in GetListByPack(appPackCode)) {
+        // TODO FILTER
+        //foreach(GameFilter filter in achievement.filters) {
+        //  string filteredAppContentState = filter.app_content_state;
+        //  if(achievement.active 
+        //      && (filteredAppContentState == app_content_state
+        //      || filteredAppContentState == "all"
+        //      || filteredAppContentState == "*"
+        //      || filteredAppContentState == "default")) {
+        //      achievements.Add(achievement);
+        //  }
+        //}
+        //}
+        return achievements;
+    }
 }
 
 // Used to determin if an achievement should also filter on other params such as
