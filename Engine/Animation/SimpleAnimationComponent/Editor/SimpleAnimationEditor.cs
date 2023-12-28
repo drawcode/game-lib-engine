@@ -1,7 +1,9 @@
-﻿
-using NUnit.Framework;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEditor;
+
+#if ENABLE_TEST
+//using NUnit.Framework;
+#endif
 
 [CustomEditor(typeof(SimpleAnimation))]
 public class SimpleAnimationEditor : Editor
