@@ -184,6 +184,12 @@ SOCIAL_USE_TWITTER_PRIME31
 SOCIAL_USE_FACEBOOK_UNITY
 SOCIAL_USE_TWITTER_UNITY
 
+# ------------------------------------------------
+# UNIT TESTING
+
+ENABLE_TEST
+TEST_USE_NUNIT
+TEST_USE_XUNIT
 
 # ------------------------------------------------
 # CURRENT BUILDS
