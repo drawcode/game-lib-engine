@@ -34,29 +34,30 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 
 #pragma warning disable 618
-
-public class LegacyParticleUpdater : ScriptableWizard
+namespace Engine.Editor
 {
-    const string kVersion = "1.3";
-
-    public enum LegacyCleanupMode
+    public class LegacyParticleUpdater : ScriptableWizard
     {
-        PreserveLegacyComponents,
-        DisableLegacyRenderer,
-        DeleteLegacyComponents
-    };
+        const string kVersion = "1.3";
 
-    enum LegacyParticleRenderMode
-    {
-        Billboard = 0,
-        Stretch2D = 1,
-        Stretch3D = 3,
-        SortedBillboard = 2,
-        BillboardFixedHorizontal = 4,
-        BillboardFixedVertical = 5,
-    };
+        public enum LegacyCleanupMode
+        {
+            PreserveLegacyComponents,
+            DisableLegacyRenderer,
+            DeleteLegacyComponents
+        };
 
-    public LegacyCleanupMode cleanupMode = LegacyCleanupMode.DisableLegacyRenderer;
+        enum LegacyParticleRenderMode
+        {
+            Billboard = 0,
+            Stretch2D = 1,
+            Stretch3D = 3,
+            SortedBillboard = 2,
+            BillboardFixedHorizontal = 4,
+            BillboardFixedVertical = 5,
+        };
+
+        public LegacyCleanupMode cleanupMode = LegacyCleanupMode.DisableLegacyRenderer;
 
 #if !UNITY_2018_3_OR_NEWER
     private ParticleEmitter[] components;
@@ -65,23 +66,23 @@ public class LegacyParticleUpdater : ScriptableWizard
 
 #endif
 
-    [MenuItem("Assets/Upgrade Legacy Particles")]
-    public static void ShowWindow()
-    {
-        ScriptableWizard.DisplayWizard<LegacyParticleUpdater>("Upgrade Legacy Particles v" + kVersion, "Upgrade Selected", "Upgrade Everything");
-    }
+        [MenuItem("Assets/Upgrade Legacy Particles")]
+        public static void ShowWindow()
+        {
+            ScriptableWizard.DisplayWizard<LegacyParticleUpdater>("Upgrade Legacy Particles v" + kVersion, "Upgrade Selected", "Upgrade Everything");
+        }
 
-    void OnWizardUpdate()
-    {
+        void OnWizardUpdate()
+        {
 #if UNITY_2017_2_OR_NEWER
-        helpString = @"This Script adds ParticleSystem and ParticleSystemRenderer Components to all GameObjects that contain Legacy Particle Components.
+            helpString = @"This Script adds ParticleSystem and ParticleSystemRenderer Components to all GameObjects that contain Legacy Particle Components.
         This script is not support in this version, please run this script using a Unity version between 2018.2 and 2018.2.";
 #else
         helpString = @"This Script adds ParticleSystem and ParticleSystemRenderer Components to all GameObjects that contain Legacy Particle Components.
         Legacy Particle System Components can be deleted, disabled, or preserved for comparison.
         Please run this script using Unity 2018.1 or older.";
 #endif
-    }
+        }
 
 #if !UNITY_2018_3_OR_NEWER // Legacy particles were removed
 
@@ -583,6 +584,7 @@ public class LegacyParticleUpdater : ScriptableWizard
         }
     }
 #endif
+    }
 }
 
 #pragma warning restore 618

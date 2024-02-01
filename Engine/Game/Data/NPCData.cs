@@ -3,29 +3,36 @@ using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
 
-public class NPCData : DataObject {
-    public string uuid;
-    public string packName;
+namespace Engine.Game.Data
+{
+    public class NPCData : DataObject
+    {
+        public string uuid;
+        public string packName;
 
-    public NPCData() {
-        Reset();
-    }
+        public NPCData()
+        {
+            Reset();
+        }
 
-    public void ChangeData(string name) {
-        Reset();
+        public void ChangeData(string name)
+        {
+            Reset();
 
-        packName = name;
+            packName = name;
 
-        //fileName = "npc-data-" + System.Uri.EscapeUriString(packName) + ".json";
-        //fileFullPath = PathUtil.Combine(filePath, fileName);
-    }
+            //fileName = "npc-data-" + System.Uri.EscapeUriString(packName) + ".json";
+            //fileFullPath = PathUtil.Combine(filePath, fileName);
+        }
 
-    public override void Reset() {
-        base.Reset();
+        public override void Reset()
+        {
+            base.Reset();
 
-        packName = "default";
-        uuid = "";//Puid.New();
+            packName = "default";
+            uuid = "";//Puid.New();
 
-        //filePath = PathUtil.AppPersistencePath;
+            //filePath = PathUtil.AppPersistencePath;
+        }
     }
 }

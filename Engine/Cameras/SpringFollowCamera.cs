@@ -8,10 +8,11 @@ using Engine.Utility;
 // This camera is similar to the one used in Jak & Dexter + Super Mario 64 3D
 using UnityEngine;
 
-namespace Engine.Cameras {
-
+namespace Engine.Cameras
+{
     [AddComponentMenu("Third Person Camera/Spring Follow Camera")]
-    public class SpringFollowCamera : BaseEngineBehavior {
+    public class SpringFollowCamera : BaseEngineBehavior
+    {
 
         public Transform target;
         public float distance = 4.0f;
@@ -29,67 +30,79 @@ namespace Engine.Cameras {
         private Vector3 velocity = Vector3.zero;
         private float targetHeight = 100000.0f;
 
-        private void Awake() {
+        private void Awake()
+        {
             DidChangeTarget();
         }
 
-        private void DidChangeTarget() {
+        private void DidChangeTarget()
+        {
 
-            if(target) {
+            if (target)
+            {
 
                 CharacterController characterController =
                     (CharacterController)target.GetComponent<CharacterController>();
 
-                if(characterController) {
+                if (characterController)
+                {
 
                     centerOffset = characterController.bounds.center - target.position;
                     headOffset = centerOffset;
                     headOffset.y = characterController.bounds.max.y - target.position.y;
                 }
 
-                if(target) {
+                if (target)
+                {
 
                     controller = target.GetComponent<BaseThirdPersonController>();
                 }
 
-                if(!controller) {
+                if (!controller)
+                {
 
                     LogUtil.Log("Please assign a target to the camera that has a super mario controller.");
                 }
             }
         }
 
-        private void Apply(Transform dummyTarget, Vector3 dummyCenter) {
+        private void Apply(Transform dummyTarget, Vector3 dummyCenter)
+        {
 
             Vector3 targetCenter = target.position + centerOffset;
             Vector3 targetHead = target.position + headOffset;
 
             // When jumping don't move camera upwards but only down!
-            if(controller.IsJumping()) {
+            if (controller.IsJumping())
+            {
 
                 // We'd be moving the camera upwards, do that only if it's really high
                 var newTargetHeight = targetCenter.y + height;
 
-                if(newTargetHeight < targetHeight || newTargetHeight - targetHeight > 5)
+                if (newTargetHeight < targetHeight || newTargetHeight - targetHeight > 5)
                     targetHeight = targetCenter.y + height;
             }
 
             // When walking always update the target height
-            else {
+            else
+            {
                 targetHeight = targetCenter.y + height;
             }
 
             // We start snapping when user pressed Fire2!
-            if(Input.GetButton("Fire2") && !isSnapping) {
+            if (Input.GetButton("Fire2") && !isSnapping)
+            {
 
                 velocity = Vector3.zero;
                 isSnapping = true;
             }
 
-            if(isSnapping) {
+            if (isSnapping)
+            {
                 ApplySnapping(targetCenter);
             }
-            else {
+            else
+            {
                 ApplyPositionDamping(
                     new Vector3(targetCenter.x, targetHeight, targetCenter.z));
             }
@@ -97,12 +110,14 @@ namespace Engine.Cameras {
             SetUpRotation(targetCenter, targetHead);
         }
 
-        private void LateUpdate() {
-            if(target)
+        private void LateUpdate()
+        {
+            if (target)
                 Apply(null, Vector3.zero);
         }
 
-        private void ApplySnapping(Vector3 targetCenter) {
+        private void ApplySnapping(Vector3 targetCenter)
+        {
 
             Vector3 position = transform.position;
             Vector3 offset = position - targetCenter;
@@ -132,18 +147,21 @@ namespace Engine.Cameras {
             transform.position = newPosition;
 
             // We are close to the target, so we can stop snapping now!
-            if(AngleDistance(currentAngle, targetAngle) < 3.0) {
+            if (AngleDistance(currentAngle, targetAngle) < 3.0)
+            {
 
                 isSnapping = false;
                 velocity = Vector3.zero;
             }
         }
 
-        private Vector3 AdjustLineOfSight(Vector3 newPosition, Vector3 target) {
+        private Vector3 AdjustLineOfSight(Vector3 newPosition, Vector3 target)
+        {
 
             RaycastHit hit;
 
-            if(Physics.Linecast(target, newPosition, out hit, lineOfSightMask.value)) {
+            if (Physics.Linecast(target, newPosition, out hit, lineOfSightMask.value))
+            {
                 velocity = Vector3.zero;
                 return hit.point;
             }
@@ -151,7 +169,8 @@ namespace Engine.Cameras {
             return newPosition;
         }
 
-        private void ApplyPositionDamping(Vector3 targetCenter) {
+        private void ApplyPositionDamping(Vector3 targetCenter)
+        {
 
             // We try to maintain a constant distance on the x-z plane with a spring.
             // Y position is handled with a seperate spring
@@ -173,7 +192,8 @@ namespace Engine.Cameras {
             transform.position = newPosition;
         }
 
-        private void SetUpRotation(Vector3 centerPos, Vector3 headPos) {
+        private void SetUpRotation(Vector3 centerPos, Vector3 headPos)
+        {
 
             // Now it's getting hairy. The devil is in the details here, the big issue is jumping of course.
             // * When jumping up and down don't center the guy in screen space. This is important to give a feel for how high you jump.
@@ -208,16 +228,19 @@ namespace Engine.Cameras {
 
             float extraLookAngle = heightToAngle * (centerRayPos.y - centerPos.y);
 
-            if(extraLookAngle < centerToTopAngle) {
+            if (extraLookAngle < centerToTopAngle)
+            {
                 extraLookAngle = 0;
             }
-            else {
+            else
+            {
                 extraLookAngle = extraLookAngle - centerToTopAngle;
                 transform.rotation *= Quaternion.Euler(-extraLookAngle, 0, 0);
             }
         }
 
-        private float AngleDistance(float a, float b) {
+        private float AngleDistance(float a, float b)
+        {
 
             a = Mathf.Repeat(a, 360);
             b = Mathf.Repeat(b, 360);
@@ -225,11 +248,13 @@ namespace Engine.Cameras {
             return Mathf.Abs(b - a);
         }
 
-        private Vector3 GetCenterOffset() {
+        private Vector3 GetCenterOffset()
+        {
             return centerOffset;
         }
 
-        private void SetTarget(Transform t) {
+        private void SetTarget(Transform t)
+        {
             target = t;
             DidChangeTarget();
         }

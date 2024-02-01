@@ -3,64 +3,77 @@ using System.Collections;
 using Engine.Utility;
 using UnityEngine;
 
-public class AudioDestroy : GameObjectBehavior {
-    public float afterTimeDefault = 5.5f;
-    public float clipLength = 5.5f;
-    AudioSource audioSource;
+namespace Engine.Audio
+{
+    public class AudioDestroy : GameObjectBehavior
+    {
+        public float afterTimeDefault = 5.5f;
+        public float clipLength = 5.5f;
+        AudioSource audioSource;
 
-    // Use this for initialization
-    private void Start() {
+        // Use this for initialization
+        private void Start()
+        {
 
-        audioSource = GetComponent<AudioSource>();
-        audioSource.enabled = true;
-        gameObject.SetActive(true);
+            audioSource = GetComponent<AudioSource>();
+            audioSource.enabled = true;
+            gameObject.SetActive(true);
 
-        Reset();
-    }
-
-    public void Reset() {
-
-        float audioLength = afterTimeDefault;
-
-        if(audioSource != null) {
-
-            if(audioSource.clip != null
-                && audioSource.isActiveAndEnabled) {
-
-                clipLength = audioSource.clip.length;
-                //LogUtil.LogAudio("DestroySound audio.clip.length:" + audio.clip.length);
-
-                if(audioSource.clip.length > 0) {
-
-                    audioLength = audioSource.clip.length + 1;
-                    StartCoroutine(DestroySound(audioLength));
-                }
-            }
+            Reset();
         }
-    }
 
-    private IEnumerator DestroySound(float afterTime) {
+        public void Reset()
+        {
 
-        //LogUtil.LogAudio("DestroySound afterTime:" + afterTime);
+            float audioLength = afterTimeDefault;
 
-        yield return new WaitForSeconds(afterTime);
+            if (audioSource != null)
+            {
 
-        if(audioSource != null) {
+                if (audioSource.clip != null
+                    && audioSource.isActiveAndEnabled)
+                {
 
-            if(audioSource.clip != null) {
+                    clipLength = audioSource.clip.length;
+                    //LogUtil.LogAudio("DestroySound audio.clip.length:" + audio.clip.length);
 
-                if(audioSource.isPlaying) {
+                    if (audioSource.clip.length > 0)
+                    {
 
-                    audioSource.Stop();
-
-                    //DestroyImmediate(gameObject.audio.clip);
+                        audioLength = audioSource.clip.length + 1;
+                        StartCoroutine(DestroySound(audioLength));
+                    }
                 }
             }
         }
 
-        audioSource.enabled = false;
-        gameObject.SetActive(false);
+        private IEnumerator DestroySound(float afterTime)
+        {
 
-        GameObjectHelper.DestroyGameObject(gameObject);
+            //LogUtil.LogAudio("DestroySound afterTime:" + afterTime);
+
+            yield return new WaitForSeconds(afterTime);
+
+            if (audioSource != null)
+            {
+
+                if (audioSource.clip != null)
+                {
+
+                    if (audioSource.isPlaying)
+                    {
+
+                        audioSource.Stop();
+
+                        //DestroyImmediate(gameObject.audio.clip);
+                    }
+                }
+            }
+
+            audioSource.enabled = false;
+            gameObject.SetActive(false);
+
+            GameObjectHelper.DestroyGameObject(gameObject);
+        }
     }
 }

@@ -2,10 +2,12 @@ using System;
 using Engine;
 using UnityEngine;
 
-namespace Engine.Events {
+namespace Engine.Events
+{
 
     [RequireComponent(typeof(Rigidbody))]
-    public class DraggableObject : GameObjectBehavior {
+    public class DraggableObject : GameObjectBehavior
+    {
 
         public int normalCollisionCount = 1;
         public float moveLimit = .5f;
@@ -25,13 +27,16 @@ namespace Engine.Events {
 
         //private Transform camTransform;
 
-        private void Start() {
+        private void Start()
+        {
 
-            if(!cam) {
+            if (!cam)
+            {
                 cam = Camera.main;
             }
 
-            if(!cam) {
+            if (!cam)
+            {
                 LogUtil.LogError("Can't find camera tagged MainCamera");
                 return;
             }
@@ -42,7 +47,8 @@ namespace Engine.Events {
             //sqrMoveLimit = moveLimit * moveLimit;   // Since we're using sqrMagnitude, which is faster than magnitude
         }
 
-        private void OnMouseDown() {
+        private void OnMouseDown()
+        {
 
             canMove = true;
             gameObject.transform.Translate(Vector3.up * addHeightWhenClicked);
@@ -53,13 +59,15 @@ namespace Engine.Events {
             yPos = gameObject.transform.position.y;
         }
 
-        private void OnMouseUp() {
+        private void OnMouseUp()
+        {
 
             canMove = false;
             rb.useGravity = gravitySetting;
             rb.freezeRotation = freezeRotationSetting;
 
-            if(!rb.useGravity) {
+            if (!rb.useGravity)
+            {
                 float _y = yPos - addHeightWhenClicked;
 
                 LogUtil.Log(_y);
@@ -68,17 +76,21 @@ namespace Engine.Events {
             }
         }
 
-        private void OnCollisionEnter() {
+        private void OnCollisionEnter()
+        {
             collisionCount++;
         }
 
-        private void OnCollisionExit() {
+        private void OnCollisionExit()
+        {
             collisionCount--;
         }
 
-        private void FixedUpdate() {
+        private void FixedUpdate()
+        {
 
-            if(!canMove) {
+            if (!canMove)
+            {
 
                 return;
             }

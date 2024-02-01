@@ -4,9 +4,10 @@ using Engine.Networking;
 using Engine.Utility;
 using UnityEngine;
 
-namespace Game {
-
-    public class AudioAPI : BaseEngineObject {
+namespace Engine.Audio
+{
+    public class AudioAPI : BaseEngineObject
+    {
 
         // -------------------------------------------------------------------
         // Singleton access
@@ -14,14 +15,19 @@ namespace Game {
         private static volatile AudioAPI instance;
         private static object syncRoot = new Object();
 
-        private AudioAPI() {
+        private AudioAPI()
+        {
         }
 
-        public static AudioAPI Instance {
-            get {
-                if(instance == null) {
-                    lock(syncRoot) {
-                        if(instance == null)
+        public static AudioAPI Instance
+        {
+            get
+            {
+                if (instance == null)
+                {
+                    lock (syncRoot)
+                    {
+                        if (instance == null)
                             instance = new AudioAPI();
                     }
                 }
@@ -33,10 +39,12 @@ namespace Game {
         // -------------------------------------------------------------------
         // Unity Methods
 
-        private void Start() {
+        private void Start()
+        {
         }
 
-        private void Update() {
+        private void Update()
+        {
         }
 
         // -------------------------------------------------------------------

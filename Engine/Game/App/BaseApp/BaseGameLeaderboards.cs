@@ -1,125 +1,156 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-// using Engine.Data.Json;
 using Engine.Utility;
+using Engine.Game.Data;
 
-public class BaseGameLeaderboards<T> : DataObjects<T> where T : DataObject, new() {
-    private static T current;
-    private static volatile BaseGameLeaderboards<T> instance;
-    private static object syncRoot = new Object();
+namespace Engine.Game.App.BaseApp
+{
+    public class BaseGameLeaderboards<T> : DataObjects<T> where T : DataObject, new()
+    {
+        private static T current;
+        private static volatile BaseGameLeaderboards<T> instance;
+        private static object syncRoot = new Object();
 
-    public static string BASE_DATA_KEY = "game-leaderboard-data";
+        public static string BASE_DATA_KEY = "game-leaderboard-data";
 
-    public static T BaseCurrent {
-        get {
-            if (current == null) {
-                lock (syncRoot) {
-                    if (current == null)
-                        current = new T();
+        public static T BaseCurrent
+        {
+            get
+            {
+                if (current == null)
+                {
+                    lock (syncRoot)
+                    {
+                        if (current == null)
+                            current = new T();
+                    }
                 }
+
+                return current;
+            }
+            set
+            {
+                current = value;
+            }
+        }
+
+        public static BaseGameLeaderboards<T> BaseInstance
+        {
+            get
+            {
+                if (instance == null)
+                {
+                    lock (syncRoot)
+                    {
+                        if (instance == null)
+                            instance = new BaseGameLeaderboards<T>(true);
+                    }
+                }
+
+                return instance;
+            }
+            set
+            {
+                instance = value;
+            }
+        }
+
+        public BaseGameLeaderboards()
+        {
+            Reset();
+        }
+
+        public BaseGameLeaderboards(bool loadData)
+        {
+            Reset();
+            path = "data/" + BASE_DATA_KEY + ".json";
+            pathKey = BASE_DATA_KEY;
+            LoadData();
+        }
+    }
+
+    public class GameNetworkData : GameDataObject
+    {
+
+    }
+
+    public class GameLeaderboardData : GameDataObject
+    {
+        public virtual string datatype
+        {
+            get
+            {
+                return Get<string>(BaseDataObjectKeys.datatype);
             }
 
-            return current;
+            set
+            {
+                Set(BaseDataObjectKeys.datatype, value);
+            }
         }
-        set {
-            current = value;
-        }
-    }
 
-    public static BaseGameLeaderboards<T> BaseInstance {
-        get {
-            if (instance == null) {
-                lock (syncRoot) {
-                    if (instance == null)
-                        instance = new BaseGameLeaderboards<T>(true);
-                }
+        public virtual string direction
+        {
+            get
+            {
+                return Get<string>(BaseDataObjectKeys.direction);
             }
 
-            return instance;
+            set
+            {
+                Set(BaseDataObjectKeys.direction, value);
+            }
         }
-        set {
-            instance = value;
-        }
-    }
 
-    public BaseGameLeaderboards() {
-        Reset();
-    }
+        public virtual List<GameNetworkData> networks
+        {
+            get
+            {
+                return Get<List<GameNetworkData>>(BaseDataObjectKeys.networks);
+            }
 
-    public BaseGameLeaderboards(bool loadData) {
-        Reset();
-        path = "data/" + BASE_DATA_KEY + ".json";
-        pathKey = BASE_DATA_KEY;
-        LoadData();
-    }
-}
-
-public class GameNetworkData : GameDataObject {
-    
-}
-
-public class GameLeaderboardData : GameDataObject {
-
-    public virtual string datatype {
-        get {
-            return Get<string>(BaseDataObjectKeys.datatype);
-        }
-        
-        set {
-            Set(BaseDataObjectKeys.datatype, value);
+            set
+            {
+                Set(BaseDataObjectKeys.networks, value);
+            }
         }
     }
 
-    public virtual string direction {
-        get {
-            return Get<string>(BaseDataObjectKeys.direction);
+    public class BaseGameLeaderboard : GameDataObject
+    {
+        // Attributes that are added or changed after launch should be like this to prevent
+        // profile conversions.
+
+        public virtual GameLeaderboardData data
+        {
+            get
+            {
+                return Get<GameLeaderboardData>(BaseDataObjectKeys.data);
+            }
+
+            set
+            {
+                Set(BaseDataObjectKeys.data, value);
+            }
         }
-        
-        set {
-            Set(BaseDataObjectKeys.direction, value);
+
+        public BaseGameLeaderboard()
+        {
+            Reset();
         }
-    }
-    
-    public virtual List<GameNetworkData> networks {
-        get {
-            return Get<List<GameNetworkData>>(BaseDataObjectKeys.networks);
+
+        public override void Reset()
+        {
+            base.Reset();
         }
-        
-        set {
-            Set(BaseDataObjectKeys.networks, value);
+
+        public void Clone(BaseGameLeaderboard toCopy)
+        {
+            base.Clone(toCopy);
         }
+
+        // Attributes that are added or changed after launch should be like this to prevent
+        // profile conversions.
     }
-}
-
-public class BaseGameLeaderboard : GameDataObject {
-
-    // Attributes that are added or changed after launch should be like this to prevent
-    // profile conversions.
-    
-    public virtual GameLeaderboardData data {
-        get {
-            return Get<GameLeaderboardData>(BaseDataObjectKeys.data);
-        }
-        
-        set {
-            Set(BaseDataObjectKeys.data, value);
-        }
-    }
-
-
-    public BaseGameLeaderboard() {
-        Reset();
-    }
-
-    public override void Reset() {
-        base.Reset();
-    }
-
-    public void Clone(BaseGameLeaderboard toCopy) {
-        base.Clone(toCopy);
-    }
-
-    // Attributes that are added or changed after launch should be like this to prevent
-    // profile conversions.
 }

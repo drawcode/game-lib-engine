@@ -1,95 +1,119 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using Engine.Game.App.BaseApp;
 
-public class AppModeTypeMeta : BaseAppModeTypeMeta {
-    //public static string appModeTypeGameDefault = "app-mode-type-game-default";
-}
+namespace Engine.Game.App
+{
+    public class AppModeTypeMeta : BaseAppModeTypeMeta
+    {
+        //public static string appModeTypeGameDefault = "app-mode-type-game-default";
+    }
 
-public enum AppModeTypeChoiceFlowState {
-    AppModeTypeChoiceOverview,
-    AppModeTypeChoiceDisplayItem,
-    AppModeTypeChoiceResultItem,
-    AppModeTypeChoiceResults,
-}
+    public enum AppModeTypeChoiceFlowState
+    {
+        AppModeTypeChoiceOverview,
+        AppModeTypeChoiceDisplayItem,
+        AppModeTypeChoiceResultItem,
+        AppModeTypeChoiceResults,
+    }
 
-public enum AppOverviewFlowState {
-    Mode,
-    GameplayTips,
-    GeneralTips,
-    Tutorial
-}
+    public enum AppOverviewFlowState
+    {
+        Mode,
+        GameplayTips,
+        GeneralTips,
+        Tutorial
+    }
 
-public enum AppModeTypeCollectionFlowState {
-    AppModeTypeCollectionOverview,
-    AppModeTypeCollectionDisplayItem,
-    AppModeTypeCollectionResultItem,
-    AppModeTypeCollectionResults,
-}
+    public enum AppModeTypeCollectionFlowState
+    {
+        AppModeTypeCollectionOverview,
+        AppModeTypeCollectionDisplayItem,
+        AppModeTypeCollectionResultItem,
+        AppModeTypeCollectionResults,
+    }
 
-public class AppModeTypes : BaseAppModeTypes<AppModeType> {
+    public class AppModeTypes : BaseAppModeTypes<AppModeType>
+    {
 
-    private static volatile AppModeType current;
-    private static volatile AppModeTypes instance;
-    private static object syncRoot = new System.Object();
-    public static string DATA_KEY = "app-mode-type-data";
-    
-    public static AppModeType Current {
+        private static volatile AppModeType current;
+        private static volatile AppModeTypes instance;
+        private static object syncRoot = new System.Object();
+        public static string DATA_KEY = "app-mode-type-data";
 
-        get {
-            if (current == null) {
-                lock (syncRoot) {
-                    if (current == null)
-                        current = new AppModeType();
+        public static AppModeType Current
+        {
+
+            get
+            {
+                if (current == null)
+                {
+                    lock (syncRoot)
+                    {
+                        if (current == null)
+                            current = new AppModeType();
+                    }
                 }
+
+                return current;
             }
-    
-            return current;
+
+            set
+            {
+                current = value;
+            }
         }
 
-        set {
-            current = value;
-        }
-    }
-     
-    public static AppModeTypes Instance {
-        get {
-            if (instance == null) {
-                lock (syncRoot) {
-                    if (instance == null)
-                        instance = new AppModeTypes(true);
+        public static AppModeTypes Instance
+        {
+            get
+            {
+                if (instance == null)
+                {
+                    lock (syncRoot)
+                    {
+                        if (instance == null)
+                            instance = new AppModeTypes(true);
+                    }
                 }
+
+                return instance;
             }
-    
-            return instance;
+            set
+            {
+                instance = value;
+            }
         }
-        set {
-            instance = value;
+
+        public AppModeTypes()
+        {
+            Reset();
         }
-    }
-         
-    public AppModeTypes() {
-        Reset();
+
+        public AppModeTypes(bool loadData)
+        {
+            Reset();
+            path = "data/" + DATA_KEY + ".json";
+            pathKey = DATA_KEY;
+            LoadData();
+        }
     }
 
-    public AppModeTypes(bool loadData) {
-        Reset();
-        path = "data/" + DATA_KEY + ".json";
-        pathKey = DATA_KEY;
-        LoadData();
-    }
-}
+    public class AppModeType : BaseAppModeType
+    {
 
-public class AppModeType : BaseAppModeType {
- 
-    // Attributes that are added or changed after launch should be like this to prevent
-    // profile conversions.
-         
-    public AppModeType() {
-        Reset();
-    }
-    
-    public override void Reset() {
-        base.Reset();
+        // Attributes that are added or changed after launch should be like this to prevent
+        // profile conversions.
+
+        public AppModeType()
+        {
+            Reset();
+        }
+
+        public override void Reset()
+        {
+            base.Reset();
+        }
     }
 }

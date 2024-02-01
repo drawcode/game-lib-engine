@@ -10,6 +10,7 @@ using UnityEngine;
 
 using Engine.Events;
 using UnityEngine.Networking;
+using Engine.Content;
 
 namespace Engine.Networking {
     public class WebRequests : GameObjectBehavior {

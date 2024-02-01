@@ -2,12 +2,15 @@ using System.Collections;
 using Engine;
 using UnityEngine;
 
-namespace Engine.Events {
+namespace Engine.Events
+{
 
-    public class DraggableGUIElement : GameObjectBehavior {
+    public class DraggableGUIElement : GameObjectBehavior
+    {
 
         [System.Serializable]
-        public class Border {
+        public class Border
+        {
 
             public float minX, maxX, minY, maxY;
         }
@@ -15,12 +18,14 @@ namespace Engine.Events {
         public Border border;
         private Vector3 lastMousePosition;
 
-        private void OnMouseDown() {
+        private void OnMouseDown()
+        {
 
             lastMousePosition = GetClampedMousePosition();
         }
 
-        private Vector3 GetClampedMousePosition() {
+        private Vector3 GetClampedMousePosition()
+        {
 
             Vector3 mousePosition = Input.mousePosition;
             mousePosition.x = Mathf.Clamp(mousePosition.x, 0f, Screen.width);
@@ -29,7 +34,8 @@ namespace Engine.Events {
             return mousePosition;
         }
 
-        private void OnMouseDrag() {
+        private void OnMouseDrag()
+        {
 
             Vector3 delta = GetClampedMousePosition() - lastMousePosition;
 

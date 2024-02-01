@@ -1,0 +1,26 @@
+{
+    "name": "game-lib-engine-editor",
+    "version": "1.0.1",
+    "rootNamespace": "Drawlabs.Game.Engine.Editor",
+    "references": [
+        "UnityEditor.UI",
+        "UnityEngine.UI",
+        "UnityEngine.TestRunner",
+        "UnityEditor.TestRunner"
+    ],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": true,
+    "precompiledReferences": [
+        "nunit.framework.dll"
+    ],
+    "autoReferenced": true,
+    "defineConstraints": [
+        "UNITY_INCLUDE_TESTS"
+    ],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

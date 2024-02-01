@@ -1,82 +1,105 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using Engine.Game.Data;
 
-public class BaseAppContentAssetTexturePresets<T> : DataObjects<T> where T : DataObject, new() {
-    private static T current;
-    private static volatile BaseAppContentAssetTexturePresets<T> instance;
-    private static object syncRoot = new Object();
-    private string BASE_DATA_KEY = "app-content-asset-texture-preset-data";
+namespace Engine.Game.App.BaseApp
+{
 
-    public static T BaseCurrent {
-        get {
-            if (current == null) {
-                lock (syncRoot) {
-                    if (current == null)
-                        current = new T();
+    public class BaseAppContentAssetTexturePresets<T> : DataObjects<T> where T : DataObject, new()
+    {
+        private static T current;
+        private static volatile BaseAppContentAssetTexturePresets<T> instance;
+        private static object syncRoot = new Object();
+        private string BASE_DATA_KEY = "app-content-asset-texture-preset-data";
+
+        public static T BaseCurrent
+        {
+            get
+            {
+                if (current == null)
+                {
+                    lock (syncRoot)
+                    {
+                        if (current == null)
+                            current = new T();
+                    }
                 }
+
+                return current;
+            }
+            set
+            {
+                current = value;
+            }
+        }
+
+        public static BaseAppContentAssetTexturePresets<T> BaseInstance
+        {
+            get
+            {
+                if (instance == null)
+                {
+                    lock (syncRoot)
+                    {
+                        if (instance == null)
+                            instance = new BaseAppContentAssetTexturePresets<T>(true);
+                    }
+                }
+
+                return instance;
+            }
+            set
+            {
+                instance = value;
+            }
+        }
+
+        public BaseAppContentAssetTexturePresets()
+        {
+            Reset();
+        }
+
+        public BaseAppContentAssetTexturePresets(bool loadData)
+        {
+            Reset();
+            path = "data/" + BASE_DATA_KEY + ".json";
+            pathKey = BASE_DATA_KEY;
+            LoadData();
+        }
+    }
+
+    public class BaseAppContentAssetTexturePreset : GameDataObject
+    {
+
+        // Attributes that are added or changed after launch should be like this to prevent
+        // profile conversions.
+
+
+        public virtual Dictionary<string, string> data
+        {
+            get
+            {
+                return Get<Dictionary<string, string>>(BaseDataObjectKeys.data);
             }
 
-            return current;
-        }
-        set {
-            current = value;
-        }
-    }
-
-    public static BaseAppContentAssetTexturePresets<T> BaseInstance {
-        get {
-            if (instance == null) {
-                lock (syncRoot) {
-                    if (instance == null)
-                        instance = new BaseAppContentAssetTexturePresets<T>(true);
-                }
+            set
+            {
+                Set(BaseDataObjectKeys.data, value);
             }
-
-            return instance;
         }
-        set {
-            instance = value;
+
+        public BaseAppContentAssetTexturePreset()
+        {
+            Reset();
         }
-    }
 
-    public BaseAppContentAssetTexturePresets() {
-        Reset();
-    }
-
-    public BaseAppContentAssetTexturePresets(bool loadData) {
-        Reset();
-        path = "data/" + BASE_DATA_KEY + ".json";
-        pathKey = BASE_DATA_KEY;
-        LoadData();
-    }
-}
-
-public class BaseAppContentAssetTexturePreset : GameDataObject {
-
-    // Attributes that are added or changed after launch should be like this to prevent
-    // profile conversions.
-
-    
-    public virtual Dictionary<string, string> data {
-        get {
-            return Get<Dictionary<string, string>>(BaseDataObjectKeys.data);
+        public override void Reset()
+        {
+            base.Reset();
         }
-        
-        set {
-            Set(BaseDataObjectKeys.data, value);
-        }
+
+        // Attributes that are added or changed after launch should be like this to prevent
+        // profile conversions.
     }
-
-    public BaseAppContentAssetTexturePreset() {
-        Reset();
-    }
-
-    public override void Reset() {
-        base.Reset();
-    }
-
-
-    // Attributes that are added or changed after launch should be like this to prevent
-    // profile conversions.
 }
