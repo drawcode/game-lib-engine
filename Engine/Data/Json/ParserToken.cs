@@ -22,7 +22,7 @@ namespace Engine.Data.Json
         CharSeq,
         // Single char
         Char,
-        
+
         // Parser Rules (see section A.2.1 of the manual)
         Text,
         Object,
@@ -34,10 +34,10 @@ namespace Engine.Data.Json
         Value,
         ValueRest,
         String,
-        
+
         // End of input
         End,
-        
+
         // The empty rule
         Epsilon
     }

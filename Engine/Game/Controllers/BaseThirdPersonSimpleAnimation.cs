@@ -37,7 +37,7 @@ namespace Engine.Game.Controllers {
                     return;
                 }
                 
-                Animation anim = actor.GetComponent<Animation>();
+                UnityEngine.Animation anim = actor.GetComponent<UnityEngine.Animation>();
 
                 if (anim != null) {
 
@@ -52,7 +52,7 @@ namespace Engine.Game.Controllers {
             }
         }
 
-        Animation ani;
+        UnityEngine.Animation ani;
 
         private void Update() {
             if (isRunning) {
@@ -61,7 +61,7 @@ namespace Engine.Game.Controllers {
                     return;
                 }
                 
-                ani = actor.GetComponent<Animation>();
+                ani = actor.GetComponent<UnityEngine.Animation>();
 
                 var currentSpeed = thirdPersonController.GetSpeed();
 
@@ -145,7 +145,7 @@ namespace Engine.Game.Controllers {
                 return;
             }
             
-            Animation anim = actor.GetComponent<Animation>();
+            UnityEngine.Animation anim = actor.GetComponent<UnityEngine.Animation>();
 
             //actor.animation.Play("jumpland");
             //SendMessage("SyncAnimation", "jumpland", SendMessageOptions.DontRequireReceiver);
@@ -161,7 +161,7 @@ namespace Engine.Game.Controllers {
                 return;
             }
             
-            Animation anim = actor.GetComponent<Animation>();
+            UnityEngine.Animation anim = actor.GetComponent<UnityEngine.Animation>();
 
             // Fade in run
             if (currentSpeed > thirdPersonController.walkSpeed) {
@@ -190,7 +190,7 @@ namespace Engine.Game.Controllers {
                 return;
             }
 
-            Animation anim = actor.GetComponent<Animation>();
+            UnityEngine.Animation anim = actor.GetComponent<UnityEngine.Animation>();
 
             // Fade in run
             if (currentSpeed > thirdPersonController.walkSpeed) {
@@ -226,7 +226,7 @@ namespace Engine.Game.Controllers {
                 return;
             }
             
-            Animation anim = actor.GetComponent<Animation>();
+            UnityEngine.Animation anim = actor.GetComponent<UnityEngine.Animation>();
 
             anim.CrossFade("hit", 0.1f);
             SendMessage("SyncAnimation", "hit", SendMessageOptions.DontRequireReceiver);
@@ -238,7 +238,7 @@ namespace Engine.Game.Controllers {
                 return;
             }
             
-            Animation anim = actor.GetComponent<Animation>();
+            UnityEngine.Animation anim = actor.GetComponent<UnityEngine.Animation>();
 
             // Wall jump animation is played without fade.
             // We are turning the character controller 180 degrees around when doing a wall jump so the animation accounts for that.

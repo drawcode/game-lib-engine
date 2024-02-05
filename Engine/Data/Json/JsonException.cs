@@ -12,43 +12,52 @@
 
 using System;
 
-namespace Engine.Data.Json {
+namespace Engine.Data.Json
+{
 
-    public class JsonException : ApplicationException {
+    public class JsonException : ApplicationException
+    {
 
         public JsonException()
-            : base() {
+            : base()
+        {
         }
 
         internal JsonException(ParserToken token) :
             base(String.Format(
-                   "Invalid token '{0}' in input string", token)) {
+                   "Invalid token '{0}' in input string", token))
+        {
         }
 
         internal JsonException(ParserToken token,
                                 Exception inner_exception) :
             base(String.Format(
                     "Invalid token '{0}' in input string", token),
-                inner_exception) {
+                inner_exception)
+        {
         }
 
         internal JsonException(int c) :
             base(String.Format(
-                   "Invalid character '{0}' in input string", (char)c)) {
+                   "Invalid character '{0}' in input string", (char)c))
+        {
         }
 
         internal JsonException(int c, Exception inner_exception) :
             base(String.Format(
                    "Invalid character '{0}' in input string", (char)c),
-               inner_exception) {
+               inner_exception)
+        {
         }
 
         public JsonException(string message)
-            : base(message) {
+            : base(message)
+        {
         }
 
         public JsonException(string message, Exception inner_exception) :
-            base(message, inner_exception) {
+            base(message, inner_exception)
+        {
         }
     }
 }

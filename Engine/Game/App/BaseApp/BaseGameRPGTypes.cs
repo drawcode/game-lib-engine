@@ -1,67 +1,86 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using Engine.Game.Data;
 
-public class BaseGameRPGTypes<T> : DataObjects<T> where T : DataObject, new() {
-    private static T current;
-    private static volatile BaseGameRPGTypes<T> instance;
-    private static object syncRoot = new Object();
-    public static string BASE_DATA_KEY = "game-rpg-types-data";
+namespace Engine.Game.App.BaseApp
+{
+    public class BaseGameRPGTypes<T> : DataObjects<T> where T : DataObject, new()
+    {
+        private static T current;
+        private static volatile BaseGameRPGTypes<T> instance;
+        private static object syncRoot = new Object();
+        public static string BASE_DATA_KEY = "game-rpg-types-data";
 
-    public static T BaseCurrent {
-        get {
-            if (current == null) {
-                lock (syncRoot) {
-                    if (current == null)
-                        current = new T();
+        public static T BaseCurrent
+        {
+            get
+            {
+                if (current == null)
+                {
+                    lock (syncRoot)
+                    {
+                        if (current == null)
+                            current = new T();
+                    }
                 }
+
+                return current;
             }
-
-            return current;
+            set
+            {
+                current = value;
+            }
         }
-        set {
-            current = value;
-        }
-    }
 
-    public static BaseGameRPGTypes<T> BaseInstance {
-        get {
-            if (instance == null) {
-                lock (syncRoot) {
-                    if (instance == null)
-                        instance = new BaseGameRPGTypes<T>(true);
+        public static BaseGameRPGTypes<T> BaseInstance
+        {
+            get
+            {
+                if (instance == null)
+                {
+                    lock (syncRoot)
+                    {
+                        if (instance == null)
+                            instance = new BaseGameRPGTypes<T>(true);
+                    }
                 }
+
+                return instance;
             }
-
-            return instance;
+            set
+            {
+                instance = value;
+            }
         }
-        set {
-            instance = value;
+
+        public BaseGameRPGTypes()
+        {
+            Reset();
+        }
+
+        public BaseGameRPGTypes(bool loadData)
+        {
+            Reset();
+            path = "data/" + BASE_DATA_KEY + ".json";
+            pathKey = BASE_DATA_KEY;
+            LoadData();
         }
     }
 
-    public BaseGameRPGTypes() {
-        Reset();
-    }
+    public class BaseGameRPGType : GameDataObject
+    {
+        // Attributes that are added or changed after launch should be like this to prevent
+        // profile conversions.
 
-    public BaseGameRPGTypes(bool loadData) {
-        Reset();
-        path = "data/" + BASE_DATA_KEY + ".json";
-        pathKey = BASE_DATA_KEY;
-        LoadData();
-    }
-}
+        public BaseGameRPGType()
+        {
+            Reset();
+        }
 
-public class BaseGameRPGType : GameDataObject {
-
-    // Attributes that are added or changed after launch should be like this to prevent
-    // profile conversions.
-
-    public BaseGameRPGType() {
-        Reset();
-    }
-
-    public override void Reset() {
-        base.Reset();
+        public override void Reset()
+        {
+            base.Reset();
+        }
     }
 }

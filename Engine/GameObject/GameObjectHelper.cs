@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Text;
+using Engine.Game.Data;
 using UnityEngine;
 
 public static class GameObjectHelper {

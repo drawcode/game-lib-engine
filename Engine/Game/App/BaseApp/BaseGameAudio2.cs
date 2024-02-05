@@ -4,6 +4,11 @@ using System.Collections.Generic;
 // using Engine.Data.Json;
 using Engine.Utility;
 using UnityEngine;
+using Engine.Game.Data;
+
+
+namespace Engine.Game.App.BaseApp
+{
 
 public class BaseGameAudioEffects2 {
 
@@ -340,5 +345,6 @@ public class BaseGameAudio2 {
         }
         return null;
     }
+}
 }
 */

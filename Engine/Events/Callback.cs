@@ -1,4 +1,5 @@
-namespace Engine.Events {
+namespace Engine.Events
+{
 
     public delegate void Callback();
 

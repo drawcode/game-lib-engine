@@ -7,6 +7,7 @@ using System.Collections.Generic;
 // using Engine.Data.Json;
 using Engine.Utility;
 using UnityEngine;
+using Engine.Game.Data;
 
 public class BaseGameAudioRecordItems2 {
 
