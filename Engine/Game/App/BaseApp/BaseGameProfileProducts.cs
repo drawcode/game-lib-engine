@@ -173,16 +173,16 @@ namespace Engine.Game.App.BaseApp
 
     // OVERRIDE TO CUSTOMIZE 
 
-    public class GameProfileProduct : BaseGameProfileProduct
-    {
-        public GameProfileProduct()
-        {
-            Reset();
-        }
+    // public class GameProfileProduct : BaseGameProfileProduct
+    // {
+    //     public GameProfileProduct()
+    //     {
+    //         Reset();
+    //     }
 
-        public override void Reset()
-        {
-            base.Reset();
-        }
-    }
+    //     public override void Reset()
+    //     {
+    //         base.Reset();
+    //     }
+    // }
 }

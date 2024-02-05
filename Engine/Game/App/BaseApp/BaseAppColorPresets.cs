@@ -9,7 +9,7 @@ using UnityEngine;
 namespace Engine.Game.App.BaseApp
 {
 
-    public class BaseAppColorPresets<T> : DataObjects<T> where T : DataObject, new()
+    public partial class BaseAppColorPresets<T> : DataObjects<T> where T : DataObject, new()
     {
         private static T current;
         private static volatile BaseAppColorPresets<T> instance;
@@ -171,4 +171,44 @@ namespace Engine.Game.App.BaseApp
         // Attributes that are added or changed after launch should be like this to prevent
         // profile conversions.
     }
+
+    // ----------------------------------------------------------------------------
+    // OVERRIDE TO CUSTOMIZE 
+
+
+    // public  class AppColorPresets : BaseAppColorPresets<AppColorPreset>
+    // {
+
+    //     public AppColorPresets()
+    //     {
+    //         OnLoaded();
+    //     }
+
+    //     public override void Reset()
+    //     {
+    //         base.Reset();
+    //     }
+
+    //     public virtual void OnLoaded() {
+    //         Reset();
+    //     }
+    // }
+
+    // public class AppColorPreset : BaseAppColorPreset
+    // {
+
+    //     public AppColorPreset()
+    //     {
+    //         OnLoaded();
+    //     }
+
+    //     public override void Reset()
+    //     {
+    //         base.Reset();
+    //     }
+
+    //     public virtual void OnLoaded() {
+    //         Reset();
+    //     }
+    // }
 }

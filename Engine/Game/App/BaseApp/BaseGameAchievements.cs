@@ -400,7 +400,7 @@ namespace Engine.Game.App.BaseApp
 
     // OVVERIDE IN GAME TO CUSTOMIZE
 
-    public class GameAchievement : BaseGameAchievement
+    public partial class GameAchievement : BaseGameAchievement
     {
         // Attributes that are added or changed after launch should be like this to prevent
         // profile conversions.

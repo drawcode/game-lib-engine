@@ -68,7 +68,7 @@ namespace Engine.Game.Actor {
         }
 
         public virtual void PlayAnimation(string animationName, PlayMode mode) {
-            gameObject.GetComponent<Animation>().CrossFade(animationName, 1.0f, mode);
+            gameObject.GetComponent<UnityEngine.Animation>().CrossFade(animationName, 1.0f, mode);
         }
 
         public virtual void PlayRun() {

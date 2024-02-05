@@ -71,8 +71,22 @@ namespace Engine.Game.App
     // ----------------------------------------------------------------------------
     // OVERRIDE TO CUSTOMIZE 
 
-    public partial class AppColorPreset : BaseAppColorPreset
+
+    public class AppColorPreset : BaseAppColorPreset
     {
 
+        public AppColorPreset()
+        {
+            OnLoaded();
+        }
+
+        public override void Reset()
+        {
+            base.Reset();
+        }
+
+        public virtual void OnLoaded() {
+            Reset();
+        }
     }
 }

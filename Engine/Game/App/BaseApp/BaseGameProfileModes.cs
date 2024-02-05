@@ -380,16 +380,16 @@ namespace Engine.Game.App.BaseApp
 
     // OVERRIDE TO CUSTOMIZE 
 
-    public class GameProfileMode : BaseGameProfileMode
-    {
-        public GameProfileMode()
-        {
-            Reset();
-        }
+    // public class GameProfileMode : BaseGameProfileMode
+    // {
+    //     public GameProfileMode()
+    //     {
+    //         Reset();
+    //     }
 
-        public override void Reset()
-        {
-            base.Reset();
-        }
-    }
+    //     public override void Reset()
+    //     {
+    //         base.Reset();
+    //     }
+    // }
 }

@@ -209,18 +209,18 @@ namespace Engine.Game.App.BaseApp
         // profile conversions.
     }
 
-    // OVERRIDE IN GAME TO CUSTOMIZE
+    // // OVERRIDE IN GAME TO CUSTOMIZE
 
-    public class GamePreset : BaseGamePreset
-    {
-        public GamePreset()
-        {
-            Reset();
-        }
+    // public class GamePreset : BaseGamePreset
+    // {
+    //     public GamePreset()
+    //     {
+    //         Reset();
+    //     }
 
-        public override void Reset()
-        {
+    //     public override void Reset()
+    //     {
 
-        }
-    }
+    //     }
+    // }
 }

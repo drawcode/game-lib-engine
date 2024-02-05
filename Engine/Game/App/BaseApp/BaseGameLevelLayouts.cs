@@ -446,16 +446,16 @@ namespace Engine.Game.App.BaseApp
 
     // OVERRIDE TO CUSTOMIZE 
 
-    public class GameLevelLayout : BaseGameLevelLayout
-    {
-        public GameLevelLayout()
-        {
-            Reset();
-        }
+    // public partial class GameLevelLayout : BaseGameLevelLayout
+    // {
+    //     public GameLevelLayout()
+    //     {
+    //         Reset();
+    //     }
 
-        public override void Reset()
-        {
-            base.Reset();
-        }
-    }
+    //     public override void Reset()
+    //     {
+    //         base.Reset();
+    //     }
+    // }
 }

@@ -65,8 +65,8 @@ namespace Engine.Game.App
         }
     }
 
-    public partial class AppContentAssetCustomItem : BaseAppContentAssetCustomItem
-    {
+    // public partial class AppContentAssetCustomItem : BaseAppContentAssetCustomItem
+    // {
 
-    }
+    // }
 }

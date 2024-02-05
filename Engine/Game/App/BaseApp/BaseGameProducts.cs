@@ -383,16 +383,16 @@ namespace Engine.Game.App.BaseApp
 
     // OVERRIDE TO CUSTOMIZE IN GAME
 
-    public class GameProduct : BaseGameProduct
-    {
-        public GameProduct()
-        {
-            Reset();
-        }
+    // public class GameProduct : BaseGameProduct
+    // {
+    //     public GameProduct()
+    //     {
+    //         Reset();
+    //     }
 
-        public override void Reset()
-        {
-            base.Reset();
-        }
-    }
+    //     public override void Reset()
+    //     {
+    //         base.Reset();
+    //     }
+    // }
 }
