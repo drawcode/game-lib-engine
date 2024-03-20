@@ -43,7 +43,7 @@ namespace Engine.Utility {
 
     public class TweenMeta {
 
-        public TweenLib _lib = TweenLib.leanTween;
+        public TweenLib _lib = TweenLib.none;
 
         public GameObject _go;
         public float _time = 1f;
@@ -1181,7 +1181,6 @@ namespace Engine.Utility {
 
             TweenLib lib = TweenLib.leanTween;
 
-
 #if USE_UI_NGUI_2_7 || USE_UI_NGUI_3 || USE_EASING_NGUI
 
             if(go.Has<UISlicedSprite>()
@@ -1271,10 +1270,6 @@ namespace Engine.Utility {
                 return;
             }
 
-#if USE_UI_NGUI_2_7 || USE_UI_NGUI_3 || USE_EASING_NGUI
-            meta.lib = TweenLib.nguiUITweener;
-#endif
-
             Action onBegin = () => {
 
             };
@@ -1315,12 +1310,34 @@ namespace Engine.Utility {
                 });
             }
 
-            if(meta.lib == TweenLib.none) {
+#if USE_UI_NGUI_2_7 || USE_UI_NGUI_3 || USE_EASING_NGUI
 
+            if(meta.go.Has<UISlicedSprite>()
+                || meta.go.Has<UISprite>()
+                || meta.go.Has<UITiledSprite>()) {
+
+                meta.lib = TweenLib.nguiUITweener;
             }
+#endif
+
+//             if(meta.lib == TweenLib.none) {
+// #if USE_UI_NGUI_2_7 || USE_UI_NGUI_3 || USE_EASING_NGUI
+//                 if(meta.lib == TweenLib.none) {
+//                     meta.lib = TweenLib.nguiUITweener;
+//                 }
+// #elif USE_EASING_LEANTWEEN
+//                 if(meta.lib == TweenLib.none) {
+//                     meta.lib = TweenLib.leanTween;
+//                 }
+// #elif USE_EASING_ITWEEN
+//                 if(meta.lib == TweenLib.none) {
+//                     meta.lib = TweenLib.iTween;
+//                 }
+// #endif
+//             }
 
 #if USE_EASING_ITWEEN
-            else if(meta.lib == TweenLib.iTween) {
+            if(meta.lib == TweenLib.iTween) {
 
                 if(meta.stopCurrent) {
                     iTween.Stop(meta.go);
