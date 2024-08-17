@@ -278,7 +278,7 @@ namespace Engine.Animation.SimpleAnimationComponent
                 return;
 
             m_Animator = GetComponent<Animator>();
-            m_Animator.updateMode = m_AnimatePhysics ? AnimatorUpdateMode.Fixed : AnimatorUpdateMode.Normal;
+            m_Animator.updateMode = m_AnimatePhysics ? AnimatorUpdateMode.AnimatePhysics : AnimatorUpdateMode.Normal;
             m_Animator.cullingMode = m_CullingMode;
             m_Graph = PlayableGraph.Create();
             m_Graph.SetTimeUpdateMode(DirectorUpdateMode.GameTime);
@@ -453,7 +453,7 @@ namespace Engine.Animation.SimpleAnimationComponent
             }
 
             m_Animator = GetComponent<Animator>();
-            m_Animator.updateMode = m_AnimatePhysics ? AnimatorUpdateMode.Fixed : AnimatorUpdateMode.Normal;
+            m_Animator.updateMode = m_AnimatePhysics ? AnimatorUpdateMode.AnimatePhysics : AnimatorUpdateMode.Normal;
             m_Animator.cullingMode = m_CullingMode;
         }
     }
