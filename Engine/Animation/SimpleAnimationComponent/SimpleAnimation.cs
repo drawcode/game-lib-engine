@@ -74,7 +74,7 @@ namespace Engine.Animation.SimpleAnimationComponent
             set
             {
                 m_AnimatePhysics = value;
-                animator.updateMode = m_AnimatePhysics ? AnimatorUpdateMode.Fixed : AnimatorUpdateMode.Normal;
+                animator.updateMode = m_AnimatePhysics ? AnimatorUpdateMode.AnimatePhysics : AnimatorUpdateMode.Normal;
             }
         }
 
