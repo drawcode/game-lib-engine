@@ -12,8 +12,8 @@ public static class MaterialExtensions {
         return inst;
     }
 
-    public static PhysicMaterial LoadPhysicMaterialFromResources(
-        this PhysicMaterial inst, string resourcesPath) {
+    public static PhysicsMaterial LoadPhysicMaterialFromResources(
+        this PhysicsMaterial inst, string resourcesPath) {
 
         inst = MaterialUtil.LoadPhysicMaterialFromResources(resourcesPath);
 

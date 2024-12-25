@@ -17,7 +17,7 @@ public static class MaterialUtil {
         return (Material)Resources.Load(resourcesPath);
     }
 
-    public static PhysicMaterial LoadPhysicMaterialFromResources(string resourcesPath) {
-        return (PhysicMaterial)Resources.Load(resourcesPath);
+    public static PhysicsMaterial LoadPhysicMaterialFromResources(string resourcesPath) {
+        return (PhysicsMaterial)Resources.Load(resourcesPath);
     }
 }

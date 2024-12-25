@@ -604,7 +604,7 @@ namespace Engine.Events
                         | RigidbodyConstraints.FreezeRotationX
                         | RigidbodyConstraints.FreezeRotationZ;
                     rb.useGravity = false;
-                    rb.angularDrag = 3f;
+                    rb.angularDamping = 3f;
                 }
 
                 go.transform.localRotation =

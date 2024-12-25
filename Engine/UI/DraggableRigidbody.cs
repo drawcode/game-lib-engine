@@ -66,10 +66,10 @@ namespace Engine.UI {
         }
 
         public IEnumerator DragObject(float distance) {
-            var oldDrag = springJoint.connectedBody.drag;
-            var oldAngularDrag = springJoint.connectedBody.angularDrag;
-            springJoint.connectedBody.drag = drag;
-            springJoint.connectedBody.angularDrag = angularDrag;
+            var oldDrag = springJoint.connectedBody.linearDamping;
+            var oldAngularDrag = springJoint.connectedBody.angularDamping;
+            springJoint.connectedBody.linearDamping = drag;
+            springJoint.connectedBody.angularDamping = angularDrag;
             var mainCamera = FindCamera();
             while(Input.GetMouseButton(0)) {
                 var ray = mainCamera.ScreenPointToRay(Input.mousePosition);
@@ -78,8 +78,8 @@ namespace Engine.UI {
             }
 
             if(springJoint.connectedBody) {
-                springJoint.connectedBody.drag = oldDrag;
-                springJoint.connectedBody.angularDrag = oldAngularDrag;
+                springJoint.connectedBody.linearDamping = oldDrag;
+                springJoint.connectedBody.angularDamping = oldAngularDrag;
                 springJoint.connectedBody = null;
             }
         }
