@@ -14,6 +14,47 @@ using Engine.Content;
 
 namespace Engine.Game.App.BaseApp
 {
+    /// <summary>
+    /// BaseGameState is the base class for managing the game state, including configuration, profiles, and game data.
+    /// It provides methods for saving and loading configurations and profiles, as well as handling user changes.
+    /// This class is designed to be a singleton, ensuring that only one instance exists throughout the application.
+    /// 
+    /// It includes methods for saving and loading game configurations, profiles, and related data.
+    /// The class also provides functionality to handle user changes and synchronize profile data.
+    /// 
+    /// Note: This class is intended to be extended by specific game implementations that will provide
+    /// additional functionality and data management as needed.
+    /// 
+    /// Usage:
+    /// - Access the singleton instance via `BaseGameState.BaseInstance`.
+    /// - Call `InitState()` to initialize the game state.
+    /// - Use `SaveConfig()`, `LoadConfig()`, `SaveProfile()`, and `LoadProfile()` to manage game data.
+    /// - Use `ChangeUser()` to switch between different user profiles.
+    /// 
+    /// This class is part of the Engine.Game.App.BaseApp namespace and is designed to work with the Engine.Game.Data and Engine.Utility namespaces.
+    /// 
+    /// Dependencies:
+    /// - Engine.Events for event handling.
+    /// - Engine.Game.Data for game data management.
+    /// - Engine.Utility for utility functions like JSON serialization and file handling.
+    /// - UnityEngine for Unity-specific functionality.
+    /// 
+    /// This class is not intended to be used directly but rather as a foundation for building game-specific state management systems.
+    /// 
+    /// Example:
+    /// ```csharp
+    /// BaseGameState gameState = BaseGameState.BaseInstance;
+    /// gameState.InitState();
+    /// gameState.SaveConfig();
+    /// gameState.LoadProfile();
+    /// ```
+    /// 
+    /// This class is part of the Engine.Game.App.BaseApp namespace and is designed to be used in Unity-based game applications.
+    /// 
+    /// Note: This class may be extended in the future to include additional functionality such as cloud synchronization, multiplayer support, or other game-specific features.
+    /// 
+    /// Version: 1.0.0  
+    /// </summary>
     public class BaseGameState
     {
         //public GameConfig config;
