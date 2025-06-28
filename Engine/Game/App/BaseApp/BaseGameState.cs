@@ -70,7 +70,7 @@ namespace Engine.Game.App.BaseApp
         //public GameProfileVehicle profileVehicle;
 
         //public GameCareer career;
-        public GameData gameData;
+        public IGameData gameData;
         //public GameLevels gameLevels;
 
         //public Gameverses.GameversesGameAPI gameversesAPI;
@@ -127,6 +127,11 @@ namespace Engine.Game.App.BaseApp
             InitState();
         }
 
+        public virtual void InitGameData(IGameData gameData)
+        {
+            this.gameData = gameData;
+        }
+
         public virtual void InitState()
         {
 
@@ -143,7 +148,7 @@ namespace Engine.Game.App.BaseApp
             //profileTeam = GameProfileTeams.Current;
             //profileVehicle = GameProfileVehicles.Current;
 
-            gameData = GameDatas.Current;
+            //gameData = GameDatas.Current;
 
             loadConfig();
             saveConfig();
