@@ -57,6 +57,7 @@ namespace Engine.Game.App.BaseApp
     /// </summary>
     public class BaseGameState
     {
+#if USE_GAME_LIB_GAMES
         //public GameConfig config;
         //public GameProfile profile;
         //public GameProfileStatistic profileStatistic;
@@ -70,11 +71,13 @@ namespace Engine.Game.App.BaseApp
         //public GameProfileVehicle profileVehicle;
 
         //public GameCareer career;
-        public IGameData gameData;
+        public GameData gameData;
         //public GameLevels gameLevels;
+#endif
 
+#if USE_GAME_LIB_GAMES
         //public Gameverses.GameversesGameAPI gameversesAPI;
-
+#endif
         private static volatile BaseGameState instance;
         private static System.Object syncRoot = new System.Object();
         //public Thread saveThread;
@@ -129,7 +132,7 @@ namespace Engine.Game.App.BaseApp
 
         public virtual void InitState()
         {
-
+#if USE_GAME_LIB_GAMES
             //config = GameConfigs.Current;
             //profile = GameProfiles.Current;
             //profileStatistic = GameProfileStatistics.Current;
@@ -141,10 +144,8 @@ namespace Engine.Game.App.BaseApp
             //profileProduct = GameProfileProducts.Current;
             //profileRPG = GameProfileRPGs.Current;
             //profileTeam = GameProfileTeams.Current;
-            //profileVehicle = GameProfileVehicles.Current;
-
             gameData = GameDatas.Current;
-
+#endif
             loadConfig();
             saveConfig();
 
