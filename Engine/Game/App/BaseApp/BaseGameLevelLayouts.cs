@@ -80,6 +80,7 @@ namespace Engine.Game.App.BaseApp
             return levelReturn;
         }
 
+#if USE_GAME_LIB_GAMES
         public void SetGameLevelLayout(GameLevelLayout gameLevelLayout)
         {
             bool found = false;
@@ -161,6 +162,7 @@ namespace Engine.Game.App.BaseApp
             }
         }
     }
+#endif
 
     public class GameLevelLayoutType
     {
