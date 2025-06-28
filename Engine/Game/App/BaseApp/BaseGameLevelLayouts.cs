@@ -161,8 +161,8 @@ namespace Engine.Game.App.BaseApp
                 LogUtil.Log("Changing LevelLayout: code:" + code);
             }
         }
-    }
 #endif
+    }
 
     public class GameLevelLayoutType
     {
