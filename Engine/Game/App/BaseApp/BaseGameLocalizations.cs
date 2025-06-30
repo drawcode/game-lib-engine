@@ -111,6 +111,7 @@ namespace Engine.Game.App.BaseApp
         images
     }
 
+#if USE_GAME_LOCALIZATION
     public class LocoKeys : GameLocalizationKeys
     {
 
@@ -120,6 +121,7 @@ namespace Engine.Game.App.BaseApp
     {
 
     }
+#endif
 
     public class BaseGameLocalizations<T> : DataObjects<T> where T : DataObject, new()
     {

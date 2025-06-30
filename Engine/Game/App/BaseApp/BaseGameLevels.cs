@@ -111,6 +111,7 @@ namespace Engine.Game.App.BaseApp
             */
         }
 
+#if USE_GAME_LIB_GAMES  
         public void SetGameLevel(string code, string name, string displayName,
                                  string description, string type, int sortIndex, int typeSortIndex)
         {
@@ -152,6 +153,7 @@ namespace Engine.Game.App.BaseApp
                 obj.uuid = UniqueUtil.CreateUUID4();
                 GameLevels.Instance.items.Add(obj);
             }
+
         }
 
         public void SetGameLevel(GameLevel gameLevel)
@@ -173,7 +175,6 @@ namespace Engine.Game.App.BaseApp
                 GameLevels.Instance.items.Add(gameLevel);
             }
         }
-
         /*
         public override GameLevel GetById(string levelCode) {
             foreach(GameLevel level in GetAll()) {
@@ -288,10 +289,6 @@ namespace Engine.Game.App.BaseApp
             Debug.Log("GameLevels:ChangeCurrent:" + " GameLevels.Current.code:" + GameLevels.Current.code);
         }
 
-        //
-
-#if USE_GAME_LIB_GAMES
-
         public static GameLevelGridData GetLevelGridTerrains(
             GameLevelGridData dataItems, List<GameDataTerrainPreset> presets)
         {
@@ -357,7 +354,6 @@ namespace Engine.Game.App.BaseApp
             return dataItems;
         }
 
-#endif
 
         // -----------------------------------------------------------------------
         // GRID LEVEL LAYOUTS
@@ -460,7 +456,6 @@ namespace Engine.Game.App.BaseApp
             return layoutObjects;
         }
 
-#if USE_GAME_LIB_GAMES
         public static GameLevelGridData GetLevelGridLayoutParts(
             GameLevelGridData dataItems, List<GameDataLayoutPreset> presets,
             string loadTypeFilter = "default")
@@ -602,10 +597,7 @@ namespace Engine.Game.App.BaseApp
 
             return dataItems;
         }
-#endif
 
-
-#if USE_GAME_LIB_GAMES
         public static GameLevelGridData GetLevelGridLayouts(
             GameLevelGridData dataItems, List<GameDataLayoutPreset> presets, string loadTypeFilter = "default")
         {
@@ -765,12 +757,10 @@ namespace Engine.Game.App.BaseApp
     */
             return dataItems;
         }
-#endif
 
         // -----------------------------------------------------------------------
         // GAME LEVEL ASSETS
 
-#if USE_GAME_LIB_GAMES
         public static GameLevelGridData GetLevelGridAssets(
             GameLevelGridData dataItems, List<GameDataAssetPreset> presets, string loadTypeFilter = "default")
         {
@@ -850,7 +840,6 @@ namespace Engine.Game.App.BaseApp
 
             return dataItems;
         }
-#endif
 
         public static List<GameDataLayoutPreset> GetLevelLayoutPresets(string loadTypeFilter = "default")
         {
@@ -888,10 +877,8 @@ namespace Engine.Game.App.BaseApp
 
             return filteredItems;
         }
-
-
+#endif
     }
-
 
     public class BaseGameLevelKeys
     {
