@@ -111,7 +111,8 @@ namespace Engine.Game.App.BaseApp
         images
     }
 
-#if USE_GAME_LOCALIZATION
+#if USE_GAME_LIB_GAMES
+// Note: add in localization defines and inteface
     public class LocoKeys : GameLocalizationKeys
     {
 
