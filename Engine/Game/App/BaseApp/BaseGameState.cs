@@ -579,7 +579,7 @@ namespace Engine.Game.App.BaseApp
 
         public static void SaveProfile()
         {
-#if GAME_LIB_GAMES
+#if USE_GAME_LIB_GAMES
             if (GameState.Instance != null)
             {
                 GameState.Instance.saveProfile();
@@ -587,7 +587,7 @@ namespace Engine.Game.App.BaseApp
 #endif
         }
 
-#if GAME_LIB_GAMES
+#if USE_GAME_LIB_GAMES
         public virtual void saveProfile(GameProfile profile)
         {
             if (profile != null)
