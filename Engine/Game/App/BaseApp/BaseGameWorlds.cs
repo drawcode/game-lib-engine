@@ -101,6 +101,7 @@ namespace Engine.Game.App.BaseApp
         }
         */
 
+#if USE_GAME_LIB_GAMES
         public GameWorld GetByWorldNum(int worldNum)
         {
             foreach (GameWorld item in GameWorlds.Instance.GetAll())
@@ -112,6 +113,7 @@ namespace Engine.Game.App.BaseApp
             }
             return null;
         }
+#endif
     }
 
     public class BaseGameWorld : GameDataObject

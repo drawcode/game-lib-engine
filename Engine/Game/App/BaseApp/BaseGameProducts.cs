@@ -69,6 +69,7 @@ namespace Engine.Game.App.BaseApp
             BaseCurrent = GetById(code);
             LogUtil.Log("Changing Product: code:" + code);
         }
+#if USE_GAME_LIB_GAMES
 
         public GameProduct GetProductByPlaformProductCode(string code)
         {
@@ -81,6 +82,7 @@ namespace Engine.Game.App.BaseApp
             }
             return null;
         }
+#endif
     }
 
     public class BaseGameProductInfo : GameDataObject

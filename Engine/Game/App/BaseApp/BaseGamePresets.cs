@@ -86,6 +86,7 @@ namespace Engine.Game.App.BaseApp
             LoadData();
         }
 
+#if USE_GAME_LIB_GAMES
         public static List<GamePreset> GetAllItems()
         {
             return GamePresets.Instance.GetAll();
@@ -95,6 +96,7 @@ namespace Engine.Game.App.BaseApp
         {
             return GamePresets.Instance.GetByCode(code);
         }
+#endif
 
         public void LoadCurrentPresets()
         {
@@ -143,6 +145,7 @@ namespace Engine.Game.App.BaseApp
             return null;
         }
 
+#if USE_GAME_LIB_GAMES
         public GamePreset GetCurrentPresetData(string presetType)
         {
             string presetCode = GetCurrentPreset(presetType);
@@ -174,6 +177,7 @@ namespace Engine.Game.App.BaseApp
         {
             return GetCurrentPresetData(GamePresetTypes.asset);
         }
+#endif
     }
 
     public class BaseGamePreset : GameDataObject

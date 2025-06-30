@@ -145,7 +145,7 @@ namespace Engine.Game.App.BaseApp
             //profileRPG = GameProfileRPGs.Current;
             //profileTeam = GameProfileTeams.Current;
             gameData = GameDatas.Current;
-#endif
+
             loadConfig();
             saveConfig();
 
@@ -154,35 +154,43 @@ namespace Engine.Game.App.BaseApp
 
             loadProfile();
             saveProfile();
+#endif
         }
 
         // CONFIG
 
         public static void SaveConfig()
         {
+#if USE_GAME_LIB_GAMES
             if (GameState.Instance != null)
             {
                 GameState.Instance.saveConfig();
             }
+#endif
         }
 
         public virtual void saveConfig()
         {
+#if USE_GAME_LIB_GAMES
             string jsonString = GameConfigs.Current.ToJson();// JsonMapper.ToJson(config);
             SystemPrefUtil.SetLocalSettingString(KEY_CONFIG, jsonString);
             SystemPrefUtil.Save();
+#endif
         }
 
         public static void LoadConfig()
         {
+#if USE_GAME_LIB_GAMES
             if (GameState.Instance != null)
             {
                 GameState.Instance.loadConfig();
             }
+#endif
         }
 
         public virtual void loadConfig()
         {
+#if USE_GAME_LIB_GAMES
             string data = SystemPrefUtil.GetLocalSettingString(KEY_CONFIG);
             if (!string.IsNullOrEmpty(data))
             {
@@ -191,6 +199,7 @@ namespace Engine.Game.App.BaseApp
 
             GameProfiles.Current.ChangeUser(GameConfigs.Current.lastLoggedOnUser);
             //career.ChangeUser(config.lastLoggedOnUser);
+#endif
         }
 
         // KEYS
@@ -199,7 +208,11 @@ namespace Engine.Game.App.BaseApp
         {
             get
             {
+#if USE_GAME_LIB_GAMES
                 return getProfileKey(GameProfiles.Current.username);
+#else
+                return "default";
+#endif
             }
         }
 
@@ -207,7 +220,11 @@ namespace Engine.Game.App.BaseApp
         {
             get
             {
+#if USE_GAME_LIB_GAMES
                 return getProfileAchievementKey(GameProfiles.Current.username);
+#else
+                return "default";
+#endif
             }
         }
 
@@ -215,7 +232,11 @@ namespace Engine.Game.App.BaseApp
         {
             get
             {
+#if USE_GAME_LIB_GAMES
                 return getProfileStatisticKey(GameProfiles.Current.username);
+#else
+                return "default";
+#endif
             }
         }
 
@@ -223,7 +244,11 @@ namespace Engine.Game.App.BaseApp
         {
             get
             {
+#if USE_GAME_LIB_GAMES
                 return getProfileCharacterKey(GameProfiles.Current.username);
+#else
+                return "default";
+#endif
             }
         }
 
@@ -231,7 +256,11 @@ namespace Engine.Game.App.BaseApp
         {
             get
             {
+#if USE_GAME_LIB_GAMES
                 return getProfileCustomizationKey(GameProfiles.Current.username);
+#else
+                return "default";
+#endif
             }
         }
 
@@ -239,7 +268,11 @@ namespace Engine.Game.App.BaseApp
         {
             get
             {
+#if USE_GAME_LIB_GAMES
                 return getProfileModeKey(GameProfiles.Current.username);
+#else
+                return "default";
+#endif
             }
         }
 
@@ -247,7 +280,11 @@ namespace Engine.Game.App.BaseApp
         {
             get
             {
+#if USE_GAME_LIB_GAMES
                 return getProfileProductKey(GameProfiles.Current.username);
+#else
+                return "default";
+#endif
             }
         }
 
@@ -255,7 +292,11 @@ namespace Engine.Game.App.BaseApp
         {
             get
             {
+#if USE_GAME_LIB_GAMES
                 return getProfileRPGKey(GameProfiles.Current.username);
+#else
+                return "default";
+#endif
             }
         }
 
@@ -263,7 +304,11 @@ namespace Engine.Game.App.BaseApp
         {
             get
             {
+#if USE_GAME_LIB_GAMES
                 return getProfileTeamKey(GameProfiles.Current.username);
+#else
+                return "default";
+#endif
             }
         }
 
@@ -271,7 +316,11 @@ namespace Engine.Game.App.BaseApp
         {
             get
             {
+#if USE_GAME_LIB_GAMES
                 return getProfileVehicleKey(GameProfiles.Current.username);
+#else
+                return "default";
+#endif
             }
         }
 
@@ -379,6 +428,7 @@ namespace Engine.Game.App.BaseApp
         {
             string data = obj.ToJson();//JsonMapper.ToJson(obj);
 
+#if USE_GAME_LIB_GAMES
             if (ProfileConfigs.useStorageEncryption)
             {
                 data = data.ToEncrypted();
@@ -388,6 +438,7 @@ namespace Engine.Game.App.BaseApp
             {
                 data = data.ToCompressed();
             }
+#endif
 
             if (keyTo == keyProfile)
             {
@@ -434,6 +485,7 @@ namespace Engine.Game.App.BaseApp
             data = readProfileFile(keyTo);
 #endif
 
+#if USE_GAME_LIB_GAMES
             if (ProfileConfigs.useStorageCompression)
             {// || data.IsCompressed()) {
                 data = data.ToDecompressed();
@@ -443,6 +495,7 @@ namespace Engine.Game.App.BaseApp
             {
                 data = data.ToDecrypted();
             }
+#endif
 
             if (keyTo == keyProfile)
             {
@@ -468,10 +521,12 @@ namespace Engine.Game.App.BaseApp
 
         public static void SyncProfile()
         {
+#if USE_GAME_LIB_GAMES
             if (GameState.Instance != null)
             {
                 GameState.Instance.syncProfile();
             }
+#endif
         }
 
         public virtual void syncProfile()
@@ -496,6 +551,7 @@ namespace Engine.Game.App.BaseApp
             GameSync.ResetProfileSyncObject();
 #endif
 
+#if USE_GAME_LIB_GAMES
             save(keyProfile, GameProfiles.Current, true);
             save(keyProfileAchievement, GameProfileAchievements.Current, true);
             save(keyProfileStatistic, GameProfileStatistics.Current, true);
@@ -506,6 +562,7 @@ namespace Engine.Game.App.BaseApp
             save(keyProfileRPG, GameProfileRPGs.Current, true);
             save(keyProfileTeam, GameProfileTeams.Current, true);
             save(keyProfileVehicle, GameProfileVehicles.Current, true);
+#endif
 
             // prepare and upload any files changed
 
@@ -522,12 +579,15 @@ namespace Engine.Game.App.BaseApp
 
         public static void SaveProfile()
         {
+#if GAME_LIB_GAMES
             if (GameState.Instance != null)
             {
                 GameState.Instance.saveProfile();
             }
+#endif
         }
 
+#if GAME_LIB_GAMES
         public virtual void saveProfile(GameProfile profile)
         {
             if (profile != null)
@@ -714,6 +774,7 @@ namespace Engine.Game.App.BaseApp
             //    profileVehicle.username = profile.username;
             //}
         }
+#endif
     }
 }
 
