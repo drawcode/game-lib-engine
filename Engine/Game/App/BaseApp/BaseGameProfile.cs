@@ -20,6 +20,12 @@ namespace Engine.Game.App.BaseApp
         public static string ATT_CONTROL_INPUT_TOUCH = "controls-input";
         public static string ATT_CONTROL_HANDED = "controls-handed";
         public static string ATT_CONTROL_VIBRATE = "controls-vibrate";
+
+        public static string ATT_AR_CAM_DEVICE_MODE = "ar-camera-device-mode";
+        public static string ATT_AR_CAM_FOCUS_MODE = "ar-camera-focus-mode";
+        public static string ATT_CONTROL_INPUT_TOUCH_FINGER = "control-input-touch-finger";
+        public static string ATT_CONTROL_INPUT_TOUCH_ON_SCREEN = "control-input-touch-onscreen";
+
         public static string ATT_AUDIO_MUSIC_VOLUME = "audio-music-volume";
         public static string ATT_AUDIO_EFFECTS_VOLUME = "audio-effects-volume";
         public static string ATT_AUDIO_VO_VOLUME = "audio-vo-volume";
@@ -223,7 +229,11 @@ namespace Engine.Game.App.BaseApp
         public override void Reset()
         {
             base.Reset();
+#if USE_GAME_LIB_GAMES
             username = ProfileConfigs.defaultPlayerName;
+#else
+            username = BaseGameProfiles.DEFAULT_USERNAME;
+#endif
         }
 
         // HELPERS
@@ -240,7 +250,11 @@ namespace Engine.Game.App.BaseApp
         public bool GetControlInputTouchFinger(bool defaultValue)
         {
             bool attValue = defaultValue;
+#if USE_GAME_LIB_GAMES
             string key = GameProfileAttributes.ATT_CONTROL_INPUT_TOUCH_FINGER;
+#else
+            string key = BaseGameProfileAttributes.ATT_CONTROL_INPUT_TOUCH_FINGER;
+#endif
             if (CheckIfAttributeExists(key))
                 attValue = GetAttributeBoolValue(key);
             return attValue;
@@ -254,7 +268,11 @@ namespace Engine.Game.App.BaseApp
         public bool GetControlInputTouchOnScreen(bool defaultValue)
         {
             bool attValue = defaultValue;
+#if USE_GAME_LIB_GAMES
             string key = GameProfileAttributes.ATT_CONTROL_INPUT_TOUCH_ON_SCREEN;
+#else
+            string key = BaseGameProfileAttributes.ATT_CONTROL_INPUT_TOUCH_ON_SCREEN;
+#endif
             if (CheckIfAttributeExists(key))
                 attValue = GetAttributeBoolValue(key);
             return attValue;
@@ -372,7 +390,11 @@ namespace Engine.Game.App.BaseApp
 
         public virtual string GetCurrentGameWorld()
         {
+#if USE_GAME_LIB_GAMES
             return GetCurrentGameWorld(GameConfigs.defaultGameWorldCode);
+#else
+            return GetCurrentGameWorld("default");
+#endif
         }
 
         public virtual string GetCurrentGameWorld(string defaultValue)
@@ -989,49 +1011,63 @@ namespace Engine.Game.App.BaseApp
 
         public void SetNetworkValueToken(string networkType, string val)
         {
+#if USE_GAME_LIB_GAMES
             GameProfiles.Current.SetNetworkValue(
                 networkType, BaseDataObjectKeys.network_token, val);
+#endif
         }
 
         public void SetNetworkValueId(string networkType, string val)
         {
+#if USE_GAME_LIB_GAMES
             GameProfiles.Current.SetNetworkValue(
                 networkType, BaseDataObjectKeys.network_id, val);
+#endif
         }
 
         public void SetNetworkValueName(string networkType, string val)
         {
+#if USE_GAME_LIB_GAMES
             GameProfiles.Current.SetNetworkValue(
                 networkType, BaseDataObjectKeys.network_name, val);
+#endif
         }
 
         public void SetNetworkValueUsername(string networkType, string val)
         {
+#if USE_GAME_LIB_GAMES
             GameProfiles.Current.SetNetworkValue(
                 networkType, BaseDataObjectKeys.network_username, val);
+#endif
         }
 
         public void SetNetworkValueFirstName(string networkType, string val)
         {
+
+#if USE_GAME_LIB_GAMES
             GameProfiles.Current.SetNetworkValue(
                 networkType, BaseDataObjectKeys.network_first_name, val);
+#endif
         }
 
         public void SetNetworkValueLastName(string networkType, string val)
         {
+#if USE_GAME_LIB_GAMES
             GameProfiles.Current.SetNetworkValue(
                 networkType, BaseDataObjectKeys.network_last_name, val);
+#endif
         }
 
         public void SetNetworkValueType(string networkType, string val)
         {
+#if USE_GAME_LIB_GAMES
             GameProfiles.Current.SetNetworkValue(
                 networkType, BaseDataObjectKeys.network_type, val);
+#endif
         }
 
         public GameProfileNetworkItem GetNetwork(string networkType)
         {
-
             GameProfileNetworkItem item = GetNetworks().GetItem(networkType);
 
             return item;
@@ -1061,44 +1097,72 @@ namespace Engine.Game.App.BaseApp
 
         public string GetNetworkValueId(string networkType)
         {
+#if USE_GAME_LIB_GAMES
             return GameProfiles.Current.GetNetworkValue(
                 networkType, BaseDataObjectKeys.network_id);
+#else
+            return null;
+#endif
         }
 
         public string GetNetworkValueUsername(string networkType)
         {
+#if USE_GAME_LIB_GAMES
             return GameProfiles.Current.GetNetworkValue(
                 networkType, BaseDataObjectKeys.network_username);
+#else
+            return null;
+#endif
         }
 
         public string GetNetworkValueToken(string networkType)
         {
+#if USE_GAME_LIB_GAMES
             return GameProfiles.Current.GetNetworkValue(
                 networkType, BaseDataObjectKeys.network_token);
+#else
+            return null;
+#endif
         }
 
         public string GetNetworkValueName(string networkType)
         {
+#if USE_GAME_LIB_GAMES
             return GameProfiles.Current.GetNetworkValue(
                 networkType, BaseDataObjectKeys.network_name);
+#else
+            return null;
+#endif
         }
 
         public string GetNetworkValueFirstName(string networkType)
         {
+#if USE_GAME_LIB_GAMES
             return GameProfiles.Current.GetNetworkValue(
                 networkType, BaseDataObjectKeys.network_first_name);
+#else
+            return null;
+#endif
         }
 
         public string GetNetworkValueLastName(string networkType)
         {
+#if USE_GAME_LIB_GAMES
             return GameProfiles.Current.GetNetworkValue(
                 networkType, BaseDataObjectKeys.network_last_name);
+#else
+            return null;
+#endif
         }
 
         public string GetNetworkValueType(string networkType)
         {
+#if USE_GAME_LIB_GAMES
             return GameProfiles.Current.GetNetworkValue(
                 networkType, BaseDataObjectKeys.network_type);
+#else
+            return null;
+#endif
         }
 
         /*

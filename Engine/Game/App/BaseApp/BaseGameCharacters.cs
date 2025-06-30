@@ -151,20 +151,24 @@ namespace Engine.Game.App.BaseApp
 
         public GameObject Load()
         {
+#if USE_GAME_LIB_GAMES
             foreach (GameDataModel model in data.models)
             {
                 return GameCharacters.Load(model.code);
             }
+#endif
             return null;
         }
 
 
         public GameObject LoadPrefab()
         {
+#if USE_GAME_LIB_GAMES
             foreach (GameDataModel model in data.models)
             {
                 return GameCharacters.LoadPrefab(model.code);
             }
+#endif
             return null;
         }
 

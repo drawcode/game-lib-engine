@@ -72,6 +72,7 @@ namespace Engine.Game.App
         {
             Color colorTo = Color.white;
 
+#if USE_GAME_LIB_GAMES
             if (GameConfigs.globalReady)
             {
 
@@ -96,7 +97,7 @@ namespace Engine.Game.App
                     colorTo = cachedColors[code];
                 }
             }
-
+#endif
             return colorTo;
         }
 

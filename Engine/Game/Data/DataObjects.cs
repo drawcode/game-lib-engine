@@ -142,7 +142,11 @@ namespace Engine.Game.Data
         public virtual void LoadData()
         {
 
+#if USE_GAME_LIB_GAMES
             dataStorage = AppConfigs.dataStorage;
+#else
+            dataStorage = DataObjectsStorage.RESOURCES;
+#endif
 
             switch (dataStorage)
             {
@@ -203,7 +207,11 @@ namespace Engine.Game.Data
         public virtual string GetStateCode()
         {
 
+#if USE_GAME_LIB_GAMES
             string val = GameProfiles.Current.GetGameDataState(pathKey);
+#else
+            string val = SystemPrefUtil.GetLocalSettingString(pathKey);
+#endif
 
             if (val.IsNullOrEmpty()
                 || val.IsEqualLowercase(BaseDataObjectKeys.defaultKey))
@@ -223,7 +231,11 @@ namespace Engine.Game.Data
                 return;
             }
 
+#if USE_GAME_LIB_GAMES
             GameProfiles.Current.SetGameDataState(pathKey, val);
+#else
+            SystemPrefUtil.SetLocalSettingString(pathKey, val);
+#endif
 
             currentStateCode = val;
         }
@@ -243,6 +255,7 @@ namespace Engine.Game.Data
 
             string pathResources = path;
 
+#if USE_GAME_LIB_GAMES
             if (!path.Contains(ContentsConfig.contentAppFolder))
             {
 
@@ -310,6 +323,11 @@ namespace Engine.Game.Data
 
                 pathResources = sbPath.ToString();
             }
+#else
+            System.Text.StringBuilder sbPath = new System.Text.StringBuilder();
+            sbPath.Append(pathResources);
+            pathResources = sbPath.ToString();
+#endif
 
             Debug.Log("LoadDataFromResources:pathResources:" + pathResources);
 

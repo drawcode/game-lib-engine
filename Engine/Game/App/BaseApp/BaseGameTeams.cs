@@ -72,6 +72,8 @@ namespace Engine.Game.App.BaseApp
         public override void ChangeCurrent(string code)
         {
             base.ChangeCurrent(code);
+
+#if USE_GAME_LIB_GAMES
             if (GameTeams.Current.code != code)
             {
                 GameTeam team = GameTeams.Instance.GetByCode(code);
@@ -81,6 +83,7 @@ namespace Engine.Game.App.BaseApp
                     Messenger<GameTeam>.Broadcast("game-team-changed", team);
                 }
             }
+#endif
         }
     }
 

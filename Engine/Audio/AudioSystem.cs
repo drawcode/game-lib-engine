@@ -180,11 +180,14 @@ namespace Engine.Audio
         public void PlaySoundByPreset(string presetCode)
         {
 
+#if USE_GAME_LIB_GAMES
             GamePreset preset = GamePresets.Get(presetCode);
             if (preset != null)
             {
-                //preset.getI
+                // NOTE: audio wire this up
+                //preset.getInstance().PlaySound(preset.audioClip);
             }
+#endif
         }
 
         // AMBIENCE OLD
@@ -662,7 +665,11 @@ namespace Engine.Audio
         public void PlayFileFromPath(string file, bool loop)
         {
 
+#if USE_GAME_LIB_GAMES
             float profileVolume = (float)GameProfiles.Current.GetAudioEffectsVolume();
+#else
+            float profileVolume = 1.0f;
+#endif
 
             PlayFileFromPath(file,
                 FindOrCreateDisposableSoundContainer().transform,

@@ -166,7 +166,9 @@ namespace Engine.Game.App.BaseApp
                 {
                     AppModes.Current = appMode;
 
+#if USE_GAME_LIB_GAMES
                     GameProfiles.Current.SetCurrentAppMode(code);
+#endif
 
                     LogUtil.Log("AppModes:ChangeState:code:" + AppModes.Current.code);
                 }

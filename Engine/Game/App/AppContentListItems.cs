@@ -169,9 +169,10 @@ namespace Engine.Game.App
 
         public void Fill(string filePathNonVersioned, string filePathVersioned)
         {
+#if USE_GAME_LIB_GAMES
             pathCurrentAppBase = ContentsConfig.contentRootFolder + "/";
             pathCurrentAppBase += ContentsConfig.contentAppFolder + "/";
-
+#endif
             pathNonVersionedApp = filePathNonVersioned.Replace(pathCurrentAppBase, "");
             pathNonVersionedSystem
                 = PathUtil.Combine(ContentPaths.appCachePath, pathNonVersionedApp);

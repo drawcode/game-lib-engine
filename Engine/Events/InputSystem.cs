@@ -1534,10 +1534,12 @@ namespace Engine.Events
         public virtual void updateTouchLaunch()
         {
 
+#if USE_GAME_LIB_GAMES
             if (!GameConfigs.isGameRunning)
             {
                 return;
             }
+#endif
 
             shouldTouch = true;
             inputButtonDown = false;

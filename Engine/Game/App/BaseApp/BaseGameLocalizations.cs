@@ -214,7 +214,11 @@ namespace Engine.Game.App.BaseApp
 
         public static string GetReplaceLocalized(string content)
         {
+#if USE_GAME_LIB_GAMES
             return Locos.Instance.ReplaceLocalized(content);
+#else
+            return content;
+#endif
         }
 
         private string lastString = "--";
@@ -246,6 +250,7 @@ namespace Engine.Game.App.BaseApp
                         valCodeGroup = group.Value;
                     }
 
+#if USE_GAME_LIB_GAMES
                     GameLocalization localization = GameLocalizations.Current;
 
                     GameLocalizationData data = localization.data;
@@ -275,6 +280,7 @@ namespace Engine.Game.App.BaseApp
 
                         content = content.RegexMatchesReplace(regexCode, replaceText);
                     }
+#endif                    
                 }
 
                 // recurse check... 
@@ -294,11 +300,14 @@ namespace Engine.Game.App.BaseApp
 
         public static string Babel(string stringToTranslate)
         {
+#if USE_GAME_LIB_GAMES
             if (GameLocalizations.Instance != null)
             {
                 //string locale = Application.systemLanguage.ToString();
-                // TODO translate
+                // Note: TODO translate using API/AI to get the string
             }
+#endif
+            
             return stringToTranslate;
         }
 
@@ -324,7 +333,11 @@ namespace Engine.Game.App.BaseApp
 
             if (item != null)
             {
+#if USE_GAME_LIB_GAMES
                 return GameLocalizations.Instance.ReplaceLocalized(item.valString);
+#else
+                return item.valString;
+#endif
             }
 
             return null;
@@ -346,6 +359,8 @@ namespace Engine.Game.App.BaseApp
         public static GameLocalizationDataItem GetDataItem(
             GameLocalizationDataItemType itemType, string locale, string key)
         {
+
+#if USE_GAME_LIB_GAMES
             //if(locale != currentLocale) {
             // check locale
             GameLocalizations.Instance.ChangeCurrent(locale);
@@ -370,7 +385,7 @@ namespace Engine.Game.App.BaseApp
                     }
                 }
             }
-
+#endif
             return null;
         }
 
@@ -392,6 +407,7 @@ namespace Engine.Game.App.BaseApp
             {
                 LoadLocale(code);
 
+#if USE_GAME_LIB_GAMES
                 GameLocalization obj = GameLocalizations.Instance.GetById(code);
 
                 if (obj != null)
@@ -401,6 +417,7 @@ namespace Engine.Game.App.BaseApp
                     Messenger<string>.Broadcast(
                         GameLocalizationMessages.gameLocalizationChanged, code);
                 }
+#endif
             }
         }
 
@@ -408,6 +425,7 @@ namespace Engine.Game.App.BaseApp
         {
             get
             {
+#if USE_GAME_LIB_GAMES
                 if (GameLocalizations.Current.data == null)
                 {
                     return false;
@@ -419,12 +437,19 @@ namespace Engine.Game.App.BaseApp
                 }
 
                 return GameLocalizations.Current.data.strings.Count > 0 ? true : false;
+#else
+                return false;
+#endif
             }
         }
 
         public static string GetCodeFromContent(string content)
         {
+#if USE_GAME_LIB_GAMES
             return GameLocalizations.Instance.FindCodeFromContent(content);
+#else
+            return null;
+#endif
         }
 
         public virtual string FindCodeFromContent(string content)
@@ -436,6 +461,7 @@ namespace Engine.Game.App.BaseApp
                 return null;
             }
 
+#if USE_GAME_LIB_GAMES
             foreach (KeyValuePair<string, GameLocalizationDataItem> pair
                     in GameLocalizations.Current.data.strings)
             {
@@ -444,7 +470,7 @@ namespace Engine.Game.App.BaseApp
                     return pair.Value.valString;
                 }
             }
-
+#endif
             return null;
         }
     }

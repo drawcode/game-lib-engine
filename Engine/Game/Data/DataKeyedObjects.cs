@@ -32,7 +32,12 @@ namespace Engine.Game.Data
 
         public virtual void LoadData()
         {
+
+#if USE_GAME_LIB_GAMES
             dataStorage = AppConfigs.dataStorage;
+#else
+            dataStorage = DataObjectsStorage.PERSISTENT;
+#endif
 
             switch (dataStorage)
             {
@@ -70,10 +75,12 @@ namespace Engine.Game.Data
             string pathResources = path;
 
             LogUtil.Log("LoadDataFromResources:pathResources:" + pathResources);
-            LogUtil.Log("LoadDataFromResources:ContentsConfig.contentRootFolder:" + ContentsConfig.contentRootFolder);
-            LogUtil.Log("LoadDataFromResources:ContentsConfig.contentAppFolder:" + ContentsConfig.contentAppFolder);
             LogUtil.Log("LoadDataFromResources:Application.persistentDataPath:" + Application.persistentDataPath);
             LogUtil.Log("LoadDataFromResources:Application.dataPath:" + Application.dataPath);
+            
+#if USE_GAME_LIB_GAMES
+            LogUtil.Log("LoadDataFromResources:ContentsConfig.contentRootFolder:" + ContentsConfig.contentRootFolder);
+            LogUtil.Log("LoadDataFromResources:ContentsConfig.contentAppFolder:" + ContentsConfig.contentAppFolder);
 
             if (!path.Contains(ContentsConfig.contentAppFolder))
             {
@@ -119,6 +126,7 @@ namespace Engine.Game.Data
                     }
                 }
             }
+#endif
 
             LogUtil.Log("LoadDataFromResources:void:" + pathResources);
 
