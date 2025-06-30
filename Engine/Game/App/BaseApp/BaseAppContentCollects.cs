@@ -342,12 +342,16 @@ namespace Engine.Game.App.BaseApp
             string collectType, string collectTypeCode, string actionUid)
         {
 
+#if USE_GAME_LIB_GAMES
             string key = GameProfileModes.GetAppContentCollectItemKey(collectTypeCode, actionUid);
 
             GameProfileContentCollectItem collectData =
                 GameProfileModes.Current.GetContentCollectItem(collectType, key);
-
             return collectData;
+#else
+            return null;
+#endif
+
         }
 
         // ---------------------------------------------------------
@@ -1057,6 +1061,7 @@ namespace Engine.Game.App.BaseApp
                 if (dataType == AppContentCollectActionDataType.itemType)
                 {
 
+#if USE_GAME_LIB_GAMES
                     GameItem obj = GameItems.Instance.GetById(dataCode);
 
                     if (obj != null)
@@ -1064,10 +1069,12 @@ namespace Engine.Game.App.BaseApp
                         data.action_display_name = obj.display_name;
                         data.action_description = obj.description;
                     }
+#endif
                 }
                 else if (dataType == AppContentCollectActionDataType.statisticType)
                 {
 
+#if USE_GAME_LIB_GAMES
                     GameStatistic obj = GameStatistics.Instance.GetById(dataCode);
 
                     if (obj != null)
@@ -1075,10 +1082,12 @@ namespace Engine.Game.App.BaseApp
                         data.action_display_name = obj.display_name;
                         data.action_description = obj.description;
                     }
+#endif
                 }
                 else if (dataType == AppContentCollectActionDataType.characterType)
                 {
 
+#if USE_GAME_LIB_GAMES
                     GameCharacter obj = GameCharacters.Instance.GetById(dataCode);
 
                     if (obj != null)
@@ -1086,6 +1095,7 @@ namespace Engine.Game.App.BaseApp
                         data.action_display_name = obj.display_name;
                         data.action_description = obj.description;
                     }
+#endif
                 }
 
                 data.display_name = ReplaceTemplated(itemDisplayName);
@@ -1317,11 +1327,13 @@ namespace Engine.Game.App.BaseApp
 
             if (!allowed)
             {
+#if USE_GAME_LIB_GAMES
                 GameWorld gameWorld = GameWorlds.Instance.GetByWorldNum(world_num);
                 if (gameWorld != null)
                 {
                     allowed = true;
                 }
+#endif
             }
 
             return allowed;
@@ -1333,12 +1345,14 @@ namespace Engine.Game.App.BaseApp
 
             if (!allowed)
             {
+#if USE_GAME_LIB_GAMES
                 GameWorld gameWorld = GameWorlds.Instance.GetById(world_code);
                 if (gameWorld != null)
                 {
                     int world_num = gameWorld.data.world_num;
                     allowed = IsAllowedWorld(world_num);
                 }
+#endif
             }
 
             return allowed;

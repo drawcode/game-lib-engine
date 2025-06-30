@@ -25,10 +25,11 @@ public class DeviceUtil : GameObjectBehavior {
 	}
 	
 	public static void Vibrate() {
-
+#if USE_GAME_LIB_GAMES
         if(!GameProfiles.Current.GetControlVibrate()) {
             return;
         }
+#endif
 
 #if UNITY_IPHONE || UNITY_ANDROID
         if(!Application.isEditor) {

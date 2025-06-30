@@ -142,6 +142,8 @@ namespace Engine.Game.App.BaseApp
 
         public virtual void Load(string code)
         {
+
+#if USE_GAME_LIB_GAMES
             GameLevelItems.Current.code = code;
             GameLevelItem currentItem = GameLevelItems.Instance.LoadItem(GameLevelItems.Instance.DATA_KEY, code);
             //GameLevelItem currentItem = GameLevelItems.Instance.LoadItem<GameLevelItem>(GameLevelItems.Instance.DATA_KEY, code);
@@ -149,21 +151,26 @@ namespace Engine.Game.App.BaseApp
             {
                 GameLevelItems.Current = currentItem;
             }
+#endif
         }
 
         public virtual void Save()
         {
+#if USE_GAME_LIB_GAMES
             GameLevelItems.Instance.Save(GameLevelItems.Current.code);
+#endif
         }
 
         public virtual void Load()
         {
+#if USE_GAME_LIB_GAMES
             GameLevelItems.Instance.Load(GameLevelItems.Current.code);
+#endif
         }
 
         public virtual void Save(string code)
         {
-
+#if USE_GAME_LIB_GAMES
             GameLevelItems.Current.code = code;
 
             if (string.IsNullOrEmpty(GameLevelItems.Current.code)
@@ -177,19 +184,25 @@ namespace Engine.Game.App.BaseApp
                 SaveItem(GameLevelItems.Instance.DATA_KEY,
                          GameLevelItems.Current.code, GameLevelItems.Current);
             }
+#endif
         }
 
         public virtual void ChangeCurrentAbsolute(string code)
         {
+#if USE_GAME_LIB_GAMES
             GameLevelItems.Current.code = "changeme";
             GameLevelItems.Instance.ChangeCurrent(code);
+#endif
         }
 
         public override void ChangeCurrent(string code)
         {
             base.ChangeCurrent(code);
-            //GameLevelItems.Instance.Save(Current.code);       
+            //GameLevelItems.Instance.Save(Current.code);    
+            
+#if USE_GAME_LIB_GAMES   
             GameLevelItems.Instance.Load(code);
+#endif
         }
     }
 

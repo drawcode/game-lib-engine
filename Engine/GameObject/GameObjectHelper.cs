@@ -560,7 +560,7 @@ public static class GameObjectHelper {
                     | RigidbodyConstraints.FreezeRotationX
                     | RigidbodyConstraints.FreezeRotationZ;
                 rigid.useGravity = false;
-                rigid.angularDrag = .25f;
+                rigid.angularDamping = .25f;
             }
             rigid.angularVelocity = (new Vector3(0, -delta.x, 0));
         }

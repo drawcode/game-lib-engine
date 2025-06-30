@@ -71,7 +71,11 @@ namespace Engine.Game.App.BaseApp
         {
             get
             {
+#if USE_GAME_LIB_GAMES
                 return GameProfileCharacters.Current.GetCurrentCharacter().profilePlayerProgress;
+#else
+                return null;
+#endif
             }
         }
 
@@ -79,7 +83,11 @@ namespace Engine.Game.App.BaseApp
         {
             get
             {
+#if USE_GAME_LIB_GAMES
                 return GameProfileCharacters.Current.GetCurrentCharacter().profileRPGItem;
+#else
+                return null;
+#endif
             }
         }
 
@@ -87,7 +95,11 @@ namespace Engine.Game.App.BaseApp
         {
             get
             {
+#if USE_GAME_LIB_GAMES
                 return GameProfileCharacters.Current.GetCurrentCharacter().profileCustomItem;
+#else
+                return null;
+#endif
             }
         }
 
@@ -245,9 +257,13 @@ namespace Engine.Game.App.BaseApp
         {
             get
             {
+#if USE_GAME_LIB_GAMES
                 return Get<string>(
                     GameProfileCharacterItemKeys.code,
                     ProfileConfigs.defaultProfileCharacterCode);
+#else
+                return "default"; 
+#endif
             }
 
             set
@@ -262,9 +278,13 @@ namespace Engine.Game.App.BaseApp
         {
             get
             {
+#if USE_GAME_LIB_GAMES
                 return Get<string>(
                     GameProfileCharacterItemKeys.characterCode,
                     ProfileConfigs.defaultGameCharacterCode);
+#else
+                return "default"; 
+#endif
             }
 
             set
@@ -279,9 +299,13 @@ namespace Engine.Game.App.BaseApp
         {
             get
             {
+#if USE_GAME_LIB_GAMES
                 return Get<string>(
                     GameProfileCharacterItemKeys.characterDisplayName,
                     ProfileConfigs.defaultGameCharacterDisplayName);
+#else
+                return "default"; 
+#endif
             }
 
             set
@@ -296,9 +320,13 @@ namespace Engine.Game.App.BaseApp
         {
             get
             {
+#if USE_GAME_LIB_GAMES
                 return Get<string>(
                     GameProfileCharacterItemKeys.characterDisplayCode,
                     ProfileConfigs.defaultGameCharacterDisplayCode);
+#else
+                return "default"; 
+#endif
             }
 
             set
@@ -358,14 +386,17 @@ namespace Engine.Game.App.BaseApp
         {
             base.Reset();
 
+#if USE_GAME_LIB_GAMES  
             //current = true;
             code = ProfileConfigs.defaultProfileCharacterCode;
             characterCode = ProfileConfigs.defaultGameCharacterCode;
+#endif
             profileRPGItem = new GameProfileRPGItem();
             profilePlayerProgress = new GameProfilePlayerProgressItem();
             profileCustomItem = new GameProfileCustomItem();
         }
 
+#if USE_GAME_LIB_GAMES  
         public GameCharacter GetCharacterData()
         {
             return GameCharacters.Instance.GetById(characterCode);
@@ -394,6 +425,7 @@ namespace Engine.Game.App.BaseApp
 
             return gameModelData.code;
         }
+#endif
     }
 
     public class BaseGameProfileCharacter : DataObject
@@ -452,10 +484,12 @@ namespace Engine.Game.App.BaseApp
 
             if (obj.items.Count == 0)
             {
+#if USE_GAME_LIB_GAMES
                 // add default
                 obj.SetCharacter(
                     GameProfileCharacters.Current.GetCurrentCharacterProfileCode(),
                     new GameProfileCharacterItem());
+#endif
 
                 SetCharacters(obj);
             }
@@ -529,7 +563,11 @@ namespace Engine.Game.App.BaseApp
 
         public GameProfileCharacterItem GetCurrentCharacter()
         {
+#if USE_GAME_LIB_GAMES
             return GetCharacter(GameProfileCharacters.Current.GetCurrentCharacterProfileCode());
+#else
+            return GetCharacter("default");
+#endif
         }
 
         public GameProfileRPGItem GetCharacterRPG(string code)
@@ -592,6 +630,7 @@ namespace Engine.Game.App.BaseApp
 
         public void AddCharacter(string characterCode)
         {
+#if USE_GAME_LIB_GAMES
             GameCharacter gameCharacter = GameCharacters.Instance.GetById(characterCode);
 
             if (gameCharacter != null)
@@ -618,6 +657,7 @@ namespace Engine.Game.App.BaseApp
                 item.code = UniqueUtil.CreateUUID4(); // allows multiple of same type
                 SetCharacter(item.code, item);
             }
+#endif
         }
 
         public void SetCharacter(string code, GameProfileCharacterItem item)
@@ -633,7 +673,9 @@ namespace Engine.Game.App.BaseApp
             if (setAsCurrent)
             {
                 BaseGameProfileCharacters.currentCharacter = item;
+#if USE_GAME_LIB_GAMES
                 GameProfileCharacters.Current.SetCurrentCharacterProfileCode(code);
+#endif
             }
 
             characters.SetCharacter(code, item);
@@ -642,7 +684,9 @@ namespace Engine.Game.App.BaseApp
 
         public void SetCharacter(GameProfileCharacterItem item)
         {
+#if USE_GAME_LIB_GAMES
             SetCharacter(GameProfileCharacters.Current.GetCurrentCharacterProfileCode(), item);
+#endif
         }
 
         public void SetCharacterRPG(string code, GameProfileRPGItem item)
@@ -668,12 +712,16 @@ namespace Engine.Game.App.BaseApp
 
         public void SetCharacterRPG(GameProfileRPGItem item)
         {
+#if USE_GAME_LIB_GAMES
             SetCharacterRPG(GameProfileCharacters.Current.GetCurrentCharacterProfileCode(), item);
+#endif
         }
 
         public void SetCharacterCustom(GameProfileCustomItem item)
         {
+#if USE_GAME_LIB_GAMES
             SetCharacterCustom(GameProfileCharacters.Current.GetCurrentCharacterProfileCode(), item);
+#endif
         }
 
         // customizations        
@@ -710,7 +758,11 @@ namespace Engine.Game.App.BaseApp
 
         public string GetCurrentCharacterProfileCode()
         {
+#if USE_GAME_LIB_GAMES
             return GetCurrentCharacterProfileCode(ProfileConfigs.defaultProfileCharacterCode);
+#else
+            return GetCurrentCharacterProfileCode("default");
+#endif
         }
 
         public string GetCurrentCharacterProfileCode(string defaultValue)

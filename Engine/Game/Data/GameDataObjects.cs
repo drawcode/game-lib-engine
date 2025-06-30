@@ -1424,7 +1424,9 @@ namespace Engine.Game.App
 
             if (!string.IsNullOrEmpty(valTo))
             {
+#if USE_GAME_LOCALIZATION
                 valTo = Locos.GetReplaceLocalized(valTo);
+#endif
             }
 
             return valTo;
@@ -3267,6 +3269,8 @@ namespace Engine.Game.App
             {
                 if (item.data_type == "preset")
                 {
+
+#if USE_GAME_LIB_GAMES
                     // lookup preset
                     GamePreset preset = GamePresets.Get(item.code);
                     if (preset != null)
@@ -3280,6 +3284,9 @@ namespace Engine.Game.App
                         obj.play_type = item.play_type;
                         objs.Add(obj);
                     }
+#else
+                    objs.Add(GetItemRandomByType(list, type));
+#endif
                 }
                 else
                 {
@@ -3302,6 +3309,7 @@ namespace Engine.Game.App
             {
                 if (item.data_type == "preset")
                 {
+#if USE_GAME_LIB_GAMES
                     // lookup preset
                     GamePreset preset = GamePresets.Get(item.code);
                     if (preset != null)
@@ -3313,6 +3321,7 @@ namespace Engine.Game.App
                         obj.layer = item.layer;
                         return obj;
                     }
+#endif
                 }
                 else
                 {

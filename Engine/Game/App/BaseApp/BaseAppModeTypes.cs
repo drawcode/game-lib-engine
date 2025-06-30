@@ -145,7 +145,9 @@ namespace Engine.Game.App.BaseApp
                 {
                     AppModeTypes.Current = appModeType;
 
+#if USE_GAME_LIB_GAMES
                     GameProfiles.Current.SetCurrentAppModeType(code);
+#endif
 
                     LogUtil.Log("AppModeTypes:ChangeState:code:" + AppModeTypes.Current.code);
                 }

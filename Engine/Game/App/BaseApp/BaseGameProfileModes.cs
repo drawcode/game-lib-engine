@@ -193,7 +193,12 @@ namespace Engine.Game.App.BaseApp
         {
             string appState = AppStates.Current.code;
             string appContentState = AppContentStates.Current.code;
+
+#if USE_GAME_LIB_GAMES
             string worldCode = GameWorlds.Current.code;
+#else
+            string worldCode = "default";
+#endif
             string levelCode = "all";
 
             return
@@ -207,7 +212,12 @@ namespace Engine.Game.App.BaseApp
         {
             string appState = AppStates.Current.code;
             string appContentState = AppContentStates.Current.code;
+
+#if USE_GAME_LIB_GAMES
             string worldCode = GameWorlds.Current.code;
+#else
+            string worldCode = "default";
+#endif
             string levelCode = "all";
 
             return

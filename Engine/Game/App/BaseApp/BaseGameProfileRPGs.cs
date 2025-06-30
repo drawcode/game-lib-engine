@@ -1697,8 +1697,11 @@ namespace Engine.Game.App.BaseApp
 
         public void UpdateGamePlayerProgressPointDataStats(double totalPoints)
         {
+
+#if USE_GAME_LIB_GAMES
             GameProfileStatistics.Current.SetAttributeDoubleValue(
                 GameProfileStatisticAttributes.ATT_TOTAL_POINTS, totalPoints);
+#endif
         }
 
         public virtual bool CheckGamePlayerProgressPointData(string uuid)

@@ -33,6 +33,7 @@ namespace Engine.Game.Actor {
         // Update is called once per frame
         private void Update() {
 
+#if USE_GAME_LIB_GAMES
             if (!GameConfigs.isGameRunning) {
 
                 if (agent != null) {
@@ -40,6 +41,7 @@ namespace Engine.Game.Actor {
                 }
                 return;
             }
+#endif
 
             if (agent != null) {
                 if (agent.remainingDistance == 0 || agent.isPathStale) {

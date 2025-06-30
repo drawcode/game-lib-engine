@@ -434,15 +434,21 @@ namespace Engine.Content
     public class ContentEndpoints
     {
 
+#if USE_GAME_LIB_GAMES
+        public static string contentEndpoint = ContentsConfig.contentEndpoint;
+#else
+        public static string contentEndpoint = "http://s3.amazonaws.com/static/";
+#endif
+
         public static string contentVerification =
-            ContentsConfig.contentEndpoint + "api/v1/en/file/{0}/{1}/{2}/{3}"; // 0 = game, version, platform, pack
+            contentEndpoint + "api/v1/en/file/{0}/{1}/{2}/{3}"; // 0 = game, version, platform, pack
 
         public static string contentDownloadPrimary = "http://s3.amazonaws.com/static/{0}/{1}/{2}/{3}";
         public static string contentDownloadAmazon = "http://s3.amazonaws.com/{0}/{1}/{2}/{3}";
 
-        public static string contentDownloadFileAsset = ContentsConfig.contentEndpoint + "api/v1/en/file/{0}/{1}/{2}/{3}"; // 0 = game, version, platform, pack;
-        public static string contentSyncContentSet = ContentsConfig.contentEndpoint + "api/v1/sync/en/content-list/{0}/{1}/{2}/{3}"; // 0 = game, version, platform, pack;
-        public static string contentDownloadAppContentListFiles = ContentsConfig.contentEndpoint + "api/v1/en/app-content-list/file/{0}/{1}/{2}/"; // 0 = game, version, platform, pack;
+        public static string contentDownloadFileAsset = contentEndpoint + "api/v1/en/file/{0}/{1}/{2}/{3}"; // 0 = game, version, platform, pack;
+        public static string contentSyncContentSet = contentEndpoint + "api/v1/sync/en/content-list/{0}/{1}/{2}/{3}"; // 0 = game, version, platform, pack;
+        public static string contentDownloadAppContentListFiles = contentEndpoint + "api/v1/en/app-content-list/file/{0}/{1}/{2}/"; // 0 = game, version, platform, pack;
     }
 
     public class ContentItem
@@ -546,8 +552,12 @@ namespace Engine.Content
         {
             get
             {
+#if USE_GAME_LIB_GAMES
                 return ContentsConfig.contentRootFolder + "/"
                     + ContentsConfig.contentAppFolder + "/version/";
+#else
+                return "";
+#endif
             }
         }
         public static string appCacheVersionShared
@@ -748,6 +758,7 @@ namespace Engine.Content
             ContentPaths.persistenceFolder = PathUtil.AppPersistencePath;
             ContentPaths.streamingAssetsFolder = Application.streamingAssetsPath;
 
+#if USE_GAME_LIB_GAMES
             LogUtil.Log("Contents::persistenceFolder: " + ContentPaths.persistenceFolder);
             LogUtil.Log("Contents::streamingAssetsFolder: " + ContentPaths.streamingAssetsFolder);
 
@@ -830,6 +841,7 @@ namespace Engine.Content
 
             FileSystemUtil.EnsureDirectory(ContentPaths.appShipCachePathData, false);
             FileSystemUtil.EnsureDirectory(ContentPaths.appShipCachePathShared, false);
+#endif
 
         }
 
@@ -1029,7 +1041,11 @@ namespace Engine.Content
         public ContentSyncDisplayState displayState = ContentSyncDisplayState.SyncNotStarted;
         public int displayStateCount = (int)ContentSyncDisplayState.StateCount;
 
+#if USE_GAME_LIB_GAMES
         public string contentUrlRoot = ContentsConfig.contentEndpoint;
+#else
+        public string contentUrlRoot = "http://s3.amazonaws.com/static/";
+#endif
         public string contentUrlCDN = "http://s3.amazonaws.com/";
 
         public List<ContentItem> contentItemList = new List<ContentItem>();
@@ -1992,6 +2008,7 @@ namespace Engine.Content
 
             string pathPack = "";
 
+#if USE_GAME_LIB_GAMES
             // app content list data
             pathPack = ContentsConfig.contentVersion +
                 "/shared/packs/" +
@@ -1999,6 +2016,7 @@ namespace Engine.Content
                     "/data/" +
                     key +
                     "." + ext;
+#endif
 
 
             if (synced)
@@ -2031,6 +2049,7 @@ namespace Engine.Content
 
             string pathPack = "";
 
+#if USE_GAME_LIB_GAMES
             // app content list data
             pathPack = ContentsConfig.contentVersion +
                 "/" + ContentPaths.GetCurrentPlatformCode() + "/packs/" +
@@ -2038,8 +2057,7 @@ namespace Engine.Content
                     "/data/" +
                     key +
                     "." + ext;
-
-
+#endif
             if (synced)
             {
                 pathPack = GetFullPathVersionedSync(pathPack);
@@ -2070,6 +2088,7 @@ namespace Engine.Content
 
             string pathPack = "";
 
+#if USE_GAME_LIB_GAMES
             // app content list data
             pathPack = ContentsConfig.contentVersion +
                 "/shared/packs/" +
@@ -2077,7 +2096,7 @@ namespace Engine.Content
                     "/content/" +
                     key +
                     "." + ext;
-
+#endif
             if (synced)
             {
                 pathPack = GetFullPathVersionedSync(pathPack);
@@ -2109,6 +2128,7 @@ namespace Engine.Content
 
             string pathPack = "";
 
+#if USE_GAME_LIB_GAMES
             // app content list data
             pathPack = ContentsConfig.contentVersion +
                 "/shared/packs/" +
@@ -2116,6 +2136,7 @@ namespace Engine.Content
                     "/" +
                     key +
                     "." + ext;
+#endif
 
             if (synced)
             {
@@ -2147,6 +2168,7 @@ namespace Engine.Content
 
             List<string> paths = new List<string>();
 
+#if USE_GAME_LIB_GAMES
             string pathRoot = ContentsConfig.contentVersion + "/data/" + AppContentListItems.DATA_KEY + ".json";
             string pathRootVersioned = GetFileVersioned(pathRoot);
             //string pathRootSync = GetFullPathVersionedSync(pathRoot); 
@@ -2174,6 +2196,7 @@ namespace Engine.Content
                     true,
                     false));
             }
+#endif
 
             return paths;
         }
@@ -2223,7 +2246,9 @@ namespace Engine.Content
 
             if (url.Contains("version/"))
             {
+#if USE_GAME_LIB_GAMES
                 url = url.Replace("version/", ContentsConfig.contentVersion + "/");
+#endif
             }
 
             return url;
@@ -2867,7 +2892,11 @@ namespace Engine.Content
             string udid = UniqueUtil.Instance.currentUniqueId;
 
             data.Add("device_id", udid);
+#if USE_GAME_LIB_GAMES
             data.Add("app_id", ContentsConfig.contentApiKey);
+#else
+            data.Add("app_id", "default_app_id");
+#endif
 
             downloadInProgress = true;
 
@@ -2950,7 +2979,11 @@ namespace Engine.Content
             string udid = UniqueUtil.Instance.currentUniqueId;
 
             data.Add("device_id", udid);
+#if USE_GAME_LIB_GAMES
             data.Add("app_id", ContentsConfig.contentApiKey);
+#else
+            data.Add("app_id", "default_app_id");
+#endif
 
             return data;
         }
@@ -2969,10 +3002,18 @@ namespace Engine.Content
 
             downloadInProgress = true;
 
+#if USE_GAME_LIB_GAMES
             string game = ContentsConfig.contentAppFolder;
+#else
+            string game = "default_game";
+#endif
             string platform = ContentPaths.GetCurrentPlatformCode();
-            string version = ContentsConfig.contentVersion;
 
+#if USE_GAME_LIB_GAMES
+            string version = ContentsConfig.contentVersion;
+#else
+            string version = "default_version";
+#endif
             string url = GetDownloadAppContentListFilesUrl(game, version, platform);
 
             Dictionary<string, object> data = GetDefaultPostParams();
@@ -3003,9 +3044,18 @@ namespace Engine.Content
 
             downloadInProgress = true;
 
+#if USE_GAME_LIB_GAMES
             string game = ContentsConfig.contentAppFolder;
+#else
+            string game = "default_game";
+#endif
             string platform = ContentPaths.GetCurrentPlatformCode();
+
+#if USE_GAME_LIB_GAMES
             string version = ContentsConfig.contentVersion;
+#else
+            string version = "default_version";
+#endif
 
             string url = GetDownloadAppContentListFilesUrl(game, version, platform);
 
@@ -3343,9 +3393,12 @@ namespace Engine.Content
                     pathSave = PathUtil.Combine(pathCache, path);
                 }
 
+#if USE_GAME_LIB_GAMES
                 string pathBase = ContentsConfig.contentRootFolder + "/";
                 pathBase += ContentsConfig.contentAppFolder + "/";
-
+#else
+                string pathBase = "default/";
+#endif
                 if (pathSave.Contains(pathBase + pathBase))
                 {
                     pathSave = pathSave.Replace(pathBase + pathBase, pathBase);
@@ -3548,18 +3601,35 @@ namespace Engine.Content
             string pathNoHashCurrent = pathSave.Replace("-" + hashNew, "");
             string hashCurrent = GetHashCodeFromFile(pathNoHashCurrent);
 
+#if USE_GAME_LIB_GAMES
             string pathVersionedSync = ContentsConfig.contentRootFolder + "/";
             pathVersionedSync += ContentsConfig.contentAppFolder + "/";
             pathVersionedSync = PathUtil.Combine(pathVersionedSync, path);
+#else       
+            string pathVersionedSync = "default/";
+            pathVersionedSync += "default_app/";
+            pathVersionedSync = PathUtil.Combine(pathVersionedSync, path);
+#endif
 
+
+#if USE_GAME_LIB_GAMES
             string pathVersioned = ContentsConfig.contentRootFolder + "/";
             pathVersioned += ContentsConfig.contentAppFolder + "/";
             pathVersioned = PathUtil.Combine(pathVersioned, pathNoHashNew);
-
+#else
+            string pathVersioned = "default/";
+            pathVersioned += "default_app/";
+            pathVersioned = PathUtil.Combine(pathVersioned, pathNoHashNew);
+#endif
             bool updateFile = false;
             //List<AppContentListItem> appContentListItems = null;
+
+#if USE_GAME_LIB_GAMES
             bool isAllType = pathVersionedSync.Contains(
                 ContentsConfig.contentAppFolder + "/all/");
+#else
+            bool isAllType = pathVersionedSync.Contains("default_app/all/");
+#endif
 
             if (isFileValid)
             {
@@ -4313,9 +4383,13 @@ namespace Engine.Content
                     string ext = arrfilepart[arrfilepart.Length - 1];
                     string filepartbare = filepart.Replace("." + ext, "");
 
+#if USE_GAME_LIB_GAMES
                     string appVersion = ContentsConfig.contentVersion.Replace(".", "-");
                     string appIncrement = ContentsConfig.contentIncrement.ToString();
-
+#else
+                    string appVersion = "default";
+                    string appIncrement = "1";
+#endif
                     if (!string.IsNullOrEmpty(hash))
                     {
 
@@ -4367,11 +4441,19 @@ namespace Engine.Content
                 if (arrpath != null)
                 {
 
+#if USE_GAME_LIB_GAMES
                     string appVersion = ContentsConfig.contentVersion.Replace(".", "-");
                     string appIncrement = ContentsConfig.contentIncrement.ToString();
                     string versionAppend = "-" + appVersion
                             + "-"
                             + appIncrement;
+#else
+                    string appVersion = "default";
+                    string appIncrement = "1";
+                    string versionAppend = "-" + appVersion
+                            + "-"
+                            + appIncrement;
+#endif
                     if (fileVersioned.Contains(versionAppend))
                     {
                         fileVersioned = fileVersioned.Substring(0, fileVersioned.IndexOf(versionAppend));
@@ -4425,8 +4507,13 @@ namespace Engine.Content
                 if (arrpath != null)
                 {
 
+#if USE_GAME_LIB_GAMES
                     string appVersion = ContentsConfig.contentVersion.Replace(".", "-");
                     string appIncrement = ContentsConfig.contentIncrement.ToString();
+#else
+                    string appVersion = "default";
+                    string appIncrement = "1";
+#endif
 
                     if (!string.IsNullOrEmpty(hash))
                     {

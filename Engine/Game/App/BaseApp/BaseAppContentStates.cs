@@ -188,7 +188,9 @@ namespace Engine.Game.App.BaseApp
 
                     AppContentStates.Current = app_content_state;
 
+#if USE_GAME_LIB_GAMES
                     GameProfiles.Current.SetCurrentAppContentState(code);
+#endif
 
                     LogUtil.Log("AppContentStates:code:" + AppContentStates.Current.code);
 

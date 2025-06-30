@@ -100,7 +100,9 @@ namespace Engine.Game.App.BaseApp
                 {
                     AppStates.Current = app_state;
 
+#if USE_GAME_LIB_GAMES
                     GameProfiles.Current.SetCurrentAppState(code);
+#endif
 
                     LogUtil.Log("AppStates:ChangeState:code:" + AppStates.Current.code);
                 }

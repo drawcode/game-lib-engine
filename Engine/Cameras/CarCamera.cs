@@ -33,7 +33,7 @@ namespace Engine.Cameras
         {
 
             currentVelocity = Vector3.Lerp(
-                prevVelocity, rb.velocity, velocityDamping * Time.deltaTime);
+                prevVelocity, rb.linearVelocity, velocityDamping * Time.deltaTime);
 
             currentVelocity.y = 0;
             prevVelocity = currentVelocity;
@@ -42,7 +42,7 @@ namespace Engine.Cameras
         private void LateUpdate()
         {
 
-            float speedFactor = Mathf.Clamp01(rb.velocity.magnitude / 70.0f);
+            float speedFactor = Mathf.Clamp01(rb.linearVelocity.magnitude / 70.0f);
 
             camera.fieldOfView = Mathf.Lerp(55, 72, speedFactor);
 

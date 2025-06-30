@@ -604,7 +604,7 @@ namespace Engine.Events
                         | RigidbodyConstraints.FreezeRotationX
                         | RigidbodyConstraints.FreezeRotationZ;
                     rb.useGravity = false;
-                    rb.angularDrag = 3f;
+                    rb.angularDamping = 3f;
                 }
 
                 go.transform.localRotation =
@@ -1534,10 +1534,12 @@ namespace Engine.Events
         public virtual void updateTouchLaunch()
         {
 
+#if USE_GAME_LIB_GAMES
             if (!GameConfigs.isGameRunning)
             {
                 return;
             }
+#endif
 
             shouldTouch = true;
             inputButtonDown = false;

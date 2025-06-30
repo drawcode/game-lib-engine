@@ -14,8 +14,50 @@ using Engine.Content;
 
 namespace Engine.Game.App.BaseApp
 {
+    /// <summary>
+    /// BaseGameState is the base class for managing the game state, including configuration, profiles, and game data.
+    /// It provides methods for saving and loading configurations and profiles, as well as handling user changes.
+    /// This class is designed to be a singleton, ensuring that only one instance exists throughout the application.
+    /// 
+    /// It includes methods for saving and loading game configurations, profiles, and related data.
+    /// The class also provides functionality to handle user changes and synchronize profile data.
+    /// 
+    /// Note: This class is intended to be extended by specific game implementations that will provide
+    /// additional functionality and data management as needed.
+    /// 
+    /// Usage:
+    /// - Access the singleton instance via `BaseGameState.BaseInstance`.
+    /// - Call `InitState()` to initialize the game state.
+    /// - Use `SaveConfig()`, `LoadConfig()`, `SaveProfile()`, and `LoadProfile()` to manage game data.
+    /// - Use `ChangeUser()` to switch between different user profiles.
+    /// 
+    /// This class is part of the Engine.Game.App.BaseApp namespace and is designed to work with the Engine.Game.Data and Engine.Utility namespaces.
+    /// 
+    /// Dependencies:
+    /// - Engine.Events for event handling.
+    /// - Engine.Game.Data for game data management.
+    /// - Engine.Utility for utility functions like JSON serialization and file handling.
+    /// - UnityEngine for Unity-specific functionality.
+    /// 
+    /// This class is not intended to be used directly but rather as a foundation for building game-specific state management systems.
+    /// 
+    /// Example:
+    /// ```csharp
+    /// BaseGameState gameState = BaseGameState.BaseInstance;
+    /// gameState.InitState();
+    /// gameState.SaveConfig();
+    /// gameState.LoadProfile();
+    /// ```
+    /// 
+    /// This class is part of the Engine.Game.App.BaseApp namespace and is designed to be used in Unity-based game applications.
+    /// 
+    /// Note: This class may be extended in the future to include additional functionality such as cloud synchronization, multiplayer support, or other game-specific features.
+    /// 
+    /// Version: 1.0.0  
+    /// </summary>
     public class BaseGameState
     {
+#if USE_GAME_LIB_GAMES
         //public GameConfig config;
         //public GameProfile profile;
         //public GameProfileStatistic profileStatistic;
@@ -31,9 +73,11 @@ namespace Engine.Game.App.BaseApp
         //public GameCareer career;
         public GameData gameData;
         //public GameLevels gameLevels;
+#endif
 
+#if USE_GAME_LIB_GAMES
         //public Gameverses.GameversesGameAPI gameversesAPI;
-
+#endif
         private static volatile BaseGameState instance;
         private static System.Object syncRoot = new System.Object();
         //public Thread saveThread;
@@ -88,7 +132,7 @@ namespace Engine.Game.App.BaseApp
 
         public virtual void InitState()
         {
-
+#if USE_GAME_LIB_GAMES
             //config = GameConfigs.Current;
             //profile = GameProfiles.Current;
             //profileStatistic = GameProfileStatistics.Current;
@@ -100,8 +144,6 @@ namespace Engine.Game.App.BaseApp
             //profileProduct = GameProfileProducts.Current;
             //profileRPG = GameProfileRPGs.Current;
             //profileTeam = GameProfileTeams.Current;
-            //profileVehicle = GameProfileVehicles.Current;
-
             gameData = GameDatas.Current;
 
             loadConfig();
@@ -112,35 +154,43 @@ namespace Engine.Game.App.BaseApp
 
             loadProfile();
             saveProfile();
+#endif
         }
 
         // CONFIG
 
         public static void SaveConfig()
         {
+#if USE_GAME_LIB_GAMES
             if (GameState.Instance != null)
             {
                 GameState.Instance.saveConfig();
             }
+#endif
         }
 
         public virtual void saveConfig()
         {
+#if USE_GAME_LIB_GAMES
             string jsonString = GameConfigs.Current.ToJson();// JsonMapper.ToJson(config);
             SystemPrefUtil.SetLocalSettingString(KEY_CONFIG, jsonString);
             SystemPrefUtil.Save();
+#endif
         }
 
         public static void LoadConfig()
         {
+#if USE_GAME_LIB_GAMES
             if (GameState.Instance != null)
             {
                 GameState.Instance.loadConfig();
             }
+#endif
         }
 
         public virtual void loadConfig()
         {
+#if USE_GAME_LIB_GAMES
             string data = SystemPrefUtil.GetLocalSettingString(KEY_CONFIG);
             if (!string.IsNullOrEmpty(data))
             {
@@ -149,6 +199,7 @@ namespace Engine.Game.App.BaseApp
 
             GameProfiles.Current.ChangeUser(GameConfigs.Current.lastLoggedOnUser);
             //career.ChangeUser(config.lastLoggedOnUser);
+#endif
         }
 
         // KEYS
@@ -157,7 +208,11 @@ namespace Engine.Game.App.BaseApp
         {
             get
             {
+#if USE_GAME_LIB_GAMES
                 return getProfileKey(GameProfiles.Current.username);
+#else
+                return "default";
+#endif
             }
         }
 
@@ -165,7 +220,11 @@ namespace Engine.Game.App.BaseApp
         {
             get
             {
+#if USE_GAME_LIB_GAMES
                 return getProfileAchievementKey(GameProfiles.Current.username);
+#else
+                return "default";
+#endif
             }
         }
 
@@ -173,7 +232,11 @@ namespace Engine.Game.App.BaseApp
         {
             get
             {
+#if USE_GAME_LIB_GAMES
                 return getProfileStatisticKey(GameProfiles.Current.username);
+#else
+                return "default";
+#endif
             }
         }
 
@@ -181,7 +244,11 @@ namespace Engine.Game.App.BaseApp
         {
             get
             {
+#if USE_GAME_LIB_GAMES
                 return getProfileCharacterKey(GameProfiles.Current.username);
+#else
+                return "default";
+#endif
             }
         }
 
@@ -189,7 +256,11 @@ namespace Engine.Game.App.BaseApp
         {
             get
             {
+#if USE_GAME_LIB_GAMES
                 return getProfileCustomizationKey(GameProfiles.Current.username);
+#else
+                return "default";
+#endif
             }
         }
 
@@ -197,7 +268,11 @@ namespace Engine.Game.App.BaseApp
         {
             get
             {
+#if USE_GAME_LIB_GAMES
                 return getProfileModeKey(GameProfiles.Current.username);
+#else
+                return "default";
+#endif
             }
         }
 
@@ -205,7 +280,11 @@ namespace Engine.Game.App.BaseApp
         {
             get
             {
+#if USE_GAME_LIB_GAMES
                 return getProfileProductKey(GameProfiles.Current.username);
+#else
+                return "default";
+#endif
             }
         }
 
@@ -213,7 +292,11 @@ namespace Engine.Game.App.BaseApp
         {
             get
             {
+#if USE_GAME_LIB_GAMES
                 return getProfileRPGKey(GameProfiles.Current.username);
+#else
+                return "default";
+#endif
             }
         }
 
@@ -221,7 +304,11 @@ namespace Engine.Game.App.BaseApp
         {
             get
             {
+#if USE_GAME_LIB_GAMES
                 return getProfileTeamKey(GameProfiles.Current.username);
+#else
+                return "default";
+#endif
             }
         }
 
@@ -229,7 +316,11 @@ namespace Engine.Game.App.BaseApp
         {
             get
             {
+#if USE_GAME_LIB_GAMES
                 return getProfileVehicleKey(GameProfiles.Current.username);
+#else
+                return "default";
+#endif
             }
         }
 
@@ -337,6 +428,7 @@ namespace Engine.Game.App.BaseApp
         {
             string data = obj.ToJson();//JsonMapper.ToJson(obj);
 
+#if USE_GAME_LIB_GAMES
             if (ProfileConfigs.useStorageEncryption)
             {
                 data = data.ToEncrypted();
@@ -346,6 +438,7 @@ namespace Engine.Game.App.BaseApp
             {
                 data = data.ToCompressed();
             }
+#endif
 
             if (keyTo == keyProfile)
             {
@@ -392,6 +485,7 @@ namespace Engine.Game.App.BaseApp
             data = readProfileFile(keyTo);
 #endif
 
+#if USE_GAME_LIB_GAMES
             if (ProfileConfigs.useStorageCompression)
             {// || data.IsCompressed()) {
                 data = data.ToDecompressed();
@@ -401,6 +495,7 @@ namespace Engine.Game.App.BaseApp
             {
                 data = data.ToDecrypted();
             }
+#endif
 
             if (keyTo == keyProfile)
             {
@@ -426,10 +521,12 @@ namespace Engine.Game.App.BaseApp
 
         public static void SyncProfile()
         {
+#if USE_GAME_LIB_GAMES
             if (GameState.Instance != null)
             {
                 GameState.Instance.syncProfile();
             }
+#endif
         }
 
         public virtual void syncProfile()
@@ -454,6 +551,7 @@ namespace Engine.Game.App.BaseApp
             GameSync.ResetProfileSyncObject();
 #endif
 
+#if USE_GAME_LIB_GAMES
             save(keyProfile, GameProfiles.Current, true);
             save(keyProfileAchievement, GameProfileAchievements.Current, true);
             save(keyProfileStatistic, GameProfileStatistics.Current, true);
@@ -464,6 +562,7 @@ namespace Engine.Game.App.BaseApp
             save(keyProfileRPG, GameProfileRPGs.Current, true);
             save(keyProfileTeam, GameProfileTeams.Current, true);
             save(keyProfileVehicle, GameProfileVehicles.Current, true);
+#endif
 
             // prepare and upload any files changed
 
@@ -480,12 +579,15 @@ namespace Engine.Game.App.BaseApp
 
         public static void SaveProfile()
         {
+#if USE_GAME_LIB_GAMES
             if (GameState.Instance != null)
             {
                 GameState.Instance.saveProfile();
             }
+#endif
         }
 
+#if USE_GAME_LIB_GAMES
         public virtual void saveProfile(GameProfile profile)
         {
             if (profile != null)
@@ -672,6 +774,7 @@ namespace Engine.Game.App.BaseApp
             //    profileVehicle.username = profile.username;
             //}
         }
+#endif
     }
 }
 
