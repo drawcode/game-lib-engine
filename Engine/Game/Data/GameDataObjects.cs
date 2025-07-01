@@ -1424,7 +1424,7 @@ namespace Engine.Game.App
 
             if (!string.IsNullOrEmpty(valTo))
             {
-#if USE_GAME_LOCALIZATION
+#if USE_GAME_LIB_GAMES
                 valTo = Locos.GetReplaceLocalized(valTo);
 #endif
             }
