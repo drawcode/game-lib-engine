@@ -10,11 +10,11 @@ public class GameObjectTimerKeys {
     public static string gameUpdateAll = "game-update-all";
     public static string gameUpdateAlways = "game-update-always";
     public static string gameUpdatePhysics = "game-update-physics";
-    
+
     public static string gameLateUpdateAll = "game-late-update-all";
     public static string gameLateUpdateAlways = "game-late-update-always";
     public static string gameLateUpdatePhysics = "game-late-update-physics";
-    
+
     public static string gameFixedUpdateAll = "game-fixed-update-all";
     public static string gameFixedUpdateAlways = "game-fixed-update-always";
     public static string gameFixedUpdatePhysics = "game-fixed-update-physics";
@@ -35,7 +35,7 @@ public class GameObjectTimer {
 
     private static volatile GameObjectTimer instance;
     private static System.Object syncRoot = new System.Object();
-        
+
     public static GameObjectTimer Instance {
         get {
             if (instance == null) {
@@ -44,7 +44,7 @@ public class GameObjectTimer {
                         instance = new GameObjectTimer();
                 }
             }
-            
+
             return instance;
         }
         set {
@@ -62,9 +62,9 @@ public class GameObjectTimer {
     }
 
     public void InitIntervals(bool reset = false) {
-        if(intervals == null || reset) {            
+        if (intervals == null || reset) {
             intervals = new Dictionary<string, float>();
-            
+
             SetInterval(GameObjectTimerKeys.gameUpdateAll, defaultInterval);
             SetInterval(GameObjectTimerKeys.gameUpdateAlways, defaultInterval);
             SetInterval(GameObjectTimerKeys.gameUpdatePhysics, defaultInterval);
@@ -81,7 +81,7 @@ public class GameObjectTimer {
     }
 
     public void InitTimers(bool reset = false) {
-        if(timers == null || reset) {            
+        if (timers == null || reset) {
             timers = new Dictionary<string, GameObjectTimerData>();
         }
     }
@@ -95,7 +95,7 @@ public class GameObjectTimer {
     public float GetInterval(string key) {
         InitIntervals();
 
-        if(intervals.ContainsKey(key)) {
+        if (intervals.ContainsKey(key)) {
             return intervals[key];
         }
 
@@ -107,29 +107,29 @@ public class GameObjectTimer {
         InitTimers();
 
         GameObjectTimerData obj = GetTimer(key, delta, modifier);
-        
+
         obj.key = key;
         obj.delta = delta;
         obj.last_time = Time.time;
         obj.modifier = modifier;
-        
+
         timers.Set<string, GameObjectTimerData>(key, obj);
 
         return obj;
     }
-    
+
     public GameObjectTimerData GetTimer(string key, float delta = 0.033f, float modifier = 1f) {
 
         InitTimers();
 
         GameObjectTimerData obj = null;
 
-        if(timers.Has(key)) {
-            obj = timers.Get(key);    
+        if (timers.Has(key)) {
+            obj = timers.Get(key);
         }
-        
-        if(obj == null) {
-            obj = new GameObjectTimerData();            
+
+        if (obj == null) {
+            obj = new GameObjectTimerData();
             obj.key = key;
             obj.delta = delta;
             obj.last_time = Time.time;
@@ -147,13 +147,13 @@ public class GameObjectTimer {
 
         GameObjectTimerData obj = GetTimer(key, delta, modifier);
 
-        if((obj.last_time + (delta * modifier)) < Time.time) {
+        if ((obj.last_time + (delta * modifier)) < Time.time) {
             obj.last_time = Time.time;
             timers.Set<GameObjectTimerData>(key, obj);
             //Debug.Log("GameObjectTimer:" + key + " last_time:" + obj.last_time);
             return true;
         }
-        
+
         return false;
     }
 
@@ -167,7 +167,7 @@ public class GameObjectTimer {
 
     public bool IsTimerPerf(string key, float modifier = 1f) {
         return IsTimerPerfRelative(
-            key, 
+            key,
             GetInterval(key) * modifier);
     }
 
@@ -198,7 +198,7 @@ public class GameObjectTimer {
             return GetFPSOffset();
         }
     }
-   
+
     public float defaultInterval {
         get {
             return 1f / 30f;
@@ -210,7 +210,7 @@ public class GameObjectTimer {
             return 2f / 30f;
         }
     }
-        
+
     public float defaultIntervalQuarter {
         get {
             return 4f / 30f;

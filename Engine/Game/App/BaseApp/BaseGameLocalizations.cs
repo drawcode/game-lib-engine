@@ -10,10 +10,8 @@ using Engine.Game.Data;
 
 using UnityEngine;
 
-namespace Engine.Game.App.BaseApp
-{
-    public class BaseGameLocalizationKeys
-    {
+namespace Engine.Game.App.BaseApp {
+    public class BaseGameLocalizationKeys {
         // APP
 
         public static string app_display_name = "app_display_name";
@@ -100,32 +98,27 @@ namespace Engine.Game.App.BaseApp
 
     }
 
-    public class GameLocalizationMessages
-    {
+    public class GameLocalizationMessages {
         public static string gameLocalizationChanged = "game-localization-changed";
     }
 
-    public enum GameLocalizationDataItemType
-    {
+    public enum GameLocalizationDataItemType {
         strings,
         images
     }
 
 #if USE_GAME_LIB_GAMES
-// Note: add in localization defines and inteface
-    public class LocoKeys : GameLocalizationKeys
-    {
+    // Note: add in localization defines and inteface
+    public class LocoKeys : GameLocalizationKeys {
 
     }
 
-    public class Locos : GameLocalizations
-    {
+    public class Locos : GameLocalizations {
 
     }
 #endif
 
-    public class BaseGameLocalizations<T> : DataObjects<T> where T : DataObject, new()
-    {
+    public class BaseGameLocalizations<T> : DataObjects<T> where T : DataObject, new() {
         private static T current;
         private static volatile BaseGameLocalizations<T> instance;
         private static System.Object syncRoot = new System.Object();
@@ -134,14 +127,10 @@ namespace Engine.Game.App.BaseApp
 
         public static string BASE_DATA_KEY = "game-localization-data";
 
-        public static T BaseCurrent
-        {
-            get
-            {
-                if (current == null)
-                {
-                    lock (syncRoot)
-                    {
+        public static T BaseCurrent {
+            get {
+                if (current == null) {
+                    lock (syncRoot) {
                         if (current == null)
                             current = new T();
                     }
@@ -149,20 +138,15 @@ namespace Engine.Game.App.BaseApp
 
                 return current;
             }
-            set
-            {
+            set {
                 current = value;
             }
         }
 
-        public static BaseGameLocalizations<T> BaseInstance
-        {
-            get
-            {
-                if (instance == null)
-                {
-                    lock (syncRoot)
-                    {
+        public static BaseGameLocalizations<T> BaseInstance {
+            get {
+                if (instance == null) {
+                    lock (syncRoot) {
                         if (instance == null)
                             instance = new BaseGameLocalizations<T>(true);
                     }
@@ -170,33 +154,28 @@ namespace Engine.Game.App.BaseApp
 
                 return instance;
             }
-            set
-            {
+            set {
                 instance = value;
             }
         }
 
-        public BaseGameLocalizations()
-        {
+        public BaseGameLocalizations() {
             Reset();
         }
 
-        public BaseGameLocalizations(bool loadData)
-        {
+        public BaseGameLocalizations(bool loadData) {
             //Reset();
             //LoadLocale(defaultLocale);
         }
 
-        public void LoadLocale(string localeCode)
-        {
+        public void LoadLocale(string localeCode) {
             Reset();
 
             string localeSystem = Application.systemLanguage.ToString();
 
             Debug.Log("GameLocalizations:LoadLocale:" + " localeSystem:" + localeSystem);
 
-            if (string.IsNullOrEmpty(localeCode))
-            {
+            if (string.IsNullOrEmpty(localeCode)) {
                 localeCode = defaultLocale;
             }
 
@@ -212,8 +191,7 @@ namespace Engine.Game.App.BaseApp
             LoadData();
         }
 
-        public static string GetReplaceLocalized(string content)
-        {
+        public static string GetReplaceLocalized(string content) {
 #if USE_GAME_LIB_GAMES
             return Locos.Instance.ReplaceLocalized(content);
 #else
@@ -223,8 +201,7 @@ namespace Engine.Game.App.BaseApp
 
         private string lastString = "--";
 
-        public string ReplaceLocalized(string content)
-        {
+        public string ReplaceLocalized(string content) {
             //if (!GameConfigs.globalReady) {
             //    return content;
             //}
@@ -236,17 +213,14 @@ namespace Engine.Game.App.BaseApp
 
             string regexTemplate = @"\{\{[ ]*\^[ ]*(.*?)[ ]*\}\}";
 
-            if (content.RegexIsMatch(regexTemplate))
-            {
+            if (content.RegexIsMatch(regexTemplate)) {
                 MatchCollection matches = content.RegexMatches(regexTemplate);
 
-                foreach (Match match in matches)
-                {
+                foreach (Match match in matches) {
                     string valCodeMatch = match.Value;
                     string valCodeGroup = match.Value;
 
-                    foreach (Group group in match.Groups)
-                    {
+                    foreach (Group group in match.Groups) {
                         valCodeGroup = group.Value;
                     }
 
@@ -255,14 +229,11 @@ namespace Engine.Game.App.BaseApp
 
                     GameLocalizationData data = localization.data;
 
-                    if (data != null)
-                    {
+                    if (data != null) {
                         GameLocalizationDataItem dataItem = null;
 
-                        if (data.strings != null)
-                        {
-                            if (data.strings.ContainsKey(valCodeGroup))
-                            {
+                        if (data.strings != null) {
+                            if (data.strings.ContainsKey(valCodeGroup)) {
                                 dataItem = data.strings.Get(valCodeGroup);
                             }
                         }
@@ -270,10 +241,8 @@ namespace Engine.Game.App.BaseApp
                         string regexCode = @"(\{\{[ ]*\^[ ]*" + valCodeGroup + @"[ ]*\}\})"; //{{[ ]*(.*?)[ ]*}} //({{[ ]*app_display_name[ ]*}}.)
                         string replaceText = valCodeMatch; // replace it if not found to prevent recursion
 
-                        if (dataItem != null)
-                        {
-                            if (!string.IsNullOrEmpty(dataItem.valString))
-                            {
+                        if (dataItem != null) {
+                            if (!string.IsNullOrEmpty(dataItem.valString)) {
                                 replaceText = dataItem.valString;
                             }
                         }
@@ -285,8 +254,7 @@ namespace Engine.Game.App.BaseApp
 
                 // recurse check... 
                 // never infinity and beyond in a loop
-                if (lastString != content)
-                {
+                if (lastString != content) {
                     lastString = content;
                     // recurse
                     content = ReplaceLocalized(content);
@@ -298,41 +266,34 @@ namespace Engine.Game.App.BaseApp
 
         //
 
-        public static string Babel(string stringToTranslate)
-        {
+        public static string Babel(string stringToTranslate) {
 #if USE_GAME_LIB_GAMES
-            if (GameLocalizations.Instance != null)
-            {
+            if (GameLocalizations.Instance != null) {
                 //string locale = Application.systemLanguage.ToString();
                 // Note: TODO translate using API/AI to get the string
             }
 #endif
-            
+
             return stringToTranslate;
         }
 
-        public static string Get(string key)
-        {
+        public static string Get(string key) {
             return GetString(key);
         }
 
-        public static string Get(string locale, string key)
-        {
+        public static string Get(string locale, string key) {
             return GetString(locale, key);
         }
 
-        public static string GetString(string key)
-        {
+        public static string GetString(string key) {
             return GetString(currentLocale, key);
         }
 
-        public static string GetString(string locale, string key)
-        {
+        public static string GetString(string locale, string key) {
             GameLocalizationDataItem item = GetDataItem(
                 GameLocalizationDataItemType.strings, locale, key);
 
-            if (item != null)
-            {
+            if (item != null) {
 #if USE_GAME_LIB_GAMES
                 return GameLocalizations.Instance.ReplaceLocalized(item.valString);
 #else
@@ -343,13 +304,11 @@ namespace Engine.Game.App.BaseApp
             return null;
         }
 
-        public static string GetImage(string locale, string key)
-        {
+        public static string GetImage(string locale, string key) {
             GameLocalizationDataItem item = GetDataItem(
                 GameLocalizationDataItemType.images, locale, key);
 
-            if (item != null)
-            {
+            if (item != null) {
                 return item.valString;
             }
 
@@ -357,8 +316,7 @@ namespace Engine.Game.App.BaseApp
         }
 
         public static GameLocalizationDataItem GetDataItem(
-            GameLocalizationDataItemType itemType, string locale, string key)
-        {
+            GameLocalizationDataItemType itemType, string locale, string key) {
 
 #if USE_GAME_LIB_GAMES
             //if(locale != currentLocale) {
@@ -368,19 +326,15 @@ namespace Engine.Game.App.BaseApp
 
             GameLocalization localeObject = GameLocalizations.Current;
 
-            if (localeObject != null)
-            {
+            if (localeObject != null) {
                 GameLocalizationData localeData = localeObject.data;
 
-                if (localeData != null)
-                {
-                    if (itemType == GameLocalizationDataItemType.strings)
-                    {
+                if (localeData != null) {
+                    if (itemType == GameLocalizationDataItemType.strings) {
 
                         return localeData.GetItemString(key);
                     }
-                    else if (itemType == GameLocalizationDataItemType.images)
-                    {
+                    else if (itemType == GameLocalizationDataItemType.images) {
                         return localeData.GetItemImage(key);
                     }
                 }
@@ -389,8 +343,7 @@ namespace Engine.Game.App.BaseApp
             return null;
         }
 
-        public override void ChangeCurrent(string code)
-        {
+        public override void ChangeCurrent(string code) {
             base.ChangeCurrent(code);
 
             //Debug.Log("ChangeCurrent:" + 
@@ -403,15 +356,13 @@ namespace Engine.Game.App.BaseApp
 
             if (code != currentLocale
                 || !IsLoaded
-                || !HasLoadedStrings)
-            {
+                || !HasLoadedStrings) {
                 LoadLocale(code);
 
 #if USE_GAME_LIB_GAMES
                 GameLocalization obj = GameLocalizations.Instance.GetById(code);
 
-                if (obj != null)
-                {
+                if (obj != null) {
                     GameLocalizations.Current = obj;
 
                     Messenger<string>.Broadcast(
@@ -421,18 +372,14 @@ namespace Engine.Game.App.BaseApp
             }
         }
 
-        public virtual bool HasLoadedStrings
-        {
-            get
-            {
+        public virtual bool HasLoadedStrings {
+            get {
 #if USE_GAME_LIB_GAMES
-                if (GameLocalizations.Current.data == null)
-                {
+                if (GameLocalizations.Current.data == null) {
                     return false;
                 }
 
-                if (GameLocalizations.Current.data.strings == null)
-                {
+                if (GameLocalizations.Current.data.strings == null) {
                     return false;
                 }
 
@@ -443,8 +390,7 @@ namespace Engine.Game.App.BaseApp
             }
         }
 
-        public static string GetCodeFromContent(string content)
-        {
+        public static string GetCodeFromContent(string content) {
 #if USE_GAME_LIB_GAMES
             return GameLocalizations.Instance.FindCodeFromContent(content);
 #else
@@ -452,21 +398,17 @@ namespace Engine.Game.App.BaseApp
 #endif
         }
 
-        public virtual string FindCodeFromContent(string content)
-        {
+        public virtual string FindCodeFromContent(string content) {
             // Find content in english to translate
 
-            if (string.IsNullOrEmpty(content) || !HasLoadedStrings)
-            {
+            if (string.IsNullOrEmpty(content) || !HasLoadedStrings) {
                 return null;
             }
 
 #if USE_GAME_LIB_GAMES
             foreach (KeyValuePair<string, GameLocalizationDataItem> pair
-                    in GameLocalizations.Current.data.strings)
-            {
-                if (content == pair.Value.valString)
-                {
+                    in GameLocalizations.Current.data.strings) {
+                if (content == pair.Value.valString) {
                     return pair.Value.valString;
                 }
             }
@@ -475,53 +417,42 @@ namespace Engine.Game.App.BaseApp
         }
     }
 
-    public class GameLocalizationDataItem : GameDataObject
-    {
+    public class GameLocalizationDataItem : GameDataObject {
         // val - content
         // type - string, image, etc - default type
         // data_type - string, int, etc - default string
 
-        public GameLocalizationDataItem()
-        {
+        public GameLocalizationDataItem() {
             val = "";
             type = "strings";
             val = "string";
         }
     }
 
-    public class GameLocalizationData : GameDataObject
-    {
-        public virtual Dictionary<string, GameLocalizationDataItem> strings
-        {
-            get
-            {
+    public class GameLocalizationData : GameDataObject {
+        public virtual Dictionary<string, GameLocalizationDataItem> strings {
+            get {
                 return Get<Dictionary<string, GameLocalizationDataItem>>(BaseDataObjectKeys.strings);
             }
 
-            set
-            {
+            set {
                 Set(BaseDataObjectKeys.strings, value);
             }
         }
 
-        public virtual Dictionary<string, GameLocalizationDataItem> images
-        {
-            get
-            {
+        public virtual Dictionary<string, GameLocalizationDataItem> images {
+            get {
                 return Get<Dictionary<string, GameLocalizationDataItem>>(BaseDataObjectKeys.images);
             }
 
-            set
-            {
+            set {
                 Set(BaseDataObjectKeys.images, value);
             }
         }
 
-        public GameLocalizationDataItem GetItemString(string key)
-        {
+        public GameLocalizationDataItem GetItemString(string key) {
 
-            if (strings != null)
-            {
+            if (strings != null) {
 
                 return strings.Get(key);
             }
@@ -529,10 +460,8 @@ namespace Engine.Game.App.BaseApp
             return null;
         }
 
-        public GameLocalizationDataItem GetItemImage(string key)
-        {
-            if (images != null)
-            {
+        public GameLocalizationDataItem GetItemImage(string key) {
+            if (images != null) {
                 return images.Get(key);
             }
 
@@ -540,28 +469,22 @@ namespace Engine.Game.App.BaseApp
         }
     }
 
-    public class BaseGameLocalization : GameDataObject
-    {
-        public virtual GameLocalizationData data
-        {
-            get
-            {
+    public class BaseGameLocalization : GameDataObject {
+        public virtual GameLocalizationData data {
+            get {
                 return Get<GameLocalizationData>(BaseDataObjectKeys.data);
             }
 
-            set
-            {
+            set {
                 Set(BaseDataObjectKeys.data, value);
             }
         }
 
-        public BaseGameLocalization()
-        {
+        public BaseGameLocalization() {
             Reset();
         }
 
-        public override void Reset()
-        {
+        public override void Reset() {
 
         }
     }

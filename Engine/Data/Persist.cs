@@ -5,10 +5,8 @@ using UnityEngine;
 //using System.Xml;
 //using System.Xml.Serialization;
 
-namespace Engine.Data
-{
-    public static class Persist
-    {
+namespace Engine.Data {
+    public static class Persist {
         /*
         public static void serializeObjectToFile( object obj, string filename )
         {

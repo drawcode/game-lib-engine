@@ -31,22 +31,22 @@ public static class StringExtensions {
         }
         return Int32.Parse(value, NumberStyles.HexNumber);
     }
-    
+
     public static string UnescapeXML(this string s) {
-        if(string.IsNullOrEmpty(s)) {
+        if (string.IsNullOrEmpty(s)) {
             return s;
         }
-        
+
         string returnString = s;
         returnString = returnString.Replace("&apos;", "'");
         returnString = returnString.Replace("&quot;", "\"");
         returnString = returnString.Replace("&gt;", ">");
         returnString = returnString.Replace("&lt;", "<");
         returnString = returnString.Replace("&amp;", "&");
-        
+
         return returnString;
     }
-    
+
     public static bool IsCompressed(this string val) {
 
         if (string.IsNullOrEmpty(val)) {
@@ -69,7 +69,7 @@ public static class StringExtensions {
 
         return FormatUtil.StringToBase64(val);
     }
-        
+
     public static string FromBase64(this string val) {
 
         if (string.IsNullOrEmpty(val)) {
@@ -85,7 +85,7 @@ public static class StringExtensions {
     }
 
     public static string ToCompressed(this string val) {
-        
+
         if (string.IsNullOrEmpty(val)) {
             return val;
         }
@@ -93,40 +93,40 @@ public static class StringExtensions {
         if (!val.IsCompressed()) {
             return Compress.CompressString(val);
         }
-        
+
         return val;
     }
-    
+
     public static string ToDecompressed(this string val) {
-        
+
         if (string.IsNullOrEmpty(val)) {
             return val;
         }
-        
+
         if (val.IsCompressed()) {
             return Compress.DecompressString(val);
         }
-        
+
         return val;
     }
 
     // ENCRYPT
 
     public static string ToEncrypted(this string val) {
-        
+
         if (string.IsNullOrEmpty(val)) {
             return val;
         }
 
         return CryptoUtil.EncryptStringAES(val);//.ToBase64();
     }
-    
+
     public static string ToDecrypted(this string val) {
-        
+
         if (string.IsNullOrEmpty(val)) {
             return val;
         }
-        
+
         return CryptoUtil.DecryptStringAES(val);//.FromBase64());
     }
 
@@ -134,9 +134,9 @@ public static class StringExtensions {
 
     public static bool RegexIsMatch(
         this string val, string regex) {
-        
+
         return RegexUtil.RegexIsMatch(val, regex);
-        
+
     }
 
     public static MatchCollection RegexMatches(
@@ -164,12 +164,12 @@ public static class StringExtensions {
 
         return val;
     }
-    
+
     public static string ToBase36(this string val) {
 
         return FormatUtil.ConvertToBase36(val);
     }
-    
+
     public static string ToPascalCase(this string val) {
 
         string output = "";
@@ -185,7 +185,7 @@ public static class StringExtensions {
 
                     firstUpper = false;
                     output += ch.ToString().ToLower();
-                    
+
                 }
                 else if (ch == '-' || ch == '_') {
 
@@ -209,19 +209,19 @@ public static class StringExtensions {
 
         return output;
     }
-    
+
     //public static string ToTitleCase(this string val) {
     //    return CultureInfo.CurrentCulture.TextInfo.ToTitleCase(val);
     //}
-    
+
     public static string ToDelimitedUnderscore(this string val) {
         return val.ToDelimited("_");
     }
-    
+
     public static string ToDelimitedDashed(this string val) {
         return val.ToDelimited("-");
     }
-        
+
     public static string ToDelimited(this string val, string delimiter = "-") {
 
         string output = "";
@@ -245,7 +245,7 @@ public static class StringExtensions {
         }
         return output;
     }
-    
+
     public static string ToNonDelimited(
         this string val, string replaceDelimeter = " ", string delimiter = "-") {
 
@@ -265,13 +265,13 @@ public static class StringExtensions {
         //.replace(/\s+/g, " ");
         return output;
     }
-    
+
     public static bool IsRegexMatch(this string input, string pattern) {
 
         if (string.IsNullOrEmpty(input)) {
             return false;
         }
-        
+
         //^[A-Z][a-z]*( [A-Z][a-z]*)*$
         if (Regex.IsMatch(input, pattern)) {
             return true;
@@ -279,15 +279,15 @@ public static class StringExtensions {
 
         return false;
     }
-    
+
     public static bool EndsWithSlash(this string input) {
         return input.IsRegexMatch("/$");
     }
-    
+
     public static Match RegexMatch(this string input, string pattern) {
         return Regex.Match(input, pattern);
     }
-    
+
     public static string Substring(this string str, string StartString, string EndString) {
 
         if (str.Contains(StartString)) {
@@ -299,11 +299,11 @@ public static class StringExtensions {
 
         return null;
     }
-    
+
     public static string ToHashMD5(this string val) {
         return CryptoUtil.HashMD5(val);
     }
-    
+
     public static bool IsNullOrEmpty(this string val) {
         return string.IsNullOrEmpty(val);
     }

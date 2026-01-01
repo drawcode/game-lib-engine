@@ -21,8 +21,8 @@ namespace Engine.Networking {
     // and client is larger than 100 ms.
     public class GraduallyUpdateState : GameObjectBehavior {
 #if !UNITY_FLASH
-        
-        #if NETWORK_USE_UNITY
+
+#if NETWORK_USE_UNITY
 
         private Component targetController;
         private FieldInfo isMovingFieldInfo;

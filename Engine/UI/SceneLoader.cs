@@ -93,7 +93,7 @@ namespace Engine.UI {
             //    SceneManager.LoadSceneAsync(sceneName);
             //}
             //else {
-                SceneManager.LoadScene(sceneName);
+            SceneManager.LoadScene(sceneName);
             //}
             LogUtil.Log("Loaded scene: " + sceneName);
 

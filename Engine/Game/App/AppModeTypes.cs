@@ -3,54 +3,44 @@ using System.Collections.Generic;
 using System.IO;
 using Engine.Game.App.BaseApp;
 
-namespace Engine.Game.App
-{
-    public class AppModeTypeMeta : BaseAppModeTypeMeta
-    {
+namespace Engine.Game.App {
+    public class AppModeTypeMeta : BaseAppModeTypeMeta {
         //public static string appModeTypeGameDefault = "app-mode-type-game-default";
     }
 
-    public enum AppModeTypeChoiceFlowState
-    {
+    public enum AppModeTypeChoiceFlowState {
         AppModeTypeChoiceOverview,
         AppModeTypeChoiceDisplayItem,
         AppModeTypeChoiceResultItem,
         AppModeTypeChoiceResults,
     }
 
-    public enum AppOverviewFlowState
-    {
+    public enum AppOverviewFlowState {
         Mode,
         GameplayTips,
         GeneralTips,
         Tutorial
     }
 
-    public enum AppModeTypeCollectionFlowState
-    {
+    public enum AppModeTypeCollectionFlowState {
         AppModeTypeCollectionOverview,
         AppModeTypeCollectionDisplayItem,
         AppModeTypeCollectionResultItem,
         AppModeTypeCollectionResults,
     }
 
-    public class AppModeTypes : BaseAppModeTypes<AppModeType>
-    {
+    public class AppModeTypes : BaseAppModeTypes<AppModeType> {
 
         private static volatile AppModeType current;
         private static volatile AppModeTypes instance;
         private static object syncRoot = new System.Object();
         public static string DATA_KEY = "app-mode-type-data";
 
-        public static AppModeType Current
-        {
+        public static AppModeType Current {
 
-            get
-            {
-                if (current == null)
-                {
-                    lock (syncRoot)
-                    {
+            get {
+                if (current == null) {
+                    lock (syncRoot) {
                         if (current == null)
                             current = new AppModeType();
                     }
@@ -59,20 +49,15 @@ namespace Engine.Game.App
                 return current;
             }
 
-            set
-            {
+            set {
                 current = value;
             }
         }
 
-        public static AppModeTypes Instance
-        {
-            get
-            {
-                if (instance == null)
-                {
-                    lock (syncRoot)
-                    {
+        public static AppModeTypes Instance {
+            get {
+                if (instance == null) {
+                    lock (syncRoot) {
                         if (instance == null)
                             instance = new AppModeTypes(true);
                     }
@@ -80,19 +65,16 @@ namespace Engine.Game.App
 
                 return instance;
             }
-            set
-            {
+            set {
                 instance = value;
             }
         }
 
-        public AppModeTypes()
-        {
+        public AppModeTypes() {
             Reset();
         }
 
-        public AppModeTypes(bool loadData)
-        {
+        public AppModeTypes(bool loadData) {
             Reset();
             path = "data/" + DATA_KEY + ".json";
             pathKey = DATA_KEY;
@@ -100,19 +82,16 @@ namespace Engine.Game.App
         }
     }
 
-    public class AppModeType : BaseAppModeType
-    {
+    public class AppModeType : BaseAppModeType {
 
         // Attributes that are added or changed after launch should be like this to prevent
         // profile conversions.
 
-        public AppModeType()
-        {
+        public AppModeType() {
             Reset();
         }
 
-        public override void Reset()
-        {
+        public override void Reset() {
             base.Reset();
         }
     }

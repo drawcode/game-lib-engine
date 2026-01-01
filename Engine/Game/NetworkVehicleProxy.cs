@@ -2,10 +2,8 @@ using System;
 using Engine.Utility;
 using UnityEngine;
 
-namespace Engine.Game
-{
-    public class NetworkVehicleProxy : GameObjectBehavior
-    {
+namespace Engine.Game {
+    public class NetworkVehicleProxy : GameObjectBehavior {
         /*
         public int competitorIndex;
         public GameObject source;

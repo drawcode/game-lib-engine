@@ -63,7 +63,7 @@ public class CameraUtil {
     public void SaveScreenshot() {
 #if UNITY_EDITOR
         string gameName = GamePacks.currentPacksGame;
-    
+
 #if USE_GAME_LIB_GAMES
         string levelCode = GameLevels.Current.code;
 #else

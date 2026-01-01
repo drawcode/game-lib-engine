@@ -6,13 +6,10 @@ using UnityEngine;
 
 using Engine.Events;
 
-namespace Engine.Game.Data
-{
-    public class DataObject : BaseDataObject
-    {
+namespace Engine.Game.Data {
+    public class DataObject : BaseDataObject {
 
-        public DataObject()
-        {
+        public DataObject() {
             //Reset();
         }
     }

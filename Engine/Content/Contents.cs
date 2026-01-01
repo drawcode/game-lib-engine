@@ -14,11 +14,9 @@ using UnityEngine.Networking;
 using Engine.Game.Data;
 using Engine.Game.App;
 
-namespace Engine.Content
-{
+namespace Engine.Content {
 
-    public class ContentConfig
-    {
+    public class ContentConfig {
 
         public static string contentCacheAssetBundles = "bundles";
         public static string contentCacheVersion = "version";
@@ -34,8 +32,7 @@ namespace Engine.Content
 
     }
 
-    public class ContentProgressItemStatus
-    {
+    public class ContentProgressItemStatus {
 
         public Dictionary<string, List<string>> contentItems =
             new Dictionary<string, List<string>>();
@@ -43,8 +40,7 @@ namespace Engine.Content
         public string contentMessage = "";
     }
 
-    public class ContentItemStatus
-    {
+    public class ContentItemStatus {
 
         public double itemSize = 0;
         public double itemProgress = 0;
@@ -52,25 +48,20 @@ namespace Engine.Content
 
         public bool downloaded = false;
 
-        public double percentageCompleted
-        {
-            get
-            {
+        public double percentageCompleted {
+            get {
                 return itemProgress;
             }
         }
 
-        public bool completed
-        {
-            get
-            {
+        public bool completed {
+            get {
                 return percentageCompleted == 1 ? true : false;
             }
         }
     }
 
-    public class ContentItemAccess : DataObjectItem
-    {
+    public class ContentItemAccess : DataObjectItem {
 
         public bool globalItem = true;
         public string code = "";
@@ -81,37 +72,30 @@ namespace Engine.Content
         public string productCode = "";
     }
 
-    public class ContentItemAccessDictionary : DataObjectItem
-    {
+    public class ContentItemAccessDictionary : DataObjectItem {
 
         Dictionary<string, ContentItemAccess> _accessItems = null;
 
-        public Dictionary<string, ContentItemAccess> accessItems
-        {
-            get
-            {
+        public Dictionary<string, ContentItemAccess> accessItems {
+            get {
 
-                if (_accessItems == null)
-                {
+                if (_accessItems == null) {
 
                     _accessItems = new Dictionary<string, ContentItemAccess>();
                 }
 
                 return _accessItems;
             }
-            set
-            {
+            set {
                 _accessItems = value;
             }
         }
 
-        public bool CheckAccess(string key)
-        {
+        public bool CheckAccess(string key) {
 
             bool hasAccess = accessItems.ContainsKey(key);
 
-            if (key.ToLower() == "default")
-            {
+            if (key.ToLower() == "default") {
 
                 //|| !GameProducts.enableProductLocks) {
                 hasAccess = true;
@@ -122,17 +106,13 @@ namespace Engine.Content
             return hasAccess;
         }
 
-        public ContentItemAccess GetContentAccess(string key)
-        {
+        public ContentItemAccess GetContentAccess(string key) {
 
-            if (CheckAccess(key))
-            {
+            if (CheckAccess(key)) {
 
-                if (accessItems != null)
-                {
+                if (accessItems != null) {
 
-                    if (accessItems.ContainsKey(key))
-                    {
+                    if (accessItems.ContainsKey(key)) {
 
                         return accessItems[key];
                     }
@@ -142,13 +122,11 @@ namespace Engine.Content
             return null;
         }
 
-        public void SetContentAccess(string key)
-        {
+        public void SetContentAccess(string key) {
 
             ContentItemAccess itemAccess;
 
-            if (CheckAccess(key) && accessItems.ContainsKey(key))
-            {
+            if (CheckAccess(key) && accessItems.ContainsKey(key)) {
 
                 itemAccess = GetContentAccess(key);
                 itemAccess.code = key;
@@ -160,8 +138,7 @@ namespace Engine.Content
                 itemAccess.receipt = "";
                 SetContentAccess(itemAccess);
             }
-            else
-            {
+            else {
 
                 itemAccess = new ContentItemAccess();
                 itemAccess.code = key;
@@ -175,29 +152,24 @@ namespace Engine.Content
             }
         }
 
-        public void SetContentAccess(ContentItemAccess itemAccess)
-        {
+        public void SetContentAccess(ContentItemAccess itemAccess) {
 
-            if (CheckAccess(itemAccess.code))
-            {
+            if (CheckAccess(itemAccess.code)) {
 
                 accessItems[itemAccess.code] = itemAccess;
             }
-            else
-            {
+            else {
 
                 accessItems.Add(itemAccess.code, itemAccess);
             }
         }
 
         public void SetContentAccessTransaction(
-            string key, string productId, string receipt, int quantity, bool save)
-        {
+            string key, string productId, string receipt, int quantity, bool save) {
 
             ContentItemAccess itemAccess = GetContentAccess(key);
 
-            if (itemAccess != null)
-            {
+            if (itemAccess != null) {
 
                 itemAccess.receipt = receipt;
                 itemAccess.productCode = productId;
@@ -205,16 +177,14 @@ namespace Engine.Content
 
                 SetContentAccess(itemAccess);
 
-                if (save)
-                {
+                if (save) {
 
                     Save();
                 }
             }
         }
 
-        public void Save()
-        {
+        public void Save() {
 
             string contentItemAccessString = "";
             string settingKey = "ssg-cal";
@@ -227,13 +197,11 @@ namespace Engine.Content
             SystemPrefUtil.Save();
         }
 
-        public void Load()
-        {
+        public void Load() {
 
             string settingKey = "ssg-cal";
 
-            if (SystemPrefUtil.HasLocalSetting(settingKey))
-            {
+            if (SystemPrefUtil.HasLocalSetting(settingKey)) {
 
                 // Load from persistence
                 string keyValue = SystemPrefUtil.GetLocalSettingString(settingKey);
@@ -252,8 +220,7 @@ namespace Engine.Content
     //{"info": "", "status": "", "error": 0, "action": "sx-2012-pack-1", "message": "Success!", "data": 
     // {"download_urls": ["https://s3.amazonaws.com/game-ssc/1.1/ios/sx-2012-pack-1.unity3d?Signature=rJ%2Fe863up9wgAutleNY%2F%2B7OSy%2BU%3D&Expires=1332496714&AWSAccessKeyId=0YAPDVPCN85QV96YR382"], "access_allowed": true, "date_modified": "2012-03-21T10:58:34.919000", "udid": "[udid]", "tags": ["test", "fun"], "content": "this is \"real\"...", "url": "ffff", "version": "1.1", "increment": 1, "active": true, "date_created": "2012-03-21T10:58:34.919000", "type": "application/octet-stream"}}
 
-    public class DownloadableContentItem
-    {
+    public class DownloadableContentItem {
 
         public List<string> download_urls = new List<string>();
 
@@ -271,16 +238,14 @@ namespace Engine.Content
         //public bool access_allowed = true;
     }
 
-    public class DownloadableContentItemList
-    {
+    public class DownloadableContentItemList {
 
         public Dictionary<string, DownloadableContentUrlObject> url_objs
             = new Dictionary<string, DownloadableContentUrlObject>();
 
     }
 
-    public class DownloadableContentUrlObject
-    {
+    public class DownloadableContentUrlObject {
 
         public string file_key = ""; // hashed url part
         public string url = ""; // amazon url
@@ -288,19 +253,16 @@ namespace Engine.Content
     }
 
 
-    public class DownloadableContentItemResponse : BaseObjectResponse
-    {
+    public class DownloadableContentItemResponse : BaseObjectResponse {
 
         public DownloadableContentItem data = new DownloadableContentItem();
 
-        public DownloadableContentItemResponse()
-        {
+        public DownloadableContentItemResponse() {
 
             Reset();
         }
 
-        public override void Reset()
-        {
+        public override void Reset() {
 
             base.Reset();
 
@@ -308,27 +270,23 @@ namespace Engine.Content
         }
     }
 
-    public class DownloadableContentItemListResponse : BaseObjectResponse
-    {
+    public class DownloadableContentItemListResponse : BaseObjectResponse {
 
         public DownloadableContentItemList data
             = new DownloadableContentItemList();
 
-        public DownloadableContentItemListResponse()
-        {
+        public DownloadableContentItemListResponse() {
             Reset();
         }
 
-        public override void Reset()
-        {
+        public override void Reset() {
             base.Reset();
             data
                 = new DownloadableContentItemList();
         }
     }
 
-    public class BaseObjectResponse
-    {
+    public class BaseObjectResponse {
 
         public string info = "";
         public string status = "";
@@ -336,14 +294,12 @@ namespace Engine.Content
         public string action = "";
         public string message = "Success";
 
-        public BaseObjectResponse()
-        {
+        public BaseObjectResponse() {
 
             Reset();
         }
 
-        public virtual void Reset()
-        {
+        public virtual void Reset() {
 
             info = "";
             status = "";
@@ -357,8 +313,7 @@ namespace Engine.Content
 
     //"info": "ssg_ssc_1_1", "status": "", "code": "0", "action": "pack-1", "message": "Success!", "data": {"download_urls": ["http://s3.amazonaws.com/game-[app]/1.1/ios/sx-2012-pack-1.unity3d?Signature=9VJYzvaLZjeVcakz4DBDDg51Fwo%3D&Expires=1332704684&AWSAccessKeyId=0YAPDVPCN85QV96YR382"]}
 
-    public class ContentMessages
-    {
+    public class ContentMessages {
 
         public static string ContentFileDownloadSuccess = "content-file-download-success";
         public static string ContentFileDownloadError = "content-file-download-error";
@@ -431,8 +386,7 @@ namespace Engine.Content
 
     }
 
-    public class ContentEndpoints
-    {
+    public class ContentEndpoints {
 
 #if USE_GAME_LIB_GAMES
         public static string contentEndpoint = ContentsConfig.contentEndpoint;
@@ -451,8 +405,7 @@ namespace Engine.Content
         public static string contentDownloadAppContentListFiles = contentEndpoint + "api/v1/en/app-content-list/file/{0}/{1}/{2}/"; // 0 = game, version, platform, pack;
     }
 
-    public class ContentItem
-    {
+    public class ContentItem {
 
         public string uid = "";
         public string name = "";
@@ -460,8 +413,7 @@ namespace Engine.Content
         public AssetBundle bundle;
     }
 
-    public class ContentItemError
-    {
+    public class ContentItemError {
 
         public string uid = "";
         public string name = "";
@@ -469,8 +421,7 @@ namespace Engine.Content
         public ContentItem contentItem;
     }
 
-    public enum ContentSyncState
-    {
+    public enum ContentSyncState {
         SyncNotStarted,
         SyncStarted,
         SyncCompleted,
@@ -486,8 +437,7 @@ namespace Engine.Content
         SyncPackCompleted
     }
 
-    public enum ContentSyncDisplayState
-    {
+    public enum ContentSyncDisplayState {
         SyncNotStarted = 0,
         SyncPreparing = 1,
         SyncShip = 2,
@@ -500,15 +450,13 @@ namespace Engine.Content
         StateCount = 9
     }
 
-    public enum ContentVersionSyncEnum
-    {
+    public enum ContentVersionSyncEnum {
         NonVersioned, // plain file
         Versioned, // just version and increment
         VersionedSync // hashed with checksum
     }
 
-    public class ContentPaths
-    {
+    public class ContentPaths {
 
         public static string persistenceFolder = "";
         public static string streamingAssetsFolder = "";
@@ -548,10 +496,8 @@ namespace Engine.Content
         public static List<string> packPathsVersionedShared = new List<string>();
         public static List<string> packPathsVersioned = new List<string>();
 
-        public static string appCacheVersion
-        {
-            get
-            {
+        public static string appCacheVersion {
+            get {
 #if USE_GAME_LIB_GAMES
                 return ContentsConfig.contentRootFolder + "/"
                     + ContentsConfig.contentAppFolder + "/version/";
@@ -560,112 +506,85 @@ namespace Engine.Content
 #endif
             }
         }
-        public static string appCacheVersionShared
-        {
-            get
-            {
+        public static string appCacheVersionShared {
+            get {
                 return appCacheVersion + "shared/";
             }
         }
 
-        public static string appCacheVersionSharedAudio
-        {
-            get
-            {
+        public static string appCacheVersionSharedAudio {
+            get {
                 return appCacheVersionShared + "audio/";
             }
         }
 
-        public static string appCacheVersionSharedPrefab
-        {
-            get
-            {
+        public static string appCacheVersionSharedPrefab {
+            get {
                 return appCacheVersionShared + "prefab/";
             }
         }
 
-        public static string appCacheVersionSharedMaterials
-        {
-            get
-            {
+        public static string appCacheVersionSharedMaterials {
+            get {
                 return appCacheVersionShared + "materials/";
             }
         }
 
-        public static string appCacheVersionSharedPrefabCharacters
-        {
-            get
-            {
+        public static string appCacheVersionSharedPrefabCharacters {
+            get {
                 return appCacheVersionSharedPrefab + "characters/";
             }
         }
 
-        public static string appCacheVersionSharedPrefabLevelAssets
-        {
-            get
-            {
+        public static string appCacheVersionSharedPrefabLevelAssets {
+            get {
                 return appCacheVersionSharedPrefab + "levelassets/";
             }
         }
 
-        public static string appCacheVersionSharedPrefabLevelItems
-        {
-            get
-            {
+        public static string appCacheVersionSharedPrefabLevelItems {
+            get {
                 return appCacheVersionSharedPrefab + "items/";
             }
         }
 
-        public static string appCacheVersionSharedPrefabNetwork
-        {
-            get
-            {
+        public static string appCacheVersionSharedPrefabNetwork {
+            get {
                 return appCacheVersionSharedPrefab + "network/";
             }
         }
 
-        public static string appCacheVersionSharedPrefabLevelUI
-        {
-            get
-            {
+        public static string appCacheVersionSharedPrefabLevelUI {
+            get {
                 return appCacheVersionSharedPrefab + "ui/";
             }
         }
 
-        public static string appCacheVersionSharedPrefabWeapons
-        {
-            get
-            {
+        public static string appCacheVersionSharedPrefabWeapons {
+            get {
                 return appCacheVersionSharedPrefab + "weapons/";
             }
         }
 
-        public static string appCacheVersionSharedPrefabEffects
-        {
-            get
-            {
+        public static string appCacheVersionSharedPrefabEffects {
+            get {
                 return appCacheVersionSharedPrefab + "effects/";
             }
         }
 
-        public static string appCacheVersionSharedPrefabWorlds
-        {
-            get
-            {
+        public static string appCacheVersionSharedPrefabWorlds {
+            get {
                 return appCacheVersionSharedPrefab + "worlds/";
             }
         }
 
-        public static string appCacheVersionSharedPrefabVehicles
-        {
-            get
-            {
+        public static string appCacheVersionSharedPrefabVehicles {
+            get {
                 return appCacheVersionSharedPrefab + "vehicles/";
             }
         }
 
-        public static string GetCurrentPlatformCode()
-        {
+        public static string GetCurrentPlatformCode() {
 
 #if UNITY_IPHONE
             return "ios";
@@ -676,8 +595,7 @@ namespace Engine.Content
 #endif
         }
 
-        public static void ResetPaths()
-        {
+        public static void ResetPaths() {
             persistenceFolder = "";
             streamingAssetsFolder = "";
 
@@ -718,28 +636,21 @@ namespace Engine.Content
 
         }
 
-        public static bool pathsCreated
-        {
-            get
-            {
-                if (string.IsNullOrEmpty(appCachePath))
-                {
+        public static bool pathsCreated {
+            get {
+                if (string.IsNullOrEmpty(appCachePath)) {
                     return false;
                 }
                 return true;
             }
         }
 
-        public static bool CheckPathsCreated(bool create)
-        {
-            if (!pathsCreated)
-            {
-                if (create)
-                {
+        public static bool CheckPathsCreated(bool create) {
+            if (!pathsCreated) {
+                if (create) {
                     CreateCachePaths();
                 }
-                else
-                {
+                else {
                     return false;
                 }
             }
@@ -747,11 +658,9 @@ namespace Engine.Content
         }
 
 
-        public static void CreateCachePaths()
-        {
+        public static void CreateCachePaths() {
 
-            if (CheckPathsCreated(false))
-            {
+            if (CheckPathsCreated(false)) {
                 return;
             }
 
@@ -845,59 +754,49 @@ namespace Engine.Content
 
         }
 
-        public static List<string> GetPackPathsNonVersioned()
-        {
+        public static List<string> GetPackPathsNonVersioned() {
 
             LoadPackPaths();
 
             return ContentPaths.packPaths;
         }
 
-        public static List<string> GetPackPathsVersioned()
-        {
+        public static List<string> GetPackPathsVersioned() {
 
             LoadPackPaths();
 
             return ContentPaths.packPathsVersioned;
         }
 
-        public static List<string> GetPackPathsVersionedShared()
-        {
+        public static List<string> GetPackPathsVersionedShared() {
 
             LoadPackPaths();
 
             return ContentPaths.packPathsVersionedShared;
         }
 
-        public static void LoadPackPaths()
-        {
+        public static void LoadPackPaths() {
 
-            if (string.IsNullOrEmpty(ContentPaths.appCachePath))
-            {
+            if (string.IsNullOrEmpty(ContentPaths.appCachePath)) {
                 CreateCachePaths();
             }
 
             ////LogUtil.Log("LoadPackPaths:appCachePathPacks:" + appCachePathPacks);
             ////LogUtil.Log("LoadPackPaths:appCachePathAllPlatformPacks:" + appCachePathAllPlatformPacks);
 
-            if (ContentPaths.packPaths.Count == 0)
-            {
+            if (ContentPaths.packPaths.Count == 0) {
                 //LogUtil.Log("Loading packPathsNONVersioned: " + appCachePathPacks);
 
-                if (!string.IsNullOrEmpty(appCachePathPacks))
-                {
+                if (!string.IsNullOrEmpty(appCachePathPacks)) {
 
 #if !UNITY_WEBGL
-                    foreach (string path in Directory.GetDirectories(ContentPaths.appCachePathPacks))
-                    {
+                    foreach (string path in Directory.GetDirectories(ContentPaths.appCachePathPacks)) {
 
                         string pathToAdd = PathUtil.Combine(appCachePathPacks, path);
 
-                        if (!string.IsNullOrEmpty(pathToAdd))
-                        {
+                        if (!string.IsNullOrEmpty(pathToAdd)) {
 
-                            if (!ContentPaths.packPaths.Contains(pathToAdd))
-                            {
+                            if (!ContentPaths.packPaths.Contains(pathToAdd)) {
 
                                 ContentPaths.packPaths.Add(pathToAdd);
                                 //LogUtil.Log("Adding packPathsNONVersioned: pathToAdd:" + pathToAdd);
@@ -908,24 +807,19 @@ namespace Engine.Content
                 }
             }
 
-            if (packPathsVersionedShared.Count == 0)
-            {
+            if (packPathsVersionedShared.Count == 0) {
                 //LogUtil.Log("Loading packPathsVersionedShared: " + appCachePathSharedPacks);
 
-                if (!string.IsNullOrEmpty(appCachePathSharedPacks))
-                {
+                if (!string.IsNullOrEmpty(appCachePathSharedPacks)) {
 
 #if !UNITY_WEBGL
-                    foreach (string path in Directory.GetDirectories(appCachePathSharedPacks))
-                    {
+                    foreach (string path in Directory.GetDirectories(appCachePathSharedPacks)) {
 
                         string pathToAdd = PathUtil.Combine(appCachePathSharedPacks, path);
 
-                        if (!string.IsNullOrEmpty(pathToAdd))
-                        {
+                        if (!string.IsNullOrEmpty(pathToAdd)) {
 
-                            if (!packPathsVersionedShared.Contains(pathToAdd))
-                            {
+                            if (!packPathsVersionedShared.Contains(pathToAdd)) {
 
                                 packPathsVersionedShared.Add(pathToAdd);
                                 //LogUtil.Log("Adding packPathsVersionedShared: pathToAdd:" + pathToAdd);
@@ -936,24 +830,19 @@ namespace Engine.Content
                 }
             }
 
-            if (packPathsVersioned.Count == 0)
-            {
+            if (packPathsVersioned.Count == 0) {
 
                 //LogUtil.Log("Loading packPathsVersioned: " + appCachePathAllPlatformPacks);
-                if (!string.IsNullOrEmpty(appCachePathAllPlatformPacks))
-                {
+                if (!string.IsNullOrEmpty(appCachePathAllPlatformPacks)) {
 
 #if !UNITY_WEBGL
-                    foreach (string path in Directory.GetDirectories(appCachePathAllPlatformPacks))
-                    {
+                    foreach (string path in Directory.GetDirectories(appCachePathAllPlatformPacks)) {
 
                         string pathToAdd = PathUtil.Combine(appCachePathAllPlatformPacks, path);
 
-                        if (!string.IsNullOrEmpty(pathToAdd))
-                        {
+                        if (!string.IsNullOrEmpty(pathToAdd)) {
 
-                            if (!packPathsVersioned.Contains(pathToAdd))
-                            {
+                            if (!packPathsVersioned.Contains(pathToAdd)) {
 
                                 packPathsVersioned.Add(pathToAdd);
                                 //LogUtil.Log("Adding packPathsVersioned: pathToAdd:" + pathToAdd);
@@ -967,8 +856,7 @@ namespace Engine.Content
 
     }
 
-    public class Contents : GameObjectBehavior
-    {
+    public class Contents : GameObjectBehavior {
 
         /*
         private static volatile Contents instance;
@@ -989,11 +877,9 @@ namespace Engine.Content
 
         public static Contents Instance;
 
-        public void Awake()
-        {
+        public void Awake() {
 
-            if (Instance != null && this != Instance)
-            {
+            if (Instance != null && this != Instance) {
                 //There is already a copy of this script running
                 Destroy(this);
                 return;
@@ -1005,14 +891,11 @@ namespace Engine.Content
 
         }
 
-        public bool isReady
-        {
-            get
-            {
+        public bool isReady {
+            get {
 
                 if (!string.IsNullOrEmpty(ContentPaths.appCachePath)
-                    && !string.IsNullOrEmpty(ContentPaths.appShipCachePath))
-                {
+                    && !string.IsNullOrEmpty(ContentPaths.appShipCachePath)) {
 
                     return true;
                 }
@@ -1021,10 +904,8 @@ namespace Engine.Content
             }
         }
 
-        public static bool isInst
-        {
-            get
-            {
+        public static bool isInst {
+            get {
                 return Instance != null ? true : false;
             }
         }
@@ -1071,8 +952,7 @@ namespace Engine.Content
         public static bool initialDownload = false;
         public static string currentPackCodeSync = "default";
 
-        void Start()
-        {
+        void Start() {
 
             ContentPaths.CreateCachePaths();
 
@@ -1190,8 +1070,7 @@ namespace Engine.Content
 
         // FULL
 
-        public void OnContentSyncFullStarted(object obj)
-        {
+        public void OnContentSyncFullStarted(object obj) {
 
             LogUtil.Log("OnContentSyncFullStarted:", obj);
 
@@ -1199,8 +1078,7 @@ namespace Engine.Content
             displayState = ContentSyncDisplayState.SyncPreparing;
         }
 
-        public void OnContentSyncFullPrepare(object obj)
-        {
+        public void OnContentSyncFullPrepare(object obj) {
 
             LogUtil.Log("OnContentSyncFullPrepare:", obj);
 
@@ -1210,16 +1088,14 @@ namespace Engine.Content
             ChangeSyncState(ContentSyncState.SyncCompleted);
         }
 
-        public void OnContentSyncFullSuccess(object obj)
-        {
+        public void OnContentSyncFullSuccess(object obj) {
 
             LogUtil.Log("OnContentSyncFullSuccess:", obj);
 
             displayState = ContentSyncDisplayState.SynContentListsCompleted;
         }
 
-        public void OnContentSyncFullError(object obj)
-        {
+        public void OnContentSyncFullError(object obj) {
 
             LogUtil.Log("OnContentSyncFullError:", obj);
             displayState = ContentSyncDisplayState.SynContentListsCompleted;
@@ -1227,8 +1103,7 @@ namespace Engine.Content
 
         // INITIAL
 
-        public void OnContentSyncInitialStarted(object obj)
-        {
+        public void OnContentSyncInitialStarted(object obj) {
 
             LogUtil.Log("OnContentSyncInitialStarted:", obj);
 
@@ -1237,16 +1112,14 @@ namespace Engine.Content
             ChangeSyncState(ContentSyncState.SyncProcessShipFiles);
         }
 
-        public void OnContentSyncInitialSuccess(object obj)
-        {
+        public void OnContentSyncInitialSuccess(object obj) {
 
             LogUtil.Log("OnContentSyncInitialSuccess:", obj);
 
             ChangeSyncState(ContentSyncState.SyncPrepare);
         }
 
-        public void OnContentSyncInitialError(object obj)
-        {
+        public void OnContentSyncInitialError(object obj) {
 
             LogUtil.Log("OnContentSyncInitialError:", obj);
 
@@ -1255,8 +1128,7 @@ namespace Engine.Content
 
         // PACK
 
-        public void OnContentSyncPackStarted(object obj)
-        {
+        public void OnContentSyncPackStarted(object obj) {
 
             LogUtil.Log("OnContentSyncPackStarted:", obj);
 
@@ -1265,16 +1137,14 @@ namespace Engine.Content
             displayState = ContentSyncDisplayState.SyncContentListsPack;
         }
 
-        public void OnContentSyncPackSuccess(object obj)
-        {
+        public void OnContentSyncPackSuccess(object obj) {
 
             LogUtil.Log("OnContentSyncPackSuccess:", obj);
 
             ChangeSyncState(ContentSyncState.SyncPackCompleted);
         }
 
-        public void OnContentSyncPackError(object obj)
-        {
+        public void OnContentSyncPackError(object obj) {
 
             LogUtil.Log("OnContentSyncPackError:", obj);
 
@@ -1283,35 +1153,30 @@ namespace Engine.Content
 
         // EVENTS CONTENT LIST
 
-        public void OnContentAppContentListSyncStarted(object obj)
-        {
+        public void OnContentAppContentListSyncStarted(object obj) {
 
             LogUtil.Log("OnContentAppContentListSyncStarted:", obj);
 
         }
 
-        public void OnContentAppContentListSyncError(object obj)
-        {
+        public void OnContentAppContentListSyncError(object obj) {
 
             LogUtil.Log("OnContentAppContentListSyncError:", obj);
 
             ChangeSyncState(ContentSyncState.SyncError);
         }
 
-        public void OnContentAppContentListSyncSuccess(object obj)
-        {
+        public void OnContentAppContentListSyncSuccess(object obj) {
 
             LogUtil.Log("OnContentAppContentListSyncSuccess:", obj);
 
             ChangeSyncState(ContentSyncState.SyncProcessDownloadFiles);
 
-            if (displayState == ContentSyncDisplayState.SyncContentListsPack)
-            {
+            if (displayState == ContentSyncDisplayState.SyncContentListsPack) {
 
                 displayState = ContentSyncDisplayState.SyncContentListsPackDownload;
             }
-            else if (displayState == ContentSyncDisplayState.SyncContentListsDefault)
-            {
+            else if (displayState == ContentSyncDisplayState.SyncContentListsDefault) {
 
                 displayState = ContentSyncDisplayState.SyncContentListsDefaultDownload;
             }
@@ -1321,24 +1186,21 @@ namespace Engine.Content
 
         // SYNC ACTUAL FILES OR PACK DOWNLAOD
 
-        public void OnContentAppContentListFilesStarted(object obj)
-        {
+        public void OnContentAppContentListFilesStarted(object obj) {
 
             LogUtil.Log("OnContentAppContentListFilesStarted:", obj);
 
             //ChangeSyncState(ContentSyncState.SyncProcessDownloadFiles);
         }
 
-        public void OnContentAppContentListFilesError(object obj)
-        {
+        public void OnContentAppContentListFilesError(object obj) {
 
             LogUtil.Log("OnContentAppContentListFilesError:", obj);
 
             ChangeSyncState(ContentSyncState.SyncError);
         }
 
-        public void OnContentAppContentListFilesSuccess(object obj)
-        {
+        public void OnContentAppContentListFilesSuccess(object obj) {
 
             LogUtil.Log("OnContentAppContentListFilesSuccess:", obj);
 
@@ -1347,36 +1209,31 @@ namespace Engine.Content
             ProcessDownloadableContentUrlQueue();
         }
 
-        public void OnContentAppContentListFileStarted(object obj)
-        {
+        public void OnContentAppContentListFileStarted(object obj) {
 
             LogUtil.Log("OnContentAppContentListFileStarted:", obj);
 
             ChangeSyncState(ContentSyncState.SyncProcessDownloadFiles);
         }
 
-        public void OnContentAppContentListFileError(object obj)
-        {
+        public void OnContentAppContentListFileError(object obj) {
 
             LogUtil.Log("OnContentAppContentListFileError:", obj);
 
             ChangeSyncState(ContentSyncState.SyncError);
         }
 
-        public void OnContentAppContentListFileSuccess(object obj)
-        {
+        public void OnContentAppContentListFileSuccess(object obj) {
 
             LogUtil.Log("OnContentAppContentListFileSuccess:", obj);
 
             // Start downloading the new files
 
-            if (displayState == ContentSyncDisplayState.SyncContentListsPack)
-            {
+            if (displayState == ContentSyncDisplayState.SyncContentListsPack) {
 
                 displayState = ContentSyncDisplayState.SyncContentListsPackDownload;
             }
-            else if (displayState == ContentSyncDisplayState.SyncContentListsDefault)
-            {
+            else if (displayState == ContentSyncDisplayState.SyncContentListsDefault) {
 
                 displayState = ContentSyncDisplayState.SyncContentListsDefaultDownload;
             }
@@ -1385,32 +1242,27 @@ namespace Engine.Content
 
         }
 
-        public void OnContentAppContentListFileDownloadStarted(object obj)
-        {
+        public void OnContentAppContentListFileDownloadStarted(object obj) {
 
             ChangeSyncState(ContentSyncState.SyncProcessDownloadFiles);
         }
 
-        public void OnContentAppContentListFileDownloadError(object obj)
-        {
+        public void OnContentAppContentListFileDownloadError(object obj) {
 
             ChangeSyncState(ContentSyncState.SyncError);
         }
 
-        public void OnContentAppContentListFileDownloadSuccess(object obj)
-        {
+        public void OnContentAppContentListFileDownloadSuccess(object obj) {
 
             LogUtil.Log("OnContentAppContentListFileDownloadSuccess:", obj);
 
             // Start downloading the new files
 
-            if (displayState == ContentSyncDisplayState.SyncContentListsPack)
-            {
+            if (displayState == ContentSyncDisplayState.SyncContentListsPack) {
 
                 displayState = ContentSyncDisplayState.SyncContentListsPackDownload;
             }
-            else if (displayState == ContentSyncDisplayState.SyncContentListsDefault)
-            {
+            else if (displayState == ContentSyncDisplayState.SyncContentListsDefault) {
 
                 displayState = ContentSyncDisplayState.SyncContentListsDefaultDownload;
             }
@@ -1421,29 +1273,23 @@ namespace Engine.Content
 
         // -----------------------------------------------------------------------
 
-        public static void ChangeSyncState(ContentSyncState syncStateTo)
-        {
+        public static void ChangeSyncState(ContentSyncState syncStateTo) {
 
-            if (isInst)
-            {
+            if (isInst) {
                 Instance.changeSyncState(syncStateTo);
             }
         }
 
-        public void changeSyncState(ContentSyncState syncStateTo)
-        {
+        public void changeSyncState(ContentSyncState syncStateTo) {
 
-            if (syncState != syncStateTo)
-            {
+            if (syncState != syncStateTo) {
 
                 syncState = syncStateTo;
 
-                if (syncState == ContentSyncState.SyncNotStarted)
-                {
+                if (syncState == ContentSyncState.SyncNotStarted) {
 
                 }
-                else if (syncState == ContentSyncState.SyncStarted)
-                {
+                else if (syncState == ContentSyncState.SyncStarted) {
 
                     incrementDownload = 0;
                     countsDownload = downloadUrlObjects.Count;
@@ -1451,36 +1297,31 @@ namespace Engine.Content
                         ContentMessages.ContentSyncFullStarted,
                         "Content Sync Started");
                 }
-                else if (syncState == ContentSyncState.SyncCompleted)
-                {
+                else if (syncState == ContentSyncState.SyncCompleted) {
 
                     Messenger<object>.Broadcast(
                         ContentMessages.ContentSyncFullSuccess,
                         "Content Sync Completed Successfully");
                 }
-                else if (syncState == ContentSyncState.SyncPrepare)
-                {
+                else if (syncState == ContentSyncState.SyncPrepare) {
 
                     Messenger<object>.Broadcast(
                         ContentMessages.ContentSyncFullPrepare,
                         "Content Sync Preparing");
                 }
-                else if (syncState == ContentSyncState.SyncError)
-                {
+                else if (syncState == ContentSyncState.SyncError) {
 
                     Messenger<object>.Broadcast(
                         ContentMessages.ContentSyncFullError,
                         "Content Sync Completed with Errors");
                 }
-                else if (syncState == ContentSyncState.SyncProcessContentList)
-                {
+                else if (syncState == ContentSyncState.SyncProcessContentList) {
 
                     Messenger<object>.Broadcast(
                         ContentMessages.ContentAppContentListSyncStarted
                         , "Content Sync Started");
                 }
-                else if (syncState == ContentSyncState.SyncProcessDownloadFiles)
-                {
+                else if (syncState == ContentSyncState.SyncProcessDownloadFiles) {
 
                     //Messenger<object>.Broadcast(
                     //	ContentMessages.ContentAppContentListSyncStarted
@@ -1491,38 +1332,30 @@ namespace Engine.Content
 
         // -----------------------------------------------------------------------
 
-        public static void ProcessDownloadableContentUrlQueue()
-        {
+        public static void ProcessDownloadableContentUrlQueue() {
 
-            if (isInst)
-            {
+            if (isInst) {
                 Instance.processDownloadableContentUrlQueue();
             }
         }
 
-        public void processDownloadableContentUrlQueue()
-        {
+        public void processDownloadableContentUrlQueue() {
 
             StartCoroutine(processDownloadableContentUrlQueueCo());
         }
 
-        public IEnumerator processDownloadableContentUrlQueueCo()
-        {
+        public IEnumerator processDownloadableContentUrlQueueCo() {
 
-            if (downloadUrlObjects != null)
-            {
+            if (downloadUrlObjects != null) {
 
-                if (downloadUrlObjects.Count > 0)
-                {
+                if (downloadUrlObjects.Count > 0) {
 
                     currentUrlObject = downloadUrlObjects.Dequeue();
 
-                    if (currentUrlObject != null)
-                    {
+                    if (currentUrlObject != null) {
                         // download file...
 
-                        if (countsDownload > 0)
-                        {
+                        if (countsDownload > 0) {
 
                             broadcastProgressMessage("Downloading Content",
                                 getUnversionedDisplayFile(currentUrlObject.path), incrementDownload++ / countsDownload);
@@ -1537,18 +1370,15 @@ namespace Engine.Content
                         requestDownloadBytes(currentUrlObject.url);
                     }
                 }
-                else
-                {
+                else {
 
                     yield return StartCoroutine(processSyncUpdateCo());
 
-                    if (!initialSyncCompleted)
-                    {
+                    if (!initialSyncCompleted) {
                         // Kick off actual file process
                         processAppContentList(currentPackCodeSync);
                     }
-                    else
-                    {
+                    else {
                         // Kick off prepare and load initial content state
                         changeSyncState(ContentSyncState.SyncPrepare);
                     }
@@ -1557,17 +1387,14 @@ namespace Engine.Content
         }
         // -----------------------------------------------------------------------
 
-        public static void ChangePackAndLoadMainScene(string pack)
-        {
+        public static void ChangePackAndLoadMainScene(string pack) {
 
-            if (isInst)
-            {
+            if (isInst) {
                 Instance.changePackAndLoadMainScene(pack);
             }
         }
 
-        public void changePackAndLoadMainScene(string pack)
-        {
+        public void changePackAndLoadMainScene(string pack) {
 
             GamePacks.Instance.ChangeCurrentGamePack(pack);
             //GameLevels.Instance.ChangeCurrentGameLevel(pack + "-main");
@@ -1577,54 +1404,44 @@ namespace Engine.Content
         // -----------------------------------------------------------------------
 
 
-        public static bool CheckGlobalContentAccess(string pack)
-        {
+        public static bool CheckGlobalContentAccess(string pack) {
 
-            if (isInst)
-            {
+            if (isInst) {
                 return Instance.checkGlobalContentAccess(pack);
             }
 
             return false;
         }
 
-        public bool checkGlobalContentAccess(string pack)
-        {
+        public bool checkGlobalContentAccess(string pack) {
 
-            if (contentItemAccess.CheckAccess(pack))
-            {
+            if (contentItemAccess.CheckAccess(pack)) {
                 return true;
             }
 
             return false;
         }
 
-        public static void SaveGlobalContentAccess()
-        {
+        public static void SaveGlobalContentAccess() {
 
-            if (isInst)
-            {
+            if (isInst) {
                 Instance.saveGlobalContentAccess();
             }
         }
 
-        public void saveGlobalContentAccess()
-        {
+        public void saveGlobalContentAccess() {
 
             contentItemAccess.Save();
         }
 
-        public static void SetGlobalContentAccess(string pack)
-        {
+        public static void SetGlobalContentAccess(string pack) {
 
-            if (isInst)
-            {
+            if (isInst) {
                 Instance.setGlobalContentAccess(pack);
             }
         }
 
-        public void setGlobalContentAccess(string pack)
-        {
+        public void setGlobalContentAccess(string pack) {
 
             pack = pack.Replace(GamePacks.currentGameBundle + ".", "");
             contentItemAccess.SetContentAccess(pack);
@@ -1640,46 +1457,38 @@ namespace Engine.Content
         }
 
         public static void SetContentAccessTransaction(
-            string key, string productId, string receipt, int quantity, bool save)
-        {
+            string key, string productId, string receipt, int quantity, bool save) {
 
-            if (isInst)
-            {
+            if (isInst) {
                 Instance.setContentAccessTransaction(key, productId, receipt, quantity, save);
             }
         }
 
         public void setContentAccessTransaction(
-            string key, string productId, string receipt, int quantity, bool save)
-        {
+            string key, string productId, string receipt, int quantity, bool save) {
 
             contentItemAccess.SetContentAccessTransaction(key, productId, receipt, quantity, save);
         }
 
         // -----------------------------------------------------------------------
 
-        public static void ProcessLoad(bool runtime)
-        {
+        public static void ProcessLoad(bool runtime) {
 
-            if (isInst)
-            {
+            if (isInst) {
                 Instance.processLoad(runtime);
             }
         }
 
-        public void processLoad(bool runtime)
-        {
+        public void processLoad(bool runtime) {
             runtimeUpdate = runtime;
             //AppViewerUIController.Instance.ShowUI();
-            if (runtimeUpdate)
-            {
+            if (runtimeUpdate) {
                 //UINotificationDisplayContent.Instance.HideDialog();
             }
             StartCoroutine(processLoadCo());
         }
 
-        IEnumerator processLoadCo()
-        {
+        IEnumerator processLoadCo() {
 
             currentPackCodeSync = "default";
 
@@ -1701,42 +1510,35 @@ namespace Engine.Content
             ProcessAppContentListSync(currentPackCodeSync);
         }
 
-        public static void ProcessPackLoad(string packCode, bool runtime)
-        {
+        public static void ProcessPackLoad(string packCode, bool runtime) {
 
-            if (isInst)
-            {
+            if (isInst) {
                 Instance.processPackLoad(packCode, runtime);
             }
         }
 
-        public void processPackLoad(string packCode, bool runtime)
-        {
+        public void processPackLoad(string packCode, bool runtime) {
 
             runtimeUpdate = true;
 
             processPackLoad(packCode);
         }
 
-        public static void ProcessPackLoad(string packCode)
-        {
+        public static void ProcessPackLoad(string packCode) {
 
-            if (isInst)
-            {
+            if (isInst) {
                 Instance.processPackLoad(packCode);
             }
         }
 
-        public void processPackLoad(string packCode)
-        {
+        public void processPackLoad(string packCode) {
 
             runtimeUpdate = false;
 
             StartCoroutine(processPackLoadCo(packCode));
         }
 
-        IEnumerator processPackLoadCo(string packCode)
-        {
+        IEnumerator processPackLoadCo(string packCode) {
             // Process pack initial startup, sync and download any new files
 
             currentPackCodeSync = packCode;
@@ -1753,17 +1555,14 @@ namespace Engine.Content
 
         }
 
-        public static void ProcessAppContentListSync(string packCode)
-        {
+        public static void ProcessAppContentListSync(string packCode) {
 
-            if (isInst)
-            {
+            if (isInst) {
                 Instance.processAppContentList(packCode);
             }
         }
 
-        public void processAppContentListSync(string packCode)
-        {
+        public void processAppContentListSync(string packCode) {
 
             initialSyncCompleted = false;
 
@@ -1771,12 +1570,10 @@ namespace Engine.Content
 
             List<string> paths = collectAppContentListSync(packCode);
 
-            if (paths.Count > 0)
-            {
+            if (paths.Count > 0) {
                 requestDownloadableAppContentListSync(paths);
             }
-            else
-            {
+            else {
 
                 Messenger<object>.Broadcast(
                     ContentMessages.ContentAppContentListSyncSuccess,
@@ -1792,27 +1589,22 @@ namespace Engine.Content
         }
         */
 
-        IEnumerator processSyncUpdateCo()
-        {
+        IEnumerator processSyncUpdateCo() {
 
-            if (processUrlObjects != null)
-            {
+            if (processUrlObjects != null) {
 
                 yield return StartCoroutine(processSyncedFilesCo());
             }
         }
 
-        public static void ProcessAppContentList(string packCode)
-        {
+        public static void ProcessAppContentList(string packCode) {
 
-            if (isInst)
-            {
+            if (isInst) {
                 Instance.processAppContentList(packCode);
             }
         }
 
-        public void processAppContentList(string packCode)
-        {
+        public void processAppContentList(string packCode) {
 
             initialSyncCompleted = true;
 
@@ -1822,12 +1614,10 @@ namespace Engine.Content
 
             List<string> paths = collectAppContentListFiles(packCode);
 
-            if (paths.Count > 0)
-            {
+            if (paths.Count > 0) {
                 requestDownloadableAppContentListFiles(paths);
             }
-            else
-            {
+            else {
 
                 Messenger<object>.Broadcast(
                     ContentMessages.ContentAppContentListFilesSuccess,
@@ -1835,27 +1625,22 @@ namespace Engine.Content
             }
         }
 
-        public static bool IsDefault(string code)
-        {
+        public static bool IsDefault(string code) {
 
-            if (isInst)
-            {
+            if (isInst) {
                 return Instance.isDefault(code);
             }
 
             return true;
         }
 
-        public bool isDefault(string code)
-        {
+        public bool isDefault(string code) {
 
-            if (!string.IsNullOrEmpty(code))
-            {
+            if (!string.IsNullOrEmpty(code)) {
 
                 if (code.ToLower() == "default"
                         && code.ToLower() == "*"
-                        && code.ToLower() == "all")
-                {
+                        && code.ToLower() == "all") {
 
                     return true;
                 }
@@ -1864,19 +1649,16 @@ namespace Engine.Content
             return false;
         }
 
-        public static bool CheckHashVerified(string pathVersioned, string hashData)
-        {
+        public static bool CheckHashVerified(string pathVersioned, string hashData) {
 
-            if (isInst)
-            {
+            if (isInst) {
                 return Instance.checkHashVerified(pathVersioned, hashData);
             }
 
             return false;
         }
 
-        public bool checkHashVerified(string pathVersioned, string hashData)
-        {
+        public bool checkHashVerified(string pathVersioned, string hashData) {
 
             string currentHash = ChecksumHash(pathVersioned);
             string dataHash = hashData;
@@ -1886,19 +1668,16 @@ namespace Engine.Content
             return hashVerified;
         }
 
-        public static List<string> CollectAppContentListFiles(string packCode)
-        {
+        public static List<string> CollectAppContentListFiles(string packCode) {
 
-            if (isInst)
-            {
+            if (isInst) {
                 return Instance.collectAppContentListFiles(packCode);
             }
 
             return new System.Collections.Generic.List<string>();
         }
 
-        public List<string> collectAppContentListFiles(string packCode)
-        {
+        public List<string> collectAppContentListFiles(string packCode) {
 
             AppContentListItems.Instance.LoadData(); // load latest
 
@@ -1907,8 +1686,7 @@ namespace Engine.Content
 
             List<string> paths = new List<string>();
 
-            foreach (AppContentListItem item in appContentListItems)
-            {
+            foreach (AppContentListItem item in appContentListItems) {
 
                 string path = PathUtil.Combine(item.data.directoryFull, item.data.fileName);
                 string pathVersioned = getFullPathVersioned(path);
@@ -1919,8 +1697,7 @@ namespace Engine.Content
                 bool shouldBeUpdated = false;
                 bool hashVerified = false;
 
-                if (!fileExists)
-                {
+                if (!fileExists) {
                     pathVersioned = PathUtil.Combine(ContentPaths.appCachePath, pathVersioned);
                     pathVersioned = GetPathUpdatedVersion(pathVersioned);
                     fileExists = FileSystemUtil.CheckFileExists(pathVersioned);
@@ -1939,17 +1716,14 @@ namespace Engine.Content
                 || pathVersioned.Contains("/" + ARDataSets.DATA_KEY)
 				|| pathVersioned.Contains("/" + ARDataSetTrackers.DATA_KEY)
 #endif
-                    )
-                {
+                    ) {
 
                     hashVerified = CheckHashVerified(pathVersioned, item.data.hash);
 
-                    if (hashVerified)
-                    {
+                    if (hashVerified) {
                         shouldBeUpdated = false;
                     }
-                    else
-                    {
+                    else {
                         shouldBeUpdated = true;
                     }
                 }
@@ -1957,30 +1731,25 @@ namespace Engine.Content
                 if (fileExists
                     && (packCode.ToLower() == item.pack_code.ToLower()
                     || isDefault(packCode))
-                    )
-                {
+                    ) {
 
                     hashVerified = checkHashVerified(pathVersioned, item.data.hash);
 
-                    if (hashVerified)
-                    {
+                    if (hashVerified) {
                         shouldBeUpdated = false;
                     }
-                    else
-                    {
+                    else {
                         shouldBeUpdated = true;
                     }
                 }
                 else if (!fileExists
                     && (packCode.ToLower() == item.pack_code.ToLower()
                     || isDefault(packCode))
-                    )
-                {
+                    ) {
                     shouldBeUpdated = true;
                 }
 
-                if (shouldBeUpdated)
-                {
+                if (shouldBeUpdated) {
                     pathHashed = getPathUpdatedVersion(pathHashed);
                     paths.Add(pathHashed);
                 }
@@ -1991,11 +1760,9 @@ namespace Engine.Content
         }
 
         public static string CollectAppContentListSharedPacksPathData(
-            string packCode, string key, string ext, bool versioned, bool synced)
-        {
+            string packCode, string key, string ext, bool versioned, bool synced) {
 
-            if (isInst)
-            {
+            if (isInst) {
                 return Instance.collectAppContentListPlatformPacksPathData(packCode, key, ext, versioned, synced);
             }
 
@@ -2003,8 +1770,7 @@ namespace Engine.Content
         }
 
         public string collectAppContentListSharedPacksPathData(
-            string packCode, string key, string ext, bool versioned, bool synced)
-        {
+            string packCode, string key, string ext, bool versioned, bool synced) {
 
             string pathPack = "";
 
@@ -2019,12 +1785,10 @@ namespace Engine.Content
 #endif
 
 
-            if (synced)
-            {
+            if (synced) {
                 pathPack = getFullPathVersionedSync(pathPack);
             }
-            else if (versioned && !synced)
-            {
+            else if (versioned && !synced) {
                 pathPack = getFileVersioned(pathPack);
             }
 
@@ -2032,11 +1796,9 @@ namespace Engine.Content
         }
 
         public static string CollectAppContentListPlatformPacksPathData(
-            string packCode, string key, string ext, bool versioned, bool synced)
-        {
+            string packCode, string key, string ext, bool versioned, bool synced) {
 
-            if (isInst)
-            {
+            if (isInst) {
                 return Instance.collectAppContentListPlatformPacksPathData(packCode, key, ext, versioned, synced);
             }
 
@@ -2044,8 +1806,7 @@ namespace Engine.Content
         }
 
         public string collectAppContentListPlatformPacksPathData(
-            string packCode, string key, string ext, bool versioned, bool synced)
-        {
+            string packCode, string key, string ext, bool versioned, bool synced) {
 
             string pathPack = "";
 
@@ -2058,23 +1819,19 @@ namespace Engine.Content
                     key +
                     "." + ext;
 #endif
-            if (synced)
-            {
+            if (synced) {
                 pathPack = GetFullPathVersionedSync(pathPack);
             }
-            else if (versioned && !synced)
-            {
+            else if (versioned && !synced) {
                 pathPack = GetFileVersioned(pathPack);
             }
 
             return pathPack;
         }
         public static string CollectAppContentListSharedPacksPathContent(
-            string packCode, string key, string ext, bool versioned, bool synced)
-        {
+            string packCode, string key, string ext, bool versioned, bool synced) {
 
-            if (isInst)
-            {
+            if (isInst) {
                 return Instance.collectAppContentListSharedPacksPathContent(
                     packCode, key, ext, versioned, synced);
             }
@@ -2083,8 +1840,7 @@ namespace Engine.Content
         }
 
         public string collectAppContentListSharedPacksPathContent(
-            string packCode, string key, string ext, bool versioned, bool synced)
-        {
+            string packCode, string key, string ext, bool versioned, bool synced) {
 
             string pathPack = "";
 
@@ -2097,12 +1853,10 @@ namespace Engine.Content
                     key +
                     "." + ext;
 #endif
-            if (synced)
-            {
+            if (synced) {
                 pathPack = GetFullPathVersionedSync(pathPack);
             }
-            else if (versioned && !synced)
-            {
+            else if (versioned && !synced) {
                 pathPack = GetFileVersioned(pathPack);
             }
 
@@ -2110,11 +1864,9 @@ namespace Engine.Content
         }
 
         public static string CollectAppContentListSharedPacksPath(
-            string packCode, string key, string ext, bool versioned, bool synced)
-        {
+            string packCode, string key, string ext, bool versioned, bool synced) {
 
-            if (isInst)
-            {
+            if (isInst) {
                 return Instance.collectAppContentListSharedPacksPath(
                     packCode, key, ext, versioned, synced);
             }
@@ -2123,8 +1875,7 @@ namespace Engine.Content
         }
 
         public string collectAppContentListSharedPacksPath(
-            string packCode, string key, string ext, bool versioned, bool synced)
-        {
+            string packCode, string key, string ext, bool versioned, bool synced) {
 
             string pathPack = "";
 
@@ -2138,31 +1889,26 @@ namespace Engine.Content
                     "." + ext;
 #endif
 
-            if (synced)
-            {
+            if (synced) {
                 pathPack = GetFullPathVersionedSync(pathPack);
             }
-            else if (versioned && !synced)
-            {
+            else if (versioned && !synced) {
                 pathPack = GetFileVersioned(pathPack);
             }
 
             return pathPack;
         }
 
-        public static List<string> CollectAppContentListSync(string packCode)
-        {
+        public static List<string> CollectAppContentListSync(string packCode) {
 
-            if (isInst)
-            {
+            if (isInst) {
                 return Instance.collectAppContentListSync(packCode);
             }
 
             return new List<string>();
         }
 
-        public List<string> collectAppContentListSync(string packCode)
-        {
+        public List<string> collectAppContentListSync(string packCode) {
 
             AppContentListItems.Instance.LoadData(); // load latest
 
@@ -2175,8 +1921,7 @@ namespace Engine.Content
 
             paths.Add(pathRootVersioned);
 
-            foreach (GamePack pack in GamePacks.Instance.GetAll())
-            {
+            foreach (GamePack pack in GamePacks.Instance.GetAll()) {
 
                 // content list items
 
@@ -2203,49 +1948,40 @@ namespace Engine.Content
 
         // -----------------------------------------------------------------------
 
-        public static void ResetQueues()
-        {
+        public static void ResetQueues() {
 
-            if (isInst)
-            {
+            if (isInst) {
                 Instance.resetQueues();
             }
         }
 
-        public void resetQueues()
-        {
+        public void resetQueues() {
 
-            if (downloadUrlObjects == null)
-            {
+            if (downloadUrlObjects == null) {
                 downloadUrlObjects = new Queue<DownloadableContentUrlObject>();
             }
 
             downloadUrlObjects.Clear();
 
-            if (processUrlObjects == null)
-            {
+            if (processUrlObjects == null) {
                 processUrlObjects = new Queue<DownloadableContentUrlObject>();
             }
 
             processUrlObjects.Clear();
         }
 
-        public static string GetPathUpdatedVersion(string url)
-        {
+        public static string GetPathUpdatedVersion(string url) {
 
-            if (isInst)
-            {
+            if (isInst) {
                 return Instance.getPathUpdatedVersion(url);
             }
 
             return url;
         }
 
-        public string getPathUpdatedVersion(string url)
-        {
+        public string getPathUpdatedVersion(string url) {
 
-            if (url.Contains("version/"))
-            {
+            if (url.Contains("version/")) {
 #if USE_GAME_LIB_GAMES
                 url = url.Replace("version/", ContentsConfig.contentVersion + "/");
 #endif
@@ -2258,15 +1994,13 @@ namespace Engine.Content
         // HANDLERS	
 
         void handleDownloadableAppContentListFilesCallback(
-            Engine.Networking.WebRequests.ResponseObject response)
-        {
+            Engine.Networking.WebRequests.ResponseObject response) {
 
             response = handleResponseObject(response);
 
             bool serverError = false;
 
-            if (response.validResponse)
-            {
+            if (response.validResponse) {
 
                 LogUtil.LogAccess("Successful HandleDownloadableAppContentListFilesCallback verfication download...");
 
@@ -2274,17 +2008,14 @@ namespace Engine.Content
 
                 LogUtil.LogAccess("dataToParse:" + dataToParse);
 
-                if (!string.IsNullOrEmpty(dataToParse))
-                {
+                if (!string.IsNullOrEmpty(dataToParse)) {
 
-                    try
-                    {
+                    try {
                         DownloadableContentItemListResponse responseData
                             = dataToParse.FromJson<DownloadableContentItemListResponse>();
 
                         foreach (KeyValuePair<string, DownloadableContentUrlObject> item
-                            in responseData.data.url_objs)
-                        {
+                            in responseData.data.url_objs) {
                             DownloadableContentUrlObject urlData = item.Value;
                             downloadUrlObjects.Enqueue(urlData);
                         }
@@ -2296,27 +2027,23 @@ namespace Engine.Content
                             ContentMessages.ContentAppContentListFilesSuccess,
                             "Content verified, downloading and loading pack.");
                     }
-                    catch (Exception e)
-                    {
+                    catch (Exception e) {
                         serverError = true;
                         LogUtil.LogAccess("Parsing error:"
                             + e.Message + e.StackTrace + e.Source);
                     }
                 }
-                else
-                {
+                else {
                     serverError = true;
                 }
             }
-            else
-            {
+            else {
                 // There was a problem with the response.
                 LogUtil.LogAccess("HandleDownloadableAppContentListFilesCallback NON-SUCCESSFUL DOWNLOAD");
                 serverError = true;
             }
 
-            if (serverError)
-            {
+            if (serverError) {
 
                 reset();
 
@@ -2327,15 +2054,13 @@ namespace Engine.Content
         }
 
         void handleDownloadableAppContentListSyncCallback(
-            Engine.Networking.WebRequests.ResponseObject response)
-        {
+            Engine.Networking.WebRequests.ResponseObject response) {
 
             response = handleResponseObject(response);
 
             bool serverError = false;
 
-            if (response.validResponse)
-            {
+            if (response.validResponse) {
 
                 LogUtil.LogAccess("Successful HandleDownloadableAppContentListSyncCallback verfication download...");
 
@@ -2343,17 +2068,14 @@ namespace Engine.Content
 
                 LogUtil.LogAccess("dataToParse:" + dataToParse);
 
-                if (!string.IsNullOrEmpty(dataToParse))
-                {
+                if (!string.IsNullOrEmpty(dataToParse)) {
 
-                    try
-                    {
+                    try {
                         DownloadableContentItemListResponse responseData
                             = dataToParse.FromJson<DownloadableContentItemListResponse>();
 
                         foreach (KeyValuePair<string, DownloadableContentUrlObject> item
-                            in responseData.data.url_objs)
-                        {
+                            in responseData.data.url_objs) {
 
                             DownloadableContentUrlObject urlData = item.Value;
                             downloadUrlObjects.Enqueue(urlData);
@@ -2366,27 +2088,23 @@ namespace Engine.Content
                             ContentMessages.ContentAppContentListSyncSuccess,
                             "Content list verfication success.");
                     }
-                    catch (Exception e)
-                    {
+                    catch (Exception e) {
                         serverError = true;
                         LogUtil.LogAccess("Parsing error:"
                             + e.Message + e.StackTrace + e.Source);
                     }
                 }
-                else
-                {
+                else {
                     serverError = true;
                 }
             }
-            else
-            {
+            else {
                 // There was a problem with the response.
                 LogUtil.LogAccess("HandleDownloadableAppContentListSyncCallback NON-SUCCESSFUL DOWNLOAD");
                 serverError = true;
             }
 
-            if (serverError)
-            {
+            if (serverError) {
 
                 reset();
 
@@ -2400,8 +2118,7 @@ namespace Engine.Content
         // HANDLERS - DEFAULT
 
         void handleDownloadAssetBundleCallback(
-            Engine.Networking.WebRequests.ResponseObject response)
-        {
+            Engine.Networking.WebRequests.ResponseObject response) {
 
             /*
              * 
@@ -2470,15 +2187,13 @@ namespace Engine.Content
         }
 
         void handleDownloadableContentInfoCallback(
-            Engine.Networking.WebRequests.ResponseObject response)
-        {
+            Engine.Networking.WebRequests.ResponseObject response) {
 
             response = handleResponseObject(response);
 
             bool serverError = false;
 
-            if (response.validResponse)
-            {
+            if (response.validResponse) {
 
                 LogUtil.LogAccess("SUCCESSFUL DOWNLOAD");
 
@@ -2486,19 +2201,16 @@ namespace Engine.Content
 
                 LogUtil.LogAccess("dataToParse:" + dataToParse);
 
-                if (!string.IsNullOrEmpty(dataToParse))
-                {
+                if (!string.IsNullOrEmpty(dataToParse)) {
 
-                    try
-                    {
+                    try {
 
                         DownloadableContentItemResponse responseData
                             = dataToParse.FromJson<DownloadableContentItemResponse>();
 
                         dlcItem = responseData.data;
                     }
-                    catch (Exception e)
-                    {
+                    catch (Exception e) {
 
                         serverError = true;
 
@@ -2506,13 +2218,11 @@ namespace Engine.Content
                             + e.Message + e.StackTrace + e.Source);
                     }
 
-                    if (dlcItem != null)
-                    {
+                    if (dlcItem != null) {
 
                         List<string> downloadUrls = dlcItem.download_urls;
 
-                        foreach (string url in downloadUrls)
-                        {
+                        foreach (string url in downloadUrls) {
                             Messenger<string>.Broadcast(
                                 ContentMessages.ContentItemVerifySuccess,
                                 "Content verified, downloading and loading pack.");
@@ -2522,20 +2232,17 @@ namespace Engine.Content
                             break;
                         }
                     }
-                    else
-                    {
+                    else {
 
                         serverError = true;
                     }
                 }
-                else
-                {
+                else {
 
                     serverError = true;
                 }
             }
-            else
-            {
+            else {
 
                 // There was a problem with the response.
                 LogUtil.LogAccess("NON-SUCCESSFUL DOWNLOAD");
@@ -2543,8 +2250,7 @@ namespace Engine.Content
                 serverError = true;
             }
 
-            if (serverError)
-            {
+            if (serverError) {
 
                 reset();
 
@@ -2557,15 +2263,13 @@ namespace Engine.Content
         //HandleDownloadableContentSetSyncCallback
 
         void handleDownloadableContentSetSyncCallback(
-            Engine.Networking.WebRequests.ResponseObject response)
-        {
+            Engine.Networking.WebRequests.ResponseObject response) {
 
             response = handleResponseObject(response);
 
             bool serverError = false;
 
-            if (response.validResponse)
-            {
+            if (response.validResponse) {
 
                 LogUtil.LogAccess("HandleDownloadableContentSetSyncCallback valid");
 
@@ -2573,19 +2277,16 @@ namespace Engine.Content
 
                 LogUtil.LogAccess("dataToParse:" + dataToParse);
 
-                if (!string.IsNullOrEmpty(dataToParse))
-                {
+                if (!string.IsNullOrEmpty(dataToParse)) {
 
-                    try
-                    {
+                    try {
 
                         DownloadableContentItemResponse responseData
                             = dataToParse.FromJson<DownloadableContentItemResponse>();
 
                         dlcItem = responseData.data;
                     }
-                    catch (Exception e)
-                    {
+                    catch (Exception e) {
 
                         serverError = true;
 
@@ -2593,13 +2294,11 @@ namespace Engine.Content
                             + e.Message + e.StackTrace + e.Source);
                     }
 
-                    if (dlcItem != null)
-                    {
+                    if (dlcItem != null) {
 
                         List<string> downloadUrls = dlcItem.download_urls;
 
-                        foreach (string url in downloadUrls)
-                        {
+                        foreach (string url in downloadUrls) {
 
                             Messenger<string>.Broadcast(
                                 ContentMessages.ContentItemVerifySuccess,
@@ -2611,28 +2310,24 @@ namespace Engine.Content
                             break;
                         }
                     }
-                    else
-                    {
+                    else {
 
                         serverError = true;
                     }
                 }
-                else
-                {
+                else {
 
                     serverError = true;
                 }
             }
-            else
-            {
+            else {
                 // There was a problem with the response.
                 LogUtil.LogAccess("NON-SUCCESSFUL DOWNLOAD");
 
                 serverError = true;
             }
 
-            if (serverError)
-            {
+            if (serverError) {
 
                 reset();
 
@@ -2642,15 +2337,13 @@ namespace Engine.Content
             }
         }
 
-        void handleDownloadableFileCallback(Engine.Networking.WebRequests.ResponseObject response)
-        {
+        void handleDownloadableFileCallback(Engine.Networking.WebRequests.ResponseObject response) {
 
             response = handleResponseObject(response);
 
             bool serverError = false;
 
-            if (response.validResponse)
-            {
+            if (response.validResponse) {
 
                 LogUtil.LogAccess("Successful verfication download...");
 
@@ -2658,18 +2351,15 @@ namespace Engine.Content
 
                 LogUtil.LogAccess("dataToParse:" + dataToParse);
 
-                if (!string.IsNullOrEmpty(dataToParse))
-                {
+                if (!string.IsNullOrEmpty(dataToParse)) {
 
-                    try
-                    {
+                    try {
                         DownloadableContentItemResponse responseData
                             = dataToParse.FromJson<DownloadableContentItemResponse>();
 
                         dlcItem = responseData.data;
                     }
-                    catch (Exception e)
-                    {
+                    catch (Exception e) {
 
                         serverError = true;
 
@@ -2677,13 +2367,11 @@ namespace Engine.Content
                             + e.Message + e.StackTrace + e.Source);
                     }
 
-                    if (dlcItem != null)
-                    {
+                    if (dlcItem != null) {
 
                         List<string> downloadUrls = dlcItem.download_urls;
 
-                        if (downloadUrls.Count > 0)
-                        {
+                        if (downloadUrls.Count > 0) {
 
                             Messenger<string>.Broadcast(
                                 ContentMessages.ContentItemVerifySuccess,
@@ -2693,26 +2381,22 @@ namespace Engine.Content
                             //WebRequests.Instance.Request(
                         }
                     }
-                    else
-                    {
+                    else {
                         serverError = true;
                     }
                 }
-                else
-                {
+                else {
                     serverError = true;
                 }
             }
-            else
-            {
+            else {
                 // There was a problem with the response.
                 LogUtil.LogAccess("NON-SUCCESSFUL DOWNLOAD");
 
                 serverError = true;
             }
 
-            if (serverError)
-            {
+            if (serverError) {
 
                 reset();
 
@@ -2727,11 +2411,9 @@ namespace Engine.Content
         //}
 
         public static Engine.Networking.WebRequests.ResponseObject HandleResponseObject(
-            Engine.Networking.WebRequests.ResponseObject responseObject)
-        {
+            Engine.Networking.WebRequests.ResponseObject responseObject) {
 
-            if (isInst)
-            {
+            if (isInst) {
                 return Instance.handleResponseObject(responseObject);
             }
 
@@ -2739,29 +2421,24 @@ namespace Engine.Content
         }
 
         public Engine.Networking.WebRequests.ResponseObject handleResponseObject(
-            Engine.Networking.WebRequests.ResponseObject responseObject)
-        {
+            Engine.Networking.WebRequests.ResponseObject responseObject) {
 
             bool serverError = false;
 
             // Manages common response object parsing to get to object
-            if (responseObject.dataValueText != null)
-            {
+            if (responseObject.dataValueText != null) {
 
                 Dictionary<string, object> data =
                     responseObject.dataValueText.FromJsonToDict();
 
-                if (data != null && data.Count > 0)
-                {
+                if (data != null && data.Count > 0) {
 
                     string code = "9999";
 
-                    try
-                    {
+                    try {
                         code = data.Get<string>("code");
                     }
-                    catch (Exception e)
-                    {
+                    catch (Exception e) {
                         responseObject.error = 1;
                         LogUtil.Log("ERROR: " +
                                     e.Message + e.StackTrace + e.Source);
@@ -2769,12 +2446,10 @@ namespace Engine.Content
 
                     string message = "Failure to parse response.";
 
-                    try
-                    {
+                    try {
                         message = data.Get<string>("message");
                     }
-                    catch (Exception e)
-                    {
+                    catch (Exception e) {
                         responseObject.error = 1;
                         LogUtil.Log("ERROR: " +
                                     e.Message + e.StackTrace + e.Source);
@@ -2810,8 +2485,7 @@ namespace Engine.Content
                     LogUtil.LogAccess("STATUS/CODE:" + code);
                     LogUtil.LogAccess("STATUS/CODE MESSAGE:" + message);
 
-                    if (code == "0")
-                    {
+                    if (code == "0") {
 
                         LogUtil.LogAccess("STATUS/DATA NODE:" + data);
 
@@ -2823,8 +2497,7 @@ namespace Engine.Content
                         responseObject.dataValue = data["data"];
                         responseObject.validResponse = true;
                     }
-                    else
-                    {
+                    else {
 
                         LogUtil.Log(
                             "ERROR - Good response but problem with data, see message.");
@@ -2833,14 +2506,12 @@ namespace Engine.Content
                     }
                 }
             }
-            else
-            {
+            else {
                 LogUtil.LogAccess("ERROR - NO DATA");
                 serverError = true;
             }
 
-            if (serverError)
-            {
+            if (serverError) {
                 responseObject.validResponse = false;
                 reset();
                 Messenger<string>.Broadcast(
@@ -2854,17 +2525,14 @@ namespace Engine.Content
         // ----------------------------------------------------------------------------------
         // REQUESTS		
 
-        public static void RequestDownloadableContent(string pack)
-        {
+        public static void RequestDownloadableContent(string pack) {
 
-            if (isInst)
-            {
+            if (isInst) {
                 Instance.requestDownloadableContent(pack);
             }
         }
 
-        public void requestDownloadableContent(string pack)
-        {
+        public void requestDownloadableContent(string pack) {
 
             RequestDownloadableContent(
                 GamePacks.currentPacksGame,
@@ -2874,18 +2542,15 @@ namespace Engine.Content
         }
 
         public static void RequestDownloadableContent(
-            string game, string version, string platform, string pack)
-        {
+            string game, string version, string platform, string pack) {
 
-            if (isInst)
-            {
+            if (isInst) {
                 Instance.requestDownloadableContent(game, version, platform, pack);
             }
         }
 
         public void requestDownloadableContent(
-            string game, string version, string platform, string pack)
-        {
+            string game, string version, string platform, string pack) {
             //glob.ShowLoadingIndicator();
 
             Dictionary<string, object> data = new Dictionary<string, object>();
@@ -2915,17 +2580,14 @@ namespace Engine.Content
         }
 
         public static void RequestDownloadableContentSetSync(
-            string game, string version, string platform)
-        {
-            if (isInst)
-            {
+            string game, string version, string platform) {
+            if (isInst) {
                 Instance.requestDownloadableContentSetSync(game, version, platform);
             }
         }
 
         public void requestDownloadableContentSetSync(
-            string game, string version, string platform)
-        {
+            string game, string version, string platform) {
 
             downloadInProgress = true;
 
@@ -2939,16 +2601,13 @@ namespace Engine.Content
                 "Getting downloadable content access...");
         }
 
-        public static void RequestDownloadableFile(string url)
-        {
-            if (isInst)
-            {
+        public static void RequestDownloadableFile(string url) {
+            if (isInst) {
                 Instance.requestDownloadableFile(url);
             }
         }
 
-        public void requestDownloadableFile(string url)
-        {
+        public void requestDownloadableFile(string url) {
 
             downloadInProgress = true;
 
@@ -2961,18 +2620,15 @@ namespace Engine.Content
                 "Started downloading..." + url);
         }
 
-        public static Dictionary<string, object> GetDefaultPostParams()
-        {
+        public static Dictionary<string, object> GetDefaultPostParams() {
 
-            if (isInst)
-            {
+            if (isInst) {
                 return Instance.getDefaultPostParams();
             }
             return null;
         }
 
-        public Dictionary<string, object> getDefaultPostParams()
-        {
+        public Dictionary<string, object> getDefaultPostParams() {
 
             Dictionary<string, object> data = new Dictionary<string, object>();
 
@@ -2988,17 +2644,14 @@ namespace Engine.Content
             return data;
         }
 
-        public static void RequestDownloadableAppContentListSync(List<string> paths)
-        {
+        public static void RequestDownloadableAppContentListSync(List<string> paths) {
 
-            if (isInst)
-            {
+            if (isInst) {
                 Instance.requestDownloadableAppContentListSync(paths);
             }
         }
 
-        public void requestDownloadableAppContentListSync(List<string> paths)
-        {
+        public void requestDownloadableAppContentListSync(List<string> paths) {
 
             downloadInProgress = true;
 
@@ -3031,16 +2684,13 @@ namespace Engine.Content
             ChangeSyncState(ContentSyncState.SyncProcessContentList);
         }
 
-        public static void RequestDownloadableAppContentListFiles(List<string> paths)
-        {
-            if (isInst)
-            {
+        public static void RequestDownloadableAppContentListFiles(List<string> paths) {
+            if (isInst) {
                 Instance.requestDownloadableAppContentListFiles(paths);
             }
         }
 
-        public void requestDownloadableAppContentListFiles(List<string> paths)
-        {
+        public void requestDownloadableAppContentListFiles(List<string> paths) {
 
             downloadInProgress = true;
 
@@ -3081,11 +2731,9 @@ namespace Engine.Content
         // HELPERS		
 
         public static string GetDownloadContentItemUrl(
-            string game, string buildVersion, string platform, string pack)
-        {
+            string game, string buildVersion, string platform, string pack) {
 
-            if (isInst)
-            {
+            if (isInst) {
 
                 return Instance.getDownloadContentItemUrl(
                     game, buildVersion, platform, pack);
@@ -3095,8 +2743,7 @@ namespace Engine.Content
         }
 
         public string getDownloadContentItemUrl(
-            string game, string buildVersion, string platform, string pack)
-        {
+            string game, string buildVersion, string platform, string pack) {
 
             // add increment to the pack name
             pack = pack + "-" + Convert.ToString(GamePacks.currentPacksIncrement);
@@ -3107,11 +2754,9 @@ namespace Engine.Content
         }
 
         public static string GetDownloadAppContentListFilesUrl(
-            string game, string buildVersion, string platform)
-        {
+            string game, string buildVersion, string platform) {
 
-            if (isInst)
-            {
+            if (isInst) {
 
                 return Instance.getDownloadAppContentListFilesUrl(
                     game, buildVersion, platform);
@@ -3122,8 +2767,7 @@ namespace Engine.Content
 
         //contentDownloadAppContentListFiles
         public string getDownloadAppContentListFilesUrl(
-            string game, string buildVersion, string platform)
-        {
+            string game, string buildVersion, string platform) {
 
             return String.Format(
                 ContentEndpoints.contentDownloadAppContentListFiles,
@@ -3131,11 +2775,9 @@ namespace Engine.Content
         }
 
         public static string GetContentSetUrl(
-            string game, string buildVersion, string platform)
-        {
+            string game, string buildVersion, string platform) {
 
-            if (isInst)
-            {
+            if (isInst) {
 
                 return Instance.getContentSetUrl(game, buildVersion, platform);
             }
@@ -3144,8 +2786,7 @@ namespace Engine.Content
         }
 
         public string getContentSetUrl(
-            string game, string buildVersion, string platform)
-        {
+            string game, string buildVersion, string platform) {
 
             // add increment to the pack name
             //pack = pack + "-" + Convert.ToString(GamePacks.currentPacksIncrement);
@@ -3154,17 +2795,14 @@ namespace Engine.Content
                 game, buildVersion, platform);
         }
 
-        public static void LoadSceneOrDownloadScenePackAndLoad(string pack)
-        {
+        public static void LoadSceneOrDownloadScenePackAndLoad(string pack) {
 
-            if (isInst)
-            {
+            if (isInst) {
                 Instance.loadSceneOrDownloadScenePackAndLoad(pack);
             }
         }
 
-        public void loadSceneOrDownloadScenePackAndLoad(string pack)
-        {
+        public void loadSceneOrDownloadScenePackAndLoad(string pack) {
 
             loadSceneOrDownloadScenePackAndLoad(
                 GamePacks.currentPacksGame,
@@ -3174,11 +2812,9 @@ namespace Engine.Content
         }
 
         public static void LoadSceneOrDownloadScenePackAndLoad(
-            string game, string buildVersion, string platform, string pack)
-        {
+            string game, string buildVersion, string platform, string pack) {
 
-            if (isInst)
-            {
+            if (isInst) {
 
                 Instance.loadSceneOrDownloadScenePackAndLoad(
                     game, buildVersion, platform, pack);
@@ -3186,8 +2822,7 @@ namespace Engine.Content
         }
 
         public void loadSceneOrDownloadScenePackAndLoad(
-            string game, string buildVersion, string platform, string pack)
-        {
+            string game, string buildVersion, string platform, string pack) {
 
             bool isDownloadableContent = IsDownloadableContent(pack);
 
@@ -3200,85 +2835,70 @@ namespace Engine.Content
             string lastPackUrlValue = GetLastPackState(pack);
 #if !UNITY_WEBGL
             if (Caching.IsVersionCached(lastPackUrlValue, Hash128.Parse(version.ToString()))
-                && !string.IsNullOrEmpty(lastPackUrlValue))
-            {
+                && !string.IsNullOrEmpty(lastPackUrlValue)) {
                 // Just load from the saved url
                 StartCoroutine(
                     sceneLoadFromCacheOrDownloadCo(lastPackUrlValue));
             }
-            else
-            {
+            else {
                 // Do download verification and download
                 requestDownloadableContent(game, buildVersion, platform, pack);
             }
 #endif
         }
 
-        public static bool IsDownloadableContent(string pack)
-        {
+        public static bool IsDownloadableContent(string pack) {
 
-            if (isInst)
-            {
+            if (isInst) {
                 return Instance.isDownloadableContent(pack);
             }
 
             return false;
         }
 
-        public bool isDownloadableContent(string pack)
-        {
+        public bool isDownloadableContent(string pack) {
             //if(pack.ToLower() == GamePacks.PACK_BOOK_DEFAULT.ToLower()) {
             //	return true;
             //}
             return false;
         }
 
-        public static void SetLastPackState(string packName, string url)
-        {
+        public static void SetLastPackState(string packName, string url) {
 
-            if (isInst)
-            {
+            if (isInst) {
                 Instance.setLastPackState(packName, url);
             }
         }
 
-        public void setLastPackState(string packName, string url)
-        {
+        public void setLastPackState(string packName, string url) {
 
-            if (IsDownloadableContent(packName))
-            {
+            if (IsDownloadableContent(packName)) {
 
                 string lastPackUrlKey = "last-pack-" + packName;
                 string lastPackUrlValue = url;
 
-                if (!string.IsNullOrEmpty(lastPackUrlValue))
-                {
+                if (!string.IsNullOrEmpty(lastPackUrlValue)) {
                     SystemPrefUtil.SetLocalSettingString(lastPackUrlKey, lastPackUrlValue);
                     SystemPrefUtil.Save();
                 }
             }
         }
 
-        public static string GetLastPackState(string packName)
-        {
+        public static string GetLastPackState(string packName) {
 
-            if (isInst)
-            {
+            if (isInst) {
                 return Instance.getLastPackState(packName);
             }
 
             return "";
         }
 
-        public string getLastPackState(string packName)
-        {
+        public string getLastPackState(string packName) {
 
-            if (IsDownloadableContent(packName))
-            {
+            if (IsDownloadableContent(packName)) {
 
                 string lastPackUrlKey = "last-pack-" + packName;
-                if (SystemPrefUtil.HasLocalSetting(lastPackUrlKey))
-                {
+                if (SystemPrefUtil.HasLocalSetting(lastPackUrlKey)) {
                     return SystemPrefUtil.GetLocalSettingString(lastPackUrlKey);
                 }
             }
@@ -3291,23 +2911,19 @@ namespace Engine.Content
 
         // Individual file downloading
 
-        public static string GetHashCodeFromFile(string url)
-        {
+        public static string GetHashCodeFromFile(string url) {
 
-            if (isInst)
-            {
+            if (isInst) {
                 return Instance.getHashCodeFromFile(url);
             }
             return "";
         }
 
-        public string getHashCodeFromFile(string url)
-        {
+        public string getHashCodeFromFile(string url) {
 
             string hash = "";
 
-            if (!url.Contains(ContentPaths.appCachePath))
-            {
+            if (!url.Contains(ContentPaths.appCachePath)) {
                 url = PathUtil.Combine(ContentPaths.appCachePath, url);
             }
 
@@ -3316,19 +2932,16 @@ namespace Engine.Content
             return hash;
         }
 
-        public static string GetHashCodeFromFilePath(string url)
-        {
+        public static string GetHashCodeFromFilePath(string url) {
 
-            if (isInst)
-            {
+            if (isInst) {
                 return Instance.getHashCodeFromFilePath(url);
             }
 
             return url;
         }
 
-        public string getHashCodeFromFilePath(string url)
-        {
+        public string getHashCodeFromFilePath(string url) {
 
             string hash = "";
 
@@ -3341,8 +2954,7 @@ namespace Engine.Content
 
             //int matchCount = 0;
 
-            if (m.Success)
-            {
+            if (m.Success) {
                 hash = m.Value;
                 hash = hash.Split('.')[0];
             }
@@ -3368,28 +2980,23 @@ namespace Engine.Content
         // BINARY SAVING	
 
         public static void HandleSyncedFileBinary(
-            byte[] bytes, DownloadableContentUrlObject urlObject)
-        {
+            byte[] bytes, DownloadableContentUrlObject urlObject) {
 
-            if (isInst)
-            {
+            if (isInst) {
                 Instance.handleSyncedFileBinary(bytes, urlObject);
             }
         }
 
         public void handleSyncedFileBinary(
-            byte[] bytes, DownloadableContentUrlObject urlObject)
-        {
+            byte[] bytes, DownloadableContentUrlObject urlObject) {
 
-            if (bytes != null)
-            {
+            if (bytes != null) {
 
                 string path = urlObject.path;
                 string pathSave = path;
                 string pathCache = ContentPaths.appCachePath;
 
-                if (!pathSave.Contains(pathCache))
-                {
+                if (!pathSave.Contains(pathCache)) {
                     pathSave = PathUtil.Combine(pathCache, path);
                 }
 
@@ -3399,13 +3006,11 @@ namespace Engine.Content
 #else
                 string pathBase = "default/";
 #endif
-                if (pathSave.Contains(pathBase + pathBase))
-                {
+                if (pathSave.Contains(pathBase + pathBase)) {
                     pathSave = pathSave.Replace(pathBase + pathBase, pathBase);
                 }
 
-                if (pathSave.Contains("/" + AppContentListItems.DATA_KEY))
-                {
+                if (pathSave.Contains("/" + AppContentListItems.DATA_KEY)) {
                     // If this is a content list, hash it before saving
 
 
@@ -3417,8 +3022,7 @@ namespace Engine.Content
                     //string pathSaveHashed = GetFileVersioned(pathUnversioned, hash);
                     //pathSaveHashed = pathSaveHashed.Replace("-process","");
                 }
-                else
-                {
+                else {
 
                     // Save file to check against before copying over			
                     FileSystemUtil.WriteAllBytes(pathSave, bytes);
@@ -3429,13 +3033,11 @@ namespace Engine.Content
             }
         }
 
-        IEnumerator processSyncedFilesCo()
-        {
+        IEnumerator processSyncedFilesCo() {
 
             AppContentListItems.Instance.LoadData();
 
-            if (processUrlObjects != null)
-            {
+            if (processUrlObjects != null) {
 
                 validatingTotal = processUrlObjects.Count;
                 validatingInc = 0;
@@ -3458,19 +3060,16 @@ namespace Engine.Content
         }
         */
 
-        public static string GetUnversionedDisplayFile(string val)
-        {
+        public static string GetUnversionedDisplayFile(string val) {
 
-            if (isInst)
-            {
+            if (isInst) {
                 return Instance.getUnversionedDisplayFile(val);
             }
 
             return "";
         }
 
-        public string getUnversionedDisplayFile(string val)
-        {
+        public string getUnversionedDisplayFile(string val) {
 #if !UNITY_WEBGL
             val = Path.GetFileName(val);
 #endif
@@ -3483,8 +3082,7 @@ namespace Engine.Content
             }
             */
 
-            if (val.Contains(AppContentListItems.DATA_KEY))
-            {
+            if (val.Contains(AppContentListItems.DATA_KEY)) {
                 val = "Checking For Awesome New Content";
             }
             //else if(val.Contains(BaseGameStatistics.DATA_KEY)) {
@@ -3493,32 +3091,25 @@ namespace Engine.Content
             //else if(val.Contains(BaseGameAchievements.DATA_KEY)) {
             //	val = "Achievements To Earn";
             //}
-            else if (val.Contains(AppContentStates.DATA_KEY))
-            {
+            else if (val.Contains(AppContentStates.DATA_KEY)) {
                 val = "3D Content";
             }
-            else if (val.Contains(AppStates.DATA_KEY))
-            {
+            else if (val.Contains(AppStates.DATA_KEY)) {
                 val = "Virtual Aisles + Categories";
             }
-            else if (val.Contains(AppContentAssets.DATA_KEY))
-            {
+            else if (val.Contains(AppContentAssets.DATA_KEY)) {
                 val = "3D Objects, Audio + Video";
             }
-            else if (val.Contains(".m4v") || val.Contains(".mp4"))
-            {
+            else if (val.Contains(".m4v") || val.Contains(".mp4")) {
                 val = "Videos";
             }
-            else if (val.Contains(".mp3") || val.Contains(".mp3"))
-            {
+            else if (val.Contains(".mp3") || val.Contains(".mp3")) {
                 val = "Audio + Effects";
             }
-            else if (val.Contains("icon") || val.Contains("feature"))
-            {
+            else if (val.Contains("icon") || val.Contains("feature")) {
                 val = "Icons + Feature Images";
             }
-            else if (val.Contains(".png") || val.Contains(".png"))
-            {
+            else if (val.Contains(".png") || val.Contains(".png")) {
                 val = "Images";
             }
 
@@ -3528,14 +3119,11 @@ namespace Engine.Content
         float validatingTotal = 0;
         float validatingInc = 0;
 
-        IEnumerator processSyncedFilesRecursiveCo()
-        {
+        IEnumerator processSyncedFilesRecursiveCo() {
 
-            if (processUrlObjects != null)
-            {
+            if (processUrlObjects != null) {
 
-                if (validatingTotal > 0)
-                {
+                if (validatingTotal > 0) {
 
                     DownloadableContentUrlObject urlObject = processUrlObjects.Dequeue();
                     broadcastProgressMessage("Validating Files", GetUnversionedDisplayFile(urlObject.path), validatingInc++ / validatingTotal);
@@ -3550,32 +3138,27 @@ namespace Engine.Content
 
         public static string processMarker = "____process";
 
-        public static void ProcessSyncedFile(DownloadableContentUrlObject urlObject)
-        {
+        public static void ProcessSyncedFile(DownloadableContentUrlObject urlObject) {
 
-            if (isInst)
-            {
+            if (isInst) {
                 Instance.processSyncedFile(urlObject);
             }
         }
 
-        public void processSyncedFile(DownloadableContentUrlObject urlObject)
-        {
+        public void processSyncedFile(DownloadableContentUrlObject urlObject) {
 
             string path = urlObject.path;
             string pathSave = path;
             string pathCache = ContentPaths.appCachePath;
 
-            if (!pathSave.Contains(pathCache))
-            {
+            if (!pathSave.Contains(pathCache)) {
                 pathSave = PathUtil.Combine(pathCache, path);
             }
 
             bool isContentList = pathSave.Contains(
                 "/" + AppContentListItems.DATA_KEY);
 
-            if (isContentList)
-            {
+            if (isContentList) {
                 pathSave = pathSave + processMarker;
             }
 
@@ -3587,8 +3170,7 @@ namespace Engine.Content
             // Check actual file contents hash
             string hashNew = GetHashCodeFromFilePath(pathSave);
 
-            if (isContentList)
-            {
+            if (isContentList) {
                 hashNew = hashNewFile;
             }
 
@@ -3631,8 +3213,7 @@ namespace Engine.Content
             bool isAllType = pathVersionedSync.Contains("default_app/all/");
 #endif
 
-            if (isFileValid)
-            {
+            if (isFileValid) {
                 // Hash matches from content list and downloaded file
 
                 // If download matches hash in data and from file then update
@@ -3645,16 +3226,13 @@ namespace Engine.Content
                 updateFile = false;
                 //}
 
-                if (hashNew != hashCurrent)
-                {
+                if (hashNew != hashCurrent) {
                     updateFile = true;
                 }
 
-                if (updateFile || isContentList)
-                {
+                if (updateFile || isContentList) {
 
-                    if (isContentList)
-                    {
+                    if (isContentList) {
 
                         pathNoHashCurrent = pathNoHashCurrent.Replace(processMarker, "");
 
@@ -3663,14 +3241,11 @@ namespace Engine.Content
                             pathNoHashCurrent, true);
                         FileSystemUtil.RemoveFile(pathSave);
                     }
-                    else
-                    {
+                    else {
 
-                        if (updateFile)
-                        {
+                        if (updateFile) {
 
-                            if (isAllType)
-                            {
+                            if (isAllType) {
                                 //string pathSaveTo = 
                                 //	appContentListItem.data.GetFilePaths().
                                 //	pathNonVersionedSystem;
@@ -3679,8 +3254,7 @@ namespace Engine.Content
                                     GetFileUnversioned(pathNoHashCurrent)
                                     , true);
                             }
-                            else
-                            {
+                            else {
                                 //string pathSaveTo = 
                                 //	appContentListItem.data.GetFilePaths().
                                 //	pathVersionedSystem;
@@ -3751,21 +3325,18 @@ namespace Engine.Content
                     }
                 }
             }
-            else
-            {
+            else {
 
                 FileSystemUtil.RemoveFile(pathSave);
             }
         }
 
         void handleRequestDownloadBytesCallback(
-            byte[] responseBytes)
-        {
+            byte[] responseBytes) {
 
             //bool serverError = false;
 
-            if (responseBytes != null)
-            {
+            if (responseBytes != null) {
 
                 handleSyncedFileBinary(responseBytes, currentUrlObject);
 
@@ -3774,8 +3345,7 @@ namespace Engine.Content
                         "Download Success " + currentUrlObject.file_key);
 
             }
-            else
-            {
+            else {
                 //serverError = true;			
 
                 Messenger<object>.Broadcast(
@@ -3784,17 +3354,14 @@ namespace Engine.Content
             }
         }
 
-        public static void RequestDownloadBytes(string url)
-        {
+        public static void RequestDownloadBytes(string url) {
 
-            if (isInst)
-            {
+            if (isInst) {
                 Instance.requestDownloadBytes(url);
             }
         }
 
-        public void requestDownloadBytes(string url)
-        {
+        public void requestDownloadBytes(string url) {
 
             Messenger<object>.Broadcast(
                 ContentMessages.ContentAppContentListFileDownloadStarted,
@@ -3820,17 +3387,14 @@ namespace Engine.Content
         //    SyncFolders();
         //}
 
-        public static void BroadcastProgressMessage(string title, string description, float progress)
-        {
+        public static void BroadcastProgressMessage(string title, string description, float progress) {
 
-            if (isInst)
-            {
+            if (isInst) {
                 Instance.broadcastProgressMessage(title, description, progress);
             }
         }
 
-        public void broadcastProgressMessage(string title, string description, float progress)
-        {
+        public void broadcastProgressMessage(string title, string description, float progress) {
 
             Messenger<string, string, float>.Broadcast(ContentMessages.ContentProgressMessage,
                 title,
@@ -3845,17 +3409,14 @@ namespace Engine.Content
             //AppViewerUIPanelLoading.ShowProgress(title, description, progress);
         }
 
-        public static void InitCache(bool syncFolders, bool syncServer)
-        {
+        public static void InitCache(bool syncFolders, bool syncServer) {
 
-            if (isInst)
-            {
+            if (isInst) {
                 Instance.initCache(syncFolders, syncServer);
             }
         }
 
-        public void initCache(bool syncFolders, bool syncServer)
-        {
+        public void initCache(bool syncFolders, bool syncServer) {
 
             StartCoroutine(initCacheCo(syncFolders, syncServer));
         }
@@ -3866,8 +3427,7 @@ namespace Engine.Content
         //	}
         //}
 
-        public IEnumerator initCacheCo(bool syncFolders, bool syncServer)
-        {
+        public IEnumerator initCacheCo(bool syncFolders, bool syncServer) {
 
             LogUtil.Log("initCacheCo:", " syncFolders:" + syncFolders + " syncServer:" + syncServer);
 
@@ -3888,8 +3448,7 @@ namespace Engine.Content
             //yield break;
         }
 
-        IEnumerator downloadLatestContentList()
-        {
+        IEnumerator downloadLatestContentList() {
 
             // Get and check the md5 hash of main content list		
 
@@ -3897,11 +3456,9 @@ namespace Engine.Content
         }
 
         public static string GetFileDataFromPersistentCache(
-            string path, bool versioned, bool absolute)
-        {
+            string path, bool versioned, bool absolute) {
 
-            if (isInst)
-            {
+            if (isInst) {
                 return Instance.getFileDataFromPersistentCache(path, versioned, absolute);
             }
 
@@ -3909,8 +3466,7 @@ namespace Engine.Content
         }
 
         public string getFileDataFromPersistentCache(
-            string path, bool versioned, bool absolute)
-        {
+            string path, bool versioned, bool absolute) {
 
             string fileData = "";
             string pathPart = path;
@@ -3919,16 +3475,14 @@ namespace Engine.Content
             pathToCopy = PathUtil.Combine(
                 ContentPaths.appShipCacheVersionPath, pathPart);
 
-            if (!absolute)
-            {
+            if (!absolute) {
                 path = PathUtil.Combine(
                     ContentPaths.appCacheVersionPath, path);
                 //shipPath = PathUtil.Combine(ContentPaths.appShipCacheVersionPath, path);
             }
             string pathVersioned = path;
 
-            if (versioned)
-            {
+            if (versioned) {
                 pathVersioned = Contents.GetFullPathVersioned(pathVersioned);
             }
 
@@ -3944,18 +3498,15 @@ namespace Engine.Content
             //LogUtil.Log("GetFileDataFromPersistentCache:versionedExists:" + versionedExists.ToString());
             //LogUtil.Log("GetFileDataFromPersistentCache:absolute:" + absolute);
 
-            if (!versionedExists && !absolute)
-            {
+            if (!versionedExists && !absolute) {
 
                 // copy from streaming assets	
                 bool shipExists = FileSystemUtil.CheckFileExists(pathToCopy);
 
-                if (shipExists)
-                {
+                if (shipExists) {
                     FileSystemUtil.CopyFile(pathToCopy, pathVersioned);
                 }
-                else
-                {
+                else {
                     return "";
                 }
             }
@@ -3965,8 +3516,7 @@ namespace Engine.Content
             return fileData;
         }
 
-        public enum ContentStorageLocation
-        {
+        public enum ContentStorageLocation {
             RESOURCES,
             STREAMING_ASSETS,
             PERSISTENT,
@@ -3975,23 +3525,19 @@ namespace Engine.Content
 
         public static IEnumerator SyncContentListItemDataCo(
             ContentStorageLocation locationFrom,
-            ContentStorageLocation locationTo)
-        {
+            ContentStorageLocation locationTo) {
 
-            if (isInst)
-            {
+            if (isInst) {
                 yield return Instance.StartCoroutine(Instance.syncContentListItemDataCo(locationFrom, locationTo));
             }
-            else
-            {
+            else {
                 yield break;
             }
         }
 
         public IEnumerator syncContentListItemDataCo(
             ContentStorageLocation locationFrom,
-            ContentStorageLocation locationTo)
-        {
+            ContentStorageLocation locationTo) {
             // Syncs content list item data from streaming assets to persistent
 
             LogUtil.Log("SyncContentListItemData: locationFrom" +
@@ -4004,8 +3550,7 @@ namespace Engine.Content
 
             yield return new WaitForEndOfFrame();
 
-            foreach (AppContentListItem contentItem in contentListItems)
-            {
+            foreach (AppContentListItem contentItem in contentListItems) {
 
                 string fileFrom = PathUtil.Combine(
                     Application.streamingAssetsPath,
@@ -4023,8 +3568,7 @@ namespace Engine.Content
 
                 yield return new WaitForEndOfFrame();
 
-                if (FileSystemUtil.CheckFileExists(fileFrom))
-                {
+                if (FileSystemUtil.CheckFileExists(fileFrom)) {
                     string fileTo = PathUtil.Combine(
                         Application.persistentDataPath,
                         contentItem.data.filePathVersioned);
@@ -4044,8 +3588,7 @@ namespace Engine.Content
 
                     yield return new WaitForEndOfFrame();
 
-                    if (!FileSystemUtil.CheckFileExists(fileTo))
-                    {
+                    if (!FileSystemUtil.CheckFileExists(fileTo)) {
                         LogUtil.Log("SyncContentListItemData: Copying File: fileTo:" + fileTo);
 
                         broadcastProgressMessage(
@@ -4072,24 +3615,20 @@ namespace Engine.Content
 
         public static IEnumerator DirectoryCopyCo(
             string sourceDirName, string destDirName,
-            bool copySubDirs, bool versioned)
-        {
+            bool copySubDirs, bool versioned) {
 
-            if (isInst)
-            {
+            if (isInst) {
                 yield return Instance.StartCoroutine(Instance.directoryCopyCo(
                     sourceDirName, destDirName, copySubDirs, versioned));
             }
-            else
-            {
+            else {
                 yield break;
             }
         }
 
         public IEnumerator directoryCopyCo(
             string sourceDirName, string destDirName,
-            bool copySubDirs, bool versioned)
-        {
+            bool copySubDirs, bool versioned) {
 
 
 #if !UNITY_WEBGL
@@ -4113,14 +3652,12 @@ namespace Engine.Content
             //	" sourceDirExists2:" + sourceDirExists2.ToString() + 
             //	" sourceDirExists3:" + sourceDirExists3.ToString());
 
-            if (sourceDirExists)
-            {
+            if (sourceDirExists) {
 
                 DirectoryInfo dir = new DirectoryInfo(sourceDirName);
                 DirectoryInfo[] dirs = dir.GetDirectories();
 
-                if (!dir.Exists)
-                {
+                if (!dir.Exists) {
                     throw new DirectoryNotFoundException(
                         "Source directory does not exist or could not be found: "
                         + sourceDirName);
@@ -4146,21 +3683,17 @@ namespace Engine.Content
 
                 int curr = 0;
 
-                foreach (FileInfo file in files)
-                {
+                foreach (FileInfo file in files) {
                     if (file.Extension != ".meta"
-                        && file.Extension != ".DS_Store")
-                    {
+                        && file.Extension != ".DS_Store") {
 
                         string temppath = PathUtil.Combine(destDirName, file.Name);
 
-                        if (versioned)
-                        {
+                        if (versioned) {
                             temppath = getFullPathVersioned(temppath);
                         }
 
-                        if (!FileSystemUtil.CheckFileExists(temppath) || Application.isEditor)
-                        {
+                        if (!FileSystemUtil.CheckFileExists(temppath) || Application.isEditor) {
 
                             LogUtil.Log("--copying ship file: " + file.FullName);
                             LogUtil.Log("--copying ship file to cache: " + temppath);
@@ -4178,11 +3711,9 @@ namespace Engine.Content
 
                 }
 
-                if (copySubDirs)
-                {
+                if (copySubDirs) {
 
-                    foreach (DirectoryInfo subdir in dirs)
-                    {
+                    foreach (DirectoryInfo subdir in dirs) {
                         string temppath = PathUtil.Combine(destDirName, subdir.Name);
                         LogUtil.Log("Copying Directory: " + temppath);
                         yield return StartCoroutine(directoryCopyCo(subdir.FullName, temppath, copySubDirs, versioned));
@@ -4203,8 +3734,7 @@ namespace Engine.Content
         //	}
         //}
 
-        public IEnumerator syncFoldersCo(bool syncFolders, bool syncServer)
-        {
+        public IEnumerator syncFoldersCo(bool syncFolders, bool syncServer) {
 
             LogUtil.Log("Contents::syncFoldersCo:", " syncFolders:" + syncFolders + " syncServer:" + syncServer);
 
@@ -4218,8 +3748,7 @@ namespace Engine.Content
 
             LogUtil.Log("Contents::syncFoldersCo:Folders Created:", " syncFolders:" + syncFolders + " syncServer:" + syncServer);
 
-            if (syncFolders)
-            {
+            if (syncFolders) {
                 yield return StartCoroutine(directoryCopyCo(ContentPaths.appShipCachePlatformPath, ContentPaths.appCachePlatformPath, true, true));
                 //DirectoryCopy(appShipCachePathPacks, ContentPaths.appCachePathPacks, true);
                 yield return StartCoroutine(directoryCopyCo(ContentPaths.appShipCachePathData, ContentPaths.appCachePathData, true, true));
@@ -4227,8 +3756,7 @@ namespace Engine.Content
                 yield return StartCoroutine(directoryCopyCo(ContentPaths.appShipCachePathAll, ContentPaths.appCachePathAll, true, false));  // files in all/shared are not versioned...
             }
 
-            if (syncServer)
-            {
+            if (syncServer) {
                 yield return StartCoroutine(syncContentListItemDataCo(
                     ContentStorageLocation.STREAMING_ASSETS,
                     ContentStorageLocation.PERSISTENT));
@@ -4244,19 +3772,16 @@ namespace Engine.Content
             ////
         }
 
-        public static string GetFullPathVersioned(string fullPath)
-        {
+        public static string GetFullPathVersioned(string fullPath) {
 
-            if (isInst)
-            {
+            if (isInst) {
                 return Instance.getFullPathVersioned(fullPath);
             }
 
             return fullPath;
         }
 
-        public string getFullPathVersioned(string fullPath)
-        {
+        public string getFullPathVersioned(string fullPath) {
             //string fileHash = ChecksumHash(fullPath);
             //return GetFileVersioned(fullPath, fileHash);
             return getFileVersioned(fullPath, null);
@@ -4273,109 +3798,90 @@ namespace Engine.Content
         //return GetFileVersioned(pathToVersion, null);
         //}
 
-        public static string GetFullPathVersionedSync(string fullPath)
-        {
+        public static string GetFullPathVersionedSync(string fullPath) {
 
-            if (isInst)
-            {
+            if (isInst) {
                 return Instance.getFullPathVersionedSync(fullPath);
             }
 
             return fullPath;
         }
 
-        public string getFullPathVersionedSync(string fullPath)
-        {
+        public string getFullPathVersionedSync(string fullPath) {
 
             string fileHash = ChecksumHash(fullPath);
             return GetFileVersioned(fullPath, fileHash);
         }
 
-        public static string ChecksumHash(string fullPath)
-        {
+        public static string ChecksumHash(string fullPath) {
 
-            if (isInst)
-            {
+            if (isInst) {
                 return Instance.checksumHash(fullPath);
             }
 
             return "";
         }
 
-        public string checksumHash(string fullPath)
-        {
+        public string checksumHash(string fullPath) {
 
             return CryptoUtil.CalculateMD5HashFromFile(fullPath);
         }
 
-        public static string GetFullPathVersionedSync(string hashPath, string pathToVersion)
-        {
+        public static string GetFullPathVersionedSync(string hashPath, string pathToVersion) {
 
-            if (isInst)
-            {
+            if (isInst) {
                 return Instance.getFullPathVersionedSync(hashPath, pathToVersion);
             }
 
             return "";
         }
 
-        public string getFullPathVersionedSync(string hashPath, string pathToVersion)
-        {
+        public string getFullPathVersionedSync(string hashPath, string pathToVersion) {
 
-            if (FileSystemUtil.CheckFileExists(hashPath))
-            {
+            if (FileSystemUtil.CheckFileExists(hashPath)) {
 
                 string fileHash = ChecksumHash(hashPath);
                 return GetFileVersioned(pathToVersion, fileHash);
             }
-            else
-            {
+            else {
                 return hashPath;
             }
         }
 
-        public static string GetFileVersioned(string path)
-        {
+        public static string GetFileVersioned(string path) {
 
-            if (isInst)
-            {
+            if (isInst) {
                 return Instance.getFileVersioned(path);
             }
 
             return path;
         }
 
-        public string getFileVersioned(string path)
-        {
+        public string getFileVersioned(string path) {
 
             return GetFileVersioned(path, null);
         }
 
-        public static string GetFileVersioned(string path, string hash)
-        {
+        public static string GetFileVersioned(string path, string hash) {
 
-            if (isInst)
-            {
+            if (isInst) {
                 return Instance.getFileVersioned(path, hash);
             }
 
             return path;
         }
 
-        public string getFileVersioned(string path, string hash)
-        {
+        public string getFileVersioned(string path, string hash) {
 
             string fileVersioned = "";
 
-            if (!string.IsNullOrEmpty(path))
-            {
+            if (!string.IsNullOrEmpty(path)) {
 
                 string[] arrpath = path.Split('/');
 
                 fileVersioned = path;
 
-                if (arrpath != null)
-                {
+                if (arrpath != null) {
 
                     string filepart = arrpath[arrpath.Length - 1];
                     string arttpathrest = path.Replace(filepart, "");
@@ -4390,8 +3896,7 @@ namespace Engine.Content
                     string appVersion = "default";
                     string appIncrement = "1";
 #endif
-                    if (!string.IsNullOrEmpty(hash))
-                    {
+                    if (!string.IsNullOrEmpty(hash)) {
 
                         fileVersioned = PathUtil.Combine(arttpathrest, filepartbare
                             + "-" + appVersion
@@ -4400,8 +3905,7 @@ namespace Engine.Content
                             + "-" + hash
                             + "." + ext);
                     }
-                    else
-                    {
+                    else {
 
                         fileVersioned = PathUtil.Combine(arttpathrest, filepartbare
                             + "-" + appVersion
@@ -4415,31 +3919,26 @@ namespace Engine.Content
             return fileVersioned;
         }
 
-        public static string GetDisplayFileUnversioned(string path)
-        {
+        public static string GetDisplayFileUnversioned(string path) {
 
-            if (isInst)
-            {
+            if (isInst) {
                 return Instance.getDisplayFileUnversioned(path);
             }
 
             return path;
         }
 
-        public string getDisplayFileUnversioned(string path)
-        {
+        public string getDisplayFileUnversioned(string path) {
 
             string fileVersioned = path;
 
-            if (!string.IsNullOrEmpty(path))
-            {
+            if (!string.IsNullOrEmpty(path)) {
 
                 string[] arrpath = path.Split('/');
 
                 fileVersioned = path;
 
-                if (arrpath != null)
-                {
+                if (arrpath != null) {
 
 #if USE_GAME_LIB_GAMES
                     string appVersion = ContentsConfig.contentVersion.Replace(".", "-");
@@ -4454,8 +3953,7 @@ namespace Engine.Content
                             + "-"
                             + appIncrement;
 #endif
-                    if (fileVersioned.Contains(versionAppend))
-                    {
+                    if (fileVersioned.Contains(versionAppend)) {
                         fileVersioned = fileVersioned.Substring(0, fileVersioned.IndexOf(versionAppend));
                     }
                 }
@@ -4464,48 +3962,40 @@ namespace Engine.Content
             return fileVersioned;
         }
 
-        public static string GetFileUnversioned(string path)
-        {
+        public static string GetFileUnversioned(string path) {
 
-            if (isInst)
-            {
+            if (isInst) {
                 return Instance.getFileUnversioned(path);
             }
 
             return path;
         }
 
-        public string getFileUnversioned(string path)
-        {
+        public string getFileUnversioned(string path) {
 
             return GetFileUnversioned(path, null);
         }
 
-        public static string GetFileUnversioned(string path, string hash)
-        {
+        public static string GetFileUnversioned(string path, string hash) {
 
-            if (isInst)
-            {
+            if (isInst) {
                 return Instance.getFileUnversioned(path, hash);
             }
 
             return path;
         }
 
-        public string getFileUnversioned(string path, string hash)
-        {
+        public string getFileUnversioned(string path, string hash) {
 
             string fileVersioned = path;
 
-            if (!string.IsNullOrEmpty(path))
-            {
+            if (!string.IsNullOrEmpty(path)) {
 
                 string[] arrpath = path.Split('/');
 
                 fileVersioned = path;
 
-                if (arrpath != null)
-                {
+                if (arrpath != null) {
 
 #if USE_GAME_LIB_GAMES
                     string appVersion = ContentsConfig.contentVersion.Replace(".", "-");
@@ -4515,8 +4005,7 @@ namespace Engine.Content
                     string appIncrement = "1";
 #endif
 
-                    if (!string.IsNullOrEmpty(hash))
-                    {
+                    if (!string.IsNullOrEmpty(hash)) {
 
                         fileVersioned = fileVersioned.Replace(
                             "-" + appVersion
@@ -4524,8 +4013,7 @@ namespace Engine.Content
                             + appIncrement
                             + "-" + hash, "");
                     }
-                    else
-                    {
+                    else {
 
                         fileVersioned = fileVersioned.Replace(
                             "-" + appVersion
@@ -4540,17 +4028,14 @@ namespace Engine.Content
 
         // SCENE / CONTENT SET FILES
 
-        public static void CheckContentSetFiles()
-        {
+        public static void CheckContentSetFiles() {
 
-            if (isInst)
-            {
+            if (isInst) {
                 Instance.checkContentSetFiles();
             }
         }
 
-        public void checkContentSetFiles()
-        {
+        public void checkContentSetFiles() {
             //LogUtil.Log("Contents::CheckContentSetFiles");            
 
             //SyncFolders();
@@ -4565,8 +4050,7 @@ namespace Engine.Content
         //	}
         //}
 
-        public IEnumerator sceneLoadFromCacheOrDownloadCo(string url)
-        {
+        public IEnumerator sceneLoadFromCacheOrDownloadCo(string url) {
 
             unloadLevelBundle();
 
@@ -4587,8 +4071,7 @@ namespace Engine.Content
             //bool isDlc = false;
             bool ready = true;
 
-            if (IsDownloadableContent(packName))
-            {
+            if (IsDownloadableContent(packName)) {
 
                 LogUtil.Log("SceneLoadFromCacheOrDownloadCo: " + packName);
 
@@ -4608,8 +4091,7 @@ namespace Engine.Content
                 LogUtil.Log("downloader.progress2: " + downloader.downloadProgress);// progress);
 
                 // Handle error
-                if (downloader.error != null)
-                {
+                if (downloader.error != null) {
 
                     LogUtil.LogError("Error downloading");
                     LogUtil.LogError(downloader.error);
@@ -4620,8 +4102,7 @@ namespace Engine.Content
                         ContentMessages.ContentItemDownloadError,
                         downloader.error);
                 }
-                else
-                {
+                else {
 
                     // In order to make the scene available from LoadLevel, we have to load the asset bundle.
                     // The AssetBundle class also lets you force unload all assets and file storage once it 
@@ -4646,15 +4127,13 @@ namespace Engine.Content
                 }
             }
 
-            if (ready)
-            {
+            if (ready) {
 
                 //GameLoadingObject.Instance.LoadLevelHandler();
 
                 reset();
             }
-            else
-            {
+            else {
 
                 // Show download error...
                 Messenger<string>.Broadcast(
@@ -4665,17 +4144,14 @@ namespace Engine.Content
             }
         }
 
-        public static void LoadLevelBundle(string pack, int increment)
-        {
+        public static void LoadLevelBundle(string pack, int increment) {
 
-            if (isInst)
-            {
+            if (isInst) {
                 Instance.loadLevelBundle(pack, increment);
             }
         }
 
-        public void loadLevelBundle(string pack, int increment)
-        {
+        public void loadLevelBundle(string pack, int increment) {
 
             string pathPack = PathUtil.Combine(ContentPaths.appCachePathAllPlatformPacks, pack);
 
@@ -4684,40 +4160,33 @@ namespace Engine.Content
             GamePacks.Instance.ChangeCurrentGamePack(pack);
 
 #if !UNITY_WEBGL
-            if (Directory.Exists(pathPack))
-            {
+            if (Directory.Exists(pathPack)) {
 
                 string pathUrl = PathUtil.Combine(
                     pathPack, pack + "-" + increment.ToString() + ".unity3d");
 
-                if (FileSystemUtil.CheckFileExists(pathUrl))
-                {
+                if (FileSystemUtil.CheckFileExists(pathUrl)) {
 
                     LoadLevelBundle("file://" + pathUrl);
                 }
-                else
-                {
+                else {
                     //LogUtil.Log("Pack file does not exist: " + pathUrl);
                 }
             }
-            else
-            {
+            else {
                 //LogUtil.Log("Pack does not exist:" + pathPack);
             }
 #endif
         }
 
-        public static void LoadLevelBundle(string sceneUrl)
-        {
+        public static void LoadLevelBundle(string sceneUrl) {
 
-            if (isInst)
-            {
+            if (isInst) {
                 Instance.loadLevelBundle(sceneUrl);
             }
         }
 
-        public void loadLevelBundle(string sceneUrl)
-        {
+        public void loadLevelBundle(string sceneUrl) {
 
             StartCoroutine(loadLevelBundleCo(sceneUrl));
         }
@@ -4731,8 +4200,7 @@ namespace Engine.Content
         //	}
         //}
 
-        public IEnumerator loadLevelBundleCo(string sceneUrl)
-        {
+        public IEnumerator loadLevelBundleCo(string sceneUrl) {
 
             bool ready = true;
 
@@ -4750,8 +4218,7 @@ namespace Engine.Content
             LogUtil.Log("downloader.progress2: " + downloader.downloadProgress);
 
             // Handle error
-            if (downloader.error != null)
-            {
+            if (downloader.error != null) {
 
                 LogUtil.LogError("Error downloading");
                 LogUtil.LogError(downloader.error);
@@ -4762,8 +4229,7 @@ namespace Engine.Content
                     ContentMessages.ContentItemDownloadError,
                     downloader.error);
             }
-            else
-            {
+            else {
 
                 // In order to make the scene available from LoadLevel, we have to load the asset bundle.
                 // The AssetBundle class also lets you force unload all assets and file storage once it 
@@ -4797,75 +4263,60 @@ namespace Engine.Content
             LogUtil.Log("ready:" + ready);
         }
 
-        public static void UnloadLevelBundle(bool unloadAll)
-        {
+        public static void UnloadLevelBundle(bool unloadAll) {
 
-            if (isInst)
-            {
+            if (isInst) {
                 Instance.unloadLevelBundle(unloadAll);
             }
         }
 
-        public void unloadLevelBundle(bool unloadAll)
-        {
+        public void unloadLevelBundle(bool unloadAll) {
 
-            if (bundle != null)
-            {
+            if (bundle != null) {
                 bundle.Unload(unloadAll);
             }
         }
 
-        public static void UnloadLevelBundle()
-        {
+        public static void UnloadLevelBundle() {
 
-            if (isInst)
-            {
+            if (isInst) {
                 Instance.unloadLevelBundle();
             }
         }
 
-        public void unloadLevelBundle()
-        {
+        public void unloadLevelBundle() {
 
             unloadLevelBundle(false);
         }
 
-        public static void Reset()
-        {
+        public static void Reset() {
 
-            if (isInst)
-            {
+            if (isInst) {
                 Instance.reset();
             }
         }
 
-        public void reset()
-        {
+        public void reset() {
 
             downloader = null;
             contentItemStatus = new ContentItemStatus();
             downloadInProgress = false;
         }
 
-        public static ContentItemStatus ProgressStatus()
-        {
+        public static ContentItemStatus ProgressStatus() {
 
-            if (isInst)
-            {
+            if (isInst) {
                 return Instance.progressStatus();
             }
 
             return null;
         }
 
-        public ContentItemStatus progressStatus()
-        {
+        public ContentItemStatus progressStatus() {
 
-            if (downloader != null && downloadInProgress)
-            {
+            if (downloader != null && downloadInProgress) {
 
-                if (downloader.isDone)
-                {
+                if (downloader.isDone) {
                     contentItemStatus.downloaded = true;
                 }
 

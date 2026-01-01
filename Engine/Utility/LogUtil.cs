@@ -162,10 +162,10 @@ public class LogUtil {
                 Application.ExternalCall("if(console)console.error", message);
         }
     }
-        
+
     public void LogWarningInternal(object message) {
         Debug.LogWarning(message + "\r\n\r\n\r\n");
-        
+
         // Output to Firebug or inspectors as avail in the browser.
         if (Application.platform == RuntimePlatform.WebGLPlayer) {
             if (message.GetType() == typeof(String))
@@ -177,99 +177,99 @@ public class LogUtil {
 
     public static void Log(string key, object message) {
 
-        if(!loggingEnabled) return;
+        if (!loggingEnabled) return;
 
         LogUtil.Instance.LogInternal(key + ":" + message);
     }
 
     public static void Log(object message) {
-        
-        if(!loggingEnabled) return;
+
+        if (!loggingEnabled) return;
 
         LogUtil.Instance.LogInternal(message);
     }
 
     public static void LogProduct(object message) {
-        
-        if(!loggingEnabled) return;
+
+        if (!loggingEnabled) return;
 
         LogUtil.Instance.LogProductKeyInternal(message);
     }
 
     public static void LogAudio(object message) {
 
-        if(!loggingEnabled) return;
+        if (!loggingEnabled) return;
 
         LogUtil.Instance.LogAudioKeyInternal(message);
     }
 
     public static void LogBikeAudio(object message) {
-        
-        if(!loggingEnabled) return;
+
+        if (!loggingEnabled) return;
 
         LogUtil.Instance.LogBikeAudioKeyInternal(message);
     }
 
     public static void LogDefault(object message) {
-        
-        if(!loggingEnabled) return;
+
+        if (!loggingEnabled) return;
 
         LogUtil.Instance.LogDefaultKeyInternal(message);
     }
 
     public static void LogStats(object message) {
-        
-        if(!loggingEnabled) return;
+
+        if (!loggingEnabled) return;
 
         LogUtil.Instance.LogStatsKeyInternal(message);
     }
 
     public static void LogAlways(object message) {
-        
-        if(!loggingEnabled) return;
+
+        if (!loggingEnabled) return;
 
         LogUtil.Instance.LogAlwaysKeyInternal(message);
     }
 
     public static void LogAds(object message) {
-        
-        if(!loggingEnabled) return;
+
+        if (!loggingEnabled) return;
 
         LogUtil.Instance.LogAdsKeyInternal(message);
     }
-    
+
     public static void LogWarning(object message) {
-        
-        if(!loggingEnabled) return;
-        
+
+        if (!loggingEnabled) return;
+
         LogUtil.Instance.LogWarningInternal(message);
     }
 
 
     public static void LogError(object message) {
-        
-        if(!loggingEnabled) return;
+
+        if (!loggingEnabled) return;
 
         LogUtil.Instance.LogErrorInternal(message);
     }
 
     public static void LogTools(object message) {
-        
-        if(!loggingEnabled) return;
+
+        if (!loggingEnabled) return;
 
         LogUtil.Instance.LogToolsKeyInternal(message);
     }
 
     public static void LogMode(object message) {
-        
-        if(!loggingEnabled) return;
+
+        if (!loggingEnabled) return;
 
         LogUtil.Instance.LogModeKeyInternal(message);
     }
 
     public static void LogAccess(object message) {
-        
-        if(!loggingEnabled) return;
+
+        if (!loggingEnabled) return;
 
         LogUtil.Instance.LogAccessKeyInternal(message);
     }

@@ -34,21 +34,17 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 
 #pragma warning disable 618
-namespace Engine.Editor
-{
-    public class LegacyParticleUpdater : ScriptableWizard
-    {
+namespace Engine.Editor {
+    public class LegacyParticleUpdater : ScriptableWizard {
         const string kVersion = "1.3";
 
-        public enum LegacyCleanupMode
-        {
+        public enum LegacyCleanupMode {
             PreserveLegacyComponents,
             DisableLegacyRenderer,
             DeleteLegacyComponents
         };
 
-        enum LegacyParticleRenderMode
-        {
+        enum LegacyParticleRenderMode {
             Billboard = 0,
             Stretch2D = 1,
             Stretch3D = 3,
@@ -67,13 +63,11 @@ namespace Engine.Editor
 #endif
 
         [MenuItem("Assets/Upgrade Legacy Particles")]
-        public static void ShowWindow()
-        {
+        public static void ShowWindow() {
             ScriptableWizard.DisplayWizard<LegacyParticleUpdater>("Upgrade Legacy Particles v" + kVersion, "Upgrade Selected", "Upgrade Everything");
         }
 
-        void OnWizardUpdate()
-        {
+        void OnWizardUpdate() {
 #if UNITY_2017_2_OR_NEWER
             helpString = @"This Script adds ParticleSystem and ParticleSystemRenderer Components to all GameObjects that contain Legacy Particle Components.
         This script is not support in this version, please run this script using a Unity version between 2018.2 and 2018.2.";

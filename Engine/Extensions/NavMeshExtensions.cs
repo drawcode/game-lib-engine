@@ -8,7 +8,7 @@ public static class NavMeshExtentions {
     public static void On(
         this UnityEngine.AI.NavMeshAgent navMeshAgent) {
 
-        if(navMeshAgent == null) {
+        if (navMeshAgent == null) {
             return;
         }
 
@@ -19,7 +19,7 @@ public static class NavMeshExtentions {
     public static void Off(
         this UnityEngine.AI.NavMeshAgent navMeshAgent) {
 
-        if(navMeshAgent == null) {
+        if (navMeshAgent == null) {
             return;
         }
 
@@ -30,13 +30,13 @@ public static class NavMeshExtentions {
     public static void StopAgent(
         this UnityEngine.AI.NavMeshAgent navMeshAgent) {
 
-        if(navMeshAgent == null) {
+        if (navMeshAgent == null) {
             return;
         }
 
-        if(navMeshAgent != null) {
+        if (navMeshAgent != null) {
 
-            if(navMeshAgent.enabled) {
+            if (navMeshAgent.enabled) {
 
                 //navMeshAgent.Off();
                 navMeshAgent.isStopped = true;
@@ -48,13 +48,13 @@ public static class NavMeshExtentions {
     public static void StartAgent(
         this UnityEngine.AI.NavMeshAgent navMeshAgent) {
 
-        if(navMeshAgent == null) {
+        if (navMeshAgent == null) {
             return;
         }
 
-        if(navMeshAgent != null) {
+        if (navMeshAgent != null) {
 
-            if(!navMeshAgent.enabled) {
+            if (!navMeshAgent.enabled) {
 
                 navMeshAgent.enabled = true;
                 //navMeshAgent.Warp(navMeshAgent.gameObject.transform.position);

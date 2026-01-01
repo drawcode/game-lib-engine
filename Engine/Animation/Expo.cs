@@ -3,20 +3,15 @@ using System.Collections.Generic;
 using System.Text;
 using UnityEngine;
 
-namespace Engine.Animation
-{
-    class Expo : Ease
-    {
-        public static double EaseIn(double t, double b, double c, double d)
-        {
+namespace Engine.Animation {
+    class Expo : Ease {
+        public static double EaseIn(double t, double b, double c, double d) {
             return (t == 0) ? b : c * Math.Pow(2, 10 * (t / d - 1)) + b - c * 0.001;
         }
-        public static double EaseOut(double t, double b, double c, double d)
-        {
+        public static double EaseOut(double t, double b, double c, double d) {
             return (t == d) ? b + c : c * (-Math.Pow(2, -10 * t / d) + 1) + b;
         }
-        public static double EaseInOut(double t, double b, double c, double d)
-        {
+        public static double EaseInOut(double t, double b, double c, double d) {
             if (t == 0)
                 return b;
             if (t == d)

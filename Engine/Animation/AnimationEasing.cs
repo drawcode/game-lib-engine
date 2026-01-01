@@ -8,10 +8,8 @@ using System.Text;
 
 using UnityEngine;
 
-namespace Engine.Animation
-{
-    public class Ani : AnimationEasing
-    {
+namespace Engine.Animation {
+    public class Ani : AnimationEasing {
 
         /*
         public static void To(AnimationItem aniItem) {
@@ -24,25 +22,20 @@ namespace Engine.Animation
         */
     }
 
-    public class AnimationEasing : MonoBehaviour
-    {
+    public class AnimationEasing : MonoBehaviour {
 
         // Only one BroadcastNetworks can exist. We use a singleton pattern to enforce this.
         private static AnimationEasing _instance = null;
 
-        public static AnimationEasing Instance
-        {
-            get
-            {
-                if (!_instance)
-                {
+        public static AnimationEasing Instance {
+            get {
+                if (!_instance) {
 
                     // check if an ObjectPoolManager is already available in the scene graph
                     _instance = FindAnyObjectByType(typeof(AnimationEasing)) as AnimationEasing;
 
                     // nope, create a new one
-                    if (!_instance)
-                    {
+                    if (!_instance) {
                         var obj = new GameObject("_AnimationEasing");
                         _instance = obj.AddComponent<AnimationEasing>();
                     }
@@ -52,8 +45,7 @@ namespace Engine.Animation
             }
         }
 
-        public enum Equations
-        {
+        public enum Equations {
             Linear,
             QuadEaseOut,
             QuadEaseIn,
@@ -100,8 +92,7 @@ namespace Engine.Animation
         public Dictionary<string, AnimationItem> animationItems = new Dictionary<string, AnimationItem>();
         public Queue<string> queueRemove = new Queue<string>();
 
-        public class AnimationItem
-        {
+        public class AnimationItem {
             public Equations equationType = Equations.QuadEaseInOut;
             public double val = 0;
             public double valStart = 0;
@@ -111,13 +102,11 @@ namespace Engine.Animation
             public double timeDelay = 1.0;
             public string key = "";
 
-            public AnimationItem()
-            {
+            public AnimationItem() {
                 Reset();
             }
 
-            public void Reset()
-            {
+            public void Reset() {
                 equationType = Equations.QuadEaseInOut;
                 val = 0f;
                 valStart = 0f;
@@ -129,33 +118,27 @@ namespace Engine.Animation
             }
         }
 
-        public void Update()
-        {
+        public void Update() {
 
-            if (queueRemove.Count > 0)
-            {
+            if (queueRemove.Count > 0) {
                 string key = queueRemove.Dequeue();
                 easeRemove(key);
             }
 
-            foreach (KeyValuePair<string, AnimationItem> item in getAnimationItems())
-            {
+            foreach (KeyValuePair<string, AnimationItem> item in getAnimationItems()) {
                 easeUpdate(item.Value);
             }
         }
 
         // GET
 
-        public static bool EaseRemove(string key)
-        {
+        public static bool EaseRemove(string key) {
             return Instance.easeRemove(key);
         }
 
-        public bool easeRemove(string key)
-        {
+        public bool easeRemove(string key) {
 
-            if (getAnimationItems().ContainsKey(key))
-            {
+            if (getAnimationItems().ContainsKey(key)) {
                 return animationItems.Remove(key);
             }
 
@@ -164,16 +147,13 @@ namespace Engine.Animation
 
         //
 
-        public static bool EaseExists(string key)
-        {
+        public static bool EaseExists(string key) {
             return Instance.easeExists(key);
         }
 
-        public bool easeExists(string key)
-        {
+        public bool easeExists(string key) {
 
-            if (getAnimationItems().ContainsKey(key))
-            {
+            if (getAnimationItems().ContainsKey(key)) {
                 return true;
             }
 
@@ -182,50 +162,41 @@ namespace Engine.Animation
 
         //
 
-        public static Dictionary<string, AnimationItem> GetAnimationItems()
-        {
+        public static Dictionary<string, AnimationItem> GetAnimationItems() {
             return Instance.getAnimationItems();
         }
 
-        public Dictionary<string, AnimationItem> getAnimationItems()
-        {
+        public Dictionary<string, AnimationItem> getAnimationItems() {
 
-            if (animationItems == null)
-            {
+            if (animationItems == null) {
                 animationItems = new Dictionary<string, AnimationItem>();
             }
 
             return animationItems;
         }
 
-        public static double EaseGetValue(string key, double defaultValue)
-        {
+        public static double EaseGetValue(string key, double defaultValue) {
             return Instance.easeGetValue(key, defaultValue);
         }
 
-        public double easeGetValue(string key, double defaultValue)
-        {
+        public double easeGetValue(string key, double defaultValue) {
 
             AnimationItem item = easeGet(key);
 
-            if (item == null)
-            {
+            if (item == null) {
                 return defaultValue;
             }
 
             return easeGet(key).val;
         }
 
-        public static AnimationItem EaseGet(string key)
-        {
+        public static AnimationItem EaseGet(string key) {
             return Instance.easeGet(key);
         }
 
-        public AnimationItem easeGet(string key)
-        {
+        public AnimationItem easeGet(string key) {
 
-            if (getAnimationItems().ContainsKey(key))
-            {
+            if (getAnimationItems().ContainsKey(key)) {
                 return animationItems[key];
             }
 
@@ -234,33 +205,27 @@ namespace Engine.Animation
 
         // UPDATE
 
-        public static AnimationItem EaseUpdate(AnimationItem animationItem)
-        {
+        public static AnimationItem EaseUpdate(AnimationItem animationItem) {
             return Instance.easeUpdate(animationItem);
         }
 
-        public AnimationItem easeUpdate(AnimationItem animationItem)
-        {
+        public AnimationItem easeUpdate(AnimationItem animationItem) {
 
-            if (animationItem == null)
-            {
+            if (animationItem == null) {
                 return null;
             }
 
-            if (!animationItems.ContainsKey(animationItem.key))
-            {
+            if (!animationItems.ContainsKey(animationItem.key)) {
                 easeAdd(animationItem);
             }
 
-            if (animationItem.timeStart == 0)
-            {
+            if (animationItem.timeStart == 0) {
                 animationItem.timeStart = Time.time;
             }
 
             float tickDuration = Time.time - (float)animationItem.timeStart;
 
-            if (tickDuration <= animationItem.timeDuration)
-            {
+            if (tickDuration <= animationItem.timeDuration) {
 
                 double valTo = (float)AnimationEasing.QuadEaseInOut(
                     tickDuration,
@@ -270,29 +235,23 @@ namespace Engine.Animation
 
                 double valAdjust = valTo;
 
-                if (animationItem.valEnd > animationItem.valStart)
-                {
+                if (animationItem.valEnd > animationItem.valStart) {
                     valAdjust = valAdjust + .005;
-                    if (valAdjust > animationItem.valEnd)
-                    {
+                    if (valAdjust > animationItem.valEnd) {
                         valTo = animationItem.valEnd;
                     }
                 }
-                else
-                {
+                else {
                     valAdjust = valAdjust - .005;
-                    if (valAdjust < animationItem.valEnd)
-                    {
+                    if (valAdjust < animationItem.valEnd) {
                         valTo = animationItem.valEnd;
                     }
                 }
 
-                if (valTo == animationItem.valEnd)
-                {
+                if (valTo == animationItem.valEnd) {
                     queueRemove.Enqueue(animationItem.key);
                 }
-                else
-                {
+                else {
                     animationItem.val = valTo;
                 }
 
@@ -306,27 +265,22 @@ namespace Engine.Animation
 
         //
 
-        public static void EaseAdd(AnimationItem animationItem)
-        {
+        public static void EaseAdd(AnimationItem animationItem) {
             Instance.easeAdd(animationItem);
         }
 
-        public void easeAdd(AnimationItem animationItem)
-        {
+        public void easeAdd(AnimationItem animationItem) {
 
-            if (animationItem == null)
-            {
+            if (animationItem == null) {
                 return;
             }
 
             string key = animationItem.key;
 
-            if (animationItems.ContainsKey(key))
-            {
+            if (animationItems.ContainsKey(key)) {
                 animationItems[key] = animationItem;
             }
-            else
-            {
+            else {
                 animationItems.Add(key, animationItem);
             }
         }
@@ -340,8 +294,7 @@ namespace Engine.Animation
             double valStart,
             double valEnd,
             double timeDuration,
-            double timeDelay)
-        {
+            double timeDelay) {
 
             Instance.easeAdd(key, equationType, val, valStart, valEnd, timeDuration, timeDelay);
         }
@@ -353,17 +306,14 @@ namespace Engine.Animation
             double valStart,
             double valEnd,
             double timeDuration,
-            double timeDelay)
-        {
+            double timeDelay) {
 
             AnimationItem animationItem = null;
 
-            if (animationItems.ContainsKey(key))
-            {
+            if (animationItems.ContainsKey(key)) {
                 animationItem = animationItems[key];
             }
-            else
-            {
+            else {
                 animationItem = new AnimationItem();
             }
 
@@ -395,8 +345,7 @@ namespace Engine.Animation
         /// <param name="c">Final value.</param>
         /// <param name="d">Duration of animation.</param>
         /// <returns>The correct value.</returns>
-        public static double Linear(double t, double b, double c, double d)
-        {
+        public static double Linear(double t, double b, double c, double d) {
             return c * t / d + b;
         }
 
@@ -413,8 +362,7 @@ namespace Engine.Animation
         /// <param name="c">Final value.</param>
         /// <param name="d">Duration of animation.</param>
         /// <returns>The correct value.</returns>
-        public static double ExpoEaseOut(double t, double b, double c, double d)
-        {
+        public static double ExpoEaseOut(double t, double b, double c, double d) {
             return (t == d) ? b + c : c * (-Math.Pow(2, -10 * t / d) + 1) + b;
         }
 
@@ -427,8 +375,7 @@ namespace Engine.Animation
         /// <param name="c">Final value.</param>
         /// <param name="d">Duration of animation.</param>
         /// <returns>The correct value.</returns>
-        public static double ExpoEaseIn(double t, double b, double c, double d)
-        {
+        public static double ExpoEaseIn(double t, double b, double c, double d) {
             return (t == 0) ? b : c * Math.Pow(2, 10 * (t / d - 1)) + b;
         }
 
@@ -441,8 +388,7 @@ namespace Engine.Animation
         /// <param name="c">Final value.</param>
         /// <param name="d">Duration of animation.</param>
         /// <returns>The correct value.</returns>
-        public static double ExpoEaseInOut(double t, double b, double c, double d)
-        {
+        public static double ExpoEaseInOut(double t, double b, double c, double d) {
             if (t == 0)
                 return b;
 
@@ -464,8 +410,7 @@ namespace Engine.Animation
         /// <param name="c">Final value.</param>
         /// <param name="d">Duration of animation.</param>
         /// <returns>The correct value.</returns>
-        public static double ExpoEaseOutIn(double t, double b, double c, double d)
-        {
+        public static double ExpoEaseOutIn(double t, double b, double c, double d) {
             if (t < d / 2)
                 return ExpoEaseOut(t * 2, b, c / 2, d);
 
@@ -485,8 +430,7 @@ namespace Engine.Animation
         /// <param name="c">Final value.</param>
         /// <param name="d">Duration of animation.</param>
         /// <returns>The correct value.</returns>
-        public static double CircEaseOut(double t, double b, double c, double d)
-        {
+        public static double CircEaseOut(double t, double b, double c, double d) {
             return c * Math.Sqrt(1 - (t = t / d - 1) * t) + b;
         }
 
@@ -499,8 +443,7 @@ namespace Engine.Animation
         /// <param name="c">Final value.</param>
         /// <param name="d">Duration of animation.</param>
         /// <returns>The correct value.</returns>
-        public static double CircEaseIn(double t, double b, double c, double d)
-        {
+        public static double CircEaseIn(double t, double b, double c, double d) {
             return -c * (Math.Sqrt(1 - (t /= d) * t) - 1) + b;
         }
 
@@ -513,8 +456,7 @@ namespace Engine.Animation
         /// <param name="c">Final value.</param>
         /// <param name="d">Duration of animation.</param>
         /// <returns>The correct value.</returns>
-        public static double CircEaseInOut(double t, double b, double c, double d)
-        {
+        public static double CircEaseInOut(double t, double b, double c, double d) {
             if ((t /= d / 2) < 1)
                 return -c / 2 * (Math.Sqrt(1 - t * t) - 1) + b;
 
@@ -530,8 +472,7 @@ namespace Engine.Animation
         /// <param name="c">Final value.</param>
         /// <param name="d">Duration of animation.</param>
         /// <returns>The correct value.</returns>
-        public static double CircEaseOutIn(double t, double b, double c, double d)
-        {
+        public static double CircEaseOutIn(double t, double b, double c, double d) {
             if (t < d / 2)
                 return CircEaseOut(t * 2, b, c / 2, d);
 
@@ -551,8 +492,7 @@ namespace Engine.Animation
         /// <param name="c">Final value.</param>
         /// <param name="d">Duration of animation.</param>
         /// <returns>The correct value.</returns>
-        public static double QuadEaseOut(double t, double b, double c, double d)
-        {
+        public static double QuadEaseOut(double t, double b, double c, double d) {
             return -c * (t /= d) * (t - 2) + b;
         }
 
@@ -565,8 +505,7 @@ namespace Engine.Animation
         /// <param name="c">Final value.</param>
         /// <param name="d">Duration of animation.</param>
         /// <returns>The correct value.</returns>
-        public static double QuadEaseIn(double t, double b, double c, double d)
-        {
+        public static double QuadEaseIn(double t, double b, double c, double d) {
             return c * (t /= d) * t + b;
         }
 
@@ -579,8 +518,7 @@ namespace Engine.Animation
         /// <param name="c">Final value.</param>
         /// <param name="d">Duration of animation.</param>
         /// <returns>The correct value.</returns>
-        public static double QuadEaseInOut(double t, double b, double c, double d)
-        {
+        public static double QuadEaseInOut(double t, double b, double c, double d) {
             if ((t /= d / 2) < 1)
                 return c / 2 * t * t + b;
 
@@ -596,8 +534,7 @@ namespace Engine.Animation
         /// <param name="c">Final value.</param>
         /// <param name="d">Duration of animation.</param>
         /// <returns>The correct value.</returns>
-        public static double QuadEaseOutIn(double t, double b, double c, double d)
-        {
+        public static double QuadEaseOutIn(double t, double b, double c, double d) {
             if (t < d / 2)
                 return QuadEaseOut(t * 2, b, c / 2, d);
 
@@ -617,8 +554,7 @@ namespace Engine.Animation
         /// <param name="c">Final value.</param>
         /// <param name="d">Duration of animation.</param>
         /// <returns>The correct value.</returns>
-        public static double SineEaseOut(double t, double b, double c, double d)
-        {
+        public static double SineEaseOut(double t, double b, double c, double d) {
             return c * Math.Sin(t / d * (Math.PI / 2)) + b;
         }
 
@@ -631,8 +567,7 @@ namespace Engine.Animation
         /// <param name="c">Final value.</param>
         /// <param name="d">Duration of animation.</param>
         /// <returns>The correct value.</returns>
-        public static double SineEaseIn(double t, double b, double c, double d)
-        {
+        public static double SineEaseIn(double t, double b, double c, double d) {
             return -c * Math.Cos(t / d * (Math.PI / 2)) + c + b;
         }
 
@@ -645,8 +580,7 @@ namespace Engine.Animation
         /// <param name="c">Final value.</param>
         /// <param name="d">Duration of animation.</param>
         /// <returns>The correct value.</returns>
-        public static double SineEaseInOut(double t, double b, double c, double d)
-        {
+        public static double SineEaseInOut(double t, double b, double c, double d) {
             if ((t /= d / 2) < 1)
                 return c / 2 * (Math.Sin(Math.PI * t / 2)) + b;
 
@@ -662,8 +596,7 @@ namespace Engine.Animation
         /// <param name="c">Final value.</param>
         /// <param name="d">Duration of animation.</param>
         /// <returns>The correct value.</returns>
-        public static double SineEaseOutIn(double t, double b, double c, double d)
-        {
+        public static double SineEaseOutIn(double t, double b, double c, double d) {
             if (t < d / 2)
                 return SineEaseOut(t * 2, b, c / 2, d);
 
@@ -683,8 +616,7 @@ namespace Engine.Animation
         /// <param name="c">Final value.</param>
         /// <param name="d">Duration of animation.</param>
         /// <returns>The correct value.</returns>
-        public static double CubicEaseOut(double t, double b, double c, double d)
-        {
+        public static double CubicEaseOut(double t, double b, double c, double d) {
             return c * ((t = t / d - 1) * t * t + 1) + b;
         }
 
@@ -697,8 +629,7 @@ namespace Engine.Animation
         /// <param name="c">Final value.</param>
         /// <param name="d">Duration of animation.</param>
         /// <returns>The correct value.</returns>
-        public static double CubicEaseIn(double t, double b, double c, double d)
-        {
+        public static double CubicEaseIn(double t, double b, double c, double d) {
             return c * (t /= d) * t * t + b;
         }
 
@@ -711,8 +642,7 @@ namespace Engine.Animation
         /// <param name="c">Final value.</param>
         /// <param name="d">Duration of animation.</param>
         /// <returns>The correct value.</returns>
-        public static double CubicEaseInOut(double t, double b, double c, double d)
-        {
+        public static double CubicEaseInOut(double t, double b, double c, double d) {
             if ((t /= d / 2) < 1)
                 return c / 2 * t * t * t + b;
 
@@ -728,8 +658,7 @@ namespace Engine.Animation
         /// <param name="c">Final value.</param>
         /// <param name="d">Duration of animation.</param>
         /// <returns>The correct value.</returns>
-        public static double CubicEaseOutIn(double t, double b, double c, double d)
-        {
+        public static double CubicEaseOutIn(double t, double b, double c, double d) {
             if (t < d / 2)
                 return CubicEaseOut(t * 2, b, c / 2, d);
 
@@ -749,8 +678,7 @@ namespace Engine.Animation
         /// <param name="c">Final value.</param>
         /// <param name="d">Duration of animation.</param>
         /// <returns>The correct value.</returns>
-        public static double QuartEaseOut(double t, double b, double c, double d)
-        {
+        public static double QuartEaseOut(double t, double b, double c, double d) {
             return -c * ((t = t / d - 1) * t * t * t - 1) + b;
         }
 
@@ -763,8 +691,7 @@ namespace Engine.Animation
         /// <param name="c">Final value.</param>
         /// <param name="d">Duration of animation.</param>
         /// <returns>The correct value.</returns>
-        public static double QuartEaseIn(double t, double b, double c, double d)
-        {
+        public static double QuartEaseIn(double t, double b, double c, double d) {
             return c * (t /= d) * t * t * t + b;
         }
 
@@ -777,8 +704,7 @@ namespace Engine.Animation
         /// <param name="c">Final value.</param>
         /// <param name="d">Duration of animation.</param>
         /// <returns>The correct value.</returns>
-        public static double QuartEaseInOut(double t, double b, double c, double d)
-        {
+        public static double QuartEaseInOut(double t, double b, double c, double d) {
             if ((t /= d / 2) < 1)
                 return c / 2 * t * t * t * t + b;
 
@@ -794,8 +720,7 @@ namespace Engine.Animation
         /// <param name="c">Final value.</param>
         /// <param name="d">Duration of animation.</param>
         /// <returns>The correct value.</returns>
-        public static double QuartEaseOutIn(double t, double b, double c, double d)
-        {
+        public static double QuartEaseOutIn(double t, double b, double c, double d) {
             if (t < d / 2)
                 return QuartEaseOut(t * 2, b, c / 2, d);
 
@@ -815,8 +740,7 @@ namespace Engine.Animation
         /// <param name="c">Final value.</param>
         /// <param name="d">Duration of animation.</param>
         /// <returns>The correct value.</returns>
-        public static double QuintEaseOut(double t, double b, double c, double d)
-        {
+        public static double QuintEaseOut(double t, double b, double c, double d) {
             return c * ((t = t / d - 1) * t * t * t * t + 1) + b;
         }
 
@@ -829,8 +753,7 @@ namespace Engine.Animation
         /// <param name="c">Final value.</param>
         /// <param name="d">Duration of animation.</param>
         /// <returns>The correct value.</returns>
-        public static double QuintEaseIn(double t, double b, double c, double d)
-        {
+        public static double QuintEaseIn(double t, double b, double c, double d) {
             return c * (t /= d) * t * t * t * t + b;
         }
 
@@ -843,8 +766,7 @@ namespace Engine.Animation
         /// <param name="c">Final value.</param>
         /// <param name="d">Duration of animation.</param>
         /// <returns>The correct value.</returns>
-        public static double QuintEaseInOut(double t, double b, double c, double d)
-        {
+        public static double QuintEaseInOut(double t, double b, double c, double d) {
             if ((t /= d / 2) < 1)
                 return c / 2 * t * t * t * t * t + b;
             return c / 2 * ((t -= 2) * t * t * t * t + 2) + b;
@@ -859,8 +781,7 @@ namespace Engine.Animation
         /// <param name="c">Final value.</param>
         /// <param name="d">Duration of animation.</param>
         /// <returns>The correct value.</returns>
-        public static double QuintEaseOutIn(double t, double b, double c, double d)
-        {
+        public static double QuintEaseOutIn(double t, double b, double c, double d) {
             if (t < d / 2)
                 return QuintEaseOut(t * 2, b, c / 2, d);
             return QuintEaseIn((t * 2) - d, b + c / 2, c / 2, d);
@@ -879,8 +800,7 @@ namespace Engine.Animation
         /// <param name="c">Final value.</param>
         /// <param name="d">Duration of animation.</param>
         /// <returns>The correct value.</returns>
-        public static double ElasticEaseOut(double t, double b, double c, double d)
-        {
+        public static double ElasticEaseOut(double t, double b, double c, double d) {
             if ((t /= d) == 1)
                 return b + c;
 
@@ -899,8 +819,7 @@ namespace Engine.Animation
         /// <param name="c">Final value.</param>
         /// <param name="d">Duration of animation.</param>
         /// <returns>The correct value.</returns>
-        public static double ElasticEaseIn(double t, double b, double c, double d)
-        {
+        public static double ElasticEaseIn(double t, double b, double c, double d) {
             if ((t /= d) == 1)
                 return b + c;
 
@@ -919,8 +838,7 @@ namespace Engine.Animation
         /// <param name="c">Final value.</param>
         /// <param name="d">Duration of animation.</param>
         /// <returns>The correct value.</returns>
-        public static double ElasticEaseInOut(double t, double b, double c, double d)
-        {
+        public static double ElasticEaseInOut(double t, double b, double c, double d) {
             if ((t /= d / 2) == 2)
                 return b + c;
 
@@ -941,8 +859,7 @@ namespace Engine.Animation
         /// <param name="c">Final value.</param>
         /// <param name="d">Duration of animation.</param>
         /// <returns>The correct value.</returns>
-        public static double ElasticEaseOutIn(double t, double b, double c, double d)
-        {
+        public static double ElasticEaseOutIn(double t, double b, double c, double d) {
             if (t < d / 2)
                 return ElasticEaseOut(t * 2, b, c / 2, d);
             return ElasticEaseIn((t * 2) - d, b + c / 2, c / 2, d);
@@ -961,8 +878,7 @@ namespace Engine.Animation
         /// <param name="c">Final value.</param>
         /// <param name="d">Duration of animation.</param>
         /// <returns>The correct value.</returns>
-        public static double BounceEaseOut(double t, double b, double c, double d)
-        {
+        public static double BounceEaseOut(double t, double b, double c, double d) {
             if ((t /= d) < (1 / 2.75))
                 return c * (7.5625 * t * t) + b;
             else if (t < (2 / 2.75))
@@ -982,8 +898,7 @@ namespace Engine.Animation
         /// <param name="c">Final value.</param>
         /// <param name="d">Duration of animation.</param>
         /// <returns>The correct value.</returns>
-        public static double BounceEaseIn(double t, double b, double c, double d)
-        {
+        public static double BounceEaseIn(double t, double b, double c, double d) {
             return c - BounceEaseOut(d - t, 0, c, d) + b;
         }
 
@@ -996,8 +911,7 @@ namespace Engine.Animation
         /// <param name="c">Final value.</param>
         /// <param name="d">Duration of animation.</param>
         /// <returns>The correct value.</returns>
-        public static double BounceEaseInOut(double t, double b, double c, double d)
-        {
+        public static double BounceEaseInOut(double t, double b, double c, double d) {
             if (t < d / 2)
                 return BounceEaseIn(t * 2, 0, c, d) * .5 + b;
             else
@@ -1013,8 +927,7 @@ namespace Engine.Animation
         /// <param name="c">Final value.</param>
         /// <param name="d">Duration of animation.</param>
         /// <returns>The correct value.</returns>
-        public static double BounceEaseOutIn(double t, double b, double c, double d)
-        {
+        public static double BounceEaseOutIn(double t, double b, double c, double d) {
             if (t < d / 2)
                 return BounceEaseOut(t * 2, b, c / 2, d);
             return BounceEaseIn((t * 2) - d, b + c / 2, c / 2, d);
@@ -1033,8 +946,7 @@ namespace Engine.Animation
         /// <param name="c">Final value.</param>
         /// <param name="d">Duration of animation.</param>
         /// <returns>The correct value.</returns>
-        public static double BackEaseOut(double t, double b, double c, double d)
-        {
+        public static double BackEaseOut(double t, double b, double c, double d) {
             return c * ((t = t / d - 1) * t * ((1.70158 + 1) * t + 1.70158) + 1) + b;
         }
 
@@ -1047,8 +959,7 @@ namespace Engine.Animation
         /// <param name="c">Final value.</param>
         /// <param name="d">Duration of animation.</param>
         /// <returns>The correct value.</returns>
-        public static double BackEaseIn(double t, double b, double c, double d)
-        {
+        public static double BackEaseIn(double t, double b, double c, double d) {
             return c * (t /= d) * t * ((1.70158 + 1) * t - 1.70158) + b;
         }
 
@@ -1061,8 +972,7 @@ namespace Engine.Animation
         /// <param name="c">Final value.</param>
         /// <param name="d">Duration of animation.</param>
         /// <returns>The correct value.</returns>
-        public static double BackEaseInOut(double t, double b, double c, double d)
-        {
+        public static double BackEaseInOut(double t, double b, double c, double d) {
             double s = 1.70158;
             if ((t /= d / 2) < 1)
                 return c / 2 * (t * t * (((s *= (1.525)) + 1) * t - s)) + b;
@@ -1078,8 +988,7 @@ namespace Engine.Animation
         /// <param name="c">Final value.</param>
         /// <param name="d">Duration of animation.</param>
         /// <returns>The correct value.</returns>
-        public static double BackEaseOutIn(double t, double b, double c, double d)
-        {
+        public static double BackEaseOutIn(double t, double b, double c, double d) {
             if (t < d / 2)
                 return BackEaseOut(t * 2, b, c / 2, d);
             return BackEaseIn((t * 2) - d, b + c / 2, c / 2, d);

@@ -6,15 +6,12 @@ using Engine.Events;
 using Engine.Game.Data;
 using Engine.Utility;
 
-namespace Engine.Game.App.BaseApp
-{
-    public class BaseGameProfileMessages
-    {
+namespace Engine.Game.App.BaseApp {
+    public class BaseGameProfileMessages {
         public static string ProfileShouldBeSaved = "profile-save";
     }
 
-    public class BaseGameProfileAttributes
-    {
+    public class BaseGameProfileAttributes {
         public static string ATT_CONTROL_HORIZON_TILT = "controls-horizon-tilt";
         public static string ATT_CONTROL_DRIVING_ASSIST = "controls-driving-assist";
         public static string ATT_CONTROL_INPUT_TOUCH = "controls-input";
@@ -86,8 +83,7 @@ namespace Engine.Game.App.BaseApp
         public static string ATT_ACCESS_PERMISSIONS = "access-permissions";
     }
 
-    public class BaseGameProfileDataState
-    {
+    public class BaseGameProfileDataState {
         public static bool updatedEffectsVolume = false;
         public static double currentEffectsVolume = .5;
         public static bool updatedMusicVolume = false;
@@ -96,27 +92,21 @@ namespace Engine.Game.App.BaseApp
         public static double currentVOVolume = .5;
     }
 
-    public enum ProfileControlHanded
-    {
+    public enum ProfileControlHanded {
         RIGHT = 0,
         LEFT = 1
     }
 
-    public class BaseGameProfiles
-    {
+    public class BaseGameProfiles {
         private static volatile BaseGameProfile current;
         private static volatile BaseGameProfiles instance;
         private static object syncRoot = new Object();
         public static string DEFAULT_USERNAME = "Player";
 
-        public static BaseGameProfile Current
-        {
-            get
-            {
-                if (current == null)
-                {
-                    lock (syncRoot)
-                    {
+        public static BaseGameProfile Current {
+            get {
+                if (current == null) {
+                    lock (syncRoot) {
                         if (current == null)
                             current = new BaseGameProfile();
                     }
@@ -124,20 +114,15 @@ namespace Engine.Game.App.BaseApp
 
                 return current;
             }
-            set
-            {
+            set {
                 current = value;
             }
         }
 
-        public static BaseGameProfiles Instance
-        {
-            get
-            {
-                if (instance == null)
-                {
-                    lock (syncRoot)
-                    {
+        public static BaseGameProfiles Instance {
+            get {
+                if (instance == null) {
+                    lock (syncRoot) {
                         if (instance == null)
                             instance = new BaseGameProfiles();
                     }
@@ -150,27 +135,22 @@ namespace Engine.Game.App.BaseApp
         // TODO: Common profile actions, lookup, count, etc
     }
 
-    public class GameProfileNetworkItem : GameDataObject
-    {
+    public class GameProfileNetworkItem : GameDataObject {
 
     }
 
-    public class GameProfileNetworkItems
-    {
+    public class GameProfileNetworkItems {
         public List<GameProfileNetworkItem> items;
 
-        public GameProfileNetworkItems()
-        {
+        public GameProfileNetworkItems() {
             Reset();
         }
 
-        public void Reset()
-        {
+        public void Reset() {
             items = new List<GameProfileNetworkItem>();
         }
 
-        public GameProfileNetworkItem GetItem(string networkType)
-        {
+        public GameProfileNetworkItem GetItem(string networkType) {
             //if(items == null) {
             //     items = new List<GameProfileCharacterItem>();
             //
@@ -178,56 +158,46 @@ namespace Engine.Game.App.BaseApp
             //    items.Add(item);
             //}
 
-            if (items == null)
-            {
+            if (items == null) {
                 return null;
             }
 
-            foreach (GameProfileNetworkItem item in items)
-            {
-                if (item.network_type.ToLower() == networkType.ToLower())
-                {
+            foreach (GameProfileNetworkItem item in items) {
+                if (item.network_type.ToLower() == networkType.ToLower()) {
                     return item;
                 }
             }
             return null;
         }
 
-        public void SetItem(string networkType, GameProfileNetworkItem item)
-        {
+        public void SetItem(string networkType, GameProfileNetworkItem item) {
             bool found = false;
 
-            for (int i = 0; i < items.Count; i++)
-            {
-                if (items[i].network_type.ToLower() == networkType.ToLower())
-                {
+            for (int i = 0; i < items.Count; i++) {
+                if (items[i].network_type.ToLower() == networkType.ToLower()) {
                     items[i] = item;
                     found = true;
                     break;
                 }
             }
 
-            if (!found)
-            {
+            if (!found) {
                 items.Add(item);
             }
         }
     }
 
-    public class BaseGameProfile : Profile
-    {
+    public class BaseGameProfile : Profile {
         // BE CAREFUL adding properties as they will cause a need for a profile conversion
         // Best way to add items to the profile is the GetAttribute and SetAttribute class as
         // that stores as a generic DataAttribute class.  Booleans, strings, objects, serialized json objects etc
         // all work well and cause no need to convert profile on updates.
 
-        public BaseGameProfile()
-        {
+        public BaseGameProfile() {
             //Reset();
         }
 
-        public override void Reset()
-        {
+        public override void Reset() {
             base.Reset();
 #if USE_GAME_LIB_GAMES
             username = ProfileConfigs.defaultPlayerName;
@@ -242,13 +212,11 @@ namespace Engine.Game.App.BaseApp
 
         // CONTROLS
 
-        public bool GetControlInputTouchFinger()
-        {
+        public bool GetControlInputTouchFinger() {
             return GetControlInputTouchFinger(true);
         }
 
-        public bool GetControlInputTouchFinger(bool defaultValue)
-        {
+        public bool GetControlInputTouchFinger(bool defaultValue) {
             bool attValue = defaultValue;
 #if USE_GAME_LIB_GAMES
             string key = GameProfileAttributes.ATT_CONTROL_INPUT_TOUCH_FINGER;
@@ -260,13 +228,11 @@ namespace Engine.Game.App.BaseApp
             return attValue;
         }
 
-        public bool GetControlInputTouchOnScreen()
-        {
+        public bool GetControlInputTouchOnScreen() {
             return GetControlInputTouchOnScreen(true);
         }
 
-        public bool GetControlInputTouchOnScreen(bool defaultValue)
-        {
+        public bool GetControlInputTouchOnScreen(bool defaultValue) {
             bool attValue = defaultValue;
 #if USE_GAME_LIB_GAMES
             string key = GameProfileAttributes.ATT_CONTROL_INPUT_TOUCH_ON_SCREEN;
@@ -280,33 +246,28 @@ namespace Engine.Game.App.BaseApp
 
         // GAME MODES
 
-        public virtual int GetCurrentGameMode()
-        {
+        public virtual int GetCurrentGameMode() {
             return GetCurrentGameMode(0);
         }
 
-        public virtual int GetCurrentGameMode(int defaultValue)
-        {
+        public virtual int GetCurrentGameMode(int defaultValue) {
             int attValue = defaultValue;
             if (CheckIfAttributeExists(BaseGameProfileAttributes.ATT_CURRENT_GAME_MODE))
                 attValue = GetAttributeIntValue(BaseGameProfileAttributes.ATT_CURRENT_GAME_MODE);
             return attValue;
         }
 
-        public virtual void SetCurrentGameMode(int attValue)
-        {
+        public virtual void SetCurrentGameMode(int attValue) {
             SetAttributeIntValue(BaseGameProfileAttributes.ATT_CURRENT_GAME_MODE, attValue);
         }
 
         // APP MODES
 
-        public virtual string GetCurrentAppMode()
-        {
+        public virtual string GetCurrentAppMode() {
             return GetCurrentAppMode("default");
         }
 
-        public virtual string GetCurrentAppMode(string defaultValue)
-        {
+        public virtual string GetCurrentAppMode(string defaultValue) {
             string attValue = defaultValue;
             string key = BaseGameProfileAttributes.ATT_CURRENT_APP_MODE;
             if (CheckIfAttributeExists(key))
@@ -314,21 +275,18 @@ namespace Engine.Game.App.BaseApp
             return attValue;
         }
 
-        public virtual void SetCurrentAppMode(string attValue)
-        {
+        public virtual void SetCurrentAppMode(string attValue) {
             string key = BaseGameProfileAttributes.ATT_CURRENT_APP_MODE;
             SetAttributeStringValue(key, attValue);
         }
 
         // APP MODE TYPES
 
-        public virtual string GetCurrentAppModeType()
-        {
+        public virtual string GetCurrentAppModeType() {
             return GetCurrentAppModeType("default");
         }
 
-        public virtual string GetCurrentAppModeType(string defaultValue)
-        {
+        public virtual string GetCurrentAppModeType(string defaultValue) {
             string attValue = defaultValue;
             string key = BaseGameProfileAttributes.ATT_CURRENT_APP_MODE_TYPE;
             if (CheckIfAttributeExists(key))
@@ -336,21 +294,18 @@ namespace Engine.Game.App.BaseApp
             return attValue;
         }
 
-        public virtual void SetCurrentAppModeType(string attValue)
-        {
+        public virtual void SetCurrentAppModeType(string attValue) {
             string key = BaseGameProfileAttributes.ATT_CURRENT_APP_MODE_TYPE;
             SetAttributeStringValue(key, attValue);
         }
 
         // APP STATE
 
-        public virtual string GetCurrentAppState()
-        {
+        public virtual string GetCurrentAppState() {
             return GetCurrentAppState("default");
         }
 
-        public virtual string GetCurrentAppState(string defaultValue)
-        {
+        public virtual string GetCurrentAppState(string defaultValue) {
             string attValue = defaultValue;
             string key = BaseGameProfileAttributes.ATT_CURRENT_APP_STATE;
             if (CheckIfAttributeExists(key))
@@ -358,21 +313,18 @@ namespace Engine.Game.App.BaseApp
             return attValue;
         }
 
-        public virtual void SetCurrentAppState(string attValue)
-        {
+        public virtual void SetCurrentAppState(string attValue) {
             string key = BaseGameProfileAttributes.ATT_CURRENT_APP_STATE;
             SetAttributeStringValue(key, attValue);
         }
 
         // APP CONTENT STATE
 
-        public virtual string GetCurrentAppContentState()
-        {
+        public virtual string GetCurrentAppContentState() {
             return GetCurrentAppContentState("default");
         }
 
-        public virtual string GetCurrentAppContentState(string defaultValue)
-        {
+        public virtual string GetCurrentAppContentState(string defaultValue) {
             string attValue = defaultValue;
             string key = BaseGameProfileAttributes.ATT_CURRENT_APP_CONTENT_STATE;
             if (CheckIfAttributeExists(key))
@@ -380,16 +332,14 @@ namespace Engine.Game.App.BaseApp
             return attValue;
         }
 
-        public virtual void SetCurrentAppContentState(string attValue)
-        {
+        public virtual void SetCurrentAppContentState(string attValue) {
             string key = BaseGameProfileAttributes.ATT_CURRENT_APP_CONTENT_STATE;
             SetAttributeStringValue(key, attValue);
         }
 
         // GAME WORLD CURRENT
 
-        public virtual string GetCurrentGameWorld()
-        {
+        public virtual string GetCurrentGameWorld() {
 #if USE_GAME_LIB_GAMES
             return GetCurrentGameWorld(GameConfigs.defaultGameWorldCode);
 #else
@@ -397,8 +347,7 @@ namespace Engine.Game.App.BaseApp
 #endif
         }
 
-        public virtual string GetCurrentGameWorld(string defaultValue)
-        {
+        public virtual string GetCurrentGameWorld(string defaultValue) {
             string attValue = defaultValue;
             string key = BaseGameProfileAttributes.ATT_CURRENT_GAME_WORLD;
             if (CheckIfAttributeExists(key))
@@ -406,26 +355,22 @@ namespace Engine.Game.App.BaseApp
             return attValue;
         }
 
-        public virtual void SetCurrentGameWorld(string attValue)
-        {
+        public virtual void SetCurrentGameWorld(string attValue) {
             string key = BaseGameProfileAttributes.ATT_CURRENT_GAME_WORLD;
             SetAttributeStringValue(key, attValue);
         }
 
         // GAME DATA STATE
 
-        public virtual string GetGameDataState(string attKey)
-        {
+        public virtual string GetGameDataState(string attKey) {
             if (CheckIfAttributeExists(attKey))
                 return GetAttributeStringValue(attKey);
             return null;
         }
 
-        public virtual void SetGameDataState(string attKey, string attValue)
-        {
+        public virtual void SetGameDataState(string attKey, string attValue) {
 
-            if (attValue.IsNullOrEmpty())
-            {
+            if (attValue.IsNullOrEmpty()) {
                 return;
             }
 
@@ -434,59 +379,50 @@ namespace Engine.Game.App.BaseApp
 
         // CAMERA MODES
 
-        public virtual int GetCurrentCameraMode()
-        {
+        public virtual int GetCurrentCameraMode() {
             return GetCurrentCameraMode(0);
         }
 
-        public virtual int GetCurrentCameraMode(int defaultValue)
-        {
+        public virtual int GetCurrentCameraMode(int defaultValue) {
             int attValue = defaultValue;
             if (CheckIfAttributeExists(BaseGameProfileAttributes.ATT_CURRENT_CAMERA_MODE))
                 attValue = GetAttributeIntValue(BaseGameProfileAttributes.ATT_CURRENT_CAMERA_MODE);
             return attValue;
         }
 
-        public virtual void SetCurrentCameraMode(int attValue)
-        {
+        public virtual void SetCurrentCameraMode(int attValue) {
             SetAttributeIntValue(BaseGameProfileAttributes.ATT_CURRENT_CAMERA_MODE, attValue);
         }
 
         // HELP TIPS SHOWN DAY
 
-        public virtual int GetHelpTipsShownDay()
-        {
+        public virtual int GetHelpTipsShownDay() {
             return GetHelpTipsShownDay(0);
         }
 
-        public virtual int GetHelpTipsShownDay(int defaultValue)
-        {
+        public virtual int GetHelpTipsShownDay(int defaultValue) {
             int attValue = defaultValue;
             if (CheckIfAttributeExists(BaseGameProfileAttributes.ATT_HELP_TIPS_SHOWN_DAY))
                 attValue = GetAttributeIntValue(BaseGameProfileAttributes.ATT_HELP_TIPS_SHOWN_DAY);
             return attValue;
         }
 
-        public virtual void SetHelpTipsShownDay(int attValue)
-        {
+        public virtual void SetHelpTipsShownDay(int attValue) {
             SetAttributeIntValue(BaseGameProfileAttributes.ATT_HELP_TIPS_SHOWN_DAY, attValue);
         }
 
-        public virtual double GetHelpTipsShownDate()
-        {
+        public virtual double GetHelpTipsShownDate() {
             return GetHelpTipsShownDate(0);
         }
 
-        public virtual double GetHelpTipsShownDate(double defaultValue)
-        {
+        public virtual double GetHelpTipsShownDate(double defaultValue) {
             double attValue = defaultValue;
             if (CheckIfAttributeExists(BaseGameProfileAttributes.ATT_HELP_TIPS_SHOWN_DATE))
                 attValue = GetAttributeDoubleValue(BaseGameProfileAttributes.ATT_HELP_TIPS_SHOWN_DATE);
             return attValue;
         }
 
-        public virtual void SetHelpTipsShownDate(double attValue)
-        {
+        public virtual void SetHelpTipsShownDate(double attValue) {
             SetAttributeDoubleValue(BaseGameProfileAttributes.ATT_HELP_TIPS_SHOWN_DATE, attValue);
         }
 
@@ -560,26 +496,21 @@ namespace Engine.Game.App.BaseApp
 
         */
 
-        public virtual void SetCustomAudio(CustomPlayerAudio audio)
-        {
+        public virtual void SetCustomAudio(CustomPlayerAudio audio) {
             string audioText = audio.ToJson();//JsonMapper.ToJson(audio);
             LogUtil.Log("SetCustomAudio: " + audioText);
             SetAttributeStringValue(BaseGameProfileAttributes.ATT_CUSTOM_AUDIO, audioText);
         }
 
-        public virtual CustomPlayerAudio GetCustomAudio()
-        {
+        public virtual CustomPlayerAudio GetCustomAudio() {
             CustomPlayerAudio audio = new CustomPlayerAudio();
             string json = GetAttributeStringValue(BaseGameProfileAttributes.ATT_CUSTOM_AUDIO);
-            if (!string.IsNullOrEmpty(json))
-            {
-                try
-                {
+            if (!string.IsNullOrEmpty(json)) {
+                try {
                     LogUtil.Log("GetCustomAudio: " + json);
                     audio = json.FromJson<CustomPlayerAudio>();//JsonMapper.ToObject<CustomPlayerAudio>(json);
                 }
-                catch (Exception e)
-                {
+                catch (Exception e) {
                     audio = new CustomPlayerAudio();
                     LogUtil.Log(e);
                 }
@@ -591,33 +522,28 @@ namespace Engine.Game.App.BaseApp
 
         // HORIZON TILT
 
-        public virtual double GetControlHorizonTilt()
-        {
+        public virtual double GetControlHorizonTilt() {
             return GetControlHorizonTilt(1.0);
         }
 
-        public virtual double GetControlHorizonTilt(double defaultValue)
-        {
+        public virtual double GetControlHorizonTilt(double defaultValue) {
             double attValue = defaultValue;
             if (CheckIfAttributeExists(BaseGameProfileAttributes.ATT_CONTROL_HORIZON_TILT))
                 attValue = GetAttributeDoubleValue(BaseGameProfileAttributes.ATT_CONTROL_HORIZON_TILT);
             return attValue;
         }
 
-        public virtual void SetControlHorizonTilt(double attValue)
-        {
+        public virtual void SetControlHorizonTilt(double attValue) {
             SetAttributeDoubleValue(BaseGameProfileAttributes.ATT_CONTROL_HORIZON_TILT, attValue);
         }
 
         // CONTROL HANDED (LEFT/RIGHT)
 
-        public virtual ProfileControlHanded GetControlHanded()
-        {
+        public virtual ProfileControlHanded GetControlHanded() {
             return GetControlHanded(ProfileControlHanded.RIGHT);
         }
 
-        public virtual ProfileControlHanded GetControlHanded(ProfileControlHanded defaultValue)
-        {
+        public virtual ProfileControlHanded GetControlHanded(ProfileControlHanded defaultValue) {
             int attValue = (int)defaultValue;
             if (CheckIfAttributeExists(BaseGameProfileAttributes.ATT_CONTROL_HANDED))
                 attValue = GetAttributeIntValue(BaseGameProfileAttributes.ATT_CONTROL_HANDED);
@@ -625,123 +551,105 @@ namespace Engine.Game.App.BaseApp
             return controlHanded;
         }
 
-        public virtual void SetControlHanded(ProfileControlHanded attValue)
-        {
+        public virtual void SetControlHanded(ProfileControlHanded attValue) {
             SetAttributeIntValue(BaseGameProfileAttributes.ATT_CONTROL_HANDED, (int)attValue);
         }
 
         // CONTROL VIBRATE
 
-        public virtual bool GetControlVibrate()
-        {
+        public virtual bool GetControlVibrate() {
             return GetControlVibrate(true);
         }
 
-        public virtual bool GetControlVibrate(bool defaultValue)
-        {
+        public virtual bool GetControlVibrate(bool defaultValue) {
             bool attValue = defaultValue;
             if (CheckIfAttributeExists(BaseGameProfileAttributes.ATT_CONTROL_VIBRATE))
                 attValue = GetAttributeBoolValue(BaseGameProfileAttributes.ATT_CONTROL_VIBRATE);
             return attValue;
         }
 
-        public virtual void SetControlVibrate(bool attValue)
-        {
+        public virtual void SetControlVibrate(bool attValue) {
             SetAttributeBoolValue(BaseGameProfileAttributes.ATT_CONTROL_VIBRATE, attValue);
         }
 
         // BROADCAST
 
-        public virtual bool GetBroadcastRecordLevels()
-        {
+        public virtual bool GetBroadcastRecordLevels() {
             return GetBroadcastRecordLevels(true);
         }
 
-        public virtual bool GetBroadcastRecordLevels(bool defaultValue)
-        {
+        public virtual bool GetBroadcastRecordLevels(bool defaultValue) {
             bool attValue = defaultValue;
             if (CheckIfAttributeExists(BaseGameProfileAttributes.ATT_BROADCAST_RECORD_LEVELS))
                 attValue = GetAttributeBoolValue(BaseGameProfileAttributes.ATT_BROADCAST_RECORD_LEVELS);
             return attValue;
         }
 
-        public virtual void SetBroadcastRecordLevels(bool attValue)
-        {
+        public virtual void SetBroadcastRecordLevels(bool attValue) {
             SetAttributeBoolValue(BaseGameProfileAttributes.ATT_BROADCAST_RECORD_LEVELS, attValue);
         }
 
 
         // HELP/TIPS
 
-        public virtual bool GetHasSeenHelp()
-        {
+        public virtual bool GetHasSeenHelp() {
             return GetHasSeenHelp(false);
         }
 
-        public virtual bool GetHasSeenHelp(bool defaultValue)
-        {
+        public virtual bool GetHasSeenHelp(bool defaultValue) {
             bool attValue = defaultValue;
             if (CheckIfAttributeExists(BaseGameProfileAttributes.ATT_UI_HAS_SEEN_HELP))
                 attValue = GetAttributeBoolValue(BaseGameProfileAttributes.ATT_UI_HAS_SEEN_HELP);
             return attValue;
         }
 
-        public virtual void SetHasSeenHelp(bool attValue)
-        {
+        public virtual void SetHasSeenHelp(bool attValue) {
             SetAttributeBoolValue(BaseGameProfileAttributes.ATT_UI_HAS_SEEN_HELP, attValue);
         }
 
         // INPUT
 
-        public virtual bool GetControlTouch()
-        {
+        public virtual bool GetControlTouch() {
             return GetControlTouch(true);
         }
 
-        public virtual bool GetControlTouch(bool defaultValue)
-        {
+        public virtual bool GetControlTouch(bool defaultValue) {
             bool attValue = defaultValue;
             if (CheckIfAttributeExists(BaseGameProfileAttributes.ATT_CONTROL_INPUT_TOUCH))
                 attValue = GetAttributeBoolValue(BaseGameProfileAttributes.ATT_CONTROL_INPUT_TOUCH);
             return attValue;
         }
 
-        public virtual void SetControlTouch(bool attValue)
-        {
+        public virtual void SetControlTouch(bool attValue) {
             SetAttributeBoolValue(BaseGameProfileAttributes.ATT_CONTROL_INPUT_TOUCH, attValue);
         }
 
         // NETWORK USER STATE
 
 
-        public virtual bool IsThirdPartyNetworkUser()
-        {
+        public virtual bool IsThirdPartyNetworkUser() {
             return GetThirdPartyNetworkUser(false);
         }
 
-        public virtual bool GetThirdPartyNetworkUser(bool defaultValue)
-        {
+        public virtual bool GetThirdPartyNetworkUser(bool defaultValue) {
             bool attValue = defaultValue;
             if (CheckIfAttributeExists(BaseGameProfileAttributes.ATT_THIRD_PARTY_NETWORK))
                 attValue = GetAttributeBoolValue(BaseGameProfileAttributes.ATT_THIRD_PARTY_NETWORK);
             return attValue;
         }
 
-        public virtual void SetThirdPartyNetworkUser(bool attValue)
-        {
+        public virtual void SetThirdPartyNetworkUser(bool attValue) {
             SetAttributeBoolValue(BaseGameProfileAttributes.ATT_THIRD_PARTY_NETWORK, attValue);
         }
 
 
         // AUDIO
 
-        public virtual double GetAudioMusicVolume()
-        {
+        public virtual double GetAudioMusicVolume() {
             return GetAudioMusicVolume(0.5);
         }
 
-        public virtual double GetAudioMusicVolume(double defaultValue)
-        {
+        public virtual double GetAudioMusicVolume(double defaultValue) {
             double attValue = defaultValue;
 
             attValue = BaseGameProfileDataState.currentMusicVolume;
@@ -753,8 +661,7 @@ namespace Engine.Game.App.BaseApp
             //   BaseGameProfileDataState.updatedMusicVolume = false;
             //UnityEngine.//LogUtil.Log("GetAudioMusicVolume checking attribute exists:" + BaseGameProfileAttributes.ATT_AUDIO_MUSIC_VOLUME);
 
-            if (CheckIfAttributeExists(BaseGameProfileAttributes.ATT_AUDIO_MUSIC_VOLUME))
-            {
+            if (CheckIfAttributeExists(BaseGameProfileAttributes.ATT_AUDIO_MUSIC_VOLUME)) {
 
                 //UnityEngine.//LogUtil.Log("GetAudioMusicVolume attribute exists:" + BaseGameProfileAttributes.ATT_AUDIO_MUSIC_VOLUME);
 
@@ -768,21 +675,18 @@ namespace Engine.Game.App.BaseApp
             return attValue;
         }
 
-        public virtual void SetAudioMusicVolume(double attValue)
-        {
+        public virtual void SetAudioMusicVolume(double attValue) {
             BaseGameProfileDataState.updatedMusicVolume = true;
             SetAttributeDoubleValue(BaseGameProfileAttributes.ATT_AUDIO_MUSIC_VOLUME, attValue);
         }
 
         // AUDIO VO
 
-        public virtual double GetAudioVOVolume()
-        {
+        public virtual double GetAudioVOVolume() {
             return GetAudioVOVolume(0.7);
         }
 
-        public virtual double GetAudioVOVolume(double defaultValue)
-        {
+        public virtual double GetAudioVOVolume(double defaultValue) {
             double attValue = defaultValue;
 
             attValue = BaseGameProfileDataState.currentVOVolume;
@@ -790,8 +694,7 @@ namespace Engine.Game.App.BaseApp
             //if(BaseGameProfileDataState.updatedVOVolume) {
             //   BaseGameProfileDataState.updatedVOVolume = false;
 
-            if (CheckIfAttributeExists(BaseGameProfileAttributes.ATT_AUDIO_VO_VOLUME))
-            {
+            if (CheckIfAttributeExists(BaseGameProfileAttributes.ATT_AUDIO_VO_VOLUME)) {
                 attValue = GetAttributeDoubleValue(BaseGameProfileAttributes.ATT_AUDIO_VO_VOLUME);
                 BaseGameProfileDataState.currentVOVolume = attValue;
             }
@@ -800,21 +703,18 @@ namespace Engine.Game.App.BaseApp
             return attValue;
         }
 
-        public virtual void SetAudioVOVolume(double attValue)
-        {
+        public virtual void SetAudioVOVolume(double attValue) {
             BaseGameProfileDataState.updatedVOVolume = true;
             SetAttributeDoubleValue(BaseGameProfileAttributes.ATT_AUDIO_VO_VOLUME, attValue);
         }
 
         // AUDIO EFFECTS
 
-        public virtual double GetAudioEffectsVolume()
-        {
+        public virtual double GetAudioEffectsVolume() {
             return GetAudioEffectsVolume(0.9);
         }
 
-        public virtual double GetAudioEffectsVolume(double defaultValue)
-        {
+        public virtual double GetAudioEffectsVolume(double defaultValue) {
             double attValue = defaultValue;
 
             attValue = BaseGameProfileDataState.currentEffectsVolume;
@@ -822,8 +722,7 @@ namespace Engine.Game.App.BaseApp
             //if(BaseGameProfileDataState.updatedEffectsVolume) {
             //   BaseGameProfileDataState.updatedEffectsVolume = false;
 
-            if (CheckIfAttributeExists(BaseGameProfileAttributes.ATT_AUDIO_EFFECTS_VOLUME))
-            {
+            if (CheckIfAttributeExists(BaseGameProfileAttributes.ATT_AUDIO_EFFECTS_VOLUME)) {
                 attValue = GetAttributeDoubleValue(BaseGameProfileAttributes.ATT_AUDIO_EFFECTS_VOLUME);
                 BaseGameProfileDataState.currentEffectsVolume = attValue;
             }
@@ -833,16 +732,14 @@ namespace Engine.Game.App.BaseApp
             return attValue;
         }
 
-        public virtual void SetAudioEffectsVolume(double attValue)
-        {
+        public virtual void SetAudioEffectsVolume(double attValue) {
             BaseGameProfileDataState.updatedEffectsVolume = true;
             SetAttributeDoubleValue(BaseGameProfileAttributes.ATT_AUDIO_EFFECTS_VOLUME, attValue);
         }
 
         // CONTENT
 
-        public virtual void SyncAccessPermissions()
-        {
+        public virtual void SyncAccessPermissions() {
 
             //Contents.AccessPermissions.UnionWith(GetAccessPermissions());
         }
@@ -851,45 +748,37 @@ namespace Engine.Game.App.BaseApp
         // saved outside of the profile.
 
         // Attribute based unlocks to switch to for profile based unlocks.
-        public virtual List<string> GetAccessPermissions()
-        {
+        public virtual List<string> GetAccessPermissions() {
             List<string> permissions = new List<string>();
             DataAttribute attribute = GetAttribute(BaseGameProfileAttributes.ATT_ACCESS_PERMISSIONS);
-            if (attribute != null)
-            {
-                if (attribute.val != null)
-                {
+            if (attribute != null) {
+                if (attribute.val != null) {
                     permissions = attribute.val.ToString().FromJson<List<string>>();
                 }
-                if (permissions != null)
-                {
+                if (permissions != null) {
                     return permissions;
                 }
             }
             return permissions;
         }
 
-        public virtual bool HasAccessPermission(string permission)
-        {
+        public virtual bool HasAccessPermission(string permission) {
             List<string> permissions = GetAccessPermissions();
             if (permissions.Contains(permission))
                 return true;
             return false;
         }
 
-        public virtual void SetAccessPermissions(List<string> permissions)
-        {
+        public virtual void SetAccessPermissions(List<string> permissions) {
             DataAttribute attribute = new DataAttribute();
             attribute.code = BaseGameProfileAttributes.ATT_ACCESS_PERMISSIONS;
             attribute.val = permissions.ToJson();
             SetAttribute(attribute);
         }
 
-        public virtual void SetAccessPermission(string permission)
-        {
+        public virtual void SetAccessPermission(string permission) {
             List<string> permissions = GetAccessPermissions();
-            if (!permissions.Contains(permission))
-            {
+            if (!permissions.Contains(permission)) {
                 permissions.Add(permission);
             }
             SetAccessPermissions(permissions);
@@ -897,8 +786,7 @@ namespace Engine.Game.App.BaseApp
 
         // GAME SETTINGS
 
-        public virtual void SetGameSettingValue(string code, object value)
-        {
+        public virtual void SetGameSettingValue(string code, object value) {
             DataAttribute att = new DataAttribute();
             att.val = value;
             att.code = code;
@@ -908,12 +796,10 @@ namespace Engine.Game.App.BaseApp
             SetAttribute(att);
         }
 
-        public virtual string GetGameSettingValue(string code)
-        {
+        public virtual string GetGameSettingValue(string code) {
             string currentValue = "";
             object objectValue = GetAttribute(code).val;
-            if (objectValue != null)
-            {
+            if (objectValue != null) {
                 currentValue = Convert.ToString(objectValue);
             }
 
@@ -939,67 +825,56 @@ namespace Engine.Game.App.BaseApp
         // auth/social
 
 
-        public virtual GameProfileNetworkItems network_items
-        {
-            get
-            {
+        public virtual GameProfileNetworkItems network_items {
+            get {
                 return Get<GameProfileNetworkItems>(BaseDataObjectKeys.network_items);
             }
 
-            set
-            {
+            set {
                 Set(BaseDataObjectKeys.network_items, value);
             }
         }
 
-        public virtual void SetNetworks(GameProfileNetworkItems obj)
-        {
+        public virtual void SetNetworks(GameProfileNetworkItems obj) {
 
             network_items = obj;
 
             Messenger.Broadcast(BaseGameProfileMessages.ProfileShouldBeSaved);
         }
 
-        public virtual GameProfileNetworkItems GetNetworks()
-        {
+        public virtual GameProfileNetworkItems GetNetworks() {
             GameProfileNetworkItems obj = new GameProfileNetworkItems();
 
             obj = network_items;
 
-            if (obj == null)
-            {
+            if (obj == null) {
                 obj = new GameProfileNetworkItems();
             }
 
             return obj;
         }
 
-        public T GetNetworkValue<T>(string networkType, string key)
-        {
+        public T GetNetworkValue<T>(string networkType, string key) {
 
             GameProfileNetworkItem item = GetNetwork(networkType);
 
-            if (item == null)
-            {
+            if (item == null) {
                 return default(T);
             }
 
             return item.Get<T>(key);
         }
 
-        public string GetNetworkValue(string networkType, string key)
-        {
+        public string GetNetworkValue(string networkType, string key) {
 
             return GetNetworkValue<string>(networkType, key);
         }
 
-        public void SetNetworkValue(string networkType, string key, object val)
-        {
+        public void SetNetworkValue(string networkType, string key, object val) {
 
             GameProfileNetworkItem item = GetNetwork(networkType);
 
-            if (item == null)
-            {
+            if (item == null) {
                 item = new GameProfileNetworkItem();
                 item.network_type = networkType;
             }
@@ -1009,40 +884,35 @@ namespace Engine.Game.App.BaseApp
             SetNetwork(networkType, item);
         }
 
-        public void SetNetworkValueToken(string networkType, string val)
-        {
+        public void SetNetworkValueToken(string networkType, string val) {
 #if USE_GAME_LIB_GAMES
             GameProfiles.Current.SetNetworkValue(
                 networkType, BaseDataObjectKeys.network_token, val);
 #endif
         }
 
-        public void SetNetworkValueId(string networkType, string val)
-        {
+        public void SetNetworkValueId(string networkType, string val) {
 #if USE_GAME_LIB_GAMES
             GameProfiles.Current.SetNetworkValue(
                 networkType, BaseDataObjectKeys.network_id, val);
 #endif
         }
 
-        public void SetNetworkValueName(string networkType, string val)
-        {
+        public void SetNetworkValueName(string networkType, string val) {
 #if USE_GAME_LIB_GAMES
             GameProfiles.Current.SetNetworkValue(
                 networkType, BaseDataObjectKeys.network_name, val);
 #endif
         }
 
-        public void SetNetworkValueUsername(string networkType, string val)
-        {
+        public void SetNetworkValueUsername(string networkType, string val) {
 #if USE_GAME_LIB_GAMES
             GameProfiles.Current.SetNetworkValue(
                 networkType, BaseDataObjectKeys.network_username, val);
 #endif
         }
 
-        public void SetNetworkValueFirstName(string networkType, string val)
-        {
+        public void SetNetworkValueFirstName(string networkType, string val) {
 
 #if USE_GAME_LIB_GAMES
             GameProfiles.Current.SetNetworkValue(
@@ -1050,41 +920,35 @@ namespace Engine.Game.App.BaseApp
 #endif
         }
 
-        public void SetNetworkValueLastName(string networkType, string val)
-        {
+        public void SetNetworkValueLastName(string networkType, string val) {
 #if USE_GAME_LIB_GAMES
             GameProfiles.Current.SetNetworkValue(
                 networkType, BaseDataObjectKeys.network_last_name, val);
 #endif
         }
 
-        public void SetNetworkValueType(string networkType, string val)
-        {
+        public void SetNetworkValueType(string networkType, string val) {
 #if USE_GAME_LIB_GAMES
             GameProfiles.Current.SetNetworkValue(
                 networkType, BaseDataObjectKeys.network_type, val);
 #endif
         }
 
-        public GameProfileNetworkItem GetNetwork(string networkType)
-        {
+        public GameProfileNetworkItem GetNetwork(string networkType) {
             GameProfileNetworkItem item = GetNetworks().GetItem(networkType);
 
             return item;
         }
 
-        public void SetNetwork(string networkType, GameProfileNetworkItem item)
-        {
+        public void SetNetwork(string networkType, GameProfileNetworkItem item) {
             SetNetwork(networkType, item, true);
         }
 
-        public void SetNetwork(string networkType, GameProfileNetworkItem item, bool setAsCurrent)
-        {
+        public void SetNetwork(string networkType, GameProfileNetworkItem item, bool setAsCurrent) {
 
             GameProfileNetworkItems items = GetNetworks();
 
-            if (setAsCurrent)
-            {
+            if (setAsCurrent) {
                 //BaseGameProfileCharacters.currentCharacter = item;
                 //GameProfileCharacters.Current.SetCurrentCharacterProfileCode(code);
             }
@@ -1095,8 +959,7 @@ namespace Engine.Game.App.BaseApp
 
         //
 
-        public string GetNetworkValueId(string networkType)
-        {
+        public string GetNetworkValueId(string networkType) {
 #if USE_GAME_LIB_GAMES
             return GameProfiles.Current.GetNetworkValue(
                 networkType, BaseDataObjectKeys.network_id);
@@ -1105,8 +968,7 @@ namespace Engine.Game.App.BaseApp
 #endif
         }
 
-        public string GetNetworkValueUsername(string networkType)
-        {
+        public string GetNetworkValueUsername(string networkType) {
 #if USE_GAME_LIB_GAMES
             return GameProfiles.Current.GetNetworkValue(
                 networkType, BaseDataObjectKeys.network_username);
@@ -1115,8 +977,7 @@ namespace Engine.Game.App.BaseApp
 #endif
         }
 
-        public string GetNetworkValueToken(string networkType)
-        {
+        public string GetNetworkValueToken(string networkType) {
 #if USE_GAME_LIB_GAMES
             return GameProfiles.Current.GetNetworkValue(
                 networkType, BaseDataObjectKeys.network_token);
@@ -1125,8 +986,7 @@ namespace Engine.Game.App.BaseApp
 #endif
         }
 
-        public string GetNetworkValueName(string networkType)
-        {
+        public string GetNetworkValueName(string networkType) {
 #if USE_GAME_LIB_GAMES
             return GameProfiles.Current.GetNetworkValue(
                 networkType, BaseDataObjectKeys.network_name);
@@ -1135,8 +995,7 @@ namespace Engine.Game.App.BaseApp
 #endif
         }
 
-        public string GetNetworkValueFirstName(string networkType)
-        {
+        public string GetNetworkValueFirstName(string networkType) {
 #if USE_GAME_LIB_GAMES
             return GameProfiles.Current.GetNetworkValue(
                 networkType, BaseDataObjectKeys.network_first_name);
@@ -1145,8 +1004,7 @@ namespace Engine.Game.App.BaseApp
 #endif
         }
 
-        public string GetNetworkValueLastName(string networkType)
-        {
+        public string GetNetworkValueLastName(string networkType) {
 #if USE_GAME_LIB_GAMES
             return GameProfiles.Current.GetNetworkValue(
                 networkType, BaseDataObjectKeys.network_last_name);
@@ -1155,8 +1013,7 @@ namespace Engine.Game.App.BaseApp
 #endif
         }
 
-        public string GetNetworkValueType(string networkType)
-        {
+        public string GetNetworkValueType(string networkType) {
 #if USE_GAME_LIB_GAMES
             return GameProfiles.Current.GetNetworkValue(
                 networkType, BaseDataObjectKeys.network_type);

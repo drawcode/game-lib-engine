@@ -9,8 +9,8 @@ using UnityEngine;
 
 namespace Engine.Networking {
     public class NetworkSyncAnimation : BaseEngineBehavior {
-        
-        #if NETWORK_USE_UNITY
+
+#if NETWORK_USE_UNITY
 
         public enum AniStates {
             walk = 0,

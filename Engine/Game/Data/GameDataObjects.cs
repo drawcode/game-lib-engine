@@ -6,40 +6,31 @@ using Engine.Game.Data;
 using Engine.Utility;
 using UnityEngine;
 
-namespace Engine.Game.App
-{
-    public class GameDataModel : GameDataObject
-    {
+namespace Engine.Game.App {
+    public class GameDataModel : GameDataObject {
 
-        public virtual string textures
-        {
-            get
-            {
+        public virtual string textures {
+            get {
                 return Get<string>(BaseDataObjectKeys.textures);
             }
 
-            set
-            {
+            set {
                 Set<string>(BaseDataObjectKeys.textures, value);
             }
         }
 
-        public virtual string colors
-        {
-            get
-            {
+        public virtual string colors {
+            get {
                 return Get<string>(BaseDataObjectKeys.colors);
             }
 
-            set
-            {
+            set {
                 Set<string>(BaseDataObjectKeys.colors, value);
             }
         }
     }
 
-    public class GameDataDirectorType
-    {
+    public class GameDataDirectorType {
         public static string enemy = "enemy";
         public static string sidekick = "sidekick";
         public static string item = "item";
@@ -47,67 +38,54 @@ namespace Engine.Game.App
         public static string custom = "custom";
     }
 
-    public class GameDataDirector : GameDataObject
-    {
+    public class GameDataDirector : GameDataObject {
 
-        public virtual bool run
-        {
-            get
-            {
+        public virtual bool run {
+            get {
                 return Get<bool>(BaseDataObjectKeys.run, true);
             }
 
-            set
-            {
+            set {
                 Set(BaseDataObjectKeys.run, value);
             }
         }
     }
 
-    public class GameDataColorPreset : GameDataObject
-    {
+    public class GameDataColorPreset : GameDataObject {
 
     }
 
-    public class GameDataTexturePreset : GameDataObject
-    {
+    public class GameDataTexturePreset : GameDataObject {
 
     }
 
-    public class GameDataItemPreset : GameDataObject
-    {
+    public class GameDataItemPreset : GameDataObject {
 
     }
 
-    public class GameDataWeaponPreset : GameDataObject
-    {
+    public class GameDataWeaponPreset : GameDataObject {
 
     }
 
-    public class GameDataTerrainPreset : GameDataObject
-    {
+    public class GameDataTerrainPreset : GameDataObject {
 
     }
 
-    public class GameDataCharacterPreset : GameDataObject
-    {
+    public class GameDataCharacterPreset : GameDataObject {
 
     }
 
-    public class GameDataAssetPreset : GameDataObject
-    {
+    public class GameDataAssetPreset : GameDataObject {
 
     }
 
-    public class GameDataLayoutPreset : GameDataObject
-    {
+    public class GameDataLayoutPreset : GameDataObject {
 
 
 
     }
 
-    public class GameDataActionKeys
-    {
+    public class GameDataActionKeys {
 
         public static string goal_range_1 = "goal_range_1";
         public static string goal_range_2 = "goal_range_2";
@@ -174,20 +152,16 @@ namespace Engine.Game.App
 
     }
 
-    public class GameDataAnimation : GameDataObject
-    {
+    public class GameDataAnimation : GameDataObject {
 
     }
 
-    public class GameDataSound : GameDataObject
-    {
+    public class GameDataSound : GameDataObject {
 
 
         //[NonSerialized]
-        public bool isPlayTypeLoop
-        {
-            get
-            {
+        public bool isPlayTypeLoop {
+            get {
                 return data_type == GameDataPlayType.loop
                     || data_type == GameDataPlayType.loop_reverse
                     || play_type == GameDataPlayType.loop
@@ -197,10 +171,8 @@ namespace Engine.Game.App
         }
 
         //[JsonIgnore]
-        public bool isPlayTypeOnce
-        {
-            get
-            {
+        public bool isPlayTypeOnce {
+            get {
                 return data_type == GameDataPlayType.once
                     || data_type == GameDataPlayType.once_reverse
                     || play_type == GameDataPlayType.once
@@ -211,23 +183,19 @@ namespace Engine.Game.App
 
     }
 
-    public class GameDataSocial : GameDataObject
-    {
+    public class GameDataSocial : GameDataObject {
 
     }
 
-    public class GameDataItemEffect : GameDataObject
-    {
+    public class GameDataItemEffect : GameDataObject {
 
     }
 
-    public class GameDataItemProjectile : GameDataObject
-    {
+    public class GameDataItemProjectile : GameDataObject {
 
     }
 
-    public class GameDataItemReward : GameDataObject
-    {
+    public class GameDataItemReward : GameDataObject {
 
         public static string xp = "xp";
         public static string currency = "currency";
@@ -241,13 +209,11 @@ namespace Engine.Game.App
         public static string scores = "scores";
     }
 
-    public class GameDataItemTypeKeys
-    {
+    public class GameDataItemTypeKeys {
         public static string defaultType = "default";
     }
 
-    public class GameDataItemKeys
-    {
+    public class GameDataItemKeys {
         public static string prepareType = "prepare";
         public static string postType = "post";
         public static string runType = "run";
@@ -255,241 +221,186 @@ namespace Engine.Game.App
         public static string loadType = "load";
     }
 
-    public class GameDataObjectItem : GameDataObject
-    {
+    public class GameDataObjectItem : GameDataObject {
 
-        public virtual List<string> roles
-        {
-            get
-            {
+        public virtual List<string> roles {
+            get {
                 return Get<List<string>>(BaseDataObjectKeys.roles);
             }
 
-            set
-            {
+            set {
                 Set<List<string>>(BaseDataObjectKeys.roles, value);
             }
         }
 
-        public virtual List<GameDataModel> models
-        {
-            get
-            {
+        public virtual List<GameDataModel> models {
+            get {
                 return Get<List<GameDataModel>>(BaseDataObjectKeys.models);
             }
 
-            set
-            {
+            set {
                 Set<List<GameDataModel>>(BaseDataObjectKeys.models, value);
             }
         }
 
-        public virtual List<GameDataDirector> directors
-        {
-            get
-            {
+        public virtual List<GameDataDirector> directors {
+            get {
                 return Get<List<GameDataDirector>>(BaseDataObjectKeys.directors);
             }
 
-            set
-            {
+            set {
                 Set<List<GameDataDirector>>(BaseDataObjectKeys.directors, value);
             }
         }
 
-        public virtual List<GameDataColorPreset> color_presets
-        {
-            get
-            {
+        public virtual List<GameDataColorPreset> color_presets {
+            get {
                 return Get<List<GameDataColorPreset>>(BaseDataObjectKeys.color_presets);
             }
 
-            set
-            {
+            set {
                 Set<List<GameDataColorPreset>>(BaseDataObjectKeys.color_presets, value);
             }
         }
 
-        public virtual List<GameDataTexturePreset> texture_presets
-        {
-            get
-            {
+        public virtual List<GameDataTexturePreset> texture_presets {
+            get {
                 return Get<List<GameDataTexturePreset>>(BaseDataObjectKeys.texture_presets);
             }
 
-            set
-            {
+            set {
                 Set<List<GameDataTexturePreset>>(BaseDataObjectKeys.texture_presets, value);
             }
         }
 
-        public virtual List<GameDataItemPreset> item_presets
-        {
-            get
-            {
+        public virtual List<GameDataItemPreset> item_presets {
+            get {
                 return Get<List<GameDataItemPreset>>(BaseDataObjectKeys.item_presets);
             }
 
-            set
-            {
+            set {
                 Set<List<GameDataItemPreset>>(BaseDataObjectKeys.item_presets, value);
             }
         }
 
-        public virtual List<GameDataWeaponPreset> weapon_presets
-        {
-            get
-            {
+        public virtual List<GameDataWeaponPreset> weapon_presets {
+            get {
                 return Get<List<GameDataWeaponPreset>>(BaseDataObjectKeys.weapon_presets);
             }
 
-            set
-            {
+            set {
                 Set<List<GameDataWeaponPreset>>(BaseDataObjectKeys.weapon_presets, value);
             }
         }
 
-        public virtual List<GameDataTerrainPreset> terrain_presets
-        {
-            get
-            {
+        public virtual List<GameDataTerrainPreset> terrain_presets {
+            get {
                 return Get<List<GameDataTerrainPreset>>(BaseDataObjectKeys.terrain_presets);
             }
 
-            set
-            {
+            set {
                 Set<List<GameDataTerrainPreset>>(BaseDataObjectKeys.terrain_presets, value);
             }
         }
 
-        public virtual List<GameDataCharacterPreset> character_presets
-        {
-            get
-            {
+        public virtual List<GameDataCharacterPreset> character_presets {
+            get {
                 return Get<List<GameDataCharacterPreset>>(BaseDataObjectKeys.character_presets);
             }
 
-            set
-            {
+            set {
                 Set<List<GameDataCharacterPreset>>(BaseDataObjectKeys.character_presets, value);
             }
         }
 
-        public virtual List<GameDataAssetPreset> asset_presets
-        {
-            get
-            {
+        public virtual List<GameDataAssetPreset> asset_presets {
+            get {
                 return Get<List<GameDataAssetPreset>>(BaseDataObjectKeys.asset_presets);
             }
 
-            set
-            {
+            set {
                 Set<List<GameDataAssetPreset>>(BaseDataObjectKeys.asset_presets, value);
             }
         }
 
-        public virtual List<GameDataAssetPreset> preload_presets
-        {
-            get
-            {
+        public virtual List<GameDataAssetPreset> preload_presets {
+            get {
                 return Get<List<GameDataAssetPreset>>(BaseDataObjectKeys.preload_presets);
             }
 
-            set
-            {
+            set {
                 Set<List<GameDataAssetPreset>>(BaseDataObjectKeys.preload_presets, value);
             }
         }
 
-        public virtual List<GameDataLayoutPreset> layout_presets
-        {
-            get
-            {
+        public virtual List<GameDataLayoutPreset> layout_presets {
+            get {
                 return Get<List<GameDataLayoutPreset>>(BaseDataObjectKeys.layout_presets);
             }
 
-            set
-            {
+            set {
                 Set<List<GameDataLayoutPreset>>(BaseDataObjectKeys.layout_presets, value);
             }
         }
 
         //character_presets
 
-        public virtual List<GameDataSound> sounds
-        {
-            get
-            {
+        public virtual List<GameDataSound> sounds {
+            get {
                 return Get<List<GameDataSound>>(BaseDataObjectKeys.sounds);
             }
 
-            set
-            {
+            set {
                 Set<List<GameDataSound>>(BaseDataObjectKeys.sounds, value);
             }
         }
 
-        public virtual List<GameDataAnimation> animations
-        {
-            get
-            {
+        public virtual List<GameDataAnimation> animations {
+            get {
                 return Get<List<GameDataAnimation>>(BaseDataObjectKeys.animations);
             }
 
-            set
-            {
+            set {
                 Set<List<GameDataAnimation>>(BaseDataObjectKeys.animations, value);
             }
         }
 
-        public virtual List<GameDataItemProjectile> projectiles
-        {
-            get
-            {
+        public virtual List<GameDataItemProjectile> projectiles {
+            get {
                 return Get<List<GameDataItemProjectile>>(BaseDataObjectKeys.projectiles);
             }
 
-            set
-            {
+            set {
                 Set<List<GameDataItemProjectile>>(BaseDataObjectKeys.projectiles, value);
             }
         }
 
-        public virtual List<GameDataItemEffect> effects
-        {
-            get
-            {
+        public virtual List<GameDataItemEffect> effects {
+            get {
                 return Get<List<GameDataItemEffect>>(BaseDataObjectKeys.effects);
             }
 
-            set
-            {
+            set {
                 Set<List<GameDataItemEffect>>(BaseDataObjectKeys.effects, value);
             }
         }
 
-        public virtual List<GameDataItemRPG> rpgs
-        {
-            get
-            {
+        public virtual List<GameDataItemRPG> rpgs {
+            get {
                 return Get<List<GameDataItemRPG>>(BaseDataObjectKeys.rpgs);
             }
 
-            set
-            {
+            set {
                 Set<List<GameDataItemRPG>>(BaseDataObjectKeys.rpgs, value);
             }
         }
 
-        public virtual List<GameDataItemReward> rewards
-        {
-            get
-            {
+        public virtual List<GameDataItemReward> rewards {
+            get {
                 return Get<List<GameDataItemReward>>(BaseDataObjectKeys.rewards);
             }
 
-            set
-            {
+            set {
                 Set<List<GameDataItemReward>>(BaseDataObjectKeys.rewards, value);
             }
         }
@@ -497,38 +408,29 @@ namespace Engine.Game.App
         // roles
 
         //[NonSerialized]
-        public bool isHero
-        {
-            get
-            {
+        public bool isHero {
+            get {
                 return IsRole("hero");
             }
         }
 
         //[JsonIgnore]
-        public bool isEnemy
-        {
-            get
-            {
+        public bool isEnemy {
+            get {
                 return IsRole("enemy");
             }
         }
 
         //[JsonIgnore]
-        public bool isSidekick
-        {
-            get
-            {
+        public bool isSidekick {
+            get {
                 return IsRole("sidekick");
             }
         }
 
-        public bool IsRole(string roleTo)
-        {
-            foreach (string role in roles)
-            {
-                if (role == roleTo)
-                {
+        public bool IsRole(string roleTo) {
+            foreach (string role in roles) {
+                if (role == roleTo) {
                     return true;
                 }
             }
@@ -537,13 +439,10 @@ namespace Engine.Game.App
 
         // projectiles
 
-        public bool HasProjectiles()
-        {
+        public bool HasProjectiles() {
 
-            if (projectiles != null)
-            {
-                if (projectiles.Count > 0)
-                {
+            if (projectiles != null) {
+                if (projectiles.Count > 0) {
                     return true;
                 }
             }
@@ -551,46 +450,37 @@ namespace Engine.Game.App
             return false;
         }
 
-        public GameDataItemProjectile GetProjectile()
-        {
+        public GameDataItemProjectile GetProjectile() {
             return GetProjectile(GameDataItemTypeKeys.defaultType);
         }
 
-        public GameDataItemProjectile GetProjectile(string code)
-        {
+        public GameDataItemProjectile GetProjectile(string code) {
             return GetItem<GameDataItemProjectile>(projectiles, code);
         }
 
-        public List<GameDataItemProjectile> GetProjectileListByType(string type)
-        {
+        public List<GameDataItemProjectile> GetProjectileListByType(string type) {
             return GetItems<GameDataItemProjectile>(projectiles, type);
         }
 
-        public GameDataItemProjectile GetProjectileByType(string type)
-        {
+        public GameDataItemProjectile GetProjectileByType(string type) {
             // get random item
             return GetItemRandomByType<GameDataItemProjectile>(projectiles, type);
         }
 
-        public GameDataItemProjectile GetProjectilesByTypeShot()
-        {
+        public GameDataItemProjectile GetProjectilesByTypeShot() {
             return GetProjectileByType(GameDataItemKeys.shotType);
         }
 
-        public GameDataItemProjectile GetProjectilesByTypeLoad()
-        {
+        public GameDataItemProjectile GetProjectilesByTypeLoad() {
             return GetProjectileByType(GameDataItemKeys.loadType);
         }
 
         // effects
 
-        public bool HasEffects()
-        {
+        public bool HasEffects() {
 
-            if (effects != null)
-            {
-                if (effects.Count > 0)
-                {
+            if (effects != null) {
+                if (effects.Count > 0) {
                     return true;
                 }
             }
@@ -598,47 +488,38 @@ namespace Engine.Game.App
             return false;
         }
 
-        public GameDataItemEffect GetEffect()
-        {
+        public GameDataItemEffect GetEffect() {
             return GetEffect(GameDataItemTypeKeys.defaultType);
         }
 
-        public GameDataItemEffect GetEffect(string code)
-        {
+        public GameDataItemEffect GetEffect(string code) {
             return GetItem<GameDataItemEffect>(effects, code);
         }
 
-        public List<GameDataItemEffect> GetEffectListByType(string type)
-        {
+        public List<GameDataItemEffect> GetEffectListByType(string type) {
             return GetItems<GameDataItemEffect>(effects, type);
         }
 
-        public GameDataItemEffect GetEffectByType(string type)
-        {
+        public GameDataItemEffect GetEffectByType(string type) {
             // get random item
             return GetItemRandomByType<GameDataItemEffect>(effects, type);
         }
 
-        public GameDataItemEffect GetEffectsByTypeShot()
-        {
+        public GameDataItemEffect GetEffectsByTypeShot() {
             return GetEffectByType(GameDataItemKeys.shotType);
         }
 
-        public GameDataItemEffect GetEffectsByTypeLoad()
-        {
+        public GameDataItemEffect GetEffectsByTypeLoad() {
             return GetEffectByType(GameDataItemKeys.loadType);
         }
 
 
         // sounds
 
-        public bool HasSounds()
-        {
+        public bool HasSounds() {
 
-            if (sounds != null)
-            {
-                if (sounds.Count > 0)
-                {
+            if (sounds != null) {
+                if (sounds.Count > 0) {
                     return true;
                 }
             }
@@ -646,44 +527,36 @@ namespace Engine.Game.App
             return false;
         }
 
-        public GameDataSound GetSound()
-        {
+        public GameDataSound GetSound() {
             return GetSound(GameDataItemTypeKeys.defaultType);
         }
 
-        public GameDataSound GetSound(string code)
-        {
+        public GameDataSound GetSound(string code) {
             return GetItem<GameDataSound>(sounds, code);
         }
 
-        public List<GameDataSound> GetSoundListByType(string type)
-        {
+        public List<GameDataSound> GetSoundListByType(string type) {
             return GetItemsRandom<GameDataSound>(sounds, type);
         }
 
-        public GameDataSound GetSoundByType(string type)
-        {
+        public GameDataSound GetSoundByType(string type) {
             // get random item
             return GetItemRandom<GameDataSound>(sounds, type);
         }
 
-        public GameDataSound GetSoundsByTypeShot()
-        {
+        public GameDataSound GetSoundsByTypeShot() {
             return GetSoundByType(GameDataActionKeys.attack);
         }
 
-        public GameDataSound GetSoundsByTypeLoad()
-        {
+        public GameDataSound GetSoundsByTypeLoad() {
             return GetSoundByType(GameDataActionKeys.load);
         }
 
-        public void PlaySoundType(string type)
-        {
+        public void PlaySoundType(string type) {
 
             GameDataSound gameDataSound = GetSoundByType(GameDataActionKeys.reward);
 
-            if (gameDataSound != null)
-            {
+            if (gameDataSound != null) {
 #if USE_GAME_LIB_GAMES
                 GameAudio.PlayEffect(gameDataSound.code);
 #endif
@@ -692,13 +565,10 @@ namespace Engine.Game.App
 
         // animations
 
-        public bool HasAnimations()
-        {
+        public bool HasAnimations() {
 
-            if (animations != null)
-            {
-                if (animations.Count > 0)
-                {
+            if (animations != null) {
+                if (animations.Count > 0) {
                     return true;
                 }
             }
@@ -706,111 +576,89 @@ namespace Engine.Game.App
             return false;
         }
 
-        public GameDataAnimation GetAnimation()
-        {
+        public GameDataAnimation GetAnimation() {
             return GetAnimation(GameDataItemTypeKeys.defaultType);
         }
 
-        public GameDataAnimation GetAnimation(string code)
-        {
+        public GameDataAnimation GetAnimation(string code) {
             return GetItem<GameDataAnimation>(animations, code);
         }
 
-        public List<GameDataAnimation> GetAnimationListByType(string type)
-        {
+        public List<GameDataAnimation> GetAnimationListByType(string type) {
             return GetItems<GameDataAnimation>(animations, type);
         }
 
-        public GameDataAnimation GetAnimationByType(string type)
-        {
+        public GameDataAnimation GetAnimationByType(string type) {
             // get random item
             return GetItemRandom<GameDataAnimation>(animations, type);
         }
 
-        public GameDataAnimation GetAnimationsByTypeIdle()
-        {
+        public GameDataAnimation GetAnimationsByTypeIdle() {
             return GetAnimationByType(GameDataActionKeys.idle);
         }
 
-        public GameDataAnimation GetAnimationsByTypeStart()
-        {
+        public GameDataAnimation GetAnimationsByTypeStart() {
             return GetAnimationByType(GameDataActionKeys.start);
         }
 
-        public GameDataAnimation GetAnimationsByTypeAttack()
-        {
+        public GameDataAnimation GetAnimationsByTypeAttack() {
             return GetAnimationByType(GameDataActionKeys.attack);
         }
 
-        public GameDataAnimation GetAnimationsByTypeAttackNear()
-        {
+        public GameDataAnimation GetAnimationsByTypeAttackNear() {
             return GetAnimationByType(GameDataActionKeys.attack_near);
         }
 
-        public GameDataAnimation GetAnimationsByTypeAttackFar()
-        {
+        public GameDataAnimation GetAnimationsByTypeAttackFar() {
             return GetAnimationByType(GameDataActionKeys.attack_far);
         }
 
-        public GameDataAnimation GetAnimationsByTypeHit()
-        {
+        public GameDataAnimation GetAnimationsByTypeHit() {
             return GetAnimationByType(GameDataActionKeys.hit);
         }
 
-        public GameDataAnimation GetAnimationsByTypeJump()
-        {
+        public GameDataAnimation GetAnimationsByTypeJump() {
             return GetAnimationByType(GameDataActionKeys.jump);
         }
 
-        public GameDataAnimation GetAnimationsByTypeRun()
-        {
+        public GameDataAnimation GetAnimationsByTypeRun() {
             return GetAnimationByType(GameDataActionKeys.run);
         }
 
-        public GameDataAnimation GetAnimationsByTypeWalk()
-        {
+        public GameDataAnimation GetAnimationsByTypeWalk() {
             return GetAnimationByType(GameDataActionKeys.walk);
         }
 
-        public GameDataAnimation GetAnimationsByTypeDeath()
-        {
+        public GameDataAnimation GetAnimationsByTypeDeath() {
             return GetAnimationByType(GameDataActionKeys.death);
         }
 
-        public GameDataAnimation GetAnimationsByTypeSkill()
-        {
+        public GameDataAnimation GetAnimationsByTypeSkill() {
             return GetAnimationByType(GameDataActionKeys.skill);
         }
 
-        public GameDataAnimation GetAnimationsByTypeWin()
-        {
+        public GameDataAnimation GetAnimationsByTypeWin() {
             return GetAnimationByType(GameDataActionKeys.win);
         }
 
-        public GameDataAnimation GetAnimationsByTypeFail()
-        {
+        public GameDataAnimation GetAnimationsByTypeFail() {
             return GetAnimationByType(GameDataActionKeys.fail);
         }
 
-        public GameDataAnimation GetAnimationsByTypeEmote()
-        {
+        public GameDataAnimation GetAnimationsByTypeEmote() {
             return GetAnimationByType(GameDataActionKeys.emote);
         }
 
-        public GameDataAnimation GetAnimationsByTypeSlide()
-        {
+        public GameDataAnimation GetAnimationsByTypeSlide() {
             return GetAnimationByType(GameDataActionKeys.slide);
         }
 
         // models
 
-        public bool HasModels()
-        {
+        public bool HasModels() {
 
-            if (models != null)
-            {
-                if (models.Count > 0)
-                {
+            if (models != null) {
+                if (models.Count > 0) {
                     return true;
                 }
             }
@@ -818,25 +666,20 @@ namespace Engine.Game.App
             return false;
         }
 
-        public GameDataModel GetModel()
-        {
+        public GameDataModel GetModel() {
             return GetModel(GameDataItemTypeKeys.defaultType);
         }
 
-        public GameDataModel GetModel(string code)
-        {
+        public GameDataModel GetModel(string code) {
             return GetItem<GameDataModel>(models, code);
         }
 
         // color presets
 
-        public bool HasColorPresets()
-        {
+        public bool HasColorPresets() {
 
-            if (color_presets != null)
-            {
-                if (color_presets.Count > 0)
-                {
+            if (color_presets != null) {
+                if (color_presets.Count > 0) {
                     return true;
                 }
             }
@@ -844,25 +687,20 @@ namespace Engine.Game.App
             return false;
         }
 
-        public GameDataColorPreset GetColorPreset()
-        {
+        public GameDataColorPreset GetColorPreset() {
             return GetColorPreset(GameDataItemTypeKeys.defaultType);
         }
 
-        public GameDataColorPreset GetColorPreset(string code)
-        {
+        public GameDataColorPreset GetColorPreset(string code) {
             return GetItem<GameDataColorPreset>(color_presets, code);
         }
 
         // texture presets
 
-        public bool HasTexturePresets()
-        {
+        public bool HasTexturePresets() {
 
-            if (texture_presets != null)
-            {
-                if (texture_presets.Count > 0)
-                {
+            if (texture_presets != null) {
+                if (texture_presets.Count > 0) {
                     return true;
                 }
             }
@@ -870,25 +708,20 @@ namespace Engine.Game.App
             return false;
         }
 
-        public GameDataTexturePreset GetTexturePreset()
-        {
+        public GameDataTexturePreset GetTexturePreset() {
             return GetTexturePreset(GameDataItemTypeKeys.defaultType);
         }
 
-        public GameDataTexturePreset GetTexturePreset(string code)
-        {
+        public GameDataTexturePreset GetTexturePreset(string code) {
             return GetItem<GameDataTexturePreset>(texture_presets, code);
         }
 
         // terrain presets
 
-        public bool HasTerrainPresets()
-        {
+        public bool HasTerrainPresets() {
 
-            if (terrain_presets != null)
-            {
-                if (terrain_presets.Count > 0)
-                {
+            if (terrain_presets != null) {
+                if (terrain_presets.Count > 0) {
                     return true;
                 }
             }
@@ -896,25 +729,20 @@ namespace Engine.Game.App
             return false;
         }
 
-        public GameDataTexturePreset GetTerrainPreset()
-        {
+        public GameDataTexturePreset GetTerrainPreset() {
             return GetTexturePreset(GameDataItemTypeKeys.defaultType);
         }
 
-        public GameDataTerrainPreset GetTerrainPreset(string code)
-        {
+        public GameDataTerrainPreset GetTerrainPreset(string code) {
             return GetItem<GameDataTerrainPreset>(terrain_presets, code);
         }
 
         // character presets
 
-        public bool HasCharacterPresets()
-        {
+        public bool HasCharacterPresets() {
 
-            if (character_presets != null)
-            {
-                if (character_presets.Count > 0)
-                {
+            if (character_presets != null) {
+                if (character_presets.Count > 0) {
                     return true;
                 }
             }
@@ -922,26 +750,21 @@ namespace Engine.Game.App
             return false;
         }
 
-        public GameDataCharacterPreset GetCharacterPreset()
-        {
+        public GameDataCharacterPreset GetCharacterPreset() {
             return GetCharacterPreset(GameDataItemTypeKeys.defaultType);
         }
 
-        public GameDataCharacterPreset GetCharacterPreset(string code)
-        {
+        public GameDataCharacterPreset GetCharacterPreset(string code) {
             return GetItem<GameDataCharacterPreset>(character_presets, code);
         }
 
 
         // item presets
 
-        public bool HasItemPresets()
-        {
+        public bool HasItemPresets() {
 
-            if (item_presets != null)
-            {
-                if (item_presets.Count > 0)
-                {
+            if (item_presets != null) {
+                if (item_presets.Count > 0) {
                     return true;
                 }
             }
@@ -949,25 +772,20 @@ namespace Engine.Game.App
             return false;
         }
 
-        public GameDataItemPreset GetItemPreset()
-        {
+        public GameDataItemPreset GetItemPreset() {
             return GetItemPreset(GameDataItemTypeKeys.defaultType);
         }
 
-        public GameDataItemPreset GetItemPreset(string code)
-        {
+        public GameDataItemPreset GetItemPreset(string code) {
             return GetItem<GameDataItemPreset>(item_presets, code);
         }
 
         // weapon presets
 
-        public bool HasWeaponPresets()
-        {
+        public bool HasWeaponPresets() {
 
-            if (weapon_presets != null)
-            {
-                if (weapon_presets.Count > 0)
-                {
+            if (weapon_presets != null) {
+                if (weapon_presets.Count > 0) {
                     return true;
                 }
             }
@@ -975,25 +793,20 @@ namespace Engine.Game.App
             return false;
         }
 
-        public GameDataWeaponPreset GetWeaponPreset()
-        {
+        public GameDataWeaponPreset GetWeaponPreset() {
             return GetWeaponPreset(GameDataItemTypeKeys.defaultType);
         }
 
-        public GameDataWeaponPreset GetWeaponPreset(string code)
-        {
+        public GameDataWeaponPreset GetWeaponPreset(string code) {
             return GetItem<GameDataWeaponPreset>(weapon_presets, code);
         }
 
         // asset presets
 
-        public bool HasAssetPresets()
-        {
+        public bool HasAssetPresets() {
 
-            if (asset_presets != null)
-            {
-                if (asset_presets.Count > 0)
-                {
+            if (asset_presets != null) {
+                if (asset_presets.Count > 0) {
                     return true;
                 }
             }
@@ -1001,25 +814,20 @@ namespace Engine.Game.App
             return false;
         }
 
-        public GameDataAssetPreset GetAssetPreset()
-        {
+        public GameDataAssetPreset GetAssetPreset() {
             return GetAssetPreset(GameDataItemTypeKeys.defaultType);
         }
 
-        public GameDataAssetPreset GetAssetPreset(string code)
-        {
+        public GameDataAssetPreset GetAssetPreset(string code) {
             return GetItem<GameDataAssetPreset>(asset_presets, code);
         }
 
         // layout presets
 
-        public bool HasLayoutPresets()
-        {
+        public bool HasLayoutPresets() {
 
-            if (layout_presets != null)
-            {
-                if (layout_presets.Count > 0)
-                {
+            if (layout_presets != null) {
+                if (layout_presets.Count > 0) {
                     return true;
                 }
             }
@@ -1027,25 +835,20 @@ namespace Engine.Game.App
             return false;
         }
 
-        public GameDataLayoutPreset GetLayoutPreset()
-        {
+        public GameDataLayoutPreset GetLayoutPreset() {
             return GetLayoutPreset(GameDataItemTypeKeys.defaultType);
         }
 
-        public GameDataLayoutPreset GetLayoutPreset(string code)
-        {
+        public GameDataLayoutPreset GetLayoutPreset(string code) {
             return GetItem<GameDataLayoutPreset>(layout_presets, code);
         }
 
         // rpgs
 
-        public bool HasRPGs()
-        {
+        public bool HasRPGs() {
 
-            if (rpgs != null)
-            {
-                if (rpgs.Count > 0)
-                {
+            if (rpgs != null) {
+                if (rpgs.Count > 0) {
                     return true;
                 }
             }
@@ -1053,26 +856,21 @@ namespace Engine.Game.App
             return false;
         }
 
-        public GameDataItemRPG GetRPG()
-        {
+        public GameDataItemRPG GetRPG() {
             return GetRPG(GameDataItemTypeKeys.defaultType);
         }
 
-        public GameDataItemRPG GetRPG(string code)
-        {
+        public GameDataItemRPG GetRPG(string code) {
             return GetItem<GameDataItemRPG>(rpgs, code);
         }
 
 
         // rewards
 
-        public bool HasRewards()
-        {
+        public bool HasRewards() {
 
-            if (rewards != null)
-            {
-                if (rewards.Count > 0)
-                {
+            if (rewards != null) {
+                if (rewards.Count > 0) {
                     return true;
                 }
             }
@@ -1080,71 +878,57 @@ namespace Engine.Game.App
             return false;
         }
 
-        public GameDataItemReward GetReward()
-        {
+        public GameDataItemReward GetReward() {
             return GetReward(GameDataItemTypeKeys.defaultType);
         }
 
-        public GameDataItemReward GetReward(string code)
-        {
+        public GameDataItemReward GetReward(string code) {
             return GetItem<GameDataItemReward>(rewards, code);
         }
 
-        public List<GameDataItemReward> GetRewardListByType(string type)
-        {
+        public List<GameDataItemReward> GetRewardListByType(string type) {
             return GetItems<GameDataItemReward>(rewards, type);
         }
 
-        public GameDataItemReward GetRewardByType(string type)
-        {
+        public GameDataItemReward GetRewardByType(string type) {
             // get random item
             return GetItemRandomByType<GameDataItemReward>(rewards, type);
         }
 
-        public GameDataItemReward GetRewardsByTypeCurrency()
-        {
+        public GameDataItemReward GetRewardsByTypeCurrency() {
             return GetRewardByType(GameDataItemReward.currency);
         }
 
-        public GameDataItemReward GetRewardsByTypeXP()
-        {
+        public GameDataItemReward GetRewardsByTypeXP() {
             return GetRewardByType(GameDataItemReward.xp);
         }
 
-        public GameDataItemReward GetRewardsByTypeHealth()
-        {
+        public GameDataItemReward GetRewardsByTypeHealth() {
             return GetRewardByType(GameDataItemReward.health);
         }
 
-        public GameDataItemReward GetRewardsByTypeCurrencyDouble()
-        {
+        public GameDataItemReward GetRewardsByTypeCurrencyDouble() {
             return GetRewardByType(GameDataItemReward.currencyDouble);
         }
     }
 
-    public class GameDataPresetsObject<T> : GameDataObject where T : GameDataObject, new()
-    {
+    public class GameDataPresetsObject<T> : GameDataObject where T : GameDataObject, new() {
 
-        public virtual List<T> items
-        {
-            get
-            {
+        public virtual List<T> items {
+            get {
                 return Get<List<T>>(BaseDataObjectKeys.items);
             }
 
-            set
-            {
+            set {
                 Set<List<T>>(BaseDataObjectKeys.items, value);
             }
         }
 
-        public T ChooseProbabilistic()
-        {
+        public T ChooseProbabilistic() {
 
             List<float> probs = new List<float>();
 
-            foreach (T item in items)
-            {
+            foreach (T item in items) {
                 probs.Add((float)item.probability);
             }
 
@@ -1155,22 +939,18 @@ namespace Engine.Game.App
         }
     }
 
-    public class GamePresetItems<T> : GameDataPresetsObject<T> where T : GameDataObject, new()
-    {
+    public class GamePresetItems<T> : GameDataPresetsObject<T> where T : GameDataObject, new() {
 
-        public GamePresetItems()
-        {
+        public GamePresetItems() {
 
         }
     }
 
-    public class GamePresetItem : GameDataObject
-    {
+    public class GamePresetItem : GameDataObject {
 
     }
 
-    public class GameFilterType
-    {
+    public class GameFilterType {
         public static string statisticSingle = "statistic-single";
         public static string statisticAll = "statistic-all";
         public static string statisticLike = "statistic-like";
@@ -1179,15 +959,13 @@ namespace Engine.Game.App
         public static string achievementSet = "achievement-set";
     }
 
-    public class GameFilterIncludeType
-    {
+    public class GameFilterIncludeType {
         public static string none = "none";
         public static string current = "current";
         public static string all = "all";
     }
 
-    public class GameCompareType
-    {
+    public class GameCompareType {
         public static string like = "like";
         public static string equal = "equal";
         public static string startsWith = "startsWith";
@@ -1195,16 +973,13 @@ namespace Engine.Game.App
         public static string all = "all";
     }
 
-    public class GameFilterIncludeKeys : GameDataObject
-    {
+    public class GameFilterIncludeKeys : GameDataObject {
 
-        public GameFilterIncludeKeys()
-        {
+        public GameFilterIncludeKeys() {
             Reset();
         }
 
-        public override void Reset()
-        {
+        public override void Reset() {
             base.Reset();
 
             defaultKey = GameFilterIncludeType.none;
@@ -1217,16 +992,13 @@ namespace Engine.Game.App
         }
     }
 
-    public class GameFilterBase : GameDataObject
-    {
+    public class GameFilterBase : GameDataObject {
 
-        public GameFilterBase()
-        {
+        public GameFilterBase() {
             Reset();
         }
 
-        public override void Reset()
-        {
+        public override void Reset() {
             base.Reset();
             codeType = GameCompareType.equal;
             compareType = StatEqualityTypeString.STAT_GREATER_THAN;
@@ -1234,165 +1006,129 @@ namespace Engine.Game.App
             includeKeys = new GameFilterIncludeKeys();
         }
 
-        public virtual GameFilterIncludeKeys includeKeys
-        {
-            get
-            {
+        public virtual GameFilterIncludeKeys includeKeys {
+            get {
                 return Get<GameFilterIncludeKeys>(BaseDataObjectKeys.includeKeys);
             }
 
-            set
-            {
+            set {
                 Set(BaseDataObjectKeys.includeKeys, value);
             }
         }
 
-        public virtual List<string> codes
-        {
-            get
-            {
+        public virtual List<string> codes {
+            get {
                 return Get<List<string>>(BaseDataObjectKeys.codes);
             }
 
-            set
-            {
+            set {
                 Set(BaseDataObjectKeys.codes, value);
             }
         }
 
-        public virtual string codeType
-        {
-            get
-            {
+        public virtual string codeType {
+            get {
                 return Get<string>(BaseDataObjectKeys.codeType);
             }
 
-            set
-            {
+            set {
                 Set(BaseDataObjectKeys.codeType, value);
             }
         }
 
-        public virtual string compareType
-        {
-            get
-            {
+        public virtual string compareType {
+            get {
                 return Get<string>(BaseDataObjectKeys.compareType);
             }
 
-            set
-            {
+            set {
                 Set(BaseDataObjectKeys.compareType, value);
             }
         }
 
-        public virtual double compareValue
-        {
-            get
-            {
+        public virtual double compareValue {
+            get {
                 return Get<double>(BaseDataObjectKeys.compareValue);
             }
 
-            set
-            {
+            set {
                 Set(BaseDataObjectKeys.compareValue, value);
             }
         }
 
-        public virtual string codeCompareTo
-        {
-            get
-            {
+        public virtual string codeCompareTo {
+            get {
                 return Get<string>(BaseDataObjectKeys.codeCompareTo);
             }
 
-            set
-            {
+            set {
                 Set<string>(BaseDataObjectKeys.codeCompareTo, value);
             }
         }
 
-        public virtual string codeLike
-        {
-            get
-            {
+        public virtual string codeLike {
+            get {
                 return Get<string>(BaseDataObjectKeys.codeLike);
             }
 
-            set
-            {
+            set {
                 Set<string>(BaseDataObjectKeys.codeLike, value);
             }
         }
 
     }
 
-    public class GameFilterStatisticSingle : GameFilterBase
-    {
+    public class GameFilterStatisticSingle : GameFilterBase {
 
     }
 
-    public class GameFilterStatisticSet : GameFilterBase
-    {
+    public class GameFilterStatisticSet : GameFilterBase {
 
     }
 
-    public class GameFilterStatisticLike : GameFilterBase
-    {
+    public class GameFilterStatisticLike : GameFilterBase {
 
     }
 
-    public class GameFilterStatisticCompare : GameFilterBase
-    {
+    public class GameFilterStatisticCompare : GameFilterBase {
 
     }
 
-    public class GameFilterStatisticAll : GameFilterBase
-    {
+    public class GameFilterStatisticAll : GameFilterBase {
 
     }
 
-    public class GameFilterAchievementSet : GameFilterBase
-    {
+    public class GameFilterAchievementSet : GameFilterBase {
 
     }
 
-    public class GameFilter : GameDataObject
-    {
+    public class GameFilter : GameDataObject {
 
-        public virtual GameFilterBase data
-        {
-            get
-            {
+        public virtual GameFilterBase data {
+            get {
                 return Get<GameFilterBase>(BaseDataObjectKeys.data);
             }
 
-            set
-            {
+            set {
                 Set(BaseDataObjectKeys.data, value);
             }
         }
     }
 
-    public class GameDataObjectMeta : GameDataObject
-    {
+    public class GameDataObjectMeta : GameDataObject {
 
-        public virtual GameDataObjectItem data
-        {
-            get
-            {
+        public virtual GameDataObjectItem data {
+            get {
                 return Get<GameDataObjectItem>(BaseDataObjectKeys.data);
             }
 
-            set
-            {
+            set {
                 Set<GameDataObjectItem>(BaseDataObjectKeys.data, value);
             }
         }
     }
 
-    public class GameDataObjectLocalized : GameDataObject
-    {
+    public class GameDataObjectLocalized : GameDataObject {
 
 
         /*
@@ -1418,12 +1154,10 @@ namespace Engine.Game.App
         }
         */
 
-        public string GetLocalized(string code, string defaultValue)
-        {
+        public string GetLocalized(string code, string defaultValue) {
             string valTo = Get<string>(code, defaultValue);
 
-            if (!string.IsNullOrEmpty(valTo))
-            {
+            if (!string.IsNullOrEmpty(valTo)) {
 #if USE_GAME_LIB_GAMES
                 valTo = Locos.GetReplaceLocalized(valTo);
 #endif
@@ -1433,82 +1167,64 @@ namespace Engine.Game.App
         }
 
         //[JsonIgnore]
-        public override string display_name
-        {
-            get
-            {
+        public override string display_name {
+            get {
                 return GetLocalized(BaseDataObjectKeys.display_name, "");
             }
 
-            set
-            {
+            set {
                 Set<string>(BaseDataObjectKeys.display_name, value);
             }
         }
 
-        public override string action_display_name
-        {
-            get
-            {
+        public override string action_display_name {
+            get {
                 return GetLocalized(BaseDataObjectKeys.action_display_name, "");
             }
 
-            set
-            {
+            set {
                 Set<string>(BaseDataObjectKeys.action_display_name, value);
             }
         }
 
         //[JsonIgnore(JsonIgnoreWhen.Deserializing)]
-        public override string name
-        {
-            get
-            {
+        public override string name {
+            get {
                 return GetLocalized(BaseDataObjectKeys.name, "");//Get<string>(BaseDataObjectKeys.name);
             }
 
-            set
-            {
+            set {
                 Set<string>(BaseDataObjectKeys.name, value);
             }
         }
 
         //[JsonIgnore(JsonIgnoreWhen.Deserializing)]
-        public override string description
-        {
-            get
-            {
+        public override string description {
+            get {
                 return GetLocalized(BaseDataObjectKeys.description, "");//Get<string>(BaseDataObjectKeys.description);
             }
 
-            set
-            {
+            set {
                 Set<string>(BaseDataObjectKeys.description, value);
             }
         }
 
-        public override string action_description
-        {
-            get
-            {
+        public override string action_description {
+            get {
                 return GetLocalized(BaseDataObjectKeys.action_description, "");//Get<string>(BaseDataObjectKeys.action_description);
             }
 
-            set
-            {
+            set {
                 Set<string>(BaseDataObjectKeys.action_description, value);
             }
         }
 
-        public override string content
-        {
-            get
-            {
+        public override string content {
+            get {
                 return GetLocalized(BaseDataObjectKeys.content, "");//Get<string>(BaseDataObjectKeys.content);
             }
 
-            set
-            {
+            set {
                 Set<string>(BaseDataObjectKeys.content, value);
 
                 hash = CryptoUtil.CalculateBase64SHA1ASCII(value);
@@ -1517,209 +1233,163 @@ namespace Engine.Game.App
     }
 
     [Serializable]
-    public class GameDataObject : DataObject
-    {
+    public class GameDataObject : DataObject {
 
         // Dataobject handles keys
 
         //[JsonIgnore(JsonIgnoreWhen.Deserializing)]
-        public virtual string uuid
-        {
-            get
-            {
+        public virtual string uuid {
+            get {
                 return Get<string>(BaseDataObjectKeys.uuid);//UniqueUtil.CreateUUID4());
             }
 
-            set
-            {
+            set {
                 Set<string>(BaseDataObjectKeys.uuid, value);
             }
         }
 
-        public virtual string uid
-        {
-            get
-            {
+        public virtual string uid {
+            get {
                 return Get<string>(BaseDataObjectKeys.uid);
             }
 
-            set
-            {
+            set {
                 Set<string>(BaseDataObjectKeys.uid, value);
             }
         }
 
-        public virtual string profile_id
-        {
-            get
-            {
+        public virtual string profile_id {
+            get {
                 return Get<string>(BaseDataObjectKeys.profile_id);
             }
 
-            set
-            {
+            set {
                 Set<string>(BaseDataObjectKeys.profile_id, value);
             }
         }
 
-        public virtual string game_id
-        {
-            get
-            {
+        public virtual string game_id {
+            get {
                 return Get<string>(BaseDataObjectKeys.game_id);
             }
 
-            set
-            {
+            set {
                 Set<string>(BaseDataObjectKeys.game_id, value);
             }
         }
 
         //[JsonIgnore(JsonIgnoreWhen.Deserializing)]
-        public virtual string code
-        {
-            get
-            {
+        public virtual string code {
+            get {
                 return Get<string>(BaseDataObjectKeys.code, "");
             }
 
-            set
-            {
+            set {
                 Set<string>(BaseDataObjectKeys.code, value);
             }
         }
 
         //[JsonIgnore(JsonIgnoreWhen.Deserializing)]
-        public virtual string hash
-        {
-            get
-            {
+        public virtual string hash {
+            get {
                 return Get<string>(BaseDataObjectKeys.hash);
             }
 
-            set
-            {
+            set {
                 Set<string>(BaseDataObjectKeys.hash, value);
             }
         }
 
-        public virtual string email
-        {
-            get
-            {
+        public virtual string email {
+            get {
                 return Get<string>(BaseDataObjectKeys.email);
             }
 
-            set
-            {
+            set {
                 Set<string>(BaseDataObjectKeys.email, value);
             }
         }
 
         //[JsonIgnore(JsonIgnoreWhen.Deserializing)]
-        public virtual string display_name
-        {
-            get
-            {
+        public virtual string display_name {
+            get {
                 return Get<string>(BaseDataObjectKeys.display_name);
             }
 
-            set
-            {
+            set {
                 Set<string>(BaseDataObjectKeys.display_name, value);
             }
         }
 
-        public virtual string action_display_name
-        {
-            get
-            {
+        public virtual string action_display_name {
+            get {
                 return Get<string>(BaseDataObjectKeys.action_display_name);
             }
 
-            set
-            {
+            set {
                 Set<string>(BaseDataObjectKeys.action_display_name, value);
             }
         }
 
         //[JsonIgnore(JsonIgnoreWhen.Deserializing)]
-        public virtual string name
-        {
-            get
-            {
+        public virtual string name {
+            get {
                 return Get<string>(BaseDataObjectKeys.name);//Get<string>(BaseDataObjectKeys.name);
             }
 
-            set
-            {
+            set {
                 Set<string>(BaseDataObjectKeys.name, value);
             }
         }
 
         //[JsonIgnore(JsonIgnoreWhen.Deserializing)]
-        public virtual string description
-        {
-            get
-            {
+        public virtual string description {
+            get {
                 return Get<string>(BaseDataObjectKeys.description);//Get<string>(BaseDataObjectKeys.description);
             }
 
-            set
-            {
+            set {
                 Set<string>(BaseDataObjectKeys.description, value);
             }
         }
 
-        public virtual string action_description
-        {
-            get
-            {
+        public virtual string action_description {
+            get {
                 return Get<string>(BaseDataObjectKeys.action_description);//Get<string>(BaseDataObjectKeys.action_description);
             }
 
-            set
-            {
+            set {
                 Set<string>(BaseDataObjectKeys.action_description, value);
             }
         }
 
         //[JsonIgnore(JsonIgnoreWhen.Deserializing)]
-        public virtual string url
-        {
-            get
-            {
+        public virtual string url {
+            get {
                 return Get<string>(BaseDataObjectKeys.url);
             }
 
-            set
-            {
+            set {
                 Set<string>(BaseDataObjectKeys.url, value);
             }
         }
 
-        public virtual string path
-        {
-            get
-            {
+        public virtual string path {
+            get {
                 return Get<string>(BaseDataObjectKeys.path);
             }
 
-            set
-            {
+            set {
                 Set<string>(BaseDataObjectKeys.path, value);
             }
         }
 
-        public virtual string content
-        {
-            get
-            {
+        public virtual string content {
+            get {
                 return Get<string>(BaseDataObjectKeys.content);//Get<string>(BaseDataObjectKeys.content);
             }
 
-            set
-            {
+            set {
                 Set<string>(BaseDataObjectKeys.content, value);
 
                 hash = CryptoUtil.CalculateBase64SHA1ASCII(value);
@@ -1727,15 +1397,12 @@ namespace Engine.Game.App
         }
 
         //[JsonIgnore(JsonIgnoreWhen.Deserializing)]
-        public virtual string host
-        {
-            get
-            {
+        public virtual string host {
+            get {
                 return Get<string>(BaseDataObjectKeys.host);
             }
 
-            set
-            {
+            set {
                 Set<string>(BaseDataObjectKeys.host, value);
             }
         }
@@ -1754,1443 +1421,1121 @@ namespace Engine.Game.App
         */
 
         //[JsonIgnore(JsonIgnoreWhen.Deserializing)]
-        public virtual int sort_order
-        {
-            get
-            {
+        public virtual int sort_order {
+            get {
                 return Get<int>(BaseDataObjectKeys.sort_order);
             }
 
-            set
-            {
+            set {
                 Set<int>(BaseDataObjectKeys.sort_order, value);
             }
         }
 
         //[JsonIgnore(JsonIgnoreWhen.Deserializing)]
-        public virtual int sort_order_type
-        {
-            get
-            {
+        public virtual int sort_order_type {
+            get {
                 return Get<int>(BaseDataObjectKeys.sort_order_type);
             }
 
-            set
-            {
+            set {
                 Set<int>(BaseDataObjectKeys.sort_order_type, value);
             }
         }
 
         //[JsonIgnore(JsonIgnoreWhen.Deserializing)]
-        public virtual bool active
-        {
-            get
-            {
+        public virtual bool active {
+            get {
                 return Get<bool>(BaseDataObjectKeys.active, true);
             }
 
-            set
-            {
+            set {
                 Set<bool>(BaseDataObjectKeys.active, value);
             }
         }
 
         //[JsonIgnore(JsonIgnoreWhen.Deserializing)]
-        public virtual string key
-        {
-            get
-            {
+        public virtual string key {
+            get {
                 return Get<string>(BaseDataObjectKeys.key);
             }
 
-            set
-            {
+            set {
                 Set<string>(BaseDataObjectKeys.key, value);
             }
         }
 
-        public virtual string network_id
-        {
-            get
-            {
+        public virtual string network_id {
+            get {
                 return Get<string>(BaseDataObjectKeys.network_id);
             }
 
-            set
-            {
+            set {
                 Set<string>(BaseDataObjectKeys.network_id, value);
             }
         }
 
-        public virtual string network_username
-        {
-            get
-            {
+        public virtual string network_username {
+            get {
                 return Get<string>(BaseDataObjectKeys.network_username);
             }
 
-            set
-            {
+            set {
                 Set<string>(BaseDataObjectKeys.network_username, value);
             }
         }
 
-        public virtual string network_type
-        {
-            get
-            {
+        public virtual string network_type {
+            get {
                 return Get<string>(BaseDataObjectKeys.network_type);
             }
 
-            set
-            {
+            set {
                 Set<string>(BaseDataObjectKeys.network_type, value);
             }
         }
 
-        public virtual string network_token
-        {
-            get
-            {
+        public virtual string network_token {
+            get {
                 return Get<string>(BaseDataObjectKeys.network_token);
             }
 
-            set
-            {
+            set {
                 Set<string>(BaseDataObjectKeys.network_token, value);
             }
         }
 
-        public virtual object network_data
-        {
-            get
-            {
+        public virtual object network_data {
+            get {
                 return Get<object>(BaseDataObjectKeys.network_data);
             }
 
-            set
-            {
+            set {
                 Set<object>(BaseDataObjectKeys.network_data, value);
             }
         }
 
         //
 
-        public virtual string mission_type
-        {
-            get
-            {
+        public virtual string mission_type {
+            get {
                 return Get<string>(BaseDataObjectKeys.mission_type);
             }
 
-            set
-            {
+            set {
                 Set<string>(BaseDataObjectKeys.mission_type, value);
             }
         }
 
-        public virtual string mission_key
-        {
-            get
-            {
+        public virtual string mission_key {
+            get {
                 return Get<string>(BaseDataObjectKeys.mission_key);
             }
 
-            set
-            {
+            set {
                 Set<string>(BaseDataObjectKeys.mission_key, value);
             }
         }
 
-        public virtual string mission_code
-        {
-            get
-            {
+        public virtual string mission_code {
+            get {
                 return Get<string>(BaseDataObjectKeys.mission_code);
             }
 
-            set
-            {
+            set {
                 Set<string>(BaseDataObjectKeys.mission_code, value);
             }
         }
 
-        public virtual object mission_data
-        {
-            get
-            {
+        public virtual object mission_data {
+            get {
                 return Get<object>(BaseDataObjectKeys.mission_data);
             }
 
-            set
-            {
+            set {
                 Set<object>(BaseDataObjectKeys.mission_data, value);
             }
         }
 
         // 
 
-        public virtual string action_type
-        {
-            get
-            {
+        public virtual string action_type {
+            get {
                 return Get<string>(BaseDataObjectKeys.action_type);
             }
 
-            set
-            {
+            set {
                 Set<string>(BaseDataObjectKeys.action_type, value);
             }
         }
 
-        public virtual string action_key
-        {
-            get
-            {
+        public virtual string action_key {
+            get {
                 return Get<string>(BaseDataObjectKeys.action_key);
             }
 
-            set
-            {
+            set {
                 Set<string>(BaseDataObjectKeys.action_key, value);
             }
         }
 
-        public virtual string action_code
-        {
-            get
-            {
+        public virtual string action_code {
+            get {
                 return Get<string>(BaseDataObjectKeys.action_code);
             }
 
-            set
-            {
+            set {
                 Set<string>(BaseDataObjectKeys.action_code, value);
             }
         }
 
-        public virtual object action_data
-        {
-            get
-            {
+        public virtual object action_data {
+            get {
                 return Get<object>(BaseDataObjectKeys.action_data);
             }
 
-            set
-            {
+            set {
                 Set<object>(BaseDataObjectKeys.action_data, value);
             }
         }
 
         //
 
-        public virtual string collection_type
-        {
-            get
-            {
+        public virtual string collection_type {
+            get {
                 return Get<string>(BaseDataObjectKeys.collection_type);
             }
 
-            set
-            {
+            set {
                 Set<string>(BaseDataObjectKeys.collection_type, value);
             }
         }
 
-        public virtual string collection_code
-        {
-            get
-            {
+        public virtual string collection_code {
+            get {
                 return Get<string>(BaseDataObjectKeys.collection_code);
             }
 
-            set
-            {
+            set {
                 Set<string>(BaseDataObjectKeys.collection_code, value);
             }
         }
 
-        public virtual object collection_data
-        {
-            get
-            {
+        public virtual object collection_data {
+            get {
                 return Get<object>(BaseDataObjectKeys.collection_data);
             }
 
-            set
-            {
+            set {
                 Set<object>(BaseDataObjectKeys.collection_data, value);
             }
         }
 
         //
 
-        public virtual string choice_type
-        {
-            get
-            {
+        public virtual string choice_type {
+            get {
                 return Get<string>(BaseDataObjectKeys.choice_type);
             }
 
-            set
-            {
+            set {
                 Set<string>(BaseDataObjectKeys.choice_type, value);
             }
         }
 
-        public virtual string choice_code
-        {
-            get
-            {
+        public virtual string choice_code {
+            get {
                 return Get<string>(BaseDataObjectKeys.choice_code);
             }
 
-            set
-            {
+            set {
                 Set<string>(BaseDataObjectKeys.choice_code, value);
             }
         }
 
-        public virtual object choice_data
-        {
-            get
-            {
+        public virtual object choice_data {
+            get {
                 return Get<object>(BaseDataObjectKeys.choice_data);
             }
 
-            set
-            {
+            set {
                 Set<object>(BaseDataObjectKeys.choice_data, value);
             }
         }
 
         //
 
-        public virtual int level_num
-        {
-            get
-            {
+        public virtual int level_num {
+            get {
                 return Get<int>(BaseDataObjectKeys.level_num);
             }
 
-            set
-            {
+            set {
                 Set<int>(BaseDataObjectKeys.level_num, value);
             }
         }
 
-        public virtual string level_code
-        {
-            get
-            {
+        public virtual string level_code {
+            get {
                 return Get<string>(BaseDataObjectKeys.level_code);
             }
 
-            set
-            {
+            set {
                 Set<string>(BaseDataObjectKeys.level_code, value);
             }
         }
 
         //
 
-        public virtual int world_num
-        {
-            get
-            {
+        public virtual int world_num {
+            get {
                 return Get<int>(BaseDataObjectKeys.world_num);
             }
 
-            set
-            {
+            set {
                 Set<int>(BaseDataObjectKeys.world_num, value);
             }
         }
 
-        public virtual string world_code
-        {
-            get
-            {
+        public virtual string world_code {
+            get {
                 return Get<string>(BaseDataObjectKeys.world_code);
             }
 
-            set
-            {
+            set {
                 Set<string>(BaseDataObjectKeys.world_code, value);
             }
         }
 
-        public virtual string world_type
-        {
-            get
-            {
+        public virtual string world_type {
+            get {
                 return Get<string>(BaseDataObjectKeys.world_type);
             }
 
-            set
-            {
+            set {
                 Set<string>(BaseDataObjectKeys.world_type, value);
             }
         }
 
-        public virtual object world_data
-        {
-            get
-            {
+        public virtual object world_data {
+            get {
                 return Get<object>(BaseDataObjectKeys.world_data);
             }
 
-            set
-            {
+            set {
                 Set<object>(BaseDataObjectKeys.world_data, value);
             }
         }
 
         //[JsonIgnore(JsonIgnoreWhen.Deserializing)]
-        public virtual string type
-        {
-            get
-            {
+        public virtual string type {
+            get {
                 return Get<string>(BaseDataObjectKeys.type);
             }
 
-            set
-            {
+            set {
                 Set<string>(BaseDataObjectKeys.type, value);
             }
         }
 
-        public virtual string compare_type
-        {
-            get
-            {
+        public virtual string compare_type {
+            get {
                 return Get<string>(BaseDataObjectKeys.compare_type);
             }
 
-            set
-            {
+            set {
                 Set<string>(BaseDataObjectKeys.compare_type, value);
             }
         }
 
-        public virtual string data_type
-        {
-            get
-            {
+        public virtual string data_type {
+            get {
                 return Get<string>(BaseDataObjectKeys.data_type);
             }
 
-            set
-            {
+            set {
                 Set<string>(BaseDataObjectKeys.data_type, value);
             }
         }
 
-        public virtual string display_type
-        {
-            get
-            {
+        public virtual string display_type {
+            get {
                 return Get<string>(BaseDataObjectKeys.display_type);
             }
 
-            set
-            {
+            set {
                 Set<string>(BaseDataObjectKeys.display_type, value);
             }
         }
 
-        public virtual string load_type
-        {
-            get
-            {
+        public virtual string load_type {
+            get {
                 return Get<string>(BaseDataObjectKeys.load_type);
             }
 
-            set
-            {
+            set {
                 Set<string>(BaseDataObjectKeys.load_type, value);
             }
         }
 
-        public virtual string ui
-        {
-            get
-            {
+        public virtual string ui {
+            get {
                 return Get<string>(BaseDataObjectKeys.ui);
             }
 
-            set
-            {
+            set {
                 Set<string>(BaseDataObjectKeys.ui, value);
             }
         }
 
         //[JsonIgnore(JsonIgnoreWhen.Deserializing)]
-        public virtual string order_by
-        {
-            get
-            {
+        public virtual string order_by {
+            get {
                 return Get<string>(BaseDataObjectKeys.order_by);
             }
 
-            set
-            {
+            set {
                 Set<string>(BaseDataObjectKeys.order_by, value);
             }
         }
 
         //[JsonIgnore(JsonIgnoreWhen.Deserializing)]
-        public virtual string status
-        {
-            get
-            {
+        public virtual string status {
+            get {
                 return Get<string>(BaseDataObjectKeys.status);
             }
 
-            set
-            {
+            set {
                 Set<string>(BaseDataObjectKeys.status, value);
             }
         }
 
         //[JsonIgnore(JsonIgnoreWhen.Deserializing)]
-        public virtual string pack_code
-        {
-            get
-            {
+        public virtual string pack_code {
+            get {
                 return Get<string>(BaseDataObjectKeys.pack_code);
             }
 
-            set
-            {
+            set {
                 Set<string>(BaseDataObjectKeys.pack_code, value);
             }
         }
 
         //[JsonIgnore(JsonIgnoreWhen.Deserializing)]
-        public virtual int pack_sort
-        {
-            get
-            {
+        public virtual int pack_sort {
+            get {
                 return Get<int>(BaseDataObjectKeys.pack_sort);
             }
 
-            set
-            {
+            set {
                 Set<int>(BaseDataObjectKeys.pack_sort, value);
             }
         }
 
         //[JsonIgnore(JsonIgnoreWhen.Deserializing)]
-        public virtual DateTime date_created
-        {
-            get
-            {
+        public virtual DateTime date_created {
+            get {
                 return Get<DateTime>(BaseDataObjectKeys.date_created, DateTime.Now);
             }
 
-            set
-            {
+            set {
                 Set<DateTime>(BaseDataObjectKeys.date_created, value);
             }
         }
 
         //[JsonIgnore(JsonIgnoreWhen.Deserializing)]
-        public virtual DateTime date_modified
-        {
-            get
-            {
+        public virtual DateTime date_modified {
+            get {
                 return Get<DateTime>(BaseDataObjectKeys.date_modified, DateTime.Now);
             }
 
-            set
-            {
+            set {
                 Set<DateTime>(BaseDataObjectKeys.date_modified, value);
             }
         }
 
-        public virtual string username
-        {
-            get
-            {
+        public virtual string username {
+            get {
                 return Get<string>(BaseDataObjectKeys.username);
             }
 
-            set
-            {
+            set {
                 Set<string>(BaseDataObjectKeys.username, value);
             }
         }
 
-        public virtual string udid
-        {
-            get
-            {
+        public virtual string udid {
+            get {
                 return Get<string>(BaseDataObjectKeys.udid);
             }
 
-            set
-            {
+            set {
                 Set<string>(BaseDataObjectKeys.udid, value);
             }
         }
 
-        public virtual string file_name
-        {
-            get
-            {
+        public virtual string file_name {
+            get {
                 return Get<string>(BaseDataObjectKeys.file_name);
             }
 
-            set
-            {
+            set {
                 Set<string>(BaseDataObjectKeys.file_name, value);
             }
         }
 
-        public virtual string file_path
-        {
-            get
-            {
+        public virtual string file_path {
+            get {
                 return Get<string>(BaseDataObjectKeys.file_path);
             }
 
-            set
-            {
+            set {
                 Set<string>(BaseDataObjectKeys.file_path, value);
             }
         }
 
-        public virtual string file_full_path
-        {
-            get
-            {
+        public virtual string file_full_path {
+            get {
                 return Get<string>(BaseDataObjectKeys.file_full_path);
             }
 
-            set
-            {
+            set {
                 Set<string>(BaseDataObjectKeys.file_full_path, value);
             }
         }
 
         // game
 
-        public virtual string asset
-        {
-            get
-            {
+        public virtual string asset {
+            get {
                 return Get<string>(BaseDataObjectKeys.asset);
             }
 
-            set
-            {
+            set {
                 Set<string>(BaseDataObjectKeys.asset, value);
             }
         }
 
-        public virtual double limit
-        {
-            get
-            {
+        public virtual double limit {
+            get {
                 return Get<double>(BaseDataObjectKeys.limit);
             }
 
-            set
-            {
+            set {
                 Set<double>(BaseDataObjectKeys.limit, value);
             }
         }
 
-        public virtual double max
-        {
-            get
-            {
+        public virtual double max {
+            get {
                 return Get<double>(BaseDataObjectKeys.max, 1);
             }
 
-            set
-            {
+            set {
                 Set<double>(BaseDataObjectKeys.max, value);
             }
         }
 
-        public virtual double min
-        {
-            get
-            {
+        public virtual double min {
+            get {
                 return Get<double>(BaseDataObjectKeys.min, 0);
             }
 
-            set
-            {
+            set {
                 Set<double>(BaseDataObjectKeys.min, value);
             }
         }
 
-        public virtual double frequency
-        {
-            get
-            {
+        public virtual double frequency {
+            get {
                 return Get<double>(BaseDataObjectKeys.frequency);
             }
 
-            set
-            {
+            set {
                 Set<double>(BaseDataObjectKeys.frequency, value);
             }
         }
 
-        public virtual double probability
-        {
-            get
-            {
+        public virtual double probability {
+            get {
                 return Get<double>(BaseDataObjectKeys.probability);
             }
 
-            set
-            {
+            set {
                 Set<double>(BaseDataObjectKeys.probability, value);
             }
         }
 
-        public virtual object val
-        {
-            get
-            {
+        public virtual object val {
+            get {
                 return Get<object>(BaseDataObjectKeys.val);
             }
 
-            set
-            {
+            set {
                 Set<object>(BaseDataObjectKeys.val, value);
             }
         }
 
-        public virtual string valString
-        {
-            get
-            {
+        public virtual string valString {
+            get {
                 return Get<string>(BaseDataObjectKeys.val);
             }
 
-            set
-            {
+            set {
                 Set<string>(BaseDataObjectKeys.val, value);
             }
         }
 
-        public virtual int valInt
-        {
-            get
-            {
+        public virtual int valInt {
+            get {
                 return Get<int>(BaseDataObjectKeys.val);
             }
 
-            set
-            {
+            set {
                 Set<int>(BaseDataObjectKeys.val, value);
             }
         }
 
-        public virtual double valDouble
-        {
-            get
-            {
+        public virtual double valDouble {
+            get {
                 return Convert.ToDouble(val);
             }
 
-            set
-            {
+            set {
                 Set<double>(BaseDataObjectKeys.val, value);
             }
         }
 
-        public virtual float valFloat
-        {
-            get
-            {
+        public virtual float valFloat {
+            get {
                 return Get<float>(BaseDataObjectKeys.val);
             }
 
-            set
-            {
+            set {
                 Set<float>(BaseDataObjectKeys.val, value);
             }
         }
 
-        public virtual double delta
-        {
-            get
-            {
+        public virtual double delta {
+            get {
                 return Get<double>(BaseDataObjectKeys.delta);
             }
 
-            set
-            {
+            set {
                 Set<double>(BaseDataObjectKeys.delta, value);
             }
         }
 
-        public virtual double last_time
-        {
-            get
-            {
+        public virtual double last_time {
+            get {
                 return Get<double>(BaseDataObjectKeys.last_time);
             }
 
-            set
-            {
+            set {
                 Set<double>(BaseDataObjectKeys.last_time, value);
             }
         }
 
-        public virtual double last_update
-        {
-            get
-            {
+        public virtual double last_update {
+            get {
                 return Get<double>(BaseDataObjectKeys.last_update);
             }
 
-            set
-            {
+            set {
                 Set<double>(BaseDataObjectKeys.last_update, value);
             }
         }
 
-        public virtual double modifier
-        {
-            get
-            {
+        public virtual double modifier {
+            get {
                 return Get<double>(BaseDataObjectKeys.modifier, 1.0);
             }
 
-            set
-            {
+            set {
                 Set<double>(BaseDataObjectKeys.modifier, value);
             }
         }
 
         // achievements
 
-        public virtual string defaultKey
-        {
-            get
-            {
+        public virtual string defaultKey {
+            get {
                 return Get<string>(BaseDataObjectKeys.defaultKey);
             }
 
-            set
-            {
+            set {
                 Set(BaseDataObjectKeys.defaultKey, value);
             }
         }
 
-        public virtual string pack
-        {
-            get
-            {
+        public virtual string pack {
+            get {
                 return Get<string>(BaseDataObjectKeys.pack);
             }
 
-            set
-            {
+            set {
                 Set(BaseDataObjectKeys.pack, value);
             }
         }
 
-        public virtual string tracker
-        {
-            get
-            {
+        public virtual string tracker {
+            get {
                 return Get<string>(BaseDataObjectKeys.tracker);
             }
 
-            set
-            {
+            set {
                 Set(BaseDataObjectKeys.tracker, value);
             }
         }
 
-        public virtual string action
-        {
-            get
-            {
+        public virtual string action {
+            get {
                 return Get<string>(BaseDataObjectKeys.action);
             }
 
-            set
-            {
+            set {
                 Set(BaseDataObjectKeys.action, value);
             }
         }
 
-        public virtual string app_state
-        {
-            get
-            {
+        public virtual string app_state {
+            get {
                 return Get<string>(BaseDataObjectKeys.app_state);
             }
 
-            set
-            {
+            set {
                 Set(BaseDataObjectKeys.app_state, value);
             }
         }
 
-        public virtual string app_content_state
-        {
-            get
-            {
+        public virtual string app_content_state {
+            get {
                 return Get<string>(BaseDataObjectKeys.app_content_state);
             }
 
-            set
-            {
+            set {
                 Set(BaseDataObjectKeys.app_content_state, value);
             }
         }
 
-        public virtual string custom
-        {
-            get
-            {
+        public virtual string custom {
+            get {
                 return Get<string>(BaseDataObjectKeys.custom);
             }
 
-            set
-            {
+            set {
                 Set(BaseDataObjectKeys.custom, value);
             }
         }
 
-        public virtual int layer
-        {
-            get
-            {
+        public virtual int layer {
+            get {
                 return Get<int>(BaseDataObjectKeys.layer, 1);
             }
 
-            set
-            {
+            set {
                 Set<int>(BaseDataObjectKeys.layer, value);
             }
         }
 
-        public virtual string play_type
-        {
-            get
-            {
+        public virtual string play_type {
+            get {
                 return Get<string>(BaseDataObjectKeys.play_type);
             }
 
-            set
-            {
+            set {
                 Set<string>(BaseDataObjectKeys.play_type, value);
             }
         }
 
-        public virtual double play_delay
-        {
-            get
-            {
+        public virtual double play_delay {
+            get {
                 return Get<double>(BaseDataObjectKeys.play_delay, 1.0);
             }
 
-            set
-            {
+            set {
                 Set<double>(BaseDataObjectKeys.play_delay, value);
             }
         }
 
         // app level
 
-        public virtual List<string> tags
-        {
-            get
-            {
+        public virtual List<string> tags {
+            get {
                 return Get<List<string>>(BaseDataObjectKeys.tags);
             }
 
-            set
-            {
+            set {
                 Set(BaseDataObjectKeys.tags, value);
             }
         }
 
-        public virtual List<string> app_states
-        {
-            get
-            {
+        public virtual List<string> app_states {
+            get {
                 return Get<List<string>>(BaseDataObjectKeys.app_states);
             }
 
-            set
-            {
+            set {
                 Set(BaseDataObjectKeys.app_states, value);
             }
         }
 
-        public virtual List<string> app_content_states
-        {
-            get
-            {
+        public virtual List<string> app_content_states {
+            get {
                 return Get<List<string>>(BaseDataObjectKeys.app_content_states);
             }
 
-            set
-            {
+            set {
                 Set(BaseDataObjectKeys.app_content_states, value);
             }
         }
 
-        public virtual Dictionary<string, List<string>> required_assets
-        {
-            get
-            {
+        public virtual Dictionary<string, List<string>> required_assets {
+            get {
                 return Get<Dictionary<string, List<string>>>(BaseDataObjectKeys.required_assets);
             }
 
-            set
-            {
+            set {
                 Set(BaseDataObjectKeys.required_assets, value);
             }
         }
 
-        public virtual List<string> required_packs
-        {
-            get
-            {
+        public virtual List<string> required_packs {
+            get {
                 return Get<List<string>>(BaseDataObjectKeys.required_packs);
             }
 
-            set
-            {
+            set {
                 Set(BaseDataObjectKeys.required_packs, value);
             }
         }
 
-        public virtual List<string> required_trackers
-        {
-            get
-            {
+        public virtual List<string> required_trackers {
+            get {
                 return Get<List<string>>(BaseDataObjectKeys.required_trackers);
             }
 
-            set
-            {
+            set {
                 Set(BaseDataObjectKeys.required_trackers, value);
             }
         }
 
-        public virtual List<string> keys
-        {
-            get
-            {
+        public virtual List<string> keys {
+            get {
                 return Get<List<string>>(BaseDataObjectKeys.keys);
             }
 
-            set
-            {
+            set {
                 Set(BaseDataObjectKeys.keys, value);
             }
         }
 
-        public virtual Dictionary<string, object> content_attributes
-        {
-            get
-            {
+        public virtual Dictionary<string, object> content_attributes {
+            get {
                 return Get<Dictionary<string, object>>(BaseDataObjectKeys.content_attributes);
             }
 
-            set
-            {
+            set {
                 Set(BaseDataObjectKeys.content_attributes, value);
             }
         }
 
-        public virtual List<string> types
-        {
-            get
-            {
+        public virtual List<string> types {
+            get {
                 return Get<List<string>>(BaseDataObjectKeys.types);
             }
 
-            set
-            {
+            set {
                 Set<List<string>>(BaseDataObjectKeys.types, value);
             }
         }
 
-        public virtual double delay
-        {
-            get
-            {
+        public virtual double delay {
+            get {
                 return Get<double>(BaseDataObjectKeys.delay);
             }
 
-            set
-            {
+            set {
                 Set<double>(BaseDataObjectKeys.delay, value);
             }
         }
 
-        public virtual double time
-        {
-            get
-            {
+        public virtual double time {
+            get {
                 return Get<double>(BaseDataObjectKeys.time);
             }
 
-            set
-            {
+            set {
                 Set<double>(BaseDataObjectKeys.time, value);
             }
         }
 
-        public virtual double points
-        {
-            get
-            {
+        public virtual double points {
+            get {
 
                 double valFinal = 0;
                 object valObj = Get<object>(BaseDataObjectKeys.points);
 
-                if (valObj == null)
-                {
+                if (valObj == null) {
                     return valFinal;
                 }
 
-                if (valObj.GetType() == typeof(double))
-                {
+                if (valObj.GetType() == typeof(double)) {
                     valFinal = Get<double>(BaseDataObjectKeys.points);
                 }
-                else if (valObj.GetType() == typeof(int))
-                {
+                else if (valObj.GetType() == typeof(int)) {
                     valFinal = (double)Get<int>(BaseDataObjectKeys.points);
                 }
 
                 return valFinal;
             }
 
-            set
-            {
-                if (value.GetType() == typeof(double))
-                {
+            set {
+                if (value.GetType() == typeof(double)) {
                     Set<double>(BaseDataObjectKeys.points, value);
                 }
-                else if (value.GetType() == typeof(int))
-                {
+                else if (value.GetType() == typeof(int)) {
                     Set<double>(BaseDataObjectKeys.points, (double)value);
                 }
             }
         }
 
-        public virtual bool complete
-        {
-            get
-            {
+        public virtual bool complete {
+            get {
                 return Get<bool>(BaseDataObjectKeys.complete);
             }
 
-            set
-            {
+            set {
                 Set<bool>(BaseDataObjectKeys.complete, value);
             }
         }
 
-        public virtual string ease_type
-        { // linear, easeInOut, easeIn, easeOut
-            get
-            {
+        public virtual string ease_type { // linear, easeInOut, easeIn, easeOut
+            get {
                 return Get<string>(BaseDataObjectKeys.ease_type);
             }
 
-            set
-            {
+            set {
                 Set<string>(BaseDataObjectKeys.ease_type, value);
             }
         }
 
-        public virtual Vector3Data local_position_data
-        {
-            get
-            {
+        public virtual Vector3Data local_position_data {
+            get {
                 return Get<Vector3Data>(BaseDataObjectKeys.local_position_data);
             }
 
-            set
-            {
+            set {
                 Set<Vector3Data>(BaseDataObjectKeys.local_position_data, value);
             }
         }
 
-        public virtual Vector3Data local_rotation_data
-        {
-            get
-            {
+        public virtual Vector3Data local_rotation_data {
+            get {
                 return Get<Vector3Data>(BaseDataObjectKeys.local_rotation_data);
             }
 
-            set
-            {
+            set {
                 Set<Vector3Data>(BaseDataObjectKeys.local_rotation_data, value);
 
             }
         }
 
-        public virtual Vector3Data position_data
-        {
-            get
-            {
+        public virtual Vector3Data position_data {
+            get {
                 return Get<Vector3Data>(BaseDataObjectKeys.position_data);
             }
 
-            set
-            {
+            set {
                 Set<Vector3Data>(BaseDataObjectKeys.position_data, value);
             }
         }
 
         //
 
-        public virtual Vector3Data grid_data
-        {
-            get
-            {
+        public virtual Vector3Data grid_data {
+            get {
                 return Get<Vector3Data>(BaseDataObjectKeys.grid_data);
             }
 
-            set
-            {
+            set {
                 Set<Vector3Data>(BaseDataObjectKeys.grid_data, value);
             }
         }
 
         //
 
-        public virtual Vector3Data rotation_data
-        {
-            get
-            {
+        public virtual Vector3Data rotation_data {
+            get {
                 return Get<Vector3Data>(BaseDataObjectKeys.rotation_data);
             }
 
-            set
-            {
+            set {
                 Set<Vector3Data>(BaseDataObjectKeys.rotation_data, value);
 
             }
         }
 
-        public virtual double rotation_min
-        {
-            get
-            {
+        public virtual double rotation_min {
+            get {
                 return Get<double>(BaseDataObjectKeys.rotation_min);
             }
 
-            set
-            {
+            set {
                 Set<double>(BaseDataObjectKeys.rotation_min, value);
             }
         }
 
-        public virtual double rotation_max
-        {
-            get
-            {
+        public virtual double rotation_max {
+            get {
                 return Get<double>(BaseDataObjectKeys.rotation_max);
             }
 
-            set
-            {
+            set {
                 Set<double>(BaseDataObjectKeys.rotation_max, value);
             }
         }
 
-        public virtual Vector3Data rotation_data_min
-        {
-            get
-            {
+        public virtual Vector3Data rotation_data_min {
+            get {
                 return Get<Vector3Data>(BaseDataObjectKeys.rotation_data_min);
             }
 
-            set
-            {
+            set {
                 Set<Vector3Data>(BaseDataObjectKeys.rotation_data_min, value);
             }
         }
 
-        public virtual Vector3Data rotation_data_max
-        {
-            get
-            {
+        public virtual Vector3Data rotation_data_max {
+            get {
                 return Get<Vector3Data>(BaseDataObjectKeys.rotation_data_max);
             }
 
-            set
-            {
+            set {
                 Set<Vector3Data>(BaseDataObjectKeys.rotation_data_max, value);
             }
         }
 
         //
 
-        public virtual Vector3Data scale_data
-        {
-            get
-            {
+        public virtual Vector3Data scale_data {
+            get {
                 return Get<Vector3Data>(BaseDataObjectKeys.scale_data);
             }
 
-            set
-            {
+            set {
                 Set<Vector3Data>(BaseDataObjectKeys.scale_data, value);
             }
         }
 
-        public virtual double scale_min
-        {
-            get
-            {
+        public virtual double scale_min {
+            get {
                 return Get<double>(BaseDataObjectKeys.scale_min);
             }
 
-            set
-            {
+            set {
                 Set<double>(BaseDataObjectKeys.scale_min, value);
             }
         }
 
-        public virtual double scale_max
-        {
-            get
-            {
+        public virtual double scale_max {
+            get {
                 return Get<double>(BaseDataObjectKeys.scale_max);
             }
 
-            set
-            {
+            set {
                 Set<double>(BaseDataObjectKeys.scale_max, value);
             }
         }
 
-        public virtual Vector3Data scale_data_min
-        {
-            get
-            {
+        public virtual Vector3Data scale_data_min {
+            get {
                 return Get<Vector3Data>(BaseDataObjectKeys.scale_data_min);
             }
 
-            set
-            {
+            set {
                 Set<Vector3Data>(BaseDataObjectKeys.scale_data_min, value);
             }
         }
 
-        public virtual Vector3Data scale_data_max
-        {
-            get
-            {
+        public virtual Vector3Data scale_data_max {
+            get {
                 return Get<Vector3Data>(BaseDataObjectKeys.scale_data_max);
             }
 
-            set
-            {
+            set {
                 Set<Vector3Data>(BaseDataObjectKeys.scale_data_max, value);
             }
         }
 
         //
 
-        public virtual List<string> data_list
-        {
-            get
-            {
+        public virtual List<string> data_list {
+            get {
                 return Get<List<string>>(BaseDataObjectKeys.data_list);
             }
 
-            set
-            {
+            set {
                 Set<List<string>>(BaseDataObjectKeys.data_list, value);
             }
         }
 
-        public virtual Dictionary<string, object> data_dict
-        {
-            get
-            {
+        public virtual Dictionary<string, object> data_dict {
+            get {
                 return Get<Dictionary<string, object>>(BaseDataObjectKeys.data_dict);
             }
 
-            set
-            {
+            set {
                 Set<Dictionary<string, object>>(BaseDataObjectKeys.data_dict, value);
             }
         }
 
-        public virtual List<Dictionary<string, object>> data_dicts
-        {
-            get
-            {
+        public virtual List<Dictionary<string, object>> data_dicts {
+            get {
                 return Get<List<Dictionary<string, object>>>(BaseDataObjectKeys.data_dicts);
             }
 
-            set
-            {
+            set {
                 Set<List<Dictionary<string, object>>>(BaseDataObjectKeys.data_dicts, value);
             }
         }
 
-        public virtual List<GameDataObject> data_game_objects
-        {
-            get
-            {
+        public virtual List<GameDataObject> data_game_objects {
+            get {
                 return Get<List<GameDataObject>>(BaseDataObjectKeys.data_game_objects);
             }
 
-            set
-            {
+            set {
                 Set<List<GameDataObject>>(BaseDataObjectKeys.data_game_objects, value);
             }
         }
 
-        public virtual List<GameDataObject> data_objects
-        {
-            get
-            {
+        public virtual List<GameDataObject> data_objects {
+            get {
                 return Get<List<GameDataObject>>(BaseDataObjectKeys.data_objects);
             }
 
-            set
-            {
+            set {
                 Set<List<GameDataObject>>(BaseDataObjectKeys.data_objects, value);
             }
         }
 
-        public virtual Dictionary<string, GameDataObject> data_object
-        {
-            get
-            {
+        public virtual Dictionary<string, GameDataObject> data_object {
+            get {
                 return Get<Dictionary<string, GameDataObject>>(BaseDataObjectKeys.data_object);
             }
 
-            set
-            {
+            set {
                 Set<Dictionary<string, GameDataObject>>(BaseDataObjectKeys.data_object, value);
             }
         }
 
         //
 
-        public GameDataObject()
-        {
+        public GameDataObject() {
             Reset();
         }
 
-        public override void Reset()
-        {
+        public override void Reset() {
             base.Reset();
 
             //scale_data_min = new Vector3Data(1, 1, 1);
@@ -3201,23 +2546,19 @@ namespace Engine.Game.App
 
         // helpers
 
-        public bool IsTypeTexture()
-        {
+        public bool IsTypeTexture() {
             return IsType("texture");
         }
 
-        public bool IsTypeColor()
-        {
+        public bool IsTypeColor() {
             return IsType("color");
         }
 
-        public bool IsType(string typeTo)
-        {
+        public bool IsType(string typeTo) {
 
             bool isTypes = false;
 
-            if (types != null)
-            {
+            if (types != null) {
                 isTypes = types.Contains(typeTo) ? true : false;
             }
 
@@ -3226,30 +2567,24 @@ namespace Engine.Game.App
             return isType || isTypes ? true : false;
         }
 
-        public bool HasTag(string tagTo)
-        {
-            if (tags == null)
-            {
+        public bool HasTag(string tagTo) {
+            if (tags == null) {
                 return false;
             }
 
             return tags.Contains(tagTo);
         }
 
-        public bool IsCode(string val)
-        {
+        public bool IsCode(string val) {
             return code == val ? true : false;
         }
 
-        public bool IsDataType(string val)
-        {
+        public bool IsDataType(string val) {
             return data_type == val ? true : false;
         }
 
-        public bool IsValGreaterThanOrEqual(double valTo)
-        {
-            if (valDouble >= valTo)
-            {
+        public bool IsValGreaterThanOrEqual(double valTo) {
+            if (valDouble >= valTo) {
                 return true;
             }
 
@@ -3258,23 +2593,19 @@ namespace Engine.Game.App
 
         // helpers
 
-        public List<T> GetItemsRandom<T>(List<T> list, string type) where T : GameDataObject, new()
-        {
+        public List<T> GetItemsRandom<T>(List<T> list, string type) where T : GameDataObject, new() {
 
             List<T> objs = new List<T>();
 
             List<T> items = GetItems<T>(list, type);
 
-            foreach (T item in items)
-            {
-                if (item.data_type == "preset")
-                {
+            foreach (T item in items) {
+                if (item.data_type == "preset") {
 
 #if USE_GAME_LIB_GAMES
                     // lookup preset
                     GamePreset preset = GamePresets.Get(item.code);
-                    if (preset != null)
-                    {
+                    if (preset != null) {
                         GamePresetItem presetItem = GetItemRandomByProbability(preset.data.items);
                         T obj = new T();
                         obj.type = item.type;
@@ -3288,8 +2619,7 @@ namespace Engine.Game.App
                     objs.Add(GetItemRandomByType(list, type));
 #endif
                 }
-                else
-                {
+                else {
 
                     objs.Add(GetItemRandomByType(list, type));
                 }
@@ -3298,22 +2628,18 @@ namespace Engine.Game.App
             return objs;
         }
 
-        public T GetItemRandom<T>(List<T> list, string type) where T : GameDataObject, new()
-        {
+        public T GetItemRandom<T>(List<T> list, string type) where T : GameDataObject, new() {
 
             T obj = default(T);
 
             List<T> items = GetItems<T>(list, type);
 
-            foreach (T item in items)
-            {
-                if (item.data_type == "preset")
-                {
+            foreach (T item in items) {
+                if (item.data_type == "preset") {
 #if USE_GAME_LIB_GAMES
                     // lookup preset
                     GamePreset preset = GamePresets.Get(item.code);
-                    if (preset != null)
-                    {
+                    if (preset != null) {
                         GamePresetItem presetItem = GetItemRandomByProbability(preset.data.items);
                         obj = new T();
                         obj.type = item.type;
@@ -3323,8 +2649,7 @@ namespace Engine.Game.App
                     }
 #endif
                 }
-                else
-                {
+                else {
                     // randomly pick from sets
                     return GetItemRandomByType(list, type);
                 }
@@ -3333,14 +2658,12 @@ namespace Engine.Game.App
             return obj;
         }
 
-        public T GetItemRandomByProbability<T>(List<T> list) where T : GameDataObject
-        {
+        public T GetItemRandomByProbability<T>(List<T> list) where T : GameDataObject {
 
             T obj = default(T);
 
             List<float> probs = new List<float>();
-            foreach (T item in list)
-            {
+            foreach (T item in list) {
                 probs.Add((float)item.probability);
             }
 
@@ -3349,16 +2672,14 @@ namespace Engine.Game.App
             return obj;
         }
 
-        public T GetItemRandomByProbability<T>(List<T> list, string type) where T : GameDataObject
-        {
+        public T GetItemRandomByProbability<T>(List<T> list, string type) where T : GameDataObject {
 
             T obj = default(T);
 
             List<T> items = GetItems<T>(list, type);
 
             List<float> probs = new List<float>();
-            foreach (T item in items)
-            {
+            foreach (T item in items) {
                 probs.Add((float)item.probability);
             }
 
@@ -3367,17 +2688,14 @@ namespace Engine.Game.App
             return obj;
         }
 
-        public T GetItemRandomByType<T>(List<T> list, string type) where T : GameDataObject
-        {
+        public T GetItemRandomByType<T>(List<T> list, string type) where T : GameDataObject {
 
             T obj = default(T);
 
             List<T> items = GetItems<T>(list, type);
 
-            if (items != null)
-            {
-                if (items.Count > 0)
-                {
+            if (items != null) {
+                if (items.Count > 0) {
                     int index = UnityEngine.Random.Range(0, items.Count);
                     obj = items[index];
                 }
@@ -3386,20 +2704,16 @@ namespace Engine.Game.App
             return obj;
         }
 
-        public List<T> GetItems<T>(List<T> list, string type) where T : GameDataObject
-        {
+        public List<T> GetItems<T>(List<T> list, string type) where T : GameDataObject {
 
             List<T> filteredList = new List<T>();
 
             if (list == null)
                 return filteredList;
 
-            if (list.Count > 0)
-            {
-                foreach (T item in list)
-                {
-                    if (item.type == type)
-                    {
+            if (list.Count > 0) {
+                foreach (T item in list) {
+                    if (item.type == type) {
                         filteredList.Add(item);
                     }
                 }
@@ -3408,24 +2722,19 @@ namespace Engine.Game.App
             return filteredList;
         }
 
-        public T GetItem<T>(List<T> list, string code) where T : GameDataObject
-        {
+        public T GetItem<T>(List<T> list, string code) where T : GameDataObject {
 
             if (list == null)
                 return default(T);
 
-            if (list.Count > 0)
-            {
-                foreach (T item in list)
-                {
-                    if (item.code == code)
-                    {
+            if (list.Count > 0) {
+                foreach (T item in list) {
+                    if (item.code == code) {
                         return item;
                     }
                 }
 
-                foreach (T item in list)
-                {
+                foreach (T item in list) {
                     return item;
                 }
             }
@@ -3433,13 +2742,10 @@ namespace Engine.Game.App
             return null;
         }
 
-        public T GetDataDictValue<T>(string key)
-        {
+        public T GetDataDictValue<T>(string key) {
 
-            if (data_dict != null)
-            {
-                if (data_dict.ContainsKey(key))
-                {
+            if (data_dict != null) {
+                if (data_dict.ContainsKey(key)) {
                     return data_dict.Get<T>(key);
                 }
             }
@@ -3447,19 +2753,15 @@ namespace Engine.Game.App
             return default(T);
         }
 
-        public Dictionary<string, object> GetDataDictsDictByKeyValue(string key, string val)
-        {
+        public Dictionary<string, object> GetDataDictsDictByKeyValue(string key, string val) {
 
-            if (data_dicts != null)
-            {
+            if (data_dicts != null) {
 
-                foreach (Dictionary<string, object> dict in data_dicts)
-                {
+                foreach (Dictionary<string, object> dict in data_dicts) {
 
                     string keyValue = dict.Get<string>(key);
 
-                    if (keyValue == val)
-                    {
+                    if (keyValue == val) {
                         return dict;
                     }
                 }

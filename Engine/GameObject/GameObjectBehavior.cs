@@ -20,7 +20,7 @@ public class GameObjectBehavior : MonoBehaviour {
             return _gameObject;
         }
     }
-    
+
     private Transform _transform;
 
     public new Transform transform {
@@ -31,9 +31,9 @@ public class GameObjectBehavior : MonoBehaviour {
             return _transform;
         }
     }
-    
+
     private Rigidbody _rigidbody;
-    
+
     public new Rigidbody rigidbody {
         get {
             if (!_rigidbody) {
@@ -42,7 +42,7 @@ public class GameObjectBehavior : MonoBehaviour {
             return _rigidbody;
         }
     }
-        
+
     private Renderer _renderer;
 
     public new Renderer renderer {
@@ -53,7 +53,7 @@ public class GameObjectBehavior : MonoBehaviour {
             return _renderer;
         }
     }
-    
+
     private AudioSource _audio;
 
     public new AudioSource audio {
@@ -64,7 +64,7 @@ public class GameObjectBehavior : MonoBehaviour {
             return _audio;
         }
     }
-        
+
     private Camera _camera;
 
     public new Camera camera {
@@ -75,9 +75,9 @@ public class GameObjectBehavior : MonoBehaviour {
             return _camera;
         }
     }
-    
+
     private Collider _collider;
-    
+
     public new Collider collider {
         get {
             if (!_collider) {
@@ -86,7 +86,7 @@ public class GameObjectBehavior : MonoBehaviour {
             return _collider;
         }
     }
-        
+
     private SpriteRenderer _rendererSprite;
 
     public SpriteRenderer rendererSprite {
@@ -108,7 +108,7 @@ public class GameObjectBehavior : MonoBehaviour {
             return _rendererSkinnedMesh;
         }
     }
-        
+
     private MeshRenderer _rendererMesh;
 
     public MeshRenderer rendererMesh {
@@ -119,7 +119,7 @@ public class GameObjectBehavior : MonoBehaviour {
             return _rendererMesh;
         }
     }
-    
+
     private TrailRenderer _rendererTrail;
 
     public TrailRenderer rendererTrail {
@@ -141,7 +141,7 @@ public class GameObjectBehavior : MonoBehaviour {
             return _rendererLine;
         }
     }
-    
+
     //private ParticleRenderer _rendererParticle;
 
     //public ParticleRenderer rendererParticle {
@@ -152,9 +152,9 @@ public class GameObjectBehavior : MonoBehaviour {
     //        return _rendererParticle;
     //    }
     //}
-    
+
     private ParticleSystem _particleSystem;
-    
+
     public new ParticleSystem particleSystem {
         get {
             if (!_particleSystem) {
@@ -163,7 +163,7 @@ public class GameObjectBehavior : MonoBehaviour {
             return _particleSystem;
         }
     }
-    
+
     private ParticleSystemRenderer _rendererParticleSystem;
 
     public ParticleSystemRenderer rendererParticleSystem {
@@ -174,9 +174,9 @@ public class GameObjectBehavior : MonoBehaviour {
             return _rendererParticleSystem;
         }
     }
-    
+
     private Light _light;
-    
+
     public new Light light {
         get {
             if (!_light) {

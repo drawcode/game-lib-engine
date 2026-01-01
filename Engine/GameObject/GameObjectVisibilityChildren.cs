@@ -2,10 +2,10 @@ using UnityEngine;
 using System.Collections;
 
 public class GameObjectVisibilityChildren : MonoBehaviour {
-	
-	// Apply this class to objects needed to be hidden but later found
-	// by using GetComponentsInChildren with the inactive flag set without
-	// searching recursively through the whole heirarchy of that object.
+
+    // Apply this class to objects needed to be hidden but later found
+    // by using GetComponentsInChildren with the inactive flag set without
+    // searching recursively through the whole heirarchy of that object.
 
     // BELOW
 
@@ -16,7 +16,7 @@ public class GameObjectVisibilityChildren : MonoBehaviour {
     public bool hideBelowXLocal = false;
     public bool hideBelowYLocal = false;
     public bool hideBelowZLocal = false;
-	
+
     public float hideBelowXWorldVal = 0;
     public float hideBelowYWorldVal = 0;
     public float hideBelowZWorldVal = 0;
@@ -48,12 +48,11 @@ public class GameObjectVisibilityChildren : MonoBehaviour {
     Vector3 posWorld = Vector3.zero;
     Vector3 posLocal = Vector3.zero;
 
-	void Start () {
-        
-	}
+    void Start() {
+
+    }
 
     void Update() {
-
 
         bool hide = false;
 
@@ -64,40 +63,40 @@ public class GameObjectVisibilityChildren : MonoBehaviour {
 
         // WORLD
 
-        if(hideBelowXWorld) {
-            if(posWorld.x < hideBelowXWorldVal) {
+        if (hideBelowXWorld) {
+            if (posWorld.x < hideBelowXWorldVal) {
                 hide = true;
             }
         }
 
-        if(hideBelowYWorld) {
-            if(posWorld.y < hideBelowYWorldVal) {
+        if (hideBelowYWorld) {
+            if (posWorld.y < hideBelowYWorldVal) {
                 hide = true;
             }
         }
 
-        if(hideBelowZWorld) {
-            if(posWorld.z < hideBelowZWorldVal) {
+        if (hideBelowZWorld) {
+            if (posWorld.z < hideBelowZWorldVal) {
                 hide = true;
             }
         }
 
         // LOCAL
 
-        if(hideBelowXLocal) {
-            if(posLocal.x < hideBelowXLocalVal) {
+        if (hideBelowXLocal) {
+            if (posLocal.x < hideBelowXLocalVal) {
                 hide = true;
             }
         }
 
-        if(hideBelowYLocal) {
-            if(posLocal.y < hideBelowYLocalVal) {
+        if (hideBelowYLocal) {
+            if (posLocal.y < hideBelowYLocalVal) {
                 hide = true;
             }
         }
 
-        if(hideBelowZLocal) {
-            if(posLocal.z < hideBelowZLocalVal) {
+        if (hideBelowZLocal) {
+            if (posLocal.z < hideBelowZLocalVal) {
                 hide = true;
             }
         }
@@ -106,48 +105,48 @@ public class GameObjectVisibilityChildren : MonoBehaviour {
 
         // WORLD
 
-        if(hideAboveXWorld) {
-            if(posWorld.x > hideAboveXWorldVal) {
+        if (hideAboveXWorld) {
+            if (posWorld.x > hideAboveXWorldVal) {
                 hide = true;
             }
         }
 
-        if(hideAboveYWorld) {
-            if(posWorld.y > hideAboveYWorldVal) {
+        if (hideAboveYWorld) {
+            if (posWorld.y > hideAboveYWorldVal) {
                 hide = true;
             }
         }
 
-        if(hideAboveZWorld) {
-            if(posWorld.z > hideAboveZWorldVal) {
+        if (hideAboveZWorld) {
+            if (posWorld.z > hideAboveZWorldVal) {
                 hide = true;
             }
         }
 
         // LOCAL
 
-        if(hideAboveXLocal) {
-            if(posLocal.x > hideAboveXLocalVal) {
+        if (hideAboveXLocal) {
+            if (posLocal.x > hideAboveXLocalVal) {
                 hide = true;
             }
         }
 
-        if(hideAboveYLocal) {
-            if(posLocal.y > hideAboveYLocalVal) {
+        if (hideAboveYLocal) {
+            if (posLocal.y > hideAboveYLocalVal) {
                 hide = true;
             }
         }
 
-        if(hideAboveZLocal) {
-            if(posLocal.z > hideAboveZLocalVal) {
+        if (hideAboveZLocal) {
+            if (posLocal.z > hideAboveZLocalVal) {
                 hide = true;
             }
         }
 
         // state
 
-        if(hide) {
-            if(!hidden) {
+        if (hide) {
+            if (!hidden) {
                 gameObject.HideChildren();
                 hidden = true;
             }
@@ -155,12 +154,10 @@ public class GameObjectVisibilityChildren : MonoBehaviour {
         }
         else {
 
-            if(hidden) {
+            if (hidden) {
                 gameObject.ShowChildren();
                 hidden = false;
             }
         }
-
-
     }
 }

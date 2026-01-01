@@ -15,10 +15,8 @@ using System.IO;
 using System.Text;
 
 
-namespace Engine.Data.Json
-{
-    public enum JsonToken
-    {
+namespace Engine.Data.Json {
+    public enum JsonToken {
         None,
 
         ObjectStart,
@@ -39,8 +37,7 @@ namespace Engine.Data.Json
     }
 
 
-    public class JsonReader
-    {
+    public class JsonReader {
         #region Fields
         private static IDictionary<int, IDictionary<int, int[]>> parse_table;
 
@@ -62,64 +59,53 @@ namespace Engine.Data.Json
 
 
         #region Public Properties
-        public bool AllowComments
-        {
+        public bool AllowComments {
             get { return lexer.AllowComments; }
             set { lexer.AllowComments = value; }
         }
 
-        public bool AllowSingleQuotedStrings
-        {
+        public bool AllowSingleQuotedStrings {
             get { return lexer.AllowSingleQuotedStrings; }
             set { lexer.AllowSingleQuotedStrings = value; }
         }
 
-        public bool SkipNonMembers
-        {
+        public bool SkipNonMembers {
             get { return skip_non_members; }
             set { skip_non_members = value; }
         }
 
-        public bool EndOfInput
-        {
+        public bool EndOfInput {
             get { return end_of_input; }
         }
 
-        public bool EndOfJson
-        {
+        public bool EndOfJson {
             get { return end_of_json; }
         }
 
-        public JsonToken Token
-        {
+        public JsonToken Token {
             get { return token; }
         }
 
-        public object Value
-        {
+        public object Value {
             get { return token_value; }
         }
         #endregion
 
 
         #region Constructors
-        static JsonReader()
-        {
+        static JsonReader() {
             PopulateParseTable();
         }
 
         public JsonReader(string json_text) :
-            this(new StringReader(json_text), true)
-        {
+            this(new StringReader(json_text), true) {
         }
 
         public JsonReader(TextReader reader) :
-            this(reader, false)
-        {
+            this(reader, false) {
         }
 
-        private JsonReader(TextReader reader, bool owned)
-        {
+        private JsonReader(TextReader reader, bool owned) {
             if (reader == null)
                 throw new ArgumentNullException("reader");
 
@@ -145,8 +131,7 @@ namespace Engine.Data.Json
 
 
         #region Static Methods
-        private static void PopulateParseTable()
-        {
+        private static void PopulateParseTable() {
             // See section A.2. of the manual for details
             parse_table = new Dictionary<int, IDictionary<int, int[]>>();
 
@@ -253,29 +238,24 @@ namespace Engine.Data.Json
         }
 
         private static void TableAddCol(ParserToken row, int col,
-                                         params int[] symbols)
-        {
+                                         params int[] symbols) {
             parse_table[(int)row].Add(col, symbols);
         }
 
-        private static void TableAddRow(ParserToken rule)
-        {
+        private static void TableAddRow(ParserToken rule) {
             parse_table.Add((int)rule, new Dictionary<int, int[]>());
         }
         #endregion
 
 
         #region Private Methods
-        private void ProcessNumber(string number)
-        {
+        private void ProcessNumber(string number) {
             if (number.IndexOf('.') != -1 ||
                 number.IndexOf('e') != -1 ||
-                number.IndexOf('E') != -1)
-            {
+                number.IndexOf('E') != -1) {
 
                 double n_double;
-                if (Double.TryParse(number, out n_double))
-                {
+                if (Double.TryParse(number, out n_double)) {
                     token = JsonToken.Double;
                     token_value = n_double;
 
@@ -284,8 +264,7 @@ namespace Engine.Data.Json
             }
 
             int n_int32;
-            if (Int32.TryParse(number, out n_int32))
-            {
+            if (Int32.TryParse(number, out n_int32)) {
                 token = JsonToken.Int;
                 token_value = n_int32;
 
@@ -293,8 +272,7 @@ namespace Engine.Data.Json
             }
 
             long n_int64;
-            if (Int64.TryParse(number, out n_int64))
-            {
+            if (Int64.TryParse(number, out n_int64)) {
                 token = JsonToken.Long;
                 token_value = n_int64;
 
@@ -306,43 +284,35 @@ namespace Engine.Data.Json
             token_value = 0;
         }
 
-        private void ProcessSymbol()
-        {
-            if (current_symbol == '[')
-            {
+        private void ProcessSymbol() {
+            if (current_symbol == '[') {
                 token = JsonToken.ArrayStart;
                 parser_return = true;
 
             }
-            else if (current_symbol == ']')
-            {
+            else if (current_symbol == ']') {
                 token = JsonToken.ArrayEnd;
                 parser_return = true;
 
             }
-            else if (current_symbol == '{')
-            {
+            else if (current_symbol == '{') {
                 token = JsonToken.ObjectStart;
                 parser_return = true;
 
             }
-            else if (current_symbol == '}')
-            {
+            else if (current_symbol == '}') {
                 token = JsonToken.ObjectEnd;
                 parser_return = true;
 
             }
-            else if (current_symbol == '"')
-            {
-                if (parser_in_string)
-                {
+            else if (current_symbol == '"') {
+                if (parser_in_string) {
                     parser_in_string = false;
 
                     parser_return = true;
 
                 }
-                else
-                {
+                else {
                     if (token == JsonToken.None)
                         token = JsonToken.String;
 
@@ -350,38 +320,32 @@ namespace Engine.Data.Json
                 }
 
             }
-            else if (current_symbol == (int)ParserToken.CharSeq)
-            {
+            else if (current_symbol == (int)ParserToken.CharSeq) {
                 token_value = lexer.StringValue;
 
             }
-            else if (current_symbol == (int)ParserToken.False)
-            {
+            else if (current_symbol == (int)ParserToken.False) {
                 token = JsonToken.Boolean;
                 token_value = false;
                 parser_return = true;
 
             }
-            else if (current_symbol == (int)ParserToken.Null)
-            {
+            else if (current_symbol == (int)ParserToken.Null) {
                 token = JsonToken.Null;
                 parser_return = true;
 
             }
-            else if (current_symbol == (int)ParserToken.Number)
-            {
+            else if (current_symbol == (int)ParserToken.Number) {
                 ProcessNumber(lexer.StringValue);
 
                 parser_return = true;
 
             }
-            else if (current_symbol == (int)ParserToken.Pair)
-            {
+            else if (current_symbol == (int)ParserToken.Pair) {
                 token = JsonToken.PropertyName;
 
             }
-            else if (current_symbol == (int)ParserToken.True)
-            {
+            else if (current_symbol == (int)ParserToken.True) {
                 token = JsonToken.Boolean;
                 token_value = true;
                 parser_return = true;
@@ -389,15 +353,13 @@ namespace Engine.Data.Json
             }
         }
 
-        private bool ReadToken()
-        {
+        private bool ReadToken() {
             if (end_of_input)
                 return false;
 
             lexer.NextToken();
 
-            if (lexer.EndOfInput)
-            {
+            if (lexer.EndOfInput) {
                 Close();
 
                 return false;
@@ -410,8 +372,7 @@ namespace Engine.Data.Json
         #endregion
 
 
-        public void Close()
-        {
+        public void Close() {
             if (end_of_input)
                 return;
 
@@ -424,13 +385,11 @@ namespace Engine.Data.Json
             reader = null;
         }
 
-        public bool Read()
-        {
+        public bool Read() {
             if (end_of_input)
                 return false;
 
-            if (end_of_json)
-            {
+            if (end_of_json) {
                 end_of_json = false;
                 automaton_stack.Clear();
                 automaton_stack.Push((int)ParserToken.End);
@@ -443,8 +402,7 @@ namespace Engine.Data.Json
             token = JsonToken.None;
             token_value = null;
 
-            if (!read_started)
-            {
+            if (!read_started) {
                 read_started = true;
 
                 if (!ReadToken())
@@ -454,10 +412,8 @@ namespace Engine.Data.Json
 
             int[] entry_symbols;
 
-            while (true)
-            {
-                if (parser_return)
-                {
+            while (true) {
+                if (parser_return) {
                     if (automaton_stack.Peek() == (int)ParserToken.End)
                         end_of_json = true;
 
@@ -468,10 +424,8 @@ namespace Engine.Data.Json
 
                 ProcessSymbol();
 
-                if (current_symbol == current_input)
-                {
-                    if (!ReadToken())
-                    {
+                if (current_symbol == current_input) {
+                    if (!ReadToken()) {
                         if (automaton_stack.Peek() != (int)ParserToken.End)
                             throw new JsonException(
                                 "Input doesn't evaluate to proper JSON text");
@@ -485,15 +439,13 @@ namespace Engine.Data.Json
                     continue;
                 }
 
-                try
-                {
+                try {
 
                     entry_symbols =
                         parse_table[current_symbol][current_input];
 
                 }
-                catch (KeyNotFoundException e)
-                {
+                catch (KeyNotFoundException e) {
                     throw new JsonException((ParserToken)current_input, e);
                 }
 

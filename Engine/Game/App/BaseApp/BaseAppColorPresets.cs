@@ -6,11 +6,9 @@ using Engine.Utility;
 
 using UnityEngine;
 
-namespace Engine.Game.App.BaseApp
-{
+namespace Engine.Game.App.BaseApp {
 
-    public partial class BaseAppColorPresets<T> : DataObjects<T> where T : DataObject, new()
-    {
+    public partial class BaseAppColorPresets<T> : DataObjects<T> where T : DataObject, new() {
         private static T current;
         private static volatile BaseAppColorPresets<T> instance;
         private static System.Object syncRoot = new System.Object();
@@ -19,14 +17,10 @@ namespace Engine.Game.App.BaseApp
 
         public static Dictionary<string, Color> cachedColors = new Dictionary<string, Color>();
 
-        public static T BaseCurrent
-        {
-            get
-            {
-                if (current == null)
-                {
-                    lock (syncRoot)
-                    {
+        public static T BaseCurrent {
+            get {
+                if (current == null) {
+                    lock (syncRoot) {
                         if (current == null)
                             current = new T();
                     }
@@ -34,20 +28,15 @@ namespace Engine.Game.App.BaseApp
 
                 return current;
             }
-            set
-            {
+            set {
                 current = value;
             }
         }
 
-        public static BaseAppColorPresets<T> BaseInstance
-        {
-            get
-            {
-                if (instance == null)
-                {
-                    lock (syncRoot)
-                    {
+        public static BaseAppColorPresets<T> BaseInstance {
+            get {
+                if (instance == null) {
+                    lock (syncRoot) {
                         if (instance == null)
                             instance = new BaseAppColorPresets<T>(true);
                     }
@@ -55,19 +44,16 @@ namespace Engine.Game.App.BaseApp
 
                 return instance;
             }
-            set
-            {
+            set {
                 instance = value;
             }
         }
 
-        public BaseAppColorPresets()
-        {
+        public BaseAppColorPresets() {
             Reset();
         }
 
-        public BaseAppColorPresets(bool loadData)
-        {
+        public BaseAppColorPresets(bool loadData) {
             Reset();
             path = "data/" + BASE_DATA_KEY + ".json";
             pathKey = BASE_DATA_KEY;
@@ -75,27 +61,23 @@ namespace Engine.Game.App.BaseApp
         }
 
 
-        public static Color GetColor(string code)
-        {
+        public static Color GetColor(string code) {
 
             Color colorTo = Color.white;
 
             //if(GameConfigs.globalReady) {
 
-            if (!cachedColors.ContainsKey(code))
-            {
+            if (!cachedColors.ContainsKey(code)) {
 
                 AppColor color = AppColors.Instance.GetByCode(code);
 
-                if (color != null)
-                {
+                if (color != null) {
                     colorTo = color.GetColor();
                 }
 
                 cachedColors.Add(code, colorTo);
             }
-            else
-            {
+            else {
                 colorTo = cachedColors[code];
             }
             //}
@@ -103,33 +85,28 @@ namespace Engine.Game.App.BaseApp
             return colorTo;
         }
 
-        public static string GetColorCodeByItemCode(string customItemCode)
-        {
+        public static string GetColorCodeByItemCode(string customItemCode) {
             return "";//List<AppColorPreset>
         }
 
-        public static Color GetColorByItemCode(string customItemCode)
-        { // helmet, jersey etc
+        public static Color GetColorByItemCode(string customItemCode) { // helmet, jersey etc
 
             Color colorTo = Color.white;
 
             //if (GameConfigs.globalReady)
             //{
 
-            if (!cachedColors.ContainsKey(customItemCode))
-            {
+            if (!cachedColors.ContainsKey(customItemCode)) {
 
                 AppColor color = AppColors.Instance.GetByCode(customItemCode);
 
-                if (color != null)
-                {
+                if (color != null) {
                     colorTo = color.GetColor();
                 }
 
                 cachedColors.Add(customItemCode, colorTo);
             }
-            else
-            {
+            else {
                 colorTo = cachedColors[customItemCode];
             }
             //}
@@ -138,33 +115,27 @@ namespace Engine.Game.App.BaseApp
         }
     }
 
-    public class BaseAppColorPreset : GameDataObject
-    {
+    public class BaseAppColorPreset : GameDataObject {
 
         // Attributes that are added or changed after launch should be like this to prevent
         // profile conversions.
 
 
-        public virtual Dictionary<string, string> data
-        {
-            get
-            {
+        public virtual Dictionary<string, string> data {
+            get {
                 return Get<Dictionary<string, string>>(BaseDataObjectKeys.data);
             }
 
-            set
-            {
+            set {
                 Set(BaseDataObjectKeys.data, value);
             }
         }
 
-        public BaseAppColorPreset()
-        {
+        public BaseAppColorPreset() {
             Reset();
         }
 
-        public override void Reset()
-        {
+        public override void Reset() {
             base.Reset();
         }
 

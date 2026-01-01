@@ -6,10 +6,8 @@ using Engine.Events;
 using Engine.Game.Data;
 using Engine.Utility;
 
-namespace Engine.Game.App.BaseApp
-{
-    public class BaseGameProfileCharacterAttributes
-    {
+namespace Engine.Game.App.BaseApp {
+    public class BaseGameProfileCharacterAttributes {
 
         public static string ATT_CURRENT_CHARACTER_PROFILE_CODE = "att-current-character-profile-code";
         public static string ATT_CURRENT_CHARACTER_CODE = "att-current-character-code";
@@ -18,21 +16,16 @@ namespace Engine.Game.App.BaseApp
         public static string ATT_CHARACTERS = "att-characters";
     }
 
-    public class BaseGameProfileCharacters
-    {
+    public class BaseGameProfileCharacters {
         private static volatile BaseGameProfileCharacter current;
         private static volatile BaseGameProfileCharacters instance;
         private static object syncRoot = new Object();
         public static string DEFAULT_USERNAME = "Player";
 
-        public static BaseGameProfileCharacter BaseCurrent
-        {
-            get
-            {
-                if (current == null)
-                {
-                    lock (syncRoot)
-                    {
+        public static BaseGameProfileCharacter BaseCurrent {
+            get {
+                if (current == null) {
+                    lock (syncRoot) {
                         if (current == null)
                             current = new BaseGameProfileCharacter();
                     }
@@ -40,20 +33,15 @@ namespace Engine.Game.App.BaseApp
 
                 return current;
             }
-            set
-            {
+            set {
                 current = value;
             }
         }
 
-        public static BaseGameProfileCharacters BaseInstance
-        {
-            get
-            {
-                if (instance == null)
-                {
-                    lock (syncRoot)
-                    {
+        public static BaseGameProfileCharacters BaseInstance {
+            get {
+                if (instance == null) {
+                    lock (syncRoot) {
                         if (instance == null)
                             instance = new BaseGameProfileCharacters();
                     }
@@ -67,10 +55,8 @@ namespace Engine.Game.App.BaseApp
 
         public static GameProfileCharacterItem currentCharacter = null;
 
-        public static GameProfilePlayerProgressItem currentProgress
-        {
-            get
-            {
+        public static GameProfilePlayerProgressItem currentProgress {
+            get {
 #if USE_GAME_LIB_GAMES
                 return GameProfileCharacters.Current.GetCurrentCharacter().profilePlayerProgress;
 #else
@@ -79,10 +65,8 @@ namespace Engine.Game.App.BaseApp
             }
         }
 
-        public static GameProfileRPGItem currentRPG
-        {
-            get
-            {
+        public static GameProfileRPGItem currentRPG {
+            get {
 #if USE_GAME_LIB_GAMES
                 return GameProfileCharacters.Current.GetCurrentCharacter().profileRPGItem;
 #else
@@ -91,10 +75,8 @@ namespace Engine.Game.App.BaseApp
             }
         }
 
-        public static GameProfileCustomItem currentCustom
-        {
-            get
-            {
+        public static GameProfileCustomItem currentCustom {
+            get {
 #if USE_GAME_LIB_GAMES
                 return GameProfileCharacters.Current.GetCurrentCharacter().profileCustomItem;
 #else
@@ -137,22 +119,18 @@ namespace Engine.Game.App.BaseApp
 
     }
 
-    public class GameProfileCharacterItems
-    {
+    public class GameProfileCharacterItems {
         public List<GameProfileCharacterItem> items;
 
-        public GameProfileCharacterItems()
-        {
+        public GameProfileCharacterItems() {
             Reset();
         }
 
-        public void Reset()
-        {
+        public void Reset() {
             items = new List<GameProfileCharacterItem>();
         }
 
-        public GameProfileCharacterItem GetCharacter(string code)
-        {
+        public GameProfileCharacterItem GetCharacter(string code) {
             //if(items == null) {
             //     items = new List<GameProfileCharacterItem>();
             //
@@ -160,47 +138,38 @@ namespace Engine.Game.App.BaseApp
             //    items.Add(item);
             //}
 
-            if (items == null)
-            {
+            if (items == null) {
                 return null;
             }
 
-            foreach (GameProfileCharacterItem item in items)
-            {
-                if (item.code.ToLower() == code.ToLower())
-                {
+            foreach (GameProfileCharacterItem item in items) {
+                if (item.code.ToLower() == code.ToLower()) {
                     return item;
                 }
             }
             return null;
         }
 
-        public void SetCharacter(string code, GameProfileCharacterItem item)
-        {
+        public void SetCharacter(string code, GameProfileCharacterItem item) {
             bool found = false;
 
-            for (int i = 0; i < items.Count; i++)
-            {
-                if (items[i].code.ToLower() == code.ToLower())
-                {
+            for (int i = 0; i < items.Count; i++) {
+                if (items[i].code.ToLower() == code.ToLower()) {
                     items[i] = item;
                     found = true;
                     break;
                 }
             }
 
-            if (!found)
-            {
+            if (!found) {
                 items.Add(item);
             }
         }
 
-        public void SetCharacterRPG(string code, GameProfileRPGItem item)
-        {
+        public void SetCharacterRPG(string code, GameProfileRPGItem item) {
             GameProfileCharacterItem character = GetCharacter(code);
 
-            if (character == null)
-            {
+            if (character == null) {
                 character = new GameProfileCharacterItem();
             }
 
@@ -208,12 +177,10 @@ namespace Engine.Game.App.BaseApp
             SetCharacter(code, character);
         }
 
-        public void SetCharacterCustom(string code, GameProfileCustomItem item)
-        {
+        public void SetCharacterCustom(string code, GameProfileCustomItem item) {
             GameProfileCharacterItem character = GetCharacter(code);
 
-            if (character == null)
-            {
+            if (character == null) {
                 character = new GameProfileCharacterItem();
             }
 
@@ -221,12 +188,10 @@ namespace Engine.Game.App.BaseApp
             SetCharacter(code, character);
         }
 
-        public void SetCharacterProgress(string code, GameProfilePlayerProgressItem item)
-        {
+        public void SetCharacterProgress(string code, GameProfilePlayerProgressItem item) {
             GameProfileCharacterItem character = GetCharacter(code);
 
-            if (character == null)
-            {
+            if (character == null) {
                 character = new GameProfileCharacterItem();
             }
 
@@ -235,8 +200,7 @@ namespace Engine.Game.App.BaseApp
         }
     }
 
-    public class GameProfileCharacterItemKeys
-    {
+    public class GameProfileCharacterItemKeys {
         public static string code = "code";
         public static string current = "current";
         public static string characterCode = "characterCode";
@@ -248,15 +212,12 @@ namespace Engine.Game.App.BaseApp
         public static string profileCustomItem = "profileCustomItem";
     }
 
-    public class GameProfileCharacterItem : DataObject
-    {
+    public class GameProfileCharacterItem : DataObject {
 
         // profile specific code
 
-        public virtual string code
-        {
-            get
-            {
+        public virtual string code {
+            get {
 #if USE_GAME_LIB_GAMES
                 return Get<string>(
                     GameProfileCharacterItemKeys.code,
@@ -266,18 +227,15 @@ namespace Engine.Game.App.BaseApp
 #endif
             }
 
-            set
-            {
+            set {
                 Set(GameProfileCharacterItemKeys.code, value);
             }
         }
 
         // game character code
 
-        public virtual string characterCode
-        {
-            get
-            {
+        public virtual string characterCode {
+            get {
 #if USE_GAME_LIB_GAMES
                 return Get<string>(
                     GameProfileCharacterItemKeys.characterCode,
@@ -287,18 +245,15 @@ namespace Engine.Game.App.BaseApp
 #endif
             }
 
-            set
-            {
+            set {
                 Set(GameProfileCharacterItemKeys.characterCode, value);
             }
         }
 
         // user visible name
 
-        public virtual string characterDisplayName
-        {
-            get
-            {
+        public virtual string characterDisplayName {
+            get {
 #if USE_GAME_LIB_GAMES
                 return Get<string>(
                     GameProfileCharacterItemKeys.characterDisplayName,
@@ -308,18 +263,15 @@ namespace Engine.Game.App.BaseApp
 #endif
             }
 
-            set
-            {
+            set {
                 Set(GameProfileCharacterItemKeys.characterDisplayName, value);
             }
         }
 
         // user visible number
 
-        public virtual string characterDisplayCode
-        {
-            get
-            {
+        public virtual string characterDisplayCode {
+            get {
 #if USE_GAME_LIB_GAMES
                 return Get<string>(
                     GameProfileCharacterItemKeys.characterDisplayCode,
@@ -329,61 +281,49 @@ namespace Engine.Game.App.BaseApp
 #endif
             }
 
-            set
-            {
+            set {
                 Set(GameProfileCharacterItemKeys.characterDisplayCode, value);
             }
         }
 
-        public virtual GameProfileRPGItem profileRPGItem
-        {
-            get
-            {
+        public virtual GameProfileRPGItem profileRPGItem {
+            get {
                 return Get<GameProfileRPGItem>(
                     GameProfileCharacterItemKeys.profileRPGItem, new GameProfileRPGItem());
             }
 
-            set
-            {
+            set {
                 Set(GameProfileCharacterItemKeys.profileRPGItem, value);
             }
         }
 
-        public virtual GameProfilePlayerProgressItem profilePlayerProgress
-        {
-            get
-            {
+        public virtual GameProfilePlayerProgressItem profilePlayerProgress {
+            get {
                 return Get<GameProfilePlayerProgressItem>(
                     GameProfileCharacterItemKeys.profilePlayerProgress, new GameProfilePlayerProgressItem());
             }
 
-            set
-            {
+            set {
                 Set(GameProfileCharacterItemKeys.profilePlayerProgress, value);
             }
         }
 
-        public virtual GameProfileCustomItem profileCustomItem
-        {
-            get
-            {
+        public virtual GameProfileCustomItem profileCustomItem {
+            get {
                 return Get<GameProfileCustomItem>(
                     GameProfileCharacterItemKeys.profileCustomItem, new GameProfileCustomItem());
             }
 
-            set
-            {
+            set {
                 Set(GameProfileCharacterItemKeys.profileCustomItem, value);
             }
         }
 
-        public GameProfileCharacterItem()
-        {
+        public GameProfileCharacterItem() {
             Reset();
         }
 
-        public override void Reset()
-        {
+        public override void Reset() {
             base.Reset();
 
 #if USE_GAME_LIB_GAMES  
@@ -397,29 +337,24 @@ namespace Engine.Game.App.BaseApp
         }
 
 #if USE_GAME_LIB_GAMES  
-        public GameCharacter GetCharacterData()
-        {
+        public GameCharacter GetCharacterData() {
             return GameCharacters.Instance.GetById(characterCode);
         }
 
-        public string GetCharacterDataModel()
-        {
+        public string GetCharacterDataModel() {
             GameCharacter gameCharacter = GetCharacterData();
 
-            if (gameCharacter == null)
-            {
+            if (gameCharacter == null) {
                 return ProfileConfigs.defaultGameCharacterCode;
             }
 
-            if (gameCharacter.data == null)
-            {
+            if (gameCharacter.data == null) {
                 return ProfileConfigs.defaultGameCharacterCode;
             }
 
             GameDataModel gameModelData = gameCharacter.data.GetModel();
 
-            if (gameModelData == null)
-            {
+            if (gameModelData == null) {
                 return ProfileConfigs.defaultGameCharacterCode;
             }
 
@@ -428,62 +363,52 @@ namespace Engine.Game.App.BaseApp
 #endif
     }
 
-    public class BaseGameProfileCharacter : DataObject
-    {
+    public class BaseGameProfileCharacter : DataObject {
         // BE CAREFUL adding properties as they will cause a need for a profile conversion
         // Best way to add items to the profile is the GetAttribute and SetAttribute class as 
         // that stores as a generic DataAttribute class.  Booleans, strings, objects, serialized json objects etc
         // all work well and cause no need to convert profile on updates. 
 
-        public BaseGameProfileCharacter()
-        {
+        public BaseGameProfileCharacter() {
             //Reset();
         }
 
-        public override void Reset()
-        {
+        public override void Reset() {
             base.Reset();
             //username = ProfileConfigs.defaultPlayerName;
         }
 
         // characters
 
-        public virtual GameProfileCharacterItems character_items
-        {
-            get
-            {
+        public virtual GameProfileCharacterItems character_items {
+            get {
                 return Get<GameProfileCharacterItems>(BaseDataObjectKeys.character_items);
             }
 
-            set
-            {
+            set {
                 Set(BaseDataObjectKeys.character_items, value);
             }
         }
 
-        public virtual void SetCharacters(GameProfileCharacterItems obj)
-        {
+        public virtual void SetCharacters(GameProfileCharacterItems obj) {
 
             character_items = obj;
 
             Messenger.Broadcast(BaseGameProfileMessages.ProfileShouldBeSaved);
         }
 
-        public virtual GameProfileCharacterItems GetCharacters()
-        {
+        public virtual GameProfileCharacterItems GetCharacters() {
             GameProfileCharacterItems obj = new GameProfileCharacterItems();
 
             obj = character_items;
 
             //UnityEngine.LogUtil.Log("GameProfileCharacterItems:obj:" + obj.ToJson());
 
-            if (obj == null)
-            {
+            if (obj == null) {
                 obj = new GameProfileCharacterItems();
             }
 
-            if (obj.items.Count == 0)
-            {
+            if (obj.items.Count == 0) {
 #if USE_GAME_LIB_GAMES
                 // add default
                 obj.SetCharacter(
@@ -499,8 +424,7 @@ namespace Engine.Game.App.BaseApp
 
         // helpers
 
-        public void CurrentCharacterAddGamePlayerProgressXP(double val)
-        {
+        public void CurrentCharacterAddGamePlayerProgressXP(double val) {
             GameProfileCharacterItem character = GetCurrentCharacter();
             character.profilePlayerProgress.AddGamePlayerProgressXP(val);
 #if USE_GAME_LIB_GAMES
@@ -509,36 +433,31 @@ namespace Engine.Game.App.BaseApp
             SetCharacter(character);
         }
 
-        public void CurrentCharacterAddGamePlayerProgressLevel(double val)
-        {
+        public void CurrentCharacterAddGamePlayerProgressLevel(double val) {
             GameProfileCharacterItem character = GetCurrentCharacter();
             character.profilePlayerProgress.AddGamePlayerProgressLevel(val);
             SetCharacter(character);
         }
 
-        public void CurrentCharacterAddGamePlayerProgressEnergy(double val)
-        {
+        public void CurrentCharacterAddGamePlayerProgressEnergy(double val) {
             GameProfileCharacterItem character = GetCurrentCharacter();
             character.profilePlayerProgress.AddGamePlayerProgressEnergy(val);
             SetCharacter(character);
         }
 
-        public void CurrentCharacterAddGamePlayerProgressEnergyAndHealth(double valEnergy, double valHealth)
-        {
+        public void CurrentCharacterAddGamePlayerProgressEnergyAndHealth(double valEnergy, double valHealth) {
             GameProfileCharacterItem character = GetCurrentCharacter();
             character.profilePlayerProgress.AddGamePlayerProgressEnergy(valEnergy);
             character.profilePlayerProgress.AddGamePlayerProgressHealth(valHealth);
             SetCharacter(character);
         }
 
-        public void CurrentCharacterAddGamePlayerProgressEnergyAndHealthRuntime(double valEnergy, double valHealth)
-        {
+        public void CurrentCharacterAddGamePlayerProgressEnergyAndHealthRuntime(double valEnergy, double valHealth) {
             BaseGameProfileCharacters.currentCharacter.profilePlayerProgress.AddGamePlayerProgressEnergy(valEnergy);
             BaseGameProfileCharacters.currentCharacter.profilePlayerProgress.AddGamePlayerProgressHealth(valHealth);
         }
 
-        public void CurrentCharacterAddGamePlayerProgressHealth(double val)
-        {
+        public void CurrentCharacterAddGamePlayerProgressHealth(double val) {
             GameProfileCharacterItem character = GetCurrentCharacter();
             character.profilePlayerProgress.AddGamePlayerProgressHealth(val);
             SetCharacter(character);
@@ -546,23 +465,19 @@ namespace Engine.Game.App.BaseApp
 
         // character 
 
-        public GameProfileRPGItem GetCurrentCharacterRPG()
-        {
+        public GameProfileRPGItem GetCurrentCharacterRPG() {
             return GetCurrentCharacter().profileRPGItem;
         }
 
-        public GameProfileCustomItem GetCurrentCharacterCustom()
-        {
+        public GameProfileCustomItem GetCurrentCharacterCustom() {
             return GetCurrentCharacter().profileCustomItem;
         }
 
-        public GameProfilePlayerProgressItem GetCurrentCharacterProgress()
-        {
+        public GameProfilePlayerProgressItem GetCurrentCharacterProgress() {
             return GetCurrentCharacter().profilePlayerProgress;
         }
 
-        public GameProfileCharacterItem GetCurrentCharacter()
-        {
+        public GameProfileCharacterItem GetCurrentCharacter() {
 #if USE_GAME_LIB_GAMES
             return GetCharacter(GameProfileCharacters.Current.GetCurrentCharacterProfileCode());
 #else
@@ -570,53 +485,42 @@ namespace Engine.Game.App.BaseApp
 #endif
         }
 
-        public GameProfileRPGItem GetCharacterRPG(string code)
-        {
+        public GameProfileRPGItem GetCharacterRPG(string code) {
             return GetCharacter(code).profileRPGItem;
         }
 
-        public GameProfileCustomItem GetCharacterCustom(string code)
-        {
+        public GameProfileCustomItem GetCharacterCustom(string code) {
             return GetCharacter(code).profileCustomItem;
         }
 
-        public GameProfilePlayerProgressItem GetCharacterProgress(string code)
-        {
+        public GameProfilePlayerProgressItem GetCharacterProgress(string code) {
             return GetCharacter(code).profilePlayerProgress;
         }
 
-        public GameProfileCharacterItem GetCharacter(string code)
-        {
+        public GameProfileCharacterItem GetCharacter(string code) {
 
-            if (BaseGameProfileCharacters.currentCharacter != null)
-            {
-                if (BaseGameProfileCharacters.currentCharacter.code == code)
-                {
+            if (BaseGameProfileCharacters.currentCharacter != null) {
+                if (BaseGameProfileCharacters.currentCharacter.code == code) {
                     return BaseGameProfileCharacters.currentCharacter;
                 }
-                else
-                {
+                else {
                     BaseGameProfileCharacters.currentCharacter = null;
                 }
             }
 
-            if (BaseGameProfileCharacters.currentCharacter == null)
-            {
+            if (BaseGameProfileCharacters.currentCharacter == null) {
                 GameProfileCharacterItem item = GetCharacters().GetCharacter(code);
 
                 // TODO check this to be sure initing is no problem in sync
-                if (item == null && code != "default")
-                {
+                if (item == null && code != "default") {
                     item = new GameProfileCharacterItem();
                     GetCharacters().SetCharacter(code, item);
                 }
 
-                if (item != null)
-                {
+                if (item != null) {
 
 #if USE_GAME_LIB_GAMES
-                    if (item.profileCustomItem != null && GameCustomController.Instance != null)
-                    {
+                    if (item.profileCustomItem != null && GameCustomController.Instance != null) {
                         item.profileCustomItem =
                             GameCustomController.CheckCustomColorInit(item.profileCustomItem, BaseDataObjectKeys.character);
                     }
@@ -628,22 +532,18 @@ namespace Engine.Game.App.BaseApp
             return BaseGameProfileCharacters.currentCharacter;
         }
 
-        public void AddCharacter(string characterCode)
-        {
+        public void AddCharacter(string characterCode) {
 #if USE_GAME_LIB_GAMES
             GameCharacter gameCharacter = GameCharacters.Instance.GetById(characterCode);
 
-            if (gameCharacter != null)
-            {
+            if (gameCharacter != null) {
 
                 int countSameType = 0;
 
                 string characterNameTemp = "";
 
-                foreach (GameProfileCharacterItem _item in GetCharacters().items)
-                {
-                    if (_item.characterDisplayName.Contains(gameCharacter.display_name))
-                    {
+                foreach (GameProfileCharacterItem _item in GetCharacters().items) {
+                    if (_item.characterDisplayName.Contains(gameCharacter.display_name)) {
                         countSameType = countSameType + 1;
                     }
                 }
@@ -660,18 +560,15 @@ namespace Engine.Game.App.BaseApp
 #endif
         }
 
-        public void SetCharacter(string code, GameProfileCharacterItem item)
-        {
+        public void SetCharacter(string code, GameProfileCharacterItem item) {
             SetCharacter(code, item, true);
         }
 
-        public void SetCharacter(string code, GameProfileCharacterItem item, bool setAsCurrent)
-        {
+        public void SetCharacter(string code, GameProfileCharacterItem item, bool setAsCurrent) {
 
             GameProfileCharacterItems characters = GetCharacters();
 
-            if (setAsCurrent)
-            {
+            if (setAsCurrent) {
                 BaseGameProfileCharacters.currentCharacter = item;
 #if USE_GAME_LIB_GAMES
                 GameProfileCharacters.Current.SetCurrentCharacterProfileCode(code);
@@ -682,43 +579,37 @@ namespace Engine.Game.App.BaseApp
             SetCharacters(characters);
         }
 
-        public void SetCharacter(GameProfileCharacterItem item)
-        {
+        public void SetCharacter(GameProfileCharacterItem item) {
 #if USE_GAME_LIB_GAMES
             SetCharacter(GameProfileCharacters.Current.GetCurrentCharacterProfileCode(), item);
 #endif
         }
 
-        public void SetCharacterRPG(string code, GameProfileRPGItem item)
-        {
+        public void SetCharacterRPG(string code, GameProfileRPGItem item) {
             GameProfileCharacterItems characters = GetCharacters();
             characters.SetCharacterRPG(code, item);
             SetCharacters(characters);
         }
 
-        public void SetCharacterProgress(string code, GameProfilePlayerProgressItem item)
-        {
+        public void SetCharacterProgress(string code, GameProfilePlayerProgressItem item) {
             GameProfileCharacterItems characters = GetCharacters();
             characters.SetCharacterProgress(code, item);
             SetCharacters(characters);
         }
 
-        public void SetCharacterCustom(string code, GameProfileCustomItem item)
-        {
+        public void SetCharacterCustom(string code, GameProfileCustomItem item) {
             GameProfileCharacterItems characters = GetCharacters();
             characters.SetCharacterCustom(code, item);
             SetCharacters(characters);
         }
 
-        public void SetCharacterRPG(GameProfileRPGItem item)
-        {
+        public void SetCharacterRPG(GameProfileRPGItem item) {
 #if USE_GAME_LIB_GAMES
             SetCharacterRPG(GameProfileCharacters.Current.GetCurrentCharacterProfileCode(), item);
 #endif
         }
 
-        public void SetCharacterCustom(GameProfileCustomItem item)
-        {
+        public void SetCharacterCustom(GameProfileCustomItem item) {
 #if USE_GAME_LIB_GAMES
             SetCharacterCustom(GameProfileCharacters.Current.GetCurrentCharacterProfileCode(), item);
 #endif
@@ -726,8 +617,7 @@ namespace Engine.Game.App.BaseApp
 
         // customizations        
 
-        public virtual void SetValue(string code, object value)
-        {
+        public virtual void SetValue(string code, object value) {
             DataAttribute att = new DataAttribute();
             att.val = value;
             att.code = code;
@@ -737,27 +627,23 @@ namespace Engine.Game.App.BaseApp
             SetAttribute(att);
         }
 
-        public virtual bool GetValue(string code)
-        {
+        public virtual bool GetValue(string code) {
             bool currentValue = false;
             object objectValue = GetAttribute(code).val;
-            if (objectValue != null)
-            {
+            if (objectValue != null) {
                 currentValue = Convert.ToBoolean(objectValue);
             }
 
             return currentValue;
         }
 
-        public virtual List<DataAttribute> GetList()
-        {
+        public virtual List<DataAttribute> GetList() {
             return GetAttributesList("character");
         }
 
         // CHARACTER - Player specific 
 
-        public string GetCurrentCharacterProfileCode()
-        {
+        public string GetCurrentCharacterProfileCode() {
 #if USE_GAME_LIB_GAMES
             return GetCurrentCharacterProfileCode(ProfileConfigs.defaultProfileCharacterCode);
 #else
@@ -765,16 +651,14 @@ namespace Engine.Game.App.BaseApp
 #endif
         }
 
-        public string GetCurrentCharacterProfileCode(string defaultValue)
-        {
+        public string GetCurrentCharacterProfileCode(string defaultValue) {
             string attValue = defaultValue;
             if (CheckIfAttributeExists(BaseGameProfileCharacterAttributes.ATT_CURRENT_CHARACTER_PROFILE_CODE))
                 attValue = GetAttributeStringValue(BaseGameProfileCharacterAttributes.ATT_CURRENT_CHARACTER_PROFILE_CODE);
             return attValue;
         }
 
-        public void SetCurrentCharacterProfileCode(string attValue)
-        {
+        public void SetCurrentCharacterProfileCode(string attValue) {
             SetAttributeStringValue(BaseGameProfileCharacterAttributes.ATT_CURRENT_CHARACTER_PROFILE_CODE, attValue);
         }
     }

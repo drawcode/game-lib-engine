@@ -9,10 +9,8 @@ using System.Text;
 
 using UnityEngine;
 
-namespace Engine.Analytics
-{
-	public class GoogleTracker
-	{
+namespace Engine.Analytics {
+	public class GoogleTracker {
 		private const string TrackingAccountConfigurationKey = "GoogleAnalyticsGoogleTracker.TrackingAccount";
 		private const string TrackingDomainConfigurationKey = "GoogleAnalyticsGoogleTracker.TrackingDomain";
 
@@ -40,13 +38,11 @@ namespace Engine.Analytics
 		public bool UseSsl { get; set; }
 
 		public GoogleTracker(string trackingAccount, string trackingDomain)
-			: this(trackingAccount, trackingDomain, new GoogleTrackerUnity3DAnalyticsSession())
-		{
+			: this(trackingAccount, trackingDomain, new GoogleTrackerUnity3DAnalyticsSession()) {
 
 		}
 
-		public GoogleTracker(string trackingAccount, string trackingDomain, GoogleTrackerIAnalyticsSession googleTrackerAnalyticsSession)
-		{
+		public GoogleTracker(string trackingAccount, string trackingDomain, GoogleTrackerIAnalyticsSession googleTrackerAnalyticsSession) {
 			TrackingAccount = trackingAccount;
 			TrackingDomain = trackingDomain;
 			GoogleTrackerAnalyticsSession = googleTrackerAnalyticsSession;
@@ -72,19 +68,16 @@ namespace Engine.Analytics
 			_UtmeGenerator = new GoogleTrackerUtmeGenerator(this);
 		}
 
-		private void InitializeCharset()
-		{
+		private void InitializeCharset() {
 			CharacterSet = "UTF-8";
 		}
 
-		private string GenerateUtmn()
-		{
+		private string GenerateUtmn() {
 			var random = new System.Random((int)DateTime.UtcNow.Ticks);
 			return random.Next(100000000, 999999999).ToString(CultureInfo.InvariantCulture);
 		}
 
-		public void SetGoogleTrackerCustomVariable(int position, string name, string value)
-		{
+		public void SetGoogleTrackerCustomVariable(int position, string name, string value) {
 			if (position < 1 || position > 5)
 				throw new ArgumentOutOfRangeException(string.Format("position {0} - {1}", position, "Must be between 1 and 5"));
 
@@ -93,11 +86,9 @@ namespace Engine.Analytics
 
 		// UNITY 3D	
 
-		public void TrackPageView(string pageTitle, string pageUrl)
-		{
+		public void TrackPageView(string pageTitle, string pageUrl) {
 
-			if (Context.Current.hasNetworkAccess)
-			{
+			if (Context.Current.hasNetworkAccess) {
 				Dictionary<string, string> parameters = new Dictionary<string, string>();
 				parameters.Add("AnalyticsVersion", AnalyticsVersion);
 				parameters.Add("utmn", GenerateUtmn());
@@ -115,8 +106,7 @@ namespace Engine.Analytics
 					parameters.Add("utme", utme);
 
 				StringBuilder data = new StringBuilder();
-				foreach (var parameter in parameters)
-				{
+				foreach (var parameter in parameters) {
 					data.Append(string.Format("{0}={1}&", parameter.Key, Uri.EscapeDataString(parameter.Value)));
 				}
 
@@ -129,17 +119,14 @@ namespace Engine.Analytics
 			}
 		}
 
-		void HandleTrackPageViewCallback(Engine.Networking.WebRequests.ResponseObject response)
-		{
+		void HandleTrackPageViewCallback(Engine.Networking.WebRequests.ResponseObject response) {
 			//string responseText = response.www.text;
 			//LogUtil.Log("HandleTrackPageViewCallback responseText:" + responseText);		
 		}
 
-		public void TrackEvent(string category, string action, string label, int val)
-		{
+		public void TrackEvent(string category, string action, string label, int val) {
 
-			if (Context.Current.hasNetworkAccess)
-			{
+			if (Context.Current.hasNetworkAccess) {
 				Dictionary<string, string> parameters = new Dictionary<string, string>();
 				parameters.Add("AnalyticsVersion", AnalyticsVersion);
 				parameters.Add("utmn", GenerateUtmn());
@@ -157,8 +144,7 @@ namespace Engine.Analytics
 				parameters.Add("utmcc", GoogleTrackerAnalyticsSession.GenerateCookieValue());
 
 				StringBuilder data = new StringBuilder();
-				foreach (var parameter in parameters)
-				{
+				foreach (var parameter in parameters) {
 					data.Append(string.Format("{0}={1}&", parameter.Key, Uri.EscapeDataString(parameter.Value)));
 				}
 
@@ -171,19 +157,16 @@ namespace Engine.Analytics
 			}
 		}
 
-		void HandleTrackEventCallback(Engine.Networking.WebRequests.ResponseObject response)
-		{
+		void HandleTrackEventCallback(Engine.Networking.WebRequests.ResponseObject response) {
 			//string responseText = response.www.text;
 			//LogUtil.Log("HandleTrackEventCallback responseText:" + responseText);		
 		}
 
 		public void TrackTransaction(
 			string orderId, string storeName, string total, string tax,
-			string shipping, string city, string region, string country)
-		{
+			string shipping, string city, string region, string country) {
 
-			if (Context.Current.hasNetworkAccess)
-			{
+			if (Context.Current.hasNetworkAccess) {
 				Dictionary<string, string> parameters = new Dictionary<string, string>();
 				parameters.Add("AnalyticsVersion", AnalyticsVersion);
 				parameters.Add("utmn", GenerateUtmn());
@@ -205,8 +188,7 @@ namespace Engine.Analytics
 				parameters.Add("utmtco", country);
 
 				StringBuilder data = new StringBuilder();
-				foreach (var parameter in parameters)
-				{
+				foreach (var parameter in parameters) {
 					data.Append(string.Format("{0}={1}&", parameter.Key, Uri.EscapeDataString(parameter.Value)));
 				}
 
@@ -219,8 +201,7 @@ namespace Engine.Analytics
 			}
 		}
 
-		void HandleTrackTransactionCallback(Engine.Networking.WebRequests.ResponseObject response)
-		{
+		void HandleTrackTransactionCallback(Engine.Networking.WebRequests.ResponseObject response) {
 			//string responseText = response.www.text;
 			//LogUtil.Log("HandleTrackTransactionCallback responseText:" + responseText);		
 		}

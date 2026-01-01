@@ -13,13 +13,13 @@ public class ParticleDestroy : MonoBehaviour {
 
     IEnumerator CheckIfAlive() {
 
-        while(true) {
+        while (true) {
 
             yield return new WaitForSeconds(0.5f);
 
-            if(!gameObject.Get<ParticleSystem>().IsAlive(true)) {
+            if (!gameObject.Get<ParticleSystem>().IsAlive(true)) {
 
-                if(OnlyDeactivate) {
+                if (OnlyDeactivate) {
 
                     gameObject.Hide();
                 }

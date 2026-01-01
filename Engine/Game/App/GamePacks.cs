@@ -5,10 +5,8 @@ using Engine.Content;
 using Engine.Game.Data;
 using Engine.Utility;
 
-namespace Engine.Game.App
-{
-    public class GamePacks : DataObjects<GamePack>
-    {
+namespace Engine.Game.App {
+    public class GamePacks : DataObjects<GamePack> {
         private static volatile GamePack current;
         private static volatile GamePacks instance;
         private static object syncRoot = new System.Object();
@@ -40,14 +38,10 @@ namespace Engine.Game.App
         public static string currentPackDataPath = "";
         public static string currentPackScenesPath = "";
 
-        public static GamePack Current
-        {
-            get
-            {
-                if (current == null)
-                {
-                    lock (syncRoot)
-                    {
+        public static GamePack Current {
+            get {
+                if (current == null) {
+                    lock (syncRoot) {
                         if (current == null)
                             current = new GamePack();
                     }
@@ -55,20 +49,15 @@ namespace Engine.Game.App
 
                 return current;
             }
-            set
-            {
+            set {
                 current = value;
             }
         }
 
-        public static GamePacks Instance
-        {
-            get
-            {
-                if (instance == null)
-                {
-                    lock (syncRoot)
-                    {
+        public static GamePacks Instance {
+            get {
+                if (instance == null) {
+                    lock (syncRoot) {
                         if (instance == null)
                             instance = new GamePacks(true);
                     }
@@ -78,21 +67,18 @@ namespace Engine.Game.App
             }
         }
 
-        public GamePacks()
-        {
+        public GamePacks() {
             Reset();
         }
 
-        public GamePacks(bool loadData)
-        {
+        public GamePacks(bool loadData) {
             Reset();
             path = "data/" + DATA_KEY + ".json";
             pathKey = DATA_KEY;
             LoadData();
         }
 
-        public void InitPackPaths()
-        {
+        public void InitPackPaths() {
 
             currentPacksPath = Path.Combine(ContentPaths.appCachePlatformPath, ContentConfig.contentCachePacks);
             currentPackPath = Path.Combine(currentPacksPath, GamePacks.Current.code);
@@ -101,8 +87,7 @@ namespace Engine.Game.App
             currentPackScenesPath = Path.Combine(currentPackPath, ContentConfig.contentCacheScenes);
         }
 
-        public void ChangeCurrentGamePack(string code)
-        {
+        public void ChangeCurrentGamePack(string code) {
             Current = GetById(code);
             LogUtil.Log("Changing Pack: code:" + code);
             LogUtil.Log("Changing Pack: name:" + Current.name);
@@ -110,14 +95,11 @@ namespace Engine.Game.App
             InitPackPaths();
         }
 
-        public bool OwnsAllPacks()
-        {
-            foreach (GamePack pack in GetAll())
-            {
+        public bool OwnsAllPacks() {
+            foreach (GamePack pack in GetAll()) {
                 //if(pack.code != GameProducts.ITEM_PACK_SX_2012_ALL
                 //  && pack.code != GamePacks.PACK_DEFAULT) {
-                if (!Contents.CheckGlobalContentAccess(pack.code))
-                {
+                if (!Contents.CheckGlobalContentAccess(pack.code)) {
                     return false;
                 }
                 //}
@@ -125,14 +107,11 @@ namespace Engine.Game.App
             return true;
         }
 
-        public bool OwnsAtLeastOnePack()
-        {
-            foreach (GamePack pack in GetAll())
-            {
+        public bool OwnsAtLeastOnePack() {
+            foreach (GamePack pack in GetAll()) {
                 //if(pack.code != GameProducts.ITEM_PACK_SX_2012_ALL
                 //  && pack.code != GamePacks.PACK_DEFAULT) {
-                if (Contents.CheckGlobalContentAccess(pack.code))
-                {
+                if (Contents.CheckGlobalContentAccess(pack.code)) {
                     return true;
                 }
                 //}
@@ -141,24 +120,20 @@ namespace Engine.Game.App
         }
     }
 
-    public class GamePack : GameDataObject
-    {
+    public class GamePack : GameDataObject {
 
         // Attributes that are added or changed after launch should be like this to prevent
         // profile conversions.
 
-        public GamePack()
-        {
+        public GamePack() {
             Reset();
         }
 
-        public override void Reset()
-        {
+        public override void Reset() {
             base.Reset();
         }
 
-        public void Clone(GamePack toCopy)
-        {
+        public void Clone(GamePack toCopy) {
 
             base.Clone(toCopy);
         }

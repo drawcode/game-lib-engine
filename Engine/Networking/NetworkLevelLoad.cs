@@ -7,8 +7,8 @@ using Engine.Utility;
 using UnityEngine;
 
 namespace Engine.Networking {
-    
-    #if NETWORK_USE_UNITY
+
+#if NETWORK_USE_UNITY
 
     [RequireComponent(typeof(NetworkView))]
     public class NetworkLevelLoad : BaseEngineBehavior {

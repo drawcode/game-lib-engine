@@ -15,10 +15,8 @@ using System.Collections;
 using System.Collections.Specialized;
 
 
-namespace Engine.Data.Json
-{
-    public class JsonMockWrapper : IJsonWrapper
-    {
+namespace Engine.Data.Json {
+    public class JsonMockWrapper : IJsonWrapper {
         public bool IsArray { get { return false; } }
         public bool IsBoolean { get { return false; } }
         public bool IsDouble { get { return false; } }
@@ -48,8 +46,7 @@ namespace Engine.Data.Json
         bool IList.IsFixedSize { get { return true; } }
         bool IList.IsReadOnly { get { return true; } }
 
-        object IList.this[int index]
-        {
+        object IList.this[int index] {
             get { return null; }
             set { }
         }
@@ -79,8 +76,7 @@ namespace Engine.Data.Json
         ICollection IDictionary.Keys { get { return null; } }
         ICollection IDictionary.Values { get { return null; } }
 
-        object IDictionary.this[object key]
-        {
+        object IDictionary.this[object key] {
             get { return null; }
             set { }
         }
@@ -93,14 +89,12 @@ namespace Engine.Data.Json
         IDictionaryEnumerator IDictionary.GetEnumerator() { return null; }
 
 
-        object IOrderedDictionary.this[int idx]
-        {
+        object IOrderedDictionary.this[int idx] {
             get { return null; }
             set { }
         }
 
-        IDictionaryEnumerator IOrderedDictionary.GetEnumerator()
-        {
+        IDictionaryEnumerator IOrderedDictionary.GetEnumerator() {
             return null;
         }
         void IOrderedDictionary.Insert(int i, object k, object v) { }

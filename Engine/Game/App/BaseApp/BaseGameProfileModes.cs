@@ -7,16 +7,13 @@ using Engine.Events;
 using Engine.Game.Data;
 using Engine.Utility;
 
-namespace Engine.Game.App.BaseApp
-{
-    public class BaseGameProfileModeAttributes
-    {
+namespace Engine.Game.App.BaseApp {
+    public class BaseGameProfileModeAttributes {
         // MODES    
         public static string ATT_CURRENT_CAMERA_MODE = "camera-mode";
     }
 
-    public class GameProfileContentCollectItem : GameDataObject
-    {
+    public class GameProfileContentCollectItem : GameDataObject {
         // action code
         // level code
         // mission code
@@ -24,63 +21,51 @@ namespace Engine.Game.App.BaseApp
 
         //public List<AppContentCollectItem> data;
 
-        public GameProfileContentCollectItem()
-        {
+        public GameProfileContentCollectItem() {
             Reset();
         }
 
-        public override void Reset()
-        {
+        public override void Reset() {
             base.Reset();
             //data = new List<AppContentCollectItem>();
         }
 
     }
 
-    public class GameProfileContentCollectItems
-    {
+    public class GameProfileContentCollectItems {
         public List<GameProfileContentCollectItem> items;
 
-        public GameProfileContentCollectItems()
-        {
+        public GameProfileContentCollectItems() {
             Reset();
         }
 
-        public void Reset()
-        {
+        public void Reset() {
             items = new List<GameProfileContentCollectItem>();
         }
 
         // COLLECT ITEM KEYS
 
         public GameProfileContentCollectItem GetItemByTypeAndKey(
-            string type, string key)
-        {
-            if (items == null)
-            {
+            string type, string key) {
+            if (items == null) {
                 return null;
             }
 
-            foreach (GameProfileContentCollectItem item in items)
-            {
+            foreach (GameProfileContentCollectItem item in items) {
                 if (item.key.ToLower() == key.ToLower()
-                    && item.type.ToLower() == type.ToLower())
-                {
+                    && item.type.ToLower() == type.ToLower()) {
                     return item;
                 }
             }
             return null;
         }
 
-        public void SetItemByTypeAndKey(GameProfileContentCollectItem item)
-        {
+        public void SetItemByTypeAndKey(GameProfileContentCollectItem item) {
             bool found = false;
 
-            for (int i = 0; i < items.Count; i++)
-            {
+            for (int i = 0; i < items.Count; i++) {
                 if (items[i].key.ToLower() == item.key.ToLower()
-                    && items[i].type.ToLower() == item.type.ToLower())
-                {
+                    && items[i].type.ToLower() == item.type.ToLower()) {
                     items[i].type = item.type;
                     items[i].key = item.key;
                     items[i].points = item.points;
@@ -90,28 +75,22 @@ namespace Engine.Game.App.BaseApp
                 }
             }
 
-            if (!found)
-            {
+            if (!found) {
                 items.Add(item);
             }
         }
     }
 
-    public class BaseGameProfileModes
-    {
+    public class BaseGameProfileModes {
         private static volatile BaseGameProfileMode current;
         private static volatile BaseGameProfileModes instance;
         private static object syncRoot = new Object();
         public static string DEFAULT_USERNAME = "Player";
 
-        public static BaseGameProfileMode BaseCurrent
-        {
-            get
-            {
-                if (current == null)
-                {
-                    lock (syncRoot)
-                    {
+        public static BaseGameProfileMode BaseCurrent {
+            get {
+                if (current == null) {
+                    lock (syncRoot) {
                         if (current == null)
                             current = new BaseGameProfileMode();
                     }
@@ -119,8 +98,7 @@ namespace Engine.Game.App.BaseApp
 
                 return current;
             }
-            set
-            {
+            set {
                 current = value;
             }
         }
@@ -128,14 +106,10 @@ namespace Engine.Game.App.BaseApp
         //string appContentState = AppContentStates.Current.code;
         //string appState = AppStates.Current.code;
 
-        public static BaseGameProfileModes BaseInstance
-        {
-            get
-            {
-                if (instance == null)
-                {
-                    lock (syncRoot)
-                    {
+        public static BaseGameProfileModes BaseInstance {
+            get {
+                if (instance == null) {
+                    lock (syncRoot) {
                         if (instance == null)
                             instance = new BaseGameProfileModes();
                     }
@@ -151,8 +125,7 @@ namespace Engine.Game.App.BaseApp
             string worldCode,
             string levelCode,
             string appContentCollectCode,
-            string actionCode)
-        {
+            string actionCode) {
             StringBuilder sb = new StringBuilder();
 
             sb.Append(":");
@@ -189,8 +162,7 @@ namespace Engine.Game.App.BaseApp
         }
 
         public static string GetAppContentCollectItemKey(
-            string missionCode)
-        {
+            string missionCode) {
             string appState = AppStates.Current.code;
             string appContentState = AppContentStates.Current.code;
 
@@ -208,8 +180,7 @@ namespace Engine.Game.App.BaseApp
         }
 
         public static string GetAppContentCollectItemKey(
-            string missionCode, string actionUid)
-        {
+            string missionCode, string actionUid) {
             string appState = AppStates.Current.code;
             string appContentState = AppContentStates.Current.code;
 
@@ -229,28 +200,24 @@ namespace Engine.Game.App.BaseApp
         // TODO: Common profile actions, lookup, count, etc
     }
 
-    public class BaseGameProfileMode : DataObject
-    {
+    public class BaseGameProfileMode : DataObject {
         // BE CAREFUL adding properties as they will cause a need for a profile conversion
         // Best way to add items to the profile is the GetAttribute and SetAttribute class as 
         // that stores as a generic DataAttribute class.  Booleans, strings, objects, serialized json objects etc
         // all work well and cause no need to convert profile on updates. 
 
-        public BaseGameProfileMode()
-        {
+        public BaseGameProfileMode() {
             //Reset();
         }
 
-        public override void Reset()
-        {
+        public override void Reset() {
             base.Reset();
             //username = ProfileConfigs.defaultPlayerName;
         }
 
         // customizations       
 
-        public virtual void SetValue(string code, object value)
-        {
+        public virtual void SetValue(string code, object value) {
             DataAttribute att = new DataAttribute();
             att.val = value;
             att.code = code;
@@ -260,8 +227,7 @@ namespace Engine.Game.App.BaseApp
             SetAttribute(att);
         }
 
-        public virtual List<DataAttribute> GetList()
-        {
+        public virtual List<DataAttribute> GetList() {
             return GetAttributesList("mode");
         }
 
@@ -277,54 +243,45 @@ namespace Engine.Game.App.BaseApp
 
         // Missions are
 
-        public virtual GameProfileContentCollectItems app_content_collect_items
-        {
-            get
-            {
+        public virtual GameProfileContentCollectItems app_content_collect_items {
+            get {
                 return Get<GameProfileContentCollectItems>(BaseDataObjectKeys.app_content_collect_items);
             }
 
-            set
-            {
+            set {
                 Set<GameProfileContentCollectItems>(BaseDataObjectKeys.app_content_collect_items, value);
             }
         }
 
-        public virtual void SetContentCollectItems(GameProfileContentCollectItems obj)
-        {
+        public virtual void SetContentCollectItems(GameProfileContentCollectItems obj) {
             app_content_collect_items = obj;
 
             Messenger.Broadcast(BaseGameProfileMessages.ProfileShouldBeSaved);
         }
 
-        public virtual GameProfileContentCollectItems GetContentCollectItems()
-        {
+        public virtual GameProfileContentCollectItems GetContentCollectItems() {
             GameProfileContentCollectItems obj = new GameProfileContentCollectItems();
 
             obj = app_content_collect_items;
 
-            if (obj == null)
-            {
+            if (obj == null) {
                 obj = new GameProfileContentCollectItems();
             }
 
             return obj;
         }
 
-        public T GetContentCollectValue<T>(string type, string typeKey, string key)
-        {
+        public T GetContentCollectValue<T>(string type, string typeKey, string key) {
             GameProfileContentCollectItem item = GetContentCollectItem(type, typeKey);
 
-            if (item == null)
-            {
+            if (item == null) {
                 return default(T);
             }
 
             return item.Get<T>(key);
         }
 
-        public string GetContentCollectValue(string type, string typeKey, string key)
-        {
+        public string GetContentCollectValue(string type, string typeKey, string key) {
             return GetContentCollectValue<string>(type, typeKey, key);
         }
 
@@ -343,12 +300,10 @@ namespace Engine.Game.App.BaseApp
         }
         */
 
-        public void SetContentCollectValue(string type, string typeKey, string key, object val)
-        {
+        public void SetContentCollectValue(string type, string typeKey, string key, object val) {
             GameProfileContentCollectItem item = GetContentCollectItem(type, typeKey);
 
-            if (item == null)
-            {
+            if (item == null) {
                 item = new GameProfileContentCollectItem();
             }
 
@@ -360,24 +315,20 @@ namespace Engine.Game.App.BaseApp
             SetContentCollectItem(item);
         }
 
-        public GameProfileContentCollectItem GetContentCollectItem(string type, string typeKey)
-        {
+        public GameProfileContentCollectItem GetContentCollectItem(string type, string typeKey) {
             GameProfileContentCollectItems objs = GetContentCollectItems();
 
             return objs.GetItemByTypeAndKey(type, typeKey);
         }
 
-        public void SetContentCollectItem(GameProfileContentCollectItem item)
-        {
+        public void SetContentCollectItem(GameProfileContentCollectItem item) {
             SetContentCollectItem(item, true);
         }
 
-        public void SetContentCollectItem(GameProfileContentCollectItem item, bool setAsCurrent)
-        {
+        public void SetContentCollectItem(GameProfileContentCollectItem item, bool setAsCurrent) {
             GameProfileContentCollectItems items = GetContentCollectItems();
 
-            if (setAsCurrent)
-            {
+            if (setAsCurrent) {
                 //BaseGameProfileCharacters.currentCharacter = item;
                 //GameProfileCharacters.Current.SetCurrentCharacterProfileCode(code);
             }

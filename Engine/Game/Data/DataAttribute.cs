@@ -1,8 +1,6 @@
 using System;
-namespace Engine.Game.Data
-{
-    public class DataAttribute
-    {
+namespace Engine.Game.Data {
+    public class DataAttribute {
         public string uid;
         public string code;
         public string type;
@@ -10,13 +8,11 @@ namespace Engine.Game.Data
         public string name;
         public object val;
 
-        public DataAttribute()
-        {
+        public DataAttribute() {
             Reset();
         }
 
-        public void Reset()
-        {
+        public void Reset() {
             uid = "";
             code = "";
             type = "";

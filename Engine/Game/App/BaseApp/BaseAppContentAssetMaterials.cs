@@ -3,23 +3,17 @@ using System.Collections.Generic;
 using System.IO;
 using Engine.Game.Data;
 
-namespace Engine.Game.App.BaseApp
-{
-    public class BaseAppContentAssetMaterials<T> : DataObjects<T> where T : DataObject, new()
-    {
+namespace Engine.Game.App.BaseApp {
+    public class BaseAppContentAssetMaterials<T> : DataObjects<T> where T : DataObject, new() {
         private static T current;
         private static volatile BaseAppContentAssetMaterials<T> instance;
         private static object syncRoot = new Object();
         private string BASE_DATA_KEY = "app-content-asset-material-data";
 
-        public static T BaseCurrent
-        {
-            get
-            {
-                if (current == null)
-                {
-                    lock (syncRoot)
-                    {
+        public static T BaseCurrent {
+            get {
+                if (current == null) {
+                    lock (syncRoot) {
                         if (current == null)
                             current = new T();
                     }
@@ -27,20 +21,15 @@ namespace Engine.Game.App.BaseApp
 
                 return current;
             }
-            set
-            {
+            set {
                 current = value;
             }
         }
 
-        public static BaseAppContentAssetMaterials<T> BaseInstance
-        {
-            get
-            {
-                if (instance == null)
-                {
-                    lock (syncRoot)
-                    {
+        public static BaseAppContentAssetMaterials<T> BaseInstance {
+            get {
+                if (instance == null) {
+                    lock (syncRoot) {
                         if (instance == null)
                             instance = new BaseAppContentAssetMaterials<T>(true);
                     }
@@ -48,19 +37,16 @@ namespace Engine.Game.App.BaseApp
 
                 return instance;
             }
-            set
-            {
+            set {
                 instance = value;
             }
         }
 
-        public BaseAppContentAssetMaterials()
-        {
+        public BaseAppContentAssetMaterials() {
             Reset();
         }
 
-        public BaseAppContentAssetMaterials(bool loadData)
-        {
+        public BaseAppContentAssetMaterials(bool loadData) {
             Reset();
             path = "data/" + BASE_DATA_KEY + ".json";
             pathKey = BASE_DATA_KEY;
@@ -68,23 +54,19 @@ namespace Engine.Game.App.BaseApp
         }
     }
 
-    public class BaseAppContentAssetMaterial : GameDataObject
-    {
+    public class BaseAppContentAssetMaterial : GameDataObject {
         // Attributes that are added or changed after launch should be like this to prevent
         // profile conversions.
 
-        public BaseAppContentAssetMaterial()
-        {
+        public BaseAppContentAssetMaterial() {
             Reset();
         }
 
-        public override void Reset()
-        {
+        public override void Reset() {
             base.Reset();
         }
 
-        public void Clone(BaseAppContentAssetMaterial toCopy)
-        {
+        public void Clone(BaseAppContentAssetMaterial toCopy) {
             base.Clone(toCopy);
         }
 
@@ -95,8 +77,7 @@ namespace Engine.Game.App.BaseApp
     // ----------------------------------------------------------------------------
     // OVERRIDE TO CUSTOMIZE 
 
-    public partial class AppContentAssetMaterial : BaseAppContentAssetMaterial
-    {
+    public partial class AppContentAssetMaterial : BaseAppContentAssetMaterial {
 
     }
 }

@@ -50,7 +50,7 @@ public class GameObjectImageFill : MonoBehaviour {
             t += 0.5f * Time.deltaTime;
             currentProgress = Mathf.Lerp(0f, 1f, t);
         }
-        
+
         /*
         if (containerFill.transform.localPosition.y <= range / 4) {
 

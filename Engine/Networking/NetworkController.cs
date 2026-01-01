@@ -9,8 +9,8 @@ using UnityEngine;
 
 namespace Engine.Networking {
     public class NetworkController : BaseEngineBehavior {
-        
-        #if NETWORK_USE_UNITY
+
+#if NETWORK_USE_UNITY
 
         public BaseThirdPersonController targetController;
         private bool jumpButton;

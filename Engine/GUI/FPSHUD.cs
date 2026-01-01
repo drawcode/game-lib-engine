@@ -26,9 +26,9 @@ public class FPSHUD : GameObjectBehavior {
 
     private void Start() {
         //if (!guiText) {
-            LogUtil.Log("UtilityFramesPerSecond needs a GUIText component!");
-            enabled = false;
-            return;
+        LogUtil.Log("UtilityFramesPerSecond needs a GUIText component!");
+        enabled = false;
+        return;
         //}
         //timeleft = updateInterval;
     }
@@ -47,13 +47,13 @@ public class FPSHUD : GameObjectBehavior {
             //guiText.text = format;
 
             //if (fps < 30) {
-                //guiText.material.color = Color.yellow;
+            //guiText.material.color = Color.yellow;
             //}
             //else {
-                //if (fps < 10)
-                //    guiText.material.color = Color.red;
-                //else
-                //    guiText.material.color = Color.green;
+            //if (fps < 10)
+            //    guiText.material.color = Color.red;
+            //else
+            //    guiText.material.color = Color.green;
 
             //    timeleft = updateInterval;
             //    accum = 0.0F;

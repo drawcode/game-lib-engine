@@ -5,7 +5,7 @@ using UnityEngine;
 public class SystemPrefUtil {
 
     public SystemPrefUtil() {
-    
+
     }
 
     public static void Save() {
@@ -67,11 +67,11 @@ public class SystemPrefUtil {
         }
         return dt;
     }
-    
+
     public static void DeleteKey(string key) {
         PlayerPrefs.DeleteKey(key);
     }
-    
+
     public static void DeleteAll() {
         PlayerPrefs.DeleteAll();
     }

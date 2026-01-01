@@ -2,46 +2,35 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
-namespace Engine.Game.Data
-{
-    public class ProfileKeys
-    {
+namespace Engine.Game.Data {
+    public class ProfileKeys {
         public static string login_count = "login_count";
     }
 
-    public class Profile : DataObject
-    {
+    public class Profile : DataObject {
 
-        public virtual int login_count
-        {
-            get
-            {
+        public virtual int login_count {
+            get {
                 return Get<int>(ProfileKeys.login_count);
             }
 
-            set
-            {
+            set {
                 Set(ProfileKeys.login_count, value);
             }
         }
 
-        public virtual string username
-        {
-            get
-            {
+        public virtual string username {
+            get {
                 return Get<string>(BaseDataObjectKeys.username);
             }
 
-            set
-            {
+            set {
                 Set(BaseDataObjectKeys.username, value);
             }
         }
 
-        public virtual string uuid
-        {
-            get
-            {
+        public virtual string uuid {
+            get {
 
                 //string val = Get<string>(BaseDataObjectKeys.uuid);
                 //if(string.IsNullOrEmpty(val)) {
@@ -53,22 +42,18 @@ namespace Engine.Game.Data
                                    UniqueUtil.CreateUUID4());
             }
 
-            set
-            {
+            set {
                 Set(BaseDataObjectKeys.uuid, value);
             }
         }
 
-        public Profile()
-        {
+        public Profile() {
             Reset();
         }
 
-        public void ChangeUser(string name)
-        {
+        public void ChangeUser(string name) {
 
-            if (name == username)
-            {
+            if (name == username) {
                 return;
             }
 
@@ -77,13 +62,11 @@ namespace Engine.Game.Data
             username = name;
         }
 
-        public void ChangeUserNoReset(string name)
-        {
+        public void ChangeUserNoReset(string name) {
             username = name;
         }
 
-        public override void Reset()
-        {
+        public override void Reset() {
             base.Reset();
 
             username = "Player";

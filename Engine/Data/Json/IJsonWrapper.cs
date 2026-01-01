@@ -15,10 +15,8 @@ using System.Collections;
 using System.Collections.Specialized;
 
 
-namespace Engine.Data.Json
-{
-    public enum JsonType
-    {
+namespace Engine.Data.Json {
+    public enum JsonType {
         None,
 
         Object,
@@ -30,8 +28,7 @@ namespace Engine.Data.Json
         Boolean
     }
 
-    public interface IJsonWrapper : IList, IOrderedDictionary
-    {
+    public interface IJsonWrapper : IList, IOrderedDictionary {
         bool IsArray { get; }
         bool IsBoolean { get; }
         bool IsDouble { get; }

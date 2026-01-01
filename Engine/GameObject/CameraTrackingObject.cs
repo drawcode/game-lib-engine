@@ -2,7 +2,7 @@ using UnityEngine;
 using System.Collections;
 
 public class CameraTrackingObject : MonoBehaviour {
-    
+
     public Camera cameraMain;
 
     public bool trackRotationX = false;
@@ -12,18 +12,18 @@ public class CameraTrackingObject : MonoBehaviour {
     public bool trackPositionX = false;
     public bool trackPositionY = false;
     public bool trackPositionZ = false;
-	
+
     public Vector3 currentPositionTo = Vector3.zero;
     public Vector3 currentRotationTo = Vector3.zero;
 
     public Vector3 lastPositionTo = Vector3.zero;
     public Vector3 lastRotationTo = Vector3.zero;
 
-	void Start() {
-		if(cameraMain == null) {
+    void Start() {
+        if (cameraMain == null) {
             cameraMain = Camera.main;
-		}
-	}
+        }
+    }
 
     void Update() {
 
@@ -33,15 +33,15 @@ public class CameraTrackingObject : MonoBehaviour {
         transform.LookAt(transform.position + cameraMain.transform.rotation * Vector3.up,
             cameraMain.transform.rotation * Vector3.up);
 
-        if(trackRotationX) {
+        if (trackRotationX) {
             currentRotationTo.x = transform.eulerAngles.x;
         }
 
-        if(trackRotationY) {
+        if (trackRotationY) {
             currentRotationTo.y = transform.eulerAngles.y;
         }
 
-        if(trackRotationZ) {
+        if (trackRotationZ) {
             currentRotationTo.z = transform.eulerAngles.z;
         }
 
@@ -50,7 +50,7 @@ public class CameraTrackingObject : MonoBehaviour {
         //    transform.position = currentPositionTo;
         //}
 
-        if(currentRotationTo != lastRotationTo) {
+        if (currentRotationTo != lastRotationTo) {
             lastRotationTo = currentRotationTo;
             transform.rotation = Quaternion.Euler(
                 Vector3.zero

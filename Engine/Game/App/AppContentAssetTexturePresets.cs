@@ -4,24 +4,18 @@ using System.IO;
 using Engine.Game.App.BaseApp;
 using Engine.Utility;
 
-namespace Engine.Game.App
-{
-    public class AppContentAssetTexturePresets : BaseAppContentAssetTexturePresets<AppContentAssetTexturePreset>
-    {
+namespace Engine.Game.App {
+    public class AppContentAssetTexturePresets : BaseAppContentAssetTexturePresets<AppContentAssetTexturePreset> {
 
         private static volatile AppContentAssetTexturePreset current;
         private static volatile AppContentAssetTexturePresets instance;
         private static System.Object syncRoot = new System.Object();
         private string DATA_KEY = "app-content-asset-texture-preset-data";
 
-        public static AppContentAssetTexturePreset Current
-        {
-            get
-            {
-                if (current == null)
-                {
-                    lock (syncRoot)
-                    {
+        public static AppContentAssetTexturePreset Current {
+            get {
+                if (current == null) {
+                    lock (syncRoot) {
                         if (current == null)
                             current = new AppContentAssetTexturePreset();
                     }
@@ -29,20 +23,15 @@ namespace Engine.Game.App
 
                 return current;
             }
-            set
-            {
+            set {
                 current = value;
             }
         }
 
-        public static AppContentAssetTexturePresets Instance
-        {
-            get
-            {
-                if (instance == null)
-                {
-                    lock (syncRoot)
-                    {
+        public static AppContentAssetTexturePresets Instance {
+            get {
+                if (instance == null) {
+                    lock (syncRoot) {
                         if (instance == null)
                             instance = new AppContentAssetTexturePresets(true);
                     }
@@ -52,43 +41,35 @@ namespace Engine.Game.App
             }
         }
 
-        public AppContentAssetTexturePresets()
-        {
+        public AppContentAssetTexturePresets() {
             Reset();
         }
 
-        public AppContentAssetTexturePresets(bool loadData)
-        {
+        public AppContentAssetTexturePresets(bool loadData) {
             Reset();
             path = "data/" + DATA_KEY + ".json";
             pathKey = DATA_KEY;
             LoadData();
         }
 
-        public static List<AppContentAssetTexturePreset> All
-        {
-            get
-            {
+        public static List<AppContentAssetTexturePreset> All {
+            get {
                 return GetAllItems();
             }
         }
 
-        public static List<AppContentAssetTexturePreset> GetAllItems()
-        {
+        public static List<AppContentAssetTexturePreset> GetAllItems() {
             return Instance.GetAll();
         }
     }
 
-    public class AppContentAssetTexturePreset : BaseAppContentAssetTexturePreset
-    {
+    public class AppContentAssetTexturePreset : BaseAppContentAssetTexturePreset {
 
-        public AppContentAssetTexturePreset()
-        {
+        public AppContentAssetTexturePreset() {
             Reset();
         }
 
-        public override void Reset()
-        {
+        public override void Reset() {
 
         }
 

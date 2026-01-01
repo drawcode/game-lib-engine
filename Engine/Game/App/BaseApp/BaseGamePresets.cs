@@ -3,26 +3,22 @@ using System.Collections.Generic;
 using System.IO;
 using Engine.Game.Data;
 
-namespace Engine.Game.App.BaseApp
-{
-    public class GamePresetTypes
-    {
+namespace Engine.Game.App.BaseApp {
+    public class GamePresetTypes {
         public static string item = "item";
         public static string character = "character";
         public static string terrain = "terrain";
         public static string asset = "asset";
     }
 
-    public class GamePresetTypeDefault
-    {
+    public class GamePresetTypeDefault {
         public static string itemDefault = "item-default";
         public static string characterDefault = "character-default";
         public static string terrainDefault = "terrain-default";
         public static string assetDefault = "asset-default";
     }
     //GamePresets.Instance.GetByCode("game-item-default");
-    public class BaseGamePresets<T> : DataObjects<T> where T : DataObject, new()
-    {
+    public class BaseGamePresets<T> : DataObjects<T> where T : DataObject, new() {
         private static T current;
         private static volatile BaseGamePresets<T> instance;
         private static object syncRoot = new Object();
@@ -31,14 +27,10 @@ namespace Engine.Game.App.BaseApp
 
         public Dictionary<string, string> currentPresets;
 
-        public static T BaseCurrent
-        {
-            get
-            {
-                if (current == null)
-                {
-                    lock (syncRoot)
-                    {
+        public static T BaseCurrent {
+            get {
+                if (current == null) {
+                    lock (syncRoot) {
                         if (current == null)
                             current = new T();
                     }
@@ -46,20 +38,15 @@ namespace Engine.Game.App.BaseApp
 
                 return current;
             }
-            set
-            {
+            set {
                 current = value;
             }
         }
 
-        public static BaseGamePresets<T> BaseInstance
-        {
-            get
-            {
-                if (instance == null)
-                {
-                    lock (syncRoot)
-                    {
+        public static BaseGamePresets<T> BaseInstance {
+            get {
+                if (instance == null) {
+                    lock (syncRoot) {
                         if (instance == null)
                             instance = new BaseGamePresets<T>(true);
                     }
@@ -67,19 +54,16 @@ namespace Engine.Game.App.BaseApp
 
                 return instance;
             }
-            set
-            {
+            set {
                 instance = value;
             }
         }
 
-        public BaseGamePresets()
-        {
+        public BaseGamePresets() {
             Reset();
         }
 
-        public BaseGamePresets(bool loadData)
-        {
+        public BaseGamePresets(bool loadData) {
             Reset();
             path = "data/" + BASE_DATA_KEY + ".json";
             pathKey = BASE_DATA_KEY;
@@ -87,58 +71,47 @@ namespace Engine.Game.App.BaseApp
         }
 
 #if USE_GAME_LIB_GAMES
-        public static List<GamePreset> GetAllItems()
-        {
+        public static List<GamePreset> GetAllItems() {
             return GamePresets.Instance.GetAll();
         }
 
-        public static GamePreset Get(string code)
-        {
+        public static GamePreset Get(string code) {
             return GamePresets.Instance.GetByCode(code);
         }
 #endif
 
-        public void LoadCurrentPresets()
-        {
-            if (currentPresets == null)
-            {
+        public void LoadCurrentPresets() {
+            if (currentPresets == null) {
                 currentPresets = new Dictionary<string, string>();
             }
 
-            if (!currentPresets.ContainsKey(GamePresetTypes.character))
-            {
+            if (!currentPresets.ContainsKey(GamePresetTypes.character)) {
                 currentPresets.Set(GamePresetTypes.character, GamePresetTypeDefault.characterDefault);
             }
 
-            if (!currentPresets.ContainsKey(GamePresetTypes.item))
-            {
+            if (!currentPresets.ContainsKey(GamePresetTypes.item)) {
                 currentPresets.Set(GamePresetTypes.item, GamePresetTypeDefault.itemDefault);
             }
 
-            if (!currentPresets.ContainsKey(GamePresetTypes.terrain))
-            {
+            if (!currentPresets.ContainsKey(GamePresetTypes.terrain)) {
                 currentPresets.Set(GamePresetTypes.terrain, GamePresetTypeDefault.terrainDefault);
             }
 
-            if (!currentPresets.ContainsKey(GamePresetTypes.asset))
-            {
+            if (!currentPresets.ContainsKey(GamePresetTypes.asset)) {
                 currentPresets.Set(GamePresetTypes.asset, GamePresetTypeDefault.assetDefault);
             }
         }
 
-        public void ChangeCurrentPreset(string presetType, string presetCode)
-        {
+        public void ChangeCurrentPreset(string presetType, string presetCode) {
             LoadCurrentPresets();
 
             currentPresets.Set(presetType, presetCode);
         }
 
-        public string GetCurrentPreset(string presetType)
-        {
+        public string GetCurrentPreset(string presetType) {
             LoadCurrentPresets();
 
-            if (currentPresets.ContainsKey(presetType))
-            {
+            if (currentPresets.ContainsKey(presetType)) {
                 return currentPresets[presetType];
             }
 
@@ -146,66 +119,54 @@ namespace Engine.Game.App.BaseApp
         }
 
 #if USE_GAME_LIB_GAMES
-        public GamePreset GetCurrentPresetData(string presetType)
-        {
+        public GamePreset GetCurrentPresetData(string presetType) {
             string presetCode = GetCurrentPreset(presetType);
 
-            if (!string.IsNullOrEmpty(presetCode))
-            {
+            if (!string.IsNullOrEmpty(presetCode)) {
                 return GamePresets.Instance.GetById(presetCode);
             }
 
             return null;
         }
 
-        public GamePreset GetCurrentPresetDataCharacter()
-        {
+        public GamePreset GetCurrentPresetDataCharacter() {
             return GetCurrentPresetData(GamePresetTypes.character);
         }
 
-        public GamePreset GetCurrentPresetDataItem()
-        {
+        public GamePreset GetCurrentPresetDataItem() {
             return GetCurrentPresetData(GamePresetTypes.item);
         }
 
-        public GamePreset GetCurrentPresetDataTerrain()
-        {
+        public GamePreset GetCurrentPresetDataTerrain() {
             return GetCurrentPresetData(GamePresetTypes.terrain);
         }
 
-        public GamePreset GetCurrentPresetDataAsset()
-        {
+        public GamePreset GetCurrentPresetDataAsset() {
             return GetCurrentPresetData(GamePresetTypes.asset);
         }
 #endif
     }
 
-    public class BaseGamePreset : GameDataObject
-    {
+    public class BaseGamePreset : GameDataObject {
 
         // Attributes that are added or changed after launch should be like this to prevent
         // profile conversions.
 
-        public virtual GamePresetItems<GamePresetItem> data
-        {
-            get
-            {
+        public virtual GamePresetItems<GamePresetItem> data {
+            get {
                 return Get<GamePresetItems<GamePresetItem>>(BaseDataObjectKeys.data);
             }
 
-            set
-            {
+            set {
                 Set(BaseDataObjectKeys.data, value);
             }
         }
 
-        public BaseGamePreset()
-        {
+        public BaseGamePreset() {
             Reset();
         }
 
-        public override void Reset()
-        {
+        public override void Reset() {
             base.Reset();
         }
 

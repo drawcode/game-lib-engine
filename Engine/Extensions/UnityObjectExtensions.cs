@@ -31,19 +31,19 @@ public static class UnityObjectUtil {
     }
 
     public static T FindObject<T>(
-        FindObjectsInactive findObjectsInactive = FindObjectsInactive.Include, 
+        FindObjectsInactive findObjectsInactive = FindObjectsInactive.Include,
         FindObjectsSortMode findObjectsSortMode = FindObjectsSortMode.None)
         where T : UnityEngine.Object {
 
-            foreach(T obj in FindObjects<T>(findObjectsInactive, findObjectsSortMode)) {
-                return obj;
-            }
-            
+        foreach (T obj in FindObjects<T>(findObjectsInactive, findObjectsSortMode)) {
+            return obj;
+        }
+
         return default(T);
     }
 
     public static T[] FindObjects<T>(
-        FindObjectsInactive findObjectsInactive = FindObjectsInactive.Include, 
+        FindObjectsInactive findObjectsInactive = FindObjectsInactive.Include,
         FindObjectsSortMode findObjectsSortMode = FindObjectsSortMode.None)
         where T : UnityEngine.Object {
         return UnityEngine.Object.FindObjectsByType(

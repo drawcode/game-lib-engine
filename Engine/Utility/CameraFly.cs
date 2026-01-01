@@ -3,7 +3,7 @@ using System.Collections;
 using UnityEngine;
 
 public class CameraFly : GameObjectBehavior {
-    /*
+	/*
     8-4-6-5 : basic movement
     shift : Makes camera accelerate
     space : Moves camera on X and Z axis only.  So camera doesn't gain any height

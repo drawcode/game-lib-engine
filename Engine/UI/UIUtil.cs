@@ -1249,7 +1249,7 @@ public class UIUtil {
         //UITweenerUtil.ColorTo(buttonTo.gameObject,
         //    UITweener.Method.Linear, UITweener.Style.Once, .5f, 0f, colorTo);
     }
-    
+
     // BUTTON EVENTS
 
     public static void SetButtonHandlerClick(GameObject obj, UnityAction objAction) {

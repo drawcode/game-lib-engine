@@ -4,17 +4,14 @@ using System.Collections.Generic;
 using Engine.Utility;
 using UnityEngine;
 
-namespace Engine.Game.App
-{
-    public enum GamePlayerType
-    {
+namespace Engine.Game.App {
+    public enum GamePlayerType {
         PLAYER_HUMAN = 0,
         PLAYER_AI = 1,
         PLAYER_NETWORK = 9
     }
 
-    public class GameRaceResultPlayer : IComparable
-    {
+    public class GameRaceResultPlayer : IComparable {
         public string udid;
         public string levelName;
         public string playerName;
@@ -23,46 +20,37 @@ namespace Engine.Game.App
         public GamePlayerType playerType = GamePlayerType.PLAYER_HUMAN;
         public int place;
 
-        public GameRaceResultPlayer()
-        {
+        public GameRaceResultPlayer() {
             Reset();
         }
 
-        public double totalTimeAccumulated
-        {
-            get
-            {
+        public double totalTimeAccumulated {
+            get {
                 double total = 0;
-                foreach (float itemValue in lapTimes)
-                {
+                foreach (float itemValue in lapTimes) {
                     total += itemValue;
                 }
                 return total;
             }
         }
 
-        public bool isHuman
-        {
+        public bool isHuman {
             get { return playerType == GamePlayerType.PLAYER_HUMAN ? true : false; }
         }
 
-        public bool isAi
-        {
+        public bool isAi {
             get { return playerType == GamePlayerType.PLAYER_AI ? true : false; }
         }
 
-        public bool isNetworked
-        {
+        public bool isNetworked {
             get { return playerType == GamePlayerType.PLAYER_NETWORK ? true : false; }
         }
 
-        public bool isWinner
-        {
+        public bool isWinner {
             get { return place == 1; }
         }
 
-        public void Reset()
-        {
+        public void Reset() {
             udid = UniqueUtil.Instance.currentUniqueId;
             levelName = "";
             playerName = "";
@@ -71,8 +59,7 @@ namespace Engine.Game.App
             place = 1;
         }
 
-        public int CompareTo(object comparedTo)
-        {
+        public int CompareTo(object comparedTo) {
             if (comparedTo == null)
                 return 0;
 
@@ -83,34 +70,27 @@ namespace Engine.Game.App
         }
     }
 
-    public class GameRaceResultsData
-    {
+    public class GameRaceResultsData {
         public List<GameRaceResultPlayer> players;
 
-        public GameRaceResultsData()
-        {
+        public GameRaceResultsData() {
             Reset();
         }
 
-        public GameRaceResultPlayer GetHumanPlayer()
-        {
-            foreach (GameRaceResultPlayer player in players)
-            {
-                if (player.isHuman)
-                {
+        public GameRaceResultPlayer GetHumanPlayer() {
+            foreach (GameRaceResultPlayer player in players) {
+                if (player.isHuman) {
                     return player;
                 }
             }
             return null;
         }
 
-        public void Reset()
-        {
+        public void Reset() {
             players = new List<GameRaceResultPlayer>();
         }
 
-        public string ToJson()
-        {
+        public string ToJson() {
             return this.ToJson();
         }
     }

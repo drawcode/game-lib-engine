@@ -1843,7 +1843,7 @@ namespace Engine.Graphics.Vector {
         public static void Active(VectorLine line, bool active) {
             Renderer render = line.vectorObject.GetComponent<Renderer>();
 
-            if(render != null) {
+            if (render != null) {
                 render.enabled = active;
             }
             line.active = active;

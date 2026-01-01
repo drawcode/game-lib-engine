@@ -8,7 +8,7 @@ public static class ListExtensions {
         var randomNumber = new Random(DateTime.Now.Millisecond);
         var n = list.Count;
 
-        while(n > 1) {
+        while (n > 1) {
 
             n--;
             var k = randomNumber.Next(n + 1);
@@ -24,7 +24,7 @@ public static class ListExtensions {
 
         int count = list.Count;
 
-        for(int i = 0; i < count / 2; i++) {
+        for (int i = 0; i < count / 2; i++) {
 
             T tmp = list[i];
             list[i] = list[count - i - 1];

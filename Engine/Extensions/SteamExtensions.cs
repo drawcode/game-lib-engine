@@ -13,7 +13,7 @@ public static class StreamExtensions {
         int bytesRead;
         long totalBytes = 0;
 
-        while((bytesRead = source.Read(buffer, 0, buffer.Length)) > 0) {
+        while ((bytesRead = source.Read(buffer, 0, buffer.Length)) > 0) {
 
             destination.Write(buffer, 0, bytesRead);
             totalBytes += bytesRead;

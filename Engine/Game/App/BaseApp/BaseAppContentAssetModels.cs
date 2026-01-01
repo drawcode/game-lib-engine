@@ -4,23 +4,17 @@ using System.IO;
 using Engine.Game.Data;
 using UnityEngine;
 
-namespace Engine.Game.App.BaseApp
-{
-    public class BaseAppContentAssetModels<T> : DataObjects<T> where T : DataObject, new()
-    {
+namespace Engine.Game.App.BaseApp {
+    public class BaseAppContentAssetModels<T> : DataObjects<T> where T : DataObject, new() {
         private static T current;
         private static volatile BaseAppContentAssetModels<T> instance;
         private static System.Object syncRoot = new System.Object();
         private string BASE_DATA_KEY = "app-content-asset-model-data";
 
-        public static T BaseCurrent
-        {
-            get
-            {
-                if (current == null)
-                {
-                    lock (syncRoot)
-                    {
+        public static T BaseCurrent {
+            get {
+                if (current == null) {
+                    lock (syncRoot) {
                         if (current == null)
                             current = new T();
                     }
@@ -28,20 +22,15 @@ namespace Engine.Game.App.BaseApp
 
                 return current;
             }
-            set
-            {
+            set {
                 current = value;
             }
         }
 
-        public static BaseAppContentAssetModels<T> BaseInstance
-        {
-            get
-            {
-                if (instance == null)
-                {
-                    lock (syncRoot)
-                    {
+        public static BaseAppContentAssetModels<T> BaseInstance {
+            get {
+                if (instance == null) {
+                    lock (syncRoot) {
                         if (instance == null)
                             instance = new BaseAppContentAssetModels<T>(true);
                     }
@@ -49,41 +38,34 @@ namespace Engine.Game.App.BaseApp
 
                 return instance;
             }
-            set
-            {
+            set {
                 instance = value;
             }
         }
 
-        public BaseAppContentAssetModels()
-        {
+        public BaseAppContentAssetModels() {
             Reset();
         }
 
-        public BaseAppContentAssetModels(bool loadData)
-        {
+        public BaseAppContentAssetModels(bool loadData) {
             Reset();
             path = "data/" + BASE_DATA_KEY + ".json";
             pathKey = BASE_DATA_KEY;
             LoadData();
         }
 
-        public static GameObject LoadModel(string code)
-        {
+        public static GameObject LoadModel(string code) {
             AppContentAssetModel model = AppContentAssetModels.Instance.GetByCode(code);
-            if (model != null)
-            {
+            if (model != null) {
                 string assetCode = model.asset;
                 return AppContentAssets.LoadAsset(assetCode);
             }
             return null;
         }
 
-        public static GameObject LoadPrefab(string code)
-        {
+        public static GameObject LoadPrefab(string code) {
             AppContentAssetModel model = AppContentAssetModels.Instance.GetByCode(code);
-            if (model != null)
-            {
+            if (model != null) {
                 string assetCode = model.asset;
                 return AppContentAssets.LoadAssetPrefab(assetCode);
             }
@@ -91,66 +73,53 @@ namespace Engine.Game.App.BaseApp
         }
     }
 
-    public class BaseAppContentAssetModel : GameDataObject
-    {
+    public class BaseAppContentAssetModel : GameDataObject {
 
         // Attributes that are added or changed after launch should be like this to prevent
         // profile conversions.
 
 
-        public virtual List<AppContentAssetCustomItemProperty> custom_materials
-        {
-            get
-            {
+        public virtual List<AppContentAssetCustomItemProperty> custom_materials {
+            get {
                 return Get<List<AppContentAssetCustomItemProperty>>(BaseDataObjectKeys.custom_materials);
             }
 
-            set
-            {
+            set {
                 Set(BaseDataObjectKeys.custom_materials, value);
             }
         }
 
-        public virtual string custom_items
-        {
-            get
-            {
+        public virtual string custom_items {
+            get {
                 return Get<string>(BaseDataObjectKeys.custom_items);
             }
 
-            set
-            {
+            set {
                 Set(BaseDataObjectKeys.custom_items, value);
             }
         }
 
-        public BaseAppContentAssetModel()
-        {
+        public BaseAppContentAssetModel() {
             Reset();
         }
 
-        public override void Reset()
-        {
+        public override void Reset() {
             base.Reset();
         }
 
-        public void Clone(BaseAppContentAssetModel toCopy)
-        {
+        public void Clone(BaseAppContentAssetModel toCopy) {
             base.Clone(toCopy);
         }
 
-        public GameObject LoadModel()
-        {
+        public GameObject LoadModel() {
             return AppContentAssetModels.LoadModel(code);
         }
 
-        public virtual List<AppContentAssetCustomItemProperty> GetCustomMaterials()
-        {
+        public virtual List<AppContentAssetCustomItemProperty> GetCustomMaterials() {
             return custom_materials;
         }
 
-        public virtual AppContentAssetCustomItem GetCustomItems()
-        {
+        public virtual AppContentAssetCustomItem GetCustomItems() {
             return AppContentAssetCustomItems.Instance.GetByCode(custom_items);
         }
 

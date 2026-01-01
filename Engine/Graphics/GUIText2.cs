@@ -41,8 +41,8 @@ namespace Engine.Graphics {
             rect.height *= invPSY;
 
 #if UNITY_EDITOR
-			if(layout != null && layout.debug)
-				GUI.Box(rect, "");
+            if (layout != null && layout.debug)
+                GUI.Box(rect, "");
 #endif
 
             GUI.Label(rect, text, style);

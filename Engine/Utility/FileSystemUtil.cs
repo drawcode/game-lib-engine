@@ -12,14 +12,14 @@ public class FileSystemUtil {
     public static void CreateDirectoryIfNeededAndAllowed(string path) {
 
 #if !UNITY_WEBPLAYER
-        
+
         Debug.Log("FileSystemUtil::CreateDirectoryIfNeededAndAllowed:path:" + path);
 
-        if(!Directory.Exists(path)) {
+        if (!Directory.Exists(path)) {
 
             Debug.Log("FileSystemUtil::CreateDirectoryIfNeededAndAllowed:pathnotexists:" + path);
 
-            if(DirectoryAllowed(path)) {
+            if (DirectoryAllowed(path)) {
 
                 Debug.Log("CreateDirectoryIfNeededAndAllowed:" + path);
 
@@ -31,7 +31,7 @@ public class FileSystemUtil {
 
                 DirectoryInfo dir = new DirectoryInfo(path);
 
-                if(!dir.Exists) {
+                if (!dir.Exists) {
 
                     dir.Create();
 
@@ -48,7 +48,7 @@ public class FileSystemUtil {
         bool allowCreate = true;
 
 #if !UNITY_WEBPLAYER
-        if(path.IndexOf(Application.persistentDataPath) == -1
+        if (path.IndexOf(Application.persistentDataPath) == -1
             && !Application.isEditor) {
             allowCreate = false;
         }
@@ -63,16 +63,16 @@ public class FileSystemUtil {
 
         Dictionary<string, object> dirInfo = null;
 
-        if(CheckFileExists(filepath)) {
+        if (CheckFileExists(filepath)) {
             dirInfo = FileSystemUtil.ReadString(filepath).FromJsonToDict();
         }
-       
-        if(dirInfo == null) {
+
+        if (dirInfo == null) {
 
             dirInfo = new Dictionary<string, object>();
         }
 
-        if(filedata.IsNullOrEmpty()) {
+        if (filedata.IsNullOrEmpty()) {
             filedata = "DIRECTORY HOLDER file for:" + path;
         }
 
@@ -98,7 +98,7 @@ public class FileSystemUtil {
         DirectoryInfo dir = new DirectoryInfo(sourceDirName);
         DirectoryInfo[] dirs = dir.GetDirectories();
 
-        if(!dir.Exists) {
+        if (!dir.Exists) {
             throw new DirectoryNotFoundException(
                 "Source directory does not exist or could not be found: "
                 + sourceDirName);
@@ -113,15 +113,15 @@ public class FileSystemUtil {
 
         //int curr = 0;
 
-        foreach(FileInfo file in files) {
+        foreach (FileInfo file in files) {
 
-            if(file.Extension != ".meta"
+            if (file.Extension != ".meta"
                 && file.Extension != ".DS_Store") {
 
                 string temppath = PathUtil.Combine(destDirName, file.Name);
 
 
-                if(!CheckFileExists(temppath) || Application.isEditor) {
+                if (!CheckFileExists(temppath) || Application.isEditor) {
 
                     LogUtil.Log("copying ship file: " + file.FullName);
                     LogUtil.Log("copying ship file to cache: " + temppath);
@@ -132,9 +132,9 @@ public class FileSystemUtil {
             }
         }
 
-        if(copySubDirs) {
+        if (copySubDirs) {
 
-            foreach(DirectoryInfo subdir in dirs) {
+            foreach (DirectoryInfo subdir in dirs) {
 
                 string temppath = PathUtil.Combine(destDirName, subdir.Name);
                 LogUtil.Log("Copying Directory: " + temppath);
@@ -156,7 +156,7 @@ public class FileSystemUtil {
 
         string directory = filePath;
 
-        if(filePath.IndexOf('.') > -1 && filterFileName) {
+        if (filePath.IndexOf('.') > -1 && filterFileName) {
 
             directory = filePath.Replace(Path.GetFileName(filePath), "");
 
@@ -196,9 +196,9 @@ public class FileSystemUtil {
     }
 
     public static string GetFileLocalPath(string path) {
-        if(!path.Contains("file://")) {
+        if (!path.Contains("file://")) {
 
-            if(!path.StartsWith("/")) {
+            if (!path.StartsWith("/")) {
                 path = "/" + path;
             }
 
@@ -300,7 +300,7 @@ public class FileSystemUtil {
 
         Debug.Log("force: " + force);
 
-        if(CheckFileExists(dataFilePath) && (!CheckFileExists(persistenceFilePath) || force)) {
+        if (CheckFileExists(dataFilePath) && (!CheckFileExists(persistenceFilePath) || force)) {
 
 #if UNITY_ANDROID
             if(dataFilePath.Contains(Application.streamingAssetsPath)) {
@@ -365,7 +365,7 @@ public class FileSystemUtil {
             try {
                 File.Copy(dataFilePath, persistenceFilePath, true);
             }
-            catch(Exception e) {
+            catch (Exception e) {
 
                 Debug.Log("ERROR File.Copy ERROR (dataFilePath,persistenceFilePath):  " + dataFilePath + " : " + persistenceFilePath);
                 Debug.Log(e);
@@ -398,7 +398,7 @@ public class FileSystemUtil {
         List<string> files = new List<string>();
 
 #if !UNITY_WEBPLAYER
-        if(Directory.Exists(dirInfoCurrent)) {
+        if (Directory.Exists(dirInfoCurrent)) {
             DirectoryInfo info = new DirectoryInfo(dirInfoCurrent);
 
             files = GetFilesLikeRecursive(info, filter, excludeExts);
@@ -425,19 +425,19 @@ public class FileSystemUtil {
         List<string> excludeExts) {
 
 #if !UNITY_WEBPLAYER
-        foreach(FileInfo fileInfo in dirInfoCurrent.GetFiles()) {
+        foreach (FileInfo fileInfo in dirInfoCurrent.GetFiles()) {
             string fileTo = fileInfo.FullName;
-            if(fileTo.Contains(filter)
+            if (fileTo.Contains(filter)
                 || filter == "*") {
-                if(!CheckFileExtention(fileTo, excludeExts)) {
-                    if(!files.Contains(fileTo)) {
+                if (!CheckFileExtention(fileTo, excludeExts)) {
+                    if (!files.Contains(fileTo)) {
                         files.Add(fileTo);
                     }
                 }
             }
         }
 
-        foreach(DirectoryInfo dirInfoItem in dirInfoCurrent.GetDirectories()) {
+        foreach (DirectoryInfo dirInfoItem in dirInfoCurrent.GetDirectories()) {
             files = GetFilesLikeRecursive(dirInfoItem, files, filter, excludeExts);
 
         }
@@ -457,7 +457,7 @@ public class FileSystemUtil {
         EnsureDirectory(persistenceFilePath);
         //LogUtil.Log("dataFilePath: " + dataFilePath);
         //LogUtil.Log("persistenceFilePath: " + persistenceFilePath);
-        if(CheckFileExists(dataFilePath) && (!CheckFileExists(persistenceFilePath) || force)) {
+        if (CheckFileExists(dataFilePath) && (!CheckFileExists(persistenceFilePath) || force)) {
 
             //LogUtil.Log("fileMoved: " + persistenceFilePath);
 #if UNITY_ANDROID       
@@ -537,7 +537,7 @@ public class FileSystemUtil {
 #if !UNITY_WEBPLAYER
 
         byte[] buffer = null;
-        if(CheckFileExists(fileName)) {
+        if (CheckFileExists(fileName)) {
             FileStream fs = new FileStream(fileName, FileMode.OpenOrCreate, FileAccess.Read);
             BinaryReader br = new BinaryReader(fs);
             long length = new FileInfo(fileName).Length;
@@ -567,7 +567,7 @@ public class FileSystemUtil {
 
     public static string ReadString(string fileName) {
         string contents = "";
-        if(CheckFileExists(fileName)) {
+        if (CheckFileExists(fileName)) {
 #if UNITY_WEBPLAYER
         contents = SystemPrefUtil.GetLocalSettingString(fileName);
 #else
@@ -601,7 +601,7 @@ public class FileSystemUtil {
     }
 
     public static void RemoveFile(string file) {
-        if(CheckFileExists(file)) {
+        if (CheckFileExists(file)) {
 #if UNITY_WEBPLAYER
         SystemPrefUtil.SetLocalSettingString(file, "");
         SystemPrefUtil.Save();
@@ -614,13 +614,13 @@ public class FileSystemUtil {
     public static void RemoveFilesLikeRecursive(DirectoryInfo dirInfo, string fileKey) {
 
 #if !UNITY_WEBPLAYER
-        foreach(FileInfo fileInfo in dirInfo.GetFiles()) {
-            if(fileInfo.FullName.Contains(fileKey)) {
+        foreach (FileInfo fileInfo in dirInfo.GetFiles()) {
+            if (fileInfo.FullName.Contains(fileKey)) {
                 File.Delete(fileInfo.FullName);
             }
         }
 
-        foreach(DirectoryInfo dirInfoItem in dirInfo.GetDirectories()) {
+        foreach (DirectoryInfo dirInfoItem in dirInfo.GetDirectories()) {
             RemoveFilesLikeRecursive(dirInfoItem, fileKey);
         }
 #endif
@@ -634,13 +634,13 @@ public class FileSystemUtil {
         List<string> excludeExts) {
 
 #if !UNITY_WEBPLAYER
-        foreach(FileInfo fileInfo in dirInfoCurrent.GetFiles()) {
-            if(fileInfo.FullName.Contains(filter)) {
+        foreach (FileInfo fileInfo in dirInfoCurrent.GetFiles()) {
+            if (fileInfo.FullName.Contains(filter)) {
                 string fileTo = fileInfo.FullName.Replace(dirInfoFrom.FullName, dirInfoTo.FullName);
-                if(!CheckFileExtention(fileTo, excludeExts)) {
+                if (!CheckFileExtention(fileTo, excludeExts)) {
                     string directoryTo = Path.GetDirectoryName(fileTo);
 
-                    if(!Directory.Exists(directoryTo)) {
+                    if (!Directory.Exists(directoryTo)) {
                         Directory.CreateDirectory(directoryTo);
                     }
 
@@ -649,15 +649,15 @@ public class FileSystemUtil {
             }
         }
 
-        foreach(DirectoryInfo dirInfoItem in dirInfoCurrent.GetDirectories()) {
+        foreach (DirectoryInfo dirInfoItem in dirInfoCurrent.GetDirectories()) {
             CopyFilesLikeRecursive(dirInfoItem, dirInfoFrom, dirInfoTo, filter, excludeExts);
         }
 #endif
     }
 
     public static bool CheckFileExtention(string path, List<string> extensions) {
-        foreach(string ext in extensions) {
-            if(path.ToLower().EndsWith(ext.ToLower())) {
+        foreach (string ext in extensions) {
+            if (path.ToLower().EndsWith(ext.ToLower())) {
                 return true;
             }
         }
@@ -671,19 +671,19 @@ public class FileSystemUtil {
         string filter,
         List<string> excludeExts) {
 #if !UNITY_WEBPLAYER
-        foreach(FileInfo fileInfo in dirInfoCurrent.GetFiles()) {
-            if(fileInfo.FullName.Contains(filter)) {
+        foreach (FileInfo fileInfo in dirInfoCurrent.GetFiles()) {
+            if (fileInfo.FullName.Contains(filter)) {
                 string fileTo = fileInfo.FullName.Replace(dirInfoFrom.FullName, dirInfoTo.FullName);
-                if(!CheckFileExtention(fileTo, excludeExts)) {
+                if (!CheckFileExtention(fileTo, excludeExts)) {
                     string directoryTo = Path.GetDirectoryName(fileTo);
 
-                    if(!Directory.Exists(directoryTo)) {
+                    if (!Directory.Exists(directoryTo)) {
                         Directory.CreateDirectory(directoryTo);
                     }
 
                     LogUtil.Log("fileTo:" + fileTo);
 
-                    if(CheckFileExists(fileTo)) {
+                    if (CheckFileExists(fileTo)) {
                         File.Delete(fileTo);
                     }
 
@@ -692,7 +692,7 @@ public class FileSystemUtil {
             }
         }
 
-        foreach(DirectoryInfo dirInfoItem in dirInfoCurrent.GetDirectories()) {
+        foreach (DirectoryInfo dirInfoItem in dirInfoCurrent.GetDirectories()) {
             MoveFilesLikeRecursive(dirInfoItem, dirInfoFrom, dirInfoTo, filter, excludeExts);
         }
 #endif
@@ -704,11 +704,11 @@ public class FileSystemUtil {
         string filterNotLike) {
 
 #if !UNITY_WEBPLAYER
-        foreach(DirectoryInfo dirInfoItem in dirInfoCurrent.GetDirectories()) {
+        foreach (DirectoryInfo dirInfoItem in dirInfoCurrent.GetDirectories()) {
             RemoveDirectoriesLikeRecursive(dirInfoItem, filterLike, filterNotLike);
         }
 
-        if(dirInfoCurrent.FullName.Contains(filterLike)
+        if (dirInfoCurrent.FullName.Contains(filterLike)
             && !dirInfoCurrent.FullName.Contains(filterNotLike)) {
             Directory.Delete(dirInfoCurrent.FullName, true);
         }
@@ -718,23 +718,23 @@ public class FileSystemUtil {
     public static bool CheckSignatureFile(string filepath, int signatureSize, string expectedSignature) {
 
 #if !UNITY_WEBPLAYER
-        if(String.IsNullOrEmpty(filepath))
+        if (String.IsNullOrEmpty(filepath))
             throw new ArgumentException("Must specify a filepath");
-        if(String.IsNullOrEmpty(expectedSignature))
+        if (String.IsNullOrEmpty(expectedSignature))
             throw new ArgumentException("Must specify a value for the expected file signature");
-        using(FileStream fs = new FileStream(filepath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite)) {
-            if(fs.Length < signatureSize)
+        using (FileStream fs = new FileStream(filepath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite)) {
+            if (fs.Length < signatureSize)
                 return false;
             byte[] signature = new byte[signatureSize];
             int bytesRequired = signatureSize;
             int index = 0;
-            while(bytesRequired > 0) {
+            while (bytesRequired > 0) {
                 int bytesRead = fs.Read(signature, index, bytesRequired);
                 bytesRequired -= bytesRead;
                 index += bytesRead;
             }
             string actualSignature = BitConverter.ToString(signature);
-            if(actualSignature == expectedSignature)
+            if (actualSignature == expectedSignature)
                 return true;
             else
                 return false;
@@ -760,19 +760,19 @@ public class FileSystemUtil {
     public static bool CheckSignature(byte[] datas, int signatureSize, string expectedSignature) {
 
 #if !UNITY_WEBPLAYER
-        using(MemoryStream ms = new MemoryStream(datas)) {
-            if(ms.Length < signatureSize)
+        using (MemoryStream ms = new MemoryStream(datas)) {
+            if (ms.Length < signatureSize)
                 return false;
             byte[] signature = new byte[signatureSize];
             int bytesRequired = signatureSize;
             int index = 0;
-            while(bytesRequired > 0) {
+            while (bytesRequired > 0) {
                 int bytesRead = ms.Read(signature, index, bytesRequired);
                 bytesRequired -= bytesRead;
                 index += bytesRead;
             }
             string actualSignature = BitConverter.ToString(signature);
-            if(actualSignature == expectedSignature)
+            if (actualSignature == expectedSignature)
                 return true;
             else
                 return false;

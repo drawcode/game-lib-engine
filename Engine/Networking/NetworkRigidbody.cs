@@ -8,8 +8,8 @@ using UnityEngine;
 
 namespace Engine.Networking {
     public class NetworkRigidbody : BaseEngineBehavior {
-        
-        #if NETWORK_USE_UNITY
+
+#if NETWORK_USE_UNITY
 
         public double m_InterpolationBackTime = 0.1;
         public double m_ExtrapolationLimit = 0.5;

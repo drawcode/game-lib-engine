@@ -1,10 +1,8 @@
 using System.Collections;
 using UnityEngine;
 
-namespace Engine.Audio.SoundManager
-{
-    public class Sound
-    {
+namespace Engine.Audio.SoundManager {
+    public class Sound {
         private So _manager;
 
         public AudioSource audioSource;
@@ -12,16 +10,13 @@ namespace Engine.Audio.SoundManager
         public bool available = true;
         public bool destroyAfterPlay = false;
 
-        public bool loop
-        {
-            set
-            {
+        public bool loop {
+            set {
                 audioSource.loop = value;
             }
         }
 
-        public Sound(So manager)
-        {
+        public Sound(So manager) {
             _manager = manager;
 
             // Create a GameObject to hold the audioSource for playing sounds
@@ -32,26 +27,22 @@ namespace Engine.Audio.SoundManager
             audioSource = gameObject.AddComponent<AudioSource>();
         }
 
-        public void destroySelf()
-        {
+        public void destroySelf() {
             _manager.removeSound(this);
 
             GameObjectBehavior.Destroy(gameObject);
         }
 
-        public void stop()
-        {
+        public void stop() {
             audioSource.Stop();
             destroySelf();
         }
 
-        public IEnumerator fadeOutAndStop(float duration)
-        {
+        public IEnumerator fadeOutAndStop(float duration) {
             return audioSource.fadeOut(duration, () => stop());
         }
 
-        public IEnumerator playAudioClip(AudioClip audioClip, AudioRolloffMode rolloff, float volume, Vector3 position)
-        {
+        public IEnumerator playAudioClip(AudioClip audioClip, AudioRolloffMode rolloff, float volume, Vector3 position) {
 
             // Setup the GameObject and AudioSource and start playing
             gameObject.name = audioClip.name;
@@ -60,8 +51,7 @@ namespace Engine.Audio.SoundManager
             return play(rolloff, volume, position);
         }
 
-        public IEnumerator play(AudioRolloffMode rolloff, float volume, Vector3 position)
-        {
+        public IEnumerator play(AudioRolloffMode rolloff, float volume, Vector3 position) {
             available = false;
 
             // Setup the GameObject and AudioSource and start playing

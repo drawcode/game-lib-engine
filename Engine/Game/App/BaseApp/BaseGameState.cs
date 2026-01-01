@@ -12,8 +12,7 @@ using Engine.Game.Data;
 using Engine.Utility;
 using Engine.Content;
 
-namespace Engine.Game.App.BaseApp
-{
+namespace Engine.Game.App.BaseApp {
     /// <summary>
     /// BaseGameState is the base class for managing the game state, including configuration, profiles, and game data.
     /// It provides methods for saving and loading configurations and profiles, as well as handling user changes.
@@ -55,8 +54,7 @@ namespace Engine.Game.App.BaseApp
     /// 
     /// Version: 1.0.0  
     /// </summary>
-    public class BaseGameState
-    {
+    public class BaseGameState {
 #if USE_GAME_LIB_GAMES
         //public GameConfig config;
         //public GameProfile profile;
@@ -87,14 +85,10 @@ namespace Engine.Game.App.BaseApp
         public string KEY_CAREER_LEGACY;
         public string KEY_GAME_DATA;
 
-        public static BaseGameState BaseInstance
-        {
-            get
-            {
-                if (instance == null)
-                {
-                    lock (syncRoot)
-                    {
+        public static BaseGameState BaseInstance {
+            get {
+                if (instance == null) {
+                    lock (syncRoot) {
                         if (instance == null)
                             instance = new BaseGameState();
                     }
@@ -103,16 +97,13 @@ namespace Engine.Game.App.BaseApp
             }
         }
 
-        public BaseGameState()
-        {
+        public BaseGameState() {
 
-            if (Application.isEditor)
-            {
+            if (Application.isEditor) {
                 KEY_CONFIG = "config-DEV34";
                 KEY_PROFILE = "profile-DEV34";
             }
-            else
-            {
+            else {
                 KEY_CONFIG = "config-v1_0_0";
                 KEY_PROFILE = "profile-v1_0_0";
             }
@@ -130,8 +121,7 @@ namespace Engine.Game.App.BaseApp
             InitState();
         }
 
-        public virtual void InitState()
-        {
+        public virtual void InitState() {
 #if USE_GAME_LIB_GAMES
             //config = GameConfigs.Current;
             //profile = GameProfiles.Current;
@@ -159,18 +149,15 @@ namespace Engine.Game.App.BaseApp
 
         // CONFIG
 
-        public static void SaveConfig()
-        {
+        public static void SaveConfig() {
 #if USE_GAME_LIB_GAMES
-            if (GameState.Instance != null)
-            {
+            if (GameState.Instance != null) {
                 GameState.Instance.saveConfig();
             }
 #endif
         }
 
-        public virtual void saveConfig()
-        {
+        public virtual void saveConfig() {
 #if USE_GAME_LIB_GAMES
             string jsonString = GameConfigs.Current.ToJson();// JsonMapper.ToJson(config);
             SystemPrefUtil.SetLocalSettingString(KEY_CONFIG, jsonString);
@@ -178,22 +165,18 @@ namespace Engine.Game.App.BaseApp
 #endif
         }
 
-        public static void LoadConfig()
-        {
+        public static void LoadConfig() {
 #if USE_GAME_LIB_GAMES
-            if (GameState.Instance != null)
-            {
+            if (GameState.Instance != null) {
                 GameState.Instance.loadConfig();
             }
 #endif
         }
 
-        public virtual void loadConfig()
-        {
+        public virtual void loadConfig() {
 #if USE_GAME_LIB_GAMES
             string data = SystemPrefUtil.GetLocalSettingString(KEY_CONFIG);
-            if (!string.IsNullOrEmpty(data))
-            {
+            if (!string.IsNullOrEmpty(data)) {
                 GameConfigs.Current = data.FromJson<GameConfig>();//JsonMapper.ToObject<GameConfig>(data);
             }
 
@@ -204,10 +187,8 @@ namespace Engine.Game.App.BaseApp
 
         // KEYS
 
-        public string keyProfile
-        {
-            get
-            {
+        public string keyProfile {
+            get {
 #if USE_GAME_LIB_GAMES
                 return getProfileKey(GameProfiles.Current.username);
 #else
@@ -216,10 +197,8 @@ namespace Engine.Game.App.BaseApp
             }
         }
 
-        public string keyProfileAchievement
-        {
-            get
-            {
+        public string keyProfileAchievement {
+            get {
 #if USE_GAME_LIB_GAMES
                 return getProfileAchievementKey(GameProfiles.Current.username);
 #else
@@ -228,10 +207,8 @@ namespace Engine.Game.App.BaseApp
             }
         }
 
-        public string keyProfileStatistic
-        {
-            get
-            {
+        public string keyProfileStatistic {
+            get {
 #if USE_GAME_LIB_GAMES
                 return getProfileStatisticKey(GameProfiles.Current.username);
 #else
@@ -240,10 +217,8 @@ namespace Engine.Game.App.BaseApp
             }
         }
 
-        public string keyProfileCharacter
-        {
-            get
-            {
+        public string keyProfileCharacter {
+            get {
 #if USE_GAME_LIB_GAMES
                 return getProfileCharacterKey(GameProfiles.Current.username);
 #else
@@ -252,10 +227,8 @@ namespace Engine.Game.App.BaseApp
             }
         }
 
-        public string keyProfileCustomization
-        {
-            get
-            {
+        public string keyProfileCustomization {
+            get {
 #if USE_GAME_LIB_GAMES
                 return getProfileCustomizationKey(GameProfiles.Current.username);
 #else
@@ -264,10 +237,8 @@ namespace Engine.Game.App.BaseApp
             }
         }
 
-        public string keyProfileMode
-        {
-            get
-            {
+        public string keyProfileMode {
+            get {
 #if USE_GAME_LIB_GAMES
                 return getProfileModeKey(GameProfiles.Current.username);
 #else
@@ -276,10 +247,8 @@ namespace Engine.Game.App.BaseApp
             }
         }
 
-        public string keyProfileProduct
-        {
-            get
-            {
+        public string keyProfileProduct {
+            get {
 #if USE_GAME_LIB_GAMES
                 return getProfileProductKey(GameProfiles.Current.username);
 #else
@@ -288,10 +257,8 @@ namespace Engine.Game.App.BaseApp
             }
         }
 
-        public string keyProfileRPG
-        {
-            get
-            {
+        public string keyProfileRPG {
+            get {
 #if USE_GAME_LIB_GAMES
                 return getProfileRPGKey(GameProfiles.Current.username);
 #else
@@ -300,10 +267,8 @@ namespace Engine.Game.App.BaseApp
             }
         }
 
-        public string keyProfileTeam
-        {
-            get
-            {
+        public string keyProfileTeam {
+            get {
 #if USE_GAME_LIB_GAMES
                 return getProfileTeamKey(GameProfiles.Current.username);
 #else
@@ -312,10 +277,8 @@ namespace Engine.Game.App.BaseApp
             }
         }
 
-        public string keyProfileVehicle
-        {
-            get
-            {
+        public string keyProfileVehicle {
+            get {
 #if USE_GAME_LIB_GAMES
                 return getProfileVehicleKey(GameProfiles.Current.username);
 #else
@@ -324,70 +287,57 @@ namespace Engine.Game.App.BaseApp
             }
         }
 
-        public virtual string getKey(string username, string type)
-        {
+        public virtual string getKey(string username, string type) {
             return KEY_PROFILE + "-" + type + "-" + System.Uri.EscapeUriString(username).ToLower();
         }
 
-        public virtual string getProfileKey(string username)
-        {
+        public virtual string getProfileKey(string username) {
             return KEY_PROFILE + "-" + System.Uri.EscapeUriString(username).ToLower();
         }
 
-        public virtual string getProfileStatisticKey(string username)
-        {
+        public virtual string getProfileStatisticKey(string username) {
             return getKey(username, "statistic");
         }
 
-        public virtual string getProfileAchievementKey(string username)
-        {
+        public virtual string getProfileAchievementKey(string username) {
             return getKey(username, "achievement");
         }
 
-        public virtual string getProfileCharacterKey(string username)
-        {
+        public virtual string getProfileCharacterKey(string username) {
             return getKey(username, "character-1-1");
         }
 
-        public virtual string getProfileCustomizationKey(string username)
-        {
+        public virtual string getProfileCustomizationKey(string username) {
             return getKey(username, "customize");
         }
 
-        public virtual string getProfileModeKey(string username)
-        {
+        public virtual string getProfileModeKey(string username) {
             return getKey(username, "mode");
         }
 
-        public virtual string getProfileProductKey(string username)
-        {
+        public virtual string getProfileProductKey(string username) {
             return getKey(username, "product");
         }
 
-        public virtual string getProfileRPGKey(string username)
-        {
+        public virtual string getProfileRPGKey(string username) {
             return getKey(username, "rpg");
         }
 
-        public virtual string getProfileTeamKey(string username)
-        {
+        public virtual string getProfileTeamKey(string username) {
             return getKey(username, "team");
         }
 
-        public virtual string getProfileVehicleKey(string username)
-        {
+        public virtual string getProfileVehicleKey(string username) {
             return getKey(username, "vehicle");
         }
 
-        public virtual string getProfileKeyLegacy()
-        {
+        public virtual string getProfileKeyLegacy() {
             return KEY_PROFILE;
         }
 
         // PROFILE
 
-        public virtual void contentSave(string key, string data)
-        {
+        public virtual void contentSave(string key, string data) {
 
 #if UNITY_WEBPLAYER || PROFILE_RESOURCES
         SystemPrefUtil.SetLocalSettingString(key, data);
@@ -405,18 +355,14 @@ namespace Engine.Game.App.BaseApp
 #endif
         }
 
-        public virtual T contentLoad<T>(string key, T obj) where T : new()
-        {
+        public virtual T contentLoad<T>(string key, T obj) where T : new() {
             string data = prepareLoad(key);
 
-            if (!string.IsNullOrEmpty(data))
-            {
-                try
-                {
+            if (!string.IsNullOrEmpty(data)) {
+                try {
                     obj = data.FromJson<T>();// JsonMapper.ToObject<T>(data);
                 }
-                catch (Exception e)
-                {
+                catch (Exception e) {
                     Debug.LogError("Error content load:" + key + " " + obj.ToJson() + " e:" + e.ToJson());
                 }
             }
@@ -424,24 +370,20 @@ namespace Engine.Game.App.BaseApp
             return obj;
         }
 
-        public virtual string prepareSave(string keyTo, object obj)
-        {
+        public virtual string prepareSave(string keyTo, object obj) {
             string data = obj.ToJson();//JsonMapper.ToJson(obj);
 
 #if USE_GAME_LIB_GAMES
-            if (ProfileConfigs.useStorageEncryption)
-            {
+            if (ProfileConfigs.useStorageEncryption) {
                 data = data.ToEncrypted();
             }
 
-            if (ProfileConfigs.useStorageCompression)
-            {
+            if (ProfileConfigs.useStorageCompression) {
                 data = data.ToCompressed();
             }
 #endif
 
-            if (keyTo == keyProfile)
-            {
+            if (keyTo == keyProfile) {
                 //Debug.Log("GameState::prepareSave data....");
                 //Debug.Log(data);
             }
@@ -449,31 +391,26 @@ namespace Engine.Game.App.BaseApp
             return data;
         }
 
-        public virtual void save(string key, object obj, bool setSync = false)
-        {
+        public virtual void save(string key, object obj, bool setSync = false) {
             string jsonString = prepareSave(key, obj);
             contentSave(key, jsonString);
             //LogUtil.Log("GameState::SaveProfile jsonString...." + jsonString);
 
-            if (setSync)
-            {
+            if (setSync) {
                 sync(key, jsonString);
             }
         }
 
-        public virtual void sync(string key, string data)
-        {
+        public virtual void sync(string key, string data) {
 
 #if USE_GAME_LIB_GAMEVERSES
-            if (AppConfigs.gameCloudSyncEnabled)
-            {
+            if (AppConfigs.gameCloudSyncEnabled) {
                 GameSync.SetProfileSyncContent(key, key, data);
             }
 #endif
         }
 
-        public virtual string prepareLoad(string keyTo)
-        {
+        public virtual string prepareLoad(string keyTo) {
 
             string data = "";
 
@@ -486,19 +423,16 @@ namespace Engine.Game.App.BaseApp
 #endif
 
 #if USE_GAME_LIB_GAMES
-            if (ProfileConfigs.useStorageCompression)
-            {// || data.IsCompressed()) {
+            if (ProfileConfigs.useStorageCompression) {// || data.IsCompressed()) {
                 data = data.ToDecompressed();
             }
 
-            if (ProfileConfigs.useStorageEncryption)
-            {
+            if (ProfileConfigs.useStorageEncryption) {
                 data = data.ToDecrypted();
             }
 #endif
 
-            if (keyTo == keyProfile)
-            {
+            if (keyTo == keyProfile) {
                 //Debug.Log("GameState::prepareLoad data....");
                 //Debug.Log(data);
             }
@@ -506,8 +440,7 @@ namespace Engine.Game.App.BaseApp
             return data;
         }
 
-        public virtual string readProfileFile(string key)
-        {
+        public virtual string readProfileFile(string key) {
 
             string data = "";
 
@@ -519,29 +452,24 @@ namespace Engine.Game.App.BaseApp
             return data;
         }
 
-        public static void SyncProfile()
-        {
+        public static void SyncProfile() {
 #if USE_GAME_LIB_GAMES
-            if (GameState.Instance != null)
-            {
+            if (GameState.Instance != null) {
                 GameState.Instance.syncProfile();
             }
 #endif
         }
 
-        public virtual void syncProfile()
-        {
+        public virtual void syncProfile() {
 
 #if USE_GAME_LIB_GAMEVERSES
-            if (AppConfigs.gameCloudSyncEnabled)
-            {
+            if (AppConfigs.gameCloudSyncEnabled) {
                 CoroutineUtil.Start(syncProfileCo());
             }
 #endif
         }
 
-        public IEnumerator syncProfileCo()
-        {
+        public IEnumerator syncProfileCo() {
 
             yield return new WaitForEndOfFrame();
 
@@ -577,21 +505,17 @@ namespace Engine.Game.App.BaseApp
             yield return new WaitForEndOfFrame();
         }
 
-        public static void SaveProfile()
-        {
+        public static void SaveProfile() {
 #if USE_GAME_LIB_GAMES
-            if (GameState.Instance != null)
-            {
+            if (GameState.Instance != null) {
                 GameState.Instance.saveProfile();
             }
 #endif
         }
 
 #if USE_GAME_LIB_GAMES
-        public virtual void saveProfile(GameProfile profile)
-        {
-            if (profile != null)
-            {
+        public virtual void saveProfile(GameProfile profile) {
+            if (profile != null) {
                 //LogUtil.Log("SaveProfile: username: " + profile.username);            
                 //LogUtil.Log("SaveProfile: key: " + key);
                 //LogUtil.Log("SaveProfile: keyAchievement: " + keyAchievement);
@@ -614,36 +538,29 @@ namespace Engine.Game.App.BaseApp
             }
         }
 
-        public virtual void saveProfile()
-        {
+        public virtual void saveProfile() {
             //LogUtil.Log("SaveProfile");
 
-            if (GameProfiles.Current != null)
-            {
+            if (GameProfiles.Current != null) {
                 saveProfile(GameProfiles.Current);
             }
         }
 
-        public IEnumerator saveProfileCo(GameProfile profile)
-        {
+        public IEnumerator saveProfileCo(GameProfile profile) {
 
             saveProfile(profile);
 
             yield return null;
         }
 
-        public static void LoadProfile()
-        {
-            if (GameState.Instance != null)
-            {
+        public static void LoadProfile() {
+            if (GameState.Instance != null) {
                 GameState.Instance.loadProfile();
             }
         }
 
-        public virtual void loadProfile()
-        {
-            if (GameProfiles.Current != null)
-            {
+        public virtual void loadProfile() {
+            if (GameProfiles.Current != null) {
 
                 LogUtil.Log("LoadProfile: username: " + GameProfiles.Current.username);
                 //LogUtil.Log("LoadProfile: key: " + key);
@@ -688,34 +605,27 @@ namespace Engine.Game.App.BaseApp
             }
         }
 
-        public static void ChangeUser(string username)
-        {
-            if (GameState.Instance != null)
-            {
+        public static void ChangeUser(string username) {
+            if (GameState.Instance != null) {
                 GameState.Instance.changeUser(username);
             }
         }
 
-        public static void ChangeUser(string username, bool keepExisting)
-        {
-            if (GameState.Instance != null)
-            {
+        public static void ChangeUser(string username, bool keepExisting) {
+            if (GameState.Instance != null) {
                 GameState.Instance.changeUser(username, keepExisting);
             }
         }
 
-        public virtual void changeUser(string username)
-        {
+        public virtual void changeUser(string username) {
             changeUser(username, false);
         }
 
-        public virtual void changeUser(string username, bool keepExisting)
-        {
+        public virtual void changeUser(string username, bool keepExisting) {
             LogUtil.Log("ChangeUser: username: " + username);
             LogUtil.Log("ChangeUser: key: " + getProfileKey(username));
 
-            if (GameProfiles.Current.username != username)
-            {
+            if (GameProfiles.Current.username != username) {
 
                 GameConfigs.Current.lastLoggedOnUser = username;
                 saveConfig();
@@ -723,14 +633,12 @@ namespace Engine.Game.App.BaseApp
                 string originalProfileUser = GameProfiles.Current.username.ToLower();
 
                 if (originalProfileUser.ToLower() == "player"
-                    || keepExisting)
-                {
+                    || keepExisting) {
                     // Keep all progress from defualt player if they decide to log into gamecenter
                     // Has cheating problems but can be resolved after bug.
                     GameProfiles.Current.ChangeUserNoReset(username);
                 }
-                else
-                {
+                else {
                     GameProfiles.Current.ChangeUser(username);
                 }
 

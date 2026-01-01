@@ -10,13 +10,13 @@ public static class TransformExtensions {
         var tmp = new GameObject();
         try {
             tmp.transform.parent = inst.parent;
-            
+
             var index = inst.GetSiblingIndex();
-            
+
             inst.SetSiblingIndex(int.MaxValue);
             if (inst.GetSiblingIndex() == 0)
                 return true;
-            
+
             inst.SetSiblingIndex(index);
             return false;
         }

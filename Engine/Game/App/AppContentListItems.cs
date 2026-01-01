@@ -5,23 +5,17 @@ using Engine.Content;
 using Engine.Game.App.BaseApp;
 using UnityEngine;
 
-namespace Engine.Game.App
-{
-    public class AppContentListItems : BaseAppContentListItems<AppContentListItem>
-    {
+namespace Engine.Game.App {
+    public class AppContentListItems : BaseAppContentListItems<AppContentListItem> {
         private static volatile AppContentListItem current;
         private static volatile AppContentListItems instance;
         private static object syncRoot = new System.Object();
         public static string DATA_KEY = "app-content-list-item-data";
 
-        public static AppContentListItem Current
-        {
-            get
-            {
-                if (current == null)
-                {
-                    lock (syncRoot)
-                    {
+        public static AppContentListItem Current {
+            get {
+                if (current == null) {
+                    lock (syncRoot) {
                         if (current == null)
                             current = new AppContentListItem();
                     }
@@ -29,20 +23,15 @@ namespace Engine.Game.App
 
                 return current;
             }
-            set
-            {
+            set {
                 current = value;
             }
         }
 
-        public static AppContentListItems Instance
-        {
-            get
-            {
-                if (instance == null)
-                {
-                    lock (syncRoot)
-                    {
+        public static AppContentListItems Instance {
+            get {
+                if (instance == null) {
+                    lock (syncRoot) {
                         if (instance == null)
                             instance = new AppContentListItems(true);
                     }
@@ -50,38 +39,31 @@ namespace Engine.Game.App
 
                 return instance;
             }
-            set
-            {
+            set {
                 instance = value;
             }
         }
 
-        public AppContentListItems()
-        {
+        public AppContentListItems() {
             Reset();
         }
 
-        public AppContentListItems(bool loadData)
-        {
+        public AppContentListItems(bool loadData) {
             Reset();
             path = "data/" + DATA_KEY + ".json";
             pathKey = DATA_KEY;
             LoadData();
         }
 
-        public void SaveData(string fileFullPath, string data)
-        {
+        public void SaveData(string fileFullPath, string data) {
 #if !UNITY_WEBPLAYER
             FileSystemUtil.WriteString(fileFullPath, data);
 #endif
         }
 
-        public void ChangeState(string code, string packCode)
-        {
-            if (Current.code != code)
-            {
-                foreach (AppContentListItem action in GetListByCodeAndPackCode(code, packCode))
-                {
+        public void ChangeState(string code, string packCode) {
+            if (Current.code != code) {
+                foreach (AppContentListItem action in GetListByCodeAndPackCode(code, packCode)) {
                     Current = action;
                     break;
                 }
@@ -101,13 +83,10 @@ namespace Engine.Game.App
         */
 
         public List<AppContentListItem> GetListByCodeAndPackCode(
-            string actionCode, string packCode)
-        {
+            string actionCode, string packCode) {
             List<AppContentListItem> filteredList = new List<AppContentListItem>();
-            foreach (AppContentListItem obj in GetListByPack(packCode))
-            {
-                if (actionCode.ToLower() == obj.code.ToLower())
-                {
+            foreach (AppContentListItem obj in GetListByPack(packCode)) {
+                if (actionCode.ToLower() == obj.code.ToLower()) {
                     filteredList.Add(obj);
                 }
             }
@@ -116,16 +95,13 @@ namespace Engine.Game.App
         }
 
         public List<AppContentListItem> GetListByPackCodeAndPathVersioned(
-            string packCode, string pathVersioned)
-        {
+            string packCode, string pathVersioned) {
             List<AppContentListItem> filteredList = new List<AppContentListItem>();
-            foreach (AppContentListItem obj in GetListByPack(packCode))
-            {
+            foreach (AppContentListItem obj in GetListByPack(packCode)) {
 
                 if (pathVersioned.ToLower() == obj.data.filePathVersioned.ToLower()
                     || (pathVersioned.ToLower().Contains(obj.data.filePathNonVersioned)
-                    && pathVersioned.ToLower().Contains(obj.data.directoryFull)))
-                {
+                    && pathVersioned.ToLower().Contains(obj.data.directoryFull))) {
                     filteredList.Add(obj);
                 }
             }
@@ -134,23 +110,20 @@ namespace Engine.Game.App
         }
     }
 
-    public enum AppContentListItemDataEnum
-    {
+    public enum AppContentListItemDataEnum {
         SYSTEM,
         FULL,
         APP,
         PACK
     }
 
-    public enum AppContentListItemFormatEnum
-    {
+    public enum AppContentListItemFormatEnum {
         NON_VERSIONED,
         VERSIONED,
         VERSIONED_SYNC
     }
 
-    public class AppContentListItemPath
-    {
+    public class AppContentListItemPath {
         public string pathCurrentAppBase;
         public string pathNonVersionedSystem;
         public string pathNonVersionedFull;
@@ -162,13 +135,11 @@ namespace Engine.Game.App
         public string pathVersionedFullSync;
         public string pathVersionedAppSync;
 
-        public AppContentListItemPath(string filePathNonVersioned, string filePathVersioned)
-        {
+        public AppContentListItemPath(string filePathNonVersioned, string filePathVersioned) {
             Fill(filePathNonVersioned, filePathVersioned);
         }
 
-        public void Fill(string filePathNonVersioned, string filePathVersioned)
-        {
+        public void Fill(string filePathNonVersioned, string filePathVersioned) {
 #if USE_GAME_LIB_GAMES
             pathCurrentAppBase = ContentsConfig.contentRootFolder + "/";
             pathCurrentAppBase += ContentsConfig.contentAppFolder + "/";
@@ -189,8 +160,7 @@ namespace Engine.Game.App
         }
     }
 
-    public class AppContentListItemData
-    {
+    public class AppContentListItemData {
         public string hash = "";
         public string directoryPath = "";
         public string directoryFull = "";
@@ -208,13 +178,11 @@ namespace Engine.Game.App
         public string platform = "shared";
         public bool versioned = false;
 
-        public AppContentListItemData()
-        {
+        public AppContentListItemData() {
 
         }
 
-        public AppContentListItemPath GetFilePaths()
-        {
+        public AppContentListItemPath GetFilePaths() {
             AppContentListItemPath paths
                 = new AppContentListItemPath(
                     filePathNonVersioned, filePathVersioned);
@@ -222,24 +190,20 @@ namespace Engine.Game.App
         }
     }
 
-    public class AppContentListItem : BaseAppContentListItem
-    {
+    public class AppContentListItem : BaseAppContentListItem {
 
         public AppContentListItemData data = null;
 
-        public AppContentListItem()
-        {
+        public AppContentListItem() {
             Reset();
         }
 
-        public override void Reset()
-        {
+        public override void Reset() {
             base.Reset();
             data = new AppContentListItemData();
         }
 
-        public AppContentListItemData GetContentListItemData()
-        {
+        public AppContentListItemData GetContentListItemData() {
             return data;
         }
     }

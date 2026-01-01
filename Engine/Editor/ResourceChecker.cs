@@ -8,10 +8,8 @@ using UnityEngine;
 using UnityEditor;
 using System.Collections.Generic;
 
-namespace Engine.Editor
-{
-    public class TextureDetails
-    {
+namespace Engine.Editor {
+    public class TextureDetails {
         public bool isCubeMap;
         public int memSizeKB;
         public Texture texture;
@@ -20,45 +18,38 @@ namespace Engine.Editor
         public List<Object> FoundInMaterials = new List<Object>();
         public List<Object> FoundInRenderers = new List<Object>();
 
-        public TextureDetails()
-        {
+        public TextureDetails() {
 
         }
     };
 
-    public class MaterialDetails
-    {
+    public class MaterialDetails {
 
         public Material material;
         public List<Renderer> FoundInRenderers = new List<Renderer>();
 
-        public MaterialDetails()
-        {
+        public MaterialDetails() {
 
         }
     };
 
-    public class MeshDetails
-    {
+    public class MeshDetails {
 
         public Mesh mesh;
         public List<MeshFilter> FoundInMeshFilters = new List<MeshFilter>();
         public List<SkinnedMeshRenderer> FoundInSkinnedMeshRenderer = new List<SkinnedMeshRenderer>();
 
-        public MeshDetails()
-        {
+        public MeshDetails() {
 
         }
     };
 
-    public class ResourceChecker : EditorWindow
-    {
+    public class ResourceChecker : EditorWindow {
 
 
         string[] inspectToolbarStrings = { "Textures", "Materials", "Meshes" };
 
-        enum InspectType
-        {
+        enum InspectType {
             Textures,
             Materials,
             Meshes
@@ -80,15 +71,13 @@ namespace Engine.Editor
         static int MinWidth = 455;
 
         [MenuItem("Content Tools/Resource Checker")]
-        static void Init()
-        {
+        static void Init() {
             ResourceChecker window = (ResourceChecker)EditorWindow.GetWindow(typeof(ResourceChecker));
             window.CheckResources();
             window.minSize = new Vector2(MinWidth, 300);
         }
 
-        void OnGUI()
-        {
+        void OnGUI() {
             if (GUILayout.Button("Refresh"))
                 CheckResources();
             GUILayout.BeginHorizontal();
@@ -100,8 +89,7 @@ namespace Engine.Editor
 
             ctrlPressed = Event.current.control || Event.current.command;
 
-            switch (ActiveInspectType)
-            {
+            switch (ActiveInspectType) {
                 case InspectType.Textures:
                     ListTextures();
                     break;
@@ -116,10 +104,8 @@ namespace Engine.Editor
             }
         }
 
-        int GetBitsPerPixel(TextureFormat format)
-        {
-            switch (format)
-            {
+        int GetBitsPerPixel(TextureFormat format) {
+            switch (format) {
                 case TextureFormat.Alpha8: //    Alpha-only texture format.
                     return 8;
                 case TextureFormat.ARGB4444: //  A 16 bits/pixel texture format. Texture stores color with an alpha channel.
@@ -173,20 +159,17 @@ namespace Engine.Editor
             return 0;
         }
 
-        int CalculateTextureSizeBytes(Texture tTexture)
-        {
+        int CalculateTextureSizeBytes(Texture tTexture) {
 
             int tWidth = tTexture.width;
             int tHeight = tTexture.height;
-            if (tTexture is Texture2D)
-            {
+            if (tTexture is Texture2D) {
                 Texture2D tTex2D = tTexture as Texture2D;
                 int bitsPerPixel = GetBitsPerPixel(tTex2D.format);
                 int mipMapCount = tTex2D.mipmapCount;
                 int mipLevel = 1;
                 int tSize = 0;
-                while (mipLevel <= mipMapCount)
-                {
+                while (mipLevel <= mipMapCount) {
                     tSize += tWidth * tHeight * bitsPerPixel / 8;
                     tWidth = tWidth / 2;
                     tHeight = tHeight / 2;
@@ -195,8 +178,7 @@ namespace Engine.Editor
                 return tSize;
             }
 
-            if (tTexture is Cubemap)
-            {
+            if (tTexture is Cubemap) {
                 Cubemap tCubemap = tTexture as Cubemap;
                 int bitsPerPixel = GetBitsPerPixel(tCubemap.format);
                 return tWidth * tHeight * 6 * bitsPerPixel / 8;
@@ -204,10 +186,8 @@ namespace Engine.Editor
             return 0;
         }
 
-        void SelectObject(Object selectedObject, bool append)
-        {
-            if (append)
-            {
+        void SelectObject(Object selectedObject, bool append) {
+            if (append) {
                 List<Object> currentSelection = new List<Object>(Selection.objects);
                 // Allow toggle selection
                 if (currentSelection.Contains(selectedObject))
@@ -221,10 +201,8 @@ namespace Engine.Editor
                 Selection.activeObject = selectedObject;
         }
 
-        void SelectObjects(List<Object> selectedObjects, bool append)
-        {
-            if (append)
-            {
+        void SelectObjects(List<Object> selectedObjects, bool append) {
+            if (append) {
                 List<Object> currentSelection = new List<Object>(Selection.objects);
                 currentSelection.AddRange(selectedObjects);
                 Selection.objects = currentSelection.ToArray();
@@ -233,18 +211,15 @@ namespace Engine.Editor
                 Selection.objects = selectedObjects.ToArray();
         }
 
-        void ListTextures()
-        {
+        void ListTextures() {
             textureListScrollPos = EditorGUILayout.BeginScrollView(textureListScrollPos);
 
-            foreach (TextureDetails tDetails in ActiveTextures)
-            {
+            foreach (TextureDetails tDetails in ActiveTextures) {
 
                 GUILayout.BeginHorizontal();
                 GUILayout.Box(tDetails.texture, GUILayout.Width(ThumbnailWidth), GUILayout.Height(ThumbnailHeight));
 
-                if (GUILayout.Button(tDetails.texture.name, GUILayout.Width(150)))
-                {
+                if (GUILayout.Button(tDetails.texture.name, GUILayout.Width(150))) {
                     SelectObject(tDetails.texture, ctrlPressed);
                 }
 
@@ -256,13 +231,11 @@ namespace Engine.Editor
 
                 GUILayout.Label(sizeLabel, GUILayout.Width(120));
 
-                if (GUILayout.Button(tDetails.FoundInMaterials.Count + " Mat", GUILayout.Width(50)))
-                {
+                if (GUILayout.Button(tDetails.FoundInMaterials.Count + " Mat", GUILayout.Width(50))) {
                     SelectObjects(tDetails.FoundInMaterials, ctrlPressed);
                 }
 
-                if (GUILayout.Button(tDetails.FoundInRenderers.Count + " GO", GUILayout.Width(50)))
-                {
+                if (GUILayout.Button(tDetails.FoundInRenderers.Count + " GO", GUILayout.Width(50))) {
                     List<Object> FoundObjects = new List<Object>();
                     foreach (Renderer renderer in tDetails.FoundInRenderers)
                         FoundObjects.Add(renderer.gameObject);
@@ -271,13 +244,11 @@ namespace Engine.Editor
 
                 GUILayout.EndHorizontal();
             }
-            if (ActiveTextures.Count > 0)
-            {
+            if (ActiveTextures.Count > 0) {
                 GUILayout.BeginHorizontal();
                 GUILayout.Box(" ", GUILayout.Width(ThumbnailWidth), GUILayout.Height(ThumbnailHeight));
 
-                if (GUILayout.Button("Select All", GUILayout.Width(150)))
-                {
+                if (GUILayout.Button("Select All", GUILayout.Width(150))) {
                     List<Object> AllTextures = new List<Object>();
                     foreach (TextureDetails tDetails in ActiveTextures)
                         AllTextures.Add(tDetails.texture);
@@ -288,33 +259,27 @@ namespace Engine.Editor
             EditorGUILayout.EndScrollView();
         }
 
-        void ListMaterials()
-        {
+        void ListMaterials() {
             materialListScrollPos = EditorGUILayout.BeginScrollView(materialListScrollPos);
 
-            foreach (MaterialDetails tDetails in ActiveMaterials)
-            {
-                if (tDetails.material != null)
-                {
+            foreach (MaterialDetails tDetails in ActiveMaterials) {
+                if (tDetails.material != null) {
                     GUILayout.BeginHorizontal();
 
                     if (tDetails.material.mainTexture != null)
                         GUILayout.Box(tDetails.material.mainTexture, GUILayout.Width(ThumbnailWidth), GUILayout.Height(ThumbnailHeight));
-                    else
-                    {
+                    else {
                         GUILayout.Box("n/a", GUILayout.Width(ThumbnailWidth), GUILayout.Height(ThumbnailHeight));
                     }
 
-                    if (GUILayout.Button(tDetails.material.name, GUILayout.Width(150)))
-                    {
+                    if (GUILayout.Button(tDetails.material.name, GUILayout.Width(150))) {
                         SelectObject(tDetails.material, ctrlPressed);
                     }
 
                     string shaderLabel = tDetails.material.shader != null ? tDetails.material.shader.name : "no shader";
                     GUILayout.Label(shaderLabel, GUILayout.Width(200));
 
-                    if (GUILayout.Button(tDetails.FoundInRenderers.Count + " GO", GUILayout.Width(50)))
-                    {
+                    if (GUILayout.Button(tDetails.FoundInRenderers.Count + " GO", GUILayout.Width(50))) {
                         List<Object> FoundObjects = new List<Object>();
                         foreach (Renderer renderer in tDetails.FoundInRenderers)
                             FoundObjects.Add(renderer.gameObject);
@@ -328,14 +293,11 @@ namespace Engine.Editor
             EditorGUILayout.EndScrollView();
         }
 
-        void ListMeshes()
-        {
+        void ListMeshes() {
             meshListScrollPos = EditorGUILayout.BeginScrollView(meshListScrollPos);
 
-            foreach (MeshDetails tDetails in ActiveMeshDetails)
-            {
-                if (tDetails.mesh != null)
-                {
+            foreach (MeshDetails tDetails in ActiveMeshDetails) {
+                if (tDetails.mesh != null) {
                     GUILayout.BeginHorizontal();
                     /*
                     if (tDetails.material.mainTexture!=null) GUILayout.Box(tDetails.material.mainTexture, GUILayout.Width(ThumbnailWidth), GUILayout.Height(ThumbnailHeight));
@@ -345,8 +307,7 @@ namespace Engine.Editor
                     }
                     */
 
-                    if (GUILayout.Button(tDetails.mesh.name, GUILayout.Width(150)))
-                    {
+                    if (GUILayout.Button(tDetails.mesh.name, GUILayout.Width(150))) {
                         SelectObject(tDetails.mesh, ctrlPressed);
                     }
                     string sizeLabel = "" + tDetails.mesh.vertexCount + " vert";
@@ -354,16 +315,14 @@ namespace Engine.Editor
                     GUILayout.Label(sizeLabel, GUILayout.Width(100));
 
 
-                    if (GUILayout.Button(tDetails.FoundInMeshFilters.Count + " GO", GUILayout.Width(50)))
-                    {
+                    if (GUILayout.Button(tDetails.FoundInMeshFilters.Count + " GO", GUILayout.Width(50))) {
                         List<Object> FoundObjects = new List<Object>();
                         foreach (MeshFilter meshFilter in tDetails.FoundInMeshFilters)
                             FoundObjects.Add(meshFilter.gameObject);
                         SelectObjects(FoundObjects, ctrlPressed);
                     }
 
-                    if (GUILayout.Button(tDetails.FoundInSkinnedMeshRenderer.Count + " GO", GUILayout.Width(50)))
-                    {
+                    if (GUILayout.Button(tDetails.FoundInSkinnedMeshRenderer.Count + " GO", GUILayout.Width(50))) {
                         List<Object> FoundObjects = new List<Object>();
                         foreach (SkinnedMeshRenderer skinnedMeshRenderer in tDetails.FoundInSkinnedMeshRenderer)
                             FoundObjects.Add(skinnedMeshRenderer.gameObject);
@@ -377,21 +336,17 @@ namespace Engine.Editor
             EditorGUILayout.EndScrollView();
         }
 
-        string FormatSizeString(int memSizeKB)
-        {
+        string FormatSizeString(int memSizeKB) {
             if (memSizeKB < 1024)
                 return "" + memSizeKB + "k";
-            else
-            {
+            else {
                 float memSizeMB = ((float)memSizeKB) / 1024.0f;
                 return memSizeMB.ToString("0.00") + "Mb";
             }
         }
 
-        TextureDetails FindTextureDetails(Texture tTexture)
-        {
-            foreach (TextureDetails tTextureDetails in ActiveTextures)
-            {
+        TextureDetails FindTextureDetails(Texture tTexture) {
+            foreach (TextureDetails tTextureDetails in ActiveTextures) {
                 if (tTextureDetails.texture == tTexture)
                     return tTextureDetails;
             }
@@ -399,10 +354,8 @@ namespace Engine.Editor
 
         }
 
-        MaterialDetails FindMaterialDetails(Material tMaterial)
-        {
-            foreach (MaterialDetails tMaterialDetails in ActiveMaterials)
-            {
+        MaterialDetails FindMaterialDetails(Material tMaterial) {
+            foreach (MaterialDetails tMaterialDetails in ActiveMaterials) {
                 if (tMaterialDetails.material == tMaterial)
                     return tMaterialDetails;
             }
@@ -410,10 +363,8 @@ namespace Engine.Editor
 
         }
 
-        MeshDetails FindMeshDetails(Mesh tMesh)
-        {
-            foreach (MeshDetails tMeshDetails in ActiveMeshDetails)
-            {
+        MeshDetails FindMeshDetails(Mesh tMesh) {
+            foreach (MeshDetails tMeshDetails in ActiveMeshDetails) {
                 if (tMeshDetails.mesh == tMesh)
                     return tMeshDetails;
             }
@@ -421,23 +372,19 @@ namespace Engine.Editor
 
         }
 
-        void CheckResources()
-        {
+        void CheckResources() {
             ActiveTextures.Clear();
             ActiveMaterials.Clear();
             ActiveMeshDetails.Clear();
 
             Renderer[] renderers = (Renderer[])FindObjectsOfType(typeof(Renderer));
             //Debug.Log("Total renderers "+renderers.Length);
-            foreach (Renderer renderer in renderers)
-            {
+            foreach (Renderer renderer in renderers) {
                 //Debug.Log("Renderer is "+renderer.name);
-                foreach (Material material in renderer.sharedMaterials)
-                {
+                foreach (Material material in renderer.sharedMaterials) {
 
                     MaterialDetails tMaterialDetails = FindMaterialDetails(material);
-                    if (tMaterialDetails == null)
-                    {
+                    if (tMaterialDetails == null) {
                         tMaterialDetails = new MaterialDetails();
                         tMaterialDetails.material = material;
                         ActiveMaterials.Add(tMaterialDetails);
@@ -446,14 +393,11 @@ namespace Engine.Editor
                 }
             }
 
-            foreach (MaterialDetails tMaterialDetails in ActiveMaterials)
-            {
+            foreach (MaterialDetails tMaterialDetails in ActiveMaterials) {
                 Material tMaterial = tMaterialDetails.material;
                 var dependencies = EditorUtility.CollectDependencies(new UnityEngine.Object[] { tMaterial });
-                foreach (Object obj in dependencies)
-                {
-                    if (obj is Texture)
-                    {
+                foreach (Object obj in dependencies) {
+                    if (obj is Texture) {
                         Texture tTexture = obj as Texture;
                         var tTextureDetail = GetTextureDetail(tTexture, tMaterial, tMaterialDetails);
                         ActiveTextures.Add(tTextureDetail);
@@ -461,8 +405,7 @@ namespace Engine.Editor
                 }
 
                 //if the texture was downloaded, it won't be included in the editor dependencies
-                if (tMaterial.mainTexture != null && !dependencies.Contains(tMaterial.mainTexture))
-                {
+                if (tMaterial.mainTexture != null && !dependencies.Contains(tMaterial.mainTexture)) {
                     var tTextureDetail = GetTextureDetail(tMaterial.mainTexture, tMaterial, tMaterialDetails);
                     ActiveTextures.Add(tTextureDetail);
                 }
@@ -471,14 +414,11 @@ namespace Engine.Editor
 
             MeshFilter[] meshFilters = (MeshFilter[])FindObjectsOfType(typeof(MeshFilter));
 
-            foreach (MeshFilter tMeshFilter in meshFilters)
-            {
+            foreach (MeshFilter tMeshFilter in meshFilters) {
                 Mesh tMesh = tMeshFilter.sharedMesh;
-                if (tMesh != null)
-                {
+                if (tMesh != null) {
                     MeshDetails tMeshDetails = FindMeshDetails(tMesh);
-                    if (tMeshDetails == null)
-                    {
+                    if (tMeshDetails == null) {
                         tMeshDetails = new MeshDetails();
                         tMeshDetails.mesh = tMesh;
                         ActiveMeshDetails.Add(tMeshDetails);
@@ -489,14 +429,11 @@ namespace Engine.Editor
 
             SkinnedMeshRenderer[] skinnedMeshRenderers = (SkinnedMeshRenderer[])FindObjectsOfType(typeof(SkinnedMeshRenderer));
 
-            foreach (SkinnedMeshRenderer tSkinnedMeshRenderer in skinnedMeshRenderers)
-            {
+            foreach (SkinnedMeshRenderer tSkinnedMeshRenderer in skinnedMeshRenderers) {
                 Mesh tMesh = tSkinnedMeshRenderer.sharedMesh;
-                if (tMesh != null)
-                {
+                if (tMesh != null) {
                     MeshDetails tMeshDetails = FindMeshDetails(tMesh);
-                    if (tMeshDetails == null)
-                    {
+                    if (tMeshDetails == null) {
                         tMeshDetails = new MeshDetails();
                         tMeshDetails.mesh = tMesh;
                         ActiveMeshDetails.Add(tMeshDetails);
@@ -526,11 +463,9 @@ namespace Engine.Editor
 
         }
 
-        private TextureDetails GetTextureDetail(Texture tTexture, Material tMaterial, MaterialDetails tMaterialDetails)
-        {
+        private TextureDetails GetTextureDetail(Texture tTexture, Material tMaterial, MaterialDetails tMaterialDetails) {
             TextureDetails tTextureDetails = FindTextureDetails(tTexture);
-            if (tTextureDetails == null)
-            {
+            if (tTextureDetails == null) {
                 tTextureDetails = new TextureDetails();
                 tTextureDetails.texture = tTexture;
                 tTextureDetails.isCubeMap = tTexture is Cubemap;
@@ -540,13 +475,11 @@ namespace Engine.Editor
                 tTextureDetails.memSizeKB = memSize / 1024;
                 TextureFormat tFormat = TextureFormat.RGBA32;
                 int tMipMapCount = 1;
-                if (tTexture is Texture2D)
-                {
+                if (tTexture is Texture2D) {
                     tFormat = (tTexture as Texture2D).format;
                     tMipMapCount = (tTexture as Texture2D).mipmapCount;
                 }
-                if (tTexture is Cubemap)
-                {
+                if (tTexture is Cubemap) {
                     tFormat = (tTexture as Cubemap).format;
                 }
 
@@ -555,8 +488,7 @@ namespace Engine.Editor
 
             }
             tTextureDetails.FoundInMaterials.Add(tMaterial);
-            foreach (Renderer renderer in tMaterialDetails.FoundInRenderers)
-            {
+            foreach (Renderer renderer in tMaterialDetails.FoundInRenderers) {
                 if (!tTextureDetails.FoundInRenderers.Contains(renderer))
                     tTextureDetails.FoundInRenderers.Add(renderer);
             }

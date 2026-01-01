@@ -5,53 +5,42 @@ using UnityEngine.Playables;
 using UnityEngine.Animations;
 using System;
 
-namespace Engine.Animation.SimpleAnimationComponent
-{
-    public partial class SimpleAnimationPlayable : PlayableBehaviour
-    {
+namespace Engine.Animation.SimpleAnimationComponent {
+    public partial class SimpleAnimationPlayable : PlayableBehaviour {
         private int m_StatesVersion = 0;
 
-        private void InvalidateStates()
-        {
+        private void InvalidateStates() {
             m_StatesVersion++;
         }
-        private class StateEnumerable : IEnumerable<IState>
-        {
+        private class StateEnumerable : IEnumerable<IState> {
             private SimpleAnimationPlayable m_Owner;
-            public StateEnumerable(SimpleAnimationPlayable owner)
-            {
+            public StateEnumerable(SimpleAnimationPlayable owner) {
                 m_Owner = owner;
             }
 
-            public IEnumerator<IState> GetEnumerator()
-            {
+            public IEnumerator<IState> GetEnumerator() {
                 return new StateEnumerator(m_Owner);
             }
 
-            IEnumerator IEnumerable.GetEnumerator()
-            {
+            IEnumerator IEnumerable.GetEnumerator() {
                 return new StateEnumerator(m_Owner);
             }
 
-            class StateEnumerator : IEnumerator<IState>
-            {
+            class StateEnumerator : IEnumerator<IState> {
                 private int m_Index = -1;
                 private int m_Version;
                 private SimpleAnimationPlayable m_Owner;
-                public StateEnumerator(SimpleAnimationPlayable owner)
-                {
+                public StateEnumerator(SimpleAnimationPlayable owner) {
                     m_Owner = owner;
                     m_Version = m_Owner.m_StatesVersion;
                     Reset();
                 }
 
-                private bool IsValid()
-                {
+                private bool IsValid() {
                     return m_Owner != null && m_Version == m_Owner.m_StatesVersion;
                 }
 
-                IState GetCurrentHandle(int index)
-                {
+                IState GetCurrentHandle(int index) {
                     if (!IsValid())
                         throw new InvalidOperationException("The collection has been modified, this Enumerator is invalid");
 
@@ -65,41 +54,33 @@ namespace Engine.Animation.SimpleAnimationComponent
                     return new StateHandle(m_Owner, state.index, state.playable);
                 }
 
-                object IEnumerator.Current
-                {
-                    get
-                    {
+                object IEnumerator.Current {
+                    get {
                         return GetCurrentHandle(m_Index);
                     }
                 }
 
-                IState IEnumerator<IState>.Current
-                {
-                    get
-                    {
+                IState IEnumerator<IState>.Current {
+                    get {
                         return GetCurrentHandle(m_Index);
                     }
                 }
 
-                public void Dispose()
-                {
+                public void Dispose() {
                 }
 
-                public bool MoveNext()
-                {
+                public bool MoveNext() {
                     if (!IsValid())
                         throw new InvalidOperationException("The collection has been modified, this Enumerator is invalid");
 
-                    do
-                    {
+                    do {
                         m_Index++;
                     } while (m_Index < m_Owner.m_States.Count && m_Owner.m_States[m_Index] == null);
 
                     return m_Index < m_Owner.m_States.Count;
                 }
 
-                public void Reset()
-                {
+                public void Reset() {
                     if (!IsValid())
                         throw new InvalidOperationException("The collection has been modified, this Enumerator is invalid");
                     m_Index = -1;
@@ -107,81 +88,65 @@ namespace Engine.Animation.SimpleAnimationComponent
             }
         }
 
-        public interface IState
-        {
+        public interface IState {
             bool IsValid();
 
-            bool enabled
-            {
+            bool enabled {
                 get; set;
             }
 
-            float time
-            {
+            float time {
                 get; set;
             }
 
-            float normalizedTime
-            {
+            float normalizedTime {
                 get; set;
             }
 
-            float speed
-            {
+            float speed {
                 get; set;
             }
 
-            string name
-            {
+            string name {
                 get; set;
             }
 
-            float weight
-            {
+            float weight {
                 get; set;
             }
 
-            float length
-            {
+            float length {
                 get;
             }
 
-            AnimationClip clip
-            {
+            AnimationClip clip {
                 get;
             }
 
-            WrapMode wrapMode
-            {
+            WrapMode wrapMode {
                 get;
             }
         }
 
-        public class StateHandle : IState
-        {
-            public StateHandle(SimpleAnimationPlayable s, int index, Playable target)
-            {
+        public class StateHandle : IState {
+            public StateHandle(SimpleAnimationPlayable s, int index, Playable target) {
                 m_Parent = s;
                 m_Index = index;
                 m_Target = target;
             }
 
-            public bool IsValid()
-            {
+            public bool IsValid() {
                 return m_Parent.ValidateInput(m_Index, m_Target);
             }
 
-            public bool enabled
-            {
-                get
-                {
+            public bool enabled {
+                get {
                     if (!IsValid())
                         throw new System.InvalidOperationException("This StateHandle is not valid");
                     return m_Parent.m_States[m_Index].enabled;
                 }
 
-                set
-                {
+                set {
                     if (!IsValid())
                         throw new System.InvalidOperationException("This StateHandle is not valid");
                     if (value)
@@ -192,26 +157,21 @@ namespace Engine.Animation.SimpleAnimationComponent
                 }
             }
 
-            public float time
-            {
-                get
-                {
+            public float time {
+                get {
                     if (!IsValid())
                         throw new System.InvalidOperationException("This StateHandle is not valid");
                     return m_Parent.m_States.GetStateTime(m_Index);
                 }
-                set
-                {
+                set {
                     if (!IsValid())
                         throw new System.InvalidOperationException("This StateHandle is not valid");
                     m_Parent.m_States.SetStateTime(m_Index, value);
                 }
             }
 
-            public float normalizedTime
-            {
-                get
-                {
+            public float normalizedTime {
+                get {
                     if (!IsValid())
                         throw new System.InvalidOperationException("This StateHandle is not valid");
 
@@ -221,8 +181,7 @@ namespace Engine.Animation.SimpleAnimationComponent
 
                     return m_Parent.m_States.GetStateTime(m_Index) / length;
                 }
-                set
-                {
+                set {
                     if (!IsValid())
                         throw new System.InvalidOperationException("This StateHandle is not valid");
 
@@ -234,32 +193,26 @@ namespace Engine.Animation.SimpleAnimationComponent
                 }
             }
 
-            public float speed
-            {
-                get
-                {
+            public float speed {
+                get {
                     if (!IsValid())
                         throw new System.InvalidOperationException("This StateHandle is not valid");
                     return m_Parent.m_States.GetStateSpeed(m_Index);
                 }
-                set
-                {
+                set {
                     if (!IsValid())
                         throw new System.InvalidOperationException("This StateHandle is not valid");
                     m_Parent.m_States.SetStateSpeed(m_Index, value);
                 }
             }
 
-            public string name
-            {
-                get
-                {
+            public string name {
+                get {
                     if (!IsValid())
                         throw new System.InvalidOperationException("This StateHandle is not valid");
                     return m_Parent.m_States.GetStateName(m_Index);
                 }
-                set
-                {
+                set {
                     if (!IsValid())
                         throw new System.InvalidOperationException("This StateHandle is not valid");
                     if (value == null)
@@ -268,16 +221,13 @@ namespace Engine.Animation.SimpleAnimationComponent
                 }
             }
 
-            public float weight
-            {
-                get
-                {
+            public float weight {
+                get {
                     if (!IsValid())
                         throw new System.InvalidOperationException("This StateHandle is not valid");
                     return m_Parent.m_States[m_Index].weight;
                 }
-                set
-                {
+                set {
                     if (!IsValid())
                         throw new System.InvalidOperationException("This StateHandle is not valid");
                     if (value < 0)
@@ -287,40 +237,32 @@ namespace Engine.Animation.SimpleAnimationComponent
                 }
             }
 
-            public float length
-            {
-                get
-                {
+            public float length {
+                get {
                     if (!IsValid())
                         throw new System.InvalidOperationException("This StateHandle is not valid");
                     return m_Parent.m_States.GetStateLength(m_Index);
                 }
             }
 
-            public AnimationClip clip
-            {
-                get
-                {
+            public AnimationClip clip {
+                get {
                     if (!IsValid())
                         throw new System.InvalidOperationException("This StateHandle is not valid");
                     return m_Parent.m_States.GetStateClip(m_Index);
                 }
             }
 
-            public WrapMode wrapMode
-            {
-                get
-                {
+            public WrapMode wrapMode {
+                get {
                     if (!IsValid())
                         throw new System.InvalidOperationException("This StateHandle is not valid");
                     return m_Parent.m_States.GetStateWrapMode(m_Index);
                 }
             }
 
-            public int index
-            {
-                get
-                {
+            public int index {
+                get {
                     return m_Index;
                 }
             }
@@ -330,17 +272,14 @@ namespace Engine.Animation.SimpleAnimationComponent
             private Playable m_Target;
         }
 
-        private class StateInfo
-        {
-            public void Initialize(string name, AnimationClip clip, WrapMode wrapMode)
-            {
+        private class StateInfo {
+            public void Initialize(string name, AnimationClip clip, WrapMode wrapMode) {
                 m_StateName = name;
                 m_Clip = clip;
                 m_WrapMode = wrapMode;
             }
 
-            public float GetTime()
-            {
+            public float GetTime() {
                 if (m_TimeIsUpToDate)
                     return m_Time;
 
@@ -349,15 +288,13 @@ namespace Engine.Animation.SimpleAnimationComponent
                 return m_Time;
             }
 
-            public void SetTime(float newTime)
-            {
+            public void SetTime(float newTime) {
                 m_Time = newTime;
                 m_Playable.ResetTime(m_Time);
                 m_Playable.SetDone(m_Time >= m_Playable.GetDuration());
             }
 
-            public void Enable()
-            {
+            public void Enable() {
                 if (m_Enabled)
                     return;
 
@@ -365,8 +302,7 @@ namespace Engine.Animation.SimpleAnimationComponent
                 m_Enabled = true;
             }
 
-            public void Disable()
-            {
+            public void Disable() {
                 if (m_Enabled == false)
                     return;
 
@@ -374,20 +310,17 @@ namespace Engine.Animation.SimpleAnimationComponent
                 m_Enabled = false;
             }
 
-            public void Pause()
-            {
+            public void Pause() {
                 //m_Playable.SetPlayState(PlayState.Paused);
                 m_Playable.Pause();
             }
 
-            public void Play()
-            {
+            public void Play() {
                 //m_Playable.SetPlayState(PlayState.Playing);
                 m_Playable.Play();
             }
 
-            public void Stop()
-            {
+            public void Stop() {
                 m_FadeSpeed = 0f;
                 ForceWeight(0.0f);
                 Disable();
@@ -395,59 +328,48 @@ namespace Engine.Animation.SimpleAnimationComponent
                 m_Playable.SetDone(false);
             }
 
-            public void ForceWeight(float weight)
-            {
+            public void ForceWeight(float weight) {
                 m_TargetWeight = weight;
                 m_Fading = false;
                 m_FadeSpeed = 0f;
                 SetWeight(weight);
             }
 
-            public void SetWeight(float weight)
-            {
+            public void SetWeight(float weight) {
                 m_Weight = weight;
                 m_WeightDirty = true;
             }
 
-            public void FadeTo(float weight, float speed)
-            {
+            public void FadeTo(float weight, float speed) {
                 m_Fading = Mathf.Abs(speed) > 0f;
                 m_FadeSpeed = speed;
                 m_TargetWeight = weight;
             }
 
-            public void DestroyPlayable()
-            {
-                if (m_Playable.IsValid())
-                {
+            public void DestroyPlayable() {
+                if (m_Playable.IsValid()) {
                     m_Playable.GetGraph().DestroySubgraph(m_Playable);
                 }
             }
 
-            public void SetAsCloneOf(StateHandle handle)
-            {
+            public void SetAsCloneOf(StateHandle handle) {
                 m_ParentState = handle;
                 m_IsClone = true;
             }
 
-            public bool enabled
-            {
-                get
-                {
+            public bool enabled {
+                get {
                     return m_Enabled;
                 }
             }
 
             private bool m_Enabled;
 
-            public int index
-            {
-                get
-                {
+            public int index {
+                get {
                     return m_Index;
                 }
-                set
-                {
+                set {
                     Debug.Assert(m_Index == 0, "Should never reassign Index");
                     m_Index = value;
                 }
@@ -455,24 +377,19 @@ namespace Engine.Animation.SimpleAnimationComponent
 
             private int m_Index;
 
-            public string stateName
-            {
-                get
-                {
+            public string stateName {
+                get {
                     return m_StateName;
                 }
-                set
-                {
+                set {
                     m_StateName = value;
                 }
             }
 
             private string m_StateName;
 
-            public bool fading
-            {
-                get
-                {
+            public bool fading {
+                get {
                     return m_Fading;
                 }
             }
@@ -482,93 +399,73 @@ namespace Engine.Animation.SimpleAnimationComponent
 
             private float m_Time;
 
-            public float targetWeight
-            {
-                get
-                {
+            public float targetWeight {
+                get {
                     return m_TargetWeight;
                 }
             }
 
             private float m_TargetWeight;
 
-            public float weight
-            {
-                get
-                {
+            public float weight {
+                get {
                     return m_Weight;
                 }
             }
 
             float m_Weight;
 
-            public float fadeSpeed
-            {
-                get
-                {
+            public float fadeSpeed {
+                get {
                     return m_FadeSpeed;
                 }
             }
 
             float m_FadeSpeed;
 
-            public float speed
-            {
-                get
-                {
+            public float speed {
+                get {
                     return (float)m_Playable.GetSpeed();
                 }
-                set
-                {
+                set {
                     m_Playable.SetSpeed(value);
                 }
             }
 
-            public float playableDuration
-            {
-                get
-                {
+            public float playableDuration {
+                get {
                     return (float)m_Playable.GetDuration();
                 }
             }
 
-            public AnimationClip clip
-            {
-                get
-                {
+            public AnimationClip clip {
+                get {
                     return m_Clip;
                 }
             }
 
             private AnimationClip m_Clip;
 
-            public void SetPlayable(Playable playable)
-            {
+            public void SetPlayable(Playable playable) {
                 m_Playable = playable;
             }
 
-            public bool isDone
-            {
-                get
-                {
+            public bool isDone {
+                get {
                     return m_Playable.IsDone();
                 }
             }
 
-            public Playable playable
-            {
-                get
-                {
+            public Playable playable {
+                get {
                     return m_Playable;
                 }
             }
 
             private Playable m_Playable;
 
-            public WrapMode wrapMode
-            {
-                get
-                {
+            public WrapMode wrapMode {
+                get {
                     return m_WrapMode;
                 }
             }
@@ -576,43 +473,34 @@ namespace Engine.Animation.SimpleAnimationComponent
             private WrapMode m_WrapMode;
 
             //Clone information
-            public bool isClone
-            {
-                get
-                {
+            public bool isClone {
+                get {
                     return m_IsClone;
                 }
             }
 
             private bool m_IsClone;
 
-            public StateHandle parentState
-            {
-                get
-                {
+            public StateHandle parentState {
+                get {
                     return m_ParentState;
                 }
             }
 
             public StateHandle m_ParentState;
 
-            public bool enabledDirty
-            {
-                get
-                {
+            public bool enabledDirty {
+                get {
                     return m_EnabledDirty;
                 }
             }
-            public bool weightDirty
-            {
-                get
-                {
+            public bool weightDirty {
+                get {
                     return m_WeightDirty;
                 }
             }
 
-            public void ResetDirtyFlags()
-            {
+            public void ResetDirtyFlags() {
                 m_EnabledDirty = false;
                 m_WeightDirty = false;
             }
@@ -620,57 +508,46 @@ namespace Engine.Animation.SimpleAnimationComponent
             private bool m_WeightDirty;
             private bool m_EnabledDirty;
 
-            public void InvalidateTime()
-            {
+            public void InvalidateTime() {
                 m_TimeIsUpToDate = false;
             }
             private bool m_TimeIsUpToDate;
         }
 
-        private StateHandle StateInfoToHandle(StateInfo info)
-        {
+        private StateHandle StateInfoToHandle(StateInfo info) {
             return new StateHandle(this, info.index, info.playable);
         }
 
-        private class StateManagement
-        {
+        private class StateManagement {
             private List<StateInfo> m_States;
 
-            public int Count
-            {
-                get
-                {
+            public int Count {
+                get {
                     return m_Count;
                 }
             }
 
             private int m_Count;
 
-            public StateInfo this[int i]
-            {
-                get
-                {
+            public StateInfo this[int i] {
+                get {
                     return m_States[i];
                 }
             }
 
-            public StateManagement()
-            {
+            public StateManagement() {
                 m_States = new List<StateInfo>();
             }
 
-            public StateInfo InsertState()
-            {
+            public StateInfo InsertState() {
                 StateInfo state = new StateInfo();
 
                 int firstAvailable = m_States.FindIndex(s => s == null);
-                if (firstAvailable == -1)
-                {
+                if (firstAvailable == -1) {
                     firstAvailable = m_States.Count;
                     m_States.Add(state);
                 }
-                else
-                {
+                else {
                     m_States.Insert(firstAvailable, state);
                 }
 
@@ -678,27 +555,22 @@ namespace Engine.Animation.SimpleAnimationComponent
                 m_Count++;
                 return state;
             }
-            public bool AnyStatePlaying()
-            {
+            public bool AnyStatePlaying() {
                 return m_States.FindIndex(s => s != null && s.enabled) != -1;
             }
 
-            public void RemoveState(int index)
-            {
+            public void RemoveState(int index) {
                 StateInfo removed = m_States[index];
                 m_States[index] = null;
                 removed.DestroyPlayable();
                 m_Count = m_States.Count;
             }
 
-            public bool RemoveClip(AnimationClip clip)
-            {
+            public bool RemoveClip(AnimationClip clip) {
                 bool removed = false;
-                for (int i = 0; i < m_States.Count; i++)
-                {
+                for (int i = 0; i < m_States.Count; i++) {
                     StateInfo state = m_States[i];
-                    if (state != null && state.clip == clip)
-                    {
+                    if (state != null && state.clip == clip) {
                         RemoveState(i);
                         removed = true;
                     }
@@ -706,8 +578,7 @@ namespace Engine.Animation.SimpleAnimationComponent
                 return removed;
             }
 
-            public StateInfo FindState(string name)
-            {
+            public StateInfo FindState(string name) {
                 int index = m_States.FindIndex(s => s != null && s.stateName == name);
                 if (index == -1)
                     return null;
@@ -715,59 +586,49 @@ namespace Engine.Animation.SimpleAnimationComponent
                 return m_States[index];
             }
 
-            public void EnableState(int index)
-            {
+            public void EnableState(int index) {
                 StateInfo state = m_States[index];
                 state.Enable();
             }
 
-            public void DisableState(int index)
-            {
+            public void DisableState(int index) {
                 StateInfo state = m_States[index];
                 state.Disable();
             }
 
-            public void SetInputWeight(int index, float weight)
-            {
+            public void SetInputWeight(int index, float weight) {
                 StateInfo state = m_States[index];
                 state.SetWeight(weight);
 
             }
 
-            public void SetStateTime(int index, float time)
-            {
+            public void SetStateTime(int index, float time) {
                 StateInfo state = m_States[index];
                 state.SetTime(time);
             }
 
-            public float GetStateTime(int index)
-            {
+            public float GetStateTime(int index) {
                 StateInfo state = m_States[index];
                 return state.GetTime();
             }
 
-            public bool IsCloneOf(int potentialCloneIndex, int originalIndex)
-            {
+            public bool IsCloneOf(int potentialCloneIndex, int originalIndex) {
                 StateInfo potentialClone = m_States[potentialCloneIndex];
                 return potentialClone.isClone && potentialClone.parentState.index == originalIndex;
             }
 
-            public float GetStateSpeed(int index)
-            {
+            public float GetStateSpeed(int index) {
                 return m_States[index].speed;
             }
-            public void SetStateSpeed(int index, float value)
-            {
+            public void SetStateSpeed(int index, float value) {
                 m_States[index].speed = value;
             }
 
-            public float GetInputWeight(int index)
-            {
+            public float GetInputWeight(int index) {
                 return m_States[index].weight;
             }
 
-            public float GetStateLength(int index)
-            {
+            public float GetStateLength(int index) {
                 AnimationClip clip = m_States[index].clip;
                 if (clip == null)
                     return 0f;
@@ -778,8 +639,7 @@ namespace Engine.Animation.SimpleAnimationComponent
                 return clip.length / speed;
             }
 
-            public float GetClipLength(int index)
-            {
+            public float GetClipLength(int index) {
                 AnimationClip clip = m_States[index].clip;
                 if (clip == null)
                     return 0f;
@@ -787,49 +647,39 @@ namespace Engine.Animation.SimpleAnimationComponent
                 return clip.length;
             }
 
-            public float GetStatePlayableDuration(int index)
-            {
+            public float GetStatePlayableDuration(int index) {
                 return m_States[index].playableDuration;
             }
 
-            public AnimationClip GetStateClip(int index)
-            {
+            public AnimationClip GetStateClip(int index) {
                 return m_States[index].clip;
             }
 
-            public WrapMode GetStateWrapMode(int index)
-            {
+            public WrapMode GetStateWrapMode(int index) {
                 return m_States[index].wrapMode;
             }
 
-            public string GetStateName(int index)
-            {
+            public string GetStateName(int index) {
                 return m_States[index].stateName;
             }
 
-            public void SetStateName(int index, string name)
-            {
+            public void SetStateName(int index, string name) {
                 m_States[index].stateName = name;
             }
 
-            public void StopState(int index, bool cleanup)
-            {
-                if (cleanup)
-                {
+            public void StopState(int index, bool cleanup) {
+                if (cleanup) {
                     RemoveState(index);
                 }
-                else
-                {
+                else {
                     m_States[index].Stop();
                 }
             }
 
         }
 
-        private struct QueuedState
-        {
-            public QueuedState(StateHandle s, float t)
-            {
+        private struct QueuedState {
+            public QueuedState(StateHandle s, float t) {
                 state = s;
                 fadeTime = t;
             }

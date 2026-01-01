@@ -6,26 +6,19 @@ using Engine.Content;
 using Engine.Game.Data;
 using UnityEngine;
 
-namespace Engine.Game.App.BaseApp
-{
-    public class BaseAppContentAssets<T> : DataObjects<T> where T : DataObject, new()
-    {
+namespace Engine.Game.App.BaseApp {
+    public class BaseAppContentAssets<T> : DataObjects<T> where T : DataObject, new() {
 
         private static T current;
         private static volatile BaseAppContentAssets<T> instance;
         private static System.Object syncRoot = new System.Object();
         private string BASE_DATA_KEY = "app-content-asset-data";
 
-        public static T BaseCurrent
-        {
-            get
-            {
-                if (current == null)
-                {
-                    lock (syncRoot)
-                    {
-                        if (current == null)
-                        {
+        public static T BaseCurrent {
+            get {
+                if (current == null) {
+                    lock (syncRoot) {
+                        if (current == null) {
                             current = new T();
                         }
                     }
@@ -33,22 +26,16 @@ namespace Engine.Game.App.BaseApp
 
                 return current;
             }
-            set
-            {
+            set {
                 current = value;
             }
         }
 
-        public static BaseAppContentAssets<T> BaseInstance
-        {
-            get
-            {
-                if (instance == null)
-                {
-                    lock (syncRoot)
-                    {
-                        if (instance == null)
-                        {
+        public static BaseAppContentAssets<T> BaseInstance {
+            get {
+                if (instance == null) {
+                    lock (syncRoot) {
+                        if (instance == null) {
                             instance = new BaseAppContentAssets<T>(true);
                         }
                     }
@@ -56,75 +43,63 @@ namespace Engine.Game.App.BaseApp
 
                 return instance;
             }
-            set
-            {
+            set {
                 instance = value;
             }
         }
 
-        public BaseAppContentAssets()
-        {
+        public BaseAppContentAssets() {
             Reset();
         }
 
-        public BaseAppContentAssets(bool loadData)
-        {
+        public BaseAppContentAssets(bool loadData) {
             Reset();
             path = "data/" + BASE_DATA_KEY + ".json";
             pathKey = BASE_DATA_KEY;
             LoadData();
         }
 
-        public static string GetLoadAssetPath(string key, string assetCode, string type)
-        {
+        public static string GetLoadAssetPath(string key, string assetCode, string type) {
             string path = "";
 
             LogUtil.Log("LoadAsset:" + " assetCode:" + assetCode + " type:" + type);
 
             if (key.StartsWith(BaseDataObjectKeys.level)
-                || key.StartsWith(BaseDataObjectKeys.levelAssets))
-            {
+                || key.StartsWith(BaseDataObjectKeys.levelAssets)) {
 
                 path = ContentPaths.appCacheVersionSharedPrefabLevelAssets;
             }
             else if (key.StartsWith(BaseDataObjectKeys.character)
-                     || key.StartsWith(BaseDataObjectKeys.characters))
-            {
+                     || key.StartsWith(BaseDataObjectKeys.characters)) {
 
                 path = ContentPaths.appCacheVersionSharedPrefabCharacters;
             }
             else if (key.StartsWith(BaseDataObjectKeys.weapon)
-                     || key.StartsWith(BaseDataObjectKeys.weapons))
-            {
+                     || key.StartsWith(BaseDataObjectKeys.weapons)) {
 
                 path = ContentPaths.appCacheVersionSharedPrefabWeapons;
             }
             else if (key.StartsWith(BaseDataObjectKeys.world)
-                     || key.StartsWith(BaseDataObjectKeys.worlds))
-            {
+                     || key.StartsWith(BaseDataObjectKeys.worlds)) {
 
                 path = ContentPaths.appCacheVersionSharedPrefabWorlds;
             }
             else if (key.StartsWith(BaseDataObjectKeys.vehicle)
-                     || key.StartsWith(BaseDataObjectKeys.vehicles))
-            {
+                     || key.StartsWith(BaseDataObjectKeys.vehicles)) {
 
                 path = ContentPaths.appCacheVersionSharedPrefabVehicles;
             }
             else if (key.StartsWith(BaseDataObjectKeys.effect)
-                     || key.StartsWith(BaseDataObjectKeys.effects))
-            {
+                     || key.StartsWith(BaseDataObjectKeys.effects)) {
 
                 path = ContentPaths.appCacheVersionSharedPrefabEffects;
             }
             else if (key.StartsWith(BaseDataObjectKeys.item)
-                     || key.StartsWith(BaseDataObjectKeys.items))
-            {
+                     || key.StartsWith(BaseDataObjectKeys.items)) {
 
                 path = ContentPaths.appCacheVersionSharedPrefabLevelItems;
             }
-            else if (key.StartsWith(BaseDataObjectKeys.ui))
-            {
+            else if (key.StartsWith(BaseDataObjectKeys.ui)) {
 
                 path = ContentPaths.appCacheVersionSharedPrefabLevelUI;
             }
@@ -133,20 +108,16 @@ namespace Engine.Game.App.BaseApp
 
             LogUtil.Log("LoadAsset:" + " path:" + path);
 
-            if (type == "resource")
-            {
+            if (type == "resource") {
                 // Load from resources                        
             }
-            else if (type == "streaming")
-            {
+            else if (type == "streaming") {
                 // TODO update path for streaming folder
             }
-            else if (type == "server")
-            {
+            else if (type == "server") {
                 // TODO update path for download and process
             }
-            else
-            {
+            else {
                 // Load from other
             }
 
@@ -159,8 +130,7 @@ namespace Engine.Game.App.BaseApp
             string code,
             Vector3 pos = default(Vector3),
             Quaternion rotate = default(Quaternion),
-            bool pool = true)
-        {
+            bool pool = true) {
 
             return LoadAsset("", code,
                              pos, rotate, pool);
@@ -170,8 +140,7 @@ namespace Engine.Game.App.BaseApp
             string code,
             Vector3 pos = default(Vector3),
             Quaternion rotate = default(Quaternion),
-            bool pool = true)
-        {
+            bool pool = true) {
 
             return LoadAsset(BaseDataObjectKeys.levelAssets, code,
                              pos, rotate, pool);
@@ -181,8 +150,7 @@ namespace Engine.Game.App.BaseApp
             string code,
             Vector3 pos = default(Vector3),
             Quaternion rotate = default(Quaternion),
-            bool pool = true)
-        {
+            bool pool = true) {
 
             return LoadAsset(BaseDataObjectKeys.characters, code,
                              pos, rotate, pool);
@@ -192,8 +160,7 @@ namespace Engine.Game.App.BaseApp
             string code,
             Vector3 pos = default(Vector3),
             Quaternion rotate = default(Quaternion),
-            bool pool = true)
-        {
+            bool pool = true) {
 
             return LoadAsset(BaseDataObjectKeys.items, code,
                              pos, rotate, pool);
@@ -203,8 +170,7 @@ namespace Engine.Game.App.BaseApp
             string code,
             Vector3 pos = default(Vector3),
             Quaternion rotate = default(Quaternion),
-            bool pool = true)
-        {
+            bool pool = true) {
 
             return LoadAsset(BaseDataObjectKeys.weapons, code,
                              pos, rotate, pool);
@@ -214,8 +180,7 @@ namespace Engine.Game.App.BaseApp
             string code,
             Vector3 pos = default(Vector3),
             Quaternion rotate = default(Quaternion),
-            bool pool = true)
-        {
+            bool pool = true) {
 
             return LoadAsset(BaseDataObjectKeys.effects, code,
                              pos, rotate, pool);
@@ -225,8 +190,7 @@ namespace Engine.Game.App.BaseApp
             string code,
             Vector3 pos = default(Vector3),
             Quaternion rotate = default(Quaternion),
-            bool pool = true)
-        {
+            bool pool = true) {
 
             return LoadAsset(BaseDataObjectKeys.worlds, code,
                              pos, rotate, pool);
@@ -236,8 +200,7 @@ namespace Engine.Game.App.BaseApp
             string code,
             Vector3 pos = default(Vector3),
             Quaternion rotate = default(Quaternion),
-            bool pool = true)
-        {
+            bool pool = true) {
 
             return LoadAsset(BaseDataObjectKeys.vehicles, code,
                              pos, rotate, pool);
@@ -247,8 +210,7 @@ namespace Engine.Game.App.BaseApp
             string code,
             Vector3 pos = default(Vector3),
             Quaternion rotate = default(Quaternion),
-            bool pool = true)
-        {
+            bool pool = true) {
 
             return LoadAsset(BaseDataObjectKeys.ui, code,
                              pos, rotate, pool);
@@ -260,14 +222,12 @@ namespace Engine.Game.App.BaseApp
             Vector3 pos = default(Vector3),
             Quaternion rotate = default(Quaternion),
             bool pool = true
-            )
-        {
+            ) {
             //LogUtil.Log("LoadAsset:" + " key:" + key + " code:" + code);
 
             GameObject prefabObject = LoadAssetPrefab(key, code);
 
-            if (prefabObject == null)
-            {
+            if (prefabObject == null) {
                 return null;
             }
 
@@ -282,27 +242,22 @@ namespace Engine.Game.App.BaseApp
 
         // LOAD ASSET PREFAB
 
-        public static GameObject LoadAssetPrefab(string code)
-        {
+        public static GameObject LoadAssetPrefab(string code) {
             return LoadAssetPrefab("", code);
         }
 
-        public static GameObject LoadAssetPrefab(string key, string code, bool depth = false)
-        {
+        public static GameObject LoadAssetPrefab(string key, string code, bool depth = false) {
             //LogUtil.Log("LoadAssetPrefab:" + " key:" + key + " code:" + code);
             //LogUtil.Log("LoadAsset:" + " code:" + code);
 
             AppContentAsset asset = AppContentAssets.Instance.GetByCode(code);
 
-            if (asset == null && depth)
-            {
+            if (asset == null && depth) {
 
-                foreach (AppContentAsset assetItem in AppContentAssets.Instance.GetAll())
-                {
+                foreach (AppContentAsset assetItem in AppContentAssets.Instance.GetAll()) {
 
                     if (assetItem.code == code
-                        && (assetItem.key == key || string.IsNullOrEmpty(key)))
-                    {
+                        && (assetItem.key == key || string.IsNullOrEmpty(key))) {
 
                         //LogUtil.Log("LoadAssetPrefab2:" + " key:" + key + " code:" + code);
 
@@ -311,16 +266,14 @@ namespace Engine.Game.App.BaseApp
                 }
             }
 
-            if (asset == null)
-            {
+            if (asset == null) {
                 //Debug.Log("ERROR:LoadAssetPrefab:NOT FOUND IN ASSETS DATA: key:" + key + " code:" + code);
                 return null;
             }
 
             string path = GetLoadAssetPath(asset.key, asset.code, asset.type);
 
-            if (string.IsNullOrEmpty(path))
-            {
+            if (string.IsNullOrEmpty(path)) {
                 return null;
             }
 
@@ -334,8 +287,7 @@ namespace Engine.Game.App.BaseApp
         }
     }
 
-    public class AppContentAssetAttributes
-    {
+    public class AppContentAssetAttributes {
         public static string version_file_increment = "version_file_increment";
         public static string version = "version";
         public static string version_required_app = "version_required_app";
@@ -351,16 +303,14 @@ namespace Engine.Game.App.BaseApp
                 */
     }
 
-    public class AppContentAssetAttributesFileType
-    {
+    public class AppContentAssetAttributesFileType {
         public static string videoType = "video";
         public static string audioType = "audio";
         public static string imageType = "image";
         public static string assetBundleType = "assetBundle";
     }
 
-    public class AppContentAssetAttributesFileExt
-    {
+    public class AppContentAssetAttributesFileExt {
         public static string videoM4vExt = "m4v";
         public static string videoMp4Ext = "mp4";
         public static string audioMp3Ext = "mp3";
@@ -370,27 +320,23 @@ namespace Engine.Game.App.BaseApp
         public static string assetBundleExt = "unity3d";
     }
 
-    public class BaseAppContentAssetKeys
-    {
+    public class BaseAppContentAssetKeys {
         public static string app_states = "app_states";
         public static string AppContentStates = "app_content_states";
         public static string required_assets = "required_assets";
     }
 
-    public class BaseAppContentAsset : GameDataObject
-    {
+    public class BaseAppContentAsset : GameDataObject {
         // types: tracker, pack, data, generic
 
         // Attributes that are added or changed after launch should be like this to prevent
         // profile conversions.
 
-        public BaseAppContentAsset()
-        {
+        public BaseAppContentAsset() {
             Reset();
         }
 
-        public override void Reset()
-        {
+        public override void Reset() {
             base.Reset();
             app_states = new List<string>();
             app_content_states = new List<string>();

@@ -3,10 +3,8 @@ using System.Collections.Generic;
 using System.IO;
 using Engine.Game.App.BaseApp;
 
-namespace Engine.Game.App
-{
-    public class AppContentChoices : BaseAppContentChoices<AppContentChoice>
-    {
+namespace Engine.Game.App {
+    public class AppContentChoices : BaseAppContentChoices<AppContentChoice> {
         private static volatile AppContentChoice current;
         private static volatile AppContentChoices instance;
         private static object syncRoot = new System.Object();
@@ -20,14 +18,10 @@ namespace Engine.Game.App
 
         public static string DATA_KEY = "app-content-choice-data";
 
-        public static AppContentChoice Current
-        {
-            get
-            {
-                if (current == null)
-                {
-                    lock (syncRoot)
-                    {
+        public static AppContentChoice Current {
+            get {
+                if (current == null) {
+                    lock (syncRoot) {
                         if (current == null)
                             current = new AppContentChoice();
                     }
@@ -35,20 +29,15 @@ namespace Engine.Game.App
 
                 return current;
             }
-            set
-            {
+            set {
                 current = value;
             }
         }
 
-        public static AppContentChoices Instance
-        {
-            get
-            {
-                if (instance == null)
-                {
-                    lock (syncRoot)
-                    {
+        public static AppContentChoices Instance {
+            get {
+                if (instance == null) {
+                    lock (syncRoot) {
                         if (instance == null)
                             instance = new AppContentChoices(true);
                     }
@@ -56,20 +45,17 @@ namespace Engine.Game.App
 
                 return instance;
             }
-            set
-            {
+            set {
                 instance = value;
             }
         }
 
-        public AppContentChoices()
-        {
+        public AppContentChoices() {
             Reset();
             //ChangeState(APP_STATE_BOOKS);
         }
 
-        public AppContentChoices(bool loadData)
-        {
+        public AppContentChoices(bool loadData) {
             Reset();
             path = "data/" + DATA_KEY + ".json";
             pathKey = DATA_KEY;
@@ -138,18 +124,15 @@ namespace Engine.Game.App
         */
     }
 
-    public class AppContentChoice : BaseAppContentChoice
-    {
+    public class AppContentChoice : BaseAppContentChoice {
         // Attributes that are added or changed after launch should be like this to prevent
         // profile conversions.
 
-        public AppContentChoice()
-        {
+        public AppContentChoice() {
             Reset();
         }
 
-        public override void Reset()
-        {
+        public override void Reset() {
             base.Reset();
         }
     }

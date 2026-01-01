@@ -4,24 +4,18 @@ using System.IO;
 using Engine.Game.Data;
 using UnityEngine;
 
-namespace Engine.Game.App.BaseApp
-{
-    public class BaseAppColors<T> : DataObjects<T> where T : DataObject, new()
-    {
+namespace Engine.Game.App.BaseApp {
+    public class BaseAppColors<T> : DataObjects<T> where T : DataObject, new() {
         private static T current;
         private static volatile BaseAppColors<T> instance;
         private static System.Object syncRoot = new System.Object();
 
         private string BASE_DATA_KEY = "app-color-data";
 
-        public static T BaseCurrent
-        {
-            get
-            {
-                if (current == null)
-                {
-                    lock (syncRoot)
-                    {
+        public static T BaseCurrent {
+            get {
+                if (current == null) {
+                    lock (syncRoot) {
                         if (current == null)
                             current = new T();
                     }
@@ -29,20 +23,15 @@ namespace Engine.Game.App.BaseApp
 
                 return current;
             }
-            set
-            {
+            set {
                 current = value;
             }
         }
 
-        public static BaseAppColors<T> BaseInstance
-        {
-            get
-            {
-                if (instance == null)
-                {
-                    lock (syncRoot)
-                    {
+        public static BaseAppColors<T> BaseInstance {
+            get {
+                if (instance == null) {
+                    lock (syncRoot) {
                         if (instance == null)
                             instance = new BaseAppColors<T>(true);
                     }
@@ -50,19 +39,16 @@ namespace Engine.Game.App.BaseApp
 
                 return instance;
             }
-            set
-            {
+            set {
                 instance = value;
             }
         }
 
-        public BaseAppColors()
-        {
+        public BaseAppColors() {
             Reset();
         }
 
-        public BaseAppColors(bool loadData)
-        {
+        public BaseAppColors(bool loadData) {
             Reset();
             path = "data/" + BASE_DATA_KEY + ".json";
             pathKey = BASE_DATA_KEY;
@@ -71,53 +57,42 @@ namespace Engine.Game.App.BaseApp
     }
 
 
-    public class AppColorValue : DataObject
-    {
+    public class AppColorValue : DataObject {
 
-        public virtual string type
-        {
-            get
-            {
+        public virtual string type {
+            get {
                 return Get<string>(BaseDataObjectKeys.type, BaseAppColorKeys.rgba);
             }
 
-            set
-            {
+            set {
                 Set<string>(BaseDataObjectKeys.type, value);
             }
         }
 
-        public virtual List<double> rgba
-        {
-            get
-            {
+        public virtual List<double> rgba {
+            get {
                 return Get<List<double>>(BaseAppColorKeys.rgba);
             }
 
-            set
-            {
+            set {
                 Set<List<double>>(BaseAppColorKeys.rgba, value);
             }
         }
 
-        public AppColorValue()
-        {
+        public AppColorValue() {
             Reset();
         }
 
-        public void SetColor(float r, float g, float b, float a)
-        {
+        public void SetColor(float r, float g, float b, float a) {
 
-            if (rgba == null)
-            {
+            if (rgba == null) {
                 rgba = new List<double>();
                 rgba.Add(r);
                 rgba.Add(g);
                 rgba.Add(b);
                 rgba.Add(a);
             }
-            else
-            {
+            else {
 
                 rgba[0] = r;
                 rgba[1] = g;
@@ -126,13 +101,11 @@ namespace Engine.Game.App.BaseApp
             }
         }
 
-        public Color GetColor()
-        {
+        public Color GetColor() {
             return ColorHelper.FromRGB(rgba);
         }
 
-        public override void Reset()
-        {
+        public override void Reset() {
             base.Reset();
 
             float r = 1;
@@ -144,49 +117,40 @@ namespace Engine.Game.App.BaseApp
         }
     }
 
-    public class BaseAppColorKeys
-    {
+    public class BaseAppColorKeys {
         public static string color = "color";
         public static string rgba = "rgba";
         public static string type = "type";
     }
 
-    public class BaseAppColor : GameDataObject
-    {
+    public class BaseAppColor : GameDataObject {
 
         // Attributes that are added or changed after launch should be like this to prevent
         // profile conversions.
 
-        public virtual AppColorValue color
-        {
-            get
-            {
+        public virtual AppColorValue color {
+            get {
                 return Get<AppColorValue>(BaseAppColorKeys.color);
             }
 
-            set
-            {
+            set {
                 Set<AppColorValue>(BaseAppColorKeys.color, value);
             }
         }
 
-        public BaseAppColor()
-        {
+        public BaseAppColor() {
             Reset();
         }
 
-        public override void Reset()
-        {
+        public override void Reset() {
             base.Reset();
         }
 
-        public void Clone(BaseAppColor toCopy)
-        {
+        public void Clone(BaseAppColor toCopy) {
             base.Clone(toCopy);
         }
 
-        public Color GetColor()
-        {
+        public Color GetColor() {
             return color.GetColor();
         }
 

@@ -3,10 +3,8 @@ using System.Collections.Generic;
 using System.IO;
 using Engine.Game.App.BaseApp;
 
-namespace Engine.Game.App
-{
-    public class AppContentCollects : BaseAppContentCollects<AppContentCollect>
-    {
+namespace Engine.Game.App {
+    public class AppContentCollects : BaseAppContentCollects<AppContentCollect> {
         private static volatile AppContentCollect current;
         private static volatile AppContentCollects instance;
         private static object syncRoot = new System.Object();
@@ -20,14 +18,10 @@ namespace Engine.Game.App
 
         public static string DATA_KEY = "app-content-collection-data";
 
-        public static AppContentCollect Current
-        {
-            get
-            {
-                if (current == null)
-                {
-                    lock (syncRoot)
-                    {
+        public static AppContentCollect Current {
+            get {
+                if (current == null) {
+                    lock (syncRoot) {
                         if (current == null)
                             current = new AppContentCollect();
                     }
@@ -35,20 +29,15 @@ namespace Engine.Game.App
 
                 return current;
             }
-            set
-            {
+            set {
                 current = value;
             }
         }
 
-        public static AppContentCollects Instance
-        {
-            get
-            {
-                if (instance == null)
-                {
-                    lock (syncRoot)
-                    {
+        public static AppContentCollects Instance {
+            get {
+                if (instance == null) {
+                    lock (syncRoot) {
                         if (instance == null)
                             instance = new AppContentCollects(true);
                     }
@@ -56,20 +45,17 @@ namespace Engine.Game.App
 
                 return instance;
             }
-            set
-            {
+            set {
                 instance = value;
             }
         }
 
-        public AppContentCollects()
-        {
+        public AppContentCollects() {
             Reset();
             //ChangeState(APP_STATE_BOOKS);
         }
 
-        public AppContentCollects(bool loadData)
-        {
+        public AppContentCollects(bool loadData) {
             Reset();
             path = "data/" + DATA_KEY + ".json";
             pathKey = DATA_KEY;
@@ -77,18 +63,15 @@ namespace Engine.Game.App
         }
     }
 
-    public class AppContentCollect : BaseAppContentCollect
-    {
+    public class AppContentCollect : BaseAppContentCollect {
         // Attributes that are added or changed after launch should be like this to prevent
         // profile conversions.
 
-        public AppContentCollect()
-        {
+        public AppContentCollect() {
             Reset();
         }
 
-        public override void Reset()
-        {
+        public override void Reset() {
             base.Reset();
         }
     }
