@@ -1,10 +1,8 @@
 using UnityEngine;
 using System.Collections;
 
-namespace Engine.Cameras
-{
-    public class GameBaseCameraSmoothFollow : GameObjectBehavior
-    {
+namespace Engine.Cameras {
+    public class GameBaseCameraSmoothFollow : GameObjectBehavior {
 
         public Transform target;
         public float smoothTime = 0.3f;
@@ -16,38 +14,32 @@ namespace Engine.Cameras
         public bool followY = false;
         public bool followZ = true;
 
-        void Start()
-        {
+        void Start() {
 
             thisTransform = transform;
         }
 
-        void LateUpdate()
-        {
+        void LateUpdate() {
 
-            if (thisTransform == null || target == null)
-            {
+            if (thisTransform == null || target == null) {
                 return;
             }
 
             Vector3 temp = target.position;
 
-            if (followX)
-            {
+            if (followX) {
 
                 temp.x = Mathf.SmoothDamp(thisTransform.position.x,
                     target.position.x + offset.x, ref velocity.x, smoothTime);
             }
 
-            if (followY)
-            {
+            if (followY) {
 
                 temp.y = Mathf.SmoothDamp(thisTransform.position.y,
                     target.position.y + offset.y, ref velocity.y, smoothTime);
             }
 
-            if (followZ)
-            {
+            if (followZ) {
 
                 temp.z = Mathf.SmoothDamp(thisTransform.position.z,
                     target.position.z + offset.z, ref velocity.z, smoothTime);

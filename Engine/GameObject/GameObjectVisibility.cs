@@ -2,7 +2,7 @@ using UnityEngine;
 using System.Collections;
 
 public class GameObjectVisibility : MonoBehaviour {
-	
+
     // BELOW
 
     public bool hideBelowXWorld = false;
@@ -12,7 +12,7 @@ public class GameObjectVisibility : MonoBehaviour {
     public bool hideBelowXLocal = false;
     public bool hideBelowYLocal = false;
     public bool hideBelowZLocal = false;
-	
+
     public float hideBelowXWorldVal = 0;
     public float hideBelowYWorldVal = 0;
     public float hideBelowZWorldVal = 0;
@@ -31,18 +31,16 @@ public class GameObjectVisibility : MonoBehaviour {
     public float hideAboveYWorldVal = 0;
     public float hideAboveZWorldVal = 0;
 
+    void Start() {
 
-
-	void Start () {
-		
-	}
+    }
 
     void Update() {
 
-        if(hideBelowXWorld) {
+        if (hideBelowXWorld) {
         }
 
-        if(hideBelowXWorld) {
+        if (hideBelowXWorld) {
         }
     }
 }

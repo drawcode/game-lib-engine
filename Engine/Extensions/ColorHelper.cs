@@ -12,9 +12,9 @@ public class ColorItem {
     public float a = 0f;
 
     public ColorItem() {
-        
+
     }
-    
+
     public ColorItem(float r, float g, float b) {
 
         Set(r, g, b, 255);
@@ -24,7 +24,7 @@ public class ColorItem {
 
         Set(r, g, b, a);
     }
-        
+
     public void Set(float rTo, float gTo, float bTo, float aTo) {
 
         r = rTo;
@@ -39,19 +39,19 @@ public class ColorItem {
             return;
         }
 
-        if(color.Count > 0) {
+        if (color.Count > 0) {
             r = (float)color[0];
         }
 
-        if(color.Count > 1) {
+        if (color.Count > 1) {
             g = (float)color[1];
         }
 
-        if(color.Count > 2) {
+        if (color.Count > 2) {
             b = (float)color[2];
         }
 
-        if(color.Count > 3) {
+        if (color.Count > 3) {
             a = (float)color[3];
         }
     }
@@ -60,7 +60,7 @@ public class ColorItem {
 
         if (color == null) {
             return Color.white;
-        } 
+        }
 
         Set(color);
 

@@ -1,11 +1,9 @@
 ﻿
 // --------------------------------------------------------------------------------
 
-namespace Engine.Game.App
-{
+namespace Engine.Game.App {
 
-    public class AppContentActionEventMessages
-    {
+    public class AppContentActionEventMessages {
         public static string AppActionTimelineEvent = "AppActionTimelineEvent";
         //
         public static string AppActionEvent = "AppActionEvent";

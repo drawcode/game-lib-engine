@@ -1,10 +1,8 @@
 using System;
 using UnityEngine;
 
-namespace Engine.Game.App
-{
-    public class GameScreenScaler : GameObjectBehavior
-    {
+namespace Engine.Game.App {
+    public class GameScreenScaler : GameObjectBehavior {
         public static GameScreenScaler Instance;
         public Vector2 originalSize = new Vector2(960f, 640f);
         public Vector2 scaledSize = new Vector2(960f, 640f);
@@ -19,10 +17,8 @@ namespace Engine.Game.App
         public float currentHeight = 0.0f;
         public float currentWidth = 0.0f;
 
-        private void Awake()
-        {
-            if (Instance != null && this != Instance)
-            {
+        private void Awake() {
+            if (Instance != null && this != Instance) {
 
                 //There is already a copy of this script running
                 Destroy(this);
@@ -32,25 +28,21 @@ namespace Engine.Game.App
             Instance = this;
         }
 
-        public float GetRatioScale()
-        {
+        public float GetRatioScale() {
 
             //Vector3 scaleTo = new Vector3(1.0f, 1.0f, 1.0f);
             float ratioFiltered = 1.0f + ((1.0f - screenRatio) / 2.0f);
             return ratioFiltered;
         }
 
-        public bool Is4x3orLower()
-        {
-            if (GetRatioScale() >= .82)
-            {
+        public bool Is4x3orLower() {
+            if (GetRatioScale() >= .82) {
                 return true;
             }
             return false;
         }
 
-        private void Update()
-        {
+        private void Update() {
             originalScreenRatio = originalSize.x / originalSize.y;
             screenRatio = (float)Screen.width / (float)Screen.height;
 
@@ -64,8 +56,7 @@ namespace Engine.Game.App
             currentWidth = 0.0f;
             currentHeight = 0.0f;
 
-            if (screenRatio > originalScreenRatio)
-            {
+            if (screenRatio > originalScreenRatio) {
                 currentWidth = (float)Screen.height * originalScreenRatio;
                 scaledViewportRect.height = 1.0f;
                 scaledViewportRect.width = currentWidth / (float)Screen.width;
@@ -79,8 +70,7 @@ namespace Engine.Game.App
                 scaledViewportRect.x =  (1.0f - scaledViewportRect.width) / 2.0f;
                 */
             }
-            else
-            {
+            else {
                 currentHeight = (float)Screen.width / originalScreenRatio;
                 scaledViewportRect.width = 1.0f;
                 scaledViewportRect.height = currentHeight / (float)Screen.height;

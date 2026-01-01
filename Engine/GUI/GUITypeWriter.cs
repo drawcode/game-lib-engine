@@ -82,24 +82,24 @@ internal class GUITypeWriter : GameObjectBehavior {
             //LogUtil.Log( guiText.GetScreenRect().height / numberOfLines );
 
             // Width check.  If the guiText gets too wide we need to backtrack to the previous word boundary and insert a newline
-           // if (guiText.GetScreenRect().width > maxWidth) {
+            // if (guiText.GetScreenRect().width > maxWidth) {
 
-                // Shift the guiText position if we are set to keep the text valigned
-                if (keepTextValigned) {
-                    //float lineHeight = guiText.GetScreenRect().height / numberOfLines;
-                   // Vector2 offset = guiText.pixelOffset;
-                   // offset.y += lineHeight / 2;
-                    //guiText.pixelOffset = offset;
-                }
+            // Shift the guiText position if we are set to keep the text valigned
+            if (keepTextValigned) {
+                //float lineHeight = guiText.GetScreenRect().height / numberOfLines;
+                // Vector2 offset = guiText.pixelOffset;
+                // offset.y += lineHeight / 2;
+                //guiText.pixelOffset = offset;
+            }
 
-                // Look for the last newline
-                int lastIndex = currentText.ToString().LastIndexOf(' ');
-                currentText.Replace(" ", "\n", lastIndex, 1);
-                numberOfLines++;
-           // }
+            // Look for the last newline
+            int lastIndex = currentText.ToString().LastIndexOf(' ');
+            currentText.Replace(" ", "\n", lastIndex, 1);
+            numberOfLines++;
+            // }
 
             currentText.Append(letter);
-           // guiText.text = currentText.ToString();
+            // guiText.text = currentText.ToString();
 
             if (sound && !audio.isPlaying)
                 audio.PlayOneShot(sound);

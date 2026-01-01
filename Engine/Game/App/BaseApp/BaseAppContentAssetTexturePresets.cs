@@ -3,24 +3,18 @@ using System.Collections.Generic;
 using System.IO;
 using Engine.Game.Data;
 
-namespace Engine.Game.App.BaseApp
-{
+namespace Engine.Game.App.BaseApp {
 
-    public class BaseAppContentAssetTexturePresets<T> : DataObjects<T> where T : DataObject, new()
-    {
+    public class BaseAppContentAssetTexturePresets<T> : DataObjects<T> where T : DataObject, new() {
         private static T current;
         private static volatile BaseAppContentAssetTexturePresets<T> instance;
         private static object syncRoot = new Object();
         private string BASE_DATA_KEY = "app-content-asset-texture-preset-data";
 
-        public static T BaseCurrent
-        {
-            get
-            {
-                if (current == null)
-                {
-                    lock (syncRoot)
-                    {
+        public static T BaseCurrent {
+            get {
+                if (current == null) {
+                    lock (syncRoot) {
                         if (current == null)
                             current = new T();
                     }
@@ -28,20 +22,15 @@ namespace Engine.Game.App.BaseApp
 
                 return current;
             }
-            set
-            {
+            set {
                 current = value;
             }
         }
 
-        public static BaseAppContentAssetTexturePresets<T> BaseInstance
-        {
-            get
-            {
-                if (instance == null)
-                {
-                    lock (syncRoot)
-                    {
+        public static BaseAppContentAssetTexturePresets<T> BaseInstance {
+            get {
+                if (instance == null) {
+                    lock (syncRoot) {
                         if (instance == null)
                             instance = new BaseAppContentAssetTexturePresets<T>(true);
                     }
@@ -49,19 +38,16 @@ namespace Engine.Game.App.BaseApp
 
                 return instance;
             }
-            set
-            {
+            set {
                 instance = value;
             }
         }
 
-        public BaseAppContentAssetTexturePresets()
-        {
+        public BaseAppContentAssetTexturePresets() {
             Reset();
         }
 
-        public BaseAppContentAssetTexturePresets(bool loadData)
-        {
+        public BaseAppContentAssetTexturePresets(bool loadData) {
             Reset();
             path = "data/" + BASE_DATA_KEY + ".json";
             pathKey = BASE_DATA_KEY;
@@ -69,33 +55,27 @@ namespace Engine.Game.App.BaseApp
         }
     }
 
-    public class BaseAppContentAssetTexturePreset : GameDataObject
-    {
+    public class BaseAppContentAssetTexturePreset : GameDataObject {
 
         // Attributes that are added or changed after launch should be like this to prevent
         // profile conversions.
 
 
-        public virtual Dictionary<string, string> data
-        {
-            get
-            {
+        public virtual Dictionary<string, string> data {
+            get {
                 return Get<Dictionary<string, string>>(BaseDataObjectKeys.data);
             }
 
-            set
-            {
+            set {
                 Set(BaseDataObjectKeys.data, value);
             }
         }
 
-        public BaseAppContentAssetTexturePreset()
-        {
+        public BaseAppContentAssetTexturePreset() {
             Reset();
         }
 
-        public override void Reset()
-        {
+        public override void Reset() {
             base.Reset();
         }
 

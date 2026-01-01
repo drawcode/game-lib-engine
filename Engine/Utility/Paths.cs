@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 //using System.Web;
 using System.Text.RegularExpressions;
-    
+
 public class Paths {
-        
+
     /*
     public static string paramValueSeparatorPath = "/";
     public static string paramValueSeparatorPathFilter = "--";
@@ -205,5 +205,5 @@ public class Paths {
         string pattern = @"[-a-zA-Z0-9@:%_\+.~#?&//=]{2,256}\.[a-z]{2,4}\b(\/[-a-zA-Z0-9@:%_\+.~#?&//=]*)?";
         return input.IsRegexMatch(pattern);
     }
- */       
+ */
 }

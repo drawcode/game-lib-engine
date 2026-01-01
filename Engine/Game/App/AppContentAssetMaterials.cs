@@ -4,23 +4,17 @@ using System.IO;
 using Engine.Game.App.BaseApp;
 using Engine.Utility;
 
-namespace Engine.Game.App
-{
-    public class AppContentAssetMaterials : BaseAppContentAssetMaterials<AppContentAssetMaterial>
-    {
+namespace Engine.Game.App {
+    public class AppContentAssetMaterials : BaseAppContentAssetMaterials<AppContentAssetMaterial> {
         private static volatile AppContentAssetMaterial current;
         private static volatile AppContentAssetMaterials instance;
         private static System.Object syncRoot = new System.Object();
         private string DATA_KEY = "app-content-asset-material-data";
 
-        public static AppContentAssetMaterial Current
-        {
-            get
-            {
-                if (current == null)
-                {
-                    lock (syncRoot)
-                    {
+        public static AppContentAssetMaterial Current {
+            get {
+                if (current == null) {
+                    lock (syncRoot) {
                         if (current == null)
                             current = new AppContentAssetMaterial();
                     }
@@ -28,20 +22,15 @@ namespace Engine.Game.App
 
                 return current;
             }
-            set
-            {
+            set {
                 current = value;
             }
         }
 
-        public static AppContentAssetMaterials Instance
-        {
-            get
-            {
-                if (instance == null)
-                {
-                    lock (syncRoot)
-                    {
+        public static AppContentAssetMaterials Instance {
+            get {
+                if (instance == null) {
+                    lock (syncRoot) {
                         if (instance == null)
                             instance = new AppContentAssetMaterials(true);
                     }
@@ -51,13 +40,11 @@ namespace Engine.Game.App
             }
         }
 
-        public AppContentAssetMaterials()
-        {
+        public AppContentAssetMaterials() {
             Reset();
         }
 
-        public AppContentAssetMaterials(bool loadData)
-        {
+        public AppContentAssetMaterials(bool loadData) {
             Reset();
             path = "data/" + DATA_KEY + ".json";
             pathKey = DATA_KEY;
@@ -65,11 +52,9 @@ namespace Engine.Game.App
         }
     }
 
-    public partial class AppContentAssetMaterial : BaseAppContentAssetMaterial
-    {
+    public partial class AppContentAssetMaterial : BaseAppContentAssetMaterial {
 
-        public override void Reset()
-        {
+        public override void Reset() {
             base.Reset();
         }
 

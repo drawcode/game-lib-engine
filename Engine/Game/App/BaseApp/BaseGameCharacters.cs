@@ -5,24 +5,18 @@ using System.IO;
 using UnityEngine;
 using Engine.Game.Data;
 
-namespace Engine.Game.App.BaseApp
-{
-    public class BaseGameCharacters<T> : DataObjects<T> where T : DataObject, new()
-    {
+namespace Engine.Game.App.BaseApp {
+    public class BaseGameCharacters<T> : DataObjects<T> where T : DataObject, new() {
         private static T current;
         private static volatile BaseGameCharacters<T> instance;
         private static System.Object syncRoot = new System.Object();
 
         private string BASE_DATA_KEY = "game-character-data";
 
-        public static T BaseCurrent
-        {
-            get
-            {
-                if (current == null)
-                {
-                    lock (syncRoot)
-                    {
+        public static T BaseCurrent {
+            get {
+                if (current == null) {
+                    lock (syncRoot) {
                         if (current == null)
                             current = new T();
                     }
@@ -30,20 +24,15 @@ namespace Engine.Game.App.BaseApp
 
                 return current;
             }
-            set
-            {
+            set {
                 current = value;
             }
         }
 
-        public static BaseGameCharacters<T> BaseInstance
-        {
-            get
-            {
-                if (instance == null)
-                {
-                    lock (syncRoot)
-                    {
+        public static BaseGameCharacters<T> BaseInstance {
+            get {
+                if (instance == null) {
+                    lock (syncRoot) {
                         if (instance == null)
                             instance = new BaseGameCharacters<T>(true);
                     }
@@ -51,63 +40,51 @@ namespace Engine.Game.App.BaseApp
 
                 return instance;
             }
-            set
-            {
+            set {
                 instance = value;
             }
         }
 
-        public BaseGameCharacters()
-        {
+        public BaseGameCharacters() {
             Reset();
         }
 
-        public BaseGameCharacters(bool loadData)
-        {
+        public BaseGameCharacters(bool loadData) {
             Reset();
             path = "data/" + BASE_DATA_KEY + ".json";
             pathKey = BASE_DATA_KEY;
             LoadData();
         }
 
-        public static GameObject Load(string code)
-        {
+        public static GameObject Load(string code) {
             return AppContentAssets.LoadAsset(code);
             //return AppContentAssetModels.LoadModel(code);
         }
 
-        public static GameObject LoadPrefab(string code)
-        {
+        public static GameObject LoadPrefab(string code) {
             return AppContentAssets.LoadAssetPrefab(code);
             //return AppContentAssetModels.LoadPrefab(code);
         }
     }
 
-    public class GameDataCharacter : GameDataObject
-    {
+    public class GameDataCharacter : GameDataObject {
 
-        public virtual List<string> roles
-        {
-            get
-            {
+        public virtual List<string> roles {
+            get {
                 return Get<List<string>>(BaseDataObjectKeys.roles);
             }
 
-            set
-            {
+            set {
                 Set<List<string>>(BaseDataObjectKeys.roles, value);
             }
         }
 
-        public virtual List<GameDataModel> models
-        {
-            get
-            {
+        public virtual List<GameDataModel> models {
+            get {
                 return Get<List<GameDataModel>>(BaseDataObjectKeys.models);
             }
 
-            set
-            {
+            set {
                 Set<List<GameDataModel>>(BaseDataObjectKeys.models, value);
             }
         }
@@ -128,32 +105,26 @@ namespace Engine.Game.App.BaseApp
     }
     */
 
-    public class BaseGameCharacter : GameDataObjectMeta
-    {
+    public class BaseGameCharacter : GameDataObjectMeta {
 
         // Attributes that are added or changed after launch should be like this to prevent
         // profile conversions.
 
-        public BaseGameCharacter()
-        {
+        public BaseGameCharacter() {
             Reset();
         }
 
-        public override void Reset()
-        {
+        public override void Reset() {
             base.Reset();
         }
 
-        public void Clone(BaseGameCharacter toCopy)
-        {
+        public void Clone(BaseGameCharacter toCopy) {
             base.Clone(toCopy);
         }
 
-        public GameObject Load()
-        {
+        public GameObject Load() {
 #if USE_GAME_LIB_GAMES
-            foreach (GameDataModel model in data.models)
-            {
+            foreach (GameDataModel model in data.models) {
                 return GameCharacters.Load(model.code);
             }
 #endif
@@ -161,11 +132,9 @@ namespace Engine.Game.App.BaseApp
         }
 
 
-        public GameObject LoadPrefab()
-        {
+        public GameObject LoadPrefab() {
 #if USE_GAME_LIB_GAMES
-            foreach (GameDataModel model in data.models)
-            {
+            foreach (GameDataModel model in data.models) {
                 return GameCharacters.LoadPrefab(model.code);
             }
 #endif

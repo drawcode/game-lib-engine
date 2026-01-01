@@ -8,18 +8,15 @@ using Engine.Utility;
 using UnityEngine;
 using UnityEngine.Networking;
 
-namespace Engine.Audio
-{
-    public class AudioSetItem
-    {
+namespace Engine.Audio {
+    public class AudioSetItem {
         public AudioSource audioSource;
         public AudioClip audioClip;
         public string file = "";
         public string type = "";
     }
 
-    public class AudioActionObject
-    {
+    public class AudioActionObject {
 
         public Vector3 pos;
         public Transform parent;
@@ -32,13 +29,11 @@ namespace Engine.Audio
         public float minDistance;
         public float spatialBlend;
 
-        public AudioActionObject()
-        {
+        public AudioActionObject() {
             Reset();
         }
 
-        public void Reset()
-        {
+        public void Reset() {
 
             pos = Vector3.zero;
             parent = null;
@@ -53,8 +48,7 @@ namespace Engine.Audio
         }
     }
 
-    public class AudioClipData
-    {
+    public class AudioClipData {
         public string filename = "";
         public Transform parentTransform;
         public bool loop = false;
@@ -66,24 +60,19 @@ namespace Engine.Audio
         public float spatialBlend = 0.9f;
     }
 
-    public class AudioSystem : GameObjectBehavior
-    {
+    public class AudioSystem : GameObjectBehavior {
 
         private static AudioSystem _instance = null;
 
-        public static AudioSystem Instance
-        {
-            get
-            {
-                if (!_instance)
-                {
+        public static AudioSystem Instance {
+            get {
+                if (!_instance) {
 
                     // check if an object is already available in the scene graph
                     _instance = FindObjectOfType(typeof(AudioSystem)) as AudioSystem;
 
                     // nope, create a new one
-                    if (!_instance)
-                    {
+                    if (!_instance) {
 
                         var obj = new GameObject("_AudioSystem");
 
@@ -117,48 +106,37 @@ namespace Engine.Audio
         AudioListener listener;
         public bool dataDrivenLoad = true;
 
-        public string audioRootPath
-        {
-            get
-            {
+        public string audioRootPath {
+            get {
                 return ContentPaths.appCacheVersionSharedAudio;
             }
         }
 
-        public bool isAudiocurrentLoopPlaying
-        {
-            get
-            {
+        public bool isAudiocurrentLoopPlaying {
+            get {
                 return currentLoop.isPlaying;
             }
         }
 
-        public bool isAudiocurrentIntroPlaying
-        {
-            get
-            {
+        public bool isAudiocurrentIntroPlaying {
+            get {
                 return currentLoop.isPlaying;
             }
         }
 
-        public bool isAudioPlaying
-        {
-            get
-            {
+        public bool isAudioPlaying {
+            get {
                 return isAudiocurrentLoopPlaying || isAudiocurrentIntroPlaying;
             }
         }
 
-        public bool isAudioAmbienceActive
-        {
-            get
-            {
+        public bool isAudioAmbienceActive {
+            get {
                 return ambienceActive;
             }
         }
 
-        public void Awake()
-        {
+        public void Awake() {
 
             //if(!dataDrivenLoad) {
             ambienceActive = false;
@@ -169,21 +147,18 @@ namespace Engine.Audio
             //}
         }
 
-        public void Start()
-        {
+        public void Start() {
 
             //
         }
 
         // AMBIENCE / GAME NEW
 
-        public void PlaySoundByPreset(string presetCode)
-        {
+        public void PlaySoundByPreset(string presetCode) {
 
 #if USE_GAME_LIB_GAMES
             GamePreset preset = GamePresets.Get(presetCode);
-            if (preset != null)
-            {
+            if (preset != null) {
                 // NOTE: audio wire this up
                 //preset.getInstance().PlaySound(preset.audioClip);
             }
@@ -192,79 +167,64 @@ namespace Engine.Audio
 
         // AMBIENCE OLD
 
-        public void CheckAmbiencePlaying()
-        {
+        public void CheckAmbiencePlaying() {
 
-            if (currentLoop != null)
-            {
+            if (currentLoop != null) {
 
-                if (!currentLoop.isPlaying)
-                {
+                if (!currentLoop.isPlaying) {
                     StartAmbience();
                 }
             }
 
-            if (!ambienceActive)
-            {
+            if (!ambienceActive) {
                 StartAmbience();
             }
         }
 
-        public void StartAmbience()
-        {
+        public void StartAmbience() {
             StartCoroutine(StartAmbienceCoroutine());
         }
 
-        public void StartGameLoopsForLaps()
-        {
+        public void StartGameLoopsForLaps() {
             StartCoroutine(StartGameLoopsForLapsCoroutine());
         }
 
-        public void SetEffectsVolume(double volume)
-        {
+        public void SetEffectsVolume(double volume) {
             effectSoundVolume = volume;
         }
 
-        public double GetEffectsVolume()
-        {
+        public double GetEffectsVolume() {
             return effectSoundVolume;
         }
 
-        public void SetAmbienceVolume(double volume)
-        {
+        public void SetAmbienceVolume(double volume) {
 
             musicSoundVolume = volume;
 
             LogUtil.Log("Sounds::SetAmbienceVolume::" + musicSoundVolume);
 
-            if (currentIntro != null)
-            {
+            if (currentIntro != null) {
 
                 currentIntro.volume = (float)musicSoundVolume;
             }
 
-            if (currentLoop != null)
-            {
+            if (currentLoop != null) {
 
                 currentLoop.volume = (float)musicSoundVolume;
             }
 
-            if (currentGameLoop != null)
-            {
+            if (currentGameLoop != null) {
 
                 currentGameLoop.volume = (float)musicSoundVolume;
             }
 
-            if (currentGameLoops != null)
-            {
+            if (currentGameLoops != null) {
 
                 if (currentGameLoops.Count > 0
                     && currentGameLoops.Count > currentLoopIndex
-                    && currentLoopIndex > -1)
-                {
+                    && currentLoopIndex > -1) {
 
-                    if (currentGameLoops[currentLoopIndex] != null)
-                    {
+                    if (currentGameLoops[currentLoopIndex] != null) {
 
                         currentGameLoops[currentLoopIndex].volume = (float)musicSoundVolume;
                     }
@@ -272,15 +232,13 @@ namespace Engine.Audio
             }
         }
 
-        public double GetAmbienceVolume()
-        {
+        public double GetAmbienceVolume() {
             return musicSoundVolume;
         }
 
         public void PlayEffect(
             string name, float volume = 1f, bool loop = false, float delay = 0f,
-            Transform parentTransform = null, float spatialBlend = 0.9f)
-        {
+            Transform parentTransform = null, float spatialBlend = 0.9f) {
 
             StartCoroutine(PlayEffectCo(
                 name, volume, loop, delay, parentTransform, spatialBlend));
@@ -288,25 +246,21 @@ namespace Engine.Audio
 
         IEnumerator PlayEffectCo(
             string name, float volume, bool loop = false, float delay = 0f,
-            Transform parentTransform = null, float spatialBlend = 0.9f)
-        {
+            Transform parentTransform = null, float spatialBlend = 0.9f) {
 
             yield return new WaitForSeconds(delay);
             // TODO, lookup filename from sound list... 
 
-            if (!loop)
-            {
+            if (!loop) {
 
                 soundIncrement++;
             }
-            else
-            {
+            else {
 
                 soundIncrement = 0;
             }
 
-            if (!name.Contains(ContentPaths.appCacheVersion))
-            {
+            if (!name.Contains(ContentPaths.appCacheVersion)) {
 
                 name = audioRootPath + name;
             }
@@ -319,8 +273,7 @@ namespace Engine.Audio
         }
 
         public GameObject PlayEffectObject(
-            Transform parentTransform, string name, bool loop, float volume)
-        {
+            Transform parentTransform, string name, bool loop, float volume) {
 
             return PlayFileFromResourcesObject(
                 parentTransform,
@@ -331,15 +284,13 @@ namespace Engine.Audio
         //    PlayEffect(name, 1f);
         //}
 
-        public void PlayEffect(Transform parentTransform, string name, bool loop, float volume)
-        {
+        public void PlayEffect(Transform parentTransform, string name, bool loop, float volume) {
 
             PlayFileFromResources(parentTransform,
                 audioRootPath + name, loop, soundIncrement, volume);
         }
 
-        public void PlayEffect(Transform parentTransform, string name, float volume)
-        {
+        public void PlayEffect(Transform parentTransform, string name, float volume) {
 
             PlayFileFromResources(parentTransform,
                 audioRootPath + name, false, soundIncrement, volume);
@@ -367,8 +318,7 @@ namespace Engine.Audio
 
         public void PlayEffectPathDelayed(
             string filename, Transform parentTransform,
-            bool loop, float volume, float delay, bool is2dSound)
-        {
+            bool loop, float volume, float delay, bool is2dSound) {
 
             StartCoroutine(PlayEffectPathDelayedCo(
                 filename, parentTransform, loop, volume, delay, is2dSound));
@@ -376,8 +326,7 @@ namespace Engine.Audio
 
         public IEnumerator PlayEffectPathDelayedCo(
             string filename, Transform parentTransform,
-            bool loop, float volume, float delay, bool is2dSound)
-        {
+            bool loop, float volume, float delay, bool is2dSound) {
 
             yield return new WaitForSeconds(delay);
 
@@ -389,8 +338,7 @@ namespace Engine.Audio
 
         public void PlayEffectPathDelayed(
             string filename, Transform parentTransform,
-            bool loop, float volume, float delay, bool is2dSound, bool incrementing)
-        {
+            bool loop, float volume, float delay, bool is2dSound, bool incrementing) {
 
             StartCoroutine(PlayEffectPathDelayedCo(
                 filename, parentTransform, loop, volume, delay, is2dSound, incrementing));
@@ -398,17 +346,14 @@ namespace Engine.Audio
 
         public IEnumerator PlayEffectPathDelayedCo(
             string filename, Transform parentTransform,
-            bool loop, float volume, float delay, bool is2dSound, bool incrementing)
-        {
+            bool loop, float volume, float delay, bool is2dSound, bool incrementing) {
 
             yield return new WaitForSeconds(delay);
 
-            if (incrementing)
-            {
+            if (incrementing) {
                 soundIncrement++;
             }
-            else
-            {
+            else {
                 soundIncrement = 0;
             }
 
@@ -417,8 +362,7 @@ namespace Engine.Audio
         }
 
         public void PlayEffectPath(
-            string filename, Transform parentTransform, bool loop, float volume, bool is2dSound)
-        {
+            string filename, Transform parentTransform, bool loop, float volume, bool is2dSound) {
 
             soundIncrement++;
 
@@ -426,57 +370,48 @@ namespace Engine.Audio
                 filename, parentTransform, loop, soundIncrement, volume, 0f, is2dSound);
         }
 
-        public void PlayEffectPath(string filename, bool loop)
-        {
+        public void PlayEffectPath(string filename, bool loop) {
 
             PlayFileFromPath(filename, loop);
         }
 
-        public void PlayEffectIncrement(AudioClip clip, float volume, int increment)
-        {
+        public void PlayEffectIncrement(AudioClip clip, float volume, int increment) {
 
             PlayAudioClip(clip, false, increment, volume);
         }
 
-        public void PlayEffect(AudioClip clip, float volume)
-        {
+        public void PlayEffect(AudioClip clip, float volume) {
 
             soundIncrement++;
 
             PlayAudioClip(clip, false, soundIncrement, volume);
         }
 
-        public void PlayEffect(AudioClip clip, bool loop, float volume)
-        {
+        public void PlayEffect(AudioClip clip, bool loop, float volume) {
 
             soundIncrement++;
 
             PlayAudioClip(clip, loop, soundIncrement, volume);
         }
 
-        public void PlayEffectSingle()
-        {
+        public void PlayEffectSingle() {
 
             PlayFileFromResources(audioRootPath + name, false);
         }
 
-        public void PlayAudioFile(string file)
-        {
+        public void PlayAudioFile(string file) {
 
             AudioSetItem item = GetAudioFile(file);
 
-            if (item != null)
-            {
+            if (item != null) {
 
                 item.audioSource.Play();
             }
         }
 
-        public AudioSetItem GetAudioFile(string file)
-        {
+        public AudioSetItem GetAudioFile(string file) {
 
-            if (clips.ContainsKey(file))
-            {
+            if (clips.ContainsKey(file)) {
 
                 return clips[file];
             }
@@ -484,8 +419,7 @@ namespace Engine.Audio
         }
 
         public GameObject PrepareFromResources(
-            string type, string file, bool loop, double volume)
-        { // file name without extension
+            string type, string file, bool loop, double volume) { // file name without extension
 
             string path = audioRootPath + file;
             string code = "game-" + type;
@@ -494,12 +428,10 @@ namespace Engine.Audio
 
             GameObject goClip = GameObject.Find(code);//FindOrCreateSoundContainer().transform.FindChild(code).gameObject;
 
-            if (goClip != null)
-            {
+            if (goClip != null) {
 
             }
-            else
-            {
+            else {
 
                 goClip = new GameObject(code);
 
@@ -516,13 +448,11 @@ namespace Engine.Audio
 
             goClip.transform.parent = FindOrCreateSoundContainer().transform;
 
-            if (Camera.main != null && Camera.main.transform != null)
-            {
+            if (Camera.main != null && Camera.main.transform != null) {
 
                 goClip.transform.position = Camera.main.transform.position;
             }
-            else
-            {
+            else {
 
                 goClip.transform.position = Vector3.zero;
             }
@@ -537,15 +467,13 @@ namespace Engine.Audio
             return goClip;
         }
 
-        public GameObject FindOrCreateDisposableSoundContainer()
-        { // disposable sounds
+        public GameObject FindOrCreateDisposableSoundContainer() { // disposable sounds
 
             string nameSoundRootName = "_SoundContainerDisposable";
 
             GameObject goSoundRoot = GameObject.Find(nameSoundRootName);
 
-            if (goSoundRoot == null)
-            {
+            if (goSoundRoot == null) {
 
                 goSoundRoot = new GameObject(nameSoundRootName);
             }
@@ -553,15 +481,13 @@ namespace Engine.Audio
             return goSoundRoot;
         }
 
-        public GameObject FindOrCreateSoundContainer()
-        {
+        public GameObject FindOrCreateSoundContainer() {
 
             string nameSoundRootName = "_SoundContainer";
 
             GameObject goSoundRoot = GameObject.Find(nameSoundRootName);
 
-            if (goSoundRoot == null)
-            {
+            if (goSoundRoot == null) {
 
                 goSoundRoot = new GameObject(nameSoundRootName);
 
@@ -570,23 +496,19 @@ namespace Engine.Audio
             return goSoundRoot;
         }
 
-        public Transform FindGameGlobal()
-        {
+        public Transform FindGameGlobal() {
 
-            if (globalTranform == null)
-            {
+            if (globalTranform == null) {
 
                 globalTranform = GameObject.Find("_GameGlobalAll");
 
-                if (globalTranform == null)
-                {
+                if (globalTranform == null) {
 
                     globalTranform = GameObject.Find("GameGlobal");
                 }
             }
 
-            if (globalTranform != null)
-            {
+            if (globalTranform != null) {
 
                 return globalTranform.transform;
             }
@@ -594,14 +516,11 @@ namespace Engine.Audio
             return null;
         }
 
-        public Transform FindAudioListenerPosition()
-        {
-            if (listener == null)
-            {
+        public Transform FindAudioListenerPosition() {
+            if (listener == null) {
                 listener = UnityObjectUtil.FindObject<AudioListener>();
             }
-            if (listener != null)
-            {
+            if (listener != null) {
                 return listener.transform;
             }
 
@@ -609,16 +528,14 @@ namespace Engine.Audio
         }
 
         public GameObject PlayFileFromResources(
-            string file, bool loop)
-        { // file name without extension
+            string file, bool loop) { // file name without extension
 
             return PlayFileFromResources(file, loop, 0, 1f);
         }
 
         public GameObject PlayFileFromResources(
             Transform parentTransform, string file, bool loop,
-            int increment, float volume, float spatialBlend = 0.9f)
-        { // file name without extension
+            int increment, float volume, float spatialBlend = 0.9f) { // file name without extension
 
             return PlayFileFromResourcesObject(
                 parentTransform, file, loop, increment, volume, spatialBlend);
@@ -626,15 +543,13 @@ namespace Engine.Audio
 
         public GameObject PlayFileFromResourcesObject(
             Transform parentTransform, string file, bool loop,
-            int increment, float volume, float spatialBlend = 0.9f)
-        { // file name without extension
+            int increment, float volume, float spatialBlend = 0.9f) { // file name without extension
 
             AudioClip clip = LoadAudioClip(file);
 
             Vector3 pos = Vector3.zero;
 
-            if (parentTransform != null)
-            {
+            if (parentTransform != null) {
                 pos = parentTransform.position;
             }
 
@@ -643,13 +558,11 @@ namespace Engine.Audio
         }
 
         public GameObject PlayFileFromResources(
-            string file, bool loop, int increment, float volume)
-        { // file name without extension
+            string file, bool loop, int increment, float volume) { // file name without extension
 
             AudioClip clip = LoadAudioClip(file);
 
-            if (clip == null)
-            {
+            if (clip == null) {
                 return null;
             }
 
@@ -662,8 +575,7 @@ namespace Engine.Audio
             return PlayAudioClip(obj);
         }
 
-        public void PlayFileFromPath(string file, bool loop)
-        {
+        public void PlayFileFromPath(string file, bool loop) {
 
 #if USE_GAME_LIB_GAMES
             float profileVolume = (float)GameProfiles.Current.GetAudioEffectsVolume();
@@ -678,8 +590,7 @@ namespace Engine.Audio
 
         public void PlayFileFromPath(
             string filename, Transform parentTransform,
-            bool loop, int increment, float volume, float delay, bool is2dSound)
-        {
+            bool loop, int increment, float volume, float delay, bool is2dSound) {
 
             AudioClipData data = new AudioClipData();
             data.filename = filename;
@@ -691,8 +602,7 @@ namespace Engine.Audio
             data.is2dSound = is2dSound;
             data.clip = null;
 
-            var onSuccess = new Action<AudioClipData>(obj =>
-            {
+            var onSuccess = new Action<AudioClipData>(obj => {
                 PlayFileFromPathLoad(obj);
             });
 
@@ -701,22 +611,18 @@ namespace Engine.Audio
             CoroutineUtil.Start(LoadClipFromPath(data, onFailure, onSuccess));
         }
 
-        public void PlayFileFromPathLoad(AudioClipData data)
-        {
+        public void PlayFileFromPathLoad(AudioClipData data) {
 
-            if (data.clip != null)
-            {
+            if (data.clip != null) {
 
                 string fileCode = Path.GetFileName(data.filename);
                 string fileVersion = fileCode + "-" + data.increment.ToString();
 
                 GameObject goClip = GameObject.Find(fileVersion);
 
-                if (goClip != null && data.increment == 0)
-                {
+                if (goClip != null && data.increment == 0) {
                 }
-                else
-                {
+                else {
                     goClip = new GameObject(fileVersion);
                     goClip.AddComponent<AudioSource>();
                 }
@@ -728,8 +634,7 @@ namespace Engine.Audio
                 goClip.GetComponent<AudioSource>().volume = data.volume;
                 goClip.GetComponent<AudioSource>().playOnAwake = false;
 
-                if (!data.loop)
-                {
+                if (!data.loop) {
                     goClip.AddComponent<AudioDestroy>();
                 }
 
@@ -739,11 +644,9 @@ namespace Engine.Audio
 
         public GameObject PlayAudioClip(
             Vector3 pos, Transform parent, AudioClip clip,
-            bool loop, int increment, float volume, float spatialBlend = 0.9f)
-        {
+            bool loop, int increment, float volume, float spatialBlend = 0.9f) {
 
-            if (clip == null)
-            {
+            if (clip == null) {
                 return null;
             }
 
@@ -760,11 +663,9 @@ namespace Engine.Audio
         }
 
         public GameObject PlayAudioClip(
-            AudioClip clip, bool loop, int increment, float volume)
-        {
+            AudioClip clip, bool loop, int increment, float volume) {
 
-            if (clip == null)
-            {
+            if (clip == null) {
                 return null;
             }
 
@@ -779,11 +680,9 @@ namespace Engine.Audio
             return PlayAudioClip(obj);
         }
 
-        public GameObject PlayAudioClip(AudioActionObject audioActionObject)
-        {
+        public GameObject PlayAudioClip(AudioActionObject audioActionObject) {
 
-            if (audioActionObject == null)
-            {
+            if (audioActionObject == null) {
                 return null;
             }
 
@@ -791,8 +690,7 @@ namespace Engine.Audio
                 audioActionObject.clip.name + "-" +
                 audioActionObject.increment.ToString();
 
-            if (prefabAudioItem == null)
-            {
+            if (prefabAudioItem == null) {
                 prefabAudioItem = PrefabsPool.PoolPrefab(audioRootPath + "audio-item");
             }
 
@@ -801,15 +699,13 @@ namespace Engine.Audio
 
             //goClip.name = fileVersion;
 
-            if (goClip == null)
-            {
+            if (goClip == null) {
                 return null;
             }
 
             GameObjectData gameObjectData = goClip.GetOrSet<GameObjectData>();
 
-            if (gameObjectData != null)
-            {
+            if (gameObjectData != null) {
                 gameObjectData.Set("code", fileVersion);
                 gameObjectData.Set("name", audioActionObject.clip.name);
             }
@@ -818,12 +714,10 @@ namespace Engine.Audio
 
             AudioDestroy audioDestroy = null;
 
-            if (audioActionObject.increment == 0)
-            {
+            if (audioActionObject.increment == 0) {
                 DontDestroyOnLoad(goClip);
             }
-            else
-            {
+            else {
                 audioDestroy = goClip.GetOrSet<AudioDestroy>();
             }
 
@@ -838,13 +732,11 @@ namespace Engine.Audio
 
             audioSourceObject.playOnAwake = false;
 
-            if (audioDestroy != null)
-            {
+            if (audioDestroy != null) {
                 audioDestroy.Reset();
             }
 
-            if (audioActionObject.panLevel > 0.0)
-            {
+            if (audioActionObject.panLevel > 0.0) {
                 audioSourceObject.maxDistance = 25;
                 audioSourceObject.spread = 360;
                 audioSourceObject.priority = 0;
@@ -866,8 +758,7 @@ namespace Engine.Audio
 
             audioSourceObject.enabled = true;
 
-            if (audioActionObject.startPlaying)
-            {
+            if (audioActionObject.startPlaying) {
                 audioSourceObject.Play();
             }
 
@@ -941,38 +832,32 @@ namespace Engine.Audio
 
          * */
 
-        public void PlayAudioClipOneShot(AudioClip clip)
-        {
+        public void PlayAudioClipOneShot(AudioClip clip) {
 
             audio.PlayOneShot(clip);
         }
 
-        public void PlayAudioAtLocation(AudioClip clip, Vector3 location)
-        {
+        public void PlayAudioAtLocation(AudioClip clip, Vector3 location) {
 
             AudioSource.PlayClipAtPoint(clip, location);
         }
 
-        public AudioClip LoadLoop(string name)
-        {
+        public AudioClip LoadLoop(string name) {
 
             AudioClip clip = LoadAudioClip(audioRootPath + name);
 
             return clip;
         }
 
-        public AudioClip LoadAudioClip(string path)
-        {
+        public AudioClip LoadAudioClip(string path) {
 
             AudioSetItem audioSetItem = LoadAudioSetItem(path);
 
             //Debug.Log("LoadAudioClip:path:" + path);
 
-            if (audioSetItem != null)
-            {
+            if (audioSetItem != null) {
 
-                if (audioSetItem.audioClip == null)
-                {
+                if (audioSetItem.audioClip == null) {
                     Debug.LogWarning("LoadAudioClip:NOT FOUND:path:" + path);
                 }
 
@@ -982,27 +867,22 @@ namespace Engine.Audio
             return null;
         }
 
-        public void ClearAudioItems()
-        {
+        public void ClearAudioItems() {
 
-            if (audioSetItems == null)
-            {
+            if (audioSetItems == null) {
                 return;
             }
 
             audioSetItems.Clear();
         }
 
-        public AudioSetItem LoadAudioSetItem(string path)
-        {
+        public AudioSetItem LoadAudioSetItem(string path) {
 
-            if (audioSetItems == null)
-            {
+            if (audioSetItems == null) {
                 audioSetItems = new Dictionary<string, AudioSetItem>();
             }
 
-            if (audioSetItems.ContainsKey(path))
-            {
+            if (audioSetItems.ContainsKey(path)) {
                 return audioSetItems[path];
             }
 
@@ -1024,8 +904,7 @@ namespace Engine.Audio
             return audioSetItem;
         }
 
-        public AudioClip LoadClipFromResources(string fileName)
-        {
+        public AudioClip LoadClipFromResources(string fileName) {
             AudioClip clip = Resources.Load(fileName) as AudioClip;
             return clip;
         }
@@ -1045,11 +924,9 @@ namespace Engine.Audio
         */
 
         public IEnumerator LoadClipFromPath(
-            AudioClipData data, Action<string> onFailure, Action<AudioClipData> onSuccess)
-        {
+            AudioClipData data, Action<string> onFailure, Action<AudioClipData> onSuccess) {
 
-            if (data.clip == null)
-            {
+            if (data.clip == null) {
 
                 var file = "file://" + data.filename;
 
@@ -1057,8 +934,7 @@ namespace Engine.Audio
 
                 yield return www.SendWebRequest();
 
-                if (www.error != null)
-                {
+                if (www.error != null) {
                     //if( onFailure != null ) {
                     //	onFailure( www.error );
                     //}
@@ -1066,8 +942,7 @@ namespace Engine.Audio
 
                 AudioClip clip = DownloadHandlerAudioClip.GetContent(www);
 
-                if (clip != null)
-                {
+                if (clip != null) {
                     //clip.loadType = AudioClipLoadType.
                     //clip.
                     data.clip = clip;
@@ -1079,11 +954,9 @@ namespace Engine.Audio
                 GC.Collect();
             }
 
-            if (data.clip != null)
-            {
+            if (data.clip != null) {
 
-                if (onSuccess != null)
-                {
+                if (onSuccess != null) {
 
                     onSuccess(data);
                 }
@@ -1097,39 +970,32 @@ namespace Engine.Audio
         }
         */
 
-        public IEnumerator StartAmbienceCoroutine()
-        {
+        public IEnumerator StartAmbienceCoroutine() {
 
-            if (!ambienceActive)
-            {
+            if (!ambienceActive) {
 
-                if (currentGameLoop != null)
-                {
+                if (currentGameLoop != null) {
 
-                    if (currentGameLoop.isPlaying)
-                    {
+                    if (currentGameLoop.isPlaying) {
 
                         currentGameLoop.volume = 0;
                         currentGameLoop.Stop();
                     }
                 }
 
-                if (currentIntro != null)
-                {
+                if (currentIntro != null) {
 
                     currentIntro.volume = (float)musicSoundVolume;
                     currentIntro.Play();
                     //if(currentIntro.clip != null) { 
                     yield return new WaitForSeconds(currentIntro.clip.length - 1f);
                     //}
-                    if (currentIntro.gameObject != null)
-                    {
+                    if (currentIntro.gameObject != null) {
                         // currentIntro.gameObject.AudioTo(0f, 1f, 1f, 0f);
                     }
                 }
 
-                if (currentLoop != null && ambienceActive)
-                {
+                if (currentLoop != null && ambienceActive) {
 
                     currentLoop.volume = (float)musicSoundVolume;
                     currentLoop.Play();
@@ -1138,25 +1004,20 @@ namespace Engine.Audio
 
                 ambienceActive = true;
             }
-            else
-            {
+            else {
                 yield break;
             }
         }
 
-        public IEnumerator StartGameLoopsForLapsCoroutine()
-        {
+        public IEnumerator StartGameLoopsForLapsCoroutine() {
 
-            foreach (AudioSource source in currentGameLoops)
-            {
+            foreach (AudioSource source in currentGameLoops) {
 
-                if (source != null)
-                {
+                if (source != null) {
 
                     source.volume = 0f;
 
-                    if (!source.isPlaying)
-                    {
+                    if (!source.isPlaying) {
 
                         source.Play();
                     }
@@ -1166,11 +1027,9 @@ namespace Engine.Audio
             yield return new WaitForSeconds(.3f);
         }
 
-        public void StartGameLoop(int loop)
-        {
+        public void StartGameLoop(int loop) {
 
-            if (currentGameLoops == null)
-            {
+            if (currentGameLoops == null) {
                 return;
             }
 
@@ -1181,22 +1040,18 @@ namespace Engine.Audio
 
             float volumeLevel = (float)musicSoundVolume;
 
-            for (int i = 0; i < currentGameLoops.Count; i++)
-            {
+            for (int i = 0; i < currentGameLoops.Count; i++) {
 
                 float currentVolumeLevel = 0f;
                 bool isCurrent = currentLoopIndex == i ? true : false;
 
-                if (isCurrent)
-                {
+                if (isCurrent) {
                     currentVolumeLevel = volumeLevel;
                 }
 
-                if (currentGameLoops.Count > i)
-                {
+                if (currentGameLoops.Count > i) {
 
-                    if (currentGameLoops[i] == null)
-                    {
+                    if (currentGameLoops[i] == null) {
                         return;
                     }
 
@@ -1204,27 +1059,23 @@ namespace Engine.Audio
                     //    return;
                     //}
 
-                    if (isCurrent)
-                    {
+                    if (isCurrent) {
 
-                        if (!currentGameLoops[i].isPlaying)
-                        {
+                        if (!currentGameLoops[i].isPlaying) {
 
                             currentGameLoops[i].Play();
                             currentGameLoops[i].time = 0f; // TODO for laps or syned get time of last loop
                             currentGameLoops[i].volume = 0f;
                         }
 
-                        if (currentGameLoops[i].isPlaying)
-                        {
+                        if (currentGameLoops[i].isPlaying) {
 
                             currentGameLoops[i].volume = currentVolumeLevel;//.gameObject.AudioTo(currentVolumeLevel, 1f, .1f, 0f);
                         }
 
                         LogUtil.Log("StartGameLoop:", " i:play:" + currentGameLoops[i].name);
                     }
-                    else
-                    {
+                    else {
 
                         currentGameLoops[i].volume = currentVolumeLevel;//.gameObject.AudioTo(currentVolumeLevel, 0f, .1f, 0f);
                         currentGameLoops[i].StopIfPlaying();
@@ -1233,36 +1084,28 @@ namespace Engine.Audio
             }
         }
 
-        public void StopAmbience()
-        {
+        public void StopAmbience() {
             StartCoroutine(StopAmbienceRoutine());
         }
 
-        private IEnumerator StopAmbienceRoutine()
-        {
-            if (ambienceActive)
-            {
+        private IEnumerator StopAmbienceRoutine() {
+            if (ambienceActive) {
 
-                if (currentLoop != null)
-                {
+                if (currentLoop != null) {
 
-                    if (currentLoop.isPlaying)
-                    {
+                    if (currentLoop.isPlaying) {
 
                         //currentLoop.gameObject.AudioTo(0f, 1f, 1.5f, 0f);
-                        if (currentIntro != null)
-                        {
+                        if (currentIntro != null) {
 
                             currentIntro.volume = 0f;
                         }
                     }
                 }
 
-                if (currentIntro != null)
-                {
+                if (currentIntro != null) {
 
-                    if (currentIntro.isPlaying)
-                    {
+                    if (currentIntro.isPlaying) {
 
                         currentIntro.volume = 0f;
                     }
@@ -1271,20 +1114,17 @@ namespace Engine.Audio
 
                 yield return new WaitForSeconds(0.5f);
 
-                if (currentIntro != null)
-                {
+                if (currentIntro != null) {
                     currentIntro.Stop();
                 }
 
-                if (currentLoop != null)
-                {
+                if (currentLoop != null) {
                     currentLoop.Stop();
                 }
 
                 ambienceActive = false;
             }
-            else
-            {
+            else {
                 yield break;
             }
         }
@@ -1293,11 +1133,9 @@ namespace Engine.Audio
 
         const int HEADER_SIZE = 44;
 
-        public static bool Save(string path, AudioClip clip)
-        {
+        public static bool Save(string path, AudioClip clip) {
 
-            if (!path.ToLower().EndsWith(".wav"))
-            {
+            if (!path.ToLower().EndsWith(".wav")) {
                 path += ".wav";
             }
 
@@ -1306,8 +1144,7 @@ namespace Engine.Audio
             // Make sure directory exists if user is saving to sub dir.
             //Directory.CreateDirectory(Path.GetDirectoryName(filepath));
 
-            using (var fileStream = CreateEmpty(path))
-            {
+            using (var fileStream = CreateEmpty(path)) {
                 ConvertAndWrite(fileStream, clip);
                 WriteHeader(fileStream, clip);
             }
@@ -1315,8 +1152,7 @@ namespace Engine.Audio
             return true; // TODO: return false if there's a failure saving the file
         }
 
-        public static AudioClip TrimSilence(AudioClip clip, float min)
-        {
+        public static AudioClip TrimSilence(AudioClip clip, float min) {
 
             var samples = new float[clip.samples];
 
@@ -1327,32 +1163,26 @@ namespace Engine.Audio
         }
 
         public static AudioClip TrimSilence(
-            List<float> samples, float min, int channels, int hz)
-        {
+            List<float> samples, float min, int channels, int hz) {
 
             return TrimSilence(samples, min, channels, hz, false, false);
         }
 
         public static AudioClip TrimSilence(
-            List<float> samples, float min, int channels, int hz, bool _3D, bool stream)
-        {
+            List<float> samples, float min, int channels, int hz, bool _3D, bool stream) {
 
             int i;
 
-            for (i = 0; i < samples.Count; i++)
-            {
-                if (Mathf.Abs(samples[i]) > min)
-                {
+            for (i = 0; i < samples.Count; i++) {
+                if (Mathf.Abs(samples[i]) > min) {
                     break;
                 }
             }
 
             samples.RemoveRange(0, i);
 
-            for (i = samples.Count - 1; i > 0; i--)
-            {
-                if (Mathf.Abs(samples[i]) > min)
-                {
+            for (i = samples.Count - 1; i > 0; i--) {
+                if (Mathf.Abs(samples[i]) > min) {
                     break;
                 }
             }
@@ -1366,23 +1196,20 @@ namespace Engine.Audio
             return clip;
         }
 
-        static FileStream CreateEmpty(string filepath)
-        {
+        static FileStream CreateEmpty(string filepath) {
 
             var fileStream = new FileStream(filepath, FileMode.Create);
 
             byte emptyByte = new byte();
 
-            for (int i = 0; i < HEADER_SIZE; i++)
-            { //preparing the header
+            for (int i = 0; i < HEADER_SIZE; i++) { //preparing the header
                 fileStream.WriteByte(emptyByte);
             }
 
             return fileStream;
         }
 
-        static void ConvertAndWrite(FileStream fileStream, AudioClip clip)
-        {
+        static void ConvertAndWrite(FileStream fileStream, AudioClip clip) {
 
             var samples = new float[clip.samples];
 
@@ -1397,8 +1224,7 @@ namespace Engine.Audio
 
             int rescaleFactor = 32767; //to convert float to Int16
 
-            for (int i = 0; i < samples.Length; i++)
-            {
+            for (int i = 0; i < samples.Length; i++) {
 
                 intData[i] = (short)(samples[i] * rescaleFactor);
 
@@ -1410,8 +1236,7 @@ namespace Engine.Audio
             fileStream.Write(bytesData, 0, bytesData.Length);
         }
 
-        static void WriteHeader(FileStream fileStream, AudioClip clip)
-        {
+        static void WriteHeader(FileStream fileStream, AudioClip clip) {
 
             var hz = clip.frequency;
             var channels = clip.channels;

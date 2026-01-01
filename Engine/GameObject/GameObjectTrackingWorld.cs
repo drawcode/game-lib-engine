@@ -29,21 +29,21 @@ public class GameObjectTrackingWorld : MonoBehaviour {
 
         currentPositionTo = transform.position;
 
-        if(trackPositionX) {
+        if (trackPositionX) {
             currentPositionTo.x = trackObject.transform.position.x;
         }
 
-        if(trackPositionY) {
+        if (trackPositionY) {
             currentPositionTo.y = trackObject.transform.position.y;
         }
 
-        if(trackPositionZ) {
+        if (trackPositionZ) {
             currentPositionTo.z = trackObject.transform.position.z;
         }
 
-        if(currentPositionTo != lastPositionTo) {
+        if (currentPositionTo != lastPositionTo) {
             lastPositionTo = currentPositionTo;
-            transform.position = 
+            transform.position =
                 Vector3.zero
                     .WithX(currentPositionTo.x)
                     .WithY(currentPositionTo.y)
@@ -54,15 +54,15 @@ public class GameObjectTrackingWorld : MonoBehaviour {
 
         currentRotationTo = transform.rotation.eulerAngles;
 
-        if(trackRotationX) {
+        if (trackRotationX) {
             currentRotationTo.x = trackObject.transform.rotation.eulerAngles.x;
         }
 
-        if(trackRotationY) {
+        if (trackRotationY) {
             currentRotationTo.y = trackObject.transform.rotation.eulerAngles.y;
         }
 
-        if(trackRotationZ) {
+        if (trackRotationZ) {
             currentRotationTo.z = trackObject.transform.rotation.eulerAngles.z;
         }
 
@@ -71,15 +71,14 @@ public class GameObjectTrackingWorld : MonoBehaviour {
         //    transform.position = currentPositionTo;
         //}
 
-        if(currentRotationTo != lastRotationTo) {
+        if (currentRotationTo != lastRotationTo) {
             lastRotationTo = currentRotationTo;
-            transform.rotation = 
+            transform.rotation =
                 Quaternion.Euler(
                     Vector3.zero
                     .WithX(currentRotationTo.x)
                     .WithY(currentRotationTo.y)
                     .WithZ(currentRotationTo.z));
         }
-
     }
 }

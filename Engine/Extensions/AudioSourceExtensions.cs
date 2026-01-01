@@ -6,11 +6,11 @@ public static class AudioSourceExtensions {
 
     public static void StopIfPlaying(this AudioSource audioSource) {
 
-        if(audioSource == null) {
+        if (audioSource == null) {
             return;
         }
 
-        if(audioSource.isPlaying) {
+        if (audioSource.isPlaying) {
             audioSource.Stop();
         }
     }
@@ -28,7 +28,7 @@ public static class AudioSourceExtensions {
         float startingVolume = audioSource.volume;
 
         // fade out the volume
-        while(audioSource.volume > 0.0f) {
+        while (audioSource.volume > 0.0f) {
 
             audioSource.volume -= Time.deltaTime * startingVolume / duration;
 
@@ -36,7 +36,7 @@ public static class AudioSourceExtensions {
         }
 
         // all done fading out
-        if(onComplete != null) {
+        if (onComplete != null) {
             onComplete();
         }
     }
@@ -59,13 +59,13 @@ public static class AudioSourceExtensions {
         float endingVolume = volumeTo;
 
         // fade out the volume
-        while(audioSource.volume < volumeTo) {
+        while (audioSource.volume < volumeTo) {
             audioSource.volume += Time.deltaTime * endingVolume / duration;
             yield return null;
         }
 
         // all done fading out
-        if(onComplete != null) {
+        if (onComplete != null) {
             onComplete();
         }
     }

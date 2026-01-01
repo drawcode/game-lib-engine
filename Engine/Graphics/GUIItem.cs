@@ -64,7 +64,7 @@ namespace Engine.Graphics {
 
         public void OnGUI() {
 #if UNITY_EDITOR
-			UpdateSettings();
+            UpdateSettings();
 #endif
 
             var matrix = GUI.matrix;

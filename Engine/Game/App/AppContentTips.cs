@@ -3,10 +3,8 @@ using System.Collections.Generic;
 using System.IO;
 using Engine.Game.App.BaseApp;
 
-namespace Engine.Game.App
-{
-    public class AppContentTips : BaseAppContentTips<AppContentTip>
-    {
+namespace Engine.Game.App {
+    public class AppContentTips : BaseAppContentTips<AppContentTip> {
         private static volatile AppContentTip current;
         private static volatile AppContentTips instance;
         private static object syncRoot = new System.Object();
@@ -20,14 +18,10 @@ namespace Engine.Game.App
 
         public static string DATA_KEY = "app-content-tip-data";
 
-        public static AppContentTip Current
-        {
-            get
-            {
-                if (current == null)
-                {
-                    lock (syncRoot)
-                    {
+        public static AppContentTip Current {
+            get {
+                if (current == null) {
+                    lock (syncRoot) {
                         if (current == null)
                             current = new AppContentTip();
                     }
@@ -35,20 +29,15 @@ namespace Engine.Game.App
 
                 return current;
             }
-            set
-            {
+            set {
                 current = value;
             }
         }
 
-        public static AppContentTips Instance
-        {
-            get
-            {
-                if (instance == null)
-                {
-                    lock (syncRoot)
-                    {
+        public static AppContentTips Instance {
+            get {
+                if (instance == null) {
+                    lock (syncRoot) {
                         if (instance == null)
                             instance = new AppContentTips(true);
                     }
@@ -56,20 +45,17 @@ namespace Engine.Game.App
 
                 return instance;
             }
-            set
-            {
+            set {
                 instance = value;
             }
         }
 
-        public AppContentTips()
-        {
+        public AppContentTips() {
             Reset();
             //ChangeState(APP_STATE_BOOKS);
         }
 
-        public AppContentTips(bool loadData)
-        {
+        public AppContentTips(bool loadData) {
             Reset();
             path = "data/" + DATA_KEY + ".json";
             pathKey = DATA_KEY;
@@ -138,18 +124,15 @@ namespace Engine.Game.App
         */
     }
 
-    public class AppContentTip : BaseAppContentTip
-    {
+    public class AppContentTip : BaseAppContentTip {
         // Attributes that are added or changed after launch should be like this to prevent
         // profile conversions.
 
-        public AppContentTip()
-        {
+        public AppContentTip() {
             Reset();
         }
 
-        public override void Reset()
-        {
+        public override void Reset() {
             base.Reset();
         }
     }

@@ -99,7 +99,7 @@ public class PathUtil {
     ///
     public static string GetAppPersistencePath() {
         //return Context.Current.ApplicationPersistentPath;
-		return Application.persistentDataPath;
+        return Application.persistentDataPath;
     }
 
     /// <summary>
@@ -149,15 +149,15 @@ public class PathUtil {
     public static string GetAppPersistencePathIPhone() {
         return PathUtil.Combine(GetAppSandboxPathIPhone(), "Documents");
     }
-	
-	public static string Combine(string path1, string path2) {
-		if(path1.EndsWith("/")) {
-			path1 = path1.TrimEnd('/');
-		}
-		if(path2.EndsWith("/")) {
-			path2 = path2.TrimEnd('/');
-		}
-		
-		return path1 + "/" + path2;
-	}
+
+    public static string Combine(string path1, string path2) {
+        if (path1.EndsWith("/")) {
+            path1 = path1.TrimEnd('/');
+        }
+        if (path2.EndsWith("/")) {
+            path2 = path2.TrimEnd('/');
+        }
+
+        return path1 + "/" + path2;
+    }
 }

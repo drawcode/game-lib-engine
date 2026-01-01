@@ -11,9 +11,9 @@ public class SpriteUtil {
     public static void SetColorAlpha(GameObject sprite, float alpha) {
 
 #if USE_UI_NGUI_2_7 || USE_UI_NGUI_3
-        
+
         UISprite iconSprite = sprite.Get<UISprite>();
-	    iconSprite.alpha = alpha;
+        iconSprite.alpha = alpha;
 #else
         SpriteRenderer spriteRenderer = sprite.Get<SpriteRenderer>();
 

@@ -4,8 +4,8 @@ using System.Text;
 using UnityEngine;
 
 public class DeviceOrientationMessages {
-	public static string deviceOrientationChange = "device-orientation-change";
-	public static string deviceScreenRatioChange = "device-screen-ratio-change";
+    public static string deviceOrientationChange = "device-orientation-change";
+    public static string deviceScreenRatioChange = "device-screen-ratio-change";
 }
 
 public class DeviceOrientationUtil {

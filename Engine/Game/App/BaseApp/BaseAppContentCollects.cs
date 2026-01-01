@@ -8,23 +8,17 @@ using System.Text.RegularExpressions;
 using Engine.Events;
 using Engine.Game.Data;
 
-namespace Engine.Game.App.BaseApp
-{
-    public class BaseAppContentCollects<T> : DataObjects<T> where T : GameDataObject, new()
-    {
+namespace Engine.Game.App.BaseApp {
+    public class BaseAppContentCollects<T> : DataObjects<T> where T : GameDataObject, new() {
         private static T current;
         private static volatile BaseAppContentCollects<T> instance;
         private static object syncRoot = new Object();
         private string BASE_DATA_KEY = "app-content-collection-data";
 
-        public static T BaseCurrent
-        {
-            get
-            {
-                if (current == null)
-                {
-                    lock (syncRoot)
-                    {
+        public static T BaseCurrent {
+            get {
+                if (current == null) {
+                    lock (syncRoot) {
                         if (current == null)
                             current = new T();
                     }
@@ -32,20 +26,15 @@ namespace Engine.Game.App.BaseApp
 
                 return current;
             }
-            set
-            {
+            set {
                 current = value;
             }
         }
 
-        public static BaseAppContentCollects<T> BaseInstance
-        {
-            get
-            {
-                if (instance == null)
-                {
-                    lock (syncRoot)
-                    {
+        public static BaseAppContentCollects<T> BaseInstance {
+            get {
+                if (instance == null) {
+                    lock (syncRoot) {
                         if (instance == null)
                             instance = new BaseAppContentCollects<T>(true);
                     }
@@ -53,29 +42,24 @@ namespace Engine.Game.App.BaseApp
 
                 return instance;
             }
-            set
-            {
+            set {
                 instance = value;
             }
         }
 
-        public BaseAppContentCollects()
-        {
+        public BaseAppContentCollects() {
             Reset();
         }
 
-        public BaseAppContentCollects(bool loadData)
-        {
+        public BaseAppContentCollects(bool loadData) {
             Reset();
             path = "data/" + BASE_DATA_KEY + ".json";
             pathKey = BASE_DATA_KEY;
             LoadData();
         }
 
-        public override void ChangeCurrent(string code)
-        {
-            if (AppContentCollects.Current.code != code)
-            {
+        public override void ChangeCurrent(string code) {
+            if (AppContentCollects.Current.code != code) {
 
                 AppContentCollects.Current = AppContentCollects.Instance.GetById(code);
 
@@ -86,21 +70,15 @@ namespace Engine.Game.App.BaseApp
         // -------------------------------------------------------
         // UPDATE DISPLAYS
 
-        public static List<AppContentCollect> UpdateCollectItemData(List<AppContentCollect> list)
-        {
+        public static List<AppContentCollect> UpdateCollectItemData(List<AppContentCollect> list) {
             return AppContentCollects.Instance.updateCollectItemData(list);
         }
 
-        public List<AppContentCollect> updateCollectItemData(List<AppContentCollect> list)
-        {
-            foreach (AppContentCollect obj in list)
-            {
-                foreach (AppContentCollectItem item in obj.data.data)
-                {
-                    if (item.data != null)
-                    {
-                        if (item.IsType(AppContentCollectType.action))
-                        {
+        public List<AppContentCollect> updateCollectItemData(List<AppContentCollect> list) {
+            foreach (AppContentCollect obj in list) {
+                foreach (AppContentCollectItem item in obj.data.data) {
+                    if (item.data != null) {
+                        if (item.IsType(AppContentCollectType.action)) {
                             item.UpdateDisplayValues();
                         }
                     }
@@ -112,13 +90,11 @@ namespace Engine.Game.App.BaseApp
 
         // TYPE
 
-        public static List<AppContentCollect> GetByType(string type)
-        {
+        public static List<AppContentCollect> GetByType(string type) {
             return AppContentCollects.Instance.getByType(type);
         }
 
-        public List<AppContentCollect> getByType(string type)
-        {
+        public List<AppContentCollect> getByType(string type) {
             List<AppContentCollect> objs = AppContentCollects.Instance.GetAll().FindAll(
                 u =>
                 u.type == type);
@@ -130,13 +106,11 @@ namespace Engine.Game.App.BaseApp
 
         // CODE
 
-        public static AppContentCollect GetByTypeAndCode(string type, string code)
-        {
+        public static AppContentCollect GetByTypeAndCode(string type, string code) {
             return AppContentCollects.Instance.getByTypeAndCode(type, code);
         }
 
-        public AppContentCollect getByTypeAndCode(string type, string code)
-        {
+        public AppContentCollect getByTypeAndCode(string type, string code) {
             return AppContentCollects.Instance.GetAll().Find(
                 u =>
                 u.type == type
@@ -145,13 +119,11 @@ namespace Engine.Game.App.BaseApp
 
         // WORLD
 
-        public static List<AppContentCollect> GetByTypeAndWorld(string type, string code)
-        {
+        public static List<AppContentCollect> GetByTypeAndWorld(string type, string code) {
             return AppContentCollects.Instance.getByTypeAndWorld(type, code);
         }
 
-        public List<AppContentCollect> getByTypeAndWorld(string type, string code)
-        {
+        public List<AppContentCollect> getByTypeAndWorld(string type, string code) {
             return AppContentCollects.Instance.GetAll().FindAll(
                 u =>
                 u.type == type
@@ -161,37 +133,31 @@ namespace Engine.Game.App.BaseApp
         // ---------------------------------------------------------
         // MISSIONS
 
-        public static List<AppContentCollect> GetMissions()
-        {
+        public static List<AppContentCollect> GetMissions() {
             return AppContentCollects.Instance.getMissions();
         }
 
-        public List<AppContentCollect> getMissions()
-        {
+        public List<AppContentCollect> getMissions() {
             return GetByType(AppContentCollectType.mission);
         }
 
         // MISSION SETS CODE
 
-        public static AppContentCollect GetMission(string code)
-        {
+        public static AppContentCollect GetMission(string code) {
             return AppContentCollects.Instance.getMission(code);
         }
 
-        public AppContentCollect getMission(string code)
-        {
+        public AppContentCollect getMission(string code) {
             return GetByTypeAndCode(AppContentCollectType.mission, code);
         }
 
         // MISSION SET BY WORLD
 
-        public static List<AppContentCollect> GetMissionsByWorld(string code)
-        {
+        public static List<AppContentCollect> GetMissionsByWorld(string code) {
             return AppContentCollects.Instance.getMissionsByWorld(code);
         }
 
-        public List<AppContentCollect> getMissionsByWorld(string code)
-        {
+        public List<AppContentCollect> getMissionsByWorld(string code) {
             return GetByTypeAndWorld(AppContentCollectType.mission, code);
         }
 
@@ -211,29 +177,23 @@ namespace Engine.Game.App.BaseApp
 
         // GETS
 
-        public static List<AppContentCollect> GetActions()
-        {
+        public static List<AppContentCollect> GetActions() {
             return AppContentCollects.Instance.getActions();
         }
 
-        public List<AppContentCollect> getActions()
-        {
+        public List<AppContentCollect> getActions() {
             return GetByType(AppContentCollectType.action);
         }
 
         // HAS
 
-        public static bool HasAction(string code)
-        {
+        public static bool HasAction(string code) {
             return AppContentCollects.Instance.hasAction(code);
         }
 
-        public bool hasAction(string code)
-        {
-            foreach (AppContentCollect appContentCollect in getActions())
-            {
-                if (appContentCollect.code.ToLower() == code.ToLower())
-                {
+        public bool hasAction(string code) {
+            foreach (AppContentCollect appContentCollect in getActions()) {
+                if (appContentCollect.code.ToLower() == code.ToLower()) {
                     return true;
                 }
             }
@@ -243,13 +203,11 @@ namespace Engine.Game.App.BaseApp
 
         // HAS ACTION ITEM - CURRENT
 
-        public static bool HasActionItemCurrent(string code)
-        {
+        public static bool HasActionItemCurrent(string code) {
             return AppContentCollects.Instance.hasActionItemCurrent(code);
         }
 
-        public bool hasActionItemCurrent(string code)
-        {
+        public bool hasActionItemCurrent(string code) {
             AppContentCollect appContentCollect = AppContentCollects.Current;
 
             return AppContentCollects.HasActionItem(appContentCollect, code);
@@ -257,23 +215,18 @@ namespace Engine.Game.App.BaseApp
 
         // HAS ACTION ITEM
 
-        public static bool HasActionItem(AppContentCollect appContentCollect, string code)
-        {
+        public static bool HasActionItem(AppContentCollect appContentCollect, string code) {
             return AppContentCollects.Instance.hasActionItem(appContentCollect, code);
         }
 
-        public bool hasActionItem(AppContentCollect appContentCollect, string code)
-        {
+        public bool hasActionItem(AppContentCollect appContentCollect, string code) {
 
-            if (appContentCollect != null)
-            {
+            if (appContentCollect != null) {
 
                 List<AppContentCollectItem> appContentCollectItems = appContentCollect.GetItemsData();
 
-                foreach (AppContentCollectItem appContentCollectItem in appContentCollectItems)
-                {
-                    if (appContentCollectItem.code.ToLower() == code.ToLower())
-                    {
+                foreach (AppContentCollectItem appContentCollectItem in appContentCollectItems) {
+                    if (appContentCollectItem.code.ToLower() == code.ToLower()) {
                         return true;
                     }
                 }
@@ -294,34 +247,29 @@ namespace Engine.Game.App.BaseApp
         // PROCESS ACTIONS / COLLECTIONS
 
         public static List<GameProfileContentCollectItem> GetCompleted(
-            string collectType, string collectTypeCode)
-        {
+            string collectType, string collectTypeCode) {
             return AppContentCollects.Instance.getCompleted(
                 collectType, collectTypeCode);
         }
 
         public List<GameProfileContentCollectItem> getCompleted(
-            string collectType, string collectTypeCode)
-        {
+            string collectType, string collectTypeCode) {
             AppContentCollect collect =
                 AppContentCollects.Instance.GetById(collectTypeCode);
 
-            if (collect == null)
-            {
+            if (collect == null) {
                 return null;
             }
 
             List<GameProfileContentCollectItem> items =
                 new List<GameProfileContentCollectItem>();
 
-            foreach (AppContentCollectItem collectItem in collect.GetItemsData())
-            {
+            foreach (AppContentCollectItem collectItem in collect.GetItemsData()) {
 
                 GameProfileContentCollectItem profileItem =
                     getProfileCollectData(collectType, collectTypeCode, collectItem.uid);
 
-                if (profileItem != null)
-                {
+                if (profileItem != null) {
                     items.Add(profileItem);
                 }
             }
@@ -332,15 +280,13 @@ namespace Engine.Game.App.BaseApp
         // GetItem
 
         public static GameProfileContentCollectItem GetProfileCollectData(
-            string collectType, string collectTypeCode, string actionUid)
-        {
+            string collectType, string collectTypeCode, string actionUid) {
             return AppContentCollects.Instance.getProfileCollectData(
                 collectType, collectTypeCode, actionUid);
         }
 
         public GameProfileContentCollectItem getProfileCollectData(
-            string collectType, string collectTypeCode, string actionUid)
-        {
+            string collectType, string collectTypeCode, string actionUid) {
 
 #if USE_GAME_LIB_GAMES
             string key = GameProfileModes.GetAppContentCollectItemKey(collectTypeCode, actionUid);
@@ -360,13 +306,11 @@ namespace Engine.Game.App.BaseApp
 
         // GETS
 
-        public static List<AppContentCollect> GetCollections()
-        {
+        public static List<AppContentCollect> GetCollections() {
             return AppContentCollects.Instance.getCollections();
         }
 
-        public List<AppContentCollect> getCollections()
-        {
+        public List<AppContentCollect> getCollections() {
             return GetByType(AppContentCollectType.action);
         }
     }
@@ -415,34 +359,29 @@ namespace Engine.Game.App.BaseApp
 
      */
 
-    public class AppContentCollectMessage
-    {
+    public class AppContentCollectMessage {
         public string choiceItemType = AppContentCollectType.mission;
         public string choiceItemCode = "";
         public string choiceCode = "";
     }
 
-    public class AppContentCollectMessages
-    {
+    public class AppContentCollectMessages {
         public static string appContentCollectItem = "app-content-collect-item";
     }
 
-    public class AppContentCollectType
-    {
+    public class AppContentCollectType {
         public static string mission = "mission";
         public static string action = "action";
         public static string collection = "collection";
     }
 
-    public class AppContentCollectTypeProgress
-    {
+    public class AppContentCollectTypeProgress {
         public static string notCompleted = "not-completed";
         public static string inProgress = "in-progress";
         public static string completed = "completed";
     }
 
-    public class AppContentCollectActionType
-    {
+    public class AppContentCollectActionType {
         public static string actionSave = "action-save";
         public static string actionWin = "action-win";
         public static string actionCollect = "action-collect";
@@ -453,8 +392,7 @@ namespace Engine.Game.App.BaseApp
         public static string actionRepair = "action-repair";
     }
 
-    public class AppCompareType
-    {
+    public class AppCompareType {
         public static string greaterThan = "greater-than";
         public static string lessThan = "less-than";
         public static string greaterThanOrEqualTo = "greater-than-or-equal-to";
@@ -462,332 +400,268 @@ namespace Engine.Game.App.BaseApp
         public static string equalTo = "equal-to";
     }
 
-    public class AppContentCollectActionDataType
-    {
+    public class AppContentCollectActionDataType {
         public static string itemType = "item";
         public static string statisticType = "statistic";
         public static string achievementType = "achievement";
         public static string characterType = "character";
     }
 
-    public class AppContentCollectActionDataScope
-    {
+    public class AppContentCollectActionDataScope {
         public static string levelScope = "level";
         public static string alltimeScope = "all-time";
     }
 
-    public class AppContentCollectActionDataCode
-    {
+    public class AppContentCollectActionDataCode {
         public static string itemCoin = "item-coin";
     }
 
-    public class AppContentCollectItemKeys
-    {
+    public class AppContentCollectItemKeys {
         public static string code = "code";
         public static string display = "display";
         public static string type = "type";
     }
 
-    public class AppContentCollectItemMission : GameDataObject
-    {
-        public AppContentCollectItemMission()
-        {
+    public class AppContentCollectItemMission : GameDataObject {
+        public AppContentCollectItemMission() {
 
         }
     }
 
-    public class AppContentCollectItemAction : GameDataObject
-    {
-        public AppContentCollectItemAction()
-        {
+    public class AppContentCollectItemAction : GameDataObject {
+        public AppContentCollectItemAction() {
 
         }
     }
 
-    public class AppContentCollectData : GameDataObject
-    {
-        public virtual List<int> level_num_suffix_list
-        {
-            get
-            {
+    public class AppContentCollectData : GameDataObject {
+        public virtual List<int> level_num_suffix_list {
+            get {
                 return Get<List<int>>(BaseDataObjectKeys.level_num_suffix_list, new List<int>());
             }
 
-            set
-            {
+            set {
                 Set<List<int>>(BaseDataObjectKeys.level_num_suffix_list, value);
             }
         }
 
-        public virtual List<int> world_num_list
-        {
-            get
-            {
+        public virtual List<int> world_num_list {
+            get {
                 return Get<List<int>>(BaseDataObjectKeys.world_num_list, new List<int>());
             }
 
-            set
-            {
+            set {
                 Set<List<int>>(BaseDataObjectKeys.world_num_list, value);
             }
         }
 
-        public virtual List<string> world_list
-        {
-            get
-            {
+        public virtual List<string> world_list {
+            get {
                 return Get<List<string>>(BaseDataObjectKeys.world_list, new List<string>());
             }
 
-            set
-            {
+            set {
                 Set<List<string>>(BaseDataObjectKeys.world_list, value);
             }
         }
 
-        public virtual List<string> level_list
-        {
-            get
-            {
+        public virtual List<string> level_list {
+            get {
                 return Get<List<string>>(BaseDataObjectKeys.level_list, new List<string>());
             }
 
-            set
-            {
+            set {
                 Set<List<string>>(BaseDataObjectKeys.level_list, value);
             }
         }
 
-        public virtual List<AppContentCollectItem> data
-        {
-            get
-            {
+        public virtual List<AppContentCollectItem> data {
+            get {
                 return Get<List<AppContentCollectItem>>(BaseDataObjectKeys.data, new List<AppContentCollectItem>());
             }
 
-            set
-            {
+            set {
                 Set<List<AppContentCollectItem>>(BaseDataObjectKeys.data, value);
             }
         }
     }
 
-    public class AppContentCollectItemState
-    {
+    public class AppContentCollectItemState {
         public bool completed = false;
         public double points = 0;
     }
 
-    public class AppContentCollectItem : GameDataObject
-    {
+    public class AppContentCollectItem : GameDataObject {
         // code 
         // type 
         // data_type
 
-        public virtual GameDataObject data
-        {
-            get
-            {
+        public virtual GameDataObject data {
+            get {
                 return Get<GameDataObject>(BaseDataObjectKeys.data, new GameDataObject());
             }
 
-            set
-            {
+            set {
                 Set<GameDataObject>(BaseDataObjectKeys.data, value);
             }
         }
 
-        public AppContentCollectItem()
-        {
+        public AppContentCollectItem() {
             Reset();
         }
 
-        public override void Reset()
-        {
+        public override void Reset() {
             code = "";
             type = AppContentCollectType.mission;
         }
 
         // type
 
-        public bool IsTypeAction()
-        {
+        public bool IsTypeAction() {
             return IsType(AppContentCollectType.action);
         }
 
-        public bool IsTypeMission()
-        {
+        public bool IsTypeMission() {
             return IsType(AppContentCollectType.mission);
         }
 
         // code
 
-        public bool IsCodeActionCollect()
-        {
+        public bool IsCodeActionCollect() {
             return IsCode(AppContentCollectActionType.actionCollect);
         }
 
-        public bool IsCodeActionKill()
-        {
+        public bool IsCodeActionKill() {
             return IsCode(AppContentCollectActionType.actionKill);
         }
 
-        public bool IsCodeActionSave()
-        {
+        public bool IsCodeActionSave() {
             return IsCode(AppContentCollectActionType.actionSave);
         }
 
-        public bool IsCodeActionWin()
-        {
+        public bool IsCodeActionWin() {
             return IsCode(AppContentCollectActionType.actionWin);
         }
 
-        public bool IsCodeActionBuild()
-        {
+        public bool IsCodeActionBuild() {
             return IsCode(AppContentCollectActionType.actionBuild);
         }
 
-        public bool IsCodeActionRepair()
-        {
+        public bool IsCodeActionRepair() {
             return IsCode(AppContentCollectActionType.actionRepair);
         }
 
-        public bool IsCodeActionAttack()
-        {
+        public bool IsCodeActionAttack() {
             return IsCode(AppContentCollectActionType.actionAttack);
         }
 
-        public bool IsCodeActionDefend()
-        {
+        public bool IsCodeActionDefend() {
             return IsCode(AppContentCollectActionType.actionDefend);
         }
 
         // data / code
 
-        public string GetDataCodeAction()
-        {
-            if (data == null)
-            {
+        public string GetDataCodeAction() {
+            if (data == null) {
                 return null;
             }
 
             return data.code;
         }
 
-        public bool IsDataCodeAction(string dataCode)
-        {
+        public bool IsDataCodeAction(string dataCode) {
             return GetDataCodeAction() == dataCode ? true : false;
         }
 
         // data / type
 
 
-        public string GetDataTypeAction()
-        {
-            if (data == null)
-            {
+        public string GetDataTypeAction() {
+            if (data == null) {
                 return null;
             }
 
             return data.type;
         }
 
-        public bool IsDataTypeAction(string dataType)
-        {
+        public bool IsDataTypeAction(string dataType) {
             return GetDataTypeAction() == dataType ? true : false;
         }
 
-        public bool IsDataTypeActionAchievement()
-        {
+        public bool IsDataTypeActionAchievement() {
             return IsDataTypeAction(AppContentCollectActionDataType.achievementType);
         }
 
-        public bool IsDataTypeActionCharacter()
-        {
+        public bool IsDataTypeActionCharacter() {
             return IsDataTypeAction(AppContentCollectActionDataType.achievementType);
         }
 
-        public bool IsDataTypeActionItem()
-        {
+        public bool IsDataTypeActionItem() {
             return IsDataTypeAction(AppContentCollectActionDataType.itemType);
         }
 
-        public bool IsDataTypeActionStatistic()
-        {
+        public bool IsDataTypeActionStatistic() {
             return IsDataTypeAction(AppContentCollectActionDataType.statisticType);
         }
 
         // data / compare_type    
 
-        public string GetDataCompareType()
-        {
-            if (data == null)
-            {
+        public string GetDataCompareType() {
+            if (data == null) {
                 return null;
             }
 
             return data.compare_type;
         }
 
-        public bool IsDataCompareType(string dataType)
-        {
+        public bool IsDataCompareType(string dataType) {
             return GetDataCompareType() == dataType ? true : false;
         }
 
-        public bool IsDataCompareTypeGreaterThan()
-        {
+        public bool IsDataCompareTypeGreaterThan() {
             return IsDataCompareType(AppCompareType.greaterThan);
         }
 
-        public bool IsDataCompareTypeGreaterThanOrEqualTo()
-        {
+        public bool IsDataCompareTypeGreaterThanOrEqualTo() {
             return IsDataCompareType(AppCompareType.greaterThanOrEqualTo);
         }
 
-        public bool IsDataCompareTypeLessThan()
-        {
+        public bool IsDataCompareTypeLessThan() {
             return IsDataCompareType(AppCompareType.lessThan);
         }
 
-        public bool IsDataCompareTypeLessThanOrEqualTo()
-        {
+        public bool IsDataCompareTypeLessThanOrEqualTo() {
             return IsDataCompareType(AppCompareType.lessThanOrEqualTo);
         }
 
-        public bool IsDataCompareTypeEqualTo()
-        {
+        public bool IsDataCompareTypeEqualTo() {
             return IsDataCompareType(AppCompareType.equalTo);
         }
 
         // data / data_type
 
 
-        public bool IsDataTypeActionDataType()
-        {
+        public bool IsDataTypeActionDataType() {
             return GetDataTypeActionDataScope() ==
                 AppContentCollectActionDataScope.alltimeScope ? true : false;
         }
 
         // data / data_type
 
-        public string GetDataTypeActionDataScope()
-        {
-            if (data == null)
-            {
+        public string GetDataTypeActionDataScope() {
+            if (data == null) {
                 return null;
             }
 
             return data.data_type;
         }
 
-        public bool IsDataTypeActionDataScopeAlltime()
-        {
+        public bool IsDataTypeActionDataScopeAlltime() {
             return GetDataTypeActionDataScope() ==
                 AppContentCollectActionDataScope.alltimeScope ? true : false;
         }
 
-        public bool IsDataTypeActionDataScopeLevel()
-        {
+        public bool IsDataTypeActionDataScopeLevel() {
             return GetDataTypeActionDataScope() ==
                 AppContentCollectActionDataScope.levelScope ? true : false;
         }
@@ -795,14 +669,12 @@ namespace Engine.Game.App.BaseApp
 #if USE_GAME_LIB_GAMES
         public double ScoreCompleted(
             GameGameRuntimeData gameRuntimeData,
-            GamePlayerRuntimeData playerRuntimeData)
-        {
+            GamePlayerRuntimeData playerRuntimeData) {
 
             AppContentCollectItemState state =
                 ProcessCompleted(gameRuntimeData, playerRuntimeData);
 
-            if (state.completed)
-            {
+            if (state.completed) {
                 return state.points;
             }
 
@@ -811,8 +683,7 @@ namespace Engine.Game.App.BaseApp
 
         public bool IsCompleted(
             GameGameRuntimeData gameRuntimeData,
-            GamePlayerRuntimeData playerRuntimeData)
-        {
+            GamePlayerRuntimeData playerRuntimeData) {
             return ProcessCompleted(gameRuntimeData, playerRuntimeData).completed;
         }
 
@@ -820,158 +691,130 @@ namespace Engine.Game.App.BaseApp
 
         public AppContentCollectItemState ProcessCompleted(
             GameGameRuntimeData gameRuntimeData,
-            GamePlayerRuntimeData playerRuntimeData)
-        {
+            GamePlayerRuntimeData playerRuntimeData) {
             // check each action to see if completed
 
             AppContentCollectItemState state = new AppContentCollectItemState();
 
-            if (gameRuntimeData == null || playerRuntimeData == null)
-            {
+            if (gameRuntimeData == null || playerRuntimeData == null) {
                 return state;
             }
 
-            if (IsTypeMission())
-            {
+            if (IsTypeMission()) {
                 // Check all data items
 
 
             }
-            else if (IsTypeAction())
-            {
+            else if (IsTypeAction()) {
 
             }
 
             // check action by default
 
-            if (IsCodeActionSave())
-            {
-                if (IsDataTypeActionDataScopeLevel())
-                {
+            if (IsCodeActionSave()) {
+                if (IsDataTypeActionDataScopeLevel()) {
 
                     double val = playerRuntimeData.saves;
 
                     double valNeeded = data.valDouble;
 
-                    if (CompareCollectData(data.compare_type, val, valNeeded))
-                    {
+                    if (CompareCollectData(data.compare_type, val, valNeeded)) {
                         state.completed = true;
                         state.points = (val) * (valNeeded * 25);
                         return state;
                     }
                 }
             }
-            else if (IsCodeActionBuild())
-            {
-                if (IsDataTypeActionDataScopeLevel())
-                {
+            else if (IsCodeActionBuild()) {
+                if (IsDataTypeActionDataScopeLevel()) {
 
                     double val = playerRuntimeData.builds;
 
                     double valNeeded = data.valDouble;
 
-                    if (CompareCollectData(data.compare_type, val, valNeeded))
-                    {
+                    if (CompareCollectData(data.compare_type, val, valNeeded)) {
                         state.completed = true;
                         state.points = (val) * (valNeeded * 100);
                         return state;
                     }
                 }
             }
-            else if (IsCodeActionRepair())
-            {
-                if (IsDataTypeActionDataScopeLevel())
-                {
+            else if (IsCodeActionRepair()) {
+                if (IsDataTypeActionDataScopeLevel()) {
 
                     double val = playerRuntimeData.repairs;
 
                     double valNeeded = data.valDouble;
 
-                    if (CompareCollectData(data.compare_type, val, valNeeded))
-                    {
+                    if (CompareCollectData(data.compare_type, val, valNeeded)) {
                         state.completed = true;
                         state.points = (val) * (valNeeded * 75);
                         return state;
                     }
                 }
             }
-            else if (IsCodeActionAttack())
-            {
-                if (IsDataTypeActionDataScopeLevel())
-                {
+            else if (IsCodeActionAttack()) {
+                if (IsDataTypeActionDataScopeLevel()) {
 
                     double val = playerRuntimeData.attacks;
 
                     double valNeeded = data.valDouble;
 
-                    if (CompareCollectData(data.compare_type, val, valNeeded))
-                    {
+                    if (CompareCollectData(data.compare_type, val, valNeeded)) {
                         state.completed = true;
                         state.points = (val) * (valNeeded * 100);
                         return state;
                     }
                 }
             }
-            else if (IsCodeActionDefend())
-            {
-                if (IsDataTypeActionDataScopeLevel())
-                {
+            else if (IsCodeActionDefend()) {
+                if (IsDataTypeActionDataScopeLevel()) {
 
                     double val = playerRuntimeData.defends;
 
                     double valNeeded = data.valDouble;
 
-                    if (CompareCollectData(data.compare_type, val, valNeeded))
-                    {
+                    if (CompareCollectData(data.compare_type, val, valNeeded)) {
                         state.completed = true;
                         state.points = (val) * (valNeeded * 75);
                         return state;
                     }
                 }
             }
-            else if (IsCodeActionKill())
-            {
-                if (IsDataTypeActionDataScopeLevel())
-                {
+            else if (IsCodeActionKill()) {
+                if (IsDataTypeActionDataScopeLevel()) {
 
                     double val = playerRuntimeData.kills;
 
                     double valNeeded = data.valDouble;
 
-                    if (CompareCollectData(data.compare_type, val, valNeeded))
-                    {
+                    if (CompareCollectData(data.compare_type, val, valNeeded)) {
                         state.completed = true;
                         state.points = (val) * (valNeeded * 10);
                         return state;
                     }
                 }
             }
-            else if (IsCodeActionCollect())
-            {
-                if (IsDataTypeActionDataScopeLevel())
-                {
+            else if (IsCodeActionCollect()) {
+                if (IsDataTypeActionDataScopeLevel()) {
 
                     double val = 0;
 
-                    if (data.code == AppContentCollectActionDataCode.itemCoin)
-                    {
+                    if (data.code == AppContentCollectActionDataCode.itemCoin) {
                         val = playerRuntimeData.coins;
                     }
 
                     double valNeeded = data.valDouble;
 
-                    if (CompareCollectData(data.compare_type, val, valNeeded))
-                    {
+                    if (CompareCollectData(data.compare_type, val, valNeeded)) {
                         state.completed = true;
                         state.points = (val) * (valNeeded * 5);
                         return state;
                     }
                 }
             }
-            else if (IsCodeActionWin())
-            {
-                if (IsDataTypeActionDataScopeLevel())
-                {
+            else if (IsCodeActionWin()) {
+                if (IsDataTypeActionDataScopeLevel()) {
 
                     double val = 0;
 
@@ -980,13 +823,11 @@ namespace Engine.Game.App.BaseApp
 
                     double valNeeded = data.valDouble;
 
-                    if (valNeeded == 0)
-                    {
+                    if (valNeeded == 0) {
                         valNeeded = (double)data.valInt;
                     }
 
-                    if (CompareCollectData(data.compare_type, val, valNeeded))
-                    {
+                    if (CompareCollectData(data.compare_type, val, valNeeded)) {
                         state.completed = true;
                         state.points = (val) * (valNeeded * 50);
                         return state;
@@ -998,41 +839,30 @@ namespace Engine.Game.App.BaseApp
         }
 #endif
 
-        public bool CompareCollectData(string compareType, double val, double valNeeded)
-        {
-            if (compareType == AppCompareType.greaterThan)
-            {
-                if (val > valNeeded)
-                {
+        public bool CompareCollectData(string compareType, double val, double valNeeded) {
+            if (compareType == AppCompareType.greaterThan) {
+                if (val > valNeeded) {
                     return true;
                 }
             }
-            else if (compareType == AppCompareType.lessThan)
-            {
-                if (val < valNeeded)
-                {
+            else if (compareType == AppCompareType.lessThan) {
+                if (val < valNeeded) {
                     return true;
                 }
             }
-            else if (compareType == AppCompareType.lessThanOrEqualTo)
-            {
-                if (val <= valNeeded)
-                {
+            else if (compareType == AppCompareType.lessThanOrEqualTo) {
+                if (val <= valNeeded) {
                     return true;
                 }
             }
-            else if (compareType == AppCompareType.equalTo)
-            {
-                if (val == valNeeded)
-                {
+            else if (compareType == AppCompareType.equalTo) {
+                if (val == valNeeded) {
                     return true;
                 }
             }
-            else
-            {
+            else {
                 //compareType == AppCompareType.greaterThanOrEqualTo
-                if (val >= valNeeded)
-                {
+                if (val >= valNeeded) {
                     return true;
                 }
             }
@@ -1042,56 +872,48 @@ namespace Engine.Game.App.BaseApp
 
         // display templating 
 
-        public void UpdateDisplayValues()
-        {
+        public void UpdateDisplayValues() {
             // get the action and object
             // format using collect item meta
 
             AppContentCollect collectItem =
                     AppContentCollects.GetByTypeAndCode(type, code);
 
-            if (collectItem != null)
-            {
+            if (collectItem != null) {
                 string itemDisplayName = collectItem.display_name;
                 string itemDescription = collectItem.description;
 
                 string dataType = data.type;
                 string dataCode = data.code;
 
-                if (dataType == AppContentCollectActionDataType.itemType)
-                {
+                if (dataType == AppContentCollectActionDataType.itemType) {
 
 #if USE_GAME_LIB_GAMES
                     GameItem obj = GameItems.Instance.GetById(dataCode);
 
-                    if (obj != null)
-                    {
+                    if (obj != null) {
                         data.action_display_name = obj.display_name;
                         data.action_description = obj.description;
                     }
 #endif
                 }
-                else if (dataType == AppContentCollectActionDataType.statisticType)
-                {
+                else if (dataType == AppContentCollectActionDataType.statisticType) {
 
 #if USE_GAME_LIB_GAMES
                     GameStatistic obj = GameStatistics.Instance.GetById(dataCode);
 
-                    if (obj != null)
-                    {
+                    if (obj != null) {
                         data.action_display_name = obj.display_name;
                         data.action_description = obj.description;
                     }
 #endif
                 }
-                else if (dataType == AppContentCollectActionDataType.characterType)
-                {
+                else if (dataType == AppContentCollectActionDataType.characterType) {
 
 #if USE_GAME_LIB_GAMES
                     GameCharacter obj = GameCharacters.Instance.GetById(dataCode);
 
-                    if (obj != null)
-                    {
+                    if (obj != null) {
                         data.action_display_name = obj.display_name;
                         data.action_description = obj.description;
                     }
@@ -1104,37 +926,31 @@ namespace Engine.Game.App.BaseApp
             }
         }
 
-        public string ReplaceTemplated(string content)
-        {
+        public string ReplaceTemplated(string content) {
             // If string contains mustache/handlebars {{ [code] }} then get all 
             // matches and replace with localized content
 
             string regexTemplate = @"\{\{[ ]*(.*?)[ ]*\}\}";
 
-            if (content.RegexIsMatch(regexTemplate))
-            {
+            if (content.RegexIsMatch(regexTemplate)) {
 
                 MatchCollection matches = content.RegexMatches(regexTemplate);
 
-                foreach (Match match in matches)
-                {
+                foreach (Match match in matches) {
 
                     //string valCodeMatch = match.Value;
                     string valCodeGroup = match.Value;
 
-                    foreach (Group group in match.Groups)
-                    {
+                    foreach (Group group in match.Groups) {
                         valCodeGroup = group.Value;
                     }
 
-                    if (data != null)
-                    {
+                    if (data != null) {
 
                         string regexCode = @"(\{\{[ ]*" + valCodeGroup + @"[ ]*\}\})";
                         object replaceObj = data.Get<object>(valCodeGroup);
 
-                        if (replaceObj != null)
-                        {
+                        if (replaceObj != null) {
                             string replaceText = replaceObj.ToString();
                             content = content.RegexMatchesReplace(regexCode, replaceText);
                         }
@@ -1155,17 +971,13 @@ namespace Engine.Game.App.BaseApp
         //}
     }
 
-    public class BaseAppContentCollect : GameDataObject
-    {
-        public virtual AppContentCollectData data
-        {
-            get
-            {
+    public class BaseAppContentCollect : GameDataObject {
+        public virtual AppContentCollectData data {
+            get {
                 return Get<AppContentCollectData>(BaseDataObjectKeys.data, new AppContentCollectData());
             }
 
-            set
-            {
+            set {
                 Set<AppContentCollectData>(BaseDataObjectKeys.data, value);
             }
         }
@@ -1175,13 +987,11 @@ namespace Engine.Game.App.BaseApp
         // Attributes that are added or changed after launch should be like this to prevent
         // profile conversions.
 
-        public BaseAppContentCollect()
-        {
+        public BaseAppContentCollect() {
             Reset();
         }
 
-        public override void Reset()
-        {
+        public override void Reset() {
             base.Reset();
         }
 
@@ -1189,13 +999,10 @@ namespace Engine.Game.App.BaseApp
 
         public bool IsCompleted(
             GameGameRuntimeData gameRuntimeData,
-            GamePlayerRuntimeData playerRuntimeData)
-        {
+            GamePlayerRuntimeData playerRuntimeData) {
 
-            foreach (AppContentCollectItem item in GetItemsData())
-            {
-                if (!item.IsCompleted(gameRuntimeData, playerRuntimeData))
-                {
+            foreach (AppContentCollectItem item in GetItemsData()) {
+                if (!item.IsCompleted(gameRuntimeData, playerRuntimeData)) {
                     return false;
                 }
             }
@@ -1206,18 +1013,15 @@ namespace Engine.Game.App.BaseApp
         public double ScoreCompleted(
             string collectType,
             GameGameRuntimeData gameRuntimeData,
-            GamePlayerRuntimeData playerRuntimeData)
-        {
+            GamePlayerRuntimeData playerRuntimeData) {
             double points = 0;
 
-            foreach (AppContentCollectItem item in GetItemsData())
-            {
+            foreach (AppContentCollectItem item in GetItemsData()) {
 
                 AppContentCollectItemState itemState =
                     item.ProcessCompleted(gameRuntimeData, playerRuntimeData);
 
-                if (itemState.completed)
-                {
+                if (itemState.completed) {
 
                     string collectKey = BaseGameProfileModes.GetAppContentCollectItemKey(code, item.uid);
 
@@ -1236,83 +1040,64 @@ namespace Engine.Game.App.BaseApp
         }
 #endif
 
-        public bool HasTypeMission()
-        {
-            foreach (AppContentCollectItem item in data.data)
-            {
-                if (item.type.ToLower() == AppContentCollectType.mission)
-                {
+        public bool HasTypeMission() {
+            foreach (AppContentCollectItem item in data.data) {
+                if (item.type.ToLower() == AppContentCollectType.mission) {
                     return true;
                 }
             }
             return false;
         }
 
-        public bool HasTypeAction()
-        {
-            foreach (AppContentCollectItem item in data.data)
-            {
-                if (item.type.ToLower() == AppContentCollectType.action)
-                {
+        public bool HasTypeAction() {
+            foreach (AppContentCollectItem item in data.data) {
+                if (item.type.ToLower() == AppContentCollectType.action) {
                     return true;
                 }
             }
             return false;
         }
 
-        public bool HasTypeCollection()
-        {
-            foreach (AppContentCollectItem item in data.data)
-            {
-                if (item.type.ToLower() == AppContentCollectType.collection)
-                {
+        public bool HasTypeCollection() {
+            foreach (AppContentCollectItem item in data.data) {
+                if (item.type.ToLower() == AppContentCollectType.collection) {
                     return true;
                 }
             }
             return false;
         }
 
-        public string GetContentString(string key)
-        {
+        public string GetContentString(string key) {
             string content = "";
-            if (content_attributes.ContainsKey(key))
-            {
+            if (content_attributes.ContainsKey(key)) {
                 content = content_attributes[key].ToString();
             }
             return content;
         }
 
-        public void UpdateCollectItemData()
-        {
-            foreach (AppContentCollectItem item in data.data)
-            {
-                if (item.data != null)
-                {
-                    if (item.IsType(AppContentCollectType.action))
-                    {
+        public void UpdateCollectItemData() {
+            foreach (AppContentCollectItem item in data.data) {
+                if (item.data != null) {
+                    if (item.IsType(AppContentCollectType.action)) {
                         item.UpdateDisplayValues();
                     }
                 }
             }
         }
 
-        public List<AppContentCollectItem> GetItemsData()
-        {
+        public List<AppContentCollectItem> GetItemsData() {
             UpdateCollectItemData();
             return data.data;
         }
 
-        public List<int> GetAllowedLevelSuffixList()
-        {
+        public List<int> GetAllowedLevelSuffixList() {
             return data.level_num_suffix_list;
         }
 
-        public int GetLevelSuffixRandom()
-        {
+        public int GetLevelSuffixRandom() {
             IList<int> levels = data.level_num_suffix_list.Shuffle();
 
-            if (levels != null && levels.Count > 0)
-            {
+            if (levels != null && levels.Count > 0) {
                 return levels[0];
             }
 
@@ -1321,16 +1106,13 @@ namespace Engine.Game.App.BaseApp
 
         //
 
-        public bool IsAllowedWorld(int world_num)
-        {
+        public bool IsAllowedWorld(int world_num) {
             bool allowed = data.world_num_list.Contains(world_num);
 
-            if (!allowed)
-            {
+            if (!allowed) {
 #if USE_GAME_LIB_GAMES
                 GameWorld gameWorld = GameWorlds.Instance.GetByWorldNum(world_num);
-                if (gameWorld != null)
-                {
+                if (gameWorld != null) {
                     allowed = true;
                 }
 #endif
@@ -1339,16 +1121,13 @@ namespace Engine.Game.App.BaseApp
             return allowed;
         }
 
-        public bool IsAllowedWorld(string world_code)
-        {
+        public bool IsAllowedWorld(string world_code) {
             bool allowed = data.world_list.Contains(world_code);
 
-            if (!allowed)
-            {
+            if (!allowed) {
 #if USE_GAME_LIB_GAMES
                 GameWorld gameWorld = GameWorlds.Instance.GetById(world_code);
-                if (gameWorld != null)
-                {
+                if (gameWorld != null) {
                     int world_num = gameWorld.data.world_num;
                     allowed = IsAllowedWorld(world_num);
                 }
@@ -1360,38 +1139,31 @@ namespace Engine.Game.App.BaseApp
 
         //
 
-        public bool IsAllowedLevel(int level_num)
-        {
+        public bool IsAllowedLevel(int level_num) {
             return data.level_num_suffix_list.Contains(level_num);
         }
 
-        public string GetVersion()
-        {
+        public string GetVersion() {
             return GetContentString(AppContentAssetAttributes.version);
         }
 
-        public string GetVersionFileIncrement()
-        {
+        public string GetVersionFileIncrement() {
             return GetContentString(AppContentAssetAttributes.version_file_increment);
         }
 
-        public string GetVersionRequiredApp()
-        {
+        public string GetVersionRequiredApp() {
             return GetContentString(AppContentAssetAttributes.version_required_app);
         }
 
-        public string GetVersionType()
-        {
+        public string GetVersionType() {
             return GetContentString(AppContentAssetAttributes.version_type);
         }
 
-        public string GetVersionFileType()
-        {
+        public string GetVersionFileType() {
             return GetContentString(AppContentAssetAttributes.version_file_type);
         }
 
-        public string GetVersionFileExt()
-        {
+        public string GetVersionFileExt() {
             return GetContentString(AppContentAssetAttributes.version_file_ext);
         }
     }

@@ -71,10 +71,10 @@ public class ObjectPool : System.Object {
         if (obj == null) {
             return;
         }
-        
+
         if (pool.Count > maxPoolItems) {
             obj.DestroyGameObject(0, false);
-            return;            
+            return;
         }
 
         // deactivate the object
@@ -98,10 +98,10 @@ public class ObjectPool : System.Object {
 
     public void clear() {
 
-        foreach(GameObject go in pool) {
+        foreach (GameObject go in pool) {
             go.DestroyNow();
         }
-        
+
         pool.Clear();
     }
 }

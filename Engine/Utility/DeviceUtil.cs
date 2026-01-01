@@ -19,24 +19,24 @@ public class DeviceUtil : GameObjectBehavior {
             return instance;
         }
     }
-	
-	void Start() {
-	
-	}
-	
-	public static void Vibrate() {
+
+    void Start() {
+
+    }
+
+    public static void Vibrate() {
 #if USE_GAME_LIB_GAMES
-        if(!GameProfiles.Current.GetControlVibrate()) {
+        if (!GameProfiles.Current.GetControlVibrate()) {
             return;
         }
 #endif
 
 #if UNITY_IPHONE || UNITY_ANDROID
-        if(!Application.isEditor) {
-	        Handheld.Vibrate();
+        if (!Application.isEditor) {
+            Handheld.Vibrate();
         }
 #endif
-	}
+    }
 
 
 }

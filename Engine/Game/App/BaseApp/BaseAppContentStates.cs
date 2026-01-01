@@ -3,8 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using Engine.Game.Data;
 
-namespace Engine.Game.App.BaseApp
-{
+namespace Engine.Game.App.BaseApp {
     // using Engine.Data.Json;
 
     /*
@@ -19,8 +18,7 @@ namespace Engine.Game.App.BaseApp
 
     */
 
-    public class BaseAppContentStateMeta
-    {
+    public class BaseAppContentStateMeta {
         //public static string appModeTypeGameDefault = "app-mode-game-default";
         public static string appContentStateGameArcade = "app-content-state-game-arcade";
         public static string appContentStateGameChallenge = "app-content-state-game-challenge";
@@ -37,21 +35,16 @@ namespace Engine.Game.App.BaseApp
         public static string appContentStateGameTips = "app-content-state-game-tips";
     }
 
-    public class BaseAppContentStates<T> : DataObjects<T> where T : DataObject, new()
-    {
+    public class BaseAppContentStates<T> : DataObjects<T> where T : DataObject, new() {
         private static T current;
         private static volatile BaseAppContentStates<T> instance;
         private static object syncRoot = new Object();
         private string BASE_DATA_KEY = "app-content-state-data";
 
-        public static T BaseCurrent
-        {
-            get
-            {
-                if (current == null)
-                {
-                    lock (syncRoot)
-                    {
+        public static T BaseCurrent {
+            get {
+                if (current == null) {
+                    lock (syncRoot) {
                         if (current == null)
                             current = new T();
                     }
@@ -59,20 +52,15 @@ namespace Engine.Game.App.BaseApp
 
                 return current;
             }
-            set
-            {
+            set {
                 current = value;
             }
         }
 
-        public static BaseAppContentStates<T> BaseInstance
-        {
-            get
-            {
-                if (instance == null)
-                {
-                    lock (syncRoot)
-                    {
+        public static BaseAppContentStates<T> BaseInstance {
+            get {
+                if (instance == null) {
+                    lock (syncRoot) {
                         if (instance == null)
                             instance = new BaseAppContentStates<T>(true);
                     }
@@ -80,111 +68,87 @@ namespace Engine.Game.App.BaseApp
 
                 return instance;
             }
-            set
-            {
+            set {
                 instance = value;
             }
         }
 
-        public BaseAppContentStates()
-        {
+        public BaseAppContentStates() {
             Reset();
         }
 
-        public BaseAppContentStates(bool loadData)
-        {
+        public BaseAppContentStates(bool loadData) {
             Reset();
             path = "data/" + BASE_DATA_KEY + ".json";
             pathKey = BASE_DATA_KEY;
             LoadData();
         }
 
-        public bool isAppContentStateGameArcade
-        {
-            get
-            {
+        public bool isAppContentStateGameArcade {
+            get {
                 return IsAppContentState(AppContentStateMeta.appContentStateGameArcade);
             }
         }
 
-        public bool isAppContentStateGameCoop
-        {
-            get
-            {
+        public bool isAppContentStateGameCoop {
+            get {
                 return IsAppContentState(AppContentStateMeta.appContentStateGameCoop);
             }
         }
 
-        public bool isAppContentStateGameMissions
-        {
-            get
-            {
+        public bool isAppContentStateGameMissions {
+            get {
                 return IsAppContentState(AppContentStateMeta.appContentStateGameMissions);
             }
         }
 
-        public bool isAppContentStateGameChallenge
-        {
-            get
-            {
+        public bool isAppContentStateGameChallenge {
+            get {
                 return IsAppContentState(AppContentStateMeta.appContentStateGameChallenge);
             }
         }
 
-        public bool isAppContentStateGameContent
-        {
-            get
-            {
+        public bool isAppContentStateGameContent {
+            get {
                 return IsAppContentState(AppContentStateMeta.appContentStateGameContent);
             }
         }
 
-        public bool isAppContentStateGameTraining
-        {
-            get
-            {
+        public bool isAppContentStateGameTraining {
+            get {
                 return IsAppContentState(AppContentStateMeta.appContentStateGameTraining);
             }
         }
 
-        public bool isAppContentStateGameTrainingChoice
-        {
-            get
-            {
+        public bool isAppContentStateGameTrainingChoice {
+            get {
                 return IsAppContentState(AppContentStateMeta.appContentStateGameTrainingChoice);
             }
         }
 
-        public bool isAppContentStateGameTrainingCollection
-        {
-            get
-            {
+        public bool isAppContentStateGameTrainingCollection {
+            get {
                 return IsAppContentState(AppContentStateMeta.appContentStateGameTrainingCollection);
             }
         }
 
-        public bool IsAppContentState(string code)
-        {
-            if (AppContentStates.Current.code == code)
-            {
+        public bool IsAppContentState(string code) {
+            if (AppContentStates.Current.code == code) {
                 return true;
             }
             return false;
         }
 
-        public void ChangeState(string code)
-        {
+        public void ChangeState(string code) {
             LogUtil.Log("ChangeState:code:" + code);
 
-            if (AppContentStates.Current.code != code)
-            {
+            if (AppContentStates.Current.code != code) {
 
                 LogUtil.Log("ChangeState:code-CHANGE:" + code);
 
                 AppContentState app_content_state = AppContentStates.Instance.GetByCode(code);
 
-                if (app_content_state != null)
-                {
+                if (app_content_state != null) {
 
                     AppContentStates.Current = app_content_state;
 
@@ -222,14 +186,11 @@ namespace Engine.Game.App.BaseApp
         }
         */
 
-        public List<AppContentState> GetListByCodeAndPackCode(string stateCode, string packCode)
-        {
+        public List<AppContentState> GetListByCodeAndPackCode(string stateCode, string packCode) {
             List<AppContentState> filteredList = new List<AppContentState>();
 
-            foreach (AppContentState obj in AppContentStates.Instance.GetListByPack(packCode))
-            {
-                if (stateCode.ToLower() == obj.code.ToLower())
-                {
+            foreach (AppContentState obj in AppContentStates.Instance.GetListByPack(packCode)) {
+                if (stateCode.ToLower() == obj.code.ToLower()) {
                     filteredList.Add(obj);
                 }
             }
@@ -237,27 +198,21 @@ namespace Engine.Game.App.BaseApp
             return filteredList;
         }
 
-        public List<AppContentState> GetByAppState(string app_state)
-        {
+        public List<AppContentState> GetByAppState(string app_state) {
             Dictionary<string, int> packSorts = new Dictionary<string, int>();
             List<AppContentState> app_content_states = new List<AppContentState>();
 
-            foreach (AppContentState state in AppContentStates.Instance.GetAll())
-            {
+            foreach (AppContentState state in AppContentStates.Instance.GetAll()) {
                 if (state.app_states.Contains(app_state)
-                    || state.app_states.Contains("*"))
-                {
+                    || state.app_states.Contains("*")) {
 
                     int sortOrder = 1;
-                    if (packSorts.ContainsKey(state.pack_code))
-                    {
+                    if (packSorts.ContainsKey(state.pack_code)) {
                         sortOrder = packSorts[state.pack_code];
                     }
-                    else
-                    {
+                    else {
                         GamePack gamePack = GamePacks.Instance.GetById(state.pack_code);
-                        if (gamePack != null)
-                        {
+                        if (gamePack != null) {
                             sortOrder = gamePack.sort_order;
                             packSorts.Add(state.pack_code, sortOrder);
                         }
@@ -272,8 +227,7 @@ namespace Engine.Game.App.BaseApp
         }
     }
 
-    public class DataPlatformStoreMeta
-    {
+    public class DataPlatformStoreMeta {
         public string platform = "";
         public string url = "";
         public string storeUrl = "";
@@ -282,72 +236,60 @@ namespace Engine.Game.App.BaseApp
         public string price = "0";
     }
 
-    public class BaseAppContentStateKeys
-    {
+    public class BaseAppContentStateKeys {
         public static string app_states = "app_states";
         public static string required_packs = "required_packs";
         public static string required_trackers = "required_trackers";
     }
 
-    public class BaseAppContentState : GameDataObject
-    {
+    public class BaseAppContentState : GameDataObject {
         // type
 
         // Attributes that are added or changed after launch should be like this to prevent
         // profile conversions.
 
-        public BaseAppContentState()
-        {
+        public BaseAppContentState() {
             Reset();
         }
 
-        public override void Reset()
-        {
+        public override void Reset() {
             base.Reset();
             app_states = new List<string>();
             required_packs = new List<string>();
             required_trackers = new List<string>();
         }
 
-        public string GetAppStateDefault()
-        {
-            foreach (string app_state in app_states)
-            {
+        public string GetAppStateDefault() {
+            foreach (string app_state in app_states) {
                 return app_state;
             }
             return "";
         }
 
-        public DataPlatformStoreMeta GetDataPlatformAttribute(string key)
-        {
+        public DataPlatformStoreMeta GetDataPlatformAttribute(string key) {
             key = GetPlatformAttributeKey(key);
             //UnityEngine.LogUtil.LogWarning("key:" + key);
             string json = GetAttributeStringValue(key);
             //UnityEngine.LogUtil.LogWarning("json:" + json);
             //UnityEngine.LogUtil.LogWarning("json:" + json.Replace("\\\"", "\""));
-            if (!string.IsNullOrEmpty(json))
-            {
-                try
-                {
+            if (!string.IsNullOrEmpty(json)) {
+                try {
                     //return JsonMapper.ToObject<DataPlatformStoreMeta>(json);
                     return json.FromJson<DataPlatformStoreMeta>();
                 }
-                catch (Exception e)
-                {
+                catch (Exception e) {
                     LogUtil.LogWarning("Error parsing DataPlatformStoreMeta" + e);
                 }
             }
             return null;
         }
 
-        public DataPlatformStoreMeta GetDataPlatformStoreMeta()
-        {
+        public DataPlatformStoreMeta GetDataPlatformStoreMeta() {
             string key = "storemeta";
             return GetDataPlatformAttribute(key);
         }
 
-        public bool IsExternalContent()
-        {
+        public bool IsExternalContent() {
             return GetDataPlatformStoreMeta() != null;
         }
     }

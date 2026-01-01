@@ -4,23 +4,17 @@ using System.IO;
 using Engine.Game.App.BaseApp;
 using Engine.Utility;
 
-namespace Engine.Game.App
-{
-    public class AppContentAssetModels : BaseAppContentAssetModels<AppContentAssetModel>
-    {
+namespace Engine.Game.App {
+    public class AppContentAssetModels : BaseAppContentAssetModels<AppContentAssetModel> {
         private static volatile AppContentAssetModel current;
         private static volatile AppContentAssetModels instance;
         private static System.Object syncRoot = new System.Object();
         private string DATA_KEY = "app-content-asset-model-data";
 
-        public static AppContentAssetModel Current
-        {
-            get
-            {
-                if (current == null)
-                {
-                    lock (syncRoot)
-                    {
+        public static AppContentAssetModel Current {
+            get {
+                if (current == null) {
+                    lock (syncRoot) {
                         if (current == null)
                             current = new AppContentAssetModel();
                     }
@@ -28,20 +22,15 @@ namespace Engine.Game.App
 
                 return current;
             }
-            set
-            {
+            set {
                 current = value;
             }
         }
 
-        public static AppContentAssetModels Instance
-        {
-            get
-            {
-                if (instance == null)
-                {
-                    lock (syncRoot)
-                    {
+        public static AppContentAssetModels Instance {
+            get {
+                if (instance == null) {
+                    lock (syncRoot) {
                         if (instance == null)
                             instance = new AppContentAssetModels(true);
                     }
@@ -51,13 +40,11 @@ namespace Engine.Game.App
             }
         }
 
-        public AppContentAssetModels()
-        {
+        public AppContentAssetModels() {
             Reset();
         }
 
-        public AppContentAssetModels(bool loadData)
-        {
+        public AppContentAssetModels(bool loadData) {
             Reset();
             path = "data/" + DATA_KEY + ".json";
             pathKey = DATA_KEY;
@@ -65,15 +52,12 @@ namespace Engine.Game.App
         }
     }
 
-    public class AppContentAssetModel : BaseAppContentAssetModel
-    {
-        public AppContentAssetModel()
-        {
+    public class AppContentAssetModel : BaseAppContentAssetModel {
+        public AppContentAssetModel() {
             Reset();
         }
 
-        public override void Reset()
-        {
+        public override void Reset() {
 
         }
     }

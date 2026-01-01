@@ -19,7 +19,7 @@ namespace Engine.Events {
 
         private void FindPad() {
 
-            if(pad == null) {
+            if (pad == null) {
 
                 pad = gameObject.transform.Find("Pad");
             }
@@ -36,20 +36,20 @@ namespace Engine.Events {
 
             bool handled = false;
 
-            if(mousePressed) {
+            if (mousePressed) {
 
-                if(collisionCamera) {
+                if (collisionCamera) {
 
                     Ray screenRay = collisionCamera.ScreenPointToRay(Input.mousePosition);
                     RaycastHit hit;
 
-                    if(Physics.Raycast(screenRay, out hit, Mathf.Infinity) && hit.transform != null) {
+                    if (Physics.Raycast(screenRay, out hit, Mathf.Infinity) && hit.transform != null) {
 
-                        if(hit.transform.gameObject == gameObject) {
+                        if (hit.transform.gameObject == gameObject) {
 
                             touchedObj = hit.transform.gameObject.GetComponent<TouchInputAxisObject>();
 
-                            if(touchedObj.axisName == axisName) {
+                            if (touchedObj.axisName == axisName) {
 
                                 handled = true;
 
@@ -60,7 +60,7 @@ namespace Engine.Events {
                                     InputSystemEvents.inputAxis,
                                     InputSystemEvents.inputAxis + "-" + axisName, axisInput);
 
-                                if(pad != null) {
+                                if (pad != null) {
 
                                     padPos = pad.localPosition;
                                     padPos.x = -Mathf.Clamp(axisInput.x * 1.5f, -1.2f, 1.2f);
@@ -74,7 +74,7 @@ namespace Engine.Events {
                 }
             }
 
-            if(!handled &&
+            if (!handled &&
                 (leftPressed
                 || rightPressed
                 || upPressed
@@ -87,23 +87,23 @@ namespace Engine.Events {
 
                 Vector3 axisInput = Vector3.zero;
 
-                if(upPressed) {
+                if (upPressed) {
                     axisInput.y = 1;
                 }
 
-                if(leftPressed) {
+                if (leftPressed) {
                     axisInput.x = -1;
                 }
 
-                if(downPressed) {
+                if (downPressed) {
                     axisInput.y = -1;
                 }
 
-                if(rightPressed) {
+                if (rightPressed) {
                     axisInput.x = 1;
                 }
 
-                if(pad != null) {
+                if (pad != null) {
 
                     Vector3 padPos = pad.localPosition;
                     padPos.x = axisInput.x;
@@ -125,7 +125,7 @@ namespace Engine.Events {
                     InputSystemEvents.inputAxis,
                     InputSystemEvents.inputAxis + "-" + axisName, axisInput);
 
-                if(pad != null) {
+                if (pad != null) {
 
                     Vector3 padPos = pad.localPosition;
                     padPos.x = 0;

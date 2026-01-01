@@ -2,28 +2,21 @@
 using System.Collections;
 
 
-namespace Engine.Editor
-{
-    public class EditorApplicationUtil : MonoBehaviour
-    {
+namespace Engine.Editor {
+    public class EditorApplicationUtil : MonoBehaviour {
 
         // Use this for initialization
-        void Start()
-        {
+        void Start() {
 
         }
 
         // Update is called once per frame
-        void Update()
-        {
+        void Update() {
 
-            if (Application.isEditor)
-            {
+            if (Application.isEditor) {
 
-                if (Input.GetKey(KeyCode.LeftControl))
-                {
-                    if (Input.GetKeyDown(KeyCode.Space))
-                    {
+                if (Input.GetKey(KeyCode.LeftControl)) {
+                    if (Input.GetKeyDown(KeyCode.Space)) {
                         // Toggle paused
                         UnityEditor.EditorApplication.isPaused = !UnityEditor.EditorApplication.isPaused ? true : false;
                     }

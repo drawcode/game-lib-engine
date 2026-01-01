@@ -6,18 +6,14 @@ using UnityEngine;
 
 using Engine.Events;
 
-namespace Engine.Game.Data
-{
-    public class DataKeyedObject : BaseDataObject
-    {
+namespace Engine.Game.Data {
+    public class DataKeyedObject : BaseDataObject {
 
-        public DataKeyedObject()
-        {
+        public DataKeyedObject() {
             Reset();
         }
 
-        public override void Reset()
-        {
+        public override void Reset() {
             base.Reset();
         }
 

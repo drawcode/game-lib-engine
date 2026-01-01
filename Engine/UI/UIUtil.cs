@@ -410,14 +410,14 @@ public class UIUtil {
 
 #if USE_UI_NGUI_2_7 || USE_UI_NGUI_3
     public static void SetLabelValue(UILabel obj, string val) {
-        if (obj != null) {
+        if (obj != null && obj.text != val) {
             obj.text = val;
         }
     }
 #endif
 
     public static void SetLabelValue(Text obj, string val) {
-        if (obj != null) {
+        if (obj != null && obj.text != val) {
             obj.text = val;
         }
     }
@@ -1249,7 +1249,7 @@ public class UIUtil {
         //UITweenerUtil.ColorTo(buttonTo.gameObject,
         //    UITweener.Method.Linear, UITweener.Style.Once, .5f, 0f, colorTo);
     }
-    
+
     // BUTTON EVENTS
 
     public static void SetButtonHandlerClick(GameObject obj, UnityAction objAction) {

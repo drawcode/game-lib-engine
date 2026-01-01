@@ -6,17 +6,14 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Networking;
 
-namespace Engine.Content
-{
-    public enum ContentBundleDownloadState
-    {
+namespace Engine.Content {
+    public enum ContentBundleDownloadState {
         InProgress,
         Failure,
         Success
     }
 
-    public class ContentBundleDownloadHandle
-    {
+    public class ContentBundleDownloadHandle {
 
         public ContentBundleDownloadState state = ContentBundleDownloadState.InProgress;
         public Uri uri;
@@ -24,29 +21,24 @@ namespace Engine.Content
         public string error = null;
         public bool fromCache = false;
 
-        public ContentBundleDownloadHandle(string url)
-        {
+        public ContentBundleDownloadHandle(string url) {
 
             uri = new Uri(url);
         }
     }
 
-    public class ContentBundleLoader : GameObjectBehavior
-    {
+    public class ContentBundleLoader : GameObjectBehavior {
 
         string cachePath;
         //ContentBundleLoader instance;
 
-        public static ContentBundleLoader Instance
-        {
+        public static ContentBundleLoader Instance {
 
-            get
-            {
+            get {
 
                 var g = GameObject.Find("/_content_bundle_loader");
 
-                if (g == null)
-                {
+                if (g == null) {
 
                     g = new GameObject("_content_bundle_loader");
                 }
@@ -55,8 +47,7 @@ namespace Engine.Content
 
                 var c = g.GetComponent<ContentBundleLoader>();
 
-                if (c == null)
-                {
+                if (c == null) {
 
                     c = g.AddComponent<ContentBundleLoader>();
                 }
@@ -65,8 +56,7 @@ namespace Engine.Content
             }
         }
 
-        public ContentBundleDownloadHandle Download(string url)
-        {
+        public ContentBundleDownloadHandle Download(string url) {
 
             var handle = new ContentBundleDownloadHandle(url);
 
@@ -75,39 +65,32 @@ namespace Engine.Content
             return handle;
         }
 
-        bool HandleDownload(ContentBundleDownloadHandle handle, UnityWebRequest www)
-        {
+        bool HandleDownload(ContentBundleDownloadHandle handle, UnityWebRequest www) {
 
-            if (www.error == null)
-            {
+            if (www.error == null) {
 
                 handle.asset = DownloadHandlerAssetBundle.GetContent(www);//www.downloadHandle.assetBundle;
 
-                if (www.error != null)
-                {
+                if (www.error != null) {
 
                     handle.error = www.error;
 
                     return false;
                 }
-                else
-                {
+                else {
 
-                    if (handle.asset == null)
-                    {
+                    if (handle.asset == null) {
 
                         handle.error = "Failed to load asset bundle";
 
                         return false;
                     }
-                    else
-                    {
+                    else {
                         return true;
                     }
                 }
             }
-            else
-            {
+            else {
 
                 handle.error = www.error;
 
@@ -115,11 +98,9 @@ namespace Engine.Content
             }
         }
 
-        IEnumerator _Download(ContentBundleDownloadHandle handle)
-        {
+        IEnumerator _Download(ContentBundleDownloadHandle handle) {
 
-            if (cachePath == null)
-            {
+            if (cachePath == null) {
 
                 cachePath = PathUtil.Combine(Application.persistentDataPath, "bundlecache");
             }
@@ -135,29 +116,25 @@ namespace Engine.Content
             var file = Path.GetFileName(uri.AbsolutePath);
             var path = PathUtil.Combine(dir, file);
 
-            if (File.Exists(path))
-            {
+            if (File.Exists(path)) {
 
                 var www = UnityWebRequest.Get("file://" + path);
 
                 yield return www.SendWebRequest();
 
-                if (HandleDownload(handle, www))
-                {
+                if (HandleDownload(handle, www)) {
 
                     handle.state = ContentBundleDownloadState.Success;
                     handle.fromCache = true;
                 }
             }
-            if (handle.state != ContentBundleDownloadState.Success)
-            {
+            if (handle.state != ContentBundleDownloadState.Success) {
 
                 var www = UnityWebRequest.Get(uri.ToString());
 
                 yield return www.SendWebRequest();
 
-                if (HandleDownload(handle, www))
-                {
+                if (HandleDownload(handle, www)) {
 
                     Directory.CreateDirectory(dir);
 
@@ -166,8 +143,7 @@ namespace Engine.Content
                     handle.error = null;
                     handle.state = ContentBundleDownloadState.Success;
                 }
-                else
-                {
+                else {
 
                     handle.state = ContentBundleDownloadState.Failure;
                 }

@@ -27,7 +27,7 @@ public class StringUtil {
     public static string Slashed(params string[] keys) {
         return Combine("/", keys);
     }
-    
+
     public static string Concat(params string[] keys) {
         return Combine("", keys);
     }
@@ -99,11 +99,11 @@ public class StringUtil {
                     }
                 }
 
-                    // If we are looking for delimiter
-                    // Check until we find a space, delimiter or 
-                    // or exit delimiter find state
+                // If we are looking for delimiter
+                // Check until we find a space, delimiter or 
+                // or exit delimiter find state
 
-                    else if (isLookingForDelimiterInQuote) {
+                else if (isLookingForDelimiterInQuote) {
 
                     bool lineEnd = false;
 
@@ -128,9 +128,9 @@ public class StringUtil {
 
                     //if (c == quote 
                     if ((c != ' ')
-                        || c == quote){
-                            //&& c != '\r'
-                             //c != '\n') {
+                        || c == quote) {
+                        //&& c != '\r'
+                        //c != '\n') {
                         isLookingForDelimiterInQuote = false;
                         //inQuoted = false;
                     }

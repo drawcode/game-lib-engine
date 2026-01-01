@@ -3,20 +3,16 @@ using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
 
-namespace Engine.Game.Data
-{
-    public class NPCData : DataObject
-    {
+namespace Engine.Game.Data {
+    public class NPCData : DataObject {
         public string uuid;
         public string packName;
 
-        public NPCData()
-        {
+        public NPCData() {
             Reset();
         }
 
-        public void ChangeData(string name)
-        {
+        public void ChangeData(string name) {
             Reset();
 
             packName = name;
@@ -25,8 +21,7 @@ namespace Engine.Game.Data
             //fileFullPath = PathUtil.Combine(filePath, fileName);
         }
 
-        public override void Reset()
-        {
+        public override void Reset() {
             base.Reset();
 
             packName = "default";

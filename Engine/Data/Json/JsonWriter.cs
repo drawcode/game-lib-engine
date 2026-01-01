@@ -16,10 +16,8 @@ using System.IO;
 using System.Text;
 
 
-namespace Engine.Data.Json
-{
-    internal enum Condition
-    {
+namespace Engine.Data.Json {
+    internal enum Condition {
         InArray,
         InObject,
         NotAProperty,
@@ -27,8 +25,7 @@ namespace Engine.Data.Json
         Value
     }
 
-    internal class WriterContext
-    {
+    internal class WriterContext {
         public int Count;
         public bool InArray;
         public bool InObject;
@@ -36,8 +33,7 @@ namespace Engine.Data.Json
         public int Padding;
     }
 
-    public class JsonWriter
-    {
+    public class JsonWriter {
         #region Fields
         private static NumberFormatInfo number_format;
 
@@ -55,29 +51,24 @@ namespace Engine.Data.Json
 
 
         #region Properties
-        public int IndentValue
-        {
+        public int IndentValue {
             get { return indent_value; }
-            set
-            {
+            set {
                 indentation = (indentation / indent_value) * value;
                 indent_value = value;
             }
         }
 
-        public bool PrettyPrint
-        {
+        public bool PrettyPrint {
             get { return pretty_print; }
             set { pretty_print = value; }
         }
 
-        public TextWriter TextWriter
-        {
+        public TextWriter TextWriter {
             get { return writer; }
         }
 
-        public bool Validate
-        {
+        public bool Validate {
             get { return validate; }
             set { validate = value; }
         }
@@ -85,13 +76,11 @@ namespace Engine.Data.Json
 
 
         #region Constructors
-        static JsonWriter()
-        {
+        static JsonWriter() {
             number_format = NumberFormatInfo.InvariantInfo;
         }
 
-        public JsonWriter()
-        {
+        public JsonWriter() {
             inst_string_builder = new StringBuilder();
             writer = new StringWriter(inst_string_builder);
 
@@ -99,12 +88,10 @@ namespace Engine.Data.Json
         }
 
         public JsonWriter(StringBuilder sb) :
-            this(new StringWriter(sb))
-        {
+            this(new StringWriter(sb)) {
         }
 
-        public JsonWriter(TextWriter writer)
-        {
+        public JsonWriter(TextWriter writer) {
             if (writer == null)
                 throw new ArgumentNullException("writer");
 
@@ -116,8 +103,7 @@ namespace Engine.Data.Json
 
 
         #region Private Methods
-        private void DoValidation(Condition cond)
-        {
+        private void DoValidation(Condition cond) {
             if (!context.ExpectingValue)
                 context.Count++;
 
@@ -128,8 +114,7 @@ namespace Engine.Data.Json
                 throw new JsonException(
                     "A complete JSON symbol has already been written");
 
-            switch (cond)
-            {
+            switch (cond) {
                 case Condition.InArray:
                     if (!context.InArray)
                         throw new JsonException(
@@ -164,8 +149,7 @@ namespace Engine.Data.Json
             }
         }
 
-        private void Init()
-        {
+        private void Init() {
             has_reached_end = false;
             hex_seq = new char[4];
             indentation = 0;
@@ -178,12 +162,10 @@ namespace Engine.Data.Json
             ctx_stack.Push(context);
         }
 
-        private static void IntToHex(int n, char[] hex)
-        {
+        private static void IntToHex(int n, char[] hex) {
             int num;
 
-            for (int i = 0; i < 4; i++)
-            {
+            for (int i = 0; i < 4; i++) {
                 num = n % 16;
 
                 if (num < 10)
@@ -195,15 +177,13 @@ namespace Engine.Data.Json
             }
         }
 
-        private void Indent()
-        {
+        private void Indent() {
             if (pretty_print)
                 indentation += indent_value;
         }
 
 
-        private void Put(string str)
-        {
+        private void Put(string str) {
             if (pretty_print && !context.ExpectingValue)
                 for (int i = 0; i < indentation; i++)
                     writer.Write(' ');
@@ -211,13 +191,11 @@ namespace Engine.Data.Json
             writer.Write(str);
         }
 
-        private void PutNewline()
-        {
+        private void PutNewline() {
             PutNewline(true);
         }
 
-        private void PutNewline(bool add_comma)
-        {
+        private void PutNewline(bool add_comma) {
             if (add_comma && !context.ExpectingValue &&
                 context.Count > 1)
                 writer.Write(',');
@@ -226,17 +204,14 @@ namespace Engine.Data.Json
                 writer.Write('\n');
         }
 
-        private void PutString(string str)
-        {
+        private void PutString(string str) {
             Put(String.Empty);
 
             writer.Write('"');
 
             int n = str.Length;
-            for (int i = 0; i < n; i++)
-            {
-                switch (str[i])
-                {
+            for (int i = 0; i < n; i++) {
+                switch (str[i]) {
                     case '\n':
                         writer.Write("\\n");
                         continue;
@@ -264,8 +239,7 @@ namespace Engine.Data.Json
                         continue;
                 }
 
-                if ((int)str[i] >= 32 && (int)str[i] <= 126)
-                {
+                if ((int)str[i] >= 32 && (int)str[i] <= 126) {
                     writer.Write(str[i]);
                     continue;
                 }
@@ -279,24 +253,21 @@ namespace Engine.Data.Json
             writer.Write('"');
         }
 
-        private void Unindent()
-        {
+        private void Unindent() {
             if (pretty_print)
                 indentation -= indent_value;
         }
         #endregion
 
 
-        public override string ToString()
-        {
+        public override string ToString() {
             if (inst_string_builder == null)
                 return String.Empty;
 
             return inst_string_builder.ToString();
         }
 
-        public void Reset()
-        {
+        public void Reset() {
             has_reached_end = false;
 
             ctx_stack.Clear();
@@ -307,8 +278,7 @@ namespace Engine.Data.Json
                 inst_string_builder.Remove(0, inst_string_builder.Length);
         }
 
-        public void Write(bool boolean)
-        {
+        public void Write(bool boolean) {
             DoValidation(Condition.Value);
             PutNewline();
 
@@ -317,8 +287,7 @@ namespace Engine.Data.Json
             context.ExpectingValue = false;
         }
 
-        public void Write(decimal number)
-        {
+        public void Write(decimal number) {
             DoValidation(Condition.Value);
             PutNewline();
 
@@ -327,8 +296,7 @@ namespace Engine.Data.Json
             context.ExpectingValue = false;
         }
 
-        public void Write(double number)
-        {
+        public void Write(double number) {
             DoValidation(Condition.Value);
             PutNewline();
 
@@ -342,8 +310,7 @@ namespace Engine.Data.Json
             context.ExpectingValue = false;
         }
 
-        public void Write(int number)
-        {
+        public void Write(int number) {
             DoValidation(Condition.Value);
             PutNewline();
 
@@ -352,8 +319,7 @@ namespace Engine.Data.Json
             context.ExpectingValue = false;
         }
 
-        public void Write(long number)
-        {
+        public void Write(long number) {
             DoValidation(Condition.Value);
             PutNewline();
 
@@ -362,8 +328,7 @@ namespace Engine.Data.Json
             context.ExpectingValue = false;
         }
 
-        public void Write(string str)
-        {
+        public void Write(string str) {
             DoValidation(Condition.Value);
             PutNewline();
 
@@ -376,8 +341,7 @@ namespace Engine.Data.Json
         }
 
         //[CLSCompliant(false)]
-        public void Write(ulong number)
-        {
+        public void Write(ulong number) {
             DoValidation(Condition.Value);
             PutNewline();
 
@@ -386,16 +350,14 @@ namespace Engine.Data.Json
             context.ExpectingValue = false;
         }
 
-        public void WriteArrayEnd()
-        {
+        public void WriteArrayEnd() {
             DoValidation(Condition.InArray);
             PutNewline(false);
 
             ctx_stack.Pop();
             if (ctx_stack.Count == 1)
                 has_reached_end = true;
-            else
-            {
+            else {
                 context = ctx_stack.Peek();
                 context.ExpectingValue = false;
             }
@@ -404,8 +366,7 @@ namespace Engine.Data.Json
             Put("]");
         }
 
-        public void WriteArrayStart()
-        {
+        public void WriteArrayStart() {
             DoValidation(Condition.NotAProperty);
             PutNewline();
 
@@ -418,16 +379,14 @@ namespace Engine.Data.Json
             Indent();
         }
 
-        public void WriteObjectEnd()
-        {
+        public void WriteObjectEnd() {
             DoValidation(Condition.InObject);
             PutNewline(false);
 
             ctx_stack.Pop();
             if (ctx_stack.Count == 1)
                 has_reached_end = true;
-            else
-            {
+            else {
                 context = ctx_stack.Peek();
                 context.ExpectingValue = false;
             }
@@ -436,8 +395,7 @@ namespace Engine.Data.Json
             Put("}");
         }
 
-        public void WriteObjectStart()
-        {
+        public void WriteObjectStart() {
             DoValidation(Condition.NotAProperty);
             PutNewline();
 
@@ -450,15 +408,13 @@ namespace Engine.Data.Json
             Indent();
         }
 
-        public void WritePropertyName(string property_name)
-        {
+        public void WritePropertyName(string property_name) {
             DoValidation(Condition.Property);
             PutNewline();
 
             PutString(property_name);
 
-            if (pretty_print)
-            {
+            if (pretty_print) {
                 if (property_name.Length > context.Padding)
                     context.Padding = property_name.Length;
 

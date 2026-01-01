@@ -49,12 +49,12 @@ namespace Engine.UI {
 
         private void Update() {
             currentTimeBlock += Time.deltaTime;
-            if(currentTimeBlock > sampleInterval) {
+            if (currentTimeBlock > sampleInterval) {
                 currentTimeBlock = 0.0f;
                 UpdateViewport();
 
                 //Disable in non-realtime situations
-                if(!Application.isEditor && !realtime) {
+                if (!Application.isEditor && !realtime) {
                     run = false;
                 }
             }
@@ -71,7 +71,7 @@ namespace Engine.UI {
 
             //LogUtil.Log("screenRatio:" + screenRatio);
 
-            if(screenRatio < 1.4) {
+            if (screenRatio < 1.4) {
 
                 // adjust 4:3 and above to fit better.
                 Vector3 scaleTo = gameObject.transform.localScale;

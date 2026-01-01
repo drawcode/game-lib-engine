@@ -4,10 +4,8 @@ using System.IO;
 using Engine.Content;
 using Engine.Game.App.BaseApp;
 
-namespace Engine.Game.App
-{
-    public class AppContentAssets : BaseAppContentAssets<AppContentAsset>
-    {
+namespace Engine.Game.App {
+    public class AppContentAssets : BaseAppContentAssets<AppContentAsset> {
         private static volatile AppContentAsset current;
         private static volatile AppContentAssets instance;
         private static object syncRoot = new System.Object();
@@ -21,14 +19,10 @@ namespace Engine.Game.App
 
         public static string DATA_KEY = "app-content-asset-data";
 
-        public static AppContentAsset Current
-        {
-            get
-            {
-                if (current == null)
-                {
-                    lock (syncRoot)
-                    {
+        public static AppContentAsset Current {
+            get {
+                if (current == null) {
+                    lock (syncRoot) {
                         if (current == null)
                             current = new AppContentAsset();
                     }
@@ -36,20 +30,15 @@ namespace Engine.Game.App
 
                 return current;
             }
-            set
-            {
+            set {
                 current = value;
             }
         }
 
-        public static AppContentAssets Instance
-        {
-            get
-            {
-                if (instance == null)
-                {
-                    lock (syncRoot)
-                    {
+        public static AppContentAssets Instance {
+            get {
+                if (instance == null) {
+                    lock (syncRoot) {
                         if (instance == null)
                             instance = new AppContentAssets(true);
                     }
@@ -57,30 +46,25 @@ namespace Engine.Game.App
 
                 return instance;
             }
-            set
-            {
+            set {
                 instance = value;
             }
         }
 
-        public AppContentAssets()
-        {
+        public AppContentAssets() {
             Reset();
             //ChangeState(APP_STATE_BOOKS);
         }
 
-        public AppContentAssets(bool loadData)
-        {
+        public AppContentAssets(bool loadData) {
             Reset();
             path = "data/" + DATA_KEY + ".json";
             pathKey = DATA_KEY;
             LoadData();
         }
 
-        public void ChangeState(string code)
-        {
-            if (Current.code != code)
-            {
+        public void ChangeState(string code) {
+            if (Current.code != code) {
                 Current = GetById(code);
             }
         }
@@ -98,13 +82,10 @@ namespace Engine.Game.App
         }
         */
 
-        public List<AppContentAsset> GetListByCodeAndPackCode(string assetCode, string packCode)
-        {
+        public List<AppContentAsset> GetListByCodeAndPackCode(string assetCode, string packCode) {
             List<AppContentAsset> filteredList = new List<AppContentAsset>();
-            foreach (AppContentAsset obj in GetListByPack(packCode))
-            {
-                if (assetCode.ToLower() == obj.code.ToLower())
-                {
+            foreach (AppContentAsset obj in GetListByPack(packCode)) {
+                if (assetCode.ToLower() == obj.code.ToLower()) {
                     filteredList.Add(obj);
                 }
             }
@@ -112,8 +93,7 @@ namespace Engine.Game.App
             return filteredList;
         }
 
-        public string GetAppContentAssetContentPath(string packCode, string asset, bool versioned)
-        {
+        public string GetAppContentAssetContentPath(string packCode, string asset, bool versioned) {
             string packPath = PathUtil.Combine(
                 ContentPaths.appCachePathSharedPacks,
                 packCode);
@@ -123,16 +103,14 @@ namespace Engine.Game.App
 
             string file = "";
             AppContentAsset appContentAsset = AppContentAssets.Instance.GetById(asset);
-            if (appContentAsset != null)
-            {
+            if (appContentAsset != null) {
                 file = appContentAsset.code
                     + "."
                     + appContentAsset.GetVersionFileExt();
             }
 
             string fullPath = PathUtil.Combine(packPathContent, file);
-            if (versioned)
-            {
+            if (versioned) {
                 fullPath = Contents.GetFullPathVersioned(fullPath);
             }
             return fullPath;
@@ -201,61 +179,50 @@ namespace Engine.Game.App
         */
     }
 
-    public class AppContentAsset : BaseAppContentAsset
-    {
+    public class AppContentAsset : BaseAppContentAsset {
 
         // Attributes that are added or changed after launch should be like this to prevent
         // profile conversions.
 
-        public AppContentAsset()
-        {
+        public AppContentAsset() {
             Reset();
         }
 
-        public override void Reset()
-        {
+        public override void Reset() {
             base.Reset();
             keys = new List<string>();
             content_attributes = new Dictionary<string, object>();
         }
 
-        public string GetContentString(string key)
-        {
+        public string GetContentString(string key) {
             string content = "";
-            if (content_attributes.ContainsKey(key))
-            {
+            if (content_attributes.ContainsKey(key)) {
                 content = content_attributes[key].ToString();
             }
             return content;
         }
 
-        public string GetVersion()
-        {
+        public string GetVersion() {
             return GetContentString(AppContentAssetAttributes.version);
         }
 
-        public string GetVersionFileIncrement()
-        {
+        public string GetVersionFileIncrement() {
             return GetContentString(AppContentAssetAttributes.version_file_increment);
         }
 
-        public string GetVersionRequiredApp()
-        {
+        public string GetVersionRequiredApp() {
             return GetContentString(AppContentAssetAttributes.version_required_app);
         }
 
-        public string GetVersionType()
-        {
+        public string GetVersionType() {
             return GetContentString(AppContentAssetAttributes.version_type);
         }
 
-        public string GetVersionFileType()
-        {
+        public string GetVersionFileType() {
             return GetContentString(AppContentAssetAttributes.version_file_type);
         }
 
-        public string GetVersionFileExt()
-        {
+        public string GetVersionFileExt() {
             return GetContentString(AppContentAssetAttributes.version_file_ext);
         }
 

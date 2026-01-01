@@ -4,24 +4,18 @@ using System.IO;
 using Engine.Utility;
 using Engine.Game.Data;
 
-namespace Engine.Game.App.BaseApp
-{
-    public class BaseGameCustomizations<T> : DataObjects<T> where T : DataObject, new()
-    {
+namespace Engine.Game.App.BaseApp {
+    public class BaseGameCustomizations<T> : DataObjects<T> where T : DataObject, new() {
         private static T current;
         private static volatile BaseGameCustomizations<T> instance;
         private static object syncRoot = new Object();
 
         public static string BASE_DATA_KEY = "game-customization-data";
 
-        public static T BaseCurrent
-        {
-            get
-            {
-                if (current == null)
-                {
-                    lock (syncRoot)
-                    {
+        public static T BaseCurrent {
+            get {
+                if (current == null) {
+                    lock (syncRoot) {
                         if (current == null)
                             current = new T();
                     }
@@ -29,20 +23,15 @@ namespace Engine.Game.App.BaseApp
 
                 return current;
             }
-            set
-            {
+            set {
                 current = value;
             }
         }
 
-        public static BaseGameCustomizations<T> BaseInstance
-        {
-            get
-            {
-                if (instance == null)
-                {
-                    lock (syncRoot)
-                    {
+        public static BaseGameCustomizations<T> BaseInstance {
+            get {
+                if (instance == null) {
+                    lock (syncRoot) {
                         if (instance == null)
                             instance = new BaseGameCustomizations<T>(true);
                     }
@@ -50,19 +39,16 @@ namespace Engine.Game.App.BaseApp
 
                 return instance;
             }
-            set
-            {
+            set {
                 instance = value;
             }
         }
 
-        public BaseGameCustomizations()
-        {
+        public BaseGameCustomizations() {
             Reset();
         }
 
-        public BaseGameCustomizations(bool loadData)
-        {
+        public BaseGameCustomizations(bool loadData) {
             Reset();
             path = "data/" + BASE_DATA_KEY + ".json";
             pathKey = BASE_DATA_KEY;
@@ -70,23 +56,19 @@ namespace Engine.Game.App.BaseApp
         }
     }
 
-    public class BaseGameCustomization : DataObject
-    {
+    public class BaseGameCustomization : DataObject {
         public List<CustomPlayerColors> colors;
 
-        public BaseGameCustomization()
-        {
+        public BaseGameCustomization() {
             Reset();
         }
 
-        public override void Reset()
-        {
+        public override void Reset() {
             base.Reset();
             colors = new List<CustomPlayerColors>();
         }
 
-        public void Clone(BaseGameCustomization toCopy)
-        {
+        public void Clone(BaseGameCustomization toCopy) {
             colors = toCopy.colors;
         }
     }

@@ -6,8 +6,7 @@ using Engine.Animation.SimpleAnimationComponent;
 //using NUnit.Framework;
 #endif
 
-namespace Engine.Animation.SimpleAnimationComponent.Editor
-{
+namespace Engine.Animation.SimpleAnimationComponent.Editor {
     // [CustomEditor(typeof(SimpleAnimation))]
     // public class SimpleAnimationEditor : Editor
     // {

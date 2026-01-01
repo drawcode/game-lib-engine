@@ -20,13 +20,13 @@ namespace Engine.UI {
             UpdateViewport();
 
             //Disable in non-realtime situations
-            if(!Application.isEditor && !realtime) {
+            if (!Application.isEditor && !realtime) {
                 run = false;
             }
         }
 
         private void UpdateViewport() {
-            if(run) {
+            if (run) {
                 float origScreenRatio = originalSize.x / originalSize.y;
                 float screenRatio = (float)Screen.width / (float)Screen.height;
                 Rect newViewportRect = new Rect();
@@ -34,7 +34,7 @@ namespace Engine.UI {
                 //float w = 0.0f;
                 float h = 0.0f;
 
-                if(screenRatio > origScreenRatio) {
+                if (screenRatio > origScreenRatio) {
 
                     //w = (float)Screen.height * origScreenRatio;
                     newViewportRect.height = 1.0f;

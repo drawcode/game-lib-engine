@@ -31,12 +31,12 @@ namespace Engine.Game.Controllers {
 
         public void Reset() {
             if (actor != null) {
-                
-                
-                if(actor == null) {
+
+
+                if (actor == null) {
                     return;
                 }
-                
+
                 UnityEngine.Animation anim = actor.GetComponent<UnityEngine.Animation>();
 
                 if (anim != null) {
@@ -56,11 +56,11 @@ namespace Engine.Game.Controllers {
 
         private void Update() {
             if (isRunning) {
-                
-                if(actor == null) {
+
+                if (actor == null) {
                     return;
                 }
-                
+
                 ani = actor.GetComponent<UnityEngine.Animation>();
 
                 var currentSpeed = thirdPersonController.GetSpeed();
@@ -141,10 +141,10 @@ namespace Engine.Game.Controllers {
         }
 
         public void DidLand() {
-            if(actor == null) {
+            if (actor == null) {
                 return;
             }
-            
+
             UnityEngine.Animation anim = actor.GetComponent<UnityEngine.Animation>();
 
             //actor.animation.Play("jumpland");
@@ -156,11 +156,11 @@ namespace Engine.Game.Controllers {
         public void DidAttack() {
             LogUtil.Log("DidAttack:");
             float currentSpeed = thirdPersonController.GetSpeed();
-            
-            if(actor == null) {
+
+            if (actor == null) {
                 return;
             }
-            
+
             UnityEngine.Animation anim = actor.GetComponent<UnityEngine.Animation>();
 
             // Fade in run
@@ -186,7 +186,7 @@ namespace Engine.Game.Controllers {
             LogUtil.Log("DidSkill:");
             float currentSpeed = thirdPersonController.GetSpeed();
 
-            if(actor == null) {
+            if (actor == null) {
                 return;
             }
 
@@ -221,11 +221,11 @@ namespace Engine.Game.Controllers {
         }
 
         public void ApplyDamage() {
-            
-            if(actor == null) {
+
+            if (actor == null) {
                 return;
             }
-            
+
             UnityEngine.Animation anim = actor.GetComponent<UnityEngine.Animation>();
 
             anim.CrossFade("hit", 0.1f);
@@ -233,11 +233,11 @@ namespace Engine.Game.Controllers {
         }
 
         public void DidWallJump() {
-            
-            if(actor == null) {
+
+            if (actor == null) {
                 return;
             }
-            
+
             UnityEngine.Animation anim = actor.GetComponent<UnityEngine.Animation>();
 
             // Wall jump animation is played without fade.

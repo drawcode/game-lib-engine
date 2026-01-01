@@ -222,18 +222,18 @@ public static class Compress {
 #else
     public static byte[] Zip(string str) {
         var bytes = Encoding.UTF8.GetBytes(str);
-        
+
         using (var msi = new MemoryStream(bytes))
         using (var mso = new MemoryStream()) {
             using (var gs = new GZipStream(mso, CompressionMode.Compress)) {
                 //msi.CopyTo(gs);
                 CopyTo(msi, gs);
             }
-            
+
             return mso.ToArray();
         }
     }
-    
+
     public static string Unzip(byte[] bytes) {
         using (var msi = new MemoryStream(bytes))
         using (var mso = new MemoryStream()) {
@@ -241,7 +241,7 @@ public static class Compress {
                 //gs.CopyTo(mso);
                 CopyTo(gs, mso);
             }
-            
+
             return Encoding.UTF8.GetString(mso.ToArray());
         }
     }

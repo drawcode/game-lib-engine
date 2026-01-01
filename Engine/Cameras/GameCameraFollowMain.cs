@@ -1,10 +1,8 @@
 using UnityEngine;
 using System.Collections;
 
-namespace Engine.Cameras
-{
-    public class GameCameraFollowMain : GameObjectBehavior
-    {
+namespace Engine.Cameras {
+    public class GameCameraFollowMain : GameObjectBehavior {
 
         public float smoothTime = 0.0f;
         public Vector3 offset = Vector3.zero;
@@ -17,54 +15,46 @@ namespace Engine.Cameras
         Transform thisTransform;
         Vector3 velocity;
 
-        public void Start()
-        {
+        public void Start() {
 
             thisTransform = transform;
         }
 
-        public void FindMainCamera()
-        {
+        public void FindMainCamera() {
 
-            if (camMain == null)
-            {
+            if (camMain == null) {
 
                 camMain = Camera.main;
             }
         }
 
-        void LateUpdate()
-        {
+        void LateUpdate() {
 
             FindMainCamera();
 
             if (thisTransform == null
                || camMain == null
-               || camMain.transform == null)
-            {
+               || camMain.transform == null) {
                 return;
             }
 
             Vector3 temp = camMain.transform.position;
 
-            if (followX)
-            {
+            if (followX) {
                 temp.x = Mathf.SmoothDamp(
                     thisTransform.position.x,
                     camMain.transform.position.x + offset.x,
                     ref velocity.x, smoothTime);
             }
 
-            if (followY)
-            {
+            if (followY) {
                 temp.y = Mathf.SmoothDamp(
                     thisTransform.position.y,
                     camMain.transform.position.y + offset.y,
                     ref velocity.y, smoothTime);
             }
 
-            if (followZ)
-            {
+            if (followZ) {
                 temp.z = Mathf.SmoothDamp(
                     thisTransform.position.z,
                     camMain.transform.position.z + offset.z,

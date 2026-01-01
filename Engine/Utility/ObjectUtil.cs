@@ -3,7 +3,7 @@ using System;
 using System.IO;
 
 public static class ObjectUtil {
-    
+
     public static T FindObject<T>()
         where T : UnityEngine.Object {
         return UnityEngine.Object.FindAnyObjectByType(typeof(T)) as T;

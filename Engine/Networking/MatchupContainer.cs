@@ -4,8 +4,8 @@ using Engine.Networking;
 using UnityEngine;
 
 public class MatchupContainer : GameObjectBehavior {
-    
-    #if NETWORK_USE_UNITY
+
+#if NETWORK_USE_UNITY
     public string trackName;
     public UnityNetworking unityNetworkingComponent;
     public MatchupGame matchupGameComponent;

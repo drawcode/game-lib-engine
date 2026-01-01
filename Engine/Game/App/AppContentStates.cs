@@ -15,10 +15,8 @@ app-content-state-game-training-content
 app-content-state-game-training-tips
 */
 
-namespace Engine.Game.App
-{
-    public class AppContentStateMeta : BaseAppContentStateMeta
-    {
+namespace Engine.Game.App {
+    public class AppContentStateMeta : BaseAppContentStateMeta {
         //public static string appModeTypeGameDefault = "app-mode-game-default";
         public static string appContentStateGameTrainingChoiceQuiz = "app-content-state-game-training-choice-quiz";
         public static string appContentStateGameTrainingCollectionSafety = "app-content-state-game-training-collection-safety";
@@ -30,8 +28,7 @@ namespace Engine.Game.App
         public static string appContentStateGameVR = "app-content-state-game-vr";
     }
 
-    public class AppContentStates : BaseAppContentStates<AppContentState>
-    {
+    public class AppContentStates : BaseAppContentStates<AppContentState> {
         private static volatile AppContentState current;
         private static volatile AppContentStates instance;
         private static object syncRoot = new System.Object();
@@ -45,14 +42,10 @@ namespace Engine.Game.App
 
         public static string DATA_KEY = "app-content-state-data";
 
-        public static AppContentState Current
-        {
-            get
-            {
-                if (current == null)
-                {
-                    lock (syncRoot)
-                    {
+        public static AppContentState Current {
+            get {
+                if (current == null) {
+                    lock (syncRoot) {
                         if (current == null)
                             current = new AppContentState();
                     }
@@ -60,20 +53,15 @@ namespace Engine.Game.App
 
                 return current;
             }
-            set
-            {
+            set {
                 current = value;
             }
         }
 
-        public static AppContentStates Instance
-        {
-            get
-            {
-                if (instance == null)
-                {
-                    lock (syncRoot)
-                    {
+        public static AppContentStates Instance {
+            get {
+                if (instance == null) {
+                    lock (syncRoot) {
                         if (instance == null)
                             instance = new AppContentStates(true);
                     }
@@ -83,46 +71,37 @@ namespace Engine.Game.App
 
                 return instance;
             }
-            set
-            {
+            set {
                 instance = value;
             }
         }
 
-        public AppContentStates()
-        {
+        public AppContentStates() {
             Reset();
             //ChangeState(APP_STATE_BOOKS);
         }
 
-        public AppContentStates(bool loadData)
-        {
+        public AppContentStates(bool loadData) {
             Reset();
             path = "data/" + DATA_KEY + ".json";
             pathKey = DATA_KEY;
             LoadData();
         }
 
-        public bool isAppContentStateGameTrainingChoiceQuiz
-        {
-            get
-            {
+        public bool isAppContentStateGameTrainingChoiceQuiz {
+            get {
                 return IsAppContentState(AppContentStateMeta.appContentStateGameTrainingChoiceQuiz);
             }
         }
 
-        public bool isAppContentStateGameTrainingCollectionSafety
-        {
-            get
-            {
+        public bool isAppContentStateGameTrainingCollectionSafety {
+            get {
                 return IsAppContentState(AppContentStateMeta.appContentStateGameTrainingCollectionSafety);
             }
         }
 
-        public bool isAppContentStateGameTrainingCollectionSmarts
-        {
-            get
-            {
+        public bool isAppContentStateGameTrainingCollectionSmarts {
+            get {
                 return IsAppContentState(AppContentStateMeta.appContentStateGameTrainingCollectionSmarts);
             }
         }
@@ -189,19 +168,16 @@ namespace Engine.Game.App
         */
     }
 
-    public class AppContentState : BaseAppContentState
-    {
+    public class AppContentState : BaseAppContentState {
 
         // Attributes that are added or changed after launch should be like this to prevent
         // profile conversions.
 
-        public AppContentState()
-        {
+        public AppContentState() {
             Reset();
         }
 
-        public override void Reset()
-        {
+        public override void Reset() {
             base.Reset();
         }
     }

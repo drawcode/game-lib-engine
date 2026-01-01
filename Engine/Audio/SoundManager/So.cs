@@ -2,10 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace Engine.Audio.SoundManager
-{
-    public class So : GameObjectBehavior
-    {
+namespace Engine.Audio.SoundManager {
+    public class So : GameObjectBehavior {
         public static So und = null;
         public int initialCapacity = 10;
 
@@ -17,12 +15,10 @@ namespace Engine.Audio.SoundManager
 
         private float _audioTime;
 
-        private void Awake()
-        {
+        private void Awake() {
 
             // avoid duplicates
-            if (und != null)
-            {
+            if (und != null) {
                 Destroy(gameObject);
                 return;
             }
@@ -37,26 +33,21 @@ namespace Engine.Audio.SoundManager
                 _soundList.Add(new Sound(this));
         }
 
-        private void OnApplicationPause(bool didPause)
-        {
+        private void OnApplicationPause(bool didPause) {
 
             // are we pausing or unpausing?
-            if (didPause)
-            {
+            if (didPause) {
 
                 // if we have a bgSound, save it
-                if (_bgSound != null)
-                {
+                if (_bgSound != null) {
                     _audioWasPlaying = true;
                     _audioTime = _bgSound.audioSource.time;
                 }
             }
-            else
-            {
+            else {
 
                 // unpausing.  restart background music
-                if (_audioWasPlaying)
-                {
+                if (_audioWasPlaying) {
                     _audioWasPlaying = false;
                     _bgSound.audioSource.time = _audioTime;
                     _bgSound.audioSource.Play();
@@ -64,8 +55,7 @@ namespace Engine.Audio.SoundManager
             }
         }
 
-        public void playBGMusic(AudioClip audioClip, float volume, bool loop)
-        {
+        public void playBGMusic(AudioClip audioClip, float volume, bool loop) {
             if (_bgSound == null)
                 _bgSound = new Sound(this);
 
@@ -73,23 +63,19 @@ namespace Engine.Audio.SoundManager
             StartCoroutine(_bgSound.playAudioClip(audioClip, AudioRolloffMode.Linear, volume, Vector3.zero));
         }
 
-        public Sound playSound(AudioClip audioClip)
-        {
+        public Sound playSound(AudioClip audioClip) {
             return playSound(audioClip, AudioRolloffMode.Linear, 0.9f, Vector3.zero);
         }
 
-        public Sound playSound(AudioClip audioClip, AudioRolloffMode rolloff)
-        {
+        public Sound playSound(AudioClip audioClip, AudioRolloffMode rolloff) {
             return playSound(audioClip, rolloff, 0.9f, Vector3.zero);
         }
 
-        public Sound playSound(AudioClip audioClip, AudioRolloffMode rolloff, float volume)
-        {
+        public Sound playSound(AudioClip audioClip, AudioRolloffMode rolloff, float volume) {
             return playSound(audioClip, rolloff, 0.9f);
         }
 
-        public Sound playSound(AudioClip audioClip, AudioRolloffMode rolloff, float volume, Vector3 position)
-        {
+        public Sound playSound(AudioClip audioClip, AudioRolloffMode rolloff, float volume, Vector3 position) {
             /*
             bool multiPlay = false;
             if( !multiPlay )
@@ -105,21 +91,18 @@ namespace Engine.Audio.SoundManager
             bool clipLoaded = false;
             bool foundEmpty = false;
 
-            foreach (var s in _soundList)
-            {
+            foreach (var s in _soundList) {
 
                 // dont care about sounds that arent available
                 if (!s.available)
                     continue;
 
-                if (s.gameObject.name == audioClip.name)
-                {
+                if (s.gameObject.name == audioClip.name) {
                     _sound = s;
                     clipLoaded = true;
                     break;
                 }
-                else
-                {
+                else {
 
                     // if we already found an empty no need to check any further
                     if (foundEmpty)
@@ -141,8 +124,7 @@ namespace Engine.Audio.SoundManager
             */
 
             // if we didnt find an available found, bail out
-            if (_sound == null)
-            {
+            if (_sound == null) {
                 _sound = new Sound(this);
                 _sound.destroyAfterPlay = true;
                 _soundList.Add(_sound);
@@ -157,8 +139,7 @@ namespace Engine.Audio.SoundManager
             return _sound;
         }
 
-        public void removeSound(Sound s)
-        {
+        public void removeSound(Sound s) {
             _soundList.Remove(s);
         }
     }

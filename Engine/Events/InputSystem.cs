@@ -5,11 +5,9 @@ using Engine.Utility;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace Engine.Events
-{
+namespace Engine.Events {
 
-    public class InputSystemEvents
-    {
+    public class InputSystemEvents {
 
         public static string inputAxis = "event-input-axis";
 
@@ -34,8 +32,7 @@ namespace Engine.Events
         public static string inputAxisAttack2DSide2 = "event-input-axis-attack-2d-side-2";
     }
 
-    public class InputSystemKeys
-    {
+    public class InputSystemKeys {
 
         public static string mainKey = "main";
         public static string moveKey = "move";
@@ -46,8 +43,7 @@ namespace Engine.Events
         public static string side2D2Key = "2d-side-2";
     }
 
-    public enum InputSystemSwipeDirection
-    {
+    public enum InputSystemSwipeDirection {
         All,
         Cross,
         Diagonals,
@@ -66,22 +62,19 @@ namespace Engine.Events
         Vertical
     }
 
-    public class InputTouchInfo
-    {
+    public class InputTouchInfo {
 
         public Vector2 position2d;
         public Vector3 position3d;
 
-        public InputTouchInfo()
-        {
+        public InputTouchInfo() {
 
             position2d = Vector2.zero;
             position3d = Vector3.zero;
         }
     }
 
-    public class InputSystem : GameObjectBehavior
-    {
+    public class InputSystem : GameObjectBehavior {
 
         private bool inputEnabled = true;
         public bool useAcceleration = false;
@@ -153,18 +146,14 @@ namespace Engine.Events
 
         private static InputSystem _instance = null;
 
-        public static InputSystem Instance
-        {
+        public static InputSystem Instance {
 
-            get
-            {
-                if (!_instance)
-                {
+            get {
+                if (!_instance) {
 
                     _instance = FindAnyObjectByType(typeof(InputSystem)) as InputSystem;
 
-                    if (!_instance)
-                    {
+                    if (!_instance) {
 
                         var obj = new GameObject("_InputSystem");
 
@@ -176,14 +165,11 @@ namespace Engine.Events
             }
         }
 
-        public static bool isInst
-        {
+        public static bool isInst {
 
-            get
-            {
+            get {
 
-                if (Instance != null)
-                {
+                if (Instance != null) {
 
                     return true;
                 }
@@ -192,14 +178,12 @@ namespace Engine.Events
             }
         }
 
-        private void OnApplicationQuit()
-        {
+        private void OnApplicationQuit() {
 
             _instance = null;
         }
 
-        private void OnEnable()
-        {
+        private void OnEnable() {
 
             Messenger<TapGesture>.AddListener(FingerGesturesMessages.OnTap,
              FingerGestures_OnTap);
@@ -223,8 +207,7 @@ namespace Engine.Events
              FingerGestures_OnDoubleTap);
         }
 
-        private void OnDisable()
-        {
+        private void OnDisable() {
 
             Messenger<TapGesture>.RemoveListener(FingerGesturesMessages.OnTap,
              FingerGestures_OnTap);
@@ -248,8 +231,7 @@ namespace Engine.Events
              FingerGestures_OnDoubleTap);
         }
 
-        public void Start()
-        {
+        public void Start() {
 
             inputEnabled = true;
             touchInfo = new InputTouchInfo();
@@ -259,67 +241,51 @@ namespace Engine.Events
         //
 
         public InputSystemSwipeDirection ConvertSwipeType(
-            FingerGestures.SwipeDirection direction)
-        {
+            FingerGestures.SwipeDirection direction) {
 
-            if (direction == FingerGestures.SwipeDirection.All)
-            {
+            if (direction == FingerGestures.SwipeDirection.All) {
                 return InputSystemSwipeDirection.All;
             }
-            else if (direction == FingerGestures.SwipeDirection.Cross)
-            {
+            else if (direction == FingerGestures.SwipeDirection.Cross) {
                 return InputSystemSwipeDirection.Cross;
             }
-            else if (direction == FingerGestures.SwipeDirection.Diagonals)
-            {
+            else if (direction == FingerGestures.SwipeDirection.Diagonals) {
                 return InputSystemSwipeDirection.Diagonals;
             }
-            else if (direction == FingerGestures.SwipeDirection.Down)
-            {
+            else if (direction == FingerGestures.SwipeDirection.Down) {
                 return InputSystemSwipeDirection.Down;
             }
-            else if (direction == FingerGestures.SwipeDirection.Horizontal)
-            {
+            else if (direction == FingerGestures.SwipeDirection.Horizontal) {
                 return InputSystemSwipeDirection.Horizontal;
             }
-            else if (direction == FingerGestures.SwipeDirection.Left)
-            {
+            else if (direction == FingerGestures.SwipeDirection.Left) {
                 return InputSystemSwipeDirection.Left;
             }
-            else if (direction == FingerGestures.SwipeDirection.LowerDiagonals)
-            {
+            else if (direction == FingerGestures.SwipeDirection.LowerDiagonals) {
                 return InputSystemSwipeDirection.LowerDiagonals;
             }
-            else if (direction == FingerGestures.SwipeDirection.LowerLeftDiagonal)
-            {
+            else if (direction == FingerGestures.SwipeDirection.LowerLeftDiagonal) {
                 return InputSystemSwipeDirection.LowerLeftDiagonal;
             }
-            else if (direction == FingerGestures.SwipeDirection.LowerRightDiagonal)
-            {
+            else if (direction == FingerGestures.SwipeDirection.LowerRightDiagonal) {
                 return InputSystemSwipeDirection.LowerRightDiagonal;
             }
-            else if (direction == FingerGestures.SwipeDirection.Right)
-            {
+            else if (direction == FingerGestures.SwipeDirection.Right) {
                 return InputSystemSwipeDirection.Right;
             }
-            else if (direction == FingerGestures.SwipeDirection.Up)
-            {
+            else if (direction == FingerGestures.SwipeDirection.Up) {
                 return InputSystemSwipeDirection.Up;
             }
-            else if (direction == FingerGestures.SwipeDirection.UpperDiagonals)
-            {
+            else if (direction == FingerGestures.SwipeDirection.UpperDiagonals) {
                 return InputSystemSwipeDirection.UpperDiagonals;
             }
-            else if (direction == FingerGestures.SwipeDirection.UpperLeftDiagonal)
-            {
+            else if (direction == FingerGestures.SwipeDirection.UpperLeftDiagonal) {
                 return InputSystemSwipeDirection.UpperLeftDiagonal;
             }
-            else if (direction == FingerGestures.SwipeDirection.UpperRightDiagonal)
-            {
+            else if (direction == FingerGestures.SwipeDirection.UpperRightDiagonal) {
                 return InputSystemSwipeDirection.UpperRightDiagonal;
             }
-            else if (direction == FingerGestures.SwipeDirection.Vertical)
-            {
+            else if (direction == FingerGestures.SwipeDirection.Vertical) {
                 return InputSystemSwipeDirection.Vertical;
             }
 
@@ -327,67 +293,51 @@ namespace Engine.Events
         }
 
         public FingerGestures.SwipeDirection ConvertSwipeType(
-            InputSystemSwipeDirection direction)
-        {
+            InputSystemSwipeDirection direction) {
 
-            if (direction == InputSystemSwipeDirection.All)
-            {
+            if (direction == InputSystemSwipeDirection.All) {
                 return FingerGestures.SwipeDirection.All;
             }
-            else if (direction == InputSystemSwipeDirection.Cross)
-            {
+            else if (direction == InputSystemSwipeDirection.Cross) {
                 return FingerGestures.SwipeDirection.Cross;
             }
-            else if (direction == InputSystemSwipeDirection.Diagonals)
-            {
+            else if (direction == InputSystemSwipeDirection.Diagonals) {
                 return FingerGestures.SwipeDirection.Diagonals;
             }
-            else if (direction == InputSystemSwipeDirection.Down)
-            {
+            else if (direction == InputSystemSwipeDirection.Down) {
                 return FingerGestures.SwipeDirection.Down;
             }
-            else if (direction == InputSystemSwipeDirection.Horizontal)
-            {
+            else if (direction == InputSystemSwipeDirection.Horizontal) {
                 return FingerGestures.SwipeDirection.Horizontal;
             }
-            else if (direction == InputSystemSwipeDirection.Left)
-            {
+            else if (direction == InputSystemSwipeDirection.Left) {
                 return FingerGestures.SwipeDirection.Left;
             }
-            else if (direction == InputSystemSwipeDirection.LowerDiagonals)
-            {
+            else if (direction == InputSystemSwipeDirection.LowerDiagonals) {
                 return FingerGestures.SwipeDirection.LowerDiagonals;
             }
-            else if (direction == InputSystemSwipeDirection.LowerLeftDiagonal)
-            {
+            else if (direction == InputSystemSwipeDirection.LowerLeftDiagonal) {
                 return FingerGestures.SwipeDirection.LowerLeftDiagonal;
             }
-            else if (direction == InputSystemSwipeDirection.LowerRightDiagonal)
-            {
+            else if (direction == InputSystemSwipeDirection.LowerRightDiagonal) {
                 return FingerGestures.SwipeDirection.LowerRightDiagonal;
             }
-            else if (direction == InputSystemSwipeDirection.Right)
-            {
+            else if (direction == InputSystemSwipeDirection.Right) {
                 return FingerGestures.SwipeDirection.Right;
             }
-            else if (direction == InputSystemSwipeDirection.Up)
-            {
+            else if (direction == InputSystemSwipeDirection.Up) {
                 return FingerGestures.SwipeDirection.Up;
             }
-            else if (direction == InputSystemSwipeDirection.UpperDiagonals)
-            {
+            else if (direction == InputSystemSwipeDirection.UpperDiagonals) {
                 return FingerGestures.SwipeDirection.UpperDiagonals;
             }
-            else if (direction == InputSystemSwipeDirection.UpperLeftDiagonal)
-            {
+            else if (direction == InputSystemSwipeDirection.UpperLeftDiagonal) {
                 return FingerGestures.SwipeDirection.UpperLeftDiagonal;
             }
-            else if (direction == InputSystemSwipeDirection.UpperRightDiagonal)
-            {
+            else if (direction == InputSystemSwipeDirection.UpperRightDiagonal) {
                 return FingerGestures.SwipeDirection.UpperRightDiagonal;
             }
-            else if (direction == InputSystemSwipeDirection.Vertical)
-            {
+            else if (direction == InputSystemSwipeDirection.Vertical) {
                 return FingerGestures.SwipeDirection.Vertical;
             }
 
@@ -396,161 +346,125 @@ namespace Engine.Events
 
         // INPUT
 
-        public static void UpdateTouchLaunch()
-        {
+        public static void UpdateTouchLaunch() {
 
-            if (isInst)
-            {
+            if (isInst) {
                 Instance.updateTouchLaunch();
             }
         }
 
-        public static bool CheckIfAllowedTouch(Vector3 pos)
-        {
+        public static bool CheckIfAllowedTouch(Vector3 pos) {
 
-            if (isInst)
-            {
+            if (isInst) {
                 return Instance.checkIfAllowedTouch(pos);
             }
 
             return false;
         }
 
-        public static void HandleTouchLaunch(Vector2 move)
-        {
+        public static void HandleTouchLaunch(Vector2 move) {
 
-            if (isInst)
-            {
+            if (isInst) {
                 Instance.handleTouchLaunch(move);
             }
         }
 
         //
 
-        public static bool isMousePressed
-        {
-            get
-            {
+        public static bool isMousePressed {
+            get {
                 return Instance.mousePress;
             }
         }
 
-        public static bool isMouseSecondaryPressed
-        {
-            get
-            {
+        public static bool isMouseSecondaryPressed {
+            get {
                 return Instance.mouseSecondaryPress;
             }
         }
 
-        public static bool isTouchPressed
-        {
-            get
-            {
+        public static bool isTouchPressed {
+            get {
                 return Instance.touchPressed;
             }
         }
 
-        public static bool isLeftPress
-        {
-            get
-            {
+        public static bool isLeftPress {
+            get {
                 return Instance.leftPress;
             }
         }
 
-        public static bool isRightPress
-        {
-            get
-            {
+        public static bool isRightPress {
+            get {
                 return Instance.rightPress;
             }
         }
 
-        public static bool isUpPress
-        {
-            get
-            {
+        public static bool isUpPress {
+            get {
                 return Instance.upPress;
             }
         }
 
-        public static bool isDownPress
-        {
-            get
-            {
+        public static bool isDownPress {
+            get {
                 return Instance.downPress;
             }
         }
 
-        public static bool isUsePress
-        {
-            get
-            {
+        public static bool isUsePress {
+            get {
                 return Instance.usePress;
             }
         }
 
-        public static bool isLeftPressDown
-        {
-            get
-            {
+        public static bool isLeftPressDown {
+            get {
                 return Instance.leftPressDown;
             }
         }
 
-        public static bool isRightPressDown
-        {
-            get
-            {
+        public static bool isRightPressDown {
+            get {
                 return Instance.rightPressDown;
             }
         }
 
-        public static bool isUpPressDown
-        {
-            get
-            {
+        public static bool isUpPressDown {
+            get {
                 return Instance.upPressDown;
             }
         }
 
-        public static bool isDownPressDown
-        {
-            get
-            {
+        public static bool isDownPressDown {
+            get {
                 return Instance.downPressDown;
             }
         }
 
-        public static bool isUsePressDown
-        {
-            get
-            {
+        public static bool isUsePressDown {
+            get {
                 return Instance.usePressDown;
             }
         }
 
         //
 
-        public virtual void FingerGestures_OnDragMove(DragGesture gesture)
-        { //Vector2 fingerPos, Vector2 delta) {
+        public virtual void FingerGestures_OnDragMove(DragGesture gesture) { //Vector2 fingerPos, Vector2 delta) {
 
             Vector2 fingerPos = gesture.Position;
             Vector2 delta = gesture.TotalMove;
 
-            if (!IsInputAllowed())
-            {
+            if (!IsInputAllowed()) {
                 return;
             }
 
-            if (currentDraggableGameObject != null)
-            {
+            if (currentDraggableGameObject != null) {
                 //DragObject(currentDraggableGameObject, fingerPos, delta);
             }
 
-            if (currentDraggableUIGameObject != null)
-            {
+            if (currentDraggableUIGameObject != null) {
                 DragObject(currentDraggableUIGameObject, fingerPos, delta);
             }
 
@@ -558,8 +472,7 @@ namespace Engine.Events
 
         }
 
-        public virtual void HandleRotators(Camera cam, Vector2 fingerPos, Vector2 delta)
-        {
+        public virtual void HandleRotators(Camera cam, Vector2 fingerPos, Vector2 delta) {
 
             GameObject goRotator = GameObjectHelper.HitObject(
                 cam,
@@ -570,32 +483,27 @@ namespace Engine.Events
 
             //Debug.Log("goRotator:" + goRotator);
 
-            if (goRotator != null)
-            {
+            if (goRotator != null) {
                 //Debug.Log("goRotator:FOUND:" + goRotator);
 
                 DragObject(goRotator, fingerPos, delta);
             }
-            else
-            {
+            else {
                 //Debug.Log("goRotator:NOTFOUND:" + goRotator);
             }
 
             Messenger<Vector2, Vector2>.Broadcast(InputSystemEvents.inputDragMove, fingerPos, delta);
         }
 
-        public virtual void DragObject(GameObject go, Vector2 fingerPos, Vector2 delta)
-        {
+        public virtual void DragObject(GameObject go, Vector2 fingerPos, Vector2 delta) {
 
-            if (go != null)
-            {
+            if (go != null) {
 
                 deferTap = true;
 
                 Rigidbody rb = go.GetComponent<Rigidbody>();
 
-                if (rb == null)
-                {
+                if (rb == null) {
 
                     go.AddComponent<Rigidbody>();
                     rb = go.GetComponent<Rigidbody>();
@@ -610,12 +518,10 @@ namespace Engine.Events
                 go.transform.localRotation =
                     Quaternion.Euler(go.transform.localRotation.eulerAngles.WithY(-delta.x));
 
-                if (Math.Abs(delta.x) > .05f)
-                {
+                if (Math.Abs(delta.x) > .05f) {
                     rb.angularVelocity = (new Vector3(0, -delta.x / 50, 0));
                 }
-                else
-                {
+                else {
                     rb.angularVelocity = Vector3.zero;
                 }
 
@@ -623,14 +529,12 @@ namespace Engine.Events
             }
         }
 
-        public virtual void FingerGestures_OnPinchMove(PinchGesture gesture)
-        {
+        public virtual void FingerGestures_OnPinchMove(PinchGesture gesture) {
             //Vector2 fingerPos1 = gesture.Fingers[0].Position;
             //Vector2 fingerPos2 = gesture.
             //float delta = gesture.Delta;
 
-            if (!IsInputAllowed())
-            {
+            if (!IsInputAllowed()) {
                 return;
             }
 
@@ -642,19 +546,16 @@ namespace Engine.Events
             //ScaleCurrentObjects(delta);
         }
 
-        public virtual void FingerGestures_OnRotationMove(TwistGesture gesture)
-        {
+        public virtual void FingerGestures_OnRotationMove(TwistGesture gesture) {
             //Vector2 fingerPos1, Vector2 fingerPos2, float rotationAngleDelta) {
             //float rotationAngleDelta = gesture.DeltaRotation;
 
-            if (!IsInputAllowed())
-            {
+            if (!IsInputAllowed()) {
                 return;
             }
             // RotateCurrentObjects(Vector3.zero.WithY(rotationAngleDelta));
 
-            if (gesture.Fingers.Count > 1)
-            {
+            if (gesture.Fingers.Count > 1) {
 
                 Messenger<Vector3, Vector3, float>.Broadcast(InputSystemEvents.inputRotate,
                     gesture.Fingers[0].Position,
@@ -663,40 +564,33 @@ namespace Engine.Events
             }
         }
 
-        public virtual void FingerGestures_OnLongPress(LongPressGesture gesture)
-        {
+        public virtual void FingerGestures_OnLongPress(LongPressGesture gesture) {
 
             Vector2 pos = gesture.Position;
 
-            if (!IsInputAllowed())
-            {
+            if (!IsInputAllowed()) {
                 return;
             }
 
-            if (gesture.Fingers.Count > 0)
-            {
+            if (gesture.Fingers.Count > 0) {
 
                 Messenger<Vector3, float>.Broadcast(InputSystemEvents.inputLongPress,
                 gesture.Fingers[0].Position,
                 gesture.ElapsedTime);//, gesture.Delta);
             }
 
-            if (currentDraggableGameObject != null)
-            {
+            if (currentDraggableGameObject != null) {
                 LongPressObject(currentDraggableGameObject, pos);
             }
         }
 
-        public virtual void LongPressObject(GameObject go, Vector2 pos)
-        {
+        public virtual void LongPressObject(GameObject go, Vector2 pos) {
 
-            if (go != null)
-            {
+            if (go != null) {
 
                 Rigidbody rb = go.GetComponent<Rigidbody>();
 
-                if (rb != null)
-                {
+                if (rb != null) {
                     rb.angularVelocity = Vector3.zero;
                 }
                 deferTap = true;
@@ -705,34 +599,28 @@ namespace Engine.Events
             }
         }
 
-        public virtual void FingerGestures_OnTap(TapGesture gesture)
-        {//Vector2 fingerPos) {
-         //Vector2 fingerPos = gesture.Position;
-         //LogUtil.Log("FingerGestures_OnTap", fingerPos);
-            if (!IsInputAllowed())
-            {
+        public virtual void FingerGestures_OnTap(TapGesture gesture) {//Vector2 fingerPos) {
+                                                                      //Vector2 fingerPos = gesture.Position;
+                                                                      //LogUtil.Log("FingerGestures_OnTap", fingerPos);
+            if (!IsInputAllowed()) {
                 return;
             }
 
-            if (gesture.Fingers.Count > 0)
-            {
+            if (gesture.Fingers.Count > 0) {
                 Messenger<Vector3, float>.Broadcast(InputSystemEvents.inputTap,
                 gesture.Fingers[0].Position,
                 gesture.ElapsedTime);//, gesture.Delta);
             }
             //bool allowTap = true;
 
-            if (currentDraggableGameObject != null)
-            {
+            if (currentDraggableGameObject != null) {
                 //TapObject(currentDraggableGameObject, fingerPos, allowTap);
             }
         }
 
-        public virtual void TapObject(GameObject go, Vector2 fingerPos, bool allowTap = true)
-        {
+        public virtual void TapObject(GameObject go, Vector2 fingerPos, bool allowTap = true) {
 
-            if (go != null)
-            {
+            if (go != null) {
 
                 deferTap = !allowTap;
 
@@ -742,15 +630,13 @@ namespace Engine.Events
                 float heightToCheck = Screen.height - Screen.height * .85f;
                 // LogUtil.Log("Tap:heightToCheck:" + heightToCheck);
 
-                if (fingerPos.y < heightToCheck)
-                {
+                if (fingerPos.y < heightToCheck) {
                     deferTap = true;
                 }
 
                 // LogUtil.Log("Tap:deferTap:" + deferTap);
 
-                if (!deferTap)
-                {
+                if (!deferTap) {
 
                     //var fwd = transform.TransformDirection(Vector3.forward);
                     //Ray ray = Camera.main.ScreenPointToRay(Vector3.zero);
@@ -776,23 +662,19 @@ namespace Engine.Events
                     // GamePlayerProgress.Instance.ProcessProgressTaps();
                     //}
                 }
-                else
-                {
+                else {
                     deferTap = false;
                 }
             }
         }
 
-        public virtual void DoubleTapObject(GameObject go, Vector2 pos)
-        {
+        public virtual void DoubleTapObject(GameObject go, Vector2 pos) {
 
-            if (go != null)
-            {
+            if (go != null) {
 
                 Rigidbody rb = go.GetComponent<Rigidbody>();
 
-                if (rb != null)
-                {
+                if (rb != null) {
                     rb.angularVelocity = Vector3.zero;
                     deferTap = true;
                 }
@@ -801,26 +683,21 @@ namespace Engine.Events
             }
         }
 
-        public virtual void FingerGestures_OnDoubleTap(TapGesture gesture)
-        {
+        public virtual void FingerGestures_OnDoubleTap(TapGesture gesture) {
 
-            if (!IsInputAllowed())
-            {
+            if (!IsInputAllowed()) {
                 return;
             }
 
-            if (gesture.Taps == 2)
-            {
+            if (gesture.Taps == 2) {
 
-                if (gesture.Fingers.Count > 0)
-                {
+                if (gesture.Fingers.Count > 0) {
                     Messenger<Vector3, float>.Broadcast(InputSystemEvents.inputDoubleTap,
                     gesture.Fingers[0].Position,
                     gesture.Taps);
                 }
 
-                if (currentDraggableGameObject != null)
-                {
+                if (currentDraggableGameObject != null) {
                     DoubleTapObject(currentDraggableGameObject, gesture.Position);
                 }
             }
@@ -861,15 +738,13 @@ namespace Engine.Events
         }
         */
 
-        public virtual void FingerGestures_OnSwipe(SwipeGesture gesture)
-        {
+        public virtual void FingerGestures_OnSwipe(SwipeGesture gesture) {
 
             //Vector2 startPos = gesture.StartPosition;
             FingerGestures.SwipeDirection direction = gesture.Direction;
             //float velocity = gesture.Velocity;
 
-            if (!IsInputAllowed())
-            {
+            if (!IsInputAllowed()) {
                 return;
             }
 
@@ -877,8 +752,7 @@ namespace Engine.Events
 
             InputSystemSwipeDirection directionTo = ConvertSwipeType(direction);
 
-            if (gesture.Fingers.Count > 0)
-            {
+            if (gesture.Fingers.Count > 0) {
                 Messenger<InputSystemSwipeDirection, Vector3, float>.Broadcast(InputSystemEvents.inputSwipe,
                 directionTo,
                 gesture.Fingers[0].Position,
@@ -887,11 +761,9 @@ namespace Engine.Events
 
 
             if (direction == FingerGestures.SwipeDirection.Right
-                || direction == FingerGestures.SwipeDirection.Down)
-            {
+                || direction == FingerGestures.SwipeDirection.Down) {
                 //if (!AppViewerUIController.Instance.uiVisible) {
-                if (allowSwipe)
-                {
+                if (allowSwipe) {
                     //AppViewerAppController.Instance.ChangeActionPrevious();
                 }
 
@@ -901,11 +773,9 @@ namespace Engine.Events
                 //}
             }
             else if (direction == FingerGestures.SwipeDirection.Left
-                || direction == FingerGestures.SwipeDirection.Up)
-            {
+                || direction == FingerGestures.SwipeDirection.Up) {
                 //if (!AppViewerUIController.Instance.uiVisible) {
-                if (allowSwipe)
-                {
+                if (allowSwipe) {
                     //AppViewerAppController.Instance.ChangeActionNext();
                 }
 
@@ -1336,45 +1206,38 @@ namespace Engine.Events
     }
     */
 
-        public virtual bool IsInputAllowed()
-        {
+        public virtual bool IsInputAllowed() {
             return true;
         }
 
-        public virtual void ScaleCurrentObject(float delta)
-        {
+        public virtual void ScaleCurrentObject(float delta) {
 
 #if USE_GAME_LIB_GAMES
             GameObject go = GameDraggableEditor.GetCurrentSpriteObject();
 
-            if (go != null)
-            {
+            if (go != null) {
                 GameObjectHelper.ScaleObject(go, delta);
             }
 #endif
         }
 
-        public virtual void RotateCurrentObject(float delta)
-        {
+        public virtual void RotateCurrentObject(float delta) {
 
 #if USE_GAME_LIB_GAMES
             GameObject go = GameDraggableEditor.GetCurrentSpriteObject();
 
-            if (go != null)
-            {
+            if (go != null) {
                 GameObjectHelper.RotateObjectZ(go, delta);
             }
 #endif
         }
 
-        public virtual void SpinCurrentObject(Vector2 fingerPos, Vector2 delta)
-        {
+        public virtual void SpinCurrentObject(Vector2 fingerPos, Vector2 delta) {
 
 #if USE_GAME_LIB_GAMES
             GameObject go = GameDraggableEditor.GetCurrentSpriteObject();
 
-            if (go != null)
-            {
+            if (go != null) {
                 GameObjectHelper.SpinObject(go, fingerPos, delta);
                 GameObjectHelper.deferTap = true;
                 GamePlayerProgress.Instance.ProcessProgressSpins();
@@ -1382,20 +1245,16 @@ namespace Engine.Events
 #endif
         }
 
-        public virtual void ResetCurrentObject(Vector2 pos)
-        {
+        public virtual void ResetCurrentObject(Vector2 pos) {
 
 #if USE_GAME_LIB_GAMES
             GameObject go = GameDraggableEditor.GetCurrentSpriteObject();
 
-            if (go != null)
-            {
+            if (go != null) {
                 Rigidbody rb = go.GetComponent<Rigidbody>();
 
-                if (rb != null)
-                {
-                    if (rb != null)
-                    {
+                if (rb != null) {
+                    if (rb != null) {
                         rb.angularVelocity = Vector3.zero;
                     }
                 }
@@ -1406,11 +1265,9 @@ namespace Engine.Events
 #endif
         }
 
-        public virtual void FingerGestures_OnTap(Vector2 fingerPos)
-        {
+        public virtual void FingerGestures_OnTap(Vector2 fingerPos) {
 
-            if (!IsInputAllowed())
-            {
+            if (!IsInputAllowed()) {
                 return;
             }
 
@@ -1419,8 +1276,7 @@ namespace Engine.Events
 #endif
         }
 
-        public virtual void handleTouchLaunch(Vector2 move)
-        {
+        public virtual void handleTouchLaunch(Vector2 move) {
 
 #if USE_GAME_LIB_GAMES
             // TODO MOVE TO EVENTS
@@ -1444,8 +1300,7 @@ namespace Engine.Events
             //LogUtil.Log("SWIPE:anglePlayer:" + anglePlayer);
             //LogUtil.Log("SWIPE:angleDiff:" + angleDiff);
 
-            if (angleDiff < 0)
-            {
+            if (angleDiff < 0) {
                 angleDiff = angleDiff + 360;
                 angleDiff = Mathf.Abs(angleDiff);
             }
@@ -1462,27 +1317,23 @@ namespace Engine.Events
 
             //forceVector.y = 0f;
 
-            if (angleDiff > 320 || angleDiff <= 45)
-            { // forwardish
+            if (angleDiff > 320 || angleDiff <= 45) { // forwardish
 
                 //Debug.Log("swipe controller: FORWARD :angleDiff:" + angleDiff);
                 GameController.CurrentGamePlayerController.Boost(forceVector, force * 20f);
             }
-            else if (angleDiff < 225 && angleDiff >= 135)
-            { // backish
+            else if (angleDiff < 225 && angleDiff >= 135) { // backish
 
                 //Debug.Log("swipe controller: BACK :angleDiff:" + angleDiff);
                 GameController.CurrentGamePlayerController.Spin(forceVector, force * 25f);
                 GamePlayerProgress.Instance.ProcessProgressTotal(GameStatCodes.spins, 1f);
             }
-            else if (angleDiff > 45 && angleDiff < 135)
-            { // rightish
+            else if (angleDiff > 45 && angleDiff < 135) { // rightish
 
                 //Debug.Log("swipe controller: RIGHT :angleDiff:" + angleDiff);
                 GameController.CurrentGamePlayerController.Strafe(forceVector, force * 30f);
             }
-            else if (angleDiff <= 320 && angleDiff >= 225)
-            { // leftish
+            else if (angleDiff <= 320 && angleDiff >= 225) { // leftish
 
                 //Debug.Log("swipe controller: LEFT :angleDiff:" + angleDiff);
                 GameController.CurrentGamePlayerController.Strafe(forceVector, force * 30f);
@@ -1490,37 +1341,30 @@ namespace Engine.Events
 #endif
         }
 
-        public void FindCameras()
-        {
+        public void FindCameras() {
 
-            if (camHud == null)
-            {
+            if (camHud == null) {
 
-                foreach (Camera camItem in Camera.allCameras)
-                {
+                foreach (Camera camItem in Camera.allCameras) {
 
                     if (camItem.cullingMask ==
-                        LayerMask.NameToLayer("UIHUDScaled"))
-                    {
+                        LayerMask.NameToLayer("UIHUDScaled")) {
 
                         camHud = camItem;
                     }
 
                     if (camItem.cullingMask ==
-                        LayerMask.NameToLayer("HUDScaled"))
-                    {
+                        LayerMask.NameToLayer("HUDScaled")) {
 
                         camHud = camItem;
                     }
 
-                    if (camItem.name.IsEqualLowercase("hudcamera"))
-                    {
+                    if (camItem.name.IsEqualLowercase("hudcamera")) {
 
                         camHud = camItem;
                     }
 
-                    if (camItem.name.IsEqualLowercase("uicamera"))
-                    {
+                    if (camItem.name.IsEqualLowercase("uicamera")) {
 
                         camUI = camItem;
                     }
@@ -1531,12 +1375,10 @@ namespace Engine.Events
             }
         }
 
-        public virtual void updateTouchLaunch()
-        {
+        public virtual void updateTouchLaunch() {
 
 #if USE_GAME_LIB_GAMES
-            if (!GameConfigs.isGameRunning)
-            {
+            if (!GameConfigs.isGameRunning) {
                 return;
             }
 #endif
@@ -1552,8 +1394,7 @@ namespace Engine.Events
             if ((Input.mousePosition.x > Screen.width / 3
                 && Input.mousePosition.x < Screen.width - Screen.width / 3)
                 && (Input.mousePosition.y > Screen.height / 4
-                && Input.mousePosition.y < Screen.height - Screen.height / 3))
-            {
+                && Input.mousePosition.y < Screen.height - Screen.height / 3)) {
                 //inHitArea = true;
             }
 
@@ -1565,8 +1406,7 @@ namespace Engine.Events
             bool hasTouchesDownAllowed = false;
             bool hasTouchesUpAllowed = false;
 
-            if (Input.touches.Length > 0)
-            {
+            if (Input.touches.Length > 0) {
                 hasTouches = true;
             }
 
@@ -1579,35 +1419,29 @@ namespace Engine.Events
             hasTouchesUpAllowed = checkIfTouchesUpAllowed();
             ////
 
-            if (hasTouches)
-            {
+            if (hasTouches) {
                 //LogUtil.Log("hasTouches: " + hasTouches);
             }
-            if (hasTouchesDownAllowed)
-            {
+            if (hasTouchesDownAllowed) {
                 //LogUtil.Log("hasTouchesDownAllowed: " + hasTouchesDownAllowed);
             }
-            if (hasTouchesUpAllowed)
-            {
+            if (hasTouchesUpAllowed) {
                 //LogUtil.Log("hasTouchesUpAllowed: " + hasTouchesUpAllowed);
             }
 
-            if (!hasTouches)
-            {
+            if (!hasTouches) {
                 lastDownAllowedPosition = Input.mousePosition;
                 checkIfAllowedTouch(lastDownAllowedPosition);
             }
 
-            if (!shouldTouch)
-            {
+            if (!shouldTouch) {
                 //return;
             }
 
             if (((Input.GetMouseButtonDown(0)
                 && !hasTouchesDownAllowed) || hasTouchesDownAllowed)
                 && !inputAxisDown
-                && !inputButtonDown)
-            {
+                && !inputButtonDown) {
 
                 inputGestureDown = true;
             }
@@ -1615,8 +1449,7 @@ namespace Engine.Events
             if (((Input.GetMouseButtonUp(0)
                 && !hasTouchesUpAllowed) || hasTouchesUpAllowed)
                 && !inputAxisDown
-                && !inputButtonDown)
-            {
+                && !inputButtonDown) {
 
                 inputGestureUp = true;
             }
@@ -1626,11 +1459,9 @@ namespace Engine.Events
                             //|| Input.mousePosition.y > Screen.height / 4)
                             //&& (Input.mousePosition.x < Screen.width - (Screen.width / 5) 
                             //&& Input.mousePosition.y < Screen.height - (Screen.height / 5) )
-                            )
-            {
+                            ) {
 
-                if (positionStart == Vector3.zero)
-                {
+                if (positionStart == Vector3.zero) {
 
                     positionEnd = Vector3.zero;
                     positionStart = lastDownAllowedPosition;
@@ -1644,11 +1475,9 @@ namespace Engine.Events
 
 #if USE_GAME_LIB_GAMES
                 // TODO MOVE TO EVENTS
-                if (GameController.CurrentGamePlayerController != null)
-                {
+                if (GameController.CurrentGamePlayerController != null) {
 
-                    if (GameController.CurrentGamePlayerController.IsPlayerControlled)
-                    {
+                    if (GameController.CurrentGamePlayerController.IsPlayerControlled) {
 
                         //Vector3 dir = positionStart - Input.mousePosition;
                         //Vector3 posNormalized = dir.normalized;
@@ -1659,18 +1488,14 @@ namespace Engine.Events
                 }
 #endif
             }
-            else if (inputGestureUp)
-            {
+            else if (inputGestureUp) {
                 if (positionEnd == Vector3.zero
-                    && positionStart != Vector3.zero)
-                {
+                    && positionStart != Vector3.zero) {
 
-                    if (hasTouches)
-                    {
+                    if (hasTouches) {
                         positionEnd = lastUpAllowedPosition;
                     }
-                    else
-                    {
+                    else {
                         positionEnd = Input.mousePosition;
                     }
 
@@ -1687,16 +1512,14 @@ namespace Engine.Events
 
                     bool doAction = true;
 
-                    if (Time.time > updateTouchStartTime + updateTouchMaxTime)
-                    {
+                    if (Time.time > updateTouchStartTime + updateTouchMaxTime) {
 
                         updateTouchStartTime = Time.time;
                         doAction = false;
                         showPoints = false;
                     }
 
-                    if (!doAction)
-                    {
+                    if (!doAction) {
 
                         positionStart = Vector3.zero;
                         return;
@@ -1704,11 +1527,9 @@ namespace Engine.Events
 
 #if USE_GAME_LIB_GAMES
                     // TODO MOVE TO EVENTS
-                    if (GameController.CurrentGamePlayerController != null)
-                    {
+                    if (GameController.CurrentGamePlayerController != null) {
 
-                        if (GameController.CurrentGamePlayerController.IsPlayerControlled)
-                        {
+                        if (GameController.CurrentGamePlayerController.IsPlayerControlled) {
 
                             //Attack();
                             //gamePlayerController.gamePlayerModelHolderModel.
@@ -1740,71 +1561,57 @@ namespace Engine.Events
                     positionEnd = Vector3.zero;
                 }
             }
-            else
-            {
+            else {
 
             }
 
-            if (showPoints)
-            {
+            if (showPoints) {
 
-                if (positionStart != Vector3.zero)
-                {
+                if (positionStart != Vector3.zero) {
                     //showStartPoint(positionStart);
                 }
 
-                if (positionEnd != Vector3.zero)
-                {
+                if (positionEnd != Vector3.zero) {
                     //showEndPoint(positionEnd);
                 }
             }
-            else
-            {
+            else {
                 //hidePoints();
             }
         }
 
-        public virtual void hidePoints()
-        {
+        public virtual void hidePoints() {
 
             hideStartPoint();
             hideEndPoint();
         }
 
-        public virtual void hideStartPoint()
-        {
+        public virtual void hideStartPoint() {
 
-            if (pointStartObject != null)
-            {
+            if (pointStartObject != null) {
 
                 pointStartObject.transform.position = Vector3.zero.WithY(3000);
             }
         }
 
-        public virtual void hideEndPoint()
-        {
+        public virtual void hideEndPoint() {
 
-            if (pointEndObject != null)
-            {
+            if (pointEndObject != null) {
 
                 pointEndObject.transform.position = Vector3.zero.WithY(3000);
             }
         }
 
-        public virtual void showStartPoint(Vector3 pos)
-        {
+        public virtual void showStartPoint(Vector3 pos) {
             //
 
-            if (pointStartObject == null)
-            {
+            if (pointStartObject == null) {
 
-                if (!isCreatingStart)
-                {
+                if (!isCreatingStart) {
 
                     isCreatingStart = true;
 
-                    if (prefabPointStart == null)
-                    {
+                    if (prefabPointStart == null) {
 
                         prefabPointStart = Resources.Load(
                             ContentPaths.appCacheVersionSharedPrefabWeapons +
@@ -1815,26 +1622,21 @@ namespace Engine.Events
                 }
             }
 
-            if (pointStartObject != null)
-            {
+            if (pointStartObject != null) {
 
                 pointStartObject.transform.position = Camera.main.ScreenToWorldPoint(pos);
             }
         }
 
-        public virtual void showEndPoint(Vector3 pos)
-        {
+        public virtual void showEndPoint(Vector3 pos) {
 
-            if (pointEndObject == null)
-            {
+            if (pointEndObject == null) {
 
-                if (!isCreatingEnd)
-                {
+                if (!isCreatingEnd) {
 
                     isCreatingEnd = true;
 
-                    if (prefabPointEnd == null)
-                    {
+                    if (prefabPointEnd == null) {
 
                         prefabPointEnd = Resources.Load(
                             ContentPaths.appCacheVersionSharedPrefabWeapons +
@@ -1845,22 +1647,18 @@ namespace Engine.Events
                 }
             }
 
-            if (pointEndObject != null)
-            {
+            if (pointEndObject != null) {
                 pointEndObject.transform.position = Camera.main.ScreenToWorldPoint(pos);
             }
         }
 
-        public virtual bool checkIfAllowedTouch(Vector3 pos)
-        {
+        public virtual bool checkIfAllowedTouch(Vector3 pos) {
 
-            if (camHud == null)
-            {
+            if (camHud == null) {
 
                 FindCameras();
 
-                if (camHud == null)
-                {
+                if (camHud == null) {
 
                     return false;
                 }
@@ -1875,33 +1673,28 @@ namespace Engine.Events
             inputAxisDown = false;
             shouldTouch = false;
 
-            if (Physics.Raycast(screenRay, out hit, Mathf.Infinity) && hit.transform != null)
-            {
+            if (Physics.Raycast(screenRay, out hit, Mathf.Infinity) && hit.transform != null) {
 
                 if (hit.transform.name.Contains("ButtonInput")
                     || hit.transform.name.Contains("Axis")
                     || hit.transform.name.Contains("Ignore")
-                    || hit.transform.name.Contains("Pad"))
-                {
+                    || hit.transform.name.Contains("Pad")) {
                     inputButtonDown = true;
                     shouldTouch = false;
                     allowedTouch = false;
                 }
 
-                if (allowedTouch)
-                {
+                if (allowedTouch) {
 
 #if USE_GAME_LIB_GAMES
-                    if (hit.transform.gameObject.Has<GameTouchInputAxis>())
-                    {
+                    if (hit.transform.gameObject.Has<GameTouchInputAxis>()) {
                         // not over axis controller
                         inputAxisDown = true;
                         shouldTouch = false;
                         allowedTouch = false;
                     }
 
-                    if (hit.transform.gameObject.Has<GameTouchInputAxis>())
-                    {
+                    if (hit.transform.gameObject.Has<GameTouchInputAxis>()) {
                         // not over axis controller
                         inputAxisDown = true;
                         shouldTouch = false;
@@ -1909,8 +1702,7 @@ namespace Engine.Events
                     }
 #endif
 
-                    if (UIUtil.IsButton(hit.transform.gameObject))
-                    {
+                    if (UIUtil.IsButton(hit.transform.gameObject)) {
                         // not over button
                         inputButtonDown = true;
                         shouldTouch = false;
@@ -1925,17 +1717,13 @@ namespace Engine.Events
             return allowedTouch;
         }
 
-        public virtual bool checkIfTouchesDownAllowed()
-        {
+        public virtual bool checkIfTouchesDownAllowed() {
 
-            foreach (Touch t in Input.touches)
-            {
+            foreach (Touch t in Input.touches) {
 
-                if (t.phase == TouchPhase.Began)
-                {
+                if (t.phase == TouchPhase.Began) {
 
-                    if (checkIfAllowedTouch(t.position))
-                    {
+                    if (checkIfAllowedTouch(t.position)) {
 
                         lastDownAllowedPosition = t.position;
 
@@ -1944,11 +1732,9 @@ namespace Engine.Events
                 }
             }
 
-            if (Input.GetMouseButtonDown(0))
-            {
+            if (Input.GetMouseButtonDown(0)) {
 
-                if (checkIfAllowedTouch(Input.mousePosition))
-                {
+                if (checkIfAllowedTouch(Input.mousePosition)) {
 
                     lastDownAllowedPosition = Input.mousePosition;
 
@@ -1959,17 +1745,13 @@ namespace Engine.Events
             return false;
         }
 
-        public virtual bool checkIfTouchesUpAllowed()
-        {
+        public virtual bool checkIfTouchesUpAllowed() {
 
-            foreach (Touch t in Input.touches)
-            {
+            foreach (Touch t in Input.touches) {
 
-                if (t.phase == TouchPhase.Ended)
-                {
+                if (t.phase == TouchPhase.Ended) {
 
-                    if (checkIfAllowedTouch(t.position))
-                    {
+                    if (checkIfAllowedTouch(t.position)) {
 
                         lastUpAllowedPosition = t.position;
 
@@ -1978,11 +1760,9 @@ namespace Engine.Events
                 }
             }
 
-            if (Input.GetMouseButtonUp(0))
-            {
+            if (Input.GetMouseButtonUp(0)) {
 
-                if (checkIfAllowedTouch(Input.mousePosition))
-                {
+                if (checkIfAllowedTouch(Input.mousePosition)) {
 
                     lastUpAllowedPosition = Input.mousePosition;
 
@@ -1993,21 +1773,17 @@ namespace Engine.Events
             return false;
         }
 
-        public virtual bool checkIfTouchesDown()
-        {
+        public virtual bool checkIfTouchesDown() {
 
-            foreach (Touch t in Input.touches)
-            {
+            foreach (Touch t in Input.touches) {
 
-                if (t.phase == TouchPhase.Began)
-                {
+                if (t.phase == TouchPhase.Began) {
 
                     return true;
                 }
             }
 
-            if (Input.GetMouseButtonDown(0))
-            {
+            if (Input.GetMouseButtonDown(0)) {
 
                 return true;
             }
@@ -2015,21 +1791,17 @@ namespace Engine.Events
             return false;
         }
 
-        public virtual bool checkIfTouchesUp()
-        {
+        public virtual bool checkIfTouchesUp() {
 
-            foreach (Touch t in Input.touches)
-            {
+            foreach (Touch t in Input.touches) {
 
-                if (t.phase == TouchPhase.Ended)
-                {
+                if (t.phase == TouchPhase.Ended) {
 
                     return true;
                 }
             }
 
-            if (Input.GetMouseButtonUp(0))
-            {
+            if (Input.GetMouseButtonUp(0)) {
 
                 return true;
             }
@@ -2085,44 +1857,38 @@ namespace Engine.Events
 
         //
 
-        public bool IsInputTouching()
-        {
+        public bool IsInputTouching() {
 
             //gameObject.SendMessage("OnInputPress");
             return IsInputTouchDown();
         }
 
-        public void SendInputDownMessage(InputTouchInfo inputTouchInfo)
-        {
+        public void SendInputDownMessage(InputTouchInfo inputTouchInfo) {
             //MessengerObject<InputTouchInfo>.Broadcast(InputSystem.EVENT_INPUT_UP, inputTouchInfo, MessengerMode.DONT_REQUIRE_LISTENER);
 
             //LogUtil.Log("InputSystem::SendInputDownMessage");
         }
 
-        public void SendInputUpMessage(InputTouchInfo inputTouchInfo)
-        {
+        public void SendInputUpMessage(InputTouchInfo inputTouchInfo) {
             //MessengerObject<InputTouchInfo>.Broadcast(InputSystem.EVENT_INPUT_UP, inputTouchInfo, MessengerMode.DONT_REQUIRE_LISTENER);
 
             //LogUtil.Log("InputSystem::SendInputUpMessage");
         }
 
-        public void SendInputMoveMessage(InputTouchInfo inputTouchInfo)
-        {
+        public void SendInputMoveMessage(InputTouchInfo inputTouchInfo) {
             //MessengerObject<InputTouchInfo>.Broadcast(InputSystem.EVENT_INPUT_MOVE, inputTouchInfo, MessengerMode.DONT_REQUIRE_LISTENER);
 
             //LogUtil.Log("InputSystem::SendInputMoveMessage");
         }
 
-        public Vector3 GetAccelerationAxis()
-        {
+        public Vector3 GetAccelerationAxis() {
 
             Vector3 dir = Vector3.zero;
 
             dir.x = -Input.acceleration.y;
             dir.z = Input.acceleration.x;
 
-            if (dir.sqrMagnitude > 1)
-            {
+            if (dir.sqrMagnitude > 1) {
                 dir.Normalize();
             }
 
@@ -2131,17 +1897,13 @@ namespace Engine.Events
             return dir;
         }
 
-        public InputTouchInfo GetTouchInfoFromInput()
-        {
+        public InputTouchInfo GetTouchInfoFromInput() {
 
-            if (!Context.Current.isMobile)
-            {
+            if (!Context.Current.isMobile) {
 
-                if (touchInfo != null)
-                {
+                if (touchInfo != null) {
 
-                    if (Input.GetMouseButtonDown(0))
-                    {
+                    if (Input.GetMouseButtonDown(0)) {
 
                         touchInfo.position2d.x = Input.mousePosition.x;
                         touchInfo.position2d.y = Input.mousePosition.y;
@@ -2154,18 +1916,14 @@ namespace Engine.Events
                     }
                 }
             }
-            else
-            {
+            else {
 
-                foreach (Touch touch in Input.touches)
-                {
+                foreach (Touch touch in Input.touches) {
 
                     if (touch.phase == TouchPhase.Moved
-                        || touch.tapCount > 0)
-                    {
+                        || touch.tapCount > 0) {
 
-                        if (touchInfo != null)
-                        {
+                        if (touchInfo != null) {
 
                             touchInfo.position2d = touch.position;
                             touchInfo.position3d.x = touch.position.x;
@@ -2185,28 +1943,22 @@ namespace Engine.Events
             return touchInfo;
         }
 
-        public bool IsInputTouchMove()
-        {
+        public bool IsInputTouchMove() {
 
-            if (!Context.Current.isMobile)
-            {
+            if (!Context.Current.isMobile) {
 
-                if (Input.GetMouseButtonDown(0))
-                {
+                if (Input.GetMouseButtonDown(0)) {
 
                     SendInputDownMessage(GetTouchInfoFromInput());
                     return true;
                 }
             }
-            else
-            {
+            else {
 
-                foreach (Touch touch in Input.touches)
-                {
+                foreach (Touch touch in Input.touches) {
 
                     if (touch.phase == TouchPhase.Moved
-                        || touch.tapCount > 0)
-                    {
+                        || touch.tapCount > 0) {
 
                         SendInputDownMessage(GetTouchInfoFromInput());
                         return true;
@@ -2217,30 +1969,24 @@ namespace Engine.Events
             return false;
         }
 
-        public bool IsInputTouchDown()
-        {
+        public bool IsInputTouchDown() {
 
-            if (!Context.Current.isMobile)
-            {
+            if (!Context.Current.isMobile) {
 
-                if (Input.GetMouseButtonDown(0))
-                {
+                if (Input.GetMouseButtonDown(0)) {
 
                     SendInputDownMessage(GetTouchInfoFromInput());
                     return true;
                 }
             }
-            else
-            {
+            else {
 
-                foreach (Touch touch in Input.touches)
-                {
+                foreach (Touch touch in Input.touches) {
 
                     if (touch.phase == TouchPhase.Began
                         || touch.phase == TouchPhase.Moved
                         || touch.tapCount > 0
-                        || Input.GetMouseButtonDown(0))
-                    {
+                        || Input.GetMouseButtonDown(0)) {
 
                         SendInputDownMessage(GetTouchInfoFromInput());
                         return true;
@@ -2251,27 +1997,21 @@ namespace Engine.Events
             return false;
         }
 
-        public bool IsInputTouchUp()
-        {
+        public bool IsInputTouchUp() {
 
-            if (!Context.Current.isMobile)
-            {
+            if (!Context.Current.isMobile) {
 
-                if (Input.GetMouseButtonUp(0))
-                {
+                if (Input.GetMouseButtonUp(0)) {
 
                     SendInputUpMessage(GetTouchInfoFromInput());
                     return true;
                 }
             }
-            else
-            {
+            else {
 
-                foreach (Touch touch in Input.touches)
-                {
+                foreach (Touch touch in Input.touches) {
 
-                    if (touch.phase == TouchPhase.Ended)
-                    {
+                    if (touch.phase == TouchPhase.Ended) {
 
                         SendInputUpMessage(GetTouchInfoFromInput());
                         return true;
@@ -2282,8 +2022,7 @@ namespace Engine.Events
             return false;
         }
 
-        public enum InputAxis
-        {
+        public enum InputAxis {
             Up,
             Down,
             Left,
@@ -2294,11 +2033,9 @@ namespace Engine.Events
             LowerLeft
         }
 
-        public bool IsAxisPressed(InputAxis inputAxis)
-        {
+        public bool IsAxisPressed(InputAxis inputAxis) {
 
-            if (IsKeyDown(inputAxis))
-            {
+            if (IsKeyDown(inputAxis)) {
 
                 return true;
             }
@@ -2306,8 +2043,7 @@ namespace Engine.Events
             return false;
         }
 
-        public bool IsAnyAxisPressed()
-        {
+        public bool IsAnyAxisPressed() {
 
             if (IsKeyDown(InputAxis.Up)
                 || IsKeyDown(InputAxis.UpperLeft)
@@ -2316,8 +2052,7 @@ namespace Engine.Events
                 || IsKeyDown(InputAxis.LowerLeft)
                 || IsKeyDown(InputAxis.LowerRight)
                 || IsKeyDown(InputAxis.Left)
-                || IsKeyDown(InputAxis.Down))
-            {
+                || IsKeyDown(InputAxis.Down)) {
 
                 LogUtil.Log("IsAnyKeyPressed:" + true);
 
@@ -2328,61 +2063,52 @@ namespace Engine.Events
             return false;
         }
 
-        public bool IsKeyDown(InputAxis inputAxis)
-        {
+        public bool IsKeyDown(InputAxis inputAxis) {
 
             if (inputAxis == InputAxis.Up
                 || inputAxis == InputAxis.UpperLeft
-                || inputAxis == InputAxis.UpperRight)
-            {
+                || inputAxis == InputAxis.UpperRight) {
 
                 if (Input.GetKeyDown(KeyCode.UpArrow)
                     || Input.GetKeyDown(KeyCode.W)
                     || Input.GetAxis("Vertical") > 0
-                    || useAcceleration && Input.acceleration.y > 0)
-                {
+                    || useAcceleration && Input.acceleration.y > 0) {
 
                     return true;
                 }
             }
             else if (inputAxis == InputAxis.Down
                 || inputAxis == InputAxis.LowerLeft
-                || inputAxis == InputAxis.LowerRight)
-            {
+                || inputAxis == InputAxis.LowerRight) {
 
                 if (Input.GetKeyDown(KeyCode.DownArrow)
                     || Input.GetKeyDown(KeyCode.S)
                     || Input.GetAxis("Vertical") < 0
-                    || useAcceleration && Input.acceleration.y < 0)
-                {
+                    || useAcceleration && Input.acceleration.y < 0) {
 
                     return true;
                 }
             }
             else if (inputAxis == InputAxis.Left
                 || inputAxis == InputAxis.UpperLeft
-                || inputAxis == InputAxis.LowerLeft)
-            {
+                || inputAxis == InputAxis.LowerLeft) {
 
                 if (Input.GetKeyDown(KeyCode.LeftArrow)
                     || Input.GetKeyDown(KeyCode.A)
                     || Input.GetAxis("Horizontal") < 0
-                    || useAcceleration && Input.acceleration.x < 0)
-                {
+                    || useAcceleration && Input.acceleration.x < 0) {
 
                     return true;
                 }
             }
             else if (inputAxis == InputAxis.Right
                 || inputAxis == InputAxis.UpperRight
-                || inputAxis == InputAxis.LowerRight)
-            {
+                || inputAxis == InputAxis.LowerRight) {
 
                 if (Input.GetKeyDown(KeyCode.RightArrow)
                     || Input.GetKeyDown(KeyCode.D)
                     || Input.GetAxis("Horizontal") > 0
-                    || useAcceleration && Input.acceleration.x > 0)
-                {
+                    || useAcceleration && Input.acceleration.x > 0) {
 
                     return true;
                 }
@@ -2391,11 +2117,9 @@ namespace Engine.Events
             return false;
         }
 
-        private void Update()
-        {
+        private void Update() {
 
-            if (!inputEnabled)
-            {
+            if (!inputEnabled) {
                 return;
             }
 

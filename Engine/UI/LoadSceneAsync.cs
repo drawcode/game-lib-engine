@@ -44,8 +44,8 @@ public class LoadSceneAsync : GameObjectBehavior {
 
 
     public void Start() {
-        if(running) {
-            if(!string.IsNullOrEmpty(levelLoadingName)) {
+        if (running) {
+            if (!string.IsNullOrEmpty(levelLoadingName)) {
                 LoadLevel(levelLoadingName);
             }
         }
@@ -53,7 +53,7 @@ public class LoadSceneAsync : GameObjectBehavior {
 
     public void ChangeState(LoadSceneState loadSceneState) {
         // change fsm
-        if(loadSceneState != levelLoadState) {
+        if (loadSceneState != levelLoadState) {
             levelLoadState = loadSceneState;
             // do stuff based on state change or fire and event.
         }
@@ -122,13 +122,13 @@ public class LoadSceneAsync : GameObjectBehavior {
 
     void Update() {
 
-        if(running) {
+        if (running) {
 
-            if(asyncLevelLoad == null) {
+            if (asyncLevelLoad == null) {
                 return;
             }
 
-            if(asyncLevelLoad.isDone) {
+            if (asyncLevelLoad.isDone) {
                 UIUtil.SetSliderValue(progressBarUI, 1f);
                 UIUtil.SetLabelValue(progressBarTextUI, "100%");
             }
@@ -137,8 +137,8 @@ public class LoadSceneAsync : GameObjectBehavior {
                 UIUtil.SetSliderValue(progressBarUI, currentLoadedBytes);
                 UIUtil.SetLabelValue(progressBarTextUI, currentLoadedBytes.ToString("P0"));
 
-                if(levelLoadState != LoadSceneState.LevelNotStarted) {
-                    if(asyncLevelLoad != null) {
+                if (levelLoadState != LoadSceneState.LevelNotStarted) {
+                    if (asyncLevelLoad != null) {
                         currentLoadedBytes = asyncLevelLoad.progress; // 0 to 1 float when 1.0 it is complete use for progress
                         Messenger<float>.Broadcast(LoadSceneMessages.LevelLoadProgress, currentLoadedBytes);
                     }

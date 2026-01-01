@@ -3,8 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using Engine.Game.Data;
 
-namespace Engine.Game.App.BaseApp
-{
+namespace Engine.Game.App.BaseApp {
 
     /*
     AppModes
@@ -17,8 +16,7 @@ namespace Engine.Game.App.BaseApp
 
     */
 
-    public class BaseAppModeMeta
-    {
+    public class BaseAppModeMeta {
         public static string appModeGameDefault = "app-mode-game-default";
         public static string appModeGameArcade = "app-mode-game-arcade";
         public static string appModeGameChallenge = "app-mode-game-challenge";
@@ -28,22 +26,17 @@ namespace Engine.Game.App.BaseApp
         public static string appModeGameCoop = "app-mode-game-coop";
     }
 
-    public class BaseAppModes<T> : DataObjects<T> where T : DataObject, new()
-    {
+    public class BaseAppModes<T> : DataObjects<T> where T : DataObject, new() {
         private static T current;
         private static volatile BaseAppModes<T> instance;
         private static object syncRoot = new Object();
 
         private string BASE_DATA_KEY = "app-mode-data";
 
-        public static T BaseCurrent
-        {
-            get
-            {
-                if (current == null)
-                {
-                    lock (syncRoot)
-                    {
+        public static T BaseCurrent {
+            get {
+                if (current == null) {
+                    lock (syncRoot) {
                         if (current == null)
                             current = new T();
                     }
@@ -51,20 +44,15 @@ namespace Engine.Game.App.BaseApp
 
                 return current;
             }
-            set
-            {
+            set {
                 current = value;
             }
         }
 
-        public static BaseAppModes<T> BaseInstance
-        {
-            get
-            {
-                if (instance == null)
-                {
-                    lock (syncRoot)
-                    {
+        public static BaseAppModes<T> BaseInstance {
+            get {
+                if (instance == null) {
+                    lock (syncRoot) {
                         if (instance == null)
                             instance = new BaseAppModes<T>(true);
                     }
@@ -72,98 +60,76 @@ namespace Engine.Game.App.BaseApp
 
                 return instance;
             }
-            set
-            {
+            set {
                 instance = value;
             }
         }
 
-        public BaseAppModes()
-        {
+        public BaseAppModes() {
             Reset();
         }
 
-        public BaseAppModes(bool loadData)
-        {
+        public BaseAppModes(bool loadData) {
             Reset();
             path = "data/" + BASE_DATA_KEY + ".json";
             pathKey = BASE_DATA_KEY;
             LoadData();
         }
 
-        public bool isAppModeGameDefault
-        {
-            get
-            {
+        public bool isAppModeGameDefault {
+            get {
                 return IsAppMode(AppModeMeta.appModeGameDefault);
             }
         }
 
-        public bool isAppModeGameArcade
-        {
-            get
-            {
+        public bool isAppModeGameArcade {
+            get {
                 return IsAppMode(AppModeMeta.appModeGameArcade);
             }
         }
 
-        public bool isAppModeGameChallenge
-        {
-            get
-            {
+        public bool isAppModeGameChallenge {
+            get {
                 return IsAppMode(AppModeMeta.appModeGameChallenge);
             }
         }
 
-        public bool isAppModeGameMission
-        {
-            get
-            {
+        public bool isAppModeGameMission {
+            get {
                 return IsAppMode(AppModeMeta.appModeGameMission);
             }
         }
 
-        public bool isAppModeGameTraining
-        {
-            get
-            {
+        public bool isAppModeGameTraining {
+            get {
                 return IsAppMode(AppModeMeta.appModeGameTraining);
             }
         }
 
-        public bool isAppModeGameMatchup
-        {
-            get
-            {
+        public bool isAppModeGameMatchup {
+            get {
                 return IsAppMode(AppModeMeta.appModeGameMatchup);
             }
         }
 
-        public bool isAppModeGameCoop
-        {
-            get
-            {
+        public bool isAppModeGameCoop {
+            get {
                 return IsAppMode(AppModeMeta.appModeGameCoop);
             }
         }
 
-        public bool IsAppMode(string code)
-        {
-            if (AppModes.Current.code == code)
-            {
+        public bool IsAppMode(string code) {
+            if (AppModes.Current.code == code) {
                 return true;
             }
             return false;
         }
 
-        public void ChangeState(string code)
-        {
-            if (AppModes.Current.code != code)
-            {
+        public void ChangeState(string code) {
+            if (AppModes.Current.code != code) {
                 AppMode appMode = AppModes.Instance.GetByCode(code);
 
-                if (appMode != null)
-                {
+                if (appMode != null) {
                     AppModes.Current = appMode;
 
 #if USE_GAME_LIB_GAMES
@@ -176,18 +142,15 @@ namespace Engine.Game.App.BaseApp
         }
     }
 
-    public class BaseAppMode : GameDataObject
-    {
+    public class BaseAppMode : GameDataObject {
         // Attributes that are added or changed after launch should be like this to prevent
         // profile conversions.
 
-        public BaseAppMode()
-        {
+        public BaseAppMode() {
             Reset();
         }
 
-        public override void Reset()
-        {
+        public override void Reset() {
             base.Reset();
         }
     }

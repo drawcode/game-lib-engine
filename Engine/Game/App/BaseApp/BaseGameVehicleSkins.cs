@@ -4,23 +4,17 @@ using System.IO;
 
 using Engine.Game.Data;
 
-namespace Engine.Game.App.BaseApp
-{
-    public class BaseGameVehicleSkins<T> : DataObjects<T> where T : DataObject, new()
-    {
+namespace Engine.Game.App.BaseApp {
+    public class BaseGameVehicleSkins<T> : DataObjects<T> where T : DataObject, new() {
         private static T current;
         private static volatile BaseGameVehicleSkins<T> instance;
         private static object syncRoot = new Object();
         private string BASE_DATA_KEY = "game-vehicle-skin-data";
 
-        public static T BaseCurrent
-        {
-            get
-            {
-                if (current == null)
-                {
-                    lock (syncRoot)
-                    {
+        public static T BaseCurrent {
+            get {
+                if (current == null) {
+                    lock (syncRoot) {
                         if (current == null)
                             current = new T();
                     }
@@ -28,20 +22,15 @@ namespace Engine.Game.App.BaseApp
 
                 return current;
             }
-            set
-            {
+            set {
                 current = value;
             }
         }
 
-        public static BaseGameVehicleSkins<T> BaseInstance
-        {
-            get
-            {
-                if (instance == null)
-                {
-                    lock (syncRoot)
-                    {
+        public static BaseGameVehicleSkins<T> BaseInstance {
+            get {
+                if (instance == null) {
+                    lock (syncRoot) {
                         if (instance == null)
                             instance = new BaseGameVehicleSkins<T>(true);
                     }
@@ -49,19 +38,16 @@ namespace Engine.Game.App.BaseApp
 
                 return instance;
             }
-            set
-            {
+            set {
                 instance = value;
             }
         }
 
-        public BaseGameVehicleSkins()
-        {
+        public BaseGameVehicleSkins() {
             Reset();
         }
 
-        public BaseGameVehicleSkins(bool loadData)
-        {
+        public BaseGameVehicleSkins(bool loadData) {
             Reset();
             path = "data/" + BASE_DATA_KEY + ".json";
             pathKey = BASE_DATA_KEY;
@@ -69,23 +55,19 @@ namespace Engine.Game.App.BaseApp
         }
     }
 
-    public class BaseGameVehicleSkin : GameDataObject
-    {
+    public class BaseGameVehicleSkin : GameDataObject {
         // Attributes that are added or changed after launch should be like this to prevent
         // profile conversions.
 
-        public BaseGameVehicleSkin()
-        {
+        public BaseGameVehicleSkin() {
             Reset();
         }
 
-        public override void Reset()
-        {
+        public override void Reset() {
             base.Reset();
         }
 
-        public void Clone(BaseGameVehicleSkin toCopy)
-        {
+        public void Clone(BaseGameVehicleSkin toCopy) {
             base.Clone(toCopy);
         }
 

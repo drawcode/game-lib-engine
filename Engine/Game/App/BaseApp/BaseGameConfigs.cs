@@ -4,10 +4,8 @@ using System.Collections.Generic;
 using System.IO;
 using Engine.Game.Data;
 
-namespace Engine.Game.App.BaseApp
-{
-    public class BaseGameConfigs<T> : DataObjects<T> where T : DataObject, new()
-    {
+namespace Engine.Game.App.BaseApp {
+    public class BaseGameConfigs<T> : DataObjects<T> where T : DataObject, new() {
         private static T current;
         private static volatile BaseGameConfigs<T> instance;
         private static object syncRoot = new Object();
@@ -35,14 +33,10 @@ namespace Engine.Game.App.BaseApp
 
         public static bool useNetworking = false;
 
-        public static T BaseCurrent
-        {
-            get
-            {
-                if (current == null)
-                {
-                    lock (syncRoot)
-                    {
+        public static T BaseCurrent {
+            get {
+                if (current == null) {
+                    lock (syncRoot) {
                         if (current == null)
                             current = new T();
                     }
@@ -50,20 +44,15 @@ namespace Engine.Game.App.BaseApp
 
                 return current;
             }
-            set
-            {
+            set {
                 current = value;
             }
         }
 
-        public static BaseGameConfigs<T> BaseInstance
-        {
-            get
-            {
-                if (instance == null)
-                {
-                    lock (syncRoot)
-                    {
+        public static BaseGameConfigs<T> BaseInstance {
+            get {
+                if (instance == null) {
+                    lock (syncRoot) {
                         if (instance == null)
                             instance = new BaseGameConfigs<T>(true);
                     }
@@ -71,35 +60,29 @@ namespace Engine.Game.App.BaseApp
 
                 return instance;
             }
-            set
-            {
+            set {
                 instance = value;
             }
         }
 
-        public BaseGameConfigs()
-        {
+        public BaseGameConfigs() {
             Reset();
         }
 
-        public BaseGameConfigs(bool loadData)
-        {
+        public BaseGameConfigs(bool loadData) {
             Reset();
             path = "data/" + BASE_DATA_KEY + ".json";
             pathKey = BASE_DATA_KEY;
             LoadData();
         }
 
-        public static bool isGameRunning
-        {
-            get
-            {
+        public static bool isGameRunning {
+            get {
 
 #if USE_GAME_LIB_GAMES
 
                 if (GameController.IsGameRunning
-                    && !isUIRunning)
-                {
+                    && !isUIRunning) {
                     return true;
                 }
 #endif
@@ -108,16 +91,13 @@ namespace Engine.Game.App.BaseApp
             }
         }
 
-        public static bool isGamePaused
-        {
-            get
-            {
+        public static bool isGamePaused {
+            get {
 
 #if USE_GAME_LIB_GAMES
 
                 if (GameController.IsGamePaused
-                    && !isUIRunning)
-                {
+                    && !isUIRunning) {
                     return true;
                 }
 
@@ -126,16 +106,13 @@ namespace Engine.Game.App.BaseApp
             }
         }
 
-        public static bool isGameContentDisplay
-        {
-            get
-            {
+        public static bool isGameContentDisplay {
+            get {
 
 #if USE_GAME_LIB_GAMES
 
                 if (GameController.IsGameContentDisplay
-                    && !isUIRunning)
-                {
+                    && !isUIRunning) {
                     return true;
                 }
 #endif
@@ -143,20 +120,16 @@ namespace Engine.Game.App.BaseApp
             }
         }
 
-        public static bool isUIRunning
-        {
-            get
-            {
+        public static bool isUIRunning {
+            get {
 
 #if USE_GAME_LIB_GAMES
 #if USE_GAME_LIB_GAMES_UI
-                if (GameUIController.Instance == null)
-                {
+                if (GameUIController.Instance == null) {
                     return false;
                 }
 
-                if (GameUIController.Instance.uiVisible)
-                {
+                if (GameUIController.Instance.uiVisible) {
                     return true;
                 }
 #endif
@@ -202,28 +175,22 @@ namespace Engine.Game.App.BaseApp
     }
     */
 
-    public class BaseGameConfig : Config
-    {
-        public virtual GameLeaderboardData data
-        {
-            get
-            {
+    public class BaseGameConfig : Config {
+        public virtual GameLeaderboardData data {
+            get {
                 return Get<GameLeaderboardData>(BaseDataObjectKeys.data);
             }
 
-            set
-            {
+            set {
                 Set(BaseDataObjectKeys.data, value);
             }
         }
 
-        public BaseGameConfig()
-        {
+        public BaseGameConfig() {
             Reset();
         }
 
-        public override void Reset()
-        {
+        public override void Reset() {
             base.Reset();
         }
     }

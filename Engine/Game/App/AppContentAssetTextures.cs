@@ -4,23 +4,17 @@ using System.IO;
 using Engine.Game.App.BaseApp;
 using Engine.Utility;
 
-namespace Engine.Game.App
-{
-    public class AppContentAssetTextures : BaseAppContentAssetTextures<AppContentAssetTexture>
-    {
+namespace Engine.Game.App {
+    public class AppContentAssetTextures : BaseAppContentAssetTextures<AppContentAssetTexture> {
         private static volatile AppContentAssetTexture current;
         private static volatile AppContentAssetTextures instance;
         private static System.Object syncRoot = new System.Object();
         private string DATA_KEY = "app-content-asset-texture-data";
 
-        public static AppContentAssetTexture Current
-        {
-            get
-            {
-                if (current == null)
-                {
-                    lock (syncRoot)
-                    {
+        public static AppContentAssetTexture Current {
+            get {
+                if (current == null) {
+                    lock (syncRoot) {
                         if (current == null)
                             current = new AppContentAssetTexture();
                     }
@@ -28,20 +22,15 @@ namespace Engine.Game.App
 
                 return current;
             }
-            set
-            {
+            set {
                 current = value;
             }
         }
 
-        public static AppContentAssetTextures Instance
-        {
-            get
-            {
-                if (instance == null)
-                {
-                    lock (syncRoot)
-                    {
+        public static AppContentAssetTextures Instance {
+            get {
+                if (instance == null) {
+                    lock (syncRoot) {
                         if (instance == null)
                             instance = new AppContentAssetTextures(true);
                     }
@@ -51,13 +40,11 @@ namespace Engine.Game.App
             }
         }
 
-        public AppContentAssetTextures()
-        {
+        public AppContentAssetTextures() {
             Reset();
         }
 
-        public AppContentAssetTextures(bool loadData)
-        {
+        public AppContentAssetTextures(bool loadData) {
             Reset();
             path = "data/" + DATA_KEY + ".json";
             pathKey = DATA_KEY;
@@ -65,16 +52,13 @@ namespace Engine.Game.App
         }
     }
 
-    public class AppContentAssetTexture : BaseAppContentAssetTexture
-    {
+    public class AppContentAssetTexture : BaseAppContentAssetTexture {
 
-        public AppContentAssetTexture()
-        {
+        public AppContentAssetTexture() {
             Reset();
         }
 
-        public override void Reset()
-        {
+        public override void Reset() {
 
         }
 

@@ -50,10 +50,10 @@ public static class CanvasExtensions {
 
         Vector3 val = Vector3.zero;
 
-        if(canvas.renderMode == RenderMode.ScreenSpaceOverlay) {
+        if (canvas.renderMode == RenderMode.ScreenSpaceOverlay) {
             val = cam.WorldToScreenPoint(pos);
         }
-        else if(canvas.renderMode == RenderMode.ScreenSpaceCamera) {
+        else if (canvas.renderMode == RenderMode.ScreenSpaceCamera) {
 
             Vector2 tempVector = Vector2.zero;
             RectTransformUtility.ScreenPointToLocalPointInRectangle(
@@ -75,10 +75,10 @@ public static class CanvasExtensions {
 
         Vector3 val = Vector3.zero;
 
-        if(canvas.renderMode == RenderMode.ScreenSpaceOverlay) {
+        if (canvas.renderMode == RenderMode.ScreenSpaceOverlay) {
             val = Input.mousePosition;
         }
-        else if(canvas.renderMode == RenderMode.ScreenSpaceCamera) {
+        else if (canvas.renderMode == RenderMode.ScreenSpaceCamera) {
 
             Vector2 tempVector = Vector2.zero;
             RectTransformUtility.ScreenPointToLocalPointInRectangle(
@@ -102,11 +102,11 @@ public static class CanvasExtensions {
 
         Vector3 val = Vector3.zero;
 
-        if(canvas.renderMode == RenderMode.ScreenSpaceOverlay) {
+        if (canvas.renderMode == RenderMode.ScreenSpaceOverlay) {
 
             val = cam.ScreenToWorldPoint(pos);
         }
-        else if(canvas.renderMode == RenderMode.ScreenSpaceCamera) {
+        else if (canvas.renderMode == RenderMode.ScreenSpaceCamera) {
 
             RectTransformUtility.ScreenPointToWorldPointInRectangle(canvas.transform as RectTransform, cam.WorldToScreenPoint(pos), cam, out val);
         }

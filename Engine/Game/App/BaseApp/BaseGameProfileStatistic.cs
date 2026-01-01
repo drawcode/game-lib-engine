@@ -5,29 +5,22 @@ using System.IO;
 using Engine.Game.Data;
 using Engine.Utility;
 
-namespace Engine.Game.App.BaseApp
-{
-    public class BaseGameProfileStatisticAttributes
-    {
+namespace Engine.Game.App.BaseApp {
+    public class BaseGameProfileStatisticAttributes {
 
         public static string ATT_TOTAL_POINTS = "att-total-points";
     }
 
-    public class BaseGameProfileStatistics
-    {
+    public class BaseGameProfileStatistics {
         private static volatile BaseGameProfileStatistic current;
         private static volatile BaseGameProfileStatistics instance;
         private static object syncRoot = new Object();
         public static string DEFAULT_USERNAME = "Player";
 
-        public static BaseGameProfileStatistic BaseCurrent
-        {
-            get
-            {
-                if (current == null)
-                {
-                    lock (syncRoot)
-                    {
+        public static BaseGameProfileStatistic BaseCurrent {
+            get {
+                if (current == null) {
+                    lock (syncRoot) {
                         if (current == null)
                             current = new BaseGameProfileStatistic();
                     }
@@ -35,20 +28,15 @@ namespace Engine.Game.App.BaseApp
 
                 return current;
             }
-            set
-            {
+            set {
                 current = value;
             }
         }
 
-        public static BaseGameProfileStatistics BaseInstance
-        {
-            get
-            {
-                if (instance == null)
-                {
-                    lock (syncRoot)
-                    {
+        public static BaseGameProfileStatistics BaseInstance {
+            get {
+                if (instance == null) {
+                    lock (syncRoot) {
                         if (instance == null)
                             instance = new BaseGameProfileStatistics();
                     }
@@ -61,28 +49,24 @@ namespace Engine.Game.App.BaseApp
         // TODO: Common profile actions, lookup, count, etc
     }
 
-    public class BaseGameProfileStatistic : DataObject
-    {
+    public class BaseGameProfileStatistic : DataObject {
         // BE CAREFUL adding properties as they will cause a need for a profile conversion
         // Best way to add items to the profile is the GetAttribute and SetAttribute class as
         // that stores as a generic DataAttribute class.  Booleans, strings, objects, serialized json objects etc
         // all work well and cause no need to convert profile on updates.
 
-        public BaseGameProfileStatistic()
-        {
+        public BaseGameProfileStatistic() {
             //Reset();
         }
 
-        public override void Reset()
-        {
+        public override void Reset() {
             base.Reset();
             //username = ProfileConfigs.defaultPlayerName;
         }
 
         // STATISTICS
 
-        public virtual void SetStatisticValue(string code, object value)
-        {
+        public virtual void SetStatisticValue(string code, object value) {
             double convertedValue = 0;
             if (value != null)
                 convertedValue = Convert.ToDouble(value);
@@ -95,15 +79,12 @@ namespace Engine.Game.App.BaseApp
             SetAttribute(att);
         }
 
-        public virtual double GetStatisticValue(string code)
-        {
+        public virtual double GetStatisticValue(string code) {
             double currentValue = 0;
             object objectValue = GetAttribute(code).val;
-            if (objectValue != null)
-            {
+            if (objectValue != null) {
                 currentValue = Convert.ToDouble(objectValue);
-                if (currentValue < 0)
-                {
+                if (currentValue < 0) {
                     currentValue = 0;
                 }
             }
@@ -111,8 +92,7 @@ namespace Engine.Game.App.BaseApp
             return currentValue;
         }
 
-        public virtual List<DataAttribute> GetList()
-        {
+        public virtual List<DataAttribute> GetList() {
             return GetAttributesList("statistic");
         }
     }

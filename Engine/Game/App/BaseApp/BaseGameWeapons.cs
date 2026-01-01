@@ -4,23 +4,17 @@ using System.IO;
 using Engine.Utility;
 using Engine.Game.Data;
 
-namespace Engine.Game.App.BaseApp
-{
-    public class BaseGameWeapons<T> : DataObjects<T> where T : DataObject, new()
-    {
+namespace Engine.Game.App.BaseApp {
+    public class BaseGameWeapons<T> : DataObjects<T> where T : DataObject, new() {
         private static T current;
         private static volatile BaseGameWeapons<T> instance;
         private static object syncRoot = new Object();
         public static string BASE_DATA_KEY = "game-weapon-data";
 
-        public static T BaseCurrent
-        {
-            get
-            {
-                if (current == null)
-                {
-                    lock (syncRoot)
-                    {
+        public static T BaseCurrent {
+            get {
+                if (current == null) {
+                    lock (syncRoot) {
                         if (current == null)
                             current = new T();
                     }
@@ -28,20 +22,15 @@ namespace Engine.Game.App.BaseApp
 
                 return current;
             }
-            set
-            {
+            set {
                 current = value;
             }
         }
 
-        public static BaseGameWeapons<T> BaseInstance
-        {
-            get
-            {
-                if (instance == null)
-                {
-                    lock (syncRoot)
-                    {
+        public static BaseGameWeapons<T> BaseInstance {
+            get {
+                if (instance == null) {
+                    lock (syncRoot) {
                         if (instance == null)
                             instance = new BaseGameWeapons<T>(true);
                     }
@@ -51,13 +40,11 @@ namespace Engine.Game.App.BaseApp
             }
         }
 
-        public BaseGameWeapons()
-        {
+        public BaseGameWeapons() {
             Reset();
         }
 
-        public BaseGameWeapons(bool loadData)
-        {
+        public BaseGameWeapons(bool loadData) {
             Reset();
             path = "data/" + BASE_DATA_KEY + ".json";
             pathKey = BASE_DATA_KEY;
@@ -65,36 +52,29 @@ namespace Engine.Game.App.BaseApp
         }
     }
 
-    public class BaseGameWeapon : GameDataObject
-    {
+    public class BaseGameWeapon : GameDataObject {
         // Attributes that are added or changed after launch should be like this to prevent
         // profile conversions.
 
-        public virtual GameDataObjectItem data
-        {
-            get
-            {
+        public virtual GameDataObjectItem data {
+            get {
                 return Get<GameDataObjectItem>(BaseDataObjectKeys.data);
             }
 
-            set
-            {
+            set {
                 Set<GameDataObjectItem>(BaseDataObjectKeys.data, value);
             }
         }
 
-        public BaseGameWeapon()
-        {
+        public BaseGameWeapon() {
             Reset();
         }
 
-        public override void Reset()
-        {
+        public override void Reset() {
             base.Reset();
         }
 
-        public void Clone(BaseGameWeapon toCopy)
-        {
+        public void Clone(BaseGameWeapon toCopy) {
             base.Clone(toCopy);
         }
 

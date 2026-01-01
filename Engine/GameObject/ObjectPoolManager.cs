@@ -38,7 +38,7 @@ public class ObjectPoolManager : GameObjectBehavior {
     public bool debug = false;
 
     // the GUI block where the debugging info will be displayed
-    public Rect debugGuiRect = new Rect( 5, 200, 160, 400 );
+    public Rect debugGuiRect = new Rect(5, 200, 160, 400);
 
 #endif
 
@@ -92,7 +92,7 @@ public class ObjectPoolManager : GameObjectBehavior {
 
     // Destroy the object after <delay> seconds have elapsed
     public static void destroyPooled(GameObject obj, float delay) {
-        if (obj == null) { 
+        if (obj == null) {
             return;
         }
 
@@ -135,7 +135,7 @@ public class ObjectPoolManager : GameObjectBehavior {
         else {
             pool = prefab2pool[prefab];
         }
-        
+
         //if(pool.Count > maxPerPool) {
         //    LogUtil.Log("ObjectPool: Too many items in the pool!: " + prefab.name);
         //   return null;
@@ -144,7 +144,7 @@ public class ObjectPoolManager : GameObjectBehavior {
         // create a new object or reuse an existing one from the pool
         GameObject obj = pool.instantiate(position, rotation);
 
-        
+
         if (obj == null) {
             return null;
         }
@@ -180,15 +180,15 @@ public class ObjectPoolManager : GameObjectBehavior {
 
 #if UNITY_EDITOR
     void OnGUI() {
-        if( debug ) {
-            GUILayout.BeginArea( debugGuiRect );
+        if (debug) {
+            GUILayout.BeginArea(debugGuiRect);
             GUILayout.BeginVertical();
 
-            GUILayout.Label( "Pools: " + prefab2pool.Count );
+            GUILayout.Label("Pools: " + prefab2pool.Count);
 
-            foreach( var pool in prefab2pool.Values )
-                GUILayout.Label( pool.prefab.name + ": " + pool.Count );
-            
+            foreach (var pool in prefab2pool.Values)
+                GUILayout.Label(pool.prefab.name + ": " + pool.Count);
+
             //foreach( var pool in instance2pool.Values )
             //    GUILayout.Label( "instance: " + pool.prefab.name + ": " + pool.Count );
 

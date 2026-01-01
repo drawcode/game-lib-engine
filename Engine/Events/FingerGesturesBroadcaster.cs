@@ -3,10 +3,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace Engine.Events
-{
-    public class FingerGesturesMessages
-    {
+namespace Engine.Events {
+    public class FingerGesturesMessages {
         public static string OnTap = "FingerGesture_OnTap";
         public static string OnSwipe = "FingerGesture_OnSwipe";
         public static string OnPinch = "FingerGesture_OnPinch";
@@ -17,16 +15,13 @@ namespace Engine.Events
         // TODO others...
     }
 
-    public class FingerGesturesBroadcaster : GameObjectBehavior
-    {
+    public class FingerGesturesBroadcaster : GameObjectBehavior {
 
-        void Start()
-        {
+        void Start() {
 
         }
 
-        void OnTap(TapGesture gesture)
-        {
+        void OnTap(TapGesture gesture) {
             //if( gesture.Selection )
             //    LogUtil.Log( "Tapped object: " + gesture.Selection.name );
             //else
@@ -36,8 +31,7 @@ namespace Engine.Events
 
         }
 
-        void OnDoubleTap(TapGesture gesture)
-        {
+        void OnDoubleTap(TapGesture gesture) {
             //if( gesture.Selection )
             //    LogUtil.Log( "Tapped object: " + gesture.Selection.name );
             //else
@@ -47,8 +41,7 @@ namespace Engine.Events
 
         }
 
-        void OnSwipe(SwipeGesture gesture)
-        {
+        void OnSwipe(SwipeGesture gesture) {
             //if( gesture.Selection )
             //    LogUtil.Log( "Swipe object: " + gesture.Selection.name );
             //else
@@ -57,8 +50,7 @@ namespace Engine.Events
             Messenger<SwipeGesture>.Broadcast(FingerGesturesMessages.OnSwipe, gesture);
         }
 
-        void OnPinch(PinchGesture gesture)
-        {
+        void OnPinch(PinchGesture gesture) {
             //if( gesture.Selection )
             //    LogUtil.Log( "Pinch object: " + gesture.Selection.name );
             //else
@@ -67,8 +59,7 @@ namespace Engine.Events
             Messenger<PinchGesture>.Broadcast(FingerGesturesMessages.OnPinch, gesture);
         }
 
-        void OnLongPress(LongPressGesture gesture)
-        {
+        void OnLongPress(LongPressGesture gesture) {
             //if( gesture.Selection )
             //    LogUtil.Log( "LongPress object: " + gesture.Selection.name );
             //else
@@ -77,8 +68,7 @@ namespace Engine.Events
             Messenger<LongPressGesture>.Broadcast(FingerGesturesMessages.OnLongPress, gesture);
         }
 
-        void OnTwist(TwistGesture gesture)
-        {
+        void OnTwist(TwistGesture gesture) {
             //if( gesture.Selection )
             //    LogUtil.Log( "Twist object: " + gesture.Selection.name );
             //else
@@ -87,8 +77,7 @@ namespace Engine.Events
             Messenger<TwistGesture>.Broadcast(FingerGesturesMessages.OnTwist, gesture);
         }
 
-        void OnDrag(DragGesture gesture)
-        {
+        void OnDrag(DragGesture gesture) {
             //if( gesture.Selection )
             //    LogUtil.Log( "Drag object: " + gesture.Selection.name );
             //else

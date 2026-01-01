@@ -4,10 +4,8 @@ using System.IO;
 using Engine.Game.Data;
 using Engine.Utility;
 
-namespace Engine.Game.App.BaseApp
-{
-    public class BaseGamePacks<T> : DataObjects<T> where T : DataObject, new()
-    {
+namespace Engine.Game.App.BaseApp {
+    public class BaseGamePacks<T> : DataObjects<T> where T : DataObject, new() {
         private static T current;
         private static volatile BaseGamePacks<T> instance;
         private static object syncRoot = new Object();
@@ -34,14 +32,10 @@ namespace Engine.Game.App.BaseApp
         public static string currentPacksGame = "game-drawlabs-template";
         public static string currentGameBundle = "com.drawk.template";
 
-        public static T BaseCurrent
-        {
-            get
-            {
-                if (current == null)
-                {
-                    lock (syncRoot)
-                    {
+        public static T BaseCurrent {
+            get {
+                if (current == null) {
+                    lock (syncRoot) {
                         if (current == null)
                             current = new T();
                     }
@@ -49,20 +43,15 @@ namespace Engine.Game.App.BaseApp
 
                 return current;
             }
-            set
-            {
+            set {
                 current = value;
             }
         }
 
-        public static BaseGamePacks<T> BaseInstance
-        {
-            get
-            {
-                if (instance == null)
-                {
-                    lock (syncRoot)
-                    {
+        public static BaseGamePacks<T> BaseInstance {
+            get {
+                if (instance == null) {
+                    lock (syncRoot) {
                         if (instance == null)
                             instance = new BaseGamePacks<T>(true);
                     }
@@ -70,29 +59,25 @@ namespace Engine.Game.App.BaseApp
 
                 return instance;
             }
-            set
-            {
+            set {
                 instance = value;
             }
         }
 
         public static string PACK_DEFAULT = "default";
 
-        public BaseGamePacks()
-        {
+        public BaseGamePacks() {
             Reset();
         }
 
-        public BaseGamePacks(bool loadData)
-        {
+        public BaseGamePacks(bool loadData) {
             Reset();
             path = "data/" + BASE_DATA_KEY + ".json";
             pathKey = BASE_DATA_KEY;
             LoadData();
         }
 
-        public virtual void ChangeCurrentGamePack(string code)
-        {
+        public virtual void ChangeCurrentGamePack(string code) {
             BaseCurrent = GetById(code);
             LogUtil.Log("Changing Pack: code:" + code);
         }
@@ -128,15 +113,12 @@ namespace Engine.Game.App.BaseApp
         */
     }
 
-    public class BaseGamePack : GameDataObject
-    {
-        public BaseGamePack()
-        {
+    public class BaseGamePack : GameDataObject {
+        public BaseGamePack() {
             Reset();
         }
 
-        public override void Reset()
-        {
+        public override void Reset() {
             base.Reset();
         }
     }

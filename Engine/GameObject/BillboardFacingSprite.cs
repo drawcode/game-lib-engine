@@ -7,11 +7,16 @@ public class BillboardFacingSprite : GameObjectBehavior {
 
     // Use this for initialization
     private void Start() {
+
         if (cameraTransform == null) {
-            if (Camera.main != null) {
-                cameraTransform = Camera.main.transform;
-            }
+            return;
         }
+
+        if (Camera.main == null) {
+            return;
+        }
+
+        cameraTransform = Camera.main.transform;
     }
 
     // Update is called once per frame

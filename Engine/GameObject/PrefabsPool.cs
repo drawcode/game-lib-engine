@@ -3,13 +3,13 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PrefabsPool : GameObjectBehavior {    
-    
+public class PrefabsPool : GameObjectBehavior {
+
     public Dictionary<string, GameObject> prefabs;
 
     // Only one ObjectPoolManager can exist. We use a singleton pattern to enforce this.
     private static PrefabsPool _instance = null;
-    
+
     public static PrefabsPool instance {
         get {
             if (!_instance) {
@@ -20,46 +20,46 @@ public class PrefabsPool : GameObjectBehavior {
                     _instance = obj.AddComponent<PrefabsPool>();
                 }
             }
-            
+
             return _instance;
         }
     }
-    
+
     private void OnApplicationQuit() {
         _instance = null;
     }
 
     public static void CheckPrefabs() {
-        if(instance == null) {
+        if (instance == null) {
             return;
         }
 
-        if(instance.prefabs == null) {
+        if (instance.prefabs == null) {
             instance.prefabs = new Dictionary<string, GameObject>();
         }
     }
 
     public static GameObject PoolPrefab(string path) {
-        
-        if(instance == null) {
+
+        if (instance == null) {
             return null;
         }
 
         CheckPrefabs();
-        
+
         string key = CryptoUtil.CalculateSHA1ASCII(path);
-        
-        if(!instance.prefabs.ContainsKey(key)) {
+
+        if (!instance.prefabs.ContainsKey(key)) {
             GameObject prefab = Resources.Load(path) as GameObject;
-            if(prefab != null) {
+            if (prefab != null) {
                 instance.prefabs.Add(key, prefab);
             }
         }
-        
-        if(instance.prefabs.ContainsKey(key)) {
+
+        if (instance.prefabs.ContainsKey(key)) {
             return instance.prefabs[key];
         }
-        
+
         return null;
     }
 }

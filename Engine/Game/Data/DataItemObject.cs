@@ -4,10 +4,8 @@ using System.IO;
 using Engine.Utility;
 using UnityEngine;
 
-namespace Engine.Game.Data
-{
-    public class DataItemObject : DataObject
-    {
+namespace Engine.Game.Data {
+    public class DataItemObject : DataObject {
         public string uuid = "";
         public string udid = "";
 
@@ -19,20 +17,17 @@ namespace Engine.Game.Data
         public string itemCode = "";
         public string parentCode = "";
 
-        public DataItemObject()
-        {
+        public DataItemObject() {
             Reset();
         }
 
-        public void Change(string code)
-        {
+        public void Change(string code) {
             Reset();
 
             itemCode = code;
         }
 
-        public void ChangeNoReset(string code)
-        {
+        public void ChangeNoReset(string code) {
             itemCode = code;
         }
 
@@ -102,8 +97,7 @@ namespace Engine.Game.Data
         }
         */
 
-        public virtual void SetSettingValue(string code, object value)
-        {
+        public virtual void SetSettingValue(string code, object value) {
             DataAttribute att = new DataAttribute();
             att.val = value;
             att.code = code;
@@ -113,20 +107,17 @@ namespace Engine.Game.Data
             SetAttribute(att);
         }
 
-        public virtual string GetSettingValue(string code)
-        {
+        public virtual string GetSettingValue(string code) {
             string currentValue = "";
             object objectValue = GetAttribute(code).val;
-            if (objectValue != null)
-            {
+            if (objectValue != null) {
                 currentValue = Convert.ToString(objectValue);
             }
 
             return currentValue;
         }
 
-        public override void Reset()
-        {
+        public override void Reset() {
             base.Reset();
 
             itemCode = "";

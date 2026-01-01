@@ -9,7 +9,7 @@ public static class DictionaryExtensions {
 
         TValue value;
 
-        if(!dict.TryGetValue(oldKey, out value)) {
+        if (!dict.TryGetValue(oldKey, out value)) {
             return false;
         }
 
@@ -22,9 +22,9 @@ public static class DictionaryExtensions {
     public static void MergeJoin<TKey, TValue>(
         this IDictionary<TKey, TValue> dict, IDictionary<TKey, TValue> dictNew) {
 
-        if(dict != null && dictNew != null) {
+        if (dict != null && dictNew != null) {
 
-            foreach(KeyValuePair<TKey, TValue> pair in dictNew) {
+            foreach (KeyValuePair<TKey, TValue> pair in dictNew) {
 
                 dict.Set(pair.Key, pair.Value);
             }
@@ -34,9 +34,9 @@ public static class DictionaryExtensions {
     public static void MergeJoin(
         this IDictionary<string, object> dict, IDictionary<string, object> dictNew) {
 
-        if(dict != null && dictNew != null) {
+        if (dict != null && dictNew != null) {
 
-            foreach(KeyValuePair<string, object> pair in dictNew) {
+            foreach (KeyValuePair<string, object> pair in dictNew) {
                 dict.Set(pair.Key, pair.Value);
             }
         }
@@ -45,9 +45,9 @@ public static class DictionaryExtensions {
     public static void Set(
         this IDictionary<string, object> dict, string key, object val) {
 
-        if(dict != null) {
+        if (dict != null) {
 
-            if(dict.ContainsKey(key)) {
+            if (dict.ContainsKey(key)) {
                 dict[key] = val;
             }
             else {
@@ -59,9 +59,9 @@ public static class DictionaryExtensions {
     public static void Set<TKey, TValue>(
         this IDictionary<TKey, TValue> dict, TKey key, TValue val) {
 
-        if(dict != null) {
+        if (dict != null) {
 
-            if(dict.ContainsKey(key)) {
+            if (dict.ContainsKey(key)) {
                 dict[key] = val;
             }
             else {
@@ -77,14 +77,14 @@ public static class DictionaryExtensions {
 
     public static T Get<T>(this IDictionary<string, object> dict, string key) {
 
-        if(dict != null) {
+        if (dict != null) {
 
-            if(dict.ContainsKey(key)) {
+            if (dict.ContainsKey(key)) {
 
                 return (T)dict[key];
             }
 
-            if(dict.ContainsKey(key.ToLower())) {
+            if (dict.ContainsKey(key.ToLower())) {
 
                 return (T)dict[key.ToLower()];
             }
@@ -95,9 +95,9 @@ public static class DictionaryExtensions {
 
     public static T Get<T>(this IDictionary<string, T> dict, string key) {
 
-        if(dict != null) {
+        if (dict != null) {
 
-            if(dict.ContainsKey(key)) {
+            if (dict.ContainsKey(key)) {
 
                 return (T)(dict[key]);
             }
@@ -108,9 +108,9 @@ public static class DictionaryExtensions {
 
     public static TValue Get<TKey, TValue>(this IDictionary<TKey, TValue> dict, TKey key) {
 
-        if(dict != null) {
+        if (dict != null) {
 
-            if(dict.ContainsKey(key)) {
+            if (dict.ContainsKey(key)) {
 
                 return dict[key];
             }
@@ -133,19 +133,19 @@ public static class DictionaryExtensions {
 
     public static TVal Get<TKey, TVal>(this Dictionary<TKey, TVal> dict, TKey code, TVal defaultValue) {
 
-        if(dict == null) {
+        if (dict == null) {
             return default(TVal);
         }
 
         try {
 
-            if(dict.ContainsKey(code)) {
+            if (dict.ContainsKey(code)) {
                 return (TVal)dict[code];
             }
 
             return defaultValue;
         }
-        catch(Exception e) {
+        catch (Exception e) {
 
             LogUtil.Log(e);
 
@@ -163,11 +163,11 @@ public static class DictionaryExtensions {
 
     public static void Set<TKey, TVal>(this Dictionary<TKey, TVal> dict, TKey code, TVal val) {
 
-        if(dict == null) {
+        if (dict == null) {
             return;
         }
 
-        if(dict.ContainsKey(code)) {
+        if (dict.ContainsKey(code)) {
             dict[code] = val;
         }
         else {
@@ -185,11 +185,11 @@ public static class DictionaryExtensions {
 
     public static bool Has<TKey, TVal>(this Dictionary<TKey, TVal> dict, TKey code) {
 
-        if(dict == null) {
+        if (dict == null) {
             return false;
         }
 
-        if(dict.ContainsKey(code)) {
+        if (dict.ContainsKey(code)) {
             return true;
         }
 
@@ -199,20 +199,20 @@ public static class DictionaryExtensions {
     public static List<Dictionary<string, object>> RemoveAllKeyStartsWith(
         this List<Dictionary<string, object>> dicts, string keyStartsWith) {
 
-        if(dicts != null) {
+        if (dicts != null) {
 
-            foreach(Dictionary<string, object> dict in dicts) {
+            foreach (Dictionary<string, object> dict in dicts) {
 
                 List<string> toRemove = new List<string>();
 
-                foreach(KeyValuePair<string, object> pair in dict) {
+                foreach (KeyValuePair<string, object> pair in dict) {
 
-                    if(pair.Key.StartsWith(keyStartsWith)) {
+                    if (pair.Key.StartsWith(keyStartsWith)) {
                         toRemove.Add(pair.Key);
                     }
                 }
 
-                foreach(string key in toRemove) {
+                foreach (string key in toRemove) {
                     dict.Remove(key);
                 }
             }
@@ -249,18 +249,18 @@ public static class DictionaryExtensions {
     public static IDictionary<string, TValue> RemoveAllKeyStartsWith<TValue>(
         this IDictionary<string, TValue> dict, string keyStartsWith) {
 
-        if(dict != null) {
+        if (dict != null) {
 
             List<string> toRemove = new List<string>();
 
-            foreach(KeyValuePair<string, TValue> pair in dict) {
+            foreach (KeyValuePair<string, TValue> pair in dict) {
 
-                if(pair.Key.StartsWith(keyStartsWith)) {
+                if (pair.Key.StartsWith(keyStartsWith)) {
                     toRemove.Add(pair.Key);
                 }
             }
 
-            foreach(string key in toRemove) {
+            foreach (string key in toRemove) {
                 dict.Remove(key);
             }
         }
@@ -271,18 +271,18 @@ public static class DictionaryExtensions {
     public static IDictionary<string, TValue> RemoveAllKeyContains<TValue>(
         this IDictionary<string, TValue> dict, string keyContains) {
 
-        if(dict != null) {
+        if (dict != null) {
 
             List<string> toRemove = new List<string>();
 
-            foreach(KeyValuePair<string, TValue> pair in dict) {
+            foreach (KeyValuePair<string, TValue> pair in dict) {
 
-                if(pair.Key.Contains(keyContains)) {
+                if (pair.Key.Contains(keyContains)) {
                     toRemove.Add(pair.Key);
                 }
             }
 
-            foreach(string key in toRemove) {
+            foreach (string key in toRemove) {
                 dict.Remove(key);
             }
         }
@@ -297,7 +297,7 @@ public static class DictionaryExtensions {
             new Dictionary<TKey, TValue>(
                 original.Count, original.Comparer);
 
-        foreach(KeyValuePair<TKey, TValue> entry in original) {
+        foreach (KeyValuePair<TKey, TValue> entry in original) {
 
             ret.Add(entry.Key, entry.Value);
         }

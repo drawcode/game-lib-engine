@@ -6,25 +6,25 @@ public class PrefabLoaderReference : MonoBehaviour {
     public GameObject prefabObject;
     public GameObject container;
 
-    void Start () {
+    void Start() {
         LoadPrefab();
-	}
+    }
 
     void LoadPrefab() {
-        
-        if(container == null) {
+
+        if (container == null) {
             container = gameObject;
         }
-        
-        if(prefabObject != null) {
+
+        if (prefabObject != null) {
             GameObject go = GameObjectHelper.CreateGameObject(
                 prefabObject, Vector3.zero, Quaternion.identity, true);
             go.transform.parent = gameObject.transform;
             go.TrackObject(gameObject);
         }
     }
-	
-	void Update () {
-	
-	}
+
+    void Update() {
+
+    }
 }

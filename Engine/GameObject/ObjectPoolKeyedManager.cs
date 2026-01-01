@@ -54,7 +54,7 @@ public class ObjectPoolKeyedManager : GameObjectBehavior {
     public bool debug = false;
 
     // the GUI block where the debugging info will be displayed
-    public Rect debugGuiRect = new Rect( 5, 200, 160, 400 );
+    public Rect debugGuiRect = new Rect(5, 200, 160, 400);
 
 #endif
 
@@ -102,12 +102,12 @@ public class ObjectPoolKeyedManager : GameObjectBehavior {
     }
 
     public static GameObject setPooled(string key, GameObject inst) {
-        
+
         return instance.internalSet(key, inst);
     }
 
     public static bool hasPooled(string key) {
-        
+
         return instance.internalHasPooled(key);
     }
 
@@ -118,7 +118,7 @@ public class ObjectPoolKeyedManager : GameObjectBehavior {
 
     // Destroy the object after <delay> seconds have elapsed
     public static void destroyPooled(GameObject obj, float delay) {
-        if (obj == null) { 
+        if (obj == null) {
             return;
         }
 
@@ -131,7 +131,7 @@ public class ObjectPoolKeyedManager : GameObjectBehavior {
 
     public static bool clearPooled() {
 
-        if(_instance != null) {
+        if (_instance != null) {
             return _instance.internalClear();
         }
 
@@ -175,7 +175,7 @@ public class ObjectPoolKeyedManager : GameObjectBehavior {
         else {
             pool = prefab2pool[key];
         }
-        
+
         //if(pool.Count > maxPerPool) {
         //    LogUtil.Log("ObjectPool: Too many items in the pool!: " + prefab.name);
         //   return null;
@@ -188,7 +188,7 @@ public class ObjectPoolKeyedManager : GameObjectBehavior {
             var keyedObject = obj.AddComponent<ObjectPoolKeyed>();
             keyedObject.data.key = key;
         }
-        
+
         if (obj == null) {
             return null;
         }
@@ -198,32 +198,32 @@ public class ObjectPoolKeyedManager : GameObjectBehavior {
 
         return obj;
     }
-    
+
     private GameObject internalSet(string key, GameObject obj) {
 
         //if(pool.Count > maxPerPool) {
         //    LogUtil.Log("ObjectPool: Too many items in the pool!: " + prefab.name);
         //   return null;
         //}
-        
+
         if (!obj.Has<PoolGameObject>()) {
             obj.AddComponent<PoolGameObject>();
-        }        
+        }
 
         var keyedObject = obj.GetOrSet<ObjectPoolKeyed>();
         keyedObject.data.key = key;
 
-        
+
         if (obj == null) {
             return null;
         }
-        
+
         // remember which pool this object was created from
         //instance2pool[key] = pool;
-        
+
         return obj;
     }
-    
+
     private void internalDestroy(GameObject obj) {
 
         string key = "";
@@ -232,8 +232,8 @@ public class ObjectPoolKeyedManager : GameObjectBehavior {
 
         bool hasKeyed = obj.Has<ObjectPoolKeyed>();
 
-        if(hasKeyed) {
-            keyedObject = obj.Get<ObjectPoolKeyed>();  
+        if (hasKeyed) {
+            keyedObject = obj.Get<ObjectPoolKeyed>();
             key = keyedObject.data.key;
         }
 
@@ -259,11 +259,11 @@ public class ObjectPoolKeyedManager : GameObjectBehavior {
 
     public bool internalClear() {
 
-        foreach(ObjectPool p in prefab2pool.Values) {
+        foreach (ObjectPool p in prefab2pool.Values) {
             p.clear();
         }
 
-        foreach(ObjectPool p in instance2pool.Values) {
+        foreach (ObjectPool p in instance2pool.Values) {
             p.clear();
         }
 
@@ -277,15 +277,15 @@ public class ObjectPoolKeyedManager : GameObjectBehavior {
 
 #if UNITY_EDITOR
     void OnGUI() {
-        if( debug ) {
-            GUILayout.BeginArea( debugGuiRect );
+        if (debug) {
+            GUILayout.BeginArea(debugGuiRect);
             GUILayout.BeginVertical();
 
-            GUILayout.Label( "Pools: " + prefab2pool.Count );
+            GUILayout.Label("Pools: " + prefab2pool.Count);
 
-            foreach( var pool in prefab2pool.Values )
-                GUILayout.Label( pool.prefab.name + ": " + pool.Count );
-            
+            foreach (var pool in prefab2pool.Values)
+                GUILayout.Label(pool.prefab.name + ": " + pool.Count);
+
             //foreach( var pool in instance2pool.Values )
             //    GUILayout.Label( "instance: " + pool.prefab.name + ": " + pool.Count );
 

@@ -7,60 +7,50 @@ using UnityEngine;
 
 using Engine.Events;
 
-namespace Engine.Game.Data
-{
-    public class DataObjectItem
-    {
+namespace Engine.Game.Data {
+    public class DataObjectItem {
 
         public Dictionary<string, DataAttribute> attributes;
 
-        public DataObjectItem()
-        {
+        public DataObjectItem() {
             Reset();
         }
 
-        public virtual void Clone(DataObject toCopy)
-        {
+        public virtual void Clone(DataObject toCopy) {
             attributes = toCopy.attributes;
         }
 
-        public string LoadDataFromResources(string path)
-        {
+        public string LoadDataFromResources(string path) {
 
             string fileData = "";
 
             TextAsset textData = AssetUtil.LoadAsset<TextAsset>(path);
 
-            if (textData != null)
-            {
+            if (textData != null) {
                 fileData = textData.text;
             }
 
             return fileData;
         }
 
-        public string LoadDataFromPrefs(string key)
-        {
+        public string LoadDataFromPrefs(string key) {
 
             string data = "";
 
-            if (!SystemPrefUtil.HasLocalSetting(key))
-            {
+            if (!SystemPrefUtil.HasLocalSetting(key)) {
                 data = SystemPrefUtil.GetLocalSettingString(key);
             }
 
             return data;
         }
 
-        public string LoadData(string fileFullPath)
-        {
+        public string LoadData(string fileFullPath) {
 
             string fileData = "";
 
 #if !UNITY_WEBPLAYER
 
-            if (FileSystemUtil.CheckFileExists(fileFullPath))
-            {
+            if (FileSystemUtil.CheckFileExists(fileFullPath)) {
                 fileData = FileSystemUtil.ReadString(fileFullPath);
             }
 
@@ -69,8 +59,7 @@ namespace Engine.Game.Data
             return fileData;
         }
 
-        public T LoadData<T>(string folderPath, string fileKey)
-        {
+        public T LoadData<T>(string folderPath, string fileKey) {
 
             string fileData = "";
 
@@ -79,23 +68,20 @@ namespace Engine.Game.Data
             string path = PathUtil.Combine(
                 folderPath, (fileKey + ".json").TrimStart('/'));
 
-            if (FileSystemUtil.CheckFileExists(path))
-            {
+            if (FileSystemUtil.CheckFileExists(path)) {
                 fileData = FileSystemUtil.ReadString(path);
             }
 
 #endif
 
-            if (!string.IsNullOrEmpty(fileData))
-            {
+            if (!string.IsNullOrEmpty(fileData)) {
                 return fileData.FromJson<T>();
             }
 
             return default(T);
         }
 
-        public void SaveData(string folderPath, string fileKey, object obj)
-        {
+        public void SaveData(string folderPath, string fileKey, object obj) {
 
             string data = obj.ToJson();
 
@@ -105,42 +91,34 @@ namespace Engine.Game.Data
             SaveData(path, data);
         }
 
-        public void SaveData(string fileFullPath, string data)
-        {
+        public void SaveData(string fileFullPath, string data) {
 #if !UNITY_WEBPLAYER
 
             if (fileFullPath.Contains(Application.dataPath)
-               || fileFullPath.Contains(Application.persistentDataPath))
-            {
+               || fileFullPath.Contains(Application.persistentDataPath)) {
 
                 FileSystemUtil.WriteString(fileFullPath, data);
             }
 #endif
         }
 
-        public object GetFieldValue(object obj, string fieldName)
-        {
+        public object GetFieldValue(object obj, string fieldName) {
             ////LogUtil.Log("GetFieldValue:obj.GetType():" + obj.GetType());
 
             bool hasGet = false;
 
             foreach (var prop in
-                    fieldName.Split('.').Select(s => obj.GetType().GetField(s)))
-            {
-                if (obj != null)
-                {
+                    fieldName.Split('.').Select(s => obj.GetType().GetField(s))) {
+                if (obj != null) {
                     obj = prop.GetValue(obj);
                     hasGet = true;
                 }
             }
 
-            if (!hasGet)
-            {
+            if (!hasGet) {
                 foreach (System.Reflection.PropertyInfo prop in
-                        obj.GetType().GetProperties())
-                {
-                    if (prop.Name == fieldName)
-                    {
+                        obj.GetType().GetProperties()) {
+                    if (prop.Name == fieldName) {
                         obj = prop.GetValue(obj, null);
                     }
                 }
@@ -149,17 +127,14 @@ namespace Engine.Game.Data
             return obj;
         }
 
-        public void SetFieldValue(object obj, string fieldName, object fieldValue)
-        {
+        public void SetFieldValue(object obj, string fieldName, object fieldValue) {
             ////LogUtil.Log("SetFieldValue:obj.GetType():" + obj.GetType());
 
             //bool hasSet = false;
 
             foreach (System.Reflection.FieldInfo field in
-                    fieldName.Split('.').Select(s => obj.GetType().GetField(s)))
-            {
-                if (field != null)
-                {
+                    fieldName.Split('.').Select(s => obj.GetType().GetField(s))) {
+                if (field != null) {
                     field.SetValue(obj, fieldValue);
 
                     //hasSet = true;
@@ -168,10 +143,8 @@ namespace Engine.Game.Data
 
             //if(!hasSet) {
             foreach (System.Reflection.PropertyInfo prop in
-                    obj.GetType().GetProperties())
-            {
-                if (prop.Name == fieldName)
-                {
+                    obj.GetType().GetProperties()) {
+                if (prop.Name == fieldName) {
                     prop.SetValue(obj, fieldValue, null);
                 }
             }
@@ -179,59 +152,49 @@ namespace Engine.Game.Data
             //}
         }
 
-        public virtual void Reset()
-        {
+        public virtual void Reset() {
             attributes = new Dictionary<string, DataAttribute>();
         }
 
 
         // ATTRIBUTES
 
-        public void SetAttribute(DataAttribute attribute)
-        {
+        public void SetAttribute(DataAttribute attribute) {
 
             string code = attribute.code;
             //UniqueUtil.Instance.GetStringHash(attribute.code);
 
-            if (attributes == null)
-            {
+            if (attributes == null) {
                 attributes = new Dictionary<string, DataAttribute>();
             }
 
             // UPSERT        
-            if (CheckIfAttributeExists(code))
-            {
+            if (CheckIfAttributeExists(code)) {
                 // UPDATE
                 attributes[code] = attribute;
             }
-            else
-            {
+            else {
                 // INSERT
                 attributes.Add(code, attribute);
             }
         }
 
-        public bool CheckIfAttributeExists(string code)
-        {
-            if (attributes != null)
-            {
+        public bool CheckIfAttributeExists(string code) {
+            if (attributes != null) {
                 //code = UniqueUtil.Instance.GetStringHash(code);
-                if (attributes.ContainsKey(code))
-                {
+                if (attributes.ContainsKey(code)) {
                     return true;
                 }
             }
             return false;
         }
 
-        public DataAttribute GetAttribute(string code)
-        {
+        public DataAttribute GetAttribute(string code) {
             DataAttribute attribute = new DataAttribute();
 
             //code = UniqueUtil.Instance.GetStringHash(code);
 
-            if (CheckIfAttributeExists(code))
-            {
+            if (CheckIfAttributeExists(code)) {
                 attribute = attributes[code];
             }
 
@@ -241,56 +204,46 @@ namespace Engine.Game.Data
 
         // ATTRIBUTES
 
-        public List<DataAttribute> GetAttributesList()
-        {
+        public List<DataAttribute> GetAttributesList() {
 
             List<DataAttribute> attributesList = new List<DataAttribute>();
 
-            foreach (DataAttribute attribute in attributes.Values)
-            {
+            foreach (DataAttribute attribute in attributes.Values) {
                 attributesList.Add(attribute);
             }
             return attributesList;
         }
 
-        public List<DataAttribute> GetAttributesList(string objectType)
-        {
+        public List<DataAttribute> GetAttributesList(string objectType) {
 
             List<DataAttribute> attributesFiltered = new List<DataAttribute>();
 
-            foreach (DataAttribute attribute in attributes.Values)
-            {
-                if (attribute.otype == objectType)
-                {
+            foreach (DataAttribute attribute in attributes.Values) {
+                if (attribute.otype == objectType) {
                     attributesFiltered.Add(attribute);
                 }
             }
             return attributesFiltered;
         }
 
-        public Dictionary<string, DataAttribute> GetAttributesDictionary()
-        {
+        public Dictionary<string, DataAttribute> GetAttributesDictionary() {
             return attributes;
         }
 
-        public Dictionary<string, DataAttribute> GetAttributesDictionary(string objectType)
-        {
+        public Dictionary<string, DataAttribute> GetAttributesDictionary(string objectType) {
 
             Dictionary<string, DataAttribute> attributesFiltered =
                 new Dictionary<string, DataAttribute>();
 
-            foreach (KeyValuePair<string, DataAttribute> pair in attributes)
-            {
-                if (pair.Value.otype == objectType)
-                {
+            foreach (KeyValuePair<string, DataAttribute> pair in attributes) {
+                if (pair.Value.otype == objectType) {
                     attributesFiltered.Add(pair.Value.code, pair.Value);
                 }
             }
             return attributesFiltered;
         }
 
-        public void SetAttributeBoolValue(string code, bool val)
-        {
+        public void SetAttributeBoolValue(string code, bool val) {
 
             DataAttribute att = new DataAttribute();
             att.val = val;
@@ -301,23 +254,20 @@ namespace Engine.Game.Data
             SetAttribute(att);
         }
 
-        public bool GetAttributeBoolValue(string code)
-        {
+        public bool GetAttributeBoolValue(string code) {
 
             bool currentValue = false;
 
             object objectValue = GetAttribute(code).val;
 
-            if (objectValue != null)
-            {
+            if (objectValue != null) {
                 currentValue = Convert.ToBoolean(objectValue);
             }
 
             return currentValue;
         }
 
-        public void SetAttributeStringValue(string code, string val)
-        {
+        public void SetAttributeStringValue(string code, string val) {
 
             DataAttribute att = new DataAttribute();
             att.val = val;
@@ -328,23 +278,20 @@ namespace Engine.Game.Data
             SetAttribute(att);
         }
 
-        public string GetAttributeStringValue(string code)
-        {
+        public string GetAttributeStringValue(string code) {
 
             string currentValue = "";
 
             object objectValue = GetAttribute(code).val;
 
-            if (objectValue != null)
-            {
+            if (objectValue != null) {
                 currentValue = Convert.ToString(objectValue);
             }
 
             return currentValue;
         }
 
-        public void SetAttributeDoubleValue(string code, double val)
-        {
+        public void SetAttributeDoubleValue(string code, double val) {
 
             DataAttribute att = new DataAttribute();
             att.val = val;
@@ -355,23 +302,20 @@ namespace Engine.Game.Data
             SetAttribute(att);
         }
 
-        public double GetAttributeDoubleValue(string code)
-        {
+        public double GetAttributeDoubleValue(string code) {
 
             double currentValue = 0.0;
 
             object objectValue = GetAttribute(code).val;
 
-            if (objectValue != null)
-            {
+            if (objectValue != null) {
                 currentValue = Convert.ToDouble(objectValue);
             }
 
             return currentValue;
         }
 
-        public void SetAttributeIntValue(string code, int val)
-        {
+        public void SetAttributeIntValue(string code, int val) {
 
             DataAttribute att = new DataAttribute();
             att.val = val;
@@ -382,23 +326,20 @@ namespace Engine.Game.Data
             SetAttribute(att);
         }
 
-        public int GetAttributeIntValue(string code)
-        {
+        public int GetAttributeIntValue(string code) {
 
             int currentValue = 0;
 
             object objectValue = GetAttribute(code).val;
 
-            if (objectValue != null)
-            {
+            if (objectValue != null) {
                 currentValue = Convert.ToInt32(objectValue);
             }
 
             return currentValue;
         }
 
-        public void SetAttributeObjectValue(string code, object val)
-        {
+        public void SetAttributeObjectValue(string code, object val) {
 
             DataAttribute att = new DataAttribute();
             att.val = val;
@@ -409,16 +350,14 @@ namespace Engine.Game.Data
             SetAttribute(att);
         }
 
-        public object GetAttributeObjectValue(string code)
-        {
+        public object GetAttributeObjectValue(string code) {
 
             object objectValue = GetAttribute(code).val;
 
             return objectValue;
         }
 
-        public string GetPlatformAttributeKey(string key)
-        {
+        public string GetPlatformAttributeKey(string key) {
 
             string keyto = key;
 

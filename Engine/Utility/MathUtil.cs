@@ -42,7 +42,7 @@ public class MathUtil {
     }
 
     // RANGES
-    
+
     public static bool IsVector3OutOfRange(Vector3 pos, Vector3 min, Vector3 max, Vector3 bounds) {
         return !IsVector3InRange(pos, min, max, bounds);
     }
@@ -373,7 +373,7 @@ public class MathUtil {
             return 0.0f;
         }
     }
-    
+
 
     // random range
 

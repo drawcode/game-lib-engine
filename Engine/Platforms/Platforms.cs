@@ -18,22 +18,22 @@ public class PlatformKeys {
 public class Platforms {
     private static volatile Platforms instance;
     private static System.Object syncRoot = new System.Object();
-        
+
     public static Platforms Instance {
         get {
             if (instance == null) {
                 lock (syncRoot) {
-                    if (instance == null) 
+                    if (instance == null)
                         instance = new Platforms();
                 }
             }
-            
+
             return instance;
         }
     }
-    
+
     public Platforms() {
-        
+
     }
 
     public static string CurrentPlatform {
@@ -47,21 +47,21 @@ public class Platforms {
 #else
             return PlatformKeys.desktop;
 #endif
-        
+
         }
     }
-    
+
     public static bool IsAmazonDevice() {
         if (SystemInfo.deviceModel.IndexOf("Kindle") > -1) {
             return true;
         }
         return false;
     }
-    
+
     public static void ShowWebView(string title, string url) {
         Instance.showWebView(title, url);
     }
-    
+
     public void showWebView(string title, string url) {
 
 #if UNITY_EDITOR
@@ -78,9 +78,9 @@ public class Platforms {
     public static void PlayMovie(string url, bool showControls, bool supportLandscape, bool supportPortrait) {
         Instance.playMovie(url, showControls, supportLandscape, supportPortrait);
     }
-    
+
     public void playMovie(string url, bool showControls, bool supportLandscape, bool supportPortrait) {
-        
+
 #if UNITY_EDITOR
         Application.OpenURL(url);
 #elif UNITY_ANDROID     
@@ -99,7 +99,7 @@ public class Platforms {
             AppConfigs.appBundleId);
 #elif UNITY_IPHONE
         Platforms.AskForReview(
-            AppConfigs.appGameDisplayName, 
+            AppConfigs.appGameDisplayName,
             AppConfigs.appStoreId);
 #endif
 #endif
@@ -108,7 +108,7 @@ public class Platforms {
     public static void AskForReview(string appName, string bundleId) {
         Instance.askForReview(appName, bundleId);
     }
-    
+
     public void askForReview(string appName, string bundleId) {
 #if UNITY_ANDROID && USE_FEATURE_ETCETERA
         EtceteraAndroid.askForReviewNow("Review " + appName + "!", "Review " + appName + " if you like it.");
@@ -121,7 +121,7 @@ public class Platforms {
     public static void ShowReviewPage() {
         Instance.showReviewPage();
     }
-    
+
     public void showReviewPage() {
 #if UNITY_ANDROID && USE_FEATURE_ETCETERA
         bool isAmazon = AppConfigs.platformIsAmazon;
@@ -134,7 +134,7 @@ public class Platforms {
     public static void AskForReview(string appName, string bundleId, int launchCount, int hoursBetweenPrompts) {
         Instance.askForReview(appName, bundleId, launchCount, hoursBetweenPrompts);
     }
-    
+
     public void askForReview(string appName, string bundleId, int launchCount, int hoursBetweenPrompts) {
 #if UNITY_ANDROID && USE_FEATURE_ETCETERA
         EtceteraAndroid.askForReview(3, 0, 3, "Review " + appName + "!", "Review " + appName + " if you like it.", false);
@@ -147,7 +147,7 @@ public class Platforms {
     public static void ShowEmailView(string to, string subject, string body, bool isHtml) {
         Instance.showEmailView(to, subject, body, isHtml);
     }
-    
+
     public void showEmailView(string to, string subject, string body, bool isHtml) {
 #if UNITY_IPHONE && USE_FEATURE_ETCETERA
         if(EtceteraBinding.isEmailAvailable()) {
@@ -162,11 +162,11 @@ public class Platforms {
         Application.OpenURL("mailto:" + to);
 #endif
     }
-    
+
     public static void SaveImageToLibrary(string name, string fileToSave) {
         Instance.saveImageToLibrary(name, fileToSave);
     }
-    
+
     public void saveImageToLibrary(string name, string fileToSave) {
 #if UNITY_IPHONE && USE_FEATURE_ETCETERA
         EtceteraBinding.saveImageToPhotoAlbum(fileToSave);

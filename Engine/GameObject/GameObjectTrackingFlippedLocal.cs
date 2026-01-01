@@ -4,7 +4,7 @@ using System.Collections;
 public class GameObjectTrackingFlippedLocal : MonoBehaviour {
 
     public GameObject trackObject;
-    
+
     public bool trackRotationX = false;
     public bool trackRotationY = true;
     public bool trackRotationZ = false;
@@ -12,16 +12,16 @@ public class GameObjectTrackingFlippedLocal : MonoBehaviour {
     public bool trackPositionX = false;
     public bool trackPositionY = false;
     public bool trackPositionZ = false;
-	
+
     public Vector3 currentPositionTo = Vector3.zero;
     public Vector3 currentRotationTo = Vector3.zero;
 
     public Vector3 lastPositionTo = Vector3.zero;
     public Vector3 lastRotationTo = Vector3.zero;
 
-	void Start() {
-        
-	}
+    void Start() {
+
+    }
 
     void Update() {
 
@@ -29,21 +29,21 @@ public class GameObjectTrackingFlippedLocal : MonoBehaviour {
 
         currentPositionTo = transform.localPosition;
 
-        if(trackPositionX) {
+        if (trackPositionX) {
             currentPositionTo.x = -trackObject.transform.localPosition.x;
         }
 
-        if(trackPositionY) {
+        if (trackPositionY) {
             currentPositionTo.y = -trackObject.transform.localPosition.y;
         }
 
-        if(trackPositionZ) {
+        if (trackPositionZ) {
             currentPositionTo.z = -trackObject.transform.localPosition.z;
         }
 
-        if(currentPositionTo != lastPositionTo) {
+        if (currentPositionTo != lastPositionTo) {
             lastPositionTo = currentPositionTo;
-            transform.localPosition = 
+            transform.localPosition =
                 Vector3.zero
                     .WithX(currentPositionTo.x)
                     .WithY(currentPositionTo.y)
@@ -54,15 +54,15 @@ public class GameObjectTrackingFlippedLocal : MonoBehaviour {
 
         currentRotationTo = transform.localRotation.eulerAngles;
 
-        if(trackRotationX) {
+        if (trackRotationX) {
             currentRotationTo.x = -trackObject.transform.localRotation.eulerAngles.x;
         }
 
-        if(trackRotationY) {
+        if (trackRotationY) {
             currentRotationTo.y = -trackObject.transform.localRotation.eulerAngles.y;
         }
 
-        if(trackRotationZ) {
+        if (trackRotationZ) {
             currentRotationTo.z = -trackObject.transform.localRotation.eulerAngles.z;
         }
 
@@ -71,7 +71,7 @@ public class GameObjectTrackingFlippedLocal : MonoBehaviour {
         //    transform.position = currentPositionTo;
         //}
 
-        if(currentRotationTo != lastRotationTo) {
+        if (currentRotationTo != lastRotationTo) {
             lastRotationTo = currentRotationTo;
             transform.localRotation = Quaternion.Euler(
                 Vector3.zero
@@ -79,6 +79,5 @@ public class GameObjectTrackingFlippedLocal : MonoBehaviour {
                 .WithY(currentRotationTo.y)
                 .WithZ(currentRotationTo.z));
         }
-
     }
 }

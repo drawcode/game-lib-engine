@@ -17,10 +17,8 @@ using System.Collections.Specialized;
 using System.IO;
 
 
-namespace Engine.Data.Json
-{
-    public class JsonData : IJsonWrapper, IEquatable<JsonData>
-    {
+namespace Engine.Data.Json {
+    public class JsonData : IJsonWrapper, IEquatable<JsonData> {
         #region Fields
         private IList<JsonData> inst_array;
         private bool inst_boolean;
@@ -38,74 +36,59 @@ namespace Engine.Data.Json
 
 
         #region Properties
-        public int Count
-        {
+        public int Count {
             get { return EnsureCollection().Count; }
         }
 
-        public bool IsArray
-        {
+        public bool IsArray {
             get { return type == JsonType.Array; }
         }
 
-        public bool IsBoolean
-        {
+        public bool IsBoolean {
             get { return type == JsonType.Boolean; }
         }
 
-        public bool IsDouble
-        {
+        public bool IsDouble {
             get { return type == JsonType.Double; }
         }
 
-        public bool IsInt
-        {
+        public bool IsInt {
             get { return type == JsonType.Int; }
         }
 
-        public bool IsLong
-        {
+        public bool IsLong {
             get { return type == JsonType.Long; }
         }
 
-        public bool IsObject
-        {
+        public bool IsObject {
             get { return type == JsonType.Object; }
         }
 
-        public bool IsString
-        {
+        public bool IsString {
             get { return type == JsonType.String; }
         }
 
-        public ICollection<string> Keys
-        {
+        public ICollection<string> Keys {
             get { EnsureDictionary(); return inst_object.Keys; }
         }
         #endregion
 
 
         #region ICollection Properties
-        int ICollection.Count
-        {
-            get
-            {
+        int ICollection.Count {
+            get {
                 return Count;
             }
         }
 
-        bool ICollection.IsSynchronized
-        {
-            get
-            {
+        bool ICollection.IsSynchronized {
+            get {
                 return EnsureCollection().IsSynchronized;
             }
         }
 
-        object ICollection.SyncRoot
-        {
-            get
-            {
+        object ICollection.SyncRoot {
+            get {
                 return EnsureCollection().SyncRoot;
             }
         }
@@ -113,32 +96,25 @@ namespace Engine.Data.Json
 
 
         #region IDictionary Properties
-        bool IDictionary.IsFixedSize
-        {
-            get
-            {
+        bool IDictionary.IsFixedSize {
+            get {
                 return EnsureDictionary().IsFixedSize;
             }
         }
 
-        bool IDictionary.IsReadOnly
-        {
-            get
-            {
+        bool IDictionary.IsReadOnly {
+            get {
                 return EnsureDictionary().IsReadOnly;
             }
         }
 
-        ICollection IDictionary.Keys
-        {
-            get
-            {
+        ICollection IDictionary.Keys {
+            get {
                 EnsureDictionary();
                 IList<string> keys = new List<string>();
 
                 foreach (KeyValuePair<string, JsonData> entry in
-                         object_list)
-                {
+                         object_list) {
                     keys.Add(entry.Key);
                 }
 
@@ -146,16 +122,13 @@ namespace Engine.Data.Json
             }
         }
 
-        ICollection IDictionary.Values
-        {
-            get
-            {
+        ICollection IDictionary.Values {
+            get {
                 EnsureDictionary();
                 IList<JsonData> values = new List<JsonData>();
 
                 foreach (KeyValuePair<string, JsonData> entry in
-                         object_list)
-                {
+                         object_list) {
                     values.Add(entry.Value);
                 }
 
@@ -167,56 +140,45 @@ namespace Engine.Data.Json
 
 
         #region IJsonWrapper Properties
-        bool IJsonWrapper.IsArray
-        {
+        bool IJsonWrapper.IsArray {
             get { return IsArray; }
         }
 
-        bool IJsonWrapper.IsBoolean
-        {
+        bool IJsonWrapper.IsBoolean {
             get { return IsBoolean; }
         }
 
-        bool IJsonWrapper.IsDouble
-        {
+        bool IJsonWrapper.IsDouble {
             get { return IsDouble; }
         }
 
-        bool IJsonWrapper.IsInt
-        {
+        bool IJsonWrapper.IsInt {
             get { return IsInt; }
         }
 
-        bool IJsonWrapper.IsLong
-        {
+        bool IJsonWrapper.IsLong {
             get { return IsLong; }
         }
 
-        bool IJsonWrapper.IsObject
-        {
+        bool IJsonWrapper.IsObject {
             get { return IsObject; }
         }
 
-        bool IJsonWrapper.IsString
-        {
+        bool IJsonWrapper.IsString {
             get { return IsString; }
         }
         #endregion
 
 
         #region IList Properties
-        bool IList.IsFixedSize
-        {
-            get
-            {
+        bool IList.IsFixedSize {
+            get {
                 return EnsureList().IsFixedSize;
             }
         }
 
-        bool IList.IsReadOnly
-        {
-            get
-            {
+        bool IList.IsReadOnly {
+            get {
                 return EnsureList().IsReadOnly;
             }
         }
@@ -224,15 +186,12 @@ namespace Engine.Data.Json
 
 
         #region IDictionary Indexer
-        object IDictionary.this[object key]
-        {
-            get
-            {
+        object IDictionary.this[object key] {
+            get {
                 return EnsureDictionary()[key];
             }
 
-            set
-            {
+            set {
                 if (!(key is String))
                     throw new ArgumentException(
                         "The key has to be a string");
@@ -246,16 +205,13 @@ namespace Engine.Data.Json
 
 
         #region IOrderedDictionary Indexer
-        object IOrderedDictionary.this[int idx]
-        {
-            get
-            {
+        object IOrderedDictionary.this[int idx] {
+            get {
                 EnsureDictionary();
                 return object_list[idx].Value;
             }
 
-            set
-            {
+            set {
                 EnsureDictionary();
                 JsonData data = ToJsonData(value);
 
@@ -273,15 +229,12 @@ namespace Engine.Data.Json
 
 
         #region IList Indexer
-        object IList.this[int index]
-        {
-            get
-            {
+        object IList.this[int index] {
+            get {
                 return EnsureList()[index];
             }
 
-            set
-            {
+            set {
                 EnsureList();
                 JsonData data = ToJsonData(value);
 
@@ -292,27 +245,21 @@ namespace Engine.Data.Json
 
 
         #region Public Indexers
-        public JsonData this[string prop_name]
-        {
-            get
-            {
+        public JsonData this[string prop_name] {
+            get {
                 EnsureDictionary();
                 return inst_object[prop_name];
             }
 
-            set
-            {
+            set {
                 EnsureDictionary();
 
                 KeyValuePair<string, JsonData> entry =
                     new KeyValuePair<string, JsonData>(prop_name, value);
 
-                if (inst_object.ContainsKey(prop_name))
-                {
-                    for (int i = 0; i < object_list.Count; i++)
-                    {
-                        if (object_list[i].Key == prop_name)
-                        {
+                if (inst_object.ContainsKey(prop_name)) {
+                    for (int i = 0; i < object_list.Count; i++) {
+                        if (object_list[i].Key == prop_name) {
                             object_list[i] = entry;
                             break;
                         }
@@ -327,10 +274,8 @@ namespace Engine.Data.Json
             }
         }
 
-        public JsonData this[int index]
-        {
-            get
-            {
+        public JsonData this[int index] {
+            get {
                 EnsureCollection();
 
                 if (type == JsonType.Array)
@@ -339,14 +284,12 @@ namespace Engine.Data.Json
                 return object_list[index].Value;
             }
 
-            set
-            {
+            set {
                 EnsureCollection();
 
                 if (type == JsonType.Array)
                     inst_array[index] = value;
-                else
-                {
+                else {
                     KeyValuePair<string, JsonData> entry = object_list[index];
                     KeyValuePair<string, JsonData> new_entry =
                         new KeyValuePair<string, JsonData>(entry.Key, value);
@@ -362,66 +305,55 @@ namespace Engine.Data.Json
 
 
         #region Constructors
-        public JsonData()
-        {
+        public JsonData() {
         }
 
-        public JsonData(bool boolean)
-        {
+        public JsonData(bool boolean) {
             type = JsonType.Boolean;
             inst_boolean = boolean;
         }
 
-        public JsonData(double number)
-        {
+        public JsonData(double number) {
             type = JsonType.Double;
             inst_double = number;
         }
 
-        public JsonData(int number)
-        {
+        public JsonData(int number) {
             type = JsonType.Int;
             inst_int = number;
         }
 
-        public JsonData(long number)
-        {
+        public JsonData(long number) {
             type = JsonType.Long;
             inst_long = number;
         }
 
-        public JsonData(object obj)
-        {
-            if (obj is Boolean)
-            {
+        public JsonData(object obj) {
+            if (obj is Boolean) {
                 type = JsonType.Boolean;
                 inst_boolean = (bool)obj;
                 return;
             }
 
-            if (obj is Double)
-            {
+            if (obj is Double) {
                 type = JsonType.Double;
                 inst_double = (double)obj;
                 return;
             }
 
-            if (obj is Int32)
-            {
+            if (obj is Int32) {
                 type = JsonType.Int;
                 inst_int = (int)obj;
                 return;
             }
 
-            if (obj is Int64)
-            {
+            if (obj is Int64) {
                 type = JsonType.Long;
                 inst_long = (long)obj;
                 return;
             }
 
-            if (obj is String)
-            {
+            if (obj is String) {
                 type = JsonType.String;
                 inst_string = (string)obj;
                 return;
@@ -431,8 +363,7 @@ namespace Engine.Data.Json
                 "Unable to wrap the given object with JsonData");
         }
 
-        public JsonData(string str)
-        {
+        public JsonData(string str) {
             type = JsonType.String;
             inst_string = str;
         }
@@ -440,36 +371,30 @@ namespace Engine.Data.Json
 
 
         #region Implicit Conversions
-        public static implicit operator JsonData(Boolean data)
-        {
+        public static implicit operator JsonData(Boolean data) {
             return new JsonData(data);
         }
 
-        public static implicit operator JsonData(Double data)
-        {
+        public static implicit operator JsonData(Double data) {
             return new JsonData(data);
         }
 
-        public static implicit operator JsonData(Int32 data)
-        {
+        public static implicit operator JsonData(Int32 data) {
             return new JsonData(data);
         }
 
-        public static implicit operator JsonData(Int64 data)
-        {
+        public static implicit operator JsonData(Int64 data) {
             return new JsonData(data);
         }
 
-        public static implicit operator JsonData(String data)
-        {
+        public static implicit operator JsonData(String data) {
             return new JsonData(data);
         }
         #endregion
 
 
         #region Explicit Conversions
-        public static explicit operator Boolean(JsonData data)
-        {
+        public static explicit operator Boolean(JsonData data) {
             if (data.type != JsonType.Boolean)
                 throw new InvalidCastException(
                     "Instance of JsonData doesn't hold a double");
@@ -477,8 +402,7 @@ namespace Engine.Data.Json
             return data.inst_boolean;
         }
 
-        public static explicit operator Double(JsonData data)
-        {
+        public static explicit operator Double(JsonData data) {
             if (data.type != JsonType.Double)
                 throw new InvalidCastException(
                     "Instance of JsonData doesn't hold a double");
@@ -486,8 +410,7 @@ namespace Engine.Data.Json
             return data.inst_double;
         }
 
-        public static explicit operator Int32(JsonData data)
-        {
+        public static explicit operator Int32(JsonData data) {
             if (data.type != JsonType.Int)
                 throw new InvalidCastException(
                     "Instance of JsonData doesn't hold an int");
@@ -495,8 +418,7 @@ namespace Engine.Data.Json
             return data.inst_int;
         }
 
-        public static explicit operator Int64(JsonData data)
-        {
+        public static explicit operator Int64(JsonData data) {
             if (data.type != JsonType.Long)
                 throw new InvalidCastException(
                     "Instance of JsonData doesn't hold an int");
@@ -504,8 +426,7 @@ namespace Engine.Data.Json
             return data.inst_long;
         }
 
-        public static explicit operator String(JsonData data)
-        {
+        public static explicit operator String(JsonData data) {
             if (data.type != JsonType.String)
                 throw new InvalidCastException(
                     "Instance of JsonData doesn't hold a string");
@@ -516,16 +437,14 @@ namespace Engine.Data.Json
 
 
         #region ICollection Methods
-        void ICollection.CopyTo(Array array, int index)
-        {
+        void ICollection.CopyTo(Array array, int index) {
             EnsureCollection().CopyTo(array, index);
         }
         #endregion
 
 
         #region IDictionary Methods
-        void IDictionary.Add(object key, object value)
-        {
+        void IDictionary.Add(object key, object value) {
             JsonData data = ToJsonData(value);
 
             EnsureDictionary().Add(key, data);
@@ -537,31 +456,25 @@ namespace Engine.Data.Json
             json = null;
         }
 
-        void IDictionary.Clear()
-        {
+        void IDictionary.Clear() {
             EnsureDictionary().Clear();
             object_list.Clear();
             json = null;
         }
 
-        bool IDictionary.Contains(object key)
-        {
+        bool IDictionary.Contains(object key) {
             return EnsureDictionary().Contains(key);
         }
 
-        IDictionaryEnumerator IDictionary.GetEnumerator()
-        {
+        IDictionaryEnumerator IDictionary.GetEnumerator() {
             return ((IOrderedDictionary)this).GetEnumerator();
         }
 
-        void IDictionary.Remove(object key)
-        {
+        void IDictionary.Remove(object key) {
             EnsureDictionary().Remove(key);
 
-            for (int i = 0; i < object_list.Count; i++)
-            {
-                if (object_list[i].Key == (string)key)
-                {
+            for (int i = 0; i < object_list.Count; i++) {
+                if (object_list[i].Key == (string)key) {
                     object_list.RemoveAt(i);
                     break;
                 }
@@ -573,16 +486,14 @@ namespace Engine.Data.Json
 
 
         #region IEnumerable Methods
-        IEnumerator IEnumerable.GetEnumerator()
-        {
+        IEnumerator IEnumerable.GetEnumerator() {
             return EnsureCollection().GetEnumerator();
         }
         #endregion
 
 
         #region IJsonWrapper Methods
-        bool IJsonWrapper.GetBoolean()
-        {
+        bool IJsonWrapper.GetBoolean() {
             if (type != JsonType.Boolean)
                 throw new InvalidOperationException(
                     "JsonData instance doesn't hold a boolean");
@@ -590,8 +501,7 @@ namespace Engine.Data.Json
             return inst_boolean;
         }
 
-        double IJsonWrapper.GetDouble()
-        {
+        double IJsonWrapper.GetDouble() {
             if (type != JsonType.Double)
                 throw new InvalidOperationException(
                     "JsonData instance doesn't hold a double");
@@ -599,8 +509,7 @@ namespace Engine.Data.Json
             return inst_double;
         }
 
-        int IJsonWrapper.GetInt()
-        {
+        int IJsonWrapper.GetInt() {
             if (type != JsonType.Int)
                 throw new InvalidOperationException(
                     "JsonData instance doesn't hold an int");
@@ -608,8 +517,7 @@ namespace Engine.Data.Json
             return inst_int;
         }
 
-        long IJsonWrapper.GetLong()
-        {
+        long IJsonWrapper.GetLong() {
             if (type != JsonType.Long)
                 throw new InvalidOperationException(
                     "JsonData instance doesn't hold a long");
@@ -617,8 +525,7 @@ namespace Engine.Data.Json
             return inst_long;
         }
 
-        string IJsonWrapper.GetString()
-        {
+        string IJsonWrapper.GetString() {
             if (type != JsonType.String)
                 throw new InvalidOperationException(
                     "JsonData instance doesn't hold a string");
@@ -626,89 +533,75 @@ namespace Engine.Data.Json
             return inst_string;
         }
 
-        void IJsonWrapper.SetBoolean(bool val)
-        {
+        void IJsonWrapper.SetBoolean(bool val) {
             type = JsonType.Boolean;
             inst_boolean = val;
             json = null;
         }
 
-        void IJsonWrapper.SetDouble(double val)
-        {
+        void IJsonWrapper.SetDouble(double val) {
             type = JsonType.Double;
             inst_double = val;
             json = null;
         }
 
-        void IJsonWrapper.SetInt(int val)
-        {
+        void IJsonWrapper.SetInt(int val) {
             type = JsonType.Int;
             inst_int = val;
             json = null;
         }
 
-        void IJsonWrapper.SetLong(long val)
-        {
+        void IJsonWrapper.SetLong(long val) {
             type = JsonType.Long;
             inst_long = val;
             json = null;
         }
 
-        void IJsonWrapper.SetString(string val)
-        {
+        void IJsonWrapper.SetString(string val) {
             type = JsonType.String;
             inst_string = val;
             json = null;
         }
 
-        string IJsonWrapper.ToJson()
-        {
+        string IJsonWrapper.ToJson() {
             return ToJson();
         }
 
-        void IJsonWrapper.ToJson(JsonWriter writer)
-        {
+        void IJsonWrapper.ToJson(JsonWriter writer) {
             ToJson(writer);
         }
         #endregion
 
 
         #region IList Methods
-        int IList.Add(object value)
-        {
+        int IList.Add(object value) {
             return Add(value);
         }
 
-        void IList.Clear()
-        {
+        void IList.Clear() {
             EnsureList().Clear();
             json = null;
         }
 
-        bool IList.Contains(object value)
-        {
+        bool IList.Contains(object value) {
             return EnsureList().Contains(value);
         }
 
-        int IList.IndexOf(object value)
-        {
+        int IList.IndexOf(object value) {
             return EnsureList().IndexOf(value);
         }
 
-        void IList.Insert(int index, object value)
-        {
+        void IList.Insert(int index, object value) {
             EnsureList().Insert(index, value);
             json = null;
         }
 
-        void IList.Remove(object value)
-        {
+        void IList.Remove(object value) {
             EnsureList().Remove(value);
             json = null;
         }
 
-        void IList.RemoveAt(int index)
-        {
+        void IList.RemoveAt(int index) {
             EnsureList().RemoveAt(index);
             json = null;
         }
@@ -716,16 +609,14 @@ namespace Engine.Data.Json
 
 
         #region IOrderedDictionary Methods
-        IDictionaryEnumerator IOrderedDictionary.GetEnumerator()
-        {
+        IDictionaryEnumerator IOrderedDictionary.GetEnumerator() {
             EnsureDictionary();
 
             return new OrderedDictionaryEnumerator(
                 object_list.GetEnumerator());
         }
 
-        void IOrderedDictionary.Insert(int idx, object key, object value)
-        {
+        void IOrderedDictionary.Insert(int idx, object key, object value) {
             string property = (string)key;
             JsonData data = ToJsonData(value);
 
@@ -737,8 +628,7 @@ namespace Engine.Data.Json
             object_list.Insert(idx, entry);
         }
 
-        void IOrderedDictionary.RemoveAt(int idx)
-        {
+        void IOrderedDictionary.RemoveAt(int idx) {
             EnsureDictionary();
 
             inst_object.Remove(object_list[idx].Key);
@@ -748,8 +638,7 @@ namespace Engine.Data.Json
 
 
         #region Private Methods
-        private ICollection EnsureCollection()
-        {
+        private ICollection EnsureCollection() {
             if (type == JsonType.Array)
                 return (ICollection)inst_array;
 
@@ -760,8 +649,7 @@ namespace Engine.Data.Json
                 "The JsonData instance has to be initialized first");
         }
 
-        private IDictionary EnsureDictionary()
-        {
+        private IDictionary EnsureDictionary() {
             if (type == JsonType.Object)
                 return (IDictionary)inst_object;
 
@@ -776,8 +664,7 @@ namespace Engine.Data.Json
             return (IDictionary)inst_object;
         }
 
-        private IList EnsureList()
-        {
+        private IList EnsureList() {
             if (type == JsonType.Array)
                 return (IList)inst_array;
 
@@ -791,8 +678,7 @@ namespace Engine.Data.Json
             return (IList)inst_array;
         }
 
-        private JsonData ToJsonData(object obj)
-        {
+        private JsonData ToJsonData(object obj) {
             if (obj == null)
                 return null;
 
@@ -802,46 +688,38 @@ namespace Engine.Data.Json
             return new JsonData(obj);
         }
 
-        private static void WriteJson(IJsonWrapper obj, JsonWriter writer)
-        {
-            if (obj == null)
-            {
+        private static void WriteJson(IJsonWrapper obj, JsonWriter writer) {
+            if (obj == null) {
                 writer.Write(null);
                 return;
             }
 
-            if (obj.IsString)
-            {
+            if (obj.IsString) {
                 writer.Write(obj.GetString());
                 return;
             }
 
-            if (obj.IsBoolean)
-            {
+            if (obj.IsBoolean) {
                 writer.Write(obj.GetBoolean());
                 return;
             }
 
-            if (obj.IsDouble)
-            {
+            if (obj.IsDouble) {
                 writer.Write(obj.GetDouble());
                 return;
             }
 
-            if (obj.IsInt)
-            {
+            if (obj.IsInt) {
                 writer.Write(obj.GetInt());
                 return;
             }
 
-            if (obj.IsLong)
-            {
+            if (obj.IsLong) {
                 writer.Write(obj.GetLong());
                 return;
             }
 
-            if (obj.IsArray)
-            {
+            if (obj.IsArray) {
                 writer.WriteArrayStart();
                 foreach (object elem in (IList)obj)
                     WriteJson((JsonData)elem, writer);
@@ -850,12 +728,10 @@ namespace Engine.Data.Json
                 return;
             }
 
-            if (obj.IsObject)
-            {
+            if (obj.IsObject) {
                 writer.WriteObjectStart();
 
-                foreach (DictionaryEntry entry in ((IDictionary)obj))
-                {
+                foreach (DictionaryEntry entry in ((IDictionary)obj)) {
                     writer.WritePropertyName((string)entry.Key);
                     WriteJson((JsonData)entry.Value, writer);
                 }
@@ -867,8 +743,7 @@ namespace Engine.Data.Json
         #endregion
 
 
-        public int Add(object value)
-        {
+        public int Add(object value) {
             JsonData data = ToJsonData(value);
 
             json = null;
@@ -876,31 +751,26 @@ namespace Engine.Data.Json
             return EnsureList().Add(data);
         }
 
-        public void Clear()
-        {
-            if (IsObject)
-            {
+        public void Clear() {
+            if (IsObject) {
                 ((IDictionary)this).Clear();
                 return;
             }
 
-            if (IsArray)
-            {
+            if (IsArray) {
                 ((IList)this).Clear();
                 return;
             }
         }
 
-        public bool Equals(JsonData x)
-        {
+        public bool Equals(JsonData x) {
             if (x == null)
                 return false;
 
             if (x.type != this.type)
                 return false;
 
-            switch (this.type)
-            {
+            switch (this.type) {
                 case JsonType.None:
                     return true;
 
@@ -929,18 +799,15 @@ namespace Engine.Data.Json
             return false;
         }
 
-        public JsonType GetJsonType()
-        {
+        public JsonType GetJsonType() {
             return type;
         }
 
-        public void SetJsonType(JsonType type)
-        {
+        public void SetJsonType(JsonType type) {
             if (this.type == type)
                 return;
 
-            switch (type)
-            {
+            switch (type) {
                 case JsonType.None:
                     break;
 
@@ -977,8 +844,7 @@ namespace Engine.Data.Json
             this.type = type;
         }
 
-        public string ToJson()
-        {
+        public string ToJson() {
             if (json != null)
                 return json;
 
@@ -992,8 +858,7 @@ namespace Engine.Data.Json
             return json;
         }
 
-        public void ToJson(JsonWriter writer)
-        {
+        public void ToJson(JsonWriter writer) {
             bool old_validate = writer.Validate;
 
             writer.Validate = false;
@@ -1003,10 +868,8 @@ namespace Engine.Data.Json
             writer.Validate = old_validate;
         }
 
-        public override string ToString()
-        {
-            switch (type)
-            {
+        public override string ToString() {
+            switch (type) {
                 case JsonType.Array:
                     return "JsonData array";
 
@@ -1034,50 +897,41 @@ namespace Engine.Data.Json
     }
 
 
-    internal class OrderedDictionaryEnumerator : IDictionaryEnumerator
-    {
+    internal class OrderedDictionaryEnumerator : IDictionaryEnumerator {
         IEnumerator<KeyValuePair<string, JsonData>> list_enumerator;
 
 
-        public object Current
-        {
+        public object Current {
             get { return Entry; }
         }
 
-        public DictionaryEntry Entry
-        {
-            get
-            {
+        public DictionaryEntry Entry {
+            get {
                 KeyValuePair<string, JsonData> curr = list_enumerator.Current;
                 return new DictionaryEntry(curr.Key, curr.Value);
             }
         }
 
-        public object Key
-        {
+        public object Key {
             get { return list_enumerator.Current.Key; }
         }
 
-        public object Value
-        {
+        public object Value {
             get { return list_enumerator.Current.Value; }
         }
 
 
         public OrderedDictionaryEnumerator(
-            IEnumerator<KeyValuePair<string, JsonData>> enumerator)
-        {
+            IEnumerator<KeyValuePair<string, JsonData>> enumerator) {
             list_enumerator = enumerator;
         }
 
 
-        public bool MoveNext()
-        {
+        public bool MoveNext() {
             return list_enumerator.MoveNext();
         }
 
-        public void Reset()
-        {
+        public void Reset() {
             list_enumerator.Reset();
         }
     }

@@ -1,10 +1,8 @@
 using System.Collections;
 using UnityEngine;
 
-namespace Engine.Cameras
-{
-    public class CarCamera : GameObjectBehavior
-    {
+namespace Engine.Cameras {
+    public class CarCamera : GameObjectBehavior {
 
         public Transform target = null;
         public float height = 1f;
@@ -22,15 +20,13 @@ namespace Engine.Cameras
 
         Rigidbody rb;
 
-        private void Start()
-        {
+        private void Start() {
 
             raycastLayers = ~ignoreLayers;
             rb = target.root.GetComponent<Rigidbody>();
         }
 
-        private void FixedUpdate()
-        {
+        private void FixedUpdate() {
 
             currentVelocity = Vector3.Lerp(
                 prevVelocity, rb.linearVelocity, velocityDamping * Time.deltaTime);
@@ -39,8 +35,7 @@ namespace Engine.Cameras
             prevVelocity = currentVelocity;
         }
 
-        private void LateUpdate()
-        {
+        private void LateUpdate() {
 
             float speedFactor = Mathf.Clamp01(rb.linearVelocity.magnitude / 70.0f);
 
@@ -57,8 +52,7 @@ namespace Engine.Cameras
             Vector3 targetDirection = newPosition - newTargetPosition;
 
             if (Physics.Raycast(
-                newTargetPosition, targetDirection, out hit, currentDistance, raycastLayers))
-            {
+                newTargetPosition, targetDirection, out hit, currentDistance, raycastLayers)) {
 
                 newPosition = hit.point;
             }

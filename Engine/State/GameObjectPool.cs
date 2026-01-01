@@ -108,7 +108,7 @@ namespace Engine.State {
         /// If true, it will only return an object if there is one currently pooled.
         /// </param>
         public GameObject GetObjectForType(string objectType, bool onlyPooled) {
-            if (pooledObjects.ContainsKey(objectType)) { 
+            if (pooledObjects.ContainsKey(objectType)) {
                 foreach (GameObject go in pooledObjects[objectType]) {
                     GameObject pooledObject = go;
 

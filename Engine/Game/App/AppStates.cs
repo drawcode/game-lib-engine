@@ -3,28 +3,21 @@ using System.Collections.Generic;
 using System.IO;
 using Engine.Game.App.BaseApp;
 
-namespace Engine.Game.App
-{
-    public class AppStateMeta : BaseAppStateMeta
-    {
+namespace Engine.Game.App {
+    public class AppStateMeta : BaseAppStateMeta {
         //public static string appModeTypeGameDefault = "app-mode-game-default";
     }
 
-    public class AppStates : BaseAppStates<AppState>
-    {
+    public class AppStates : BaseAppStates<AppState> {
         private static volatile AppState current;
         private static volatile AppStates instance;
         private static object syncRoot = new System.Object();
         public static string DATA_KEY = "app-state-data";
 
-        public static AppState Current
-        {
-            get
-            {
-                if (current == null)
-                {
-                    lock (syncRoot)
-                    {
+        public static AppState Current {
+            get {
+                if (current == null) {
+                    lock (syncRoot) {
                         if (current == null)
                             current = new AppState();
                     }
@@ -32,20 +25,15 @@ namespace Engine.Game.App
 
                 return current;
             }
-            set
-            {
+            set {
                 current = value;
             }
         }
 
-        public static AppStates Instance
-        {
-            get
-            {
-                if (instance == null)
-                {
-                    lock (syncRoot)
-                    {
+        public static AppStates Instance {
+            get {
+                if (instance == null) {
+                    lock (syncRoot) {
                         if (instance == null)
                             instance = new AppStates(true);
                     }
@@ -53,19 +41,16 @@ namespace Engine.Game.App
 
                 return instance;
             }
-            set
-            {
+            set {
                 instance = value;
             }
         }
 
-        public AppStates()
-        {
+        public AppStates() {
             Reset();
         }
 
-        public AppStates(bool loadData)
-        {
+        public AppStates(bool loadData) {
             Reset();
             path = "data/" + DATA_KEY + ".json";
             pathKey = DATA_KEY;
@@ -134,19 +119,16 @@ namespace Engine.Game.App
         */
     }
 
-    public class AppState : BaseAppState
-    {
+    public class AppState : BaseAppState {
 
         // Attributes that are added or changed after launch should be like this to prevent
         // profile conversions.
 
-        public AppState()
-        {
+        public AppState() {
             Reset();
         }
 
-        public override void Reset()
-        {
+        public override void Reset() {
             base.Reset();
         }
     }

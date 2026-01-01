@@ -4,31 +4,25 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Engine.Analytics
-{
-    class GoogleTrackerUtmeGenerator
-    {
+namespace Engine.Analytics {
+    class GoogleTrackerUtmeGenerator {
         private readonly GoogleTracker _GoogleTracker;
 
-        private enum ValueType
-        {
+        private enum ValueType {
             Event = 5,
             GoogleTrackerCustomVariableName = 8,
             GoogleTrackerCustomVariableValue = 9
         }
 
-        public GoogleTrackerUtmeGenerator(GoogleTracker GoogleTracker)
-        {
+        public GoogleTrackerUtmeGenerator(GoogleTracker GoogleTracker) {
             _GoogleTracker = GoogleTracker;
         }
 
-        public string Generate()
-        {
+        public string Generate() {
             return GenerateCustomVariables();
         }
 
-        private string GenerateCustomVariables()
-        {
+        private string GenerateCustomVariables() {
             Func<GoogleTrackerCustomVariable, Func<GoogleTrackerCustomVariable, string>, string> getProperty =
                 (cv, f) => cv == null ? null : f(cv);
             Func<Func<GoogleTrackerCustomVariable, string>, ValueType, string> getValues =
@@ -43,14 +37,12 @@ namespace Engine.Analytics
             return names + values;
         }
 
-        private static string SerializeValues(IList<string> values, ValueType type)
-        {
+        private static string SerializeValues(IList<string> values, ValueType type) {
             var builder = new StringBuilder();
 
             var hasNonNullValues = false;
 
-            for (var i = 0; i < values.Count; i++)
-            {
+            for (var i = 0; i < values.Count; i++) {
                 if (values[i] == null) continue;
 
                 if (!hasNonNullValues)
