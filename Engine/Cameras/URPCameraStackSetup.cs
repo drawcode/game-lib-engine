@@ -76,6 +76,11 @@ namespace Engine.Cameras {
                     Debug.Log($"[URPCameraStackSetup] Forced '{cam.name}' (depth {cam.depth}) to Overlay.", cam);
                 }
 
+                // Cameras that used clearFlags Nothing depend on the depth buffer written
+                // by earlier cameras — URP overlays default clearDepth to true, which
+                // would draw them over everything instead.
+                SetClearDepth(data, cam.clearFlags != CameraClearFlags.Nothing);
+
                 overlays.Add(cam);
             }
 
@@ -90,8 +95,26 @@ namespace Engine.Cameras {
         /// <summary>Ensures the camera is marked as Overlay — safe to call repeatedly.</summary>
         private static void EnsureOverlay(Camera cam) {
             var data = cam.GetComponent<UniversalAdditionalCameraData>();
-            if (data != null && data.renderType != CameraRenderType.Overlay) {
-                data.renderType = CameraRenderType.Overlay;
+            if (data != null) {
+                if (data.renderType != CameraRenderType.Overlay) {
+                    data.renderType = CameraRenderType.Overlay;
+                }
+                SetClearDepth(data, cam.clearFlags != CameraClearFlags.Nothing);
+            }
+        }
+
+        // UniversalAdditionalCameraData.clearDepth has no setter — write the serialized
+        // m_ClearDepth field via reflection.
+        private static System.Reflection.FieldInfo clearDepthField;
+
+        private static void SetClearDepth(UniversalAdditionalCameraData data, bool value) {
+            if (clearDepthField == null) {
+                clearDepthField = typeof(UniversalAdditionalCameraData).GetField(
+                    "m_ClearDepth",
+                    System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic);
+            }
+            if (clearDepthField != null) {
+                clearDepthField.SetValue(data, value);
             }
         }
     }
