@@ -40,8 +40,12 @@ or `UnityEngine.UIElements` — those names may appear only inside backend/adapt
     call sites passing onComplete during 1.4 for double-fire assumptions.
   - `FadeToObject`/`ColorToObject` implement the `-a-NN` child-name alpha-cap convention in
     facade code (TweenUtil.cs:1436-1466, 1703-1729) — keep in facade, not backend.
-  - Fade/Color auto Show() on alpha>0 begin and Hide() on alpha==0 complete — keep in facade
-    by composing into onStart/onComplete before dispatch.
+  - Fade/Color auto Show() on alpha>0 begin and Hide() on alpha==0 complete — **DO NOT wire
+    these into the internal backend** (learned at the Phase 1 gate, 2026-07-12): the NGUI
+    path never fired them, and a decade of panel code owns active-state itself. Wiring them
+    deactivated objects on fade-out and broke HUD/pause + the bot-preview card on 15 panels
+    ("Coroutine couldn't be started because the game object is inactive"). Tweens are purely
+    visual; the internalEasing branches pass raw meta (user callbacks only).
 - `Engine/Animation/AnimationEasing.cs`: full Penner static equation set (keep as the single
   math source) + a minimal keyed float animator that is **broken/limited**: `easeUpdate`
   hardcodes `QuadEaseInOut` ignoring `item.equationType`; `timeDelay` never applied; no loops;
@@ -116,10 +120,12 @@ Upgrade `AnimationEasing` in place (zero call sites — safe):
   channels driven off a single normalized item applying `Vector3.LerpUnclamped(from, to, t)`
   through `ITweenTarget.SetPosition` — prefer ONE item per op with an apply delegate over
   3 scalar items, so keys and callbacks stay 1:1 with the logical tween).
-- **Cancel keys**: `"{targetId}:{channel}"`. `stopCurrent=true` cancels that op's channel on
-  that target before starting (matches LeanTween.cancel(go)/iTween.Stop(go) closely enough:
-  those cancel all channels — do all-channels cancel to match, i.e. `Cancel(t)`).
-  `CancelAll()` clears every item — replaces `LeanTween.cancelAll()`.
+- **Cancel keys**: `"{targetId}:{channel}"`. `stopCurrent=true` cancels ONLY the same channel
+  on that target (gate learning #6: NGUI tweeners were isolated per component — a fade never
+  killed an in-flight move; all-channels stopCurrent scrambled the boot-time Show/Hide races,
+  leaving the PanelBackgroundUI backer stranded at open position). Explicit `Cancel(t)` /
+  `TweenUtil.Cancel(go)` remain all-channels. `CancelAll()` clears every item — replaces
+  `LeanTween.cancelAll()`.
 - Ease mapping: `TweenEaseType.linear/quadEaseIn/quadEaseOut/quadEaseInOut` →
   `Equations.Linear/QuadEaseIn/QuadEaseOut/QuadEaseInOut`. (Only these 4 exist at call sites;
   the full Equations enum stays available for animation-preset tokens at 1.5.)
@@ -179,9 +185,95 @@ Upgrade `AnimationEasing` in place (zero call sites — safe):
 8. PlayMode smoke (1 test): MoveToObject with lib=internalEasing actually moves a GO across
    3 pumped frames.
 
+## Gate learnings (2026-07-12, Phase 1 flip)
+
+1. Tweens never flip GameObject active-state (see current-state bullet above).
+2. `AnimationEasing` pump is `DontDestroyOnLoad` — NGUI tweeners lived on their targets and
+   survived scene loads; a scene-local pump silently dropped transition-time tweens (stuck
+   dialog backdrop, tip overlay re-appearing after gameplay). Dead targets self-remove via
+   `ITweenTarget.alive` (looping tweens would otherwise leak across level loads).
+3. **Never fade a camera GameObject through the facade** — the NGUI-adapter child-widget
+   fallback resolves it to the first `UIWidget` of the whole UI layer under that camera
+   (pre-flip these were silent LeanTween no-ops). The `CameraExtensions` fades were removed;
+   camera visibility is `enabled` + `Show()`. Residual risk of the same class: any
+   `FadeToObject` on a bare container GO now alpha-drives its first child widget where it
+   no-op'd pre-flip — watch for one-widget fade artifacts in Phase 3 panel work.
+4. **FadeToObject's `-a-NN` child recursion is deleted** — it only ever executed on the
+   LeanTween path where child fades no-op'd on NGUI widgets. Made real, it forced scene
+   objects like `BackgroundDark-a-70` / `Background-a-40` to NN% alpha on every ancestor
+   fade including fade-outs. `ColorToObject`'s recursion stays (it was live via NGUI).
+5. **Adapter NGUI alpha applies ONLY to sprites on self** (UISlicedSprite/UISprite/
+   UITiledSprite via GetComponent on the target GO; then CanvasGroup → Graphic → Renderer;
+   NEVER UIPanel, never generic UIWidget, never children). Trace-verified production rule:
+   pre-flip, facade fades were real only when the old sprite-routing sent them to NGUI —
+   which required a sprite on the GO itself. Every other fade (containers, UIPanel hosts,
+   labels) was a LeanTween no-op, and whole subsystems depend on that: the
+   BaseGameUIPanelBackgrounds Show/Hide* fade choreography is effectively dead code whose
+   execution dims/blanks the vivid backgrounds; the PanelBackgroundUI dark backer shows/
+   hides only by position, and panel-main's AnimateIn isVisible early-return means no
+   reliable off-switch exists if its alpha ever gets driven. Color keeps its child-widget
+   search — that path (TweenColor via the always-forced NGUI ColorToObject) really was live.
+
+6. **stopCurrent cancels the same channel only** (see Cancel-keys bullet above): NGUI
+   tweeners were per-component isolated; all-channel cancel scrambled boot Show/Hide races.
+7. **Facade Move/Rotate coerce coord to LOCAL**: NGUI TweenPosition/TweenRotation always
+   animated local transforms and ignored the requested coord; call sites default to world
+   and depend on the local behavior (UIGameNotification's off-screen parking, panel slides).
+   Explicit-backend calls (backend.Move directly) still honor world.
+8. **`FadeToObject(TweenMeta, float)`'s Show()/Hide() side effects were only ever dead for
+   the sprite-forced-NGUI path — they were LIVE for every other GO** (learning #5 talks
+   about the *value* landing; this is about the composed onStart/onComplete callbacks that
+   drive `meta.go.Show()`/`Hide()`). Pre-flip: `FadeToObject(GameObject,...)` only forced
+   `meta.lib = nguiUITweener` when the GO carried `UISlicedSprite`/`UISprite`/`UITiledSprite`
+   on itself; every other GO fell through to the *default* `TweenLib.leanTween`, whose
+   `LTDescr.setOnStart/setOnComplete` really did fire, so plain container GOs (e.g.
+   `panel-header`'s `TitleContainer`/`BackerObject`, which hold no sprite themselves — the
+   sprite is a grandchild) got real `Hide()` on fade-to-0 / `Show()` on fade-to->0. The 1.2
+   flip collapsed the sprite check into an unconditional `meta.lib = TweenLib.internalEasing`
+   and, per learning #1/#5, dispatched "raw meta" (no onStart/onComplete) for ALL fades —
+   correct for the sprite-bearing case (NGUI TweenAlpha really never fired those callbacks)
+   but wrong for the non-sprite default-lib case, which silently stopped calling `Hide()`.
+   Symptom: `GameUIPanelHeader.showMain()`'s `HideTitleObject()`/`HideBackerObject()` (both
+   fade non-sprite containers) never deactivated them again after boot's `AnimateIn()`
+   opened them, leaving the "PLAY GAMEMODE" title label and its dark backer sprite
+   permanently visible over the main menu. Fix (`Engine/Utility/TweenUtil.cs`,
+   `FadeToObject(TweenMeta, float)`): compute `hadSpriteOnSelf` (the old sprite check) before
+   forcing `meta.lib = internalEasing`, then only skip the composed onStart/onComplete
+   dispatch (`backend.Fade(..., meta)`, raw) when `hadSpriteOnSelf`; otherwise dispatch with
+   `metaDispatch.onStart/onComplete` wired to the Show()/Hide() closures, restoring the
+   historically-live default-lib behavior. `ColorToObject` does NOT need the equivalent fix:
+   its lib-forcing was already unconditional pre-flip (no sprite check — see learning #5's
+   "always-forced NGUI ColorToObject"), so its Show()/Hide() callbacks were dead in every
+   case both before and after; only the color *value* application differs there, and that
+   already keeps its NGUI-only child-widget recursion. Verified via the stash A/B recipe:
+   pre-flip, `TitleContainer`/`BackerObject` end boot with `activeSelf=false`; post-flip
+   (pre-fix) they stayed `true`; post-fix they match pre-flip exactly.
+
 ## Out of scope for 1.1/1.2 (later chunks)
 
 - Removing forced-NGUI overrides, `USE_EASING_*` gates, vendored lib deletion → 1.5/1.6.
 - Named animation-preset tokens (`panel-in-left`, durations/eases as data) → 1.5, then
   formalized into the bitty token source at 2.1.
 - UITweenerUtil shim → 1.3 (games repo).
+
+## OPEN at session end (2026-07-12): settings-family content regression — 1.5 flip UNCOMMITTED
+
+Gate run 7 (full walk): main family clean; settings family (6 panels) BROKEN — header +
+coins render, all content containers (button grids, sliders, credits text) absent. Settings
+PASSED in gate run 6. Deltas 6→7: (a) per-channel stopCurrent, (b) facade Move/Rotate
+coord→local coercion, (c) learning #8 Show/Hide callback split for non-sprite fades.
+
+Prime suspect: (b). Panel containers' ±4500 closed / 0 open design values were applied as
+WORLD coords in run 6 (default coord=world landed containers at world origin ≈ screen
+center, accidentally "working"); local coercion now sends them to LOCAL design positions —
+verify what NGUI TweenPosition actually produced for these containers (it used localPosition;
+but the *from* it captured on Begin may differ from our from-capture). Second suspect: (c)
+replacement-vs-stacking timing killing the fade-in's Show() when an out-fade lands in the
+same window (LeanTween.cancel(go) analysis says equivalent, but only fades were LeanTween —
+re-verify with the stash A/B probe on containerCenter of panel-settings during ShowSettings).
+
+Evidence: run captures /private/tmp/claude-501/.../scratchpad/postflip7/ (vs postflip6/ which
+passed settings) — compare panel-settings.png across runs 6/7 first. Verified clean and green:
+cold boot main menu, backer (-4500), no banner, HUD, 13/13 EditMode tests.
+
+All 8 learnings above are trace-verified and must be preserved by whoever finishes 1.5.
