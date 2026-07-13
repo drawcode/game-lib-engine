@@ -13,13 +13,16 @@ using System.Text;
 using UnityEngine;
 using UnityEngine.UI;
 
+using Engine.Animation;
+
 namespace Engine.Utility {
 
     public enum TweenLib {
         none,
         iTween,
         leanTween,
-        nguiUITweener
+        nguiUITweener,
+        internalEasing
     }
 
     public enum TweenEaseType {
@@ -205,6 +208,55 @@ namespace Engine.Utility {
         public static float topClosedY = 4500f;
 
         public static int increment = 0;
+
+        // --------------------------------------------------------------------
+        // BACKEND
+
+        private static ITweenBackend _backend = null;
+
+        public static ITweenBackend backend {
+            get {
+                if (_backend == null) {
+                    _backend = EasingTweenBackend.Instance;
+                }
+
+                return _backend;
+            }
+        }
+
+        public static void SetBackend(ITweenBackend value) {
+            _backend = value;
+        }
+
+        public static ITweenTarget ResolveTarget(GameObject go) {
+
+            if (go == null) {
+                return null;
+            }
+
+            return new TransformTweenTarget(go);
+        }
+
+        public static ITweenTarget ResolveTarget(object native) {
+
+            if (native == null) {
+                return null;
+            }
+
+            ITweenTarget target = VisualElementTweenTarget.TryCreate(native);
+
+            if (target != null) {
+                return target;
+            }
+
+            GameObject go = native as GameObject;
+
+            if (go != null) {
+                return ResolveTarget(go);
+            }
+
+            return null;
+        }
 
         // LOOP TYPES
 
@@ -606,7 +658,11 @@ namespace Engine.Utility {
             }
 
 #if USE_UI_NGUI_2_7 || USE_UI_NGUI_3 || USE_EASING_NGUI
-            meta.lib = TweenLib.nguiUITweener;
+            // Coexistence override: NGUI drives all tweens unless a call site
+            // explicitly opted into the internal backend. Removed at flip (1.5).
+            if (meta.lib != TweenLib.internalEasing) {
+                meta.lib = TweenLib.nguiUITweener;
+            }
 #endif
 
             Action onBegin = () => {
@@ -730,6 +786,9 @@ namespace Engine.Utility {
                 //OnTweenTick(onTick);
             }
 #endif
+            else if (meta.lib == TweenLib.internalEasing) {
+                backend.Move(ResolveTarget(meta.go), pos, meta);
+            }
         }
 
         // --------------------------------------------------------------------
@@ -824,7 +883,11 @@ namespace Engine.Utility {
 
 
 #if USE_UI_NGUI_2_7 || USE_UI_NGUI_3 || USE_EASING_NGUI
-            meta.lib = TweenLib.nguiUITweener;
+            // Coexistence override: NGUI drives all tweens unless a call site
+            // explicitly opted into the internal backend. Removed at flip (1.5).
+            if (meta.lib != TweenLib.internalEasing) {
+                meta.lib = TweenLib.nguiUITweener;
+            }
 #endif
 
             Action onBegin = () => {
@@ -948,6 +1011,9 @@ namespace Engine.Utility {
                 //OnTweenTick(onTick);
             }
 #endif
+            else if (meta.lib == TweenLib.internalEasing) {
+                backend.Scale(ResolveTarget(meta.go), pos, meta);
+            }
         }
 
         // --------------------------------------------------------------------
@@ -1037,7 +1103,11 @@ namespace Engine.Utility {
             }
 
 #if USE_UI_NGUI_2_7 || USE_UI_NGUI_3 || USE_EASING_NGUI
-            meta.lib = TweenLib.nguiUITweener;
+            // Coexistence override: NGUI drives all tweens unless a call site
+            // explicitly opted into the internal backend. Removed at flip (1.5).
+            if (meta.lib != TweenLib.internalEasing) {
+                meta.lib = TweenLib.nguiUITweener;
+            }
 #endif
 
             Action onBegin = () => {
@@ -1161,6 +1231,9 @@ namespace Engine.Utility {
                 //OnTweenTick(onTick);
             }
 #endif
+            else if (meta.lib == TweenLib.internalEasing) {
+                backend.Rotate(ResolveTarget(meta.go), pos, meta);
+            }
         }
 
         // --------------------------------------------------------------------
@@ -1260,6 +1333,39 @@ namespace Engine.Utility {
                 TweenLib.nguiUITweener,
                 go,
                 alpha, time, delay, stopCurrent, coord, easeType, loopType);
+        }
+
+        // Convenience shims for UITweenerUtil.FadeIn/FadeOut/FadeOutNow (chunk 1.3 port map).
+        // Route through FadeToObject so the forced-NGUI override / lib resolution is untouched.
+
+        public static void FadeInObject(
+           GameObject go,
+           float time = 1f, float delay = 1f,
+           bool stopCurrent = true,
+           TweenCoord coord = TweenCoord.world,
+           TweenEaseType easeType = TweenEaseType.quadEaseIn,
+           TweenLoopType loopType = TweenLoopType.once) {
+
+            FadeToObject(go, 1f, time, delay, stopCurrent, coord, easeType, loopType);
+        }
+
+        public static void FadeOutObject(
+           GameObject go,
+           float time = 1f, float delay = 0f,
+           bool stopCurrent = true,
+           TweenCoord coord = TweenCoord.world,
+           TweenEaseType easeType = TweenEaseType.quadEaseIn,
+           TweenLoopType loopType = TweenLoopType.once) {
+
+            FadeToObject(go, 0f, time, delay, stopCurrent, coord, easeType, loopType);
+        }
+
+        public static void FadeOutObjectNow(
+           GameObject go,
+           bool stopCurrent = true,
+           TweenCoord coord = TweenCoord.world) {
+
+            FadeToObject(go, 0f, 0f, 0f, stopCurrent, coord, TweenEaseType.quadEaseIn, TweenLoopType.once);
         }
 
         public static void FadeToObject(
@@ -1426,11 +1532,24 @@ namespace Engine.Utility {
             }
 
 #endif
+            else if (meta.lib == TweenLib.internalEasing) {
+
+                // Dispatch with the composed local callbacks so the Show()/Hide()
+                // side effects above reach the backend (meta itself lacks them).
+                TweenMeta metaDispatch = GetMetaDefault(
+                    meta.lib, meta.go, meta.time, meta.delay,
+                    meta.stopCurrent, meta.coord, meta.easeType, meta.loopType);
+                metaDispatch.onStart = onBegin;
+                metaDispatch.onComplete = onFinish;
+                metaDispatch.onUpdate = meta.onUpdate;
+
+                backend.Fade(ResolveTarget(meta.go), alpha, metaDispatch);
+            }
 
             /*
              * TODO nested -a- marked objects to keep alpha on on nested when needed
              * ex: objectname-a-50 = alpha 50% on nested no matter parent
-             * 
+             *
              */
 
             if (meta.lib != TweenLib.nguiUITweener) {
@@ -1558,7 +1677,11 @@ namespace Engine.Utility {
             }
 
 #if USE_UI_NGUI_2_7 || USE_UI_NGUI_3 || USE_EASING_NGUI
-            meta.lib = TweenLib.nguiUITweener;
+            // Coexistence override: NGUI drives all tweens unless a call site
+            // explicitly opted into the internal backend. Removed at flip (1.5).
+            if (meta.lib != TweenLib.internalEasing) {
+                meta.lib = TweenLib.nguiUITweener;
+            }
 #endif
 
             Action onBegin = () => {
@@ -1694,11 +1817,24 @@ namespace Engine.Utility {
                 //OnTweenTick(onTick);
             }
 #endif
+            else if (meta.lib == TweenLib.internalEasing) {
+
+                // Dispatch with the composed local callbacks so the Show()/Hide()
+                // side effects above reach the backend (meta itself lacks them).
+                TweenMeta metaDispatch = GetMetaDefault(
+                    meta.lib, meta.go, meta.time, meta.delay,
+                    meta.stopCurrent, meta.coord, meta.easeType, meta.loopType);
+                metaDispatch.onStart = onBegin;
+                metaDispatch.onComplete = onFinish;
+                metaDispatch.onUpdate = meta.onUpdate;
+
+                backend.ColorTo(ResolveTarget(meta.go), color, metaDispatch);
+            }
 
             /*
              * TODO nested -a- marked objects to keep alpha on on nested when needed
              * ex: objectname-a-50 = alpha 50% on nested no matter parent
-             * 
+             *
              */
             foreach (Transform t in meta.go.transform) {
                 string toLook = "-a-";
@@ -1727,6 +1863,52 @@ namespace Engine.Utility {
                 }
                 //FadeToObject(t.gameObject, alpha, meta.time, meta.delay);
             }
+        }
+
+        // --------------------------------------------------------------------
+        // VALUE / CANCEL (internalEasing backend)
+
+        public static void ValueTo(
+            string key,
+            float from, float to,
+            float time, float delay,
+            TweenEaseType ease,
+            Action<float> onValue,
+            Action onComplete = null) {
+
+            if (string.IsNullOrEmpty(key) || onValue == null) {
+                return;
+            }
+
+            TweenMeta meta = new TweenMeta();
+            meta.time = time;
+            meta.delay = delay;
+            meta.easeType = ease;
+            meta.onComplete = onComplete;
+
+            backend.Value(key, from, to, meta, onValue);
+        }
+
+        public static void Cancel(GameObject go) {
+
+            if (go == null) {
+                return;
+            }
+
+            backend.Cancel(ResolveTarget(go));
+        }
+
+        public static void Cancel(string key) {
+
+            if (string.IsNullOrEmpty(key)) {
+                return;
+            }
+
+            backend.Cancel(key);
+        }
+
+        public static void CancelAll() {
+            backend.CancelAll();
         }
 
         // --------------------------------------------------------------------
