@@ -657,13 +657,14 @@ namespace Engine.Utility {
                 return;
             }
 
-#if USE_UI_NGUI_2_7 || USE_UI_NGUI_3 || USE_EASING_NGUI
-            // Coexistence override: NGUI drives all tweens unless a call site
-            // explicitly opted into the internal backend. Removed at flip (1.5).
-            if (meta.lib != TweenLib.internalEasing) {
-                meta.lib = TweenLib.nguiUITweener;
-            }
-#endif
+            // All tweens run on the internal backend; legacy lib branches below
+            // are unreachable and get deleted with the vendored libs.
+            meta.lib = TweenLib.internalEasing;
+
+            // NGUI TweenPosition always animated localPosition regardless of the
+            // requested coord, and a decade of call sites (which default to world)
+            // rely on that — honoring world moves panels to wrong absolute spots.
+            meta.coord = TweenCoord.local;
 
             Action onBegin = () => {
 
@@ -882,13 +883,9 @@ namespace Engine.Utility {
             }
 
 
-#if USE_UI_NGUI_2_7 || USE_UI_NGUI_3 || USE_EASING_NGUI
-            // Coexistence override: NGUI drives all tweens unless a call site
-            // explicitly opted into the internal backend. Removed at flip (1.5).
-            if (meta.lib != TweenLib.internalEasing) {
-                meta.lib = TweenLib.nguiUITweener;
-            }
-#endif
+            // All tweens run on the internal backend; legacy lib branches below
+            // are unreachable and get deleted with the vendored libs.
+            meta.lib = TweenLib.internalEasing;
 
             Action onBegin = () => {
 
@@ -1102,13 +1099,12 @@ namespace Engine.Utility {
                 return;
             }
 
-#if USE_UI_NGUI_2_7 || USE_UI_NGUI_3 || USE_EASING_NGUI
-            // Coexistence override: NGUI drives all tweens unless a call site
-            // explicitly opted into the internal backend. Removed at flip (1.5).
-            if (meta.lib != TweenLib.internalEasing) {
-                meta.lib = TweenLib.nguiUITweener;
-            }
-#endif
+            // All tweens run on the internal backend; legacy lib branches below
+            // are unreachable and get deleted with the vendored libs.
+            meta.lib = TweenLib.internalEasing;
+
+            // NGUI TweenRotation always animated localRotation — see MoveToObject.
+            meta.coord = TweenCoord.local;
 
             Action onBegin = () => {
 
@@ -1253,16 +1249,6 @@ namespace Engine.Utility {
             }
 
             TweenLib lib = TweenLib.leanTween;
-
-#if USE_UI_NGUI_2_7 || USE_UI_NGUI_3 || USE_EASING_NGUI
-
-            if (go.Has<UISlicedSprite>()
-                || go.Has<UISprite>()
-                || go.Has<UITiledSprite>()) {
-
-                lib = TweenLib.nguiUITweener;
-            }
-#endif
 
             FadeToObject(lib,
                 go,
@@ -1416,15 +1402,24 @@ namespace Engine.Utility {
                 });
             }
 
+            // Pre-flip, only sprite-on-self GOs got forced onto the NGUI tweener
+            // (whose callbacks were dead - see below); every other GO fell through
+            // to the default lib (LeanTween), which DID fire onStart/onComplete for
+            // real, so plain containers (header title/backer wrappers, etc.) were
+            // actually Show()/Hide()'d by GameObject active-state. Capture that
+            // distinction before collapsing everything onto the internal backend,
+            // so non-sprite fades keep getting their Show()/Hide() side effects.
+            bool hadSpriteOnSelf = false;
 #if USE_UI_NGUI_2_7 || USE_UI_NGUI_3 || USE_EASING_NGUI
-
-            if (meta.go.Has<UISlicedSprite>()
+            hadSpriteOnSelf =
+                meta.go.Has<UISlicedSprite>()
                 || meta.go.Has<UISprite>()
-                || meta.go.Has<UITiledSprite>()) {
-
-                meta.lib = TweenLib.nguiUITweener;
-            }
+                || meta.go.Has<UITiledSprite>();
 #endif
+
+            // All tweens run on the internal backend; legacy lib branches below
+            // are unreachable and get deleted with the vendored libs.
+            meta.lib = TweenLib.internalEasing;
 
             //             if(meta.lib == TweenLib.none) {
             // #if USE_UI_NGUI_2_7 || USE_UI_NGUI_3 || USE_EASING_NGUI
@@ -1534,55 +1529,39 @@ namespace Engine.Utility {
 #endif
             else if (meta.lib == TweenLib.internalEasing) {
 
-                // Dispatch with the composed local callbacks so the Show()/Hide()
-                // side effects above reach the backend (meta itself lacks them).
-                TweenMeta metaDispatch = GetMetaDefault(
-                    meta.lib, meta.go, meta.time, meta.delay,
-                    meta.stopCurrent, meta.coord, meta.easeType, meta.loopType);
-                metaDispatch.onStart = onBegin;
-                metaDispatch.onComplete = onFinish;
-                metaDispatch.onUpdate = meta.onUpdate;
+                if (hadSpriteOnSelf) {
 
-                backend.Fade(ResolveTarget(meta.go), alpha, metaDispatch);
-            }
+                    // Raw meta on purpose: the NGUI tweener never fired the composed
+                    // Show()/Hide() side effects on sprite widgets, and panel code
+                    // owns active-state there. A backend-driven Hide() on fade-out
+                    // would deactivate objects that legacy AnimateIn/ShowDefault
+                    // flows expect to stay active (gate learning #5).
+                    backend.Fade(ResolveTarget(meta.go), alpha, meta);
+                }
+                else {
 
-            /*
-             * TODO nested -a- marked objects to keep alpha on on nested when needed
-             * ex: objectname-a-50 = alpha 50% on nested no matter parent
-             *
-             */
+                    // Dispatch with the composed local callbacks so the Show()/Hide()
+                    // side effects above reach the backend (meta itself lacks them).
+                    // This restores the historically-live default-lib (LeanTween)
+                    // behavior for non-sprite GOs (plain containers), whose
+                    // onStart/onComplete really did fire pre-flip.
+                    TweenMeta metaDispatch = GetMetaDefault(
+                        meta.lib, meta.go, meta.time, meta.delay,
+                        meta.stopCurrent, meta.coord, meta.easeType, meta.loopType);
+                    metaDispatch.onStart = onBegin;
+                    metaDispatch.onComplete = onFinish;
+                    metaDispatch.onUpdate = meta.onUpdate;
 
-            if (meta.lib != TweenLib.nguiUITweener) {
-
-                foreach (Transform t in meta.go.transform) {
-                    string toLook = "-a-";
-                    int alphaMarker = t.name.IndexOf(toLook);
-                    //string alphaObject = t.name;
-                    if (alphaMarker > -1) {
-                        // Fade it immediately
-                        //FadeToObject(t.gameObject, alpha, meta.time, meta.delay);
-                        // Fade to the correct value after initial fade in
-                        string val = t.name.Substring(alphaMarker + toLook.Length);
-                        if (!string.IsNullOrEmpty(val)) {
-                            float valNumeric = 0f;
-                            float.TryParse(val, out valNumeric);
-
-                            if (valNumeric > 0f) {
-                                valNumeric = valNumeric / 100f;
-
-                                //FadeTo(t.gameObject, UITweener.Method.Linear, UITweener.Style.Once,
-                                //    duration + .05f, duration + delay, valNumeric);
-
-                                if (t.gameObject != null) {
-
-                                    FadeToObject(meta.lib, t.gameObject, valNumeric, meta.time, meta.delay + .05f);
-                                }
-                            }
-                        }
-                    }
-                    //FadeToObject(t.gameObject, alpha, meta.time, meta.delay);
+                    backend.Fade(ResolveTarget(meta.go), alpha, metaDispatch);
                 }
             }
+
+            // The legacy "-a-NN" child recursion was removed here: it only ever ran on
+            // the LeanTween path, where child fades were silent no-ops on NGUI widgets.
+            // Once tweens became real it forced children like BackgroundDark-a-70 to
+            // NN% alpha on EVERY fade — including fade-outs — leaving translucent dark
+            // backdrops stuck over the menu (Phase 1 gate finding, 2026-07-12).
+            // ColorToObject keeps its recursion: that one was live via the NGUI path.
         }
 
         // --------------------------------------------------------------------
@@ -1676,13 +1655,9 @@ namespace Engine.Utility {
                 return;
             }
 
-#if USE_UI_NGUI_2_7 || USE_UI_NGUI_3 || USE_EASING_NGUI
-            // Coexistence override: NGUI drives all tweens unless a call site
-            // explicitly opted into the internal backend. Removed at flip (1.5).
-            if (meta.lib != TweenLib.internalEasing) {
-                meta.lib = TweenLib.nguiUITweener;
-            }
-#endif
+            // All tweens run on the internal backend; legacy lib branches below
+            // are unreachable and get deleted with the vendored libs.
+            meta.lib = TweenLib.internalEasing;
 
             Action onBegin = () => {
 
@@ -1819,16 +1794,9 @@ namespace Engine.Utility {
 #endif
             else if (meta.lib == TweenLib.internalEasing) {
 
-                // Dispatch with the composed local callbacks so the Show()/Hide()
-                // side effects above reach the backend (meta itself lacks them).
-                TweenMeta metaDispatch = GetMetaDefault(
-                    meta.lib, meta.go, meta.time, meta.delay,
-                    meta.stopCurrent, meta.coord, meta.easeType, meta.loopType);
-                metaDispatch.onStart = onBegin;
-                metaDispatch.onComplete = onFinish;
-                metaDispatch.onUpdate = meta.onUpdate;
-
-                backend.ColorTo(ResolveTarget(meta.go), color, metaDispatch);
+                // Raw meta on purpose — see FadeToObject: tweens must not flip
+                // active state; the NGUI path never ran these side effects.
+                backend.ColorTo(ResolveTarget(meta.go), color, meta);
             }
 
             /*
@@ -2030,23 +1998,7 @@ namespace Engine.Utility {
 
             if (fade) {
 
-                bool found = false;
-
-#if USE_UI_NGUI_2_7 || USE_UI_NGUI_3 || USE_EASING_NGUI
-
-                if (go.Has<UISlicedSprite>()
-                    || go.Has<UISprite>()
-                    || go.Has<UITiledSprite>()) {
-
-                    found = true;
-
-                    TweenUtil.FadeToObject(TweenLib.nguiUITweener, go, alpha, time, delay, true, coord);
-                }
-#endif
-                if (!found) {
-
-                    TweenUtil.FadeToObject(go, alpha, time, delay, true, coord);
-                }
+                TweenUtil.FadeToObject(go, alpha, time, delay, true, coord);
             }
 
             TweenUtil.MoveToObject(

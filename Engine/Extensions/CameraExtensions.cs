@@ -90,7 +90,10 @@ public static class CamerAnimationExtensions {
                 cam.gameObject.Show();
                 cam.enabled = true;
 
-                TweenUtil.FadeToObject(cam.gameObject, 1f, .4f, .55f);
+                // No alpha tween here: fading a camera GameObject resolved to the
+                // first UIWidget under the whole camera hierarchy (arbitrary panel
+                // widget) once tweens got real — historically this call was a
+                // silent no-op and camera visibility is owned by enabled/Show().
 
                 //UITweenerUtil.FadeTo(cam.gameObject, UITweener.Method.EaseIn, UITweener.Style.Once, .5f, .5f, 1f);
             }
@@ -114,7 +117,7 @@ public static class CamerAnimationExtensions {
 
             if (cam.gameObject != null) {
 
-                TweenUtil.FadeToObject(cam.gameObject, 0f, .1f, 0f);
+                // No alpha tween — see showCameraCo; cam.enabled below does the hide.
 
                 //UITweenerUtil.FadeTo(cam.gameObject, UITweener.Method.EaseIn, UITweener.Style.Once, .5f, .5f, 0f);
             }

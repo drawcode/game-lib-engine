@@ -12,6 +12,10 @@ namespace Engine.Animation {
         // EntityId no longer converts to int without an obsolete-flagged cast.
         string targetId { get; }
 
+        // False once the underlying object is destroyed; the backend removes
+        // the tween (looping tweens would otherwise pump dead targets forever).
+        bool alive { get; }
+
         Vector3 GetPosition(TweenCoord coord);
         void SetPosition(Vector3 v, TweenCoord coord);
 

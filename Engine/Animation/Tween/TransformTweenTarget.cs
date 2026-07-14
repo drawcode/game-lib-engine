@@ -31,6 +31,12 @@ namespace Engine.Animation {
             }
         }
 
+        public bool alive {
+            get {
+                return go;
+            }
+        }
+
         public Vector3 GetPosition(TweenCoord coord) {
 
             if (!tr) {
@@ -255,18 +261,16 @@ namespace Engine.Animation {
 
 #if USE_UI_NGUI_2_7 || USE_UI_NGUI_3
 
-        // Mirrors NGUI 2.7 TweenAlpha.Awake(): UIPanel on self takes priority over
-        // UIWidget; UIWidget lookup is GetComponentInChildren (self or children).
+        // SPRITE-ON-SELF ONLY (Phase 1 gate finding, trace-verified): pre-flip,
+        // facade fades were real ONLY for GOs carrying an NGUI sprite themselves
+        // (the old FadeToObject sprite-routing to UITweenerUtil); every other
+        // NGUI fade — containers, UIPanel hosts, labels — was a LeanTween no-op
+        // that a decade of scenes and choreography (BaseGameUIPanelBackgrounds
+        // Show/Hide* calls, the PanelBackgroundUI backer) silently depends on.
+        // Driving panel or generic-widget alpha here dims/blanks whole screens.
         private bool TryGetNguiAlpha(out float alpha) {
 
-            UIPanel panel = tr.GetComponent<UIPanel>();
-
-            if (panel) {
-                alpha = panel.alpha;
-                return true;
-            }
-
-            UIWidget widget = tr.GetComponentInChildren<UIWidget>();
+            UIWidget widget = GetSelfSpriteWidget();
 
             if (widget) {
                 alpha = widget.alpha;
@@ -279,14 +283,7 @@ namespace Engine.Animation {
 
         private bool TrySetNguiAlpha(float value) {
 
-            UIPanel panel = tr.GetComponent<UIPanel>();
-
-            if (panel) {
-                panel.alpha = value;
-                return true;
-            }
-
-            UIWidget widget = tr.GetComponentInChildren<UIWidget>();
+            UIWidget widget = GetSelfSpriteWidget();
 
             if (widget) {
                 widget.alpha = value;
@@ -294,6 +291,21 @@ namespace Engine.Animation {
             }
 
             return false;
+        }
+
+        private UIWidget GetSelfSpriteWidget() {
+
+            UIWidget widget = tr.GetComponent<UISlicedSprite>();
+
+            if (!widget) {
+                widget = tr.GetComponent<UISprite>();
+            }
+
+            if (!widget) {
+                widget = tr.GetComponent<UITiledSprite>();
+            }
+
+            return widget;
         }
 
         // Mirrors NGUI 2.7 TweenColor.Awake()/color setter: UIWidget (self or

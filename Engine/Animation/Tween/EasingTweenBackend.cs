@@ -80,7 +80,7 @@ namespace Engine.Animation {
             }
 
             if (meta.stopCurrent) {
-                Cancel(t);
+                Cancel(t, TweenChannel.alpha);
             }
 
             float from = t.GetAlpha();
@@ -100,6 +100,11 @@ namespace Engine.Animation {
             item.onComplete = ComposeOnComplete(meta);
             item.onUpdate = (val) => {
 
+                if (!t.alive) {
+                    AnimationEasing.EaseRemove(item.key);
+                    return;
+                }
+
                 t.SetAlpha(Mathf.LerpUnclamped(from, to, (float)val));
 
                 if (metaOnUpdate != null) {
@@ -117,7 +122,7 @@ namespace Engine.Animation {
             }
 
             if (meta.stopCurrent) {
-                Cancel(t);
+                Cancel(t, TweenChannel.color);
             }
 
             Color from = t.GetColor();
@@ -136,6 +141,11 @@ namespace Engine.Animation {
             item.onStart = ComposeOnStart(meta);
             item.onComplete = ComposeOnComplete(meta);
             item.onUpdate = (val) => {
+
+                if (!t.alive) {
+                    AnimationEasing.EaseRemove(item.key);
+                    return;
+                }
 
                 t.SetColor(Color.LerpUnclamped(from, to, (float)val));
 
@@ -238,8 +248,11 @@ namespace Engine.Animation {
         private void StartVectorTween(
             ITweenTarget t, TweenChannel channel, Vector3 from, Vector3 to, TweenMeta meta, Action<Vector3> apply) {
 
+            // Same-channel only: NGUI tweeners were isolated per component, so a
+            // fade never killed an in-flight move. Cross-channel cancel scrambles
+            // the boot-time Show/Hide races the legacy choreography relies on.
             if (meta.stopCurrent) {
-                Cancel(t);
+                Cancel(t, channel);
             }
 
             AnimationEasing.AnimationItem item = new AnimationEasing.AnimationItem();
@@ -256,6 +269,11 @@ namespace Engine.Animation {
             item.onStart = ComposeOnStart(meta);
             item.onComplete = ComposeOnComplete(meta);
             item.onUpdate = (val) => {
+
+                if (!t.alive) {
+                    AnimationEasing.EaseRemove(item.key);
+                    return;
+                }
 
                 apply(Vector3.LerpUnclamped(from, to, (float)val));
 

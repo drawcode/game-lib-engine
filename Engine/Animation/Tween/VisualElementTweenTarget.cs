@@ -43,6 +43,12 @@ namespace Engine.Animation {
             }
         }
 
+        public bool alive {
+            get {
+                return element != null;
+            }
+        }
+
         // TweenCoord is ignored: style.translate/rotate/scale are always self-relative.
 
         // Getters are keyword-aware: element.style only reflects inline values, so an

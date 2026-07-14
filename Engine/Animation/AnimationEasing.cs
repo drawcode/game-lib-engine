@@ -41,6 +41,14 @@ namespace Engine.Animation {
                         var obj = new GameObject("_AnimationEasing");
                         _instance = obj.AddComponent<AnimationEasing>();
                     }
+
+                    // Must survive scene loads: NGUI tweeners lived on their target
+                    // objects, so tweens issued around a scene transition completed
+                    // regardless. A scene-local pump silently drops them instead
+                    // (stuck dialog backdrops / overlay panels never slid offscreen).
+                    if (Application.isPlaying) {
+                        DontDestroyOnLoad(_instance.gameObject);
+                    }
                 }
 
                 return _instance;
@@ -185,6 +193,7 @@ namespace Engine.Animation {
         public bool easeRemove(string key) {
 
             if (getAnimationItems().ContainsKey(key)) {
+
                 return animationItems.Remove(key);
             }
 

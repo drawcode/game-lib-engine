@@ -256,24 +256,87 @@ Upgrade `AnimationEasing` in place (zero call sites — safe):
   formalized into the bitty token source at 2.1.
 - UITweenerUtil shim → 1.3 (games repo).
 
-## OPEN at session end (2026-07-12): settings-family content regression — 1.5 flip UNCOMMITTED
+## RESOLVED (2026-07-13): settings-family content regression — NOT a tween bug
 
-Gate run 7 (full walk): main family clean; settings family (6 panels) BROKEN — header +
-coins render, all content containers (button grids, sliders, credits text) absent. Settings
-PASSED in gate run 6. Deltas 6→7: (a) per-channel stopCurrent, (b) facade Move/Rotate
-coord→local coercion, (c) learning #8 Show/Hide callback split for non-sprite fades.
+Prior session end (2026-07-12) left this OPEN as a suspected tween-replace/coord-coercion
+regression (hypotheses (a)/(b)/(c) below, kept for the record). This session re-investigated
+with live runtime probes (RunCommand instrumentation of `GameUIPanelBackgrounds`'s shared
+`PanelBackgroundUI` backer and of the individual panels' own `panelContainer`/
+`panelCenterObject`) before touching any code, per the gate rule "verify with runtime traces
+before fixing."
 
-Prime suspect: (b). Panel containers' ±4500 closed / 0 open design values were applied as
-WORLD coords in run 6 (default coord=world landed containers at world origin ≈ screen
-center, accidentally "working"); local coercion now sends them to LOCAL design positions —
-verify what NGUI TweenPosition actually produced for these containers (it used localPosition;
-but the *from* it captured on Begin may differ from our from-capture). Second suspect: (c)
-replacement-vs-stacking timing killing the fade-in's Show() when an out-fade lands in the
-same window (LeanTween.cancel(go) analysis says equivalent, but only fades were LeanTween —
-re-verify with the stash A/B probe on containerCenter of panel-settings during ShowSettings).
+**Finding: the tween hypotheses do not reproduce.** Direct probes of `ShowGameMode`,
+`ShowSettingsCredits`, `ShowSettingsHelp`, `ShowCustomize` (single-hop, full-sequence, and
+rapid-fire/sub-.55s-gap stress variants, `Logs/gamemode-backgroundUI-probe.txt`,
+`Logs/full-sequence-probe.txt`, `Logs/rapidfire-probe.txt`) all show the shared
+`PanelBackgroundUI` reliably animating closed(-4500)→open(0) and settling correctly within
+~1.8s of `ShowUI()`, matching screenshots against baselines with a ≥2.8s settle wait. The
+per-channel stopCurrent (#6), coord→local coercion (#7), and Show/Hide callback split (#8)
+semantics are all confirmed correct and were **not** the cause of the originally-reported
+"header + background only, content absent" symptom for `ShowSettingsAudio` — those three
+learnings remain valid production-faithful behavior.
 
-Evidence: run captures /private/tmp/claude-501/.../scratchpad/postflip7/ (vs postflip6/ which
-passed settings) — compare panel-settings.png across runs 6/7 first. Verified clean and green:
-cold boot main menu, backer (-4500), no banner, HUD, 13/13 EditMode tests.
+**Actual root cause (verified via `AppContentAssets.LoadAssetUI` runtime probe,
+`Logs/loadassetui-test.txt` / `loadassetui-test2.txt`):** `BaseUIPanel.panelSettingsAudio`,
+`panelSettingsControls`, and `panelSettingsProfile` (`Assets/Code/Libs/game-lib-games/Game/
+Controller/BaseUIController.cs`, blamed to 2018-07-10 — predates the tween flip entirely)
+held codes that didn't exact-match their `AppContentAsset` data/prefab codes:
+`"panel-settings-Audio"`/`"panel-settings-Controls"` (stray capitals) and
+`"panel-settings-profile"` (singular, vs the data's plural `"panel-settings-profiles"`).
+`AppContentAssets.LoadAssetUI(code)` resolves via an exact-match lookup and silently returns
+`null` on a miss; `syncPanelLoaded` only parents a panel into `UIContainer` when
+`LoadAssetUI` returns non-null, so for these three codes **no panel GameObject was ever
+instantiated** — only the shared header/background (which don't depend on the panel
+existing) rendered, exactly matching "header + background render, all content absent."
+Confirmed live: `LoadAssetUI("panel-settings-Audio")` → `NULL`; `LoadAssetUI(
+"panel-settings-audio")` → valid instance. Fixed by correcting the three string constants
+(lowercase, and profile→profiles) with an explanatory comment at the declaration site;
+`ShowSettingsHelp`/`ShowSettingsCredits`/`ShowGameMode`/`ShowCustomize` never had a code
+mismatch and were confirmed working both before and after this fix.
 
-All 8 learnings above are trace-verified and must be preserved by whoever finishes 1.5.
+Verified via a fresh-boot walk with 2.8s settle waits (`Logs/audio-probe2.txt` reproduced the
+frozen `activeInHierarchy=False`/`center@y=-3000` pre-fix; post-fix captures in
+`/private/tmp/claude-501/.../scratchpad/postfix-final/` show real content — volume sliders,
+vibration toggle, Apply Code/Sync Profile buttons — for all three, matching baseline layout).
+Also re-verified clean: cold boot main menu, top-level settings, backer (-4500), no banner,
+13/13 EditMode-equivalent panel walk. `git stash list` empty in both submodules (no A/B
+stash left behind — the A/B recipe wasn't needed since the bug reproduced identically
+regardless of tween backend, being unrelated to it).
+
+## Gate learning #9 (2026-07-13)
+
+**"Content absent" is not automatically a tween symptom — verify the load path before the
+choreography.** A panel that never gets instantiated (bad `AppContentAssets.LoadAssetUI`
+code lookup, syncPanelLoaded silently no-op'ing on a null return) looks visually identical
+to a tween that fails to bring content on-screen: header and shared background render either
+way, since those don't depend on the panel's own GameObject existing. Before chasing
+tween-replace/coord/cancel-key timing for a "sub-panel shows nothing" symptom, probe
+`AppContentAssets.LoadAssetUI(theExactCodeConstant)` directly and confirm it returns a
+non-null instance — a single case or pluralization mismatch between a `BaseUIPanel.panelX`
+constant and the actual `AppContentAsset` data code is enough to produce the exact symptom,
+and won't show up in tween-focused tracing at all.
+
+All 9 learnings above are trace-verified and must be preserved by whoever finishes 1.5.
+
+## Final gate result (2026-07-13) + 1.5 feel-tuning worklist
+
+31/31 baseline-comparable panels: zero BROKEN, zero console errors (5 MATCH, 26 MINOR-DRIFT).
+Captures: scratchpad gate-final/. Drift classes — ALL from now-real fades revealing design
+intent that the LeanTween no-op era never showed (product decision needed: keep or suppress):
+1. Dark header band (panel-header BackerObject) visible on every sub-panel; occludes FPS overlay.
+2. Dark rounded content backer behind sub-panel content (settings/game-mode/store/customize/...).
+3. Bot-preview card + CUSTOMIZE button on ~12 sub-panels — LAYOUT COLLISIONS on statistics/
+   achievements (overlaps GameCenter buttons) and products (overlaps ALL/COINS filters) — fix
+   regardless of keep/suppress decision.
+4. Main-menu DRAWLABS logo semi-transparent (a fade end-value lands on the logo widget) — bug, fix.
+5. settings-audio/controls/profile baselines are EMPTY (pre-existing #9 bug) — re-capture baselines.
+RESOLVED (2026-07-13): post-gameplay menu return works. The gate run's failure was a
+test-harness artifact — the walk issued an extra UIPanelOverlayPrepare.HideAll() before
+QuitGame that interfered with the GameQuit state machine's menu restoration. The FAITHFUL
+production sequence (BaseUIController.GameQuit = GameController.QuitGame() + GameUIController.
+ShowMain(), no HideAll) returns the full main menu correctly — verified live, screenshot
+roundtrip/06-real-quit-10s.png. Note: currentPanel=="panel-main" even DURING gameplay (the
+HUD is an overlay, not a currentPanel), so GameQuit's ShowMain() early-returns and the menu
+restore rides entirely on the QuitGame state flow (onGameQuit -> ShowUI) — this is unchanged,
+shipped behavior, not a flip regression. GATE = PASS (31/31 panels zero BROKEN, zero console
+errors, menu round-trip healthy).
