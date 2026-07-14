@@ -5,8 +5,8 @@ metadata:
   type: design
   repo: game-lib-engine
   plan: plan-ui-migration-uitoolkit
-  chunk: "1.1"
-  status: approved-design
+  chunk: "1.1-1.6 (Phase 1 complete)"
+  status: complete
   created: 2026-07-12
 ---
 
@@ -340,3 +340,25 @@ HUD is an overlay, not a currentPanel), so GameQuit's ShowMain() early-returns a
 restore rides entirely on the QuitGame state flow (onGameQuit -> ShowUI) — this is unchanged,
 shipped behavior, not a flip regression. GATE = PASS (31/31 panels zero BROKEN, zero console
 errors, menu round-trip healthy).
+
+
+## Phase 1 COMPLETE (2026-07-13)
+
+All chunks landed. Commits: engine 43068ca (1.5 flip) + c6206b4 (1.6 strip);
+games c7ce32c (panel-code fix); games-ui 8ebb01e (character-display fixes);
+app 6e0368c (re-baselined corpus) + 0be6ba3 (defines dropped, libs deleted).
+
+End state: every tween in the app runs on EasingTweenBackend through the
+ITweenBackend seam. `USE_EASING_*` defines are gone; Assets/LeanTween and
+Assets/Plugins/Pixelplacement/iTween are deleted; TweenUtil's per-lib #if
+branches are stripped. UITweenerUtil (games) still exists but its whole body
+was `#if USE_EASING_NGUI`, so it now compiles to nothing — delete the file in
+Phase 4.2 as planned. TweenLib's iTween/leanTween/nguiUITweener enum values
+remain (harmless; ColorToObject's `-a-` recursion still tests against
+nguiUITweener) and can go with NGUI in Phase 4.
+
+Verified: 13/13 EditMode tests, clean full rebuild, 31/31-panel gate, gameplay
+round-trip. The nine gate learnings above are the load-bearing constraints —
+the UIToolkitBackend in Phase 2 must honor the same contracts (particularly:
+tweens don't own active-state, the pump is scene-persistent, and stopCurrent is
+per-channel).
