@@ -577,13 +577,16 @@ namespace Engine.UI {
 
         // POINTER / EVENT SOURCE
 
+        // 0, not -1, when NGUI is compiled out: the four legacy call sites (InputEvents,
+        // SliderEvents, CheckboxEvents, ListEvents) all initialized `int camIndex = 0` and only
+        // overwrote it under the NGUI define. Preserve that exactly.
         public int currentPointerId {
             get {
 
 #if USE_UI_NGUI_2_7 || USE_UI_NGUI_3
                 return UICamera.currentTouchID;
 #else
-                return -1;
+                return 0;
 #endif
             }
         }

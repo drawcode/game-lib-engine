@@ -639,6 +639,38 @@ public class UIUtil {
         }
     }
 
+    // POINTER SOURCE
+    //
+    // Replaces the four direct UICamera.currentTouchID reads (InputEvents, SliderEvents,
+    // CheckboxEvents, ListEvents in game-lib-games). Those were the only reason game-lib-games
+    // referenced an NGUI type in its event layer; routing them through the backend is what lets
+    // Phase 4 drop the define there without touching the call sites again.
+    //
+    // Per-object dispatch: an NGUI widget resolves to UICamera's touch id, a VisualElement to
+    // the UI Toolkit pointer id — which is the whole point of the seam.
+
+    public static int GetPointerId(GameObject obj) {
+
+        IUIBackend backend = UIPlatform.For(obj);
+
+        if (backend == null) {
+            return 0;
+        }
+
+        return backend.currentPointerId;
+    }
+
+    public static int GetPointerId(UIRef r) {
+
+        IUIBackend backend = UIPlatform.For(r);
+
+        if (backend == null) {
+            return 0;
+        }
+
+        return backend.currentPointerId;
+    }
+
     // The name-substring and deep-find helpers, on the UIRef path. The GameObject/Transform
     // originals below are left exactly as they are — 3 and 37 call sites respectively, and
     // they are the ugliest compatibility seam in the class.
