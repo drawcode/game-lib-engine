@@ -14,6 +14,7 @@ using UnityEngine;
 using UnityEngine.UI;
 
 using Engine.Animation;
+using Engine.UI;
 
 namespace Engine.Utility {
 
@@ -1369,6 +1370,62 @@ namespace Engine.Utility {
 
             TweenUtil.MoveToObject(
                 go, pos, time, delay, false, coord);
+        }
+
+        // --------------------------------------------------------------------
+        // UIREF PATH (UI Toolkit panels)
+        //
+        // Preset-driven, so panel timing lives in tokens.json (UITokens seeds TweenPresets)
+        // rather than in the ±4500-unit literals scattered through UIPanelBase. Backend-blind:
+        // ResolveTarget(object) already picks VisualElementTweenTarget for a VisualElement and
+        // TransformTweenTarget for a GameObject, so the same call works either way.
+        //
+        // These do NOT touch display/active state. Gate learning #1: tweens never own
+        // visibility. The panel system calls IUIBackend.Show/Hide around them.
+
+        public static void FadeToObject(UIRef r, float alpha, string presetName) {
+
+            if (r == null || !r.alive) {
+                return;
+            }
+
+            ITweenTarget target = ResolveTarget(r.native);
+
+            if (target == null) {
+                return;
+            }
+
+            TweenPreset preset = TweenPresets.Get(presetName);
+
+            TweenMeta meta = new TweenMeta();
+            meta.time = preset.time;
+            meta.delay = preset.delay;
+            meta.easeType = preset.easeType;
+            meta.loopType = preset.loopType;
+            meta.stopCurrent = true;
+
+            backend.Fade(target, alpha, meta);
+        }
+
+        public static void ShowObject(UIRef r, string presetName = "panel-show") {
+            FadeToObject(r, 1f, presetName);
+        }
+
+        public static void HideObject(UIRef r, string presetName = "panel-hide") {
+            FadeToObject(r, 0f, presetName);
+        }
+
+        public static void Cancel(UIRef r) {
+
+            if (r == null || !r.alive) {
+                return;
+            }
+
+            ITweenTarget target = ResolveTarget(r.native);
+
+            if (target != null) {
+                backend.Cancel(target);
+            }
         }
     }
 }
