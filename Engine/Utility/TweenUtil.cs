@@ -270,50 +270,8 @@ namespace Engine.Utility {
 
             }
 
-#if USE_EASING_LEANTWEEN
-            else if (genericType == typeof(LeanTweenType)) {
 
-                if (loopType == TweenLoopType.once) {
-                    libType = (T)(object)LeanTweenType.once;
-                }
-                else if (loopType == TweenLoopType.loop) {
-                    libType = (T)(object)LeanTweenType.clamp;
-                }
-                else if (loopType == TweenLoopType.pingPong) {
-                    libType = (T)(object)LeanTweenType.clamp;
-                }
-            }
-#endif
 
-#if USE_EASING_ITWEEN
-            else if (genericType == typeof(iTween.LoopType)) {
-
-                if (loopType == TweenLoopType.once) {
-                    libType = (T)(object)iTween.LoopType.none;
-                }
-                else if (loopType == TweenLoopType.loop) {
-                    libType = (T)(object)iTween.LoopType.loop;
-                }
-                else if (loopType == TweenLoopType.pingPong) {
-                    libType = (T)(object)iTween.LoopType.pingPong;
-                }
-            }
-#endif
-
-#if USE_EASING_NGUI
-            else if (genericType == typeof(UITweener.Style)) {
-
-                if (loopType == TweenLoopType.once) {
-                    libType = (T)(object)UITweener.Style.Once;
-                }
-                else if (loopType == TweenLoopType.loop) {
-                    libType = (T)(object)UITweener.Style.Loop;
-                }
-                else if (loopType == TweenLoopType.pingPong) {
-                    libType = (T)(object)UITweener.Style.PingPong;
-                }
-            }
-#endif
 
             return libType;
         }
@@ -328,56 +286,8 @@ namespace Engine.Utility {
 
             }
 
-#if USE_EASING_LEANTWEEN
-            else if (genericType == typeof(LeanTweenType)) {
 
-                LeanTweenType libType = (LeanTweenType)(object)genericType;
 
-                if (libType == LeanTweenType.once) {
-                    loopType = TweenLoopType.once;
-                }
-                else if (libType == LeanTweenType.clamp) {
-                    loopType = TweenLoopType.loop;
-                }
-                else if (libType == LeanTweenType.pingPong) {
-                    loopType = TweenLoopType.pingPong;
-                }
-            }
-#endif
-
-#if USE_EASING_ITWEEN
-            else if (genericType == typeof(iTween.LoopType)) {
-
-                iTween.LoopType libType = (iTween.LoopType)(object)genericType;
-
-                if (libType == iTween.LoopType.none) {
-                    loopType = TweenLoopType.once;
-                }
-                else if (libType == iTween.LoopType.loop) {
-                    loopType = TweenLoopType.loop;
-                }
-                else if (libType == iTween.LoopType.pingPong) {
-                    loopType = TweenLoopType.pingPong;
-                }
-            }
-#endif
-
-#if USE_EASING_NGUI
-            else if (genericType == typeof(UITweener.Style)) {
-
-                UITweener.Style libType = (UITweener.Style)(object)genericType;
-
-                if (libType == UITweener.Style.Once) {
-                    loopType = TweenLoopType.once;
-                }
-                else if (libType == UITweener.Style.Loop) {
-                    loopType = TweenLoopType.loop;
-                }
-                else if (libType == UITweener.Style.PingPong) {
-                    loopType = TweenLoopType.pingPong;
-                }
-            }
-#endif
 
             return loopType;
         }
@@ -394,59 +304,8 @@ namespace Engine.Utility {
 
             }
 
-#if USE_EASING_LEANTWEEN
-            else if (genericType == typeof(LeanTweenType)) {
 
-                if (easeType == TweenEaseType.linear) {
-                    libType = (T)(object)LeanTweenType.linear;
-                }
-                else if (easeType == TweenEaseType.quadEaseInOut) {
-                    libType = (T)(object)LeanTweenType.easeInOutQuad;
-                }
-                else if (easeType == TweenEaseType.quadEaseIn) {
-                    libType = (T)(object)LeanTweenType.easeInQuad;
-                }
-                else if (easeType == TweenEaseType.quadEaseOut) {
-                    libType = (T)(object)LeanTweenType.easeOutQuad;
-                }
-            }
-#endif
 
-#if USE_EASING_ITWEEN
-            else if (genericType == typeof(iTween.EaseType)) {
-
-                if (easeType == TweenEaseType.linear) {
-                    libType = (T)(object)iTween.EaseType.linear;
-                }
-                else if (easeType == TweenEaseType.quadEaseInOut) {
-                    libType = (T)(object)iTween.EaseType.easeInOutQuad;
-                }
-                else if (easeType == TweenEaseType.quadEaseIn) {
-                    libType = (T)(object)iTween.EaseType.easeInQuad;
-                }
-                else if (easeType == TweenEaseType.quadEaseOut) {
-                    libType = (T)(object)iTween.EaseType.easeOutQuad;
-                }
-            }
-#endif
-
-#if USE_EASING_NGUI
-            else if (genericType == typeof(UITweener.Method)) {
-
-                if (easeType == TweenEaseType.linear) {
-                    libType = (T)(object)UITweener.Method.Linear;
-                }
-                else if (easeType == TweenEaseType.quadEaseInOut) {
-                    libType = (T)(object)UITweener.Method.EaseInOut;
-                }
-                else if (easeType == TweenEaseType.quadEaseIn) {
-                    libType = (T)(object)UITweener.Method.EaseIn;
-                }
-                else if (easeType == TweenEaseType.quadEaseOut) {
-                    libType = (T)(object)UITweener.Method.EaseOut;
-                }
-            }
-#endif
 
             return libType;
         }
@@ -461,65 +320,8 @@ namespace Engine.Utility {
 
             }
 
-#if USE_EASING_LEANTWEEN
-            else if (genericType == typeof(LeanTweenType)) {
 
-                LeanTweenType libType = (LeanTweenType)(object)genericType;
 
-                if (libType == LeanTweenType.linear) {
-                    easeType = TweenEaseType.linear;
-                }
-                else if (libType == LeanTweenType.easeInOutQuad) {
-                    easeType = TweenEaseType.quadEaseInOut;
-                }
-                else if (libType == LeanTweenType.easeOutQuad) {
-                    easeType = TweenEaseType.quadEaseOut;
-                }
-                else if (libType == LeanTweenType.easeInQuad) {
-                    easeType = TweenEaseType.quadEaseIn;
-                }
-            }
-#endif
-
-#if USE_EASING_ITWEEN
-            else if (genericType == typeof(iTween.LoopType)) {
-
-                iTween.EaseType libType = (iTween.EaseType)(object)genericType;
-
-                if (libType == iTween.EaseType.linear) {
-                    easeType = TweenEaseType.linear;
-                }
-                else if (libType == iTween.EaseType.easeInOutQuad) {
-                    easeType = TweenEaseType.quadEaseInOut;
-                }
-                else if (libType == iTween.EaseType.easeOutQuad) {
-                    easeType = TweenEaseType.quadEaseOut;
-                }
-                else if (libType == iTween.EaseType.easeInQuart) {
-                    easeType = TweenEaseType.quadEaseIn;
-                }
-            }
-#endif
-
-#if USE_EASING_NGUI
-            else if (genericType == typeof(UITweener.Style)) {
-
-                UITweener.Method libType = (UITweener.Method)(object)genericType;
-
-                if (libType == UITweener.Method.Linear) {
-                    easeType = TweenEaseType.linear;
-                }
-                else if (libType == UITweener.Method.EaseInOut) {
-                    easeType = TweenEaseType.quadEaseInOut;
-                }
-                else if (libType == UITweener.Method.EaseOut) {
-                    easeType = TweenEaseType.quadEaseOut;
-                }
-                else if (libType == UITweener.Method.EaseIn) {
-                    easeType = TweenEaseType.quadEaseIn;
-                }
-            }
-#endif
 
             return easeType;
         }
@@ -698,95 +500,8 @@ namespace Engine.Utility {
 
             }
 
-#if USE_EASING_ITWEEN
-            else if (meta.lib == TweenLib.iTween) {
 
-                if (meta.stopCurrent) {
-                    iTween.Stop(meta.go);
-                }
 
-                iTween.LoopType loopTypeLib =
-                    ConvertLibLoopType<iTween.LoopType>(meta.loopType);
-
-                iTween.EaseType easeTypeLib =
-                    ConvertLibEaseType<iTween.EaseType>(meta.easeType);
-
-                Hashtable hash = iTween.Hash(
-                    "position", pos,
-                    "time", meta.time,
-                    "delay", meta.delay,
-                    "looptype", loopTypeLib,
-                    "easetype", easeTypeLib,
-                    "islocal", meta.coord == TweenCoord.local,
-                    "onstart", "OnTweenBegin",
-                    "onstartparams", onBegin,
-                    "oncomplete", "OnTweenFinish",
-                    "oncompleteparams", onFinish);
-
-                iTween.MoveTo(meta.go, hash);
-            }
-#endif
-
-#if USE_EASING_LEANTWEEN
-            else if (meta.lib == TweenLib.leanTween) {
-
-                if (meta.stopCurrent) {
-                    LeanTween.cancel(meta.go);
-                }
-
-                LTDescr info = null;
-
-                if (meta.coord == TweenCoord.local) {
-                    info =
-                        LeanTween.moveLocal(meta.go, pos, meta.time)
-                        .setDelay(meta.delay).pause();
-                }
-                else {
-                    info =
-                        LeanTween.move(meta.go, pos, meta.time)
-                        .setDelay(meta.delay).pause();
-                }
-
-                LeanTweenType loopTypeLib =
-                    ConvertLibLoopType<LeanTweenType>(meta.loopType);
-
-                LeanTweenType easeTypeLib =
-                    ConvertLibEaseType<LeanTweenType>(meta.easeType);
-
-                info.setLoopType(loopTypeLib);
-                info.setEase(easeTypeLib);
-
-                info.setOnStart(onBegin);
-                info.setOnComplete(onFinish);
-                //info.setOnUpdate(onTick);
-
-                if (meta.onUpdate != null) {
-                    //info.setOnUpdate(onUpdate);
-                }
-
-                info.resume();
-            }
-#endif
-
-#if USE_EASING_NGUI
-            else if (meta.lib == TweenLib.nguiUITweener) {
-
-                UITweener.Style loopTypeLib =
-                    ConvertLibLoopType<UITweener.Style>(meta.loopType);
-
-                UITweener.Method easeTypeLib =
-                    ConvertLibEaseType<UITweener.Method>(meta.easeType);
-
-                UITweenerUtil.MoveTo(
-                    meta.go,
-                    easeTypeLib, loopTypeLib,
-                    meta.time, meta.delay, pos);
-
-                //OnTweenBegin(onBegin);
-                //OnTweenFinish(onFinish);
-                //OnTweenTick(onTick);
-            }
-#endif
             else if (meta.lib == TweenLib.internalEasing) {
                 backend.Move(ResolveTarget(meta.go), pos, meta);
             }
@@ -919,95 +634,8 @@ namespace Engine.Utility {
 
             }
 
-#if USE_EASING_ITWEEN
-            else if (meta.lib == TweenLib.iTween) {
 
-                if (meta.stopCurrent) {
-                    iTween.Stop(meta.go);
-                }
 
-                iTween.LoopType loopTypeLib =
-                    ConvertLibLoopType<iTween.LoopType>(meta.loopType);
-
-                iTween.EaseType easeTypeLib =
-                    ConvertLibEaseType<iTween.EaseType>(meta.easeType);
-
-                Hashtable hash = iTween.Hash(
-                    "position", pos,
-                    "time", meta.time,
-                    "delay", meta.delay,
-                    "looptype", loopTypeLib,
-                    "easetype", easeTypeLib,
-                    "islocal", meta.coord == TweenCoord.local,
-                    "onstart", "OnTweenBegin",
-                    "onstartparams", onBegin,
-                    "oncomplete", "OnTweenFinish",
-                    "oncompleteparams", onFinish);
-
-                iTween.ScaleTo(meta.go, hash);
-            }
-#endif
-
-#if USE_EASING_LEANTWEEN
-            else if (meta.lib == TweenLib.leanTween) {
-
-                if (meta.stopCurrent) {
-                    LeanTween.cancel(meta.go);
-                }
-
-                LTDescr info = null;
-
-                if (meta.coord == TweenCoord.local) {
-                    info =
-                        LeanTween.scale(meta.go, pos, meta.time)
-                        .setDelay(meta.delay).pause();
-                }
-                else {
-                    info =
-                        LeanTween.scale(meta.go, pos, meta.time)
-                        .setDelay(meta.delay).pause();
-                }
-
-                LeanTweenType loopTypeLib =
-                    ConvertLibLoopType<LeanTweenType>(meta.loopType);
-
-                LeanTweenType easeTypeLib =
-                    ConvertLibEaseType<LeanTweenType>(meta.easeType);
-
-                info.setLoopType(loopTypeLib);
-                info.setEase(easeTypeLib);
-
-                info.setOnStart(onBegin);
-                info.setOnComplete(onFinish);
-                //info.setOnUpdate(onTick);
-
-                if (meta.onUpdate != null) {
-                    //info.setOnUpdate(onUpdate);
-                }
-
-                info.resume();
-            }
-#endif
-
-#if USE_EASING_NGUI
-            else if (meta.lib == TweenLib.nguiUITweener) {
-
-                //UITweener.Style loopTypeLib =
-                //    ConvertLibLoopType<UITweener.Style>(meta.loopType);
-
-                //UITweener.Method easeTypeLib =
-                //    ConvertLibEaseType<UITweener.Method>(meta.easeType);
-
-                //UITweenerUtil.Scal(
-                //    meta.go,
-                //    easeTypeLib, loopTypeLib,
-                //    meta.time, meta.delay, pos);
-
-                //OnTweenBegin(onBegin);
-                //OnTweenFinish(onFinish);
-                //OnTweenTick(onTick);
-            }
-#endif
             else if (meta.lib == TweenLib.internalEasing) {
                 backend.Scale(ResolveTarget(meta.go), pos, meta);
             }
@@ -1138,95 +766,8 @@ namespace Engine.Utility {
 
             }
 
-#if USE_EASING_ITWEEN
-            else if (meta.lib == TweenLib.iTween) {
 
-                if (meta.stopCurrent) {
-                    iTween.Stop(meta.go);
-                }
 
-                iTween.LoopType loopTypeLib =
-                    ConvertLibLoopType<iTween.LoopType>(meta.loopType);
-
-                iTween.EaseType easeTypeLib =
-                    ConvertLibEaseType<iTween.EaseType>(meta.easeType);
-
-                Hashtable hash = iTween.Hash(
-                    "rotation", pos,
-                    "time", meta.time,
-                    "delay", meta.delay,
-                    "looptype", loopTypeLib,
-                    "easetype", easeTypeLib,
-                    "islocal", meta.coord == TweenCoord.local,
-                    "onstart", "OnTweenBegin",
-                    "onstartparams", onBegin,
-                    "oncomplete", "OnTweenFinish",
-                    "oncompleteparams", onFinish);
-
-                iTween.RotateTo(meta.go, hash);
-            }
-#endif
-
-#if USE_EASING_LEANTWEEN
-            else if (meta.lib == TweenLib.leanTween) {
-
-                if (meta.stopCurrent) {
-                    LeanTween.cancel(meta.go);
-                }
-
-                LTDescr info = null;
-
-                if (meta.coord == TweenCoord.local) {
-                    info =
-                        LeanTween.rotateLocal(meta.go, pos, meta.time)
-                        .setDelay(meta.delay).pause();
-                }
-                else {
-                    info =
-                        LeanTween.rotate(meta.go, pos, meta.time)
-                        .setDelay(meta.delay).pause();
-                }
-
-                LeanTweenType loopTypeLib =
-                    ConvertLibLoopType<LeanTweenType>(meta.loopType);
-
-                LeanTweenType easeTypeLib =
-                    ConvertLibEaseType<LeanTweenType>(meta.easeType);
-
-                info.setLoopType(loopTypeLib);
-                info.setEase(easeTypeLib);
-
-                info.setOnStart(onBegin);
-                info.setOnComplete(onFinish);
-                //info.setOnUpdate(onTick);
-
-                if (meta.onUpdate != null) {
-                    //info.setOnUpdate(onUpdate);
-                }
-
-                info.resume();
-            }
-#endif
-
-#if USE_EASING_NGUI
-            else if (meta.lib == TweenLib.nguiUITweener) {
-
-                UITweener.Style loopTypeLib =
-                    ConvertLibLoopType<UITweener.Style>(meta.loopType);
-
-                UITweener.Method easeTypeLib =
-                    ConvertLibEaseType<UITweener.Method>(meta.easeType);
-
-                UITweenerUtil.RotateTo(
-                    meta.go,
-                    easeTypeLib, loopTypeLib,
-                    meta.time, meta.delay, pos);
-
-                //OnTweenBegin(onBegin);
-                //OnTweenFinish(onFinish);
-                //OnTweenTick(onTick);
-            }
-#endif
             else if (meta.lib == TweenLib.internalEasing) {
                 backend.Rotate(ResolveTarget(meta.go), pos, meta);
             }
@@ -1437,97 +978,9 @@ namespace Engine.Utility {
             // #endif
             //             }
 
-#if USE_EASING_ITWEEN
-            if (meta.lib == TweenLib.iTween) {
 
-                if (meta.stopCurrent) {
-                    iTween.Stop(meta.go);
-                }
 
-                iTween.LoopType loopTypeLib =
-                    ConvertLibLoopType<iTween.LoopType>(meta.loopType);
-
-                iTween.EaseType easeTypeLib =
-                    ConvertLibEaseType<iTween.EaseType>(meta.easeType);
-
-                Hashtable hash = iTween.Hash(
-                    "alpha", alpha,
-                    "time", meta.time,
-                    "delay", meta.delay,
-                    "looptype", loopTypeLib,
-                    "easetype", easeTypeLib,
-                    "islocal", meta.coord == TweenCoord.local,
-                    "onstart", "OnTweenBegin",
-                    "onstartparams", onBegin,
-                    "oncomplete", "OnTweenFinish",
-                    "oncompleteparams", onFinish);
-
-                iTween.FadeTo(meta.go, hash);
-            }
-#endif
-
-#if USE_EASING_LEANTWEEN
-            else if (meta.lib == TweenLib.leanTween) {
-
-                if (meta.stopCurrent) {
-                    LeanTween.cancel(meta.go);
-                }
-
-                LTDescr info = null;
-
-                if (meta.go.Has<Image>()) {
-                    info = LeanTween.alpha(
-                        meta.go.Get<Image>().rectTransform, alpha, meta.time).setDelay(meta.delay).pause();
-                }
-                else if (meta.go.Has<CanvasGroup>()) {
-                    info = LeanTween.alphaCanvas(
-                        meta.go.Get<CanvasGroup>(), alpha, meta.time).setDelay(meta.delay).pause();
-                }
-                else {
-                    info = LeanTween.alpha(
-                        meta.go, alpha, meta.time).setDelay(meta.delay).pause();
-                }
-
-                LeanTweenType loopTypeLib =
-                    ConvertLibLoopType<LeanTweenType>(meta.loopType);
-
-                LeanTweenType easeTypeLib =
-                    ConvertLibEaseType<LeanTweenType>(meta.easeType);
-
-                info.setLoopType(loopTypeLib);
-                info.setEase(easeTypeLib);
-
-                info.setOnStart(onBegin);
-                info.setOnComplete(onFinish);
-                //info.setOnUpdate(onTick);
-
-                if (meta.onUpdate != null) {
-                    //info.setOnUpdate(onUpdate);
-                }
-
-                info.resume();
-            }
-#endif
-
-#if USE_EASING_NGUI
-            else if (meta.lib == TweenLib.nguiUITweener) {
-
-                UITweener.Style loopTypeLib =
-                    ConvertLibLoopType<UITweener.Style>(meta.loopType);
-
-                UITweener.Method easeTypeLib =
-                    ConvertLibEaseType<UITweener.Method>(meta.easeType);
-
-                UITweenerUtil.FadeTo(
-                    meta.go, easeTypeLib, loopTypeLib, meta.time, meta.delay, alpha);
-
-                //OnTweenBegin(onBegin);
-                //OnTweenFinish(onFinish);
-                //OnTweenTick(onTick);
-            }
-
-#endif
-            else if (meta.lib == TweenLib.internalEasing) {
+            if (meta.lib == TweenLib.internalEasing) {
 
                 if (hadSpriteOnSelf) {
 
@@ -1703,95 +1156,8 @@ namespace Engine.Utility {
 
             }
 
-#if USE_EASING_ITWEEN
-            else if (meta.lib == TweenLib.iTween) {
 
-                if (meta.stopCurrent) {
-                    iTween.Stop(meta.go);
-                }
 
-                iTween.LoopType loopTypeLib =
-                    ConvertLibLoopType<iTween.LoopType>(meta.loopType);
-
-                iTween.EaseType easeTypeLib =
-                    ConvertLibEaseType<iTween.EaseType>(meta.easeType);
-
-                Hashtable hash = iTween.Hash(
-                    "color", color,
-                    "time", meta.time,
-                    "delay", meta.delay,
-                    "looptype", loopTypeLib,
-                    "easetype", easeTypeLib,
-                    "islocal", meta.coord == TweenCoord.local,
-                    "onstart", "OnTweenBegin",
-                    "onstartparams", onBegin,
-                    "oncomplete", "OnTweenFinish",
-                    "oncompleteparams", onFinish);
-
-                iTween.FadeTo(meta.go, hash);
-            }
-#endif
-
-#if USE_EASING_LEANTWEEN
-            else if (meta.lib == TweenLib.leanTween) {
-
-                if (meta.stopCurrent) {
-                    LeanTween.cancel(meta.go);
-                }
-
-                LTDescr info = null;
-
-                if (meta.go.Has<Image>()) {
-                    info = LeanTween.color(
-                        meta.go.Get<Image>().rectTransform, color, meta.time).setDelay(meta.delay).pause();
-                }
-                else if (meta.go.Has<CanvasGroup>()) {
-                    info = LeanTween.alphaCanvas(
-                        meta.go.Get<CanvasGroup>(), color.a, meta.time).setDelay(meta.delay).pause();
-                }
-                else {
-                    info = LeanTween.color(
-                        meta.go, color, meta.time).setDelay(meta.delay).pause();
-                }
-
-                LeanTweenType loopTypeLib =
-                    ConvertLibLoopType<LeanTweenType>(meta.loopType);
-
-                LeanTweenType easeTypeLib =
-                    ConvertLibEaseType<LeanTweenType>(meta.easeType);
-
-                info.setLoopType(loopTypeLib);
-                info.setEase(easeTypeLib);
-
-                info.setOnStart(onBegin);
-                info.setOnComplete(onFinish);
-                //info.setOnUpdate(onTick);
-
-                if (meta.onUpdate != null) {
-                    //info.setOnUpdate(onUpdate);
-                }
-
-                info.resume();
-            }
-#endif
-
-#if USE_EASING_NGUI
-            else if (meta.lib == TweenLib.nguiUITweener) {
-
-                UITweener.Style loopTypeLib =
-                    ConvertLibLoopType<UITweener.Style>(meta.loopType);
-
-                UITweener.Method easeTypeLib =
-                    ConvertLibEaseType<UITweener.Method>(meta.easeType);
-
-                UITweenerUtil.ColorTo(
-                    meta.go, easeTypeLib, loopTypeLib, meta.time, meta.delay, color);
-
-                //OnTweenBegin(onBegin);
-                //OnTweenFinish(onFinish);
-                //OnTweenTick(onTick);
-            }
-#endif
             else if (meta.lib == TweenLib.internalEasing) {
 
                 // Raw meta on purpose — see FadeToObject: tweens must not flip
