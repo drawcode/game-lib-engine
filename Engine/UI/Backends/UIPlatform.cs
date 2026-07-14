@@ -53,6 +53,21 @@ namespace Engine.UI {
 
 #if USE_UI_TOOLKIT
             Register(UIToolkitBackend.Instance);
+
+            // The Toolkit backend owns view loading whenever it is compiled in.
+            //
+            // NGUIBackend.LoadView is a deliberate no-op: NGUI screens are Resources prefabs
+            // instantiated by the app's content pipeline (AppContentAssets.LoadAssetUI), which
+            // lives above the engine and never goes through IUIBackend. So leaving NGUIBackend as
+            // the view backend meant LoadView could never return anything — the pilot silently
+            // stayed on NGUI with no error, which is exactly the kind of quiet failure this seam
+            // exists to prevent.
+            //
+            // This does NOT force panels onto UI Toolkit. A panel becomes a toolkit panel only if
+            // a UXML view actually exists for its key; otherwise LoadView returns none and the
+            // panel stays on NGUI. THAT is the per-panel switch — the presence of the view, not a
+            // global flag.
+            _viewBackend = UIToolkitBackend.Instance;
 #endif
         }
 
@@ -102,7 +117,12 @@ namespace Engine.UI {
         public static IUIBackend viewBackend {
             get {
 
-                if (_viewBackend == null) {
+                // Touch `backends` first: RegisterDefaults is what assigns _viewBackend, and if
+                // this getter ran before it, _viewBackend would latch onto NGUIBackend — whose
+                // LoadView is a no-op — and no panel could ever load a UXML view.
+                List<IUIBackend> registered = backends;
+
+                if (_viewBackend == null && registered.Count > 0) {
                     _viewBackend = NGUIBackend.Instance;
                 }
 
