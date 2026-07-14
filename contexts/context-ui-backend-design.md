@@ -100,10 +100,10 @@ namespace Engine.UI {
     // and prevents a half-inspector/half-bound hybrid.
     public class UIRef {
 
-        public object native { get; }    // GameObject | VisualElement — never leaked upward
+        public object native { get; }      // GameObject | VisualElement — never leaked upward
         public string name { get; }
-        public bool alive { get; }       // false once the underlying object is destroyed
-        public bool isValid { get; }     // alive && native != null
+        public bool alive { get; }         // false once the underlying object is destroyed
+        public GameObject gameObject { get; }  // convenience for the GameObject backends; null for a VisualElement
 
         public static readonly UIRef none;
 
@@ -112,6 +112,10 @@ namespace Engine.UI {
     }
 }
 ```
+
+**As-built note (2.2):** the earlier sketch also carried an `isValid` alongside `alive`. It shipped
+with `alive` only — two names for one concept is exactly the kind of thing that rots. Mirror the
+code, not this sketch, if they ever disagree.
 
 `alive` mirrors `ITweenTarget.alive` and exists for the same reason: a handle can outlive its
 element, and every backend op must no-op rather than throw on a dead one. `UIRef.none` is never
@@ -462,6 +466,25 @@ transparent root so gameplay taps fall through. `UICamera.currentTouchID` reads 
 6. `NGUIBackend` dispatch is provably behavior-preserving: same GameObject through the legacy body
    and through the backend produces identical results (EditMode test, mirroring
    `TweenBackendTests`).
+
+## As-built findings from 2.2 (implementation)
+
+- **The Slider-before-Toggle probe order in `SetToggleValue` is unreachable.** It looks like a bug
+  worth fixing. It is not reachable: `Slider` and `Toggle` both derive from `Selectable`, and Unity
+  refuses two Selectables on one GameObject — `AddComponent<Toggle>()` returns **null** when a
+  Slider is already present (verified in-editor). No object can hit the ambiguous branch, so
+  preserving the ordering is free. Pinned by
+  `SliderAndToggle_CannotCoexist_SoProbeOrderIsUnreachable` so it is not re-litigated.
+- **`UIPlatform.autoRegisterDefaults`** is a test-only seam. Once the backend auto-registers, the
+  legacy body in UIUtil becomes unreachable and "behavior-preserving" becomes an untestable claim.
+  Turning defaults off makes `For()` return null, UIUtil falls back to its original body, and the
+  A/B comparison becomes possible. Production never touches it.
+- **`GridReposition` is a deliberate no-op on the Toolkit backend.** `UIGrid.Reposition()` exists
+  only because NGUI had no layout engine; UI Toolkit reflows itself via flex-wrap. The 2 call sites
+  become free once their panels are UXML.
+- **Fill has no UI Toolkit equivalent.** `SetImageFillValue` maps to horizontal `width: %` for v1,
+  which covers every current consumer (it has zero direct call sites; fills arrive via
+  `SetSliderValue`'s fallback). Radial/vertical gauges are a real gap and land with the HUD in 3H.
 
 ## Open risks
 
