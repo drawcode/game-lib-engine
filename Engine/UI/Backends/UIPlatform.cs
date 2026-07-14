@@ -140,6 +140,18 @@ namespace Engine.UI {
         // host). The host registers the resolver; everything above the provider layer sees only
         // strings in and UIRefs out.
 
+        // KILL SWITCH.
+        //
+        // Set false and every panel falls back to NGUI on its next show — no view is loaded, no
+        // UIDocument work happens, nothing above the provider layer changes. NGUI remains the
+        // shipping path for the whole of Phase 3 by design; this makes that reversible in one
+        // line rather than by reverting per-panel code.
+        //
+        // Exists because UI Toolkit is currently costing us memory and scene-transition time
+        // that NGUI was not (2026-07-14). Until that is understood and fixed, the toolkit path
+        // must be trivially switchable off.
+        public static bool toolkitViewsEnabled = true;
+
         public const string layerHud = "layer-hud";
         public const string layerScreens = "layer-screens";
         public const string layerOverlay = "layer-overlay";
