@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Engine.UI;
 using Engine.Utility;
 using UnityEngine;
 
@@ -422,9 +423,33 @@ public class UIUtil {
         }
     }
 
+    // ------------------------------------------------------------------------
+    // BACKEND DISPATCH
+    //
+    // The GameObject-resolver overloads below hand off to the registered backend
+    // (UIPlatform.For(obj) → NGUIBackend for a GameObject, UIToolkitBackend for a
+    // VisualElement). NGUIBackend is a verbatim extraction of the bodies that used to live
+    // here, so this is behavior-preserving by construction — and UIBackendTests proves it by
+    // running the same GameObject down both paths and comparing.
+    //
+    // The legacy bodies stay as the fallback for a project that registers no backend at all.
+    // They are deleted in Phase 4 with the NGUI define; they are NOT deleted now, because
+    // these core libs are consumed by other projects (UIUtil's surface is additive-only).
+    //
+    // The typed overloads (UILabel/Text/Button/...) are untouched — call sites in other
+    // projects bind to them directly, and the backends call straight back into them.
+    // ------------------------------------------------------------------------
+
     public static void SetLabelValue(GameObject obj, string val) {
 
         if (obj != null) {
+
+            IUIBackend backend = UIPlatform.For(obj);
+
+            if (backend != null) {
+                backend.SetLabelValue(UIRef.Of(obj), val);
+                return;
+            }
 
 #if USE_UI_NGUI_2_7 || USE_UI_NGUI_3
             if (obj.Has<UILabel>()) {
@@ -435,6 +460,229 @@ public class UIUtil {
                 SetLabelValue(obj.Get<Text>(), val);
             }
         }
+    }
+
+    // The UIRef overloads are what migrated panel code calls. Backend-blind: the same call
+    // works whether the panel is still an NGUI prefab or already a UXML view.
+
+    public static void SetLabelValue(UIRef r, string val) {
+
+        IUIBackend backend = UIPlatform.For(r);
+
+        if (backend != null) {
+            backend.SetLabelValue(r, val);
+        }
+    }
+
+    public static string GetLabelValue(UIRef r) {
+
+        IUIBackend backend = UIPlatform.For(r);
+
+        if (backend == null) {
+            return null;
+        }
+
+        return backend.GetLabelValue(r);
+    }
+
+    public static void SetLabelColor(UIRef r, Color colorTo) {
+
+        IUIBackend backend = UIPlatform.For(r);
+
+        if (backend != null) {
+            backend.SetLabelColor(r, colorTo);
+        }
+    }
+
+    public static void SetInputValue(UIRef r, string val) {
+
+        IUIBackend backend = UIPlatform.For(r);
+
+        if (backend != null) {
+            backend.SetInputValue(r, val);
+        }
+    }
+
+    public static string GetInputValue(UIRef r) {
+
+        IUIBackend backend = UIPlatform.For(r);
+
+        if (backend == null) {
+            return null;
+        }
+
+        return backend.GetInputValue(r);
+    }
+
+    public static void SetSliderValue(UIRef r, float val) {
+
+        IUIBackend backend = UIPlatform.For(r);
+
+        if (backend != null) {
+            backend.SetSliderValue(r, val);
+        }
+    }
+
+    public static float GetSliderValue(UIRef r) {
+
+        IUIBackend backend = UIPlatform.For(r);
+
+        if (backend == null) {
+            return 0f;
+        }
+
+        return backend.GetSliderValue(r);
+    }
+
+    public static void SetToggleValue(UIRef r, bool val) {
+
+        IUIBackend backend = UIPlatform.For(r);
+
+        if (backend != null) {
+            backend.SetToggleValue(r, val);
+        }
+    }
+
+    public static bool GetToggleValue(UIRef r) {
+
+        IUIBackend backend = UIPlatform.For(r);
+
+        if (backend == null) {
+            return false;
+        }
+
+        return backend.GetToggleValue(r);
+    }
+
+    public static void SetImageFillValue(UIRef r, float val) {
+
+        IUIBackend backend = UIPlatform.For(r);
+
+        if (backend != null) {
+            backend.SetImageFillValue(r, val);
+        }
+    }
+
+    public static float GetImageFillValue(UIRef r) {
+
+        IUIBackend backend = UIPlatform.For(r);
+
+        if (backend == null) {
+            return 0f;
+        }
+
+        return backend.GetImageFillValue(r);
+    }
+
+    public static void SetSpriteColor(UIRef r, Color colorTo) {
+
+        IUIBackend backend = UIPlatform.For(r);
+
+        if (backend != null) {
+            backend.SetSpriteColor(r, colorTo);
+        }
+    }
+
+    public static bool IsButton(UIRef r) {
+
+        IUIBackend backend = UIPlatform.For(r);
+
+        if (backend == null) {
+            return false;
+        }
+
+        return backend.IsButton(r);
+    }
+
+    public static void SetButtonColor(UIRef r, Color colorTo) {
+
+        IUIBackend backend = UIPlatform.For(r);
+
+        if (backend != null) {
+            backend.SetButtonColor(r, colorTo);
+        }
+    }
+
+    public static void SetButtonHandlerClick(UIRef r, Action objAction) {
+
+        IUIBackend backend = UIPlatform.For(r);
+
+        if (backend != null) {
+            backend.SetButtonHandlerClick(r, objAction);
+        }
+    }
+
+    public static void ShowObject(UIRef r) {
+
+        IUIBackend backend = UIPlatform.For(r);
+
+        if (backend != null) {
+            backend.Show(r);
+        }
+    }
+
+    public static void HideObject(UIRef r) {
+
+        IUIBackend backend = UIPlatform.For(r);
+
+        if (backend != null) {
+            backend.Hide(r);
+        }
+    }
+
+    public static void GridReposition(UIRef r) {
+
+        IUIBackend backend = UIPlatform.For(r);
+
+        if (backend != null) {
+            backend.GridReposition(r);
+        }
+    }
+
+    // The name-substring and deep-find helpers, on the UIRef path. The GameObject/Transform
+    // originals below are left exactly as they are — 3 and 37 call sites respectively, and
+    // they are the ugliest compatibility seam in the class.
+
+    public static void SetTextValue(UIRef root, string code, string val) {
+
+        IUIBackend backend = UIPlatform.For(root);
+
+        if (backend == null) {
+            return;
+        }
+
+        List<UIRef> matches = backend.ResolveLike(root, code);
+
+        for (int i = 0; i < matches.Count; i++) {
+            backend.SetLabelValue(matches[i], val);
+            backend.SetInputValue(matches[i], val);
+        }
+    }
+
+    public static void SetTextColor(UIRef root, string code, Color color) {
+
+        IUIBackend backend = UIPlatform.For(root);
+
+        if (backend == null) {
+            return;
+        }
+
+        List<UIRef> matches = backend.ResolveLike(root, code);
+
+        for (int i = 0; i < matches.Count; i++) {
+            backend.SetSpriteColor(matches[i], color);
+        }
+    }
+
+    public static void UpdateLabelObject(UIRef root, string key, string val) {
+
+        IUIBackend backend = UIPlatform.For(root);
+
+        if (backend == null) {
+            return;
+        }
+
+        backend.SetLabelValue(backend.ResolveDeep(root, key), val);
     }
 
     //
@@ -473,6 +721,12 @@ public class UIUtil {
     public static string GetLabelValue(GameObject obj) {
 
         if (obj != null) {
+
+            IUIBackend backend = UIPlatform.For(obj);
+
+            if (backend != null) {
+                return backend.GetLabelValue(UIRef.Of(obj));
+            }
 
 #if USE_UI_NGUI_2_7 || USE_UI_NGUI_3
             if (obj.Has<UILabel>()) {
@@ -526,6 +780,13 @@ public class UIUtil {
 
         if (obj != null) {
 
+            IUIBackend backend = UIPlatform.For(obj);
+
+            if (backend != null) {
+                backend.SetInputValue(UIRef.Of(obj), val);
+                return;
+            }
+
 #if USE_UI_NGUI_2_7 || USE_UI_NGUI_3
             if (obj.Has<UIInput>()) {
                 SetInputValue(obj.Get<UIInput>(), val);
@@ -556,6 +817,12 @@ public class UIUtil {
     public static string GetInputValue(GameObject obj) {
 
         if (obj != null) {
+
+            IUIBackend backend = UIPlatform.For(obj);
+
+            if (backend != null) {
+                return backend.GetInputValue(UIRef.Of(obj));
+            }
 
 #if USE_UI_NGUI_2_7 || USE_UI_NGUI_3
             if (obj.Has<UIInput>()) {
@@ -625,6 +892,14 @@ public class UIUtil {
     public static void SetSliderValue(GameObject obj, float val) {
 
         if (obj != null) {
+
+            IUIBackend backend = UIPlatform.For(obj);
+
+            if (backend != null) {
+                backend.SetSliderValue(UIRef.Of(obj), val);
+                return;
+            }
+
 #if USE_UI_NGUI_2_7 || USE_UI_NGUI_3
             if (obj.Has<UISlider>()) {
                 SetSliderValue(obj.Get<UISlider>(), val);
@@ -655,6 +930,13 @@ public class UIUtil {
     public static float GetSliderValue(GameObject obj) {
 
         if (obj != null) {
+
+            IUIBackend backend = UIPlatform.For(obj);
+
+            if (backend != null) {
+                return backend.GetSliderValue(UIRef.Of(obj));
+            }
+
 #if USE_UI_NGUI_2_7 || USE_UI_NGUI_3
             if (obj.Has<UISlider>()) {
                 return GetSliderValue(obj.Get<UISlider>());
@@ -745,6 +1027,14 @@ public class UIUtil {
     public static void SetToggleValue(GameObject obj, bool selected) {
 
         if (obj != null) {
+
+            IUIBackend backend = UIPlatform.For(obj);
+
+            if (backend != null) {
+                backend.SetToggleValue(UIRef.Of(obj), selected);
+                return;
+            }
+
 #if USE_UI_NGUI_2_7
             if (obj.Has<UICheckbox>()) {
                 SetToggleValue(obj.Get<UICheckbox>(), selected);
@@ -816,6 +1106,12 @@ public class UIUtil {
 
         if (obj != null) {
 
+            IUIBackend backend = UIPlatform.For(obj);
+
+            if (backend != null) {
+                return backend.GetToggleValue(UIRef.Of(obj));
+            }
+
 #if USE_UI_NGUI_2_7
             if (obj.Has<UICheckbox>()) {
                 return GetToggleValue(obj.Get<UICheckbox>());
@@ -846,6 +1142,12 @@ public class UIUtil {
     public static bool IsButton(GameObject go) {
         if (go == null)
             return false;
+
+        IUIBackend backendFor = UIPlatform.For(go);
+
+        if (backendFor != null) {
+            return backendFor.IsButton(UIRef.Of(go));
+        }
 
 #if USE_UI_NGUI_2_7 || USE_UI_NGUI_3
         if (go.Has<UIButton>() || go.Has<UIImageButton>()) {
@@ -935,6 +1237,13 @@ public class UIUtil {
     public static void GridReposition(GameObject grid) {
 
         if (grid == null) {
+            return;
+        }
+
+        IUIBackend backend = UIPlatform.For(grid);
+
+        if (backend != null) {
+            backend.GridReposition(UIRef.Of(grid));
             return;
         }
 
@@ -1132,6 +1441,13 @@ public class UIUtil {
         if (go == null)
             return;
 
+        IUIBackend backend = UIPlatform.For(go);
+
+        if (backend != null) {
+            backend.SetSpriteColor(UIRef.Of(go), colorTo);
+            return;
+        }
+
         if (go != null) {
 
             TweenUtil.ColorToObject(go, colorTo, .5f, 0f);
@@ -1175,6 +1491,14 @@ public class UIUtil {
     public static void SetLabelColor(GameObject obj, Color colorTo) {
 
         if (obj != null) {
+
+            IUIBackend backend = UIPlatform.For(obj);
+
+            if (backend != null) {
+                backend.SetLabelColor(UIRef.Of(obj), colorTo);
+                return;
+            }
+
 #if USE_UI_NGUI_2_7 || USE_UI_NGUI_3
             if (obj.Has<UILabel>()) {
                 SetLabelColor(obj.Get<UILabel>(), colorTo);
@@ -1217,6 +1541,14 @@ public class UIUtil {
     public static void SetButtonColor(GameObject obj, Color colorTo) {
 
         if (obj != null) {
+
+            IUIBackend backend = UIPlatform.For(obj);
+
+            if (backend != null) {
+                backend.SetButtonColor(UIRef.Of(obj), colorTo);
+                return;
+            }
+
 #if USE_UI_NGUI_2_7 || USE_UI_NGUI_3
             if (obj.Has<UIButton>()) {
                 SetButtonColor(obj.Get<UIButton>(), colorTo);
@@ -1255,6 +1587,13 @@ public class UIUtil {
     public static void SetButtonHandlerClick(GameObject obj, UnityAction objAction) {
         if (obj == null)
             return;
+
+        IUIBackend backend = UIPlatform.For(obj);
+
+        if (backend != null) {
+            backend.SetButtonHandlerClick(UIRef.Of(obj), () => objAction());
+            return;
+        }
 
 #if USE_UI_NGUI_2_7 || USE_UI_NGUI_3
         if (obj.Has<UIButton>()) {
