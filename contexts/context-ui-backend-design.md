@@ -497,3 +497,95 @@ transparent root so gameplay taps fall through. `UICamera.currentTouchID` reads 
 - **`UIPanelBase.Start()` → `AnimateOut()` on every panel** and `HideAllPanels()` calling
   `AnimateOut` twice per navigation. Harmless under tweens; verify it stays harmless when
   `Hide()` becomes a real `display: none` rather than an off-screen slide.
+
+---
+
+## As-built through the pilot (2.6–2.10, 2026-07-14)
+
+The pilot (`panel-settings-credits`) shipped end-to-end. Several 2.1 design assumptions changed
+under contact with the running editor; **trust this section over the original design above where
+they differ.**
+
+### PanelRenderer, not UIDocument (the biggest change)
+`UIDocument` is **deprecated** in Unity 6000.5.2f1 (can't be added to new GameObjects). The backend
+runs on `UnityEngine.UIElements.PanelRenderer` instead (confirmed present). This also killed the
+"one persistent host with layer containers" model:
+- **Per-panel PanelRenderer.** Each migrated panel's view is its own GameObject (`uitk-<viewKey>`)
+  carrying a PanelRenderer + VisualTreeAsset. Destroying it frees the UXML — that is the unload the
+  memory story needs. Layer containers / the layer resolver are GONE.
+- **One shared `PanelSettings`** (registered by the slim `UIToolkitHost` MonoBehaviour) → one runtime
+  panel, many renderer subtrees, no render target per panel. Ref resolution must be **1138×640,
+  match=height** to reproduce NGUI's 640-tall UIRoot; the default 1200×800/match-width rescaled every
+  offset.
+- **Loading is DEFERRED.** Assigning `visualTreeAsset` does NOT build synchronously; the root arrives
+  in `RegisterUIReloadCallback`. So `IUIBackend.LoadView` is now `LoadView(viewKey, Action<UIRef> onReady)`
+  — NGUIBackend calls back synchronously, Toolkit from the reload callback. Bind/hide/NGUI-suppress all
+  moved into the continuation. On first show a panel briefly runs NGUI until the view arrives a frame
+  later. Show/hide/bind operate on the view's OWN named subtree (`root.Q(viewKey)`), never the shared
+  panel root.
+
+### Per-panel migration cost = one property
+A panel migrates by overriding `toolkitViewKey` (the same string key the NGUI path uses). The view is
+lazy-loaded on first `AnimateIn` — NOT Init/Start, because panels are instantiated **inactive**
+(pooled), so Start never runs until first show.
+
+### Destroy-on-hide — panels are POOLED, not destroyed
+This project pools panels (`_ObjectPoolKeyedManager`): navigate-away DEACTIVATES the panel (fires
+`OnDisable`), it does NOT destroy it (OnDestroy never fires on navigation). So the view is freed in
+`UIPanelBase.OnDisable` (verified: open→1 renderer, back→0, reopen→1). **Systemic gotcha:** many
+`Base*` panels override `OnEnable`/`OnDisable` WITHOUT calling `base` (e.g.
+`BaseGameUIPanelSettingsCredits`), which silently skips the free — every migrated panel must chain to
+base. A companion-hook that doesn't depend on override discipline is a Phase 3 item.
+Also fixed here: the pre-existing `UIPanelBase.OnDisable` bug that called `AddListener` (not Remove)
+for the two ButtonEvents — a real per-hide listener leak, unrelated to UI Toolkit.
+
+### Kill switch
+`UIPlatform.toolkitViewsEnabled = false` reverts every panel to NGUI on next show. NGUI is the
+shipping path for all of Phase 3 by design; this makes that a one-flag revert.
+
+### Reusable ScrollView pattern (credits, worlds, levels, statistics, achievements)
+A clipped NGUI `UIPanel` → `ui:ScrollView`. All of this lives in the converter + backend so no panel
+repeats it:
+- **Drop the NGUI `UIScrollBar` node** (ScrollView draws its own — two bars otherwise).
+- **Top-anchor** scroll children (a scroll region is top-anchored, not centre-anchored like panel
+  widgets) and **wrap them in one content element of the real height** (a min-height USS rule on the
+  ScrollView's internal content-container is fragile — the descendant selector resolved to 0).
+- **`ScrollDrag` manipulator** on `.ngui-scrollview`: pointer drag scrolls for BOTH mouse and touch
+  (UI Toolkit does neither with a mouse), with **momentum** (velocity over real elapsed time,
+  exponential decay), **auto-hide** (bar fades ~0.8s after scrolling), and the bar **inset 8px** so
+  it stays inside the backer. One `.schedule.Every(16)` ticker drives decay + idle-hide.
+
+### Coexistence click-through guard (Phase 2 gate)
+- `UIPlatform.IsPointerOverUI(screenPos)` — backend-agnostic OR over each backend's `IsPointerOver`
+  (NGUI false; Toolkit does `panel.Pick`).
+- `ConfigurePicking` sets `.ngui-container`/`.ngui-root` to `PickingMode.Ignore` on load, so only
+  real widgets count as over-UI — otherwise the full-bleed wrappers would block the always-on NGUI
+  header. **Only fires when a view is loaded**; NGUI input is untouched normally.
+- One grep-marked `// UITK-MIGRATION`, `USE_UI_TOOLKIT`-gated early-out in `UICamera.Raycast`.
+  Verified selective: True over panel content, False over header/back-button/gameplay.
+
+### Perf / memory (still open — measure on device)
+Editor A/B **exonerated the theme/atlases**: NGUI already keeps the 5 UI atlases resident, so the
+theme's `sprites.uss` adds no net texture memory. The felt memory + scene-transition regression is
+NOT the atlases. Editor managed-heap numbers are noise-dominated; the trustworthy verdict needs an
+**Android build** (toolkit on vs off via the kill switch). destroy-on-hide is wired, so the
+architecture can free views — magnitude TBD on device. See memory [[ui-toolkit-perf-regression]].
+
+### Font
+`FontMain` = `DimboRegular` (93 refs, the dominant live face), TTF present → real SDF FontAsset at
+`Assets/UI Toolkit/Fonts/Dimbo-SDF.asset`, applied at `:root`. The default UI Toolkit face is wider
+than Dimbo, which is what made ported absolute label rows overlap.
+
+### Converter as-built (see also context-ngui-uxml-converter)
+- **USS has NO `calc()`** — Unity logs "Unknown function 'calc'", drops the declaration, everything
+  collapses to the top-left (looks exactly like a failed stylesheet; it isn't). Position via
+  `left/top: 50%` + `translate` / `margin` instead.
+- Pivot → self-relative `translate %` (NOT folded into the pixel offset: a label's localScale is its
+  FONT SIZE, not text width, so folding it misplaced every label).
+- Colour from `mColor`, alignment from pivot, sprite via `.spr-<name>` class; `-unity-slice-*` takes a
+  bare integer, not px.
+- `RectTransform` roots + `Canvas`/`CanvasRenderer` are UI, not "non-UI" (dropping them ate
+  panel-header/footer). Duplicate BUTTON names are fine (name-keyed clicks); duplicate BIND TARGETS
+  are fatal (`panel-worlds` has one — fix in 3D).
+- Designed list content (credits) is reflowed to a **flex column by hand** in the cleanup pass; the
+  converter's absolute output is scaffolding.
