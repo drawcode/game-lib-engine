@@ -541,40 +541,82 @@ namespace Engine.UI {
 
             sv.mode = ScrollViewMode.Vertical;
             sv.touchScrollBehavior = ScrollView.TouchScrollBehavior.Elastic;
+            // Auto shows the bar only when content overflows; ScrollDrag then fades it in on
+            // scroll and out when idle (like a mobile scroller).
             sv.verticalScrollerVisibility = ScrollerVisibility.Auto;
             sv.horizontalScrollerVisibility = ScrollerVisibility.Hidden;
 
             new ScrollDrag(sv);
         }
 
-        // Pointer-drag-to-scroll for both mouse and touch. A small threshold before capture means
-        // a click on a child button still registers as a click, not a drag.
+        // Pointer-drag-to-scroll for both mouse and touch, with momentum and an auto-hide bar.
+        // NGUI's UIDraggablePanel had all three; UI Toolkit's ScrollView has none for mouse.
         private class ScrollDrag {
 
-            private const float threshold = 6f;
+            private const float threshold = 6f;       // px of drag before we take over (clicks survive)
+            private const float tickDt = 0.016f;      // scheduler tick ~60Hz
+            private const float decayPerTick = 0.93f; // momentum falloff per tick (~0.1s half-life)
+            private const float minVelocity = 30f;    // px/s: below this the flick stops
+            private const float idleHideSeconds = 0.8f;
 
             private readonly ScrollView sv;
+            private readonly Scroller scroller;
+
             private bool active;
             private bool capturing;
             private float startY;
             private float startOffsetY;
             private int pointerId;
 
+            private float velocity;       // px/s of scrollOffset (the flick)
+            private float lastPointerY;
+            private float lastMoveTime;
+            private bool barShown;
+            private float lastActivity;   // Time.unscaledTime of last scroll movement
+
             public ScrollDrag(ScrollView sv) {
 
                 this.sv = sv;
+                this.scroller = sv.verticalScroller;
 
                 VisualElement viewport = sv.contentViewport;
                 viewport.RegisterCallback<PointerDownEvent>(OnDown);
                 viewport.RegisterCallback<PointerMoveEvent>(OnMove);
                 viewport.RegisterCallback<PointerUpEvent>(OnUp);
                 viewport.RegisterCallback<PointerCaptureOutEvent>(OnCaptureOut);
+
+                // One ticker drives both momentum decay and the idle-hide fade.
+                sv.schedule.Execute(Tick).Every(16);
+
+                SetBar(false);
+                lastActivity = -999f;
+            }
+
+            private float MaxOffset() {
+                float range = sv.contentContainer.resolvedStyle.height
+                            - sv.contentViewport.resolvedStyle.height;
+                return range > 0f ? range : 0f;
+            }
+
+            private void SetBar(bool show) {
+
+                if (barShown == show || scroller == null) {
+                    return;
+                }
+
+                barShown = show;
+                // Opacity fade (common.uss puts a transition on the scroller). Auto still manages
+                // display based on overflow; we only animate opacity within that.
+                scroller.style.opacity = show ? 1f : 0f;
             }
 
             private void OnDown(PointerDownEvent e) {
                 active = true;
                 capturing = false;
+                velocity = 0f;
                 startY = e.position.y;
+                lastPointerY = e.position.y;
+                lastMoveTime = Time.unscaledTime;
                 startOffsetY = sv.scrollOffset.y;
                 pointerId = e.pointerId;
             }
@@ -597,7 +639,24 @@ namespace Engine.UI {
                     sv.contentViewport.CapturePointer(pointerId);
                 }
 
-                sv.scrollOffset = new Vector2(sv.scrollOffset.x, startOffsetY - dy);
+                float newOffset = Mathf.Clamp(startOffsetY - dy, 0f, MaxOffset());
+                sv.scrollOffset = new Vector2(sv.scrollOffset.x, newOffset);
+
+                // Scroll velocity from this move's pointer motion over the REAL elapsed time
+                // (PointerMove fires at variable intervals, so a fixed dt would distort the flick).
+                // Drag content up => scroll down, hence the negation. Smoothed so one jittery frame
+                // doesn't dominate the release velocity.
+                float now = Time.unscaledTime;
+                float dt = now - lastMoveTime;
+                if (dt > 0.0001f) {
+                    float instant = -(e.position.y - lastPointerY) / dt;
+                    velocity = Mathf.Lerp(velocity, instant, 0.6f);
+                }
+                lastPointerY = e.position.y;
+                lastMoveTime = now;
+
+                lastActivity = now;
+                SetBar(true);
                 e.StopPropagation();
             }
 
@@ -610,11 +669,40 @@ namespace Engine.UI {
                 }
 
                 capturing = false;
+                // velocity carries into Tick -> the flick/swoosh.
             }
 
             private void OnCaptureOut(PointerCaptureOutEvent e) {
                 active = false;
                 capturing = false;
+            }
+
+            private void Tick() {
+
+                // Momentum: keep scrolling after release, decaying to a stop.
+                if (!active && Mathf.Abs(velocity) > minVelocity) {
+
+                    float offset = sv.scrollOffset.y + velocity * tickDt;
+                    float max = MaxOffset();
+
+                    if (offset <= 0f || offset >= max) {
+                        velocity = 0f;   // hit an edge, stop
+                    }
+
+                    sv.scrollOffset = new Vector2(sv.scrollOffset.x, Mathf.Clamp(offset, 0f, max));
+                    velocity *= decayPerTick;
+                    lastActivity = Time.unscaledTime;
+                    SetBar(true);
+                }
+                else if (Mathf.Abs(velocity) <= minVelocity) {
+                    velocity = 0f;
+                }
+
+                // Auto-hide: fade the bar out once nothing has scrolled for a moment.
+                if (!active && velocity == 0f
+                        && Time.unscaledTime - lastActivity > idleHideSeconds) {
+                    SetBar(false);
+                }
             }
         }
 
