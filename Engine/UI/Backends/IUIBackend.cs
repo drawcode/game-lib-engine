@@ -83,10 +83,14 @@ namespace Engine.UI {
         void GridReposition(UIRef r);
 
         // VIEW LIFECYCLE
-
-        UIRef LoadView(string viewKey);
-        void Attach(UIRef view, UIRef parent);
-        void Detach(UIRef view);
+        //
+        // LoadView is ASYNCHRONOUS: onReady fires with the view's root UIRef once it is built.
+        // This is not gratuitous — the UI Toolkit backend is built on PanelRenderer (UIDocument
+        // is deprecated in Unity 6.5), and PanelRenderer loads its VisualTreeAsset deferred: the
+        // root only exists in its reload callback, never synchronously after assignment (verified
+        // in-editor). The NGUIBackend calls onReady synchronously, so callers write one flow.
+        // onReady receives UIRef.none if the view can't be loaded.
+        void LoadView(string viewKey, Action<UIRef> onReady);
         void DestroyView(UIRef view);
 
         // POINTER / EVENT SOURCE

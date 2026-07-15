@@ -532,36 +532,15 @@ namespace Engine.UI {
 
         // VIEW LIFECYCLE
 
-        public UIRef LoadView(string viewKey) {
+        // NGUI views are Resources prefabs loaded by the app's content pipeline
+        // (AppContentAssets.LoadAssetUI), which lives above the engine. The panel system keeps
+        // doing that itself in the NGUI path; nothing routes NGUI views through here. Fire the
+        // continuation synchronously with none so callers share one flow with the Toolkit backend.
+        public void LoadView(string viewKey, Action<UIRef> onReady) {
 
-            // NGUI views are Resources prefabs loaded by the app's content pipeline
-            // (AppContentAssets.LoadAssetUI), which lives above the engine. The panel system
-            // keeps doing that itself in the NGUI path; nothing calls this. UIToolkitBackend
-            // is the one that actually implements view loading.
-            return UIRef.none;
-        }
-
-        public void Attach(UIRef view, UIRef parent) {
-
-            GameObject go = Go(view);
-            GameObject parentGo = Go(parent);
-
-            if (go == null || parentGo == null) {
-                return;
+            if (onReady != null) {
+                onReady(UIRef.none);
             }
-
-            go.transform.parent = parentGo.transform;
-        }
-
-        public void Detach(UIRef view) {
-
-            GameObject go = Go(view);
-
-            if (go == null) {
-                return;
-            }
-
-            go.transform.parent = null;
         }
 
         public void DestroyView(UIRef view) {

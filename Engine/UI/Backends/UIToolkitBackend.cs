@@ -412,11 +412,36 @@ namespace Engine.UI {
         }
 
         // VIEW LIFECYCLE
+        //
+        // Each migrated panel gets its OWN PanelRenderer (Unity 6.5's replacement for the
+        // deprecated UIDocument). A view is a GameObject carrying a PanelRenderer with the view's
+        // VisualTreeAsset assigned. This is what makes load/unload real: destroying that
+        // GameObject drops the UXML — the persistent one-UIDocument-holds-everything model never
+        // unloaded anything.
+        //
+        // PanelSettings is supplied by the scene host (UIToolkitHost) at startup; all views share
+        // it (one runtime panel, many renderer subtrees) so we don't pay a render target per view.
+        //
+        // Loading is DEFERRED: PanelRenderer builds its tree on a later panel update and hands the
+        // root to its reload callback. So LoadView takes a continuation and fires it from there.
 
-        public UIRef LoadView(string viewKey) {
+        public static PanelSettings panelSettings;
+
+        // view-subtree root -> the PanelRenderer GameObject that owns it (for DestroyView).
+        private readonly Dictionary<VisualElement, GameObject> viewHosts
+            = new Dictionary<VisualElement, GameObject>();
+
+        private int _nextSortingOrder = 100;
+
+        public void LoadView(string viewKey, Action<UIRef> onReady) {
+
+            if (onReady == null) {
+                return;
+            }
 
             if (string.IsNullOrEmpty(viewKey)) {
-                return UIRef.none;
+                onReady(UIRef.none);
+                return;
             }
 
             VisualTreeAsset asset = Resources.Load<VisualTreeAsset>(viewPath + viewKey);
@@ -424,31 +449,54 @@ namespace Engine.UI {
             if (asset == null) {
                 LogUtil.LogWarning("UIToolkitBackend.LoadView: no VisualTreeAsset at "
                     + viewPath + viewKey);
-                return UIRef.none;
-            }
-
-            TemplateContainer view = asset.Instantiate();
-
-            // The view's own name is the panel key — BindElements, the click bridge, and the
-            // panel system all address elements by name, so the root must carry it too.
-            view.name = viewKey;
-
-            return UIRef.Of(view, viewKey);
-        }
-
-        public void Attach(UIRef view, UIRef parent) {
-
-            VisualElement el = El(view);
-            VisualElement parentEl = El(parent);
-
-            if (el == null || parentEl == null) {
+                onReady(UIRef.none);
                 return;
             }
 
-            parentEl.Add(el);
+            if (panelSettings == null) {
+                LogUtil.LogWarning("UIToolkitBackend.LoadView: no PanelSettings registered "
+                    + "(is UIToolkitHost in the scene?); cannot host '" + viewKey + "'");
+                onReady(UIRef.none);
+                return;
+            }
+
+            GameObject go = new GameObject("uitk-" + viewKey);
+            PanelRenderer renderer = go.AddComponent<PanelRenderer>();
+            renderer.panelSettings = panelSettings;
+            renderer.sortingOrder = _nextSortingOrder++;
+
+            bool[] delivered = { false };
+
+            PanelRenderer.UIReloadCallback cb = null;
+            cb = (r, root) => {
+
+                if (delivered[0] || root == null) {
+                    return;
+                }
+
+                delivered[0] = true;
+
+                // The callback's `root` may be the shared panel root when views share a
+                // PanelSettings. Bind and show/hide against THIS view's own subtree, found by the
+                // UXML root's name, so one panel's ops never touch another's. Fall back to root
+                // only if the named element isn't found (shouldn't happen).
+                VisualElement viewRoot = root.Q(viewKey) ?? root;
+
+                RegisterRoot(viewRoot);
+                viewHosts[viewRoot] = go;
+
+                onReady(UIRef.Of(viewRoot, viewKey));
+            };
+
+            renderer.RegisterUIReloadCallback(cb);
+
+            // Assign last: this is what marks the renderer dirty and schedules the deferred load.
+            renderer.visualTreeAsset = asset;
         }
 
-        public void Detach(UIRef view) {
+        // Frees the UXML: destroying the PanelRenderer GameObject is the whole point of the
+        // per-panel model. Unregisters the click bridge for that view's root first.
+        public void DestroyView(UIRef view) {
 
             VisualElement el = El(view);
 
@@ -456,13 +504,17 @@ namespace Engine.UI {
                 return;
             }
 
-            el.RemoveFromHierarchy();
-        }
+            UnregisterRoot(el);
 
-        // VisualElements are managed objects, not Unity Objects — removing from the hierarchy
-        // drops the last reference and GC handles the rest. There is no Destroy.
-        public void DestroyView(UIRef view) {
-            Detach(view);
+            GameObject go = null;
+
+            if (viewHosts.TryGetValue(el, out go)) {
+                viewHosts.Remove(el);
+
+                if (go != null) {
+                    UnityEngine.Object.Destroy(go);
+                }
+            }
         }
 
         // POINTER / EVENT SOURCE

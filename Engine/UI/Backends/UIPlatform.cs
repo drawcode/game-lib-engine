@@ -152,32 +152,10 @@ namespace Engine.UI {
         // must be trivially switchable off.
         public static bool toolkitViewsEnabled = true;
 
-        public const string layerHud = "layer-hud";
-        public const string layerScreens = "layer-screens";
-        public const string layerOverlay = "layer-overlay";
-
-        public delegate UIRef LayerResolver(string name);
-
-        private static LayerResolver _layerResolver = null;
-
-        public static void SetLayerResolver(LayerResolver resolver) {
-            _layerResolver = resolver;
-        }
-
-        public static UIRef Layer(string name) {
-
-            if (_layerResolver == null) {
-                return UIRef.none;
-            }
-
-            return _layerResolver(name);
-        }
-
         // Test seam: drop all registrations so a test can install a fake.
         public static void Reset() {
             _backends = null;
             _viewBackend = null;
-            _layerResolver = null;
         }
     }
 }

@@ -433,12 +433,18 @@ namespace Engine.UI.Tests {
         }
 
         [Test]
-        public void Toolkit_LoadView_ReturnsNone_WhenMissing() {
+        public void Toolkit_LoadView_CallsBackWithNone_WhenMissing() {
 
-            // Must degrade, not throw — a missing UXML is a content bug, not a crash.
-            UIRef view = UIToolkitBackend.Instance.LoadView("panel-does-not-exist");
+            // Must degrade, not throw — a missing UXML is a content bug, not a crash. LoadView is
+            // callback-based (PanelRenderer loads deferred); the missing-asset path fires the
+            // continuation synchronously with none.
+            UIRef delivered = null;
+            bool called = false;
 
-            Assert.IsFalse(view.alive);
+            UIToolkitBackend.Instance.LoadView("panel-does-not-exist", v => { called = true; delivered = v; });
+
+            Assert.IsTrue(called);
+            Assert.IsFalse(delivered.alive);
         }
 
 #endif
