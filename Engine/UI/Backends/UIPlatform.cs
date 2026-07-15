@@ -1,5 +1,7 @@
 using System.Collections.Generic;
 
+using UnityEngine;
+
 namespace Engine.UI {
 
     // Backend registration + per-object dispatch.
@@ -108,6 +110,23 @@ namespace Engine.UI {
             }
 
             return For(r.native);
+        }
+
+        // The coexistence click-through guard's entry point. NGUI's UICamera.Raycast asks this
+        // before its own raycast: if a UI Toolkit panel has actual (pickable) content under the
+        // pointer, NGUI must not also hit a collider behind it. Backend-agnostic — NGUIBackend
+        // always answers false, only the Toolkit backend does a real panel.Pick.
+        public static bool IsPointerOverUI(Vector2 screenPos) {
+
+            List<IUIBackend> list = backends;
+
+            for (int i = 0; i < list.Count; i++) {
+                if (list[i].IsPointerOver(screenPos)) {
+                    return true;
+                }
+            }
+
+            return false;
         }
 
         // Which backend builds a NEW screen. Separate from For() because LoadView("panel-x")

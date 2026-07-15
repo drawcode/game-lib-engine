@@ -486,6 +486,7 @@ namespace Engine.UI {
                 viewHosts[viewRoot] = go;
 
                 ConfigureScrollViews(viewRoot);
+                ConfigurePicking(viewRoot);
 
                 onReady(UIRef.Of(viewRoot, viewKey));
             };
@@ -535,6 +536,26 @@ namespace Engine.UI {
             }
 
             root.Query<ScrollView>(className: "ngui-scrollview").ForEach(WireScrollView);
+        }
+
+        // Layout wrappers must not block pointer input. The converter emits full-bleed
+        // (inset:0) container elements; if they stayed pickable, panel.Pick would return one of
+        // them everywhere the panel's root spans — including the transparent margin over the
+        // always-on NGUI header — so the click-through guard would block the NGUI back button.
+        // Making containers ignore-picking means only real widgets (backer, labels, buttons)
+        // register as "over UI", and taps on the panel's transparent areas fall through to NGUI.
+        private static void ConfigurePicking(VisualElement root) {
+
+            if (root == null) {
+                return;
+            }
+
+            if (root.ClassListContains("ngui-container") || root.ClassListContains("ngui-root")) {
+                root.pickingMode = PickingMode.Ignore;
+            }
+
+            root.Query<VisualElement>(className: "ngui-container").ForEach(
+                e => e.pickingMode = PickingMode.Ignore);
         }
 
         private static void WireScrollView(ScrollView sv) {
