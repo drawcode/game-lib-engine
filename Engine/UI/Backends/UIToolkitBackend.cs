@@ -485,6 +485,8 @@ namespace Engine.UI {
                 RegisterRoot(viewRoot);
                 viewHosts[viewRoot] = go;
 
+                ConfigureScrollViews(viewRoot);
+
                 onReady(UIRef.Of(viewRoot, viewKey));
             };
 
@@ -514,6 +516,105 @@ namespace Engine.UI {
                 if (go != null) {
                     UnityEngine.Object.Destroy(go);
                 }
+            }
+        }
+
+        // SCROLLERS
+        //
+        // The reusable scroll pattern (credits, worlds, levels, statistics, achievements...).
+        // Two things NGUI's UIDraggablePanel gave for free that UI Toolkit's ScrollView does not:
+        //  1. drag the CONTENT AREA to scroll, with a MOUSE as well as touch — UI Toolkit only
+        //     drag-scrolls on touch, and on desktop expects mouse wheel / scrollbar drag;
+        //  2. a single, thin scrollbar (the thin styling is in common.uss; visibility is set here).
+        // Both are wired for every .ngui-scrollview when a view loads, so no panel repeats it.
+
+        private static void ConfigureScrollViews(VisualElement root) {
+
+            if (root == null) {
+                return;
+            }
+
+            root.Query<ScrollView>(className: "ngui-scrollview").ForEach(WireScrollView);
+        }
+
+        private static void WireScrollView(ScrollView sv) {
+
+            sv.mode = ScrollViewMode.Vertical;
+            sv.touchScrollBehavior = ScrollView.TouchScrollBehavior.Elastic;
+            sv.verticalScrollerVisibility = ScrollerVisibility.Auto;
+            sv.horizontalScrollerVisibility = ScrollerVisibility.Hidden;
+
+            new ScrollDrag(sv);
+        }
+
+        // Pointer-drag-to-scroll for both mouse and touch. A small threshold before capture means
+        // a click on a child button still registers as a click, not a drag.
+        private class ScrollDrag {
+
+            private const float threshold = 6f;
+
+            private readonly ScrollView sv;
+            private bool active;
+            private bool capturing;
+            private float startY;
+            private float startOffsetY;
+            private int pointerId;
+
+            public ScrollDrag(ScrollView sv) {
+
+                this.sv = sv;
+
+                VisualElement viewport = sv.contentViewport;
+                viewport.RegisterCallback<PointerDownEvent>(OnDown);
+                viewport.RegisterCallback<PointerMoveEvent>(OnMove);
+                viewport.RegisterCallback<PointerUpEvent>(OnUp);
+                viewport.RegisterCallback<PointerCaptureOutEvent>(OnCaptureOut);
+            }
+
+            private void OnDown(PointerDownEvent e) {
+                active = true;
+                capturing = false;
+                startY = e.position.y;
+                startOffsetY = sv.scrollOffset.y;
+                pointerId = e.pointerId;
+            }
+
+            private void OnMove(PointerMoveEvent e) {
+
+                if (!active) {
+                    return;
+                }
+
+                float dy = e.position.y - startY;
+
+                if (!capturing) {
+
+                    if (Mathf.Abs(dy) < threshold) {
+                        return;
+                    }
+
+                    capturing = true;
+                    sv.contentViewport.CapturePointer(pointerId);
+                }
+
+                sv.scrollOffset = new Vector2(sv.scrollOffset.x, startOffsetY - dy);
+                e.StopPropagation();
+            }
+
+            private void OnUp(PointerUpEvent e) {
+
+                active = false;
+
+                if (capturing && sv.contentViewport.HasPointerCapture(pointerId)) {
+                    sv.contentViewport.ReleasePointer(pointerId);
+                }
+
+                capturing = false;
+            }
+
+            private void OnCaptureOut(PointerCaptureOutEvent e) {
+                active = false;
+                capturing = false;
             }
         }
 
