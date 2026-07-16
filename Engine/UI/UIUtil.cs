@@ -138,6 +138,17 @@ public class UIUtil {
         }
     }
 
+    // Backend-blind UIRef overload (2.11): migrated panel fields are UIRefs. Mirrors
+    // ShowObject(UIRef) — show/hide of a label is just show/hide of its element.
+    public static void ShowLabel(UIRef r) {
+
+        IUIBackend backend = UIPlatform.For(r);
+
+        if (backend != null) {
+            backend.Show(r);
+        }
+    }
+
     //
 
 #if USE_UI_NGUI_2_7
@@ -171,6 +182,16 @@ public class UIUtil {
     public static void HideLabel(Text obj) {
         if (obj != null) {
             obj.gameObject.Hide();
+        }
+    }
+
+    // Backend-blind UIRef overload (2.11). Mirrors HideObject(UIRef).
+    public static void HideLabel(UIRef r) {
+
+        IUIBackend backend = UIPlatform.For(r);
+
+        if (backend != null) {
+            backend.Hide(r);
         }
     }
 
@@ -1226,6 +1247,20 @@ public class UIUtil {
             return false;
 
         if (buttonClickedName == button) {
+            //LogUtil.Log("IsButtonClicked: " + buttonClickedName);
+            return true;
+        }
+        return false;
+    }
+
+    // Backend-blind UIRef overload (2.11): migrated panel button fields are UIRefs, and
+    // clicks dispatch by element name — so this matches the name the same way the
+    // Button/GameObject overloads compare button.name. UIRef.none has name "" (never matches).
+    public static bool IsButtonClicked(UIRef button, string buttonClickedName) {
+        if (button == null)
+            return false;
+
+        if (buttonClickedName == button.name) {
             //LogUtil.Log("IsButtonClicked: " + buttonClickedName);
             return true;
         }

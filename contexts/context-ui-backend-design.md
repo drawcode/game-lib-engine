@@ -589,3 +589,38 @@ than Dimbo, which is what made ported absolute label rows overlap.
   are fatal (`panel-worlds` has one — fix in 3D).
 - Designed list content (credits) is reflowed to a **flex column by hand** in the cleanup pass; the
   converter's absolute output is scaffolding.
+
+## As-built: 2.11 — panel field mirror `#else` → UIRef (2026-07-15)
+
+The panel field mirror is `#if USE_UI_NGUI_2_7 || USE_UI_NGUI_3` (NGUI types) `#else` (was UGUI
+`Button`/`Text`/`Slider`/`InputField`/`GameObject`) `#endif`. 2.11 flips the **`#else` branch to
+`Engine.UI.UIRef`** so the same call sites work backend-blind and the value must come from
+`BindElements` at runtime (UIRef is not `[Serializable]` — Unity ignores the field, which is the point).
+
+- **Scope was 16 classes / 77 fields**, all in `game-lib-games-ui/Game/UI/Panels/` (NOT the ~59-class
+  whole-universe of the mirror; the gameverses Community mirror classes + `UIPanel*`/notification/dialog
+  families are later chunks). Three `Panels/` files use the NGUI `#if` only around **method bodies**, not
+  fields (`BaseGameUIPanelAchievements/Products/Statistics`) — not in 2.11.
+- **Fully-qualified `Engine.UI.UIRef`** in the field decls rather than adding `using Engine.UI;` to 15
+  files — one edit per file, no NGUI-branch ambiguity, self-documenting. (UIUtil itself is **global
+  namespace** but imports Engine.UI; panels call `UIUtil.X` with no using, so only the UIRef type name
+  needed qualifying.)
+- **Core libs are additive-only** → the seam methods the fields flow into got **added UIRef overloads**,
+  never changed signatures. Only 5 UIUtil methods actually receive a 2.11 field; 2 already had UIRef
+  overloads (`SetLabelValue`, `SetInputValue`), so **3 were added**: `IsButtonClicked(UIRef,string)`
+  (name-compare `== r.name`, mirroring the Button/GameObject overloads — clicks dispatch by name),
+  `ShowLabel(UIRef)` / `HideLabel(UIRef)` (delegate to `backend.Show/Hide`, mirroring
+  `ShowObject/HideObject(UIRef)`).
+- **One hard direct-access break**: `BaseGameHUD.cs:2081` `labelTime.text = time;` sat in **unguarded**
+  common code → replaced with `UIUtil.SetLabelValue(labelTime, time)` (backend-blind; has UILabel/Text/
+  UIRef overloads so it compiles in BOTH define branches). Two `field.name` reads (Header:183,
+  SettingsProfile:119) compile unchanged via `UIRef.name`.
+- **Declaration-only fields** (no consumer anywhere): HUD `sliderHealth`/`sliderEnergy`, Loader
+  `labelLoading`/`sliderProgress` — converted for consistency, zero behavioural effect.
+- **Verified by whole-project Unity recompile: no CS errors** (concrete `GameUIPanel*` subclasses
+  included — the compiler confirmed no broken member access the static sweep might have missed). The
+  scope map (which methods, which direct-access sites) is the reusable recipe for the later mirror chunks;
+  those additionally exercise `SetSliderValue`/`SetToggleValue`/`IsToggleOn`/`IsCheckboxChecked` — check
+  for missing UIRef overloads (`IsToggleOn(UIRef)`/`IsCheckboxChecked(UIRef)` were absent as of 2.11).
+- Systemic sibling finding: many `Base*` panels skip `base.OnDisable()` → latent `FreeToolkitView` leak;
+  a per-panel Phase-3 prerequisite (see plan + memory `ondisable-chain-breaks-at-base-layer`).
