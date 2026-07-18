@@ -149,6 +149,17 @@ public class UIUtil {
         }
     }
 
+    // Show a runtime texture on an element — the 3D-in-UI widget path (a UIRenderStage's
+    // RenderTexture: coin, character preview). Additive (3B).
+    public static void SetImageTexture(UIRef r, Texture texture) {
+
+        IUIBackend backend = UIPlatform.For(r);
+
+        if (backend != null) {
+            backend.SetImageTexture(r, texture);
+        }
+    }
+
     //
 
 #if USE_UI_NGUI_2_7

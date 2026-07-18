@@ -59,6 +59,11 @@ namespace Engine.UI {
         float GetImageFillValue(UIRef r);
         void SetSpriteColor(UIRef r, Color c);
 
+        // Show a runtime texture (typically a UIRenderStage's RenderTexture — 3D-in-UI widgets)
+        // as the element's image. Replaces any styled background and neutralizes its tint: the
+        // caller is saying "display exactly this texture".
+        void SetImageTexture(UIRef r, Texture texture);
+
         // BUTTONS
         // The object half only. The name-compare half (IsButtonClicked(string, string),
         // 199 call sites) is NOT here — it is the event bus, and it lives on UIEvents.
@@ -91,6 +96,12 @@ namespace Engine.UI {
         // in-editor). The NGUIBackend calls onReady synchronously, so callers write one flow.
         // onReady receives UIRef.none if the view can't be loaded.
         void LoadView(string viewKey, Action<UIRef> onReady);
+
+        // Same, with an explicit draw-order band (see UILayers). Draw order used to be load order,
+        // which breaks always-on chrome: the header loads early but must render ABOVE screens
+        // loaded later. Pass UILayers.auto to keep the original auto-assigned behavior.
+        void LoadView(string viewKey, int sortingOrder, Action<UIRef> onReady);
+
         void DestroyView(UIRef view);
 
         // POINTER / EVENT SOURCE

@@ -66,6 +66,10 @@ namespace Engine.UI.Bitty {
 
             t.motion["panel-show"] = Motion(.45f, .5f);
             t.motion["panel-hide"] = Motion(.45f, 0f);
+            // Chrome (header/footer) runs slightly faster than content with a different ease, so
+            // the two entrances read as fluid variance rather than one mechanical move (3B).
+            t.motion["chrome-show"] = Motion(.35f, .35f, "quadEaseOut");
+            t.motion["chrome-hide"] = Motion(.35f, 0f, "quadEaseIn");
             t.motion["dialog-show"] = Motion(.3f, 0f);
             t.motion["dialog-hide"] = Motion(.3f, 0f);
             t.motion["fade-in"] = Motion(.5f, 0f);
@@ -76,11 +80,15 @@ namespace Engine.UI.Bitty {
             return t;
         }
 
-        private static UIMotionToken Motion(float time, float delay) {
+        private static UIMotionToken Motion(float time, float delay, string ease = null) {
 
             UIMotionToken m = new UIMotionToken();
             m.time = time;
             m.delay = delay;
+
+            if (!string.IsNullOrEmpty(ease)) {
+                m.ease = ease;
+            }
 
             return m;
         }

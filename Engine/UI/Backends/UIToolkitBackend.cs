@@ -371,6 +371,32 @@ namespace Engine.UI {
             ColorTween(El(r), c);
         }
 
+        public void SetImageTexture(UIRef r, Texture texture) {
+
+            VisualElement el = El(r);
+
+            if (el == null) {
+                return;
+            }
+
+            if (texture is RenderTexture rt) {
+                el.style.backgroundImage = Background.FromRenderTexture(rt);
+            }
+            else if (texture is Texture2D t2) {
+                el.style.backgroundImage = Background.FromTexture2D(t2);
+            }
+            else {
+                return;
+            }
+
+            // "Display exactly this texture": clear any styled tint (a themed gold tint would
+            // recolor an RT's live pixels) and stretch it over the whole element — overriding any
+            // placeholder background-size the class carried (e.g. the coin's shrunken gold circle).
+            el.style.unityBackgroundImageTintColor = Color.white;
+            el.style.backgroundSize =
+                new BackgroundSize(Length.Percent(100), Length.Percent(100));
+        }
+
         // Colors animate over .5s to match the GameObject backend, whose SetSpriteColor /
         // SetLabelColor go through TweenUtil.ColorToObject(go, c, .5f, 0f). Reuses the Phase 1
         // VisualElementTweenTarget, which already picks style.color for TextElements and
@@ -493,6 +519,10 @@ namespace Engine.UI {
         private int _nextSortingOrder = 100;
 
         public void LoadView(string viewKey, Action<UIRef> onReady) {
+            LoadView(viewKey, UILayers.auto, onReady);
+        }
+
+        public void LoadView(string viewKey, int sortingOrder, Action<UIRef> onReady) {
 
             if (onReady == null) {
                 return;
@@ -545,7 +575,10 @@ namespace Engine.UI {
             GameObject go = new GameObject("uitk-" + viewKey);
             PanelRenderer renderer = go.AddComponent<PanelRenderer>();
             renderer.panelSettings = panelSettings;
-            renderer.sortingOrder = _nextSortingOrder++;
+            // Explicit band (UILayers.chrome/overlay) when the panel declares one; otherwise the
+            // original auto-assign, which is load order within the panel band.
+            renderer.sortingOrder =
+                sortingOrder == UILayers.auto ? _nextSortingOrder++ : sortingOrder;
 
             bool[] delivered = { false };
             BittyNode bittyToBuild = bitty;

@@ -48,6 +48,15 @@ namespace Engine.UI {
         // never touches UIPlatform directly. Defines gate which backends exist at all.
         private static void RegisterDefaults() {
 
+            // Load the token source the first time the platform spins up: tokens.json seeds
+            // TweenPresets (durations/eases), making panel timing data-driven. NOTHING else called
+            // Load in production (found 3B — only tests did), which went unnoticed because
+            // TweenPresets' built-in table matches the token defaults; the chrome-show/hide
+            // variance is the first preset that only exists through the tokens. Touching
+            // `current` after Load seeds the built-in defaults even when no tokens.json ships.
+            Engine.UI.Bitty.UITokens.Load();
+            Engine.UI.Bitty.UITokens tokens = Engine.UI.Bitty.UITokens.current;
+
             // NGUIBackend is the GameObject backend: it carries BOTH the NGUI and the uGUI
             // probes, because UIUtil's GameObject resolver bodies always probed both in the
             // same method. It is the extraction of those bodies, unchanged.

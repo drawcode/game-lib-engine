@@ -416,6 +416,11 @@ namespace Engine.UI {
             TweenUtil.ColorToObject(obj, c, .5f, 0f);
         }
 
+        // Deliberate no-op: NGUI/uGUI widgets take textures through their own atlas/sprite
+        // pipeline, never a runtime-texture swap; the RT widget path is a toolkit-view feature.
+        public void SetImageTexture(UIRef r, Texture texture) {
+        }
+
         // BUTTONS
 
         public bool IsButton(UIRef r) {
@@ -541,6 +546,13 @@ namespace Engine.UI {
             if (onReady != null) {
                 onReady(UIRef.none);
             }
+        }
+
+        // Draw order is meaningless here: NGUI screens are Resources prefabs instantiated by the
+        // app's content pipeline (AppContentAssets.LoadAssetUI), never through this seam, so
+        // LoadView is a deliberate no-op on both overloads.
+        public void LoadView(string viewKey, int sortingOrder, Action<UIRef> onReady) {
+            LoadView(viewKey, onReady);
         }
 
         public void DestroyView(UIRef view) {

@@ -777,3 +777,84 @@ Several first-cut choices changed under real screenshots; trust these over the i
 
 Wave 3A is COMPLETE — all five Settings panels on UI Toolkit (credits pilot + audio + controls + root +
 profiles); help → 3D. Committed engine → games-ui → content → app.
+
+## As-built: Wave 3B part 1 — header chrome + draw order + 3D-in-UI render stage (2026-07-17/18)
+
+**Scope correction first (prefab ground truth):** the plan's "header/footer kills the only UGUI" was
+wrong. `panel-footer` is the ONLY pure-UGUI prefab (157 UGUI comps); `panel-header` is NGUI-dominant
+(17 NGUI / 4 UGUI — just the back arrow island), `panel-main` is NGUI (hero screen + 3D character),
+the loader is an NGUI boot SCENE (`GameUISceneLoader.unity`), and both defines compile
+(`USE_UI_NGUI_2_7;USE_UI_TOOLKIT`). 3B spans both backends.
+
+### Chrome model: draw order is a PANEL PROPERTY; lifetime is NOT
+User decision: no persistent-host special case. `UILayers` bands (auto -1 default / panel 100 /
+chrome 10000 / overlay 20000) + `IUIBackend.LoadView(viewKey, sortingOrder, onReady)` +
+`UIPanelBase.toolkitSortOrder`. "Always-on" is EMERGENT: chrome stays resident because its
+GameObject stays enabled; `FreeToolkitView` on OnDisable still governs everything (dynamic panels
+load/free exactly as before). The header just declares `toolkitSortOrder => UILayers.chrome`.
+
+### Header migration specifics (BaseGameUIPanelHeader)
+- Show-mode choreography (`showFull`/`showMain`) drives BOTH backends: UIRef parallels
+  (`backObjectRef`/`backerObjectRef`/`titleObjectRef`/`coinObjectRef`) fade the toolkit elements;
+  the NGUI GameObject path is GATED on `!isToolkitPanel` — without the gate every showFull
+  RE-SHOWED the suppressed NGUI widgets under the toolkit band (double header).
+- **`SuppressLegacyView()` is now virtual** on UIPanelBase: default hides `panelContainer`; the
+  header overrides to hide only the flat widgets it replaces, because the 3D character preview
+  containers (`Characters`) live INSIDE its Container and must survive for customize screens.
+- Coin count refreshes FROM DATA on show (`RefreshCoins` in showFull/showMain reads
+  `GameProfileRPGs.Current.GetCurrency()`), replacing the NGUI `UIGameRPGCurrency` 1s poller.
+- View defaults: band/back/title ship `opacity: 0` in the UXML — main menu shows only coins
+  (showMain), so a fresh header must not flash the bar; showFull fades them in.
+- Header must be EXPLICITLY hidden on game entry: `BaseUIController.hideUI` now calls
+  `GameUIPanelHeader.ShowNone()` — `HideAllPanels` skips always-on, and under NGUI the loader
+  covered the header by depth; a toolkit view draws above all cameras so it lingered over the load.
+- Back arrow = `sprite-icon-navdirection-64.png` (drawlabs-common), points LEFT natively, tinted
+  `--icon-tint` (#E9FF81 in the old prefab — NOT accent-gold). Old-button backer sprite =
+  `ui-backer-fade-sm`.
+
+### 3D-in-UI: UIRenderStage (Engine/UI/UIRenderStage.cs)
+Toolkit panels draw above the entire camera stack → world 3D can never appear on top of a view.
+Answer: stage the 3D subtree to a RenderTexture and show it via the new
+`IUIBackend.SetImageTexture(UIRef, Texture)` (toolkit: `Background.FromRenderTexture` + neutralize
+tint + force background-size 100% — "display exactly this texture"; NGUI: no-op; additive
+`UIUtil.SetImageTexture`). Decisions (discussed): plain RenderTexture NOT RTHandle (fixed-size
+persistent widget; RTHandle is screen-scaling/SRP-pooling machinery + API coupling); PER-WIDGET RTs
+not a shared atlas (passes dominate cost, not textures; atlas only worth it at dozens-of-widgets
+scale — swappable inside the seam). Stage: flips the subtree (recursively, originals stored) onto
+the `UIWidget3D` layer (added at TagManager slot 22 — `UI3D` may be culled by existing UI cams),
+frames MESH bounds only (particles excluded or the glow balloons the framing; `framePadding` param
+— coin uses 1.3), ortho camera on -Z + stage-only directional light, transparent clear,
+`SetVisible(false)` disables the camera (hidden widget = zero cost), `Detach()` restores layers
+(kill-switch safe). First consumer: the header coin — the NGUI prefab's LIVE `UICoin` subtree
+(mesh + CFXM2 glow) stays in place, staged; its flat bits (count label / "+" label / sprite backer)
+hide; glow boosted via `startSizeMultiplier` ×1.8 (works regardless of particle scalingMode;
+originals restored on free). Same machinery is the plan for character previews (3H/customize).
+
+### Motion + theming systemics found/landed in 3B
+- **`UITokens.Load` was NEVER called in production** (tokens.json silently inert since 2.3; masked
+  because TweenPresets' built-in table matches token defaults byte-for-byte). Now loaded lazily in
+  `UIPlatform.RegisterDefaults` — tokens.json timing/palette edits are live at runtime.
+- Per-panel motion presets: `UIPanelBase.toolkitShowPreset/toolkitHidePreset` (default
+  panel-show/hide; header overrides chrome-show/hide = .35s/.25s, quadEaseOut/In) — chrome enters
+  with slight variance from content, per user.
+- **Entrance choreography:** backer LEADS (~0.1s, code-side in BaseGameUIPanelBackgrounds), content
+  follows slightly (panel-show delay 0.15), chrome ~with backer (0.05). The old stack-up (backer at
+  ~1.1s) had content landing before the backer started — looked broken.
+- **Enter direction is per-panel + derived:** `UIPanelBase.centerEnterDirection` — panels showing
+  the shared PanelBacker enter from the TOP (with it); backerless flows (worlds/levels) keep the
+  classic BOTTOM rise; virtual for explicit override. (A blanket top flip was reverted — user wants
+  bottom default.) Backer latch: hiding an already-hidden backer SNAPS instead of sweeping across
+  the screen (`backerUIVisible` in BaseGameUIPanelBackgrounds).
+- Theming rule (user): ALL backer/button art is NEUTRAL white/grey; color arrives via theme tokens
+  (`--chrome-band` etc. in tokens.json -> gen_vars.py -> vars.uss) or runtime
+  (`UIUtil.SetSpriteColor`). Header band = purpose-made `ui-fade-strip.png` (4×64 neutral 230→204
+  vertical fade — subtle "candy" gradient; full-bleed strip, no corners — the header is the ONE
+  flat-strip exception to the cartoon-corner rule). ui-backer-fade has transparent padding rows at
+  its top edge (caused a band gap when stretched).
+
+### Open (3B remainder)
+- Footer (the real UGUI→toolkit hop; big ShowButtons(code) button-bank) and Main (NGUI hero screen
+  + 3D character via UIRenderStage?) not started. Loader scene later.
+- Coin glow is contained by the 64px element — RT clips at element bounds; if it must reach past
+  the button chrome, grow the element (subtle 64→80) rather than the particles.
+- Uncommitted: everything above (engine + games + games-ui + content + app + TagManager layer).
