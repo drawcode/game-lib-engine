@@ -624,3 +624,156 @@ The panel field mirror is `#if USE_UI_NGUI_2_7 || USE_UI_NGUI_3` (NGUI types) `#
   for missing UIRef overloads (`IsToggleOn(UIRef)`/`IsCheckboxChecked(UIRef)` were absent as of 2.11).
 - Systemic sibling finding: many `Base*` panels skip `base.OnDisable()` → latent `FreeToolkitView` leak;
   a per-panel Phase-3 prerequisite (see plan + memory `ondisable-chain-breaks-at-base-layer`).
+
+## As-built: Wave 3A — bitty runtime + Settings option-row/menu (2026-07-15)
+
+Phase 3 wave 3A. This is where the **bitty runtime landed** (deferred from 2.3) and the **option-row
+pattern** was designed against real panels, per the plan's abstraction-overreach guard. Trust this
+section for how bitty actually runs.
+
+### The bitty runtime (4 files)
+- `Engine/UI/Bitty/BittyNode.cs` — agnostic parsed element; fields mirror `BittySchema.Keys` 1:1.
+- `Engine/UI/Bitty/BittyParser.cs` — JSON→tree on **MiniJSON** (`Engine/Utility`), NOT `FromJson<T>`:
+  the schema is polymorphic (`class` string|string[], `value` bool|string|float), so MiniJSON's
+  Dictionary/List/primitive output is normalized once here. Root object names itself with `view`;
+  inner nodes with `name`. Bad JSON → null + log (view fails to load → panel stays NGUI), never half-build.
+- `Engine/UI/Bitty/BittyPatterns.cs` — pattern expansion **at parse time** (builder only sees concrete
+  elements). Only `option-row` is structural in v1; the other five names attach their common.uss class
+  and recurse (structure lands with their own waves).
+- `Engine/UI/Backends/BittyToolkitBuilder.cs` — BittyNode→VisualElement. **Backend layer** (names
+  UIElements; lives in `Backends/` for the leak grep). Styling is classes only — inline `style` strings
+  are NOT applied at runtime (parsing a USS block to `VisualElement.style` is the prototype's grave).
+  `@loc:` resolves through `Locos` at build time.
+
+### How a bitty view loads (`UIToolkitBackend.LoadView`)
+A view key resolves as **UXML `VisualTreeAsset` OR bitty JSON `TextAsset`** at `ui/views/<key>` —
+`Resources.Load` is type-disambiguated so a `.uxml` and a `.json` at the same path never collide; UXML
+wins if both exist. Bitty path: parse → `BittyToolkitBuilder.Build` → **attach the built tree straight to
+the callback `root`** (its root node is uniquely named `viewKey`, so it stays isolated even when the
+callback hands back the *shared* panel root). A shared empty stub `Resources/ui/bitty-host.uxml` exists
+only to spin the `PanelRenderer` up and fire the reload callback — nothing is read back from it.
+
+### The VALUE bridge (the 3A analogue of the click bridge)
+Migrated sliders/toggles/inputs must reach the existing name-keyed handlers with no per-widget
+MonoBehaviour (NGUI needed `SliderEvents`/`CheckboxEvents` components on each). So the backend registers
+**bubbling `ChangeEvent<float>/<bool>/<string>` on each view root** and broadcasts `(element.name, value)`,
+exactly mirroring the click bridge. Guard: skip `evt.target.name` starting with `"unity-"` (a ScrollView's
+internal scroller is a `Slider` too and would spam the bus). Broadcast constants added to `UIEvents`
+(`EVENT_SLIDER_CHANGE`/`EVENT_CHECKBOX_CHANGE`/`EVENT_INPUT_CHANGE` + `BroadcastSliderChange` etc.), with
+values **byte-identical to game-lib-games' `SliderEvents`/`CheckboxEvents`/`InputEvents.EVENT_ITEM_CHANGE`**
+— duplicated in engine exactly as the button constants already are (games not touched; engine can't
+depend on it). A migrated toggle/slider therefore hits `OnSliderChange`/`OnCheckboxChange` untouched.
+
+### The option-row pattern (two variants, driven by the two real panels)
+- **slider control → `.option-row--stacked`**: external `.option-row__label` ABOVE a full-width control
+  (audio: "MUSIC VOLUME" over the bar).
+- **toggle control → `.option-row--inline`**: the toggle carries `label` as its OWN native text (controls:
+  box + "Vibrate on HITS"), because UI Toolkit's `Toggle` renders its label natively — a separate label
+  element would double it. The control child keeps its own `name` (broadcast/bind key); only the wrapper
+  takes the row's name.
+
+### Scope correction — "Settings family (5)" is heterogeneous (not 5 option-rows)
+- **option-row ×2**: `panel-settings-audio` (2 sliders), `panel-settings-controls` (3 toggles) → **bitty JSON**.
+- **button-menu ×2**: `panel-settings` root (5 tiles), `panel-settings-profiles` → hand **UXML**.
+- **list ×1**: `panel-settings-help` (scrolling help rows) → belongs to **3D** (list pattern).
+- **DONE this wave:** audio, controls, root. **DEFERRED:** profiles — its declared UIRef fields
+  (`buttonProfileFacebook/Twitter/GameNetwork` + `inputProfileName`) do **not** match its baseline
+  (Apply Code / Sync Profile buttons); a real data discrepancy needing in-editor reconciliation before
+  authoring. Help → 3D.
+
+### Interactive-panel migration recipe (extends the credits "just name the view key")
+Credits was static. An interactive panel also needs: (1) `base.OnDisable()` at the **Base\*** layer
+(FreeToolkitView chain); (2) `toolkitViewKey` on the concrete class; (3) finish the **2.11 UIRef swap for
+the panel's widget fields** (audio had none/commented → added `sliderAudio*Volume`; controls was raw
+`UICheckbox` → `#if`/`#else` UIRef, and `ChangeCheckedState` branch-guarded to `UIUtil.SetToggleValue(UIRef)`);
+(4) a **bind manifest** mapping `field → element`, where the element name == the **prefab GameObject name**
+(the handlers compare the broadcast name to `field.name`). Audio volume persistence was **restored** (it was
+dead/commented on both branches; null-guarded so the unwired NGUI branch stays a no-op).
+
+### USS / visual as-built (from the first in-editor screenshots)
+- **The drawlabs-common cartoon 9-slice = `game-drawlabs-assets-common-1/textures/ui/image/ui_button_up.png`**
+  (256×64 tintable rounded button, soft top gradient) + `ui_bar_button.png` (48² round knob). Import
+  border is zero → author `-unity-slice-*` in USS. **Tint** via `-unity-background-image-tint-color`
+  (matches the NGUI buttons, which tinted `ui-backer-fade` per color). Used for menu tiles, slider track,
+  slider knob, toggle box. (`.spr-ui-backer-fade` in `sprites.uss` has NO slice; `.spr-ui-backer-sm` does.)
+- **Toggle text label is `.unity-toggle__text`** (the `.text` label), NOT `.unity-toggle__label` (the empty
+  `BaseField` label) — targeting the latter is why labels rendered tiny + default-dark.
+- **Composite clickable** (a named `VisualElement`/`Button` with children): decorative children need
+  `picking-mode="Ignore"`, else the deepest hit child (empty `name`) is `ClickEvent.target` and nothing
+  broadcasts. Named tile must be the pick target.
+- Content must clear the always-on header band (**~88px** in the 640 ref) — `padding-top` on the centered
+  container. The header is NGUI and persistent; the toolkit view sits under it.
+- **USS units (Unity 6.5):** NO `em`/`rem`; `font-size` is **px only** (no `%`); no `vw/vh/vmin/vmax`; no
+  `calc()`. `%` DOES work for width/height/min-max/flex-basis, margin/padding, left-top-right-bottom,
+  `translate` (self-relative — the pivot trick), border-radius, background-size, transform-origin. Also
+  `s/ms` (transitions) and `deg/grad/rad/turn` (rotate). **Responsive scaling is the PanelSettings, not
+  units:** `ScaleWithScreenSize` @ 1138×640 `match:height` → every px (incl. font-size) scales *uniformly*
+  by `screenHeight/640` (no distortion). Horizontal fit is **aspect-dependent**, so the cross axis is done
+  with flex + centering (`.settings-center`/`.settings-content`), never absolute px — absolutely-positioned
+  wide content (raw converter output) is what overflows at extreme aspect ratios.
+
+### Open / carry into tuning + later waves
+- **Backer entrance:** the dark backer is the shared **`PanelBacker`** background (`backgroundDisplayState
+  = PanelBacker`), animated with the panel's `panelCenterObject` sliding from the BOTTOM; the toolkit view
+  itself only `display`-toggles (no slide). To make it "ease down from top", either drive the view via a
+  from-top `TweenPreset` on show, or retarget the shared backer — needs hands-on to pick.
+- **Header should clip scrolled content** (top disappears under the header) — a credits/help scroll-clip
+  concern; the toolkit view needs clipping to below the header when it scrolls. 3A panels don't scroll, so
+  `padding-top` suffices there.
+- **Toggle checked-star** (yellow `icons-star-filled-64` overlay when on) needs a custom toggle build —
+  the native checkmark mechanism only swaps one background-image, which the cartoon box already occupies.
+  Currently: grey box (off) → green box (on), no star.
+- **Slider fill:** UI Toolkit `Slider` has no progress fill; the whole bar is green. A filled-to-the-knob
+  look needs a custom fill element.
+- **Initial-value sync:** sliders/toggles don't yet reflect the saved profile on open (user-change
+  persistence works). Programmatic set must use `SetValueWithoutNotify` or the value bridge broadcasts the
+  set and clobbers state.
+- **Logo artifacts** (Action Bots / Drawlabs Game Studio) are on the still-**NGUI Help panel** (deferred to
+  3D) — an atlas/NGUI-render issue, not the toolkit path.
+- **Pre-existing bug** to fix with the profiles migration: `BaseGameUIPanelSettingsProfile.cs:95` calls
+  `AddListener` (not `RemoveListener`) in OnDisable — the input listener accumulates per hide.
+- Whole-project Unity recompile CLEAN (RunCommand probe `isCompilationSuccessful`); console = 15
+  pre-existing errors (14 URP shader + 1 stale iOS pod), 0 new.
+
+### 3A refinements — from the in-editor iteration (2026-07-15)
+Several first-cut choices changed under real screenshots; trust these over the initial 3A notes above.
+
+- **Cartoon backer = `ui-backer-fade` (atlas), NOT `ui_button_up`.** The good NGUI tiles tint
+  `ui-backer-fade` (the solid white→grey gradient tile with the *slanted bottom corners* = the cartoon
+  slant). `ui_button_up` has a low-alpha center + opaque rim, so tinting it rendered as a translucent fill
+  + colored outline. Applied as `background-size: 100% 100%` (stretch — the sprite's aspect ≈ a tile and
+  the slant lives in the corners) with a per-element `-unity-background-image-tint-color`. Interaction
+  feedback = scale-up + a DARKER per-color tint on `:hover`/`:active` (not a native focus rectangle).
+- **Slider and toggle are CODE-BUILT COMPOSITES** (`BittyToolkitBuilder.BuildSlider`/`BuildToggle`), not
+  USS-skinned natives — because UI Toolkit's `Slider` has no fill element and its `Toggle` swaps the
+  checkmark background per state (which blanked the cartoon box). Slider = grey `.slider-track` + green
+  `.slider-fill` (width = value%, updated on `ChangeEvent`) behind the native drag-container (tracker made
+  transparent) + a cartoon slant knob. Toggle = native checkmark hidden, own `.toggle-box` (cartoon) +
+  `.toggle-star` (`icons-star-filled-64`) overlay, with tint/star/hover-lighten all driven in code so no
+  reliance on the exact `:checked` selector form. Both keep the node's `name` for bind + the value bridge.
+- **Content slides from the top** (was fade-only → looked stationary). `TweenUtil.ShowObjectTop(UIRef)` /
+  `HideObjectTop(UIRef)` translate the view from off-screen top (VisualElement translate is y-DOWN, so a
+  NEGATIVE `-720px` offset) + fade, on the `panel-show`/`panel-hide` presets. Wired in BOTH the normal
+  AnimateIn toolkit branch AND the async load continuation (first shows load late, so AnimateIn's call
+  no-ops — the continuation must slide too, parking off-screen in the same frame as `Show` to avoid a
+  flash). A first attempt synced to the backer's ~1.1s delay LAGGED every navigation: the shared backer
+  only slides on FIRST entry and stays resident between panels — do not delay content to match it.
+- **Crash fixed (NRE `ApplyStyleTranslate`):** a pooled-away panel destroys its view mid-slide, and the
+  still-ticking translate tween then wrote style on a panel-less element. Fix: `FreeToolkitView` now calls
+  `TweenUtil.Cancel(viewRoot)` before `DestroyView`; and `VisualElementTweenTarget`'s transform setters
+  skip when `element.panel == null` (the `detached` guard — `alive`'s `element != null` is not enough).
+- **Backer entrance fixed:** `BaseGameUIPanelBackgrounds.ShowUI/HideUI` were hard-coded to
+  `ShowObjectBottom`/`HideObjectBottom`; switched to the **Top** variants so the shared backer eases down
+  from the top (its panel-top anchor) on every PanelBacker panel.
+- **Profiles DONE** (no longer deferred): migrated to the **baseline** — 2 gameverses tiles
+  (`ButtonProfileGameversesApplyCode` gift / `ButtonProfileGameversesSync` reload), UXML button menu,
+  cartoon backer tinted red. Sync reaches `GameState.SyncProfile` by name (`BaseUIController:2638`). The
+  2.11 UIRef fields (Facebook/Twitter/GameNetwork + input) are STALE — for social buttons the build gates
+  off — so `BindElements` logs ~4 benign unresolved-field warnings; reconcile the class fields with the
+  shipped panel in a later cleanup. Fixed the `AddListener`→`RemoveListener` leak at
+  `BaseGameUIPanelSettingsProfile.cs`.
+- **Logo artifacts** turned out to be already-uncompressed textures → confirmed an NGUI-under-URP render
+  issue on the still-NGUI Help panel (no import fix; clears when Help migrates in 3D).
+
+Wave 3A is COMPLETE — all five Settings panels on UI Toolkit (credits pilot + audio + controls + root +
+profiles); help → 3D. Committed engine → games-ui → content → app.

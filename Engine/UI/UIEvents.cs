@@ -24,6 +24,18 @@ namespace Engine.UI {
         public const string EVENT_BUTTON_CLICK_OBJECT = "event-button-click-object";
         public const string EVENT_BUTTON_CLICK_DATA = "event-button-click-data";
 
+        // VALUE bus (Phase 3 / 3A). The button bus above broadcasts a name; a value control also
+        // broadcasts its new value. These names MUST stay byte-identical to game-lib-games'
+        // SliderEvents/CheckboxEvents/InputEvents.EVENT_ITEM_CHANGE — those are the wire format the
+        // panels' Messenger<string,T> listeners already subscribe to. Engine cannot depend on
+        // game-lib-games, so (exactly as with the button constants) the strings are duplicated here
+        // with the same values, not code-referenced. A migrated toolkit slider/toggle/input then
+        // reaches the SAME OnSliderChange/OnCheckboxChange/OnProfileInputChanged handlers untouched,
+        // with no NGUI SliderEvents/CheckboxEvents MonoBehaviour on the widget.
+        public const string EVENT_SLIDER_CHANGE = "event-slider-item-change";
+        public const string EVENT_CHECKBOX_CHANGE = "event-checkbox-item-change";
+        public const string EVENT_INPUT_CHANGE = "event-input-item-change";
+
         public static bool IsButtonClicked(string button, string buttonClickedName) {
 
             if (button == null) {
@@ -49,6 +61,37 @@ namespace Engine.UI {
             }
 
             Messenger<string>.Broadcast(EVENT_BUTTON_CLICK, elementName);
+        }
+
+        // The value bridge's broadcasters — the toolkit backend calls these from ChangeEvent
+        // callbacks. Same shape as SliderEvents.OnSliderChange etc., so the receiving handler
+        // cannot tell an NGUI change from a toolkit change.
+
+        public static void BroadcastSliderChange(string elementName, float value) {
+
+            if (string.IsNullOrEmpty(elementName)) {
+                return;
+            }
+
+            Messenger<string, float>.Broadcast(EVENT_SLIDER_CHANGE, elementName, value);
+        }
+
+        public static void BroadcastCheckboxChange(string elementName, bool value) {
+
+            if (string.IsNullOrEmpty(elementName)) {
+                return;
+            }
+
+            Messenger<string, bool>.Broadcast(EVENT_CHECKBOX_CHANGE, elementName, value);
+        }
+
+        public static void BroadcastInputChange(string elementName, string value) {
+
+            if (string.IsNullOrEmpty(elementName)) {
+                return;
+            }
+
+            Messenger<string, string>.Broadcast(EVENT_INPUT_CHANGE, elementName, value);
         }
     }
 }

@@ -73,9 +73,20 @@ namespace Engine.Animation {
             return Vector3.zero;
         }
 
+        // Writing a transform inline style (translate/scale/rotate) on an element that is no longer
+        // attached to a panel throws inside Unity's InlineStyleAccess (ApplyStyleTranslate NRE).
+        // That happens when a panel is pooled away mid-tween: the view is destroyed but the tween
+        // is still ticking. Skip the write when detached — the element is going away anyway, and
+        // TweenUtil.Cancel on FreeToolkitView stops the tween shortly after.
+        private bool detached {
+            get {
+                return element == null || element.panel == null;
+            }
+        }
+
         public void SetPosition(Vector3 v, TweenCoord coord) {
 
-            if (element == null) {
+            if (detached) {
                 return;
             }
 
@@ -101,7 +112,7 @@ namespace Engine.Animation {
 
         public void SetScale(Vector3 v) {
 
-            if (element == null) {
+            if (detached) {
                 return;
             }
 
@@ -128,7 +139,7 @@ namespace Engine.Animation {
 
         public void SetRotation(Vector3 euler, TweenCoord coord) {
 
-            if (element == null) {
+            if (detached) {
                 return;
             }
 

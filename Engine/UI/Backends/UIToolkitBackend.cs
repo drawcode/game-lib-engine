@@ -5,6 +5,7 @@ using UnityEngine;
 using UnityEngine.UIElements;
 
 using Engine.Animation;
+using Engine.UI.Bitty;
 using Engine.Utility;
 
 namespace Engine.UI {
@@ -64,6 +65,15 @@ namespace Engine.UI {
             // hit, so its name is what gets broadcast.
             root.RegisterCallback<ClickEvent>(OnClick);
             root.RegisterCallback<PointerDownEvent>(OnPointerDown);
+
+            // The VALUE bridge (3A). Same idea as the click bridge one line up: one bubbling
+            // callback per root, and the element's own name is the broadcast key. A migrated
+            // slider/toggle/textfield reaches the existing name-keyed OnSliderChange /
+            // OnCheckboxChange / OnProfileInputChanged handlers with no per-widget MonoBehaviour
+            // (NGUI needed a SliderEvents/CheckboxEvents component on each; UI Toolkit does not).
+            root.RegisterCallback<ChangeEvent<float>>(OnSliderChanged);
+            root.RegisterCallback<ChangeEvent<bool>>(OnToggleChanged);
+            root.RegisterCallback<ChangeEvent<string>>(OnInputChanged);
         }
 
         public void UnregisterRoot(VisualElement root) {
@@ -74,6 +84,10 @@ namespace Engine.UI {
 
             root.UnregisterCallback<ClickEvent>(OnClick);
             root.UnregisterCallback<PointerDownEvent>(OnPointerDown);
+
+            root.UnregisterCallback<ChangeEvent<float>>(OnSliderChanged);
+            root.UnregisterCallback<ChangeEvent<bool>>(OnToggleChanged);
+            root.UnregisterCallback<ChangeEvent<string>>(OnInputChanged);
 
             roots.Remove(root);
         }
@@ -94,6 +108,51 @@ namespace Engine.UI {
 
         private void OnPointerDown(PointerDownEvent evt) {
             _currentPointerId = evt.pointerId;
+        }
+
+        // VALUE bridge handlers. Guard on the element name: a ScrollView's internal scroller is a
+        // Slider too and fires ChangeEvent<float>, but its name is "unity-..."; real widgets carry
+        // the prefab GameObject name (e.g. "SliderAudioMusicVolume"). Skipping the "unity-" prefix
+        // keeps scroll gestures off the value bus.
+
+        private static bool IsBridgedControl(VisualElement el) {
+
+            return el != null
+                && !string.IsNullOrEmpty(el.name)
+                && !el.name.StartsWith("unity-");
+        }
+
+        private void OnSliderChanged(ChangeEvent<float> evt) {
+
+            VisualElement el = evt.target as VisualElement;
+
+            if (!IsBridgedControl(el)) {
+                return;
+            }
+
+            UIEvents.BroadcastSliderChange(el.name, evt.newValue);
+        }
+
+        private void OnToggleChanged(ChangeEvent<bool> evt) {
+
+            VisualElement el = evt.target as VisualElement;
+
+            if (!IsBridgedControl(el)) {
+                return;
+            }
+
+            UIEvents.BroadcastCheckboxChange(el.name, evt.newValue);
+        }
+
+        private void OnInputChanged(ChangeEvent<string> evt) {
+
+            VisualElement el = evt.target as VisualElement;
+
+            if (!IsBridgedControl(el)) {
+                return;
+            }
+
+            UIEvents.BroadcastInputChange(el.name, evt.newValue);
         }
 
         // RESOLUTION
@@ -444,10 +503,33 @@ namespace Engine.UI {
                 return;
             }
 
+            // A view resolves one of two ways under the same key:
+            //   * a UXML VisualTreeAsset  -> app-IP screens authored native (credits, menus)
+            //   * a bitty JSON TextAsset  -> data-driven screens built at runtime (settings rows)
+            // UXML wins if both exist. Resources.Load is type-disambiguated, so a .uxml and a .json
+            // at the same path never collide. This is the D6 template/bitty split at the load seam.
             VisualTreeAsset asset = Resources.Load<VisualTreeAsset>(viewPath + viewKey);
+            BittyNode bitty = null;
 
             if (asset == null) {
-                LogUtil.LogWarning("UIToolkitBackend.LoadView: no VisualTreeAsset at "
+
+                TextAsset json = Resources.Load<TextAsset>(viewPath + viewKey);
+
+                if (json != null) {
+
+                    bitty = BittyParser.Parse(json.text);
+
+                    if (bitty != null) {
+                        // Bitty builds its own VisualElements; PanelRenderer still needs SOME
+                        // VisualTreeAsset to spin up a panel and fire the reload callback, so a
+                        // shared empty host stub stands in and we graft the built tree under it.
+                        asset = BittyHostAsset();
+                    }
+                }
+            }
+
+            if (asset == null) {
+                LogUtil.LogWarning("UIToolkitBackend.LoadView: no UXML or bitty view at "
                     + viewPath + viewKey);
                 onReady(UIRef.none);
                 return;
@@ -466,6 +548,7 @@ namespace Engine.UI {
             renderer.sortingOrder = _nextSortingOrder++;
 
             bool[] delivered = { false };
+            BittyNode bittyToBuild = bitty;
 
             PanelRenderer.UIReloadCallback cb = null;
             cb = (r, root) => {
@@ -476,11 +559,30 @@ namespace Engine.UI {
 
                 delivered[0] = true;
 
-                // The callback's `root` may be the shared panel root when views share a
-                // PanelSettings. Bind and show/hide against THIS view's own subtree, found by the
-                // UXML root's name, so one panel's ops never touch another's. Fall back to root
-                // only if the named element isn't found (shouldn't happen).
-                VisualElement viewRoot = root.Q(viewKey) ?? root;
+                VisualElement viewRoot;
+
+                if (bittyToBuild != null) {
+
+                    // Build the data-driven tree and attach it straight to `root`. Its root node is
+                    // named viewKey (unique), so this stays isolated even when several bitty views
+                    // share one PanelSettings and `root` is the shared panel root — a generic
+                    // host-element lookup would ambiguously match another open view's stub. The
+                    // stub asset exists only to spin the PanelRenderer up; nothing is read from it.
+                    VisualElement built = BittyToolkitBuilder.Build(bittyToBuild);
+
+                    if (built != null) {
+                        root.Add(built);
+                    }
+
+                    viewRoot = built ?? root;
+                }
+                else {
+                    // The callback's `root` may be the shared panel root when views share a
+                    // PanelSettings. Bind and show/hide against THIS view's own subtree, found by
+                    // the UXML root's name, so one panel's ops never touch another's. Fall back to
+                    // root only if the named element isn't found (shouldn't happen).
+                    viewRoot = root.Q(viewKey) ?? root;
+                }
 
                 RegisterRoot(viewRoot);
                 viewHosts[viewRoot] = go;
@@ -495,6 +597,25 @@ namespace Engine.UI {
 
             // Assign last: this is what marks the renderer dirty and schedules the deferred load.
             renderer.visualTreeAsset = asset;
+        }
+
+        // The shared empty stub every bitty view is hosted in (see LoadView). One asset, loaded
+        // once: it produces a single #bitty-host element the built tree is grafted under. Missing
+        // stub is a content bug — bitty views cannot render without it — so it warns loudly.
+        private static VisualTreeAsset _bittyHost;
+
+        private static VisualTreeAsset BittyHostAsset() {
+
+            if (_bittyHost == null) {
+                _bittyHost = Resources.Load<VisualTreeAsset>("ui/bitty-host");
+
+                if (_bittyHost == null) {
+                    LogUtil.LogWarning("UIToolkitBackend: no Resources/ui/bitty-host.uxml — "
+                        + "bitty views cannot be hosted");
+                }
+            }
+
+            return _bittyHost;
         }
 
         // Frees the UXML: destroying the PanelRenderer GameObject is the whole point of the

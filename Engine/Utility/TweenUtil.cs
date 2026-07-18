@@ -1415,6 +1415,76 @@ namespace Engine.Utility {
             FadeToObject(r, 0f, presetName);
         }
 
+        // A toolkit VIEW slides down from off-screen top (translate) AND fades. ShowObject above
+        // only fades, which is why a migrated panel's content sat still while the backer slid.
+        //
+        // A VisualElement's translate is y-DOWN, the opposite of the NGUI backer's y-up world
+        // constants, so "off-screen top" is a NEGATIVE offset here. Timing comes from the
+        // panel-show/panel-hide presets (tokens.json) — the same feel as every other panel
+        // transition. (An earlier attempt synced to the backer's ~1.1s first-entry delay; that
+        // lagged every navigation, because the shared backer only slides on FIRST entry and stays
+        // resident between panels.)
+        private const float viewTopOffset = -720f;   // px above the panel; clears the 640 view
+
+        public static void ShowObjectTop(UIRef r, string presetName = "panel-show") {
+
+            ITweenTarget target = SlideTarget(r);
+
+            if (target == null) {
+                return;
+            }
+
+            // Start off-screen top + invisible, then slide to 0 and fade in.
+            target.SetPosition(new Vector3(0f, viewTopOffset, 0f), TweenCoord.local);
+            target.SetAlpha(0f);
+
+            SlideMove(target, Vector3.zero, presetName);
+            SlideFade(target, 1f, presetName);
+        }
+
+        public static void HideObjectTop(UIRef r, string presetName = "panel-hide") {
+
+            ITweenTarget target = SlideTarget(r);
+
+            if (target == null) {
+                return;
+            }
+
+            SlideMove(target, new Vector3(0f, viewTopOffset, 0f), presetName);
+            SlideFade(target, 0f, presetName);
+        }
+
+        private static ITweenTarget SlideTarget(UIRef r) {
+
+            if (r == null || !r.alive) {
+                return null;
+            }
+
+            return ResolveTarget(r.native);
+        }
+
+        private static TweenMeta SlideMeta(string presetName) {
+
+            TweenPreset preset = TweenPresets.Get(presetName);
+
+            TweenMeta meta = new TweenMeta();
+            meta.time = preset.time;
+            meta.delay = preset.delay;
+            meta.easeType = preset.easeType;
+            meta.loopType = preset.loopType;
+            meta.stopCurrent = true;   // per-channel: Move and Fade don't cancel each other
+
+            return meta;
+        }
+
+        private static void SlideMove(ITweenTarget target, Vector3 pos, string presetName) {
+            backend.Move(target, pos, SlideMeta(presetName));
+        }
+
+        private static void SlideFade(ITweenTarget target, float alpha, string presetName) {
+            backend.Fade(target, alpha, SlideMeta(presetName));
+        }
+
         public static void Cancel(UIRef r) {
 
             if (r == null || !r.alive) {
