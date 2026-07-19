@@ -224,8 +224,15 @@ namespace Engine.Animation {
         }
 
         public void CancelAll() {
-            AnimationEasing.Instance.getAnimationItems().Clear();
-            AnimationEasing.Instance.queueRemove.Clear();
+
+            AnimationEasing inst = AnimationEasing.Instance;
+
+            if (inst == null) {
+                return;
+            }
+
+            inst.getAnimationItems().Clear();
+            inst.queueRemove.Clear();
         }
 
         public bool IsTweening(ITweenTarget t) {

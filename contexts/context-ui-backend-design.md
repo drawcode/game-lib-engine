@@ -852,9 +852,81 @@ originals restored on free). Same machinery is the plan for character previews (
   flat-strip exception to the cartoon-corner rule). ui-backer-fade has transparent padding rows at
   its top edge (caused a band gap when stretched).
 
+## As-built: Wave 3B part 2 — footer chrome (2026-07-18)
+
+The footer was the only pure-UGUI panel (157 comps). Now on toolkit via `panel-footer.uxml`,
+screenshot-verified in play mode (main corners / progression / product-sections /
+game-networks-apple / return-to-main), zero console errors or bind warnings.
+
+### Shape
+- **Prefab reality:** two icon-only corner buttons (ButtonGameSettings bottom-left,
+  ButtonGameEquipment bottom-right) + seven center groups keyed by `GameObjectShowItem.code`
+  (customize, products, progression, game-networks, character, statistics, achievements);
+  products + game-networks contain `GameObjectInactive` subgroups (product-earn/-store/-sections;
+  apple/google). Every button = Image+Button+ButtonEvents (broadcasts GameObject name).
+- **Code-as-element-name dispatch:** center groups/subgroups are NOT bind fields — UXML elements
+  are NAMED by their code strings, so the wiring resolves `backend.Resolve(viewRoot, code)`
+  straight from the code `ShowButtons` is already handed. Only 3 binds: FooterBand,
+  SettingsContainer, CustomizeContainer. Button element names = NGUI names → existing
+  controller click handlers fire unchanged (duplicates across groups fine; one group on screen).
+- **Bottom-edge slide seam:** `UIPanelBase.ShowToolkitViewSlide/HideToolkitViewSlide` virtuals
+  (default = existing top slide; all three call sites routed through). Footer overrides to new
+  `TweenUtil.ShowObjectBottom/HideObjectBottom(UIRef)` (+720 park, y-down). Chrome presets reused.
+- **Park-off-screen visibility idiom:** corner containers + groups default
+  `opacity:0; translate:0 720px` in UXML and hide by sliding back out — parked elements can't
+  swallow picks, no display toggling/callbacks needed. Subgroups DO display-toggle
+  (backend.Show/Hide), mirroring GameObjectInactive.
+- **Async state replay:** first showMain/ShowButtons of a session runs while still NGUI-only, so
+  `SuppressLegacyView` override replays `toolkitCornersVisible` + `currentButtonCode` +
+  `currentNetworkSub/currentProductSub` onto the freshly bound view. `HideAllButtonsLegacy` split
+  out so ShowButtons' hideCurrent can't kill the toolkit group it's about to show.
+- **Faithful NGUI geometry (user correction — a first pass with an invented bottom band was
+  rejected: "see the NGUI flows … always check that before presenting"):** there is NO footer
+  band. Banks fly up into the lower-LEFT content area; grid banks sit on a square
+  `ui-backer-fade` plate (`--footer-plate` #E9FFC5, new token). Geometry ported 1:1 from
+  panel-footer.prefab RectTransforms — UGUI canvas is 960x640 Expand, height 640 == toolkit
+  reference height, positions relative to bottom-center (AnchorBottom) as
+  `left:50%; margin-left: x-w/2; bottom: y-h/2`, authored inline in the UXML. Corner buttons
+  110px at (80,80) centers from the corners, 64px icons, NGUI tints via tokens (settings
+  #FFB100→--accent-warm, customize #02BEFD→--button-controls). Tiles are COLUMN layout
+  (icon 40px top, label, sub), size variants a–e mirror the prefab rects (244x122, 222x100,
+  133x111, 140x110, 130x100).
+- `BaseGameUIPanelFooter.OnDisable` now chains `base.OnDisable()` (FreeToolkitView prerequisite,
+  same fix as header); FreeToolkitView override clears the corner refs.
+- **Kill-switch as ground truth (workflow, 2026-07-18):** prefab YAML alone was NOT enough —
+  gaps/sizes/colors still read wrong until the legacy footer was captured live:
+  `UIPlatform.toolkitViewsEnabled = false` + cycle the panel's GameObject (OnDisable frees the
+  view) + re-show `panelContainer` (SuppressLegacyView had hidden it) renders the real UGUI
+  layout for side-by-side screenshots. Findings folded back in: tiles use ui-backer-fade-SM
+  (the big slant fade is ONLY the plate; -sm's tight alpha bounds are what keep grid gaps slim);
+  tile colors are per-BUTTON `m_Color` tints, not invented per-function colors — legacy palette
+  is exactly four: green #5DBB09 (gamecenter/playservices/products), purple #7C0CE8
+  (statistics/trophies/training == --button-profile), orange #E17D12 (customize), cyan #00C1DA
+  (buy-bots); new tokens tile-green/tile-orange/tile-cyan. Progression = purple stats over
+  ORANGE trophies. Sub-labels hug their label (margin-top -6).
+- **Never squish aspect (user rule, 2026-07-18):** buttons and icons must never distort. Two
+  sources found and fixed in common.uss: (1) UIAtlas sub-sprites are TRIMMED and often non-square
+  (icon-trophy 58x50, stars 60x56) — forcing square icon boxes stretched them; all icon box
+  classes now use `background-size: contain`. (2) the slant backer stretched on non-native-aspect
+  tiles; every ui-backer-fade(-sm) user is now 9-SLICED (`-unity-slice-*` in atlas px + 
+  `-unity-slice-scale` to tune rendered corner size: fade 80px @ 0.4, sm 18px @ 1.2–1.6) so
+  corners/edges keep native aspect and only the middle stretches. Verified across footer banks,
+  settings menu, header, main corners.
+- **AnimationEasing shutdown guard:** freeing views from OnDisable/OnDestroy meant play-exit
+  teardown called `TweenUtil.Cancel` → `AnimationEasing.EaseRemove` → the lazy `Instance` getter
+  RE-CREATED the destroyed `_AnimationEasing` pump mid-scene-close (Unity: "Some objects were not
+  cleaned up when closing the scene"). Fix in AnimationEasing: `isShuttingDown` latch set in
+  OnApplicationQuit + OnDestroy-while-playing (destruction order across roots is not guaranteed),
+  cleared by a `RuntimeInitializeOnLoadMethod(SubsystemRegistration)` hook (survives
+  domain-reload-disabled restarts; edit-mode destroys don't latch, tests recreate freely).
+  `Instance` returns null during shutdown and every static wrapper + backend CancelAll no-ops —
+  cancelling on a dead pump is by definition done. Verified: play→exit with footer view loaded,
+  zero console errors.
+
 ### Open (3B remainder)
-- Footer (the real UGUI→toolkit hop; big ShowButtons(code) button-bank) and Main (NGUI hero screen
-  + 3D character via UIRenderStage?) not started. Loader scene later.
+- Main (NGUI hero screen + 3D character via UIRenderStage?) not started. Loader scene later.
 - Coin glow is contained by the 64px element — RT clips at element bounds; if it must reach past
   the button chrome, grow the element (subtle 64→80) rather than the particles.
+- Footer click-through nav not exercised in-editor (names match NGUI handlers proven in 3A/3B;
+  worth one tap-test on device/next session).
 - Uncommitted: everything above (engine + games + games-ui + content + app + TagManager layer).

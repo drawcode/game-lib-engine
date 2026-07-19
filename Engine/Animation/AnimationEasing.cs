@@ -29,8 +29,45 @@ namespace Engine.Animation {
         // Only one BroadcastNetworks can exist. We use a singleton pattern to enforce this.
         private static AnimationEasing _instance = null;
 
+        // The pump must NOT resurrect during teardown: panels free their toolkit views from
+        // OnDisable/OnDestroy (TweenUtil.Cancel -> EaseRemove), and if the pump object was
+        // already destroyed the lazy getter re-created "_AnimationEasing" while the scene was
+        // closing (Unity: "Some objects were not cleaned up when closing the scene"). During
+        // shutdown the getter returns null and the static wrappers no-op — cancelling a tween
+        // on a dead pump is by definition already done.
+        private static bool isShuttingDown = false;
+
+        // Statics survive play sessions when domain reload is disabled; re-arm the pump on the
+        // next play start.
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+        static void ResetShutdownFlag() {
+            isShuttingDown = false;
+        }
+
+        public virtual void OnApplicationQuit() {
+            isShuttingDown = true;
+        }
+
+        public virtual void OnDestroy() {
+
+            // Destruction order across roots isn't guaranteed on play exit — if the pump goes
+            // first, latch shutdown so a panel's teardown Cancel can't respawn it. Only while
+            // playing: edit-mode users (tests) may destroy and recreate the pump freely, and
+            // the play-start reset hook wouldn't clear an edit-mode latch.
+            if (_instance == this) {
+                if (Application.isPlaying) {
+                    isShuttingDown = true;
+                }
+                _instance = null;
+            }
+        }
+
         public static AnimationEasing Instance {
             get {
+                if (isShuttingDown) {
+                    return null;
+                }
+
                 if (!_instance) {
 
                     // check if an ObjectPoolManager is already available in the scene graph
@@ -187,7 +224,14 @@ namespace Engine.Animation {
         // GET
 
         public static bool EaseRemove(string key) {
-            return Instance.easeRemove(key);
+
+            AnimationEasing inst = Instance;
+
+            if (inst == null) {
+                return false;
+            }
+
+            return inst.easeRemove(key);
         }
 
         public bool easeRemove(string key) {
@@ -203,7 +247,14 @@ namespace Engine.Animation {
         //
 
         public static bool EaseExists(string key) {
-            return Instance.easeExists(key);
+
+            AnimationEasing inst = Instance;
+
+            if (inst == null) {
+                return false;
+            }
+
+            return inst.easeExists(key);
         }
 
         public bool easeExists(string key) {
@@ -218,7 +269,14 @@ namespace Engine.Animation {
         //
 
         public static Dictionary<string, AnimationItem> GetAnimationItems() {
-            return Instance.getAnimationItems();
+
+            AnimationEasing inst = Instance;
+
+            if (inst == null) {
+                return new Dictionary<string, AnimationItem>();
+            }
+
+            return inst.getAnimationItems();
         }
 
         public Dictionary<string, AnimationItem> getAnimationItems() {
@@ -231,7 +289,14 @@ namespace Engine.Animation {
         }
 
         public static double EaseGetValue(string key, double defaultValue) {
-            return Instance.easeGetValue(key, defaultValue);
+
+            AnimationEasing inst = Instance;
+
+            if (inst == null) {
+                return defaultValue;
+            }
+
+            return inst.easeGetValue(key, defaultValue);
         }
 
         public double easeGetValue(string key, double defaultValue) {
@@ -246,7 +311,14 @@ namespace Engine.Animation {
         }
 
         public static AnimationItem EaseGet(string key) {
-            return Instance.easeGet(key);
+
+            AnimationEasing inst = Instance;
+
+            if (inst == null) {
+                return null;
+            }
+
+            return inst.easeGet(key);
         }
 
         public AnimationItem easeGet(string key) {
@@ -261,7 +333,14 @@ namespace Engine.Animation {
         // UPDATE
 
         public static AnimationItem EaseUpdate(AnimationItem animationItem) {
-            return Instance.easeUpdate(animationItem);
+
+            AnimationEasing inst = Instance;
+
+            if (inst == null) {
+                return null;
+            }
+
+            return inst.easeUpdate(animationItem);
         }
 
         public AnimationItem easeUpdate(AnimationItem animationItem) {
@@ -271,7 +350,14 @@ namespace Engine.Animation {
         // Explicit-time overload: lets callers (tests, backends) drive the
         // animation without waiting on real frames / Time.time.
         public static AnimationItem EaseUpdate(AnimationItem animationItem, double now) {
-            return Instance.easeUpdate(animationItem, now);
+
+            AnimationEasing inst = Instance;
+
+            if (inst == null) {
+                return null;
+            }
+
+            return inst.easeUpdate(animationItem, now);
         }
 
         public AnimationItem easeUpdate(AnimationItem animationItem, double now) {
@@ -418,7 +504,14 @@ namespace Engine.Animation {
         //
 
         public static void EaseAdd(AnimationItem animationItem) {
-            Instance.easeAdd(animationItem);
+
+            AnimationEasing inst = Instance;
+
+            if (inst == null) {
+                return;
+            }
+
+            inst.easeAdd(animationItem);
         }
 
         public void easeAdd(AnimationItem animationItem) {
@@ -448,7 +541,13 @@ namespace Engine.Animation {
             double timeDuration,
             double timeDelay) {
 
-            Instance.easeAdd(key, equationType, val, valStart, valEnd, timeDuration, timeDelay);
+            AnimationEasing inst = Instance;
+
+            if (inst == null) {
+                return;
+            }
+
+            inst.easeAdd(key, equationType, val, valStart, valEnd, timeDuration, timeDelay);
         }
 
         public void easeAdd(

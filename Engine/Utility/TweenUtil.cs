@@ -1454,6 +1454,37 @@ namespace Engine.Utility {
             SlideFade(target, 0f, presetName);
         }
 
+        // Bottom chrome (footer) and bottom-anchored rows enter from BELOW the screen — translate
+        // is y-down, so off-screen bottom is a POSITIVE offset.
+        private const float viewBottomOffset = 720f;
+
+        public static void ShowObjectBottom(UIRef r, string presetName = "panel-show") {
+
+            ITweenTarget target = SlideTarget(r);
+
+            if (target == null) {
+                return;
+            }
+
+            target.SetPosition(new Vector3(0f, viewBottomOffset, 0f), TweenCoord.local);
+            target.SetAlpha(0f);
+
+            SlideMove(target, Vector3.zero, presetName);
+            SlideFade(target, 1f, presetName);
+        }
+
+        public static void HideObjectBottom(UIRef r, string presetName = "panel-hide") {
+
+            ITweenTarget target = SlideTarget(r);
+
+            if (target == null) {
+                return;
+            }
+
+            SlideMove(target, new Vector3(0f, viewBottomOffset, 0f), presetName);
+            SlideFade(target, 0f, presetName);
+        }
+
         private static ITweenTarget SlideTarget(UIRef r) {
 
             if (r == null || !r.alive) {
