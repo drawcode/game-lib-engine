@@ -65,7 +65,12 @@ namespace Engine.UI {
             string type = n.type ?? BittySchema.Types.container;
 
             if (type == BittySchema.Types.label) {
-                return new Label(Loc(n.text));
+                // Decorative in the name-dispatch idiom (clicks broadcast evt.target.name, and
+                // click names live on containers/buttons): never a pick target, or a label
+                // inside a clickable tile would swallow the tile's click.
+                Label label = new Label(Loc(n.text));
+                label.pickingMode = PickingMode.Ignore;
+                return label;
             }
 
             if (type == BittySchema.Types.button) {
@@ -81,8 +86,11 @@ namespace Engine.UI {
 
             if (type == BittySchema.Types.image) {
                 // Sprite comes from a `.spr-<name>` class (sprites.uss), same as the converter's
-                // output — the node carries it in `class`.
-                return new VisualElement();
+                // output — the node carries it in `class`. Decorative like labels: never a pick
+                // target.
+                VisualElement image = new VisualElement();
+                image.pickingMode = PickingMode.Ignore;
+                return image;
             }
 
             if (type == BittySchema.Types.textfield) {

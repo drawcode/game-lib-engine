@@ -727,6 +727,17 @@ namespace Engine.UI {
             return UIRef.Of(row, itemName);
         }
 
+        public void SetElementName(UIRef r, string name) {
+
+            VisualElement el = El(r);
+
+            if (el == null || string.IsNullOrEmpty(name)) {
+                return;
+            }
+
+            el.name = name;
+        }
+
         public void ClearListItems(UIRef view, string listName) {
 
             VisualElement content = ListContent(view, listName);

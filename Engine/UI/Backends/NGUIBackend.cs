@@ -564,6 +564,15 @@ namespace Engine.UI {
         public void ClearListItems(UIRef view, string listName) {
         }
 
+        public void SetElementName(UIRef r, string name) {
+
+            GameObject go = Go(r);
+
+            if (go != null && !string.IsNullOrEmpty(name)) {
+                go.name = name;
+            }
+        }
+
         public void DestroyView(UIRef view) {
 
             GameObject go = Go(view);

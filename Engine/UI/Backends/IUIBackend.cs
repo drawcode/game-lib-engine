@@ -98,6 +98,11 @@ namespace Engine.UI {
         UIRef AddListItem(UIRef view, string listName, string templateName, string itemName);
         void ClearListItems(UIRef view, string listName);
 
+        // Rename an element. List rows use it to put the $-encoded click payload in the
+        // element NAME (the legacy naming idiom) — elements have no GameObjectData, so the
+        // name is the only payload channel the click bus carries.
+        void SetElementName(UIRef r, string name);
+
         // VIEW LIFECYCLE
         //
         // LoadView is ASYNCHRONOUS: onReady fires with the view's root UIRef once it is built.

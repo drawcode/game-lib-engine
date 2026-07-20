@@ -765,6 +765,15 @@ public class UIUtil {
         return backend.AddListItem(view, listName, templateName, itemName);
     }
 
+    public static void SetElementName(UIRef r, string name) {
+
+        IUIBackend backend = UIPlatform.For(r);
+
+        if (backend != null) {
+            backend.SetElementName(r, name);
+        }
+    }
+
     public static void ClearListItems(UIRef view, string listName) {
 
         IUIBackend backend = UIPlatform.For(view);
