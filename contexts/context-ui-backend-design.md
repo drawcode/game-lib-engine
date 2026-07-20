@@ -960,8 +960,33 @@ through to the bot's collider. Verified: tap → clean SELECT GAMEPLAY MODE (not
   DETACHED old tree (resolvedStyle NREs, tweens silently no-op, "view never hides"). Diagnose
   via `(viewRoot.native as VisualElement).panel == null`. Restart play after UXML edits.
 
+## As-built: Wave 3B part 4 — loader on UI Toolkit (2026-07-19)
+
+The boot/transition loading screen (PanelLoader, scene-embedded in GameUISceneRoot — boot
+bootstraps through the root scene even when playing GameSceneDynamic). Flat widgets migrated
+(slanted logo, sponsor, LOADING pill: grey fade backer + main/item progress fills + label);
+MainBackground particles stay legacy. Progress: GameUISceneRoot pushes
+UIUtil.SetSliderValue(ref, v) per frame; the toolkit backend's fill fallback drives the named
+fill elements' width%. Overlay sort band.
+
+- **Boot scenes need a UIToolkitHost.** LoadView requires the host-registered PanelSettings;
+  GameUISceneRoot had none, so the loader's load bailed with UIRef.none at boot (silently — the
+  panel stays NGUI, no retry since AnimateIn runs once). Fixed by adding a UIToolkitHost (with
+  the shared PanelSettings asset) to GameUISceneRoot.unity. ANY scene that hosts toolkit panels
+  needs one.
+- **`-unity-slice-scale` requires a px unit.** Unitless values (0.4) are INVALID and silently
+  ignored — every 9-slice had been rendering at scale 1 with Unity clamping oversized borders;
+  the tuned corner sizes only took effect once the values became `0.4px` etc. The USS import
+  warnings only surfaced in the editor console during a scene save. Verified footer/settings
+  tiles still match legacy with real scale values.
+- Editor-verification caveat: with the editor UNFOCUSED the player loop barely ticks — a boot
+  can sit at Time.time=0 for many real seconds, entrance tweens hold at their park state
+  (opacity 0), and captures show nothing. The loader view was therefore verified by force-
+  showing it over the menu (build via LoadView, set opacity/translate + fill widths inline) and
+  comparing against the measured legacy pill/logo geometry. On-device flows tick normally.
+
 ### Open (3B remainder)
-- Loader scene later.
+- (3B complete: header, footer, main, loader.)
 - Coin glow is contained by the 64px element — RT clips at element bounds; if it must reach past
   the button chrome, grow the element (subtle 64→80) rather than the particles.
 - Footer click-through nav not exercised in-editor (names match NGUI handlers proven in 3A/3B;
