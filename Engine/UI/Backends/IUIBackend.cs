@@ -87,6 +87,17 @@ namespace Engine.UI {
 
         void GridReposition(UIRef r);
 
+        // LISTS (wave 3D — bitty list pattern)
+        //
+        // Dynamic rows for a bitty "list": the view declares one row named "<X>Template"
+        // (class list-item-template, hidden by common.uss) as the clone source. AddListItem
+        // rebuilds a fresh row from the retained bitty tree, names it, and appends it to the
+        // list's content; ClearListItems removes every non-template row. The NGUI backend
+        // no-ops both (legacy panels keep their own NGUITools.AddChild grid path).
+
+        UIRef AddListItem(UIRef view, string listName, string templateName, string itemName);
+        void ClearListItems(UIRef view, string listName);
+
         // VIEW LIFECYCLE
         //
         // LoadView is ASYNCHRONOUS: onReady fires with the view's root UIRef once it is built.

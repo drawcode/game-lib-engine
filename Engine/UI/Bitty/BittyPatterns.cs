@@ -33,6 +33,10 @@ namespace Engine.UI.Bitty {
                 return ExpandOptionRow(node);
             }
 
+            if (node.pattern == BittySchema.Patterns.list) {
+                return ExpandList(node);
+            }
+
             return ExpandGeneric(node);
         }
 
@@ -111,6 +115,40 @@ namespace Engine.UI.Bitty {
             }
 
             return row;
+        }
+
+        // LIST — a scrollable item collection (wave 3D; first consumer panel-settings-help,
+        // dynamic consumer panel-game-mode-missions). The declared children are the rows:
+        // static rows are authored directly; a dynamic list declares ONE row named
+        // "<X>Template" with class "list-item-template" (display:none in common.uss) that the
+        // backend row API (IUIBackend.AddListItem) rebuilds per data item at runtime.
+        //
+        // Expansion follows the as-built ScrollView recipe: the node becomes a `scrollview`
+        // (the builder auto-tags .ngui-scrollview, so ConfigureScrollViews wires the themed
+        // scroller + ScrollDrag), and the rows wrap in ONE content container (.list-content)
+        // so the scroll height is the content's real height.
+        private static BittyNode ExpandList(BittyNode n) {
+
+            BittyNode sv = new BittyNode();
+            sv.type = BittySchema.Types.scrollview;
+            sv.name = n.name;
+            sv.bind = n.bind;
+            sv.events = n.events;
+            sv.classes.Add("list");
+            sv.classes.AddRange(n.classes);
+
+            BittyNode content = new BittyNode();
+            content.type = BittySchema.Types.container;
+            content.name = string.IsNullOrEmpty(n.name) ? null : n.name + "__content";
+            content.classes.Add("list-content");
+
+            for (int i = 0; i < n.children.Count; i++) {
+                content.children.Add(n.children[i]);
+            }
+
+            sv.children.Add(content);
+
+            return sv;
         }
 
         private static BittyNode FindControl(BittyNode n) {

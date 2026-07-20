@@ -555,6 +555,15 @@ namespace Engine.UI {
             LoadView(viewKey, onReady);
         }
 
+        // LISTS (wave 3D): no-op on the legacy backend — NGUI panels keep their own
+        // NGUITools.AddChild grid path; only toolkit views build rows through the platform.
+        public UIRef AddListItem(UIRef view, string listName, string templateName, string itemName) {
+            return UIRef.none;
+        }
+
+        public void ClearListItems(UIRef view, string listName) {
+        }
+
         public void DestroyView(UIRef view) {
 
             GameObject go = Go(view);

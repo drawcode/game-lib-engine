@@ -738,6 +738,42 @@ public class UIUtil {
         }
     }
 
+    // Deep name resolution on a view ref, backend-blind (wave 3D: panels toggling named
+    // groups on their toolkit view, mirroring legacy container show/hide).
+    public static UIRef ResolveDeep(UIRef root, string name) {
+
+        IUIBackend backend = UIPlatform.For(root);
+
+        if (backend == null) {
+            return UIRef.none;
+        }
+
+        return backend.ResolveDeep(root, name);
+    }
+
+    // LISTS (wave 3D): dynamic rows for the bitty list pattern. Backend-blind like the
+    // label ops — a legacy panel calling these gets the NGUI no-op.
+
+    public static UIRef AddListItem(UIRef view, string listName, string templateName, string itemName) {
+
+        IUIBackend backend = UIPlatform.For(view);
+
+        if (backend == null) {
+            return UIRef.none;
+        }
+
+        return backend.AddListItem(view, listName, templateName, itemName);
+    }
+
+    public static void ClearListItems(UIRef view, string listName) {
+
+        IUIBackend backend = UIPlatform.For(view);
+
+        if (backend != null) {
+            backend.ClearListItems(view, listName);
+        }
+    }
+
     public static void UpdateLabelObject(UIRef root, string key, string val) {
 
         IUIBackend backend = UIPlatform.For(root);

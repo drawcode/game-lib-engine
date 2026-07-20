@@ -554,6 +554,11 @@ namespace Engine.UI {
                         // VisualTreeAsset to spin up a panel and fire the reload callback, so a
                         // shared empty host stub stands in and we graft the built tree under it.
                         asset = BittyHostAsset();
+
+                        // Retain the parsed tree: AddListItem rebuilds dynamic list rows from the
+                        // declared "<X>Template" node (VisualElements can't deep-clone). Freed
+                        // with the view in DestroyView.
+                        _bittyTrees[viewKey] = bitty;
                     }
                 }
             }
@@ -661,6 +666,10 @@ namespace Engine.UI {
                 return;
             }
 
+            if (view != null && !string.IsNullOrEmpty(view.name)) {
+                _bittyTrees.Remove(view.name);
+            }
+
             UnregisterRoot(el);
 
             GameObject go = null;
@@ -672,6 +681,124 @@ namespace Engine.UI {
                     UnityEngine.Object.Destroy(go);
                 }
             }
+        }
+
+        // LISTS (wave 3D — bitty list pattern)
+        //
+        // Parsed bitty trees, retained per viewKey so dynamic rows can be REBUILT from the
+        // declared template node (VisualElements have no deep-clone).
+        private readonly Dictionary<string, BittyNode> _bittyTrees =
+            new Dictionary<string, BittyNode>();
+
+        public UIRef AddListItem(UIRef view, string listName, string templateName, string itemName) {
+
+            VisualElement content = ListContent(view, listName);
+
+            if (content == null) {
+                return UIRef.none;
+            }
+
+            BittyNode tree = null;
+
+            if (view == null || string.IsNullOrEmpty(view.name)
+                    || !_bittyTrees.TryGetValue(view.name, out tree)) {
+                return UIRef.none;
+            }
+
+            BittyNode template = FindBittyNode(tree, templateName);
+
+            if (template == null) {
+                LogUtil.LogWarning("UIToolkitBackend.AddListItem: no template node '"
+                    + templateName + "' in view '" + view.name + "'");
+                return UIRef.none;
+            }
+
+            VisualElement row = BittyToolkitBuilder.Build(template);
+
+            if (row == null) {
+                return UIRef.none;
+            }
+
+            row.name = itemName;
+            row.RemoveFromClassList("list-item-template");
+
+            content.Add(row);
+
+            return UIRef.Of(row, itemName);
+        }
+
+        public void ClearListItems(UIRef view, string listName) {
+
+            VisualElement content = ListContent(view, listName);
+
+            if (content == null) {
+                return;
+            }
+
+            List<VisualElement> doomed = null;
+
+            foreach (VisualElement child in content.Children()) {
+
+                if (child.ClassListContains("list-item-template")) {
+                    continue;
+                }
+
+                if (doomed == null) {
+                    doomed = new List<VisualElement>();
+                }
+
+                doomed.Add(child);
+            }
+
+            if (doomed == null) {
+                return;
+            }
+
+            for (int i = 0; i < doomed.Count; i++) {
+                doomed[i].RemoveFromHierarchy();
+            }
+        }
+
+        // The single content container an expanded list keeps its rows in (.list-content under
+        // the named scrollview; ExpandList guarantees it). Falls back to the list element itself
+        // so a hand-authored ScrollView without the wrapper still works.
+        private VisualElement ListContent(UIRef view, string listName) {
+
+            VisualElement root = El(view);
+
+            if (root == null) {
+                return null;
+            }
+
+            VisualElement listEl = root.name == listName ? root : root.Q(listName);
+
+            if (listEl == null) {
+                return null;
+            }
+
+            return listEl.Q(null, "list-content") ?? listEl;
+        }
+
+        private static BittyNode FindBittyNode(BittyNode node, string name) {
+
+            if (node == null) {
+                return null;
+            }
+
+            if (node.name == name) {
+                return node;
+            }
+
+            for (int i = 0; i < node.children.Count; i++) {
+
+                BittyNode found = FindBittyNode(node.children[i], name);
+
+                if (found != null) {
+                    return found;
+                }
+            }
+
+            return null;
         }
 
         // SCROLLERS
