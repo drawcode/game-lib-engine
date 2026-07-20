@@ -14,6 +14,10 @@ namespace Engine.UI.Bitty {
         public float delay = 0f;
         public string ease = "quadEaseInOut";
         public bool fade = true;
+
+        // "once" (default) | "loop" | "pingPong" | "bounce" — lets a token express a repeating
+        // motion (e.g. the main screen's pulsing tap-to-play CTA) instead of a one-shot.
+        public string loop = "once";
     }
 
     // The token source: the single authority for palette, sizing, fonts, and motion.
@@ -165,8 +169,24 @@ namespace Engine.UI.Bitty {
                 UIMotionToken m = pair.Value;
 
                 TweenPresets.Set(new TweenPreset(
-                    pair.Key, m.time, m.delay, ParseEase(m.ease), TweenLoopType.once, m.fade));
+                    pair.Key, m.time, m.delay, ParseEase(m.ease), ParseLoop(m.loop), m.fade));
             }
+        }
+
+        // Unknown loop names fall back to once, same forgiveness as ParseEase.
+        public static TweenLoopType ParseLoop(string loop) {
+
+            if (loop == "loop") {
+                return TweenLoopType.loop;
+            }
+            else if (loop == "pingPong") {
+                return TweenLoopType.pingPong;
+            }
+            else if (loop == "bounce") {
+                return TweenLoopType.bounce;
+            }
+
+            return TweenLoopType.once;
         }
 
         // Unknown ease names fall back to the engine default rather than throwing — a typo in

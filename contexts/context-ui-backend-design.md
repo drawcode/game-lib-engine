@@ -893,6 +893,13 @@ game-networks-apple / return-to-main), zero console errors or bind warnings.
   133x111, 140x110, 130x100).
 - `BaseGameUIPanelFooter.OnDisable` now chains `base.OnDisable()` (FreeToolkitView prerequisite,
   same fix as header); FreeToolkitView override clears the corner refs.
+- **Conversion workflow rule (user, 2026-07-19): screenshot the NGUI version FIRST.** Before
+  authoring any panel conversion, capture the running legacy version of every state AND its
+  entrance/exit flows via the kill switch — those captures are the spec the first iteration is
+  built against (and rendered colors are sampled from them). Prefab YAML numbers (incl.
+  m_LocalRotation — NGUI slants like panel-main's logo 5.13deg / CTA 4.87deg live on transforms)
+  fill in the exact values afterward. panel-main needed three correction rounds because this
+  order was inverted.
 - **Kill-switch as ground truth (workflow, 2026-07-18):** prefab YAML alone was NOT enough —
   gaps/sizes/colors still read wrong until the legacy footer was captured live:
   `UIPlatform.toolkitViewsEnabled = false` + cycle the panel's GameObject (OnDisable frees the
@@ -923,8 +930,38 @@ game-networks-apple / return-to-main), zero console errors or bind warnings.
   cancelling on a dead pump is by definition done. Verified: play→exit with footer view loaded,
   zero console errors.
 
+## As-built: Wave 3B part 3 — main hero on UI Toolkit (2026-07-18/19)
+
+panel-main is the first HYBRID panel: only the FLAT widgets migrated (action-bots-logo image,
+pulsing "TAP A CHARACTER TO PLAY" CTA, sponsor watermark); the 3D character button (draggable
+UIGameCustomPlayerContainer + collider click), its backer plate, and the particle glows stay
+LIVE on the legacy side. World content can't render above the toolkit overlay, so the bot shows
+through where the view draws nothing — no UIRenderStage needed here; every view element is
+picking-Ignore and the backend forces .ngui-root/.ngui-container to Ignore, so taps fall
+through to the bot's collider. Verified: tap → clean SELECT GAMEPLAY MODE (nothing floats).
+
+- **Hybrid motion seam:** `UIPanelBase.toolkitKeepsLegacyMotion` (default false). The toolkit
+  branch's early-return in AnimateIn/AnimateOut is right for fully-migrated panels but left
+  main's legacy character PARKED ON SCREEN FOREVER after a tap (the nine-edge slides are what
+  move panelBottomObject/panelCenterObject). Hybrid panels run BOTH: the whole-view slide AND
+  the legacy edge slides. Note: the hybrid out-path skips the immediate HidePanel (legacy tail
+  owns it via coroutine; main's panelContainer is null so effectively neither runs — hide is
+  purely the slide, same as NGUI).
+- **Motion tokens can loop:** UIMotionToken.loop ("once"/"loop"/"pingPong"/"bounce") →
+  TweenPreset.loopType via Seed/ParseLoop; `label-pulse` token (2s quadEaseInOut pingPong)
+  drives the CTA via TweenUtil.FadeToObject(ref, .5f, "label-pulse"), replayed on async view
+  arrival in SuppressLegacyView (first AnimateIn ran NGUI-only).
+- Suppression: only Logo + Start + AnchorTopLeft/TopLeft (sponsor, found by path — not a
+  serialized field); FreeToolkitView restores them for the kill switch.
+- Text: UXML label carries the RUNTIME string ("TAP A CHARACTER TO PLAY") — prefab mText lacks
+  the "A"; UILocalizedLabel localizes at runtime, the toolkit bridge doesn't yet.
+- **Editor hazard (not a product bug):** editing a UXML during PLAY makes PanelRenderer rebuild
+  its tree — the rendered elements are NEW instances; viewRoot + every bound UIRef point at the
+  DETACHED old tree (resolvedStyle NREs, tweens silently no-op, "view never hides"). Diagnose
+  via `(viewRoot.native as VisualElement).panel == null`. Restart play after UXML edits.
+
 ### Open (3B remainder)
-- Main (NGUI hero screen + 3D character via UIRenderStage?) not started. Loader scene later.
+- Loader scene later.
 - Coin glow is contained by the 64px element — RT clips at element bounds; if it must reach past
   the button chrome, grow the element (subtle 64→80) rather than the particles.
 - Footer click-through nav not exercised in-editor (names match NGUI handlers proven in 3A/3B;
