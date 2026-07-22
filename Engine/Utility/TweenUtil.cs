@@ -1485,6 +1485,70 @@ namespace Engine.Utility {
             SlideFade(target, 0f, presetName);
         }
 
+        // Right-anchored overlays (the pause dialog) enter from OFF the right edge — a POSITIVE x
+        // offset. Mirrors the Top/Bottom view-slide overloads for the 3F right-anchored dialogs;
+        // the legacy pause slid its containerPause in from the right (TweenUtil.ShowObjectRight).
+        private const float viewRightOffset = 720f;
+
+        public static void ShowObjectRight(UIRef r, string presetName = "panel-show") {
+
+            ITweenTarget target = SlideTarget(r);
+
+            if (target == null) {
+                return;
+            }
+
+            target.SetPosition(new Vector3(viewRightOffset, 0f, 0f), TweenCoord.local);
+            target.SetAlpha(0f);
+
+            SlideMove(target, Vector3.zero, presetName);
+            SlideFade(target, 1f, presetName);
+        }
+
+        public static void HideObjectRight(UIRef r, string presetName = "panel-hide") {
+
+            ITweenTarget target = SlideTarget(r);
+
+            if (target == null) {
+                return;
+            }
+
+            SlideMove(target, new Vector3(viewRightOffset, 0f, 0f), presetName);
+            SlideFade(target, 0f, presetName);
+        }
+
+        // Timescale-INDEPENDENT show/hide for a toolkit view: snaps the view to shown/hidden with no
+        // tween. The animated slides above are driven by the AnimationEasing pump, which advances on
+        // scaled time — so a panel shown while the game is PAUSED (Time.timeScale == 0, e.g. the pause
+        // dialog) would stay frozen off-screen at alpha 0 and never appear. These set position/alpha
+        // directly, so a paused-context view shows/hides reliably (legacy pause also appeared in place,
+        // it never actually slid — its slide target was null).
+        public static void ShowViewInPlace(UIRef r) {
+
+            ITweenTarget target = SlideTarget(r);
+
+            if (target == null) {
+                return;
+            }
+
+            Cancel(r);
+            target.SetPosition(Vector3.zero, TweenCoord.local);
+            target.SetAlpha(1f);
+        }
+
+        public static void HideViewInPlace(UIRef r) {
+
+            ITweenTarget target = SlideTarget(r);
+
+            if (target == null) {
+                return;
+            }
+
+            Cancel(r);
+            target.SetAlpha(0f);
+            target.SetPosition(new Vector3(viewRightOffset, 0f, 0f), TweenCoord.local);
+        }
+
         private static ITweenTarget SlideTarget(UIRef r) {
 
             if (r == null || !r.alive) {
