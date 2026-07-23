@@ -151,6 +151,12 @@ namespace Engine.Animation {
 
             public TweenLoopType loopType = TweenLoopType.once;
 
+            // Drive this item off Time.unscaledTime instead of Time.time. Needed by anything that must
+            // keep animating while the game is PAUSED (Time.timeScale == 0) — e.g. the pause menu's own
+            // slide-in, which otherwise freezes parked off-screen and forces the caller to delay the
+            // freeze until the animation would have finished. Default false = existing scaled behavior.
+            public bool useUnscaledTime = false;
+
             public Action onStart = null;
             public Action<double> onUpdate = null;
             public Action onComplete = null;
@@ -172,6 +178,7 @@ namespace Engine.Animation {
                 timeDelay = 1.0f;
                 key = System.Guid.NewGuid().ToString();
                 loopType = TweenLoopType.once;
+                useUnscaledTime = false;
                 onStart = null;
                 onUpdate = null;
                 onComplete = null;
@@ -344,7 +351,17 @@ namespace Engine.Animation {
         }
 
         public AnimationItem easeUpdate(AnimationItem animationItem) {
-            return easeUpdate(animationItem, Time.time);
+            return easeUpdate(animationItem, NowFor(animationItem));
+        }
+
+        // Clock for an item: unscaled items keep ticking at Time.timeScale == 0.
+        public static double NowFor(AnimationItem animationItem) {
+
+            if (animationItem != null && animationItem.useUnscaledTime) {
+                return Time.unscaledTime;
+            }
+
+            return Time.time;
         }
 
         // Explicit-time overload: lets callers (tests, backends) drive the
@@ -574,7 +591,7 @@ namespace Engine.Animation {
             animationItem.valEnd = valEnd;
             animationItem.timeDuration = timeDuration;
             animationItem.equationType = equationType;
-            animationItem.timeStart = Time.time;
+            animationItem.timeStart = NowFor(animationItem);
             animationItem.timeDelay = timeDelay;
 
             //Debug.Log("easeAdd:" + " animationItem:" + animationItem.ToJson());

@@ -60,6 +60,7 @@ namespace Engine.Utility {
         public Action _onStart = null;
         public Action _onUpdate = null;
         public bool _stopCurrent = false;
+        public bool _useUnscaledTime = false;
 
         public float durationShow = .45f;
         public float durationDelayShow = .5f;
@@ -186,6 +187,17 @@ namespace Engine.Utility {
                 _stopCurrent = value;
             }
         }
+
+        // Run this tween off the unscaled clock so it keeps animating at Time.timeScale == 0
+        // (pause-context UI). Default false = existing scaled behavior.
+        public bool useUnscaledTime {
+            get {
+                return _useUnscaledTime;
+            }
+            set {
+                _useUnscaledTime = value;
+            }
+        }
     }
 
     public class TweenUtil {
@@ -209,6 +221,37 @@ namespace Engine.Utility {
         public static float topClosedY = 4500f;
 
         public static int increment = 0;
+
+        // --------------------------------------------------------------------
+        // UNSCALED SCOPE
+        //
+        // Ambient opt-in: every tween CREATED inside this scope runs off Time.unscaledTime, so it
+        // keeps animating while the game is PAUSED (Time.timeScale == 0). Used by pause-context UI
+        // (UIPanelPause) — its slide is what the 1s pause freeze-delay used to wait on.
+        //
+        // Scoped rather than threaded through each helper because the Show/Hide entry points funnel
+        // through ~6 layers of optional-arg forwarding before a TweenMeta exists. Tweens are created
+        // synchronously inside a scope (the show/hide "delay" is carried on the animation item, not a
+        // coroutine), so the flag cannot leak to another caller. Depth-counted for nesting.
+
+        private static int unscaledScopeDepth = 0;
+
+        public static bool isUnscaledScope {
+            get {
+                return unscaledScopeDepth > 0;
+            }
+        }
+
+        public static void BeginUnscaledScope() {
+            unscaledScopeDepth++;
+        }
+
+        public static void EndUnscaledScope() {
+
+            if (unscaledScopeDepth > 0) {
+                unscaledScopeDepth--;
+            }
+        }
 
         // --------------------------------------------------------------------
         // BACKEND
@@ -340,6 +383,8 @@ namespace Engine.Utility {
            TweenLoopType loopType = TweenLoopType.once) {
 
             TweenMeta meta = new TweenMeta();
+
+            meta.useUnscaledTime = isUnscaledScope;
             meta.lib = lib;
             meta.go = go;
             meta.time = time;
@@ -1006,6 +1051,11 @@ namespace Engine.Utility {
                     metaDispatch.onComplete = onFinish;
                     metaDispatch.onUpdate = meta.onUpdate;
 
+                    // Carry the clock from the ORIGINAL meta rather than re-reading the ambient
+                    // scope: this rebuild happens at dispatch time, which need not still be inside
+                    // the BeginUnscaledScope block that created meta.
+                    metaDispatch.useUnscaledTime = meta.useUnscaledTime;
+
                     backend.Fade(ResolveTarget(meta.go), alpha, metaDispatch);
                 }
             }
@@ -1216,6 +1266,8 @@ namespace Engine.Utility {
             }
 
             TweenMeta meta = new TweenMeta();
+
+            meta.useUnscaledTime = isUnscaledScope;
             meta.time = time;
             meta.delay = delay;
             meta.easeType = ease;
@@ -1398,6 +1450,8 @@ namespace Engine.Utility {
             TweenPreset preset = TweenPresets.Get(presetName);
 
             TweenMeta meta = new TweenMeta();
+
+            meta.useUnscaledTime = isUnscaledScope;
             meta.time = preset.time;
             meta.delay = preset.delay;
             meta.easeType = preset.easeType;
@@ -1563,6 +1617,8 @@ namespace Engine.Utility {
             TweenPreset preset = TweenPresets.Get(presetName);
 
             TweenMeta meta = new TweenMeta();
+
+            meta.useUnscaledTime = isUnscaledScope;
             meta.time = preset.time;
             meta.delay = preset.delay;
             meta.easeType = preset.easeType;

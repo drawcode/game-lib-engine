@@ -93,6 +93,7 @@ namespace Engine.Animation {
             item.valEnd = 1.0;
             item.timeDuration = meta.time;
             item.timeDelay = meta.delay;
+            item.useUnscaledTime = meta.useUnscaledTime;
 
             Action metaOnUpdate = meta.onUpdate;
 
@@ -135,6 +136,7 @@ namespace Engine.Animation {
             item.valEnd = 1.0;
             item.timeDuration = meta.time;
             item.timeDelay = meta.delay;
+            item.useUnscaledTime = meta.useUnscaledTime;
 
             Action metaOnUpdate = meta.onUpdate;
 
@@ -175,6 +177,7 @@ namespace Engine.Animation {
             item.valEnd = 1.0;
             item.timeDuration = meta.time;
             item.timeDelay = meta.delay;
+            item.useUnscaledTime = meta.useUnscaledTime;
 
             Action metaOnUpdate = meta.onUpdate;
 
@@ -270,6 +273,7 @@ namespace Engine.Animation {
             item.valEnd = 1.0;
             item.timeDuration = meta.time;
             item.timeDelay = meta.delay;
+            item.useUnscaledTime = meta.useUnscaledTime;
 
             Action metaOnUpdate = meta.onUpdate;
 
