@@ -894,6 +894,11 @@ public static class BaseGameObjectExtensions {
         GameObjectHelper.ResetRigidBodiesVelocity(go);
     }
 
+    public static void ResetRigidBodiesMotion(this GameObject go) {
+
+        GameObjectHelper.ResetRigidBodiesMotion(go);
+    }
+
     // ASPECT RATIO
 
     public static void ResizePreservingAspectToScreen(

@@ -224,26 +224,36 @@ public static class StringExtensions {
 
     public static string ToDelimited(this string val, string delimiter = "-") {
 
-        string output = "";
-        char[] chars = val.ToCharArray();
+        if (string.IsNullOrEmpty(val)) {
+            return val;
+        }
 
-        foreach (char ch in chars) {
+        // Built with a StringBuilder rather than "output +=" in a per-character loop.
+        // This runs on every pooled spawn to derive the pool key, so the old version
+        // allocated a fresh string per character of every projectile/effect name.
+
+        System.Text.StringBuilder output = new System.Text.StringBuilder(val.Length + 8);
+
+        for (int i = 0; i < val.Length; i++) {
+
+            char ch = val[i];
 
             if (char.IsUpper(ch)) {
 
                 if (output.Length > 0) {
 
-                    output += delimiter;
+                    output.Append(delimiter);
                 }
 
-                output += ch.ToString().ToLower();
+                output.Append(char.ToLower(ch));
             }
             else {
 
-                output += ch.ToString();
+                output.Append(ch);
             }
         }
-        return output;
+
+        return output.ToString();
     }
 
     public static string ToNonDelimited(

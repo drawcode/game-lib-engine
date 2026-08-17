@@ -253,7 +253,22 @@ public class ObjectPoolKeyedManager : GameObjectBehavior {
 
     // must be run as coroutine
     private IEnumerator internalDestroy(GameObject obj, float delay) {
+
+        int serial = PoolGameObject.GetSerial(obj);
+
         yield return new WaitForSeconds(delay);
+
+        if (obj == null) {
+            yield break;
+        }
+
+        // The object was recycled and re-issued while this timer was pending -- it is
+        // somebody else's now, so leave it alone.
+
+        if (!PoolGameObject.IsSameUse(obj, serial)) {
+            yield break;
+        }
+
         internalDestroy(obj);
     }
 

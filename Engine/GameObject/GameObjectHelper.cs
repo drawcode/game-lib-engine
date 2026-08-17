@@ -2204,15 +2204,26 @@ public static class GameObjectHelper {
     public static GameObject CleanGameObjectName(
         GameObject go) {
 
-        if (go.name.Contains(" (Clone)")) {
-            go.name = go.name.Replace(" (Clone)", "");
+        if (go == null) {
+            return go;
         }
-        if (go.name.Contains("(Clone)")) {
-            go.name = go.name.Replace("(Clone)", "");
+
+        // GameObject.name allocates a new string on every read, and this runs on every
+        // pooled spawn. Read it once and bail before touching it at all in the common
+        // case -- a revived pooled object was already cleaned in a previous life.
+
+        string name = go.name;
+
+        if (name.IndexOf("(Clone", StringComparison.OrdinalIgnoreCase) < 0
+            && name.IndexOf("(clone", StringComparison.OrdinalIgnoreCase) < 0) {
+            return go;
         }
-        if (go.name.Contains("(clone)")) {
-            go.name = go.name.Replace("(clone)", "");
-        }
+
+        name = name.Replace(" (Clone)", "");
+        name = name.Replace("(Clone)", "");
+        name = name.Replace("(clone)", "");
+
+        go.name = name;
 
         return go;
     }
@@ -2254,6 +2265,11 @@ public static class GameObjectHelper {
                 if (!obj.Has<PoolGameObject>()) {
                     obj.AddComponent<PoolGameObject>();
                 }
+
+                // Mark a new life so any delayed recycle still pending from the
+                // previous one cannot reclaim this object out from under its new owner.
+
+                PoolGameObject.Bump(obj);
             }
         }
 
@@ -2465,6 +2481,31 @@ public static class GameObjectHelper {
         }
 
         ResetRigidBodiesVelocity(inst, Vector3.zero);
+    }
+
+    // NOTE: ResetRigidBodiesVelocity only clears ANGULAR velocity despite its name.
+    // Pooled objects that are revived keep the linear velocity they died with, which
+    // then adds to whatever impulse the new owner applies. Use this when an object is
+    // being re-issued from a pool and must start from a genuine standstill.
+
+    public static void ResetRigidBodiesMotion(GameObject inst) {
+
+        if (inst == null) {
+            return;
+        }
+
+        Rigidbody[] rigidbodies
+            = inst.GetComponentsInChildren<Rigidbody>(true);
+
+        foreach (Rigidbody r in rigidbodies) {
+
+            if (r == null || r.isKinematic) {
+                continue;
+            }
+
+            r.linearVelocity = Vector3.zero;
+            r.angularVelocity = Vector3.zero;
+        }
     }
 
     public static void ResetRigidBodies(GameObject inst) {
