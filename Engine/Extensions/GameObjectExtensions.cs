@@ -235,22 +235,25 @@ public static class BaseGameObjectExtensions {
         return GameObjectHelper.Remove<T>(inst);
     }
 
-    public static T GetOrSet<T>(this GameObject inst) where T : Component {
+    // includeChildren defaults to true to preserve existing behavior. Pass
+    // false when the component must be on this exact object.
+
+    public static T GetOrSet<T>(this GameObject inst, bool includeChildren = true) where T : Component {
 
         if (inst == null) {
             return null;
         }
 
-        return GameObjectHelper.GetOrSet<T>(inst);
+        return GameObjectHelper.GetOrSet<T>(inst, includeChildren);
     }
 
-    public static T Set<T>(this GameObject inst) where T : Component {
+    public static T Set<T>(this GameObject inst, bool includeChildren = true) where T : Component {
 
         if (inst == null) {
             return null;
         }
 
-        return GameObjectHelper.Set<T>(inst);
+        return GameObjectHelper.Set<T>(inst, includeChildren);
     }
 
     public static T SetOnly<T>(this GameObject inst) where T : Component {
@@ -271,13 +274,13 @@ public static class BaseGameObjectExtensions {
         return GameObjectHelper.GetAsGameObject<T>(inst);
     }
 
-    public static T Get<T>(this GameObject inst) where T : Component {
+    public static T Get<T>(this GameObject inst, bool includeChildren = true) where T : Component {
 
         if (inst == null) {
             return null;
         }
 
-        return GameObjectHelper.Get<T>(inst);
+        return GameObjectHelper.Get<T>(inst, includeChildren);
     }
 
     public static T Get<T>(this GameObject inst, string name) where T : Component {
@@ -307,13 +310,13 @@ public static class BaseGameObjectExtensions {
         return GameObjectHelper.GetList<T>(inst);
     }
 
-    public static bool Has<T>(this GameObject inst) where T : Component {
+    public static bool Has<T>(this GameObject inst, bool includeChildren = true) where T : Component {
 
         if (inst == null) {
             return false;
         }
 
-        return GameObjectHelper.Has<T>(inst);
+        return GameObjectHelper.Has<T>(inst, includeChildren);
     }
 
     public static void Show(this GameObject inst) {

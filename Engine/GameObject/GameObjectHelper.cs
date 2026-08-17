@@ -583,21 +583,25 @@ public static class GameObjectHelper {
         return false;
     }
 
-    public static T GetOrSet<T>(GameObject inst) where T : Component {
+    // includeChildren defaults to true to preserve the long-standing behavior
+    // of these helpers. Pass false when the component must be on this exact
+    // object, such as anything looked up later with a plain GetComponent.
+
+    public static T GetOrSet<T>(GameObject inst, bool includeChildren = true) where T : Component {
         if (inst == null) {
             return null;
         }
 
-        if (!inst.Has<T>()) {
+        if (!inst.Has<T>(includeChildren)) {
             return inst.AddComponent<T>();
         }
         else {
-            return inst.Get<T>();
+            return inst.Get<T>(includeChildren);
         }
     }
 
-    public static T Set<T>(GameObject inst) where T : Component {
-        return GetOrSet<T>(inst);
+    public static T Set<T>(GameObject inst, bool includeChildren = true) where T : Component {
+        return GetOrSet<T>(inst, includeChildren);
     }
 
     public static T SetOnly<T>(GameObject inst) where T : Component {
@@ -630,7 +634,7 @@ public static class GameObjectHelper {
         return null;
     }
 
-    public static T Get<T>(GameObject inst) where T : Component {
+    public static T Get<T>(GameObject inst, bool includeChildren = true) where T : Component {
         if (inst == null) {
             return null;
         }
@@ -639,6 +643,9 @@ public static class GameObjectHelper {
             return obj;
         }
 
+        if (!includeChildren) {
+            return null;
+        }
 
         foreach (T obj in inst.GetComponentsInChildren<T>(true)) {
             return obj;
@@ -713,13 +720,17 @@ public static class GameObjectHelper {
         return list;
     }
 
-    public static bool Has<T>(GameObject inst) where T : Component {
+    public static bool Has<T>(GameObject inst, bool includeChildren = true) where T : Component {
         if (inst == null) {
             return false;
         }
 
-        if (inst.GetComponentsInChildren<T>(true).Length > 0
-            || inst.GetComponents<T>().Length > 0) {
+        if (inst.GetComponents<T>().Length > 0) {
+            return true;
+        }
+
+        if (includeChildren
+            && inst.GetComponentsInChildren<T>(true).Length > 0) {
             return true;
         }
 
