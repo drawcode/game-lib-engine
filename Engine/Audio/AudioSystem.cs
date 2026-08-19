@@ -240,16 +240,25 @@ namespace Engine.Audio {
             string name, float volume = 1f, bool loop = false, float delay = 0f,
             Transform parentTransform = null, float spatialBlend = 0.9f) {
 
+            // Only pay for a coroutine when there is actually something to wait for.
+            // Combat effects (weapon shots, hit sounds) all pass delay 0, and starting a
+            // coroutine per call allocated the iterator plus a WaitForSeconds and pushed
+            // the sound a frame late for no reason.
+
+            if (delay <= 0f) {
+                PlayEffectNow(name, volume, loop, parentTransform, spatialBlend);
+                return;
+            }
+
             StartCoroutine(PlayEffectCo(
                 name, volume, loop, delay, parentTransform, spatialBlend));
         }
 
-        IEnumerator PlayEffectCo(
-            string name, float volume, bool loop = false, float delay = 0f,
-            Transform parentTransform = null, float spatialBlend = 0.9f) {
+        void PlayEffectNow(
+            string name, float volume, bool loop,
+            Transform parentTransform, float spatialBlend) {
 
-            yield return new WaitForSeconds(delay);
-            // TODO, lookup filename from sound list... 
+            // TODO, lookup filename from sound list...
 
             if (!loop) {
 
@@ -265,11 +274,17 @@ namespace Engine.Audio {
                 name = audioRootPath + name;
             }
 
-            //Debug.Log("PlayEffectCo:path:" + name);
-            //Debug.Log("PlayEffectCo:volume:" + volume);
-
             PlayFileFromResources(
                 parentTransform, name, loop, soundIncrement, volume, spatialBlend);
+        }
+
+        IEnumerator PlayEffectCo(
+            string name, float volume, bool loop = false, float delay = 0f,
+            Transform parentTransform = null, float spatialBlend = 0.9f) {
+
+            yield return new WaitForSeconds(delay);
+
+            PlayEffectNow(name, volume, loop, parentTransform, spatialBlend);
         }
 
         public GameObject PlayEffectObject(
@@ -467,7 +482,18 @@ namespace Engine.Audio {
             return goClip;
         }
 
+        // Cached so the containers are not re-found on every sound. GameObject.Find walks
+        // the whole scene graph by name, and PlayAudioClip hits the disposable container on
+        // the combat path. The fields go Unity-null if the container is destroyed on a
+        // scene change, so the lookup still self-heals.
+        GameObject soundContainerDisposable;
+        GameObject soundContainer;
+
         public GameObject FindOrCreateDisposableSoundContainer() { // disposable sounds
+
+            if (soundContainerDisposable != null) {
+                return soundContainerDisposable;
+            }
 
             string nameSoundRootName = "_SoundContainerDisposable";
 
@@ -478,10 +504,16 @@ namespace Engine.Audio {
                 goSoundRoot = new GameObject(nameSoundRootName);
             }
 
+            soundContainerDisposable = goSoundRoot;
+
             return goSoundRoot;
         }
 
         public GameObject FindOrCreateSoundContainer() {
+
+            if (soundContainer != null) {
+                return soundContainer;
+            }
 
             string nameSoundRootName = "_SoundContainer";
 
@@ -493,6 +525,9 @@ namespace Engine.Audio {
 
                 goSoundRoot.transform.parent = FindGameGlobal();
             }
+
+            soundContainer = goSoundRoot;
+
             return goSoundRoot;
         }
 
@@ -686,9 +721,11 @@ namespace Engine.Audio {
                 return null;
             }
 
-            string fileVersion =
-                audioActionObject.clip.name + "-" +
-                audioActionObject.increment.ToString();
+            // UnityEngine.Object.name allocates a fresh string on every read, so read the
+            // clip's name once and reuse it for both the version string and the data entry.
+            string clipName = audioActionObject.clip.name;
+
+            string fileVersion = clipName + "-" + audioActionObject.increment.ToString();
 
             if (prefabAudioItem == null) {
                 prefabAudioItem = PrefabsPool.PoolPrefab(audioRootPath + "audio-item");
@@ -703,14 +740,16 @@ namespace Engine.Audio {
                 return null;
             }
 
-            GameObjectData gameObjectData = goClip.GetOrSet<GameObjectData>();
+            // includeChildren:false -- GetOrSet descends into children by default, and every
+            // component here lives on the audio-item root.
+            GameObjectData gameObjectData = goClip.GetOrSet<GameObjectData>(false);
 
             if (gameObjectData != null) {
                 gameObjectData.Set("code", fileVersion);
-                gameObjectData.Set("name", audioActionObject.clip.name);
+                gameObjectData.Set("name", clipName);
             }
 
-            AudioSource audioSourceObject = goClip.GetOrSet<AudioSource>();
+            AudioSource audioSourceObject = goClip.GetOrSet<AudioSource>(false);
 
             AudioDestroy audioDestroy = null;
 
@@ -718,7 +757,7 @@ namespace Engine.Audio {
                 DontDestroyOnLoad(goClip);
             }
             else {
-                audioDestroy = goClip.GetOrSet<AudioDestroy>();
+                audioDestroy = goClip.GetOrSet<AudioDestroy>(false);
             }
 
             audioSourceObject.clip = audioActionObject.clip;
@@ -882,8 +921,11 @@ namespace Engine.Audio {
                 audioSetItems = new Dictionary<string, AudioSetItem>();
             }
 
-            if (audioSetItems.ContainsKey(path)) {
-                return audioSetItems[path];
+            // One lookup, not two -- this is on the path of every combat sound.
+            AudioSetItem existingItem;
+
+            if (audioSetItems.TryGetValue(path, out existingItem)) {
+                return existingItem;
             }
 
             //Debug.Log("LoadAudioSetItem:path:" + path);

@@ -27,6 +27,12 @@ public class ObjectPool : System.Object {
 
     public Queue<GameObject> pool;
 
+    // Mirrors the queue's contents. recycle() has to reject an object that is already
+    // parked, and Queue<T>.Contains is a linear scan -- with maxPoolItems at 5000 and
+    // bullets, muzzles, shells, hit effects and audio objects all recycling every frame
+    // that scan was the most expensive part of returning an object to the pool.
+    private HashSet<GameObject> pooledSet = new HashSet<GameObject>();
+
     public string key = "default";
 
     // How many objects are currently sitting in the cache
@@ -51,6 +57,7 @@ public class ObjectPool : System.Object {
         }
         else { // else pull one from the cache
             obj = pool.Dequeue();
+            pooledSet.Remove(obj);
 
             // reactivate the object
             obj.transform.parent = null;
@@ -90,7 +97,9 @@ public class ObjectPool : System.Object {
         }
 
 
-        if (!pool.Contains(obj)) {
+        // Add() returns false when it is already parked, which replaces the old
+        // linear pool.Contains(obj) scan.
+        if (pooledSet.Add(obj)) {
             // put object back in cache for reuse later
             pool.Enqueue(obj);
         }
@@ -103,5 +112,6 @@ public class ObjectPool : System.Object {
         }
 
         pool.Clear();
+        pooledSet.Clear();
     }
 }
