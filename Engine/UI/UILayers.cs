@@ -17,8 +17,23 @@ namespace Engine.UI {
         // "Let the backend auto-assign" — preserves the original load-order behavior. Default.
         public const int auto = -1;
 
+        // BELOW every flow screen. Shared scenery that panels draw ON TOP of — the character
+        // preview card the header owns, which main/game-mode/results/customize-character all
+        // show while drawing their own arrows and plates over it. It cannot live in the chrome
+        // band (that is above panels, so the card would bury their content) and it cannot live
+        // in a panel's own view (four screens would each author, and fight over, one shared rig).
+        public const int backdrop = 50;
+
         // Flow-scoped screens (settings, main, results...). The auto band starts here.
         public const int panel = 100;
+
+        // ABOVE every flow screen, below the always-on chrome. The other half of a shared
+        // backdrop: the character rig's BACKER belongs behind a panel's content, but the bot
+        // itself and its CUSTOMIZE button belong in front of it — that is the legacy NGUI
+        // z-order (see the coop baseline, where the bot's legs and the button both draw over
+        // the green mode buttons while the dark card sits behind them). One band each side of
+        // `panel` reproduces it without any panel having to know the rig exists.
+        public const int foreground = 9000;
 
         // Always-on chrome (header/footer) — above screens, below overlays. Headroom is large so
         // a long session of auto-assigned panels can never climb into this band.

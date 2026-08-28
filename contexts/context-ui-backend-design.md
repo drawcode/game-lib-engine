@@ -992,3 +992,59 @@ fill elements' width%. Overlay sort band.
 - Footer click-through nav not exercised in-editor (names match NGUI handlers proven in 3A/3B;
   worth one tap-test on device/next session).
 - Uncommitted: everything above (engine + games + games-ui + content + app + TagManager layer).
+
+## As-built: Wave 3I — the shared CharacterLarge cluster (2026-08-26/27)
+
+The character preview that main/game-mode/customize/equipment all show is ONE rig owned by the
+header (`panel-header/.../CharacterLarge/ContainerCharacterLarge`), not by any panel. Converting it
+needed two engine-level changes.
+
+### UILayers grew a band on EACH side of `panel`
+
+    backdrop     50   below every flow screen
+    panel       100   flow screens (the auto band starts here)
+    foreground 9000   above flow screens, below chrome        <- new in 3I
+    chrome    10000   always-on header/footer
+    overlay   20000   dialogs / loading / transitions
+
+**Why both.** A toolkit view composites as a single unit at a single sortingOrder, and this cluster
+STRADDLES the flow panel in z: the dark card belongs behind a screen's content (the customize
+screen's nav arrows and name plate draw over it) while the bot and its CUSTOMIZE button belong in
+front of it. The coop baseline is the case that proves it — bot legs and button both overlap the
+green mode buttons, the card does not.
+
+It shipped first as one view in `backdrop`, which is why this is worth recording: **arcade and
+customize-character both look correct that way**, because nothing overlaps on either. Only coop
+exposed it, and there the button was invisible AND untappable (staging suppresses its legacy
+collider). Read the baseline for OVERLAP before choosing a band; a screen with no overlap will
+validate the wrong answer.
+
+The fix is one view per band, both rooted at the same full-screen 1385x640 box so centre-relative
+rects transfer between them unchanged.
+
+### UIRenderStage: four additions, each from a measurement, all additive (the coin path is untouched)
+
+- **`followContent`** — the framing was computed ONCE at Attach. Fine for a widget pinned in place
+  (the coin), quietly fatal for one tweened into position: the character is attached while its
+  container is still parked off-screen, so the camera framed empty space ~14 units above the bot
+  and **the RT came back fully transparent** (0 non-zero pixels, measured). The camera now holds
+  its offset to the content root each `LateUpdate`. POSITION ONLY, and deliberately not parented —
+  rotation and scale below the staged root must still read as motion in the RT.
+- **`Reframe()`** — the pose and zoom are EASED tweens, so a next-frame re-fit measures the rig
+  mid-zoom and then lets it grow out of frame. Call it after the ease settles.
+- **`PosedBounds()`** — `Renderer.bounds` on a `SkinnedMeshRenderer` is the ANIMATION-SAFE box,
+  sized to hold every pose in the rig, not the pose on screen. Framing on it drew the bot at ~50%
+  of the legacy size. Now bakes the current pose (`BakeMesh`, scale applied) and transforms its 8
+  corners to world so a rotated rig still yields a correct AABB. Non-skinned renderers take the
+  plain bounds.
+- **`keepColliderLayers`** — the layer flip moves the WHOLE subtree off the UI event layer, which
+  silently kills any interaction the content still owns; the preview is drag-to-rotate and UICamera
+  only raycasts its own mask. Nodes with a Collider and no Renderer contribute nothing to the stage
+  image, so they keep their original layer. Off by default (the coin goes fully inert while staged).
+
+### Open
+- Stage isolation is still POSITIONAL only — the coin stage and the character stage share layer 22
+  and merely happen to fall outside each other's ortho frustum. Give stages distinct layers, or
+  frustum-verify, before adding a third.
+- The character's on-screen size is calibrated on ONE animation pose; baked bounds still run ~25%
+  wider than the silhouette.
