@@ -57,9 +57,16 @@ namespace Engine.UI {
         // Collider but NO Renderer contribute nothing to the stage image, so they can keep their
         // original layer and stay pickable while the meshes render off-screen. Off by default:
         // the coin deliberately goes fully inert while staged.
+        // lightIntensity: the stage light is the ONLY light the content gets (its cullingMask is
+        // the stage layer alone), so it is also the exposure control. The 1.1 default is what the
+        // character card was tuned against and is kept for compatibility, but it OVER-EXPOSES the
+        // gold coin: measured against the legacy capture, 73% of the coin's pixels clipped at
+        // green=255 where legacy clips none, and the median green read 255 against 207 — which is
+        // what turned a shaded gold coin into a flat yellow one. Coin callers pass a lower value.
         public static UIRenderStage Attach(
             GameObject content, int layer, int size = 256, float framePadding = 1.15f,
-            bool keepColliderLayers = false, bool followContent = false) {
+            bool keepColliderLayers = false, bool followContent = false,
+            float lightIntensity = 1.1f) {
 
             if (content == null || layer < 0) {
                 return null;
@@ -108,7 +115,7 @@ namespace Engine.UI {
             Light light = lightGo.AddComponent<Light>();
             light.type = LightType.Directional;
             light.cullingMask = 1 << layer;
-            light.intensity = 1.1f;
+            light.intensity = lightIntensity;
 
             // Interaction nodes stay on their original layer (see keepColliderLayers above).
             // Renderer-less by test, so the stage camera loses nothing by not culling them.
