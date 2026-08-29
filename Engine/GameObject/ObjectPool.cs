@@ -114,4 +114,36 @@ public class ObjectPool : System.Object {
         pool.Clear();
         pooledSet.Clear();
     }
+
+    /// <summary>
+    /// Release cached objects beyond <paramref name="keep"/>, oldest first, and return how
+    /// many were destroyed.
+    ///
+    /// This only ever touches objects sitting in the queue -- something that is live in the
+    /// world was never enqueued, so it cannot be taken away from its owner. Keeping a few
+    /// back matters: `clear()` empties the bucket entirely and the next spawn pays a full
+    /// Instantiate, which is exactly the spike a pool exists to avoid.
+    /// </summary>
+    public int trim(int keep) {
+
+        if (keep < 0) {
+            keep = 0;
+        }
+
+        int destroyed = 0;
+
+        while (pool.Count > keep) {
+
+            GameObject go = pool.Dequeue();
+
+            pooledSet.Remove(go);
+
+            if (go != null) {
+                go.DestroyNow();
+                destroyed++;
+            }
+        }
+
+        return destroyed;
+    }
 }

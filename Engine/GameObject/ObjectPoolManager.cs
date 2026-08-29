@@ -103,6 +103,21 @@ public class ObjectPoolManager : GameObjectBehavior {
         instance.StartCoroutine(instance.internalDestroy(obj, delay));
     }
 
+    /// <summary>
+    /// Release cached objects beyond <paramref name="keepPerPool"/> in every bucket and
+    /// return how many were destroyed. Live objects are untouched -- see
+    /// ObjectPool.trim. Deliberately does NOT create the manager: nothing has been pooled
+    /// if it does not exist yet.
+    /// </summary>
+    public static int trimPooled(int keepPerPool) {
+
+        if (_instance == null) {
+            return 0;
+        }
+
+        return _instance.internalTrim(keepPerPool);
+    }
+
     #endregion
 
     #region Private implementation
@@ -111,6 +126,27 @@ public class ObjectPoolManager : GameObjectBehavior {
     private void Awake() {
         prefab2pool = new Dictionary<GameObject, ObjectPool>();
         instance2pool = new Dictionary<GameObject, ObjectPool>();
+    }
+
+    public int internalTrim(int keepPerPool) {
+
+        int destroyed = 0;
+
+        if (prefab2pool == null) {
+            return 0;
+        }
+
+        // prefab2pool and instance2pool share the same ObjectPool instances, so one pass
+        // covers both.
+
+        foreach (ObjectPool p in prefab2pool.Values) {
+
+            if (p != null) {
+                destroyed += p.trim(keepPerPool);
+            }
+        }
+
+        return destroyed;
     }
 
     private ObjectPool createPool(GameObject prefab) {
