@@ -904,19 +904,24 @@ namespace Engine.Game.Data
             return false;
         }
 
-        public DataAttribute GetAttribute(string code)
-        {
+        public DataAttribute GetAttribute(string code) {
 
-            DataAttribute attribute = new DataAttribute();
+            // One dictionary lookup instead of ContainsKey-then-indexer, and no throwaway
+            // DataAttribute allocated on the hit path. This sits under every attribute
+            // read in the game -- including the audio effects volume the weapon launcher
+            // used to fetch once per bullet -- so the discarded allocation was real GC
+            // pressure during sustained fire.
 
-            //code = UniqueUtil.Instance.GetStringHash(code);
+            if (attributes != null && code != null) {
 
-            if (CheckIfAttributeExists(code))
-            {
-                attribute = attributes[code];
+                DataAttribute existing;
+
+                if (attributes.TryGetValue(code, out existing)) {
+                    return existing;
+                }
             }
 
-            return attribute;
+            return new DataAttribute();
         }
 
         public List<DataAttribute> GetAttributesList()

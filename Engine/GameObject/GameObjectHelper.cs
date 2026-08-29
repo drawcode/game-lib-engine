@@ -2228,19 +2228,62 @@ public static class GameObjectHelper {
         return go;
     }
 
+    private class PoolKeyEntry {
+        public GameObject prefab;
+        public string key;
+    }
+
+    private static readonly Dictionary<EntityId, PoolKeyEntry> poolKeyCache
+        = new Dictionary<EntityId, PoolKeyEntry>();
+
+    /// <summary>
+    /// The pool bucket a prefab spawns into, derived from its name.
+    ///
+    /// This used to run `go.name.ToDelimited()` on EVERY spawn: a native name read into a
+    /// fresh managed string, a StringBuilder, its char buffer and one more string -- three
+    /// times per minigun shot (bullet, muzzle, shell) plus once per combat sound.
+    ///
+    /// A plain instanceID -> key map was rejected previously and rightly so: Unity reuses
+    /// instance IDs once an object is unloaded, which would silently put a new prefab's
+    /// objects into another prefab's bucket. Keeping the prefab reference beside the key
+    /// and comparing it turns that case into an ordinary cache miss. UnityEngine.Object's
+    /// == also reports a destroyed prefab as null, so an unloaded entry misses too.
+    /// (Keyed on EntityId -- GetInstanceID is deprecated as of Unity 6.5.)
+    /// </summary>
+    public static string GetPoolKey(GameObject go) {
+
+        if (go == null) {
+            return "default";
+        }
+
+        EntityId id = go.GetEntityId();
+
+        PoolKeyEntry entry;
+
+        if (poolKeyCache.TryGetValue(id, out entry)) {
+
+            if (entry.prefab == go) {
+                return entry.key;
+            }
+        }
+        else {
+            entry = new PoolKeyEntry();
+            poolKeyCache[id] = entry;
+        }
+
+        entry.prefab = go;
+        entry.key = go.name.ToDelimited();
+
+        return entry.key;
+    }
+
     public static GameObject CreateGameObject(
         GameObject go,
         Vector3 pos,
         Quaternion rotate,
         bool pooled) {
 
-        string key = "default";
-
-        if (go != null) {
-            key = go.name.ToDelimited();
-        }
-
-        return CreateGameObject(key, go, pos, rotate, pooled);
+        return CreateGameObject(GetPoolKey(go), go, pos, rotate, pooled);
     }
 
     // Pool keyed
@@ -2252,28 +2295,40 @@ public static class GameObjectHelper {
         Quaternion rotate,
         bool pooled) {
 
-        GameObject obj = null;
-
         if (!pooled) {
-            obj = GameObject.Instantiate(go, pos, rotate) as GameObject;
-        }
-        else {
-            obj = ObjectPoolKeyedManager.createPooled(key, go, pos, rotate);
-
-            if (obj != null) {
-
-                if (!obj.Has<PoolGameObject>()) {
-                    obj.AddComponent<PoolGameObject>();
-                }
-
-                // Mark a new life so any delayed recycle still pending from the
-                // previous one cannot reclaim this object out from under its new owner.
-
-                PoolGameObject.Bump(obj);
-            }
+            return CleanGameObjectName(GameObject.Instantiate(go, pos, rotate) as GameObject);
         }
 
-        obj = CleanGameObjectName(obj);
+        GameObject obj = ObjectPoolKeyedManager.createPooled(key, go, pos, rotate);
+
+        if (obj == null) {
+            return null;
+        }
+
+        // One component lookup for all of the pooled bookkeeping. This was three
+        // (Has, AddComponent-check, Bump) plus a name read, on every spawn.
+
+        PoolGameObject poolGameObject = obj.GetComponent<PoolGameObject>();
+
+        if (poolGameObject == null) {
+            poolGameObject = obj.AddComponent<PoolGameObject>();
+        }
+
+        // Mark a new life so any delayed recycle still pending from the previous one
+        // cannot reclaim this object out from under its new owner.
+
+        unchecked {
+            poolGameObject.useSerial++;
+        }
+
+        // "(Clone)" is appended by Instantiate, so it can only ever be there on the
+        // object's FIRST life. Every later revive was reading the name -- allocating a
+        // managed string -- to discover a suffix that could not be present.
+
+        if (!poolGameObject.nameCleaned) {
+            CleanGameObjectName(obj);
+            poolGameObject.nameCleaned = true;
+        }
 
         return obj;
     }

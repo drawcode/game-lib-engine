@@ -14,6 +14,12 @@ public class PoolGameObject : GameObjectBehavior {
 
     public int useSerial = 0;
 
+    // "(Clone)" is only ever appended by the first Instantiate, so the name only needs
+    // cleaning once per instance. Without this every revive read GameObject.name --
+    // a fresh managed string each time -- just to find nothing to strip.
+
+    public bool nameCleaned = false;
+
     void Start() {
 
     }
