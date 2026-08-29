@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Text;
@@ -2536,6 +2536,19 @@ public static class GameObjectHelper {
         }
 
         ResetRigidBodiesVelocity(inst, Vector3.zero);
+    }
+
+    // The two names above clear ANGULAR velocity only, and have since they were written --
+    // callers that wanted "stop moving" got "stop spinning". They keep their behaviour and
+    // their name because other products call them; these are the honest names for the same
+    // thing. Anything being re-issued from a pool wants ResetRigidBodiesMotion below.
+
+    public static void ResetRigidBodiesAngularVelocity(GameObject inst, Vector3 angularVelocity) {
+        ResetRigidBodiesVelocity(inst, angularVelocity);
+    }
+
+    public static void ResetRigidBodiesAngularVelocity(GameObject inst) {
+        ResetRigidBodiesVelocity(inst);
     }
 
     // NOTE: ResetRigidBodiesVelocity only clears ANGULAR velocity despite its name.

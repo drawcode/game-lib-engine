@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 
 #if !UNITY_WEBPLAYER
@@ -892,6 +892,11 @@ public static class BaseGameObjectExtensions {
     public static void ResetRigidBodiesVelocity(this GameObject go) {
 
         GameObjectHelper.ResetRigidBodiesVelocity(go);
+    }
+
+    public static void ResetRigidBodiesAngularVelocity(this GameObject go) {
+
+        GameObjectHelper.ResetRigidBodiesAngularVelocity(go);
     }
 
     public static void ResetRigidBodiesMotion(this GameObject go) {
