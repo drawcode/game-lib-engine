@@ -382,6 +382,12 @@ namespace Engine.Game.Data
         public static string scale_data_max = "scale_data_max";
         public static string scale_min = "scale_min";
         public static string scale_max = "scale_max";
+        // Movement-capsule size for one character, in ACTOR-ROOT units (the model
+        // holder is scaled x4 under the root, so these are 4x the model's own bounds).
+        // Absent or <= 0 means "not authored" -- the controller keeps its own defaults.
+        public static string capsule_radius = "capsule_radius";
+        public static string capsule_height = "capsule_height";
+        public static string capsule_center_y = "capsule_center_y";
         public static string volume = "volume";
         public static string loop = "loop";
         public static string go = "go";

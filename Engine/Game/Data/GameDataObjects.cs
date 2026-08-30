@@ -674,6 +674,63 @@ namespace Engine.Game.App {
             return GetItem<GameDataModel>(models, code);
         }
 
+        // ------------------------------------------------------------------------
+        // MOVEMENT CAPSULE
+        //
+        // Every actor used to get ONE hardcoded CharacterController capsule -- radius
+        // 1.88, height 4.88, centre y 2.39 -- whatever character was in it. Measured
+        // against the shipped models that is 4x too big for a droid and too short for
+        // the boss, so small enemies shoved the player from well outside their own
+        // silhouette and big ones stuck out of theirs.
+        //
+        // These are OPTIONAL and read as double, the way every other authored number
+        // in this file is: the JSON deserialiser boxes numbers as double, and a float
+        // cast on a boxed double throws. Absent or <= 0 means "not authored" and the
+        // controller keeps its serialised defaults -- so adding this key to one
+        // character changes nothing for the others.
+        //
+        // Units are ACTOR-ROOT units, not model units. The model holder sits at x4
+        // scale under the actor root, so a model 0.69 tall wants a capsule of 2.76.
+
+        public virtual double capsule_radius {
+            get {
+                return Get<double>(BaseDataObjectKeys.capsule_radius);
+            }
+
+            set {
+                Set<double>(BaseDataObjectKeys.capsule_radius, value);
+            }
+        }
+
+        public virtual double capsule_height {
+            get {
+                return Get<double>(BaseDataObjectKeys.capsule_height);
+            }
+
+            set {
+                Set<double>(BaseDataObjectKeys.capsule_height, value);
+            }
+        }
+
+        public virtual double capsule_center_y {
+            get {
+                return Get<double>(BaseDataObjectKeys.capsule_center_y);
+            }
+
+            set {
+                Set<double>(BaseDataObjectKeys.capsule_center_y, value);
+            }
+        }
+
+        /// <summary>
+        /// True only when a usable capsule is authored. Radius and height carry the
+        /// shape; centre y alone is not enough to size anything.
+        /// </summary>
+        public virtual bool HasCapsule() {
+            return capsule_radius > 0 && capsule_height > 0;
+        }
+
+
         // color presets
 
         public bool HasColorPresets() {
