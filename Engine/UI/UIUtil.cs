@@ -774,6 +774,19 @@ public class UIUtil {
         }
     }
 
+    // Scroll a list back to the top. Toolkit-only by design: this reaches the concrete backend
+    // rather than going through IUIBackend, so no other implementor has to grow a method for it.
+    // NGUI lists keep using RepositionListScroll.
+    public static void ScrollToTop(UIRef r, bool smooth = true) {
+
+        Engine.UI.UIToolkitBackend backend =
+            UIPlatform.For(r) as Engine.UI.UIToolkitBackend;
+
+        if (backend != null) {
+            backend.ScrollToTop(r, smooth);
+        }
+    }
+
     public static void ClearListItems(UIRef view, string listName) {
 
         IUIBackend backend = UIPlatform.For(view);

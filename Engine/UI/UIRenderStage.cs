@@ -109,13 +109,29 @@ namespace Engine.UI {
             cam.targetTexture = stage.texture;
 
             // A stage-only light so lit materials read; scene lights sit on other layers.
-            GameObject lightGo = new GameObject("stage-light");
-            lightGo.transform.SetParent(camGo.transform, false);
-            lightGo.transform.rotation = Quaternion.Euler(35f, -30f, 0f);
-            Light light = lightGo.AddComponent<Light>();
-            light.type = LightType.Directional;
-            light.cullingMask = 1 << layer;
-            light.intensity = lightIntensity;
+            //
+            // lightIntensity <= 0 means DO NOT ADD ONE — the layer already has a stage light and
+            // this content should borrow it. That option exists because stage lights, unlike stage
+            // cameras, DO NOT ISOLATE. The camera is positionally isolated (it frames only its own
+            // content), but this light is DIRECTIONAL with cullingMask = the whole layer, so it has
+            // infinite reach and lights every other stage's content on that layer too. Two stages
+            // on one layer therefore ADD: measured 2026-08-30, the header coin (1.1) plus a second
+            // coin stage (0.7) gave every staged widget 1.8 and turned the shaded gold coin flat
+            // yellow — the exact over-exposure symptom the lightIntensity parameter was added to
+            // cure in the first place.
+            //
+            // Callers that stage extra content onto a layer some always-on widget already owns
+            // should pass 0 and inherit that widget's light rather than stacking another.
+            if (lightIntensity > 0f) {
+
+                GameObject lightGo = new GameObject("stage-light");
+                lightGo.transform.SetParent(camGo.transform, false);
+                lightGo.transform.rotation = Quaternion.Euler(35f, -30f, 0f);
+                Light light = lightGo.AddComponent<Light>();
+                light.type = LightType.Directional;
+                light.cullingMask = 1 << layer;
+                light.intensity = lightIntensity;
+            }
 
             // Interaction nodes stay on their original layer (see keepColliderLayers above).
             // Renderer-less by test, so the stage camera loses nothing by not culling them.

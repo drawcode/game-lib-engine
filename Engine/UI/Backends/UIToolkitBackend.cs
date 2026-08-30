@@ -821,6 +821,72 @@ namespace Engine.UI {
         //  2. a single, thin scrollbar (the thin styling is in common.uss; visibility is set here).
         // Both are wired for every .ngui-scrollview when a view loads, so no panel repeats it.
 
+        // Return a list's scroll position to the top.
+        //
+        // Exists because a filtered list that keeps its old offset reads as EMPTY: switch the store
+        // from ALL (30 rows) to UPGRADES (3) while scrolled down and the three rows are above the
+        // viewport, so the screen looks broken rather than filtered. The legacy path called
+        // RepositionListScroll(0) for exactly this.
+        //
+        // Smooth, not a jump: the rebuild is already instant, and snapping the offset on top of
+        // that reads as a glitch. Eased over ~0.22s on the panel's own scheduler, and any drag
+        // the player starts mid-glide cancels it (ScrollDrag writes scrollOffset directly, and
+        // this stops as soon as it sees the offset move somewhere it did not put it).
+        public void ScrollToTop(UIRef r, bool smooth = true) {
+
+            VisualElement el = El(r);
+
+            if (el == null) {
+                return;
+            }
+
+            ScrollView sv = el as ScrollView ?? el.Q<ScrollView>();
+
+            if (sv == null) {
+                return;
+            }
+
+            float from = sv.scrollOffset.y;
+
+            if (from <= 0.5f) {
+                return;
+            }
+
+            if (!smooth) {
+                sv.scrollOffset = new Vector2(sv.scrollOffset.x, 0f);
+                return;
+            }
+
+            const float duration = 0.22f;
+            float elapsed = 0f;
+            float last = from;
+
+            IVisualElementScheduledItem item = null;
+
+            item = sv.schedule.Execute(() => {
+
+                // Someone else moved it (a drag, or another reset) — yield rather than fight.
+                if (Mathf.Abs(sv.scrollOffset.y - last) > 0.5f) {
+                    item.Pause();
+                    return;
+                }
+
+                elapsed += 0.016f;
+
+                float t = Mathf.Clamp01(elapsed / duration);
+                float eased = 1f - (1f - t) * (1f - t);           // ease-out quad
+                float y = Mathf.Lerp(from, 0f, eased);
+
+                sv.scrollOffset = new Vector2(sv.scrollOffset.x, y);
+                last = sv.scrollOffset.y;
+
+                if (t >= 1f) {
+                    item.Pause();
+                }
+
+            }).Every(16);
+        }
+
         private static void ConfigureScrollViews(VisualElement root) {
 
             if (root == null) {
