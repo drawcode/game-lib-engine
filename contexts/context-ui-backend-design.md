@@ -162,6 +162,8 @@ namespace Engine.UI {
         // toggle / checkbox
         void SetToggleValue(UIRef r, bool val);
         bool GetToggleValue(UIRef r);
+        void SetToggleHandlerChange(UIRef r, Action<bool> onChange);   // added 2026-08-31
+        void SetSliderHandlerChange(UIRef r, Action<float> onChange);  // added 2026-08-31
 
         // image / sprite
         void SetImageFillValue(UIRef r, float val);
@@ -208,6 +210,12 @@ Notes that are load-bearing:
 - **No `Awake`/`Update` on the interface.** Backends are plain lazy C# singletons like
   `EasingTweenBackend`, not MonoBehaviours. Only `UIToolkitClickBridge` (which needs
   `UIDocument`) is a MonoBehaviour, and it lives inside the UIToolkitBackend file group.
+
+> **The change half was missing until 2026-08-31.** A backend could set and read a toggle's
+> value but never hear it change, so every migrated toggle was inert however correctly it was
+> bound — the legacy path got its change events from MonoBehaviours riding the NGUI widget's
+> GameObject, and a VisualElement has none. See
+> [`context-ui-control-change-events.md`](./context-ui-control-change-events.md).
 
 ## D3 — UIPlatform: registration and per-object dispatch
 
