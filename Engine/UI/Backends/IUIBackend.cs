@@ -47,11 +47,21 @@ namespace Engine.UI {
 
         void SetSliderValue(UIRef r, float val);
         float GetSliderValue(UIRef r);
+        void SetSliderHandlerChange(UIRef r, Action<float> onChange);
 
         // TOGGLES
 
         void SetToggleValue(UIRef r, bool val);
         bool GetToggleValue(UIRef r);
+
+        // The change half of a toggle, and the missing piece under UI Toolkit.
+        //
+        // The legacy path never needed it: CheckboxEvents/SliderEvents are MonoBehaviours that
+        // ride the NGUI widget's own GameObject and rebroadcast its callback onto the Messenger
+        // bus, so a panel only had to listen. A toolkit toggle is a VisualElement -- no
+        // GameObject, so no component, so nothing broadcasts and every migrated toggle is inert
+        // however correctly it is bound. Panels register here instead.
+        void SetToggleHandlerChange(UIRef r, Action<bool> onChange);
 
         // IMAGES
 

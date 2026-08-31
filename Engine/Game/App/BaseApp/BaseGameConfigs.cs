@@ -5,6 +5,32 @@ using System.IO;
 using Engine.Game.Data;
 
 namespace Engine.Game.App.BaseApp {
+
+    // OFF-SCREEN EDGE INDICATOR DIALS
+    //
+    // Deliberately NOT on BaseGameConfigs<T>: that class is generic, so its statics are only
+    // reachable through a closed type (the app's `GameConfigs`), which the engine lib cannot
+    // name. BaseGameProfile lives here and needs the same numbers for its slider bounds, so
+    // they sit in a non-generic class both sides can see.
+    //
+    // `scale` multiplies the distance-derived size in BaseGamePlayerIndicator.ScaleIndicator.
+    // It ships at .9 -- the 10% shrink asked for on device -- and Settings: Controls writes the
+    // player's own value over it from ATT_CONTROL_INDICATOR_SCALE.
+    //
+    // `edgeBorderScale` multiplies the indicator prefab's authored `clampBorderSize` (90 design
+    // units) rather than replacing it, so the authored margin stays the one place that number
+    // is written down. .5 puts them at 45 units. 90 was worst on the vertical axis: the visible
+    // area measures +/-692.5 x +/-320 container units, so it inset the top and bottom dots by
+    // 28% of the half-height while the sides sat at 13% -- which is why only SOME of them read
+    // as far from the edge.
+    public static class GameIndicatorConfigs {
+        public static float scale = .9f;
+        public static float scaleMin = .5f;
+        public static float scaleMax = 1.5f;
+
+        public static float edgeBorderScale = .5f;
+    }
+
     public class BaseGameConfigs<T> : DataObjects<T> where T : DataObject, new() {
         private static T current;
         private static volatile BaseGameConfigs<T> instance;

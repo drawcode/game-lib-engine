@@ -282,6 +282,28 @@ namespace Engine.UI {
             SetImageFillValue(r, val);
         }
 
+        public void SetSliderHandlerChange(UIRef r, Action<float> onChange) {
+
+            VisualElement el = El(r);
+
+            if (el == null || onChange == null) {
+                return;
+            }
+
+            Slider slider = el as Slider;
+
+            if (slider != null) {
+                slider.RegisterValueChangedCallback(evt => onChange(evt.newValue));
+                return;
+            }
+
+            Scroller scroller = el as Scroller;
+
+            if (scroller != null) {
+                scroller.valueChanged += onChange;
+            }
+        }
+
         public float GetSliderValue(UIRef r) {
 
             VisualElement el = El(r);
@@ -327,6 +349,24 @@ namespace Engine.UI {
             }
 
             return toggle.value;
+        }
+
+        // RegisterValueChangedCallback, not the `this.value = x` setter path: the callback only
+        // fires when the value actually changes, and SetToggleValue goes through `toggle.value`
+        // too. A panel that answers a change by re-syncing every toggle (which is exactly what
+        // BaseGameUIPanelSettingsControls.SyncCheckedState does) would otherwise re-enter here
+        // for each one. Toolkit suppresses the callback when the new value equals the old, so
+        // the re-sync settles instead of looping -- but a handler that flips the value it was
+        // told about will still recurse, and that is on the caller.
+        public void SetToggleHandlerChange(UIRef r, Action<bool> onChange) {
+
+            Toggle toggle = El(r) as Toggle;
+
+            if (toggle == null || onChange == null) {
+                return;
+            }
+
+            toggle.RegisterValueChangedCallback(evt => onChange(evt.newValue));
         }
 
         // IMAGES

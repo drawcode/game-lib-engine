@@ -586,6 +586,28 @@ public class UIUtil {
         return backend.GetToggleValue(r);
     }
 
+    // The change half of a toggle/slider. Under UI Toolkit this is the ONLY way a panel hears
+    // about one: CheckboxEvents/SliderEvents are MonoBehaviours on the NGUI widget's GameObject
+    // and a VisualElement has no GameObject, so nothing rebroadcasts onto the Messenger bus and
+    // a migrated toggle is inert however correctly BindElements bound it.
+    public static void SetToggleHandlerChange(UIRef r, Action<bool> onChange) {
+
+        IUIBackend backend = UIPlatform.For(r);
+
+        if (backend != null) {
+            backend.SetToggleHandlerChange(r, onChange);
+        }
+    }
+
+    public static void SetSliderHandlerChange(UIRef r, Action<float> onChange) {
+
+        IUIBackend backend = UIPlatform.For(r);
+
+        if (backend != null) {
+            backend.SetSliderHandlerChange(r, onChange);
+        }
+    }
+
     public static void SetImageFillValue(UIRef r, float val) {
 
         IUIBackend backend = UIPlatform.For(r);

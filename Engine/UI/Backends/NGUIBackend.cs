@@ -373,6 +373,42 @@ namespace Engine.UI {
             return false;
         }
 
+        // On this backend the change half already has an owner: CheckboxEvents and SliderEvents
+        // are MonoBehaviours authored onto the widget's own GameObject, and they rebroadcast the
+        // NGUI callback onto the Messenger bus that every legacy panel already listens to.
+        // Registering a second, direct handler here would deliver the same change twice to a
+        // panel that is listening both ways during a migration. So these wire the uGUI
+        // components -- which have no such rebroadcaster -- and leave the NGUI widgets to their
+        // existing bus. Same shape as SetButtonHandlerClick, whose NGUI branch is also a no-op.
+        public void SetToggleHandlerChange(UIRef r, Action<bool> onChange) {
+
+            GameObject obj = Go(r);
+
+            if (obj == null || onChange == null) {
+                return;
+            }
+
+            if (obj.Has<Toggle>()) {
+                obj.Get<Toggle>().onValueChanged.AddListener(val => onChange(val));
+            }
+        }
+
+        public void SetSliderHandlerChange(UIRef r, Action<float> onChange) {
+
+            GameObject obj = Go(r);
+
+            if (obj == null || onChange == null) {
+                return;
+            }
+
+            if (obj.Has<Slider>()) {
+                obj.Get<Slider>().onValueChanged.AddListener(val => onChange(val));
+            }
+            else if (obj.Has<Scrollbar>()) {
+                obj.Get<Scrollbar>().onValueChanged.AddListener(val => onChange(val));
+            }
+        }
+
         // IMAGES
 
         public void SetImageFillValue(UIRef r, float val) {
