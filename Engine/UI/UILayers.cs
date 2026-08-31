@@ -41,5 +41,17 @@ namespace Engine.UI {
 
         // Dialogs / loading / transition overlays — above everything.
         public const int overlay = 20000;
+
+        // Toasts that must sit above a dialog as well as above a screen — the achievement /
+        // point / tip / error notification.
+        //
+        // This band exists because the shared PanelSettings renders in OVERLAY mode
+        // (m_RenderMode: 0), so EVERY toolkit view composites after every camera. A toast left
+        // on NGUI therefore draws under the toolkit header no matter what its NGUI depth is —
+        // which is exactly the "achievements header sort" report: the legacy toast slid down
+        // from the top and the header band, the coin count and the FPS readout drew straight
+        // over it. It also matches the legacy camera order, where OverlayCamera (55) sits above
+        // DialogCamera (15).
+        public const int notification = 30000;
     }
 }
