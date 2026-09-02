@@ -74,6 +74,27 @@ namespace Engine.UI {
         // caller is saying "display exactly this texture".
         void SetImageTexture(UIRef r, Texture texture);
 
+        // Paint an element's own fill, independent of any background IMAGE it carries.
+        // SetSpriteColor above tints a sprite; this is the flat fill a swatch/chip needs, where
+        // there is no sprite to tint and the colour IS the content.
+        void SetElementColor(UIRef r, Color c);
+
+        // DRAG SURFACES (colour pickers, and anything else that reads a position inside a rect
+        // rather than a discrete click).
+        //
+        // NGUI had no equivalent: the legacy picker raycast a MeshCollider from Update and did
+        // its own camera maths. A toolkit element already knows its own rect, so the backend
+        // hands the panel a NORMALIZED point instead — (0,0) at the element's BOTTOM-LEFT,
+        // (1,1) at its top-right, clamped, fired on pointer down and on every move while held.
+        // Panels never see pointer ids, capture, or local-vs-world coordinates.
+        void SetElementDragHandler(UIRef r, Action<Vector2> onDrag);
+
+        // Place a child inside its parent by fraction of the parent's box — (0,0) bottom-left,
+        // (1,1) top-right. The element is expected to be absolutely positioned and centred on
+        // its own point (translate -50% -50%), so this moves a THUMB without the caller knowing
+        // the parent's pixel size. Percent, not pixels, so it survives a resize.
+        void SetElementOffsetPercent(UIRef r, float xPercent, float yPercent);
+
         // BUTTONS
         // The object half only. The name-compare half (IsButtonClicked(string, string),
         // 199 call sites) is NOT here — it is the event bus, and it lives on UIEvents.

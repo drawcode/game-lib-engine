@@ -462,6 +462,84 @@ namespace Engine.UI {
             TweenUtil.backend.ColorTo(target, c, meta);
         }
 
+        public void SetElementColor(UIRef r, Color c) {
+
+            VisualElement el = El(r);
+
+            if (el == null) {
+                return;
+            }
+
+            el.style.backgroundColor = c;
+        }
+
+        // DRAG SURFACES
+
+        // One pointer, captured for the duration of the press. Capture is what makes a drag that
+        // leaves the element keep reporting — without it the picker stops updating the moment the
+        // thumb crosses the rect edge, which is exactly where a user drags to reach 0 or 1.
+        //
+        // localPosition has y DOWN from the element's top-left; the reported point has y UP from
+        // its bottom-left, so a caller reasons in the same orientation as the USS `bottom`/thumb
+        // percentages it is about to set.
+        public void SetElementDragHandler(UIRef r, Action<Vector2> onDrag) {
+
+            VisualElement el = El(r);
+
+            if (el == null || onDrag == null) {
+                return;
+            }
+
+            Action<Vector2> report = (Vector2 local) => {
+
+                Rect rect = el.contentRect;
+
+                if (rect.width <= 0f || rect.height <= 0f) {
+                    return;
+                }
+
+                float x = Mathf.Clamp01(local.x / rect.width);
+                float y = Mathf.Clamp01(1f - (local.y / rect.height));
+
+                onDrag(new Vector2(x, y));
+            };
+
+            el.RegisterCallback<PointerDownEvent>(evt => {
+                el.CapturePointer(evt.pointerId);
+                report(evt.localPosition);
+                evt.StopPropagation();
+            });
+
+            el.RegisterCallback<PointerMoveEvent>(evt => {
+
+                if (!el.HasPointerCapture(evt.pointerId)) {
+                    return;
+                }
+
+                report(evt.localPosition);
+                evt.StopPropagation();
+            });
+
+            el.RegisterCallback<PointerUpEvent>(evt => {
+
+                if (el.HasPointerCapture(evt.pointerId)) {
+                    el.ReleasePointer(evt.pointerId);
+                }
+            });
+        }
+
+        public void SetElementOffsetPercent(UIRef r, float xPercent, float yPercent) {
+
+            VisualElement el = El(r);
+
+            if (el == null) {
+                return;
+            }
+
+            el.style.left = Length.Percent(Mathf.Clamp01(xPercent) * 100f);
+            el.style.top = Length.Percent((1f - Mathf.Clamp01(yPercent)) * 100f);
+        }
+
         // BUTTONS
 
         public bool IsButton(UIRef r) {

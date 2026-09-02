@@ -160,6 +160,42 @@ public class UIUtil {
         }
     }
 
+    // Flat fill for an element that has no sprite to tint — a colour swatch, where the colour is
+    // the content rather than a recolouring of some art. Additive.
+    public static void SetElementColor(UIRef r, Color c) {
+
+        IUIBackend backend = UIPlatform.For(r);
+
+        if (backend != null) {
+            backend.SetElementColor(r, c);
+        }
+    }
+
+    // Turn an element into a DRAG SURFACE: the handler receives a normalized point inside it,
+    // (0,0) bottom-left .. (1,1) top-right, on press and on every move while held. The colour
+    // picker's hue strip and saturation/brightness square are the first callers — the legacy
+    // versions raycast a MeshCollider from their own Update and did the camera maths by hand.
+    public static void SetElementDragHandler(UIRef r, Action<Vector2> onDrag) {
+
+        IUIBackend backend = UIPlatform.For(r);
+
+        if (backend != null) {
+            backend.SetElementDragHandler(r, onDrag);
+        }
+    }
+
+    // Place a thumb inside its track by fraction, (0,0) bottom-left .. (1,1) top-right. The
+    // element is expected to carry `position: absolute` and `translate: -50% -50%` so it centres
+    // on its own point.
+    public static void SetElementOffsetPercent(UIRef r, float xPercent, float yPercent) {
+
+        IUIBackend backend = UIPlatform.For(r);
+
+        if (backend != null) {
+            backend.SetElementOffsetPercent(r, xPercent, yPercent);
+        }
+    }
+
     //
 
 #if USE_UI_NGUI_2_7

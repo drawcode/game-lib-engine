@@ -457,6 +457,19 @@ namespace Engine.UI {
         public void SetImageTexture(UIRef r, Texture texture) {
         }
 
+        // Deliberate no-ops, same reason: a flat element fill, a normalized drag surface and a
+        // percent-placed thumb are all VisualElement geometry. The NGUI equivalents are a widget
+        // colour, a MeshCollider raycast from Update, and a world-space transform — three
+        // different mechanisms that the legacy picker already owns in its own components.
+        public void SetElementColor(UIRef r, Color c) {
+        }
+
+        public void SetElementDragHandler(UIRef r, Action<Vector2> onDrag) {
+        }
+
+        public void SetElementOffsetPercent(UIRef r, float xPercent, float yPercent) {
+        }
+
         // BUTTONS
 
         public bool IsButton(UIRef r) {
