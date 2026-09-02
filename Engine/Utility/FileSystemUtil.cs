@@ -9,23 +9,58 @@ using UnityEngine.Networking;
 
 public class FileSystemUtil {
 
+    // Per-file-operation trace logging, OFF by default.
+    //
+    // These 39 call sites were plain Debug.Log, and they are the single most expensive thing this
+    // class does. Measured on a 7-byte write: WriteString costs 5.06 ms with stack traces on and
+    // 1.66 ms with them off, while the write itself is 0.20 ms and the Directory.Exists behind
+    // EnsureDirectory is 0.007 ms. The gap is UnityEngine.Debug capturing a managed stack trace
+    // per call — five calls per WriteString (one here, three in EnsureDirectory, one in
+    // CreateDirectoryIfNeededAndAllowed), and CopyFile logs fifteen more per file.
+    //
+    // That is not an Editor artifact: StackTraceLogType.ScriptOnly is the DEFAULT for LogType.Log
+    // in player builds too, so it shipped. GameState.SaveProfile writes ten blobs and paid ~34 ms
+    // of it per save.
+    //
+    // Routing them through LogUtil.Log would NOT have fixed it — LogUtil.loggingEnabled defaults
+    // true and the "default" key is active, so it runs LoadKeys() plus a key scan and then calls
+    // Debug.Log anyway. Hence an explicit flag: set FileSystemUtil.logVerbose = true to get the
+    // trace back when diagnosing a path or permissions problem.
+    //
+    // The File.Copy failure log is deliberately NOT gated — a real error must never go quiet.
+    public static bool logVerbose = false;
+
+    // Directories confirmed to exist this session — see EnsureDirectory. Session-scoped on
+    // purpose: it is a cache of an observation, not of an intent, so the worst case if something
+    // deletes a folder underneath us is one failed write rather than a silently wrong path.
+    static readonly HashSet<string> ensuredDirectories = new HashSet<string>();
+
+    static void LogVerbose(object message) {
+
+        if (!logVerbose) {
+            return;
+        }
+
+        Debug.Log(message);
+    }
+
     public static void CreateDirectoryIfNeededAndAllowed(string path) {
 
 #if !UNITY_WEBPLAYER
 
-        Debug.Log("FileSystemUtil::CreateDirectoryIfNeededAndAllowed:path:" + path);
+        LogVerbose("FileSystemUtil::CreateDirectoryIfNeededAndAllowed:path:" + path);
 
         if (!Directory.Exists(path)) {
 
-            Debug.Log("FileSystemUtil::CreateDirectoryIfNeededAndAllowed:pathnotexists:" + path);
+            LogVerbose("FileSystemUtil::CreateDirectoryIfNeededAndAllowed:pathnotexists:" + path);
 
             if (DirectoryAllowed(path)) {
 
-                Debug.Log("CreateDirectoryIfNeededAndAllowed:" + path);
+                LogVerbose("CreateDirectoryIfNeededAndAllowed:" + path);
 
                 path = path.TrimEnd('/');
 
-                Debug.Log("CreateDirectoryIfNeededAndAllowed:trimmed:path:" + path);
+                LogVerbose("CreateDirectoryIfNeededAndAllowed:trimmed:path:" + path);
 
                 //Directory.CreateDirectory(path);
 
@@ -35,7 +70,7 @@ public class FileSystemUtil {
 
                     dir.Create();
 
-                    Debug.Log("CreateDirectoryIfNeededAndAllowed:info:path:" + path);
+                    LogVerbose("CreateDirectoryIfNeededAndAllowed:info:path:" + path);
                 }
 
             }
@@ -84,7 +119,7 @@ public class FileSystemUtil {
 
         WriteString(filepath, data);
 
-        Debug.Log("CreateDirectoryHolderFile:data:" + data);
+        LogVerbose("CreateDirectoryHolderFile:data:" + data);
     }
 
     public static void DirectoryCopy(string sourceDirName, string destDirName, bool copySubDirs, bool versioned) {
@@ -152,7 +187,7 @@ public class FileSystemUtil {
 
         //LogUtil.Log("filePath:" + filePath);
 
-        Debug.Log("FileSystemUtil::EnsureDirectory:filePath:" + filePath);
+        LogVerbose("FileSystemUtil::EnsureDirectory:filePath:" + filePath);
 
         string directory = filePath;
 
@@ -160,15 +195,27 @@ public class FileSystemUtil {
 
             directory = filePath.Replace(Path.GetFileName(filePath), "");
 
-            Debug.Log("FileSystemUtil::EnsureDirectory:directory:" + directory);
+            LogVerbose("FileSystemUtil::EnsureDirectory:directory:" + directory);
 
         }
 
-        Debug.Log("FileSystemUtil::EnsureDirectory:directory:" + directory);
+        LogVerbose("FileSystemUtil::EnsureDirectory:directory:" + directory);
 
         //LogUtil.Log("directory:" + directory);
 
+        // One directory serves every write that follows it — SaveProfile alone writes ten blobs
+        // into the same folder — so confirm it once per session instead of once per file. Only
+        // directories we have actually seen exist are remembered, and the remember happens AFTER
+        // the create, so a first run still creates and a failed create is never cached.
+        if (ensuredDirectories.Contains(directory)) {
+            return;
+        }
+
         CreateDirectoryIfNeededAndAllowed(directory);
+
+        if (Directory.Exists(directory)) {
+            ensuredDirectories.Add(directory);
+        }
 
         //if(createFileEmptyFileInFolder) {
         //    CreateDirectoryHolderFile(directory);
@@ -177,7 +224,7 @@ public class FileSystemUtil {
 
     public static bool CheckDirectoryExists(string filePath, bool filterFileName = true) {
 
-        Debug.Log("FileSystemUtil::CheckDirectoryExists:filePath:" + filePath);
+        LogVerbose("FileSystemUtil::CheckDirectoryExists:filePath:" + filePath);
 
         string directory = filePath;
 
@@ -185,11 +232,11 @@ public class FileSystemUtil {
 
             directory = filePath.Replace(Path.GetFileName(filePath), "");
 
-            Debug.Log("FileSystemUtil::CheckDirectoryExists:directory:" + directory);
+            LogVerbose("FileSystemUtil::CheckDirectoryExists:directory:" + directory);
 
         }
 
-        Debug.Log("FileSystemUtil::CheckDirectoryExists:directory:" + directory);
+        LogVerbose("FileSystemUtil::CheckDirectoryExists:directory:" + directory);
 
         return Directory.Exists(directory);
 
@@ -211,9 +258,9 @@ public class FileSystemUtil {
 
         bool exists = false;
 
-        Debug.Log("CheckFileExists: path:" + path);
-        Debug.Log("CheckFileExists: Application.streamingAssetsPath:" + Application.streamingAssetsPath);
-        Debug.Log("CheckFileExists: path.Contains(Application.streamingAssetsPath):" + path.Contains(Application.streamingAssetsPath));
+        LogVerbose("CheckFileExists: path:" + path);
+        LogVerbose("CheckFileExists: Application.streamingAssetsPath:" + Application.streamingAssetsPath);
+        LogVerbose("CheckFileExists: path.Contains(Application.streamingAssetsPath):" + path.Contains(Application.streamingAssetsPath));
 
 #if UNITY_ANDROID
         if(!exists) {// && path.Contains(Application.streamingAssetsPath)) {
@@ -246,8 +293,8 @@ public class FileSystemUtil {
                 //int length = file.bytes.Length;
                 int length = www.downloadHandler.data.Length;
 
-                Debug.Log("CheckFileExists: Android: path:" + path);
-                Debug.Log("CheckFileExists: Android: file.bytes.length:" + length);
+                LogVerbose("CheckFileExists: Android: path:" + path);
+                LogVerbose("CheckFileExists: Android: file.bytes.length:" + length);
 
                 if(www.downloadHandler.data.Length > 0) {
                     exists = true;
@@ -281,24 +328,24 @@ public class FileSystemUtil {
         EnsureDirectory(dataFilePath);
         EnsureDirectory(persistenceFilePath);
 
-        Debug.Log("dataFilePath: " + dataFilePath);
-        Debug.Log("persistenceFilePath: " + persistenceFilePath);
-        Debug.Log("Application.dataPath: " + Application.dataPath);
-        Debug.Log("Application.persistentDataPath: " + Application.persistentDataPath);
-        Debug.Log("Application.temporaryCachePath: " + Application.temporaryCachePath);
-        Debug.Log("Application.streamingAssetsPath: " + Application.streamingAssetsPath);
+        LogVerbose("dataFilePath: " + dataFilePath);
+        LogVerbose("persistenceFilePath: " + persistenceFilePath);
+        LogVerbose("Application.dataPath: " + Application.dataPath);
+        LogVerbose("Application.persistentDataPath: " + Application.persistentDataPath);
+        LogVerbose("Application.temporaryCachePath: " + Application.temporaryCachePath);
+        LogVerbose("Application.streamingAssetsPath: " + Application.streamingAssetsPath);
 
-        Debug.Log("CheckFileExists(dataFilePath): " + CheckFileExists(dataFilePath));
-        Debug.Log("!CheckFileExists(persistenceFilePath): " + !CheckFileExists(persistenceFilePath));
-        Debug.Log("CheckDirectoryExists(dataFilePath): " + CheckDirectoryExists(dataFilePath));
-        Debug.Log("CheckDirectoryExists(dataPath): " + CheckDirectoryExists(Application.dataPath));
-        Debug.Log("CheckDirectoryExists(Application.persistentDataPath): " + CheckDirectoryExists(Application.persistentDataPath));
-        Debug.Log("CheckDirectoryExists(Application.persistentDataPath): " + CheckDirectoryExists(Application.persistentDataPath));
-        Debug.Log("CheckDirectoryExists(Application.temporaryCachePath): " + CheckDirectoryExists(Application.temporaryCachePath));
-        Debug.Log("CheckDirectoryExists(Application.streamingAssetsPath): " + CheckDirectoryExists(Application.streamingAssetsPath));
+        LogVerbose("CheckFileExists(dataFilePath): " + CheckFileExists(dataFilePath));
+        LogVerbose("!CheckFileExists(persistenceFilePath): " + !CheckFileExists(persistenceFilePath));
+        LogVerbose("CheckDirectoryExists(dataFilePath): " + CheckDirectoryExists(dataFilePath));
+        LogVerbose("CheckDirectoryExists(dataPath): " + CheckDirectoryExists(Application.dataPath));
+        LogVerbose("CheckDirectoryExists(Application.persistentDataPath): " + CheckDirectoryExists(Application.persistentDataPath));
+        LogVerbose("CheckDirectoryExists(Application.persistentDataPath): " + CheckDirectoryExists(Application.persistentDataPath));
+        LogVerbose("CheckDirectoryExists(Application.temporaryCachePath): " + CheckDirectoryExists(Application.temporaryCachePath));
+        LogVerbose("CheckDirectoryExists(Application.streamingAssetsPath): " + CheckDirectoryExists(Application.streamingAssetsPath));
 
 
-        Debug.Log("force: " + force);
+        LogVerbose("force: " + force);
 
         if (CheckFileExists(dataFilePath) && (!CheckFileExists(persistenceFilePath) || force)) {
 
@@ -343,9 +390,9 @@ public class FileSystemUtil {
                     //int length = file.bytes.Length;
                     int length = www.downloadHandler.data.Length;
 
-                    Debug.Log("CopyFile: Android: dataFilePath:" + dataFilePath);
-                    Debug.Log("CopyFile: Android: persistenceFilePath:" + persistenceFilePath);
-                    Debug.Log("CopyFile: Android: file.bytes.length:" + length);
+                    LogVerbose("CopyFile: Android: dataFilePath:" + dataFilePath);
+                    LogVerbose("CopyFile: Android: persistenceFilePath:" + persistenceFilePath);
+                    LogVerbose("CopyFile: Android: file.bytes.length:" + length);
 
                     //if(file.bytes.Length > 0) {
                     //    // Save file contents to new location                   
@@ -588,7 +635,7 @@ public class FileSystemUtil {
         SystemPrefUtil.SetLocalSettingString(fileName, data);
         SystemPrefUtil.Save();
 #else
-        Debug.Log("FileSystemUtil::WriteString:EnsureDirectory:fileName:" + fileName);
+        LogVerbose("FileSystemUtil::WriteString:EnsureDirectory:fileName:" + fileName);
 
         EnsureDirectory(fileName);
 
