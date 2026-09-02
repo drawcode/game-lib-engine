@@ -563,13 +563,44 @@ namespace Engine.UI {
 
         // VISIBILITY
 
+        // A VisualElement is NOT a UnityEngine.Object, so UIRef.alive cannot see that the
+        // PanelRenderer GameObject which owned it has been destroyed — it reports a torn-down
+        // view as perfectly alive. Unity destroys scene objects in arbitrary order on play-mode
+        // exit and scene unload, so a panel's OnDisable routinely reaches a view whose host is
+        // already gone, and writing an inline style on one of those throws a NullReferenceException
+        // from inside UIElements itself (InlineStyleAccess.ApplyStyleValue). Observed on the
+        // header: OnDisable -> FreeToolkitView -> FreeCharacterLargeView -> UnstageCharacterLarge
+        // -> HideObject(characterLargeView).
+        //
+        // viewHosts is the authority: it maps a view's subtree root to the GameObject that owns
+        // it, and Unity's == null on that GameObject is exactly the "already destroyed" signal
+        // UIRef cannot provide. Walk up to the nearest tracked root; an element that belongs to no
+        // tracked view is left alone (permissive — nothing to say about it).
+        private bool HostAlive(VisualElement el) {
+
+            VisualElement node = el;
+
+            while (node != null) {
+
+                GameObject go = null;
+
+                if (viewHosts.TryGetValue(node, out go)) {
+                    return go != null;
+                }
+
+                node = node.parent;
+            }
+
+            return true;
+        }
+
         // display, not visibility: display removes the element from layout, which is what
         // SetActive does on the GameObject side. Tweens must never call these (gate learning #1).
         public void Show(UIRef r) {
 
             VisualElement el = El(r);
 
-            if (el == null) {
+            if (el == null || !HostAlive(el)) {
                 return;
             }
 
@@ -580,7 +611,7 @@ namespace Engine.UI {
 
             VisualElement el = El(r);
 
-            if (el == null) {
+            if (el == null || !HostAlive(el)) {
                 return;
             }
 
