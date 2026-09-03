@@ -149,14 +149,24 @@ public static class GameObjectHelper {
 
     // RENDERERS
 
+    // Scratch buffers for the visibility tests below. These run per object, per frame (the
+    // off-screen indicators test one per indicator in LateUpdate, actor shadows one per actor in
+    // Update), and the array-returning GetComponentsInChildren<T>() allocates a fresh array every
+    // call. The List overload fills a buffer instead.
+    //
+    // Static and shared, and safe because the buffer never outlives the call that fills it: it is
+    // walked immediately and nothing retains a reference. Main thread only, like the rest of the
+    // Unity API these wrap.
+    private static readonly List<Renderer> renderersShared = new List<Renderer>(16);
+    private static readonly Plane[] frustumPlanesShared = new Plane[6];
+
     public static bool IsRenderersVisibleByCamera(GameObject inst) {
         if (inst == null)
             return false;
 
-        if (!inst.IsRenderersVisible()) {
-            return false;
-        }
-
+        // The IsRenderersVisible() pre-pass this replaces walked exactly the same renderers to ask
+        // exactly the same `enabled` question the loop below already asks, so it doubled the cost
+        // of every call and could never change the answer.
         Renderer render = inst.GetComponent<Renderer>();
 
         if (render != null) {
@@ -167,14 +177,21 @@ public static class GameObjectHelper {
             }
         }
 
-        // Enable rendering:
-        foreach (Renderer component in inst.GetComponentsInChildren<Renderer>()) {
-            if (component.enabled) {
+        inst.GetComponentsInChildren<Renderer>(renderersShared);
+
+        for (int i = 0; i < renderersShared.Count; i++) {
+
+            Renderer component = renderersShared[i];
+
+            if (component != null && component.enabled) {
                 if (component.isVisible) {
+                    renderersShared.Clear();
                     return true;
                 }
             }
         }
+
+        renderersShared.Clear();
 
         return false;
     }
@@ -183,30 +200,41 @@ public static class GameObjectHelper {
         if (inst == null)
             return false;
 
-        if (!inst.IsRenderersVisible()) {
-            return false;
+        if (cam == null) {
+            return IsRenderersVisibleByCamera(inst);
         }
+
+        // Calculate the frustum ONCE for the whole object rather than once per renderer, which is
+        // what the per-renderer IsVisibleFrom(cam) overload used to do.
+        GeometryUtility.CalculateFrustumPlanes(cam, frustumPlanesShared);
 
         Renderer render = inst.GetComponent<Renderer>();
 
         if (render != null) {
             if (render.enabled) {
                 if (render.isVisible
-                    && render.IsVisibleFrom(cam)) {
+                    && GeometryUtility.TestPlanesAABB(frustumPlanesShared, render.bounds)) {
                     return true;
                 }
             }
         }
 
-        // Enable rendering:
-        foreach (Renderer component in inst.GetComponentsInChildren<Renderer>()) {
-            if (component.enabled) {
+        inst.GetComponentsInChildren<Renderer>(renderersShared);
+
+        for (int i = 0; i < renderersShared.Count; i++) {
+
+            Renderer component = renderersShared[i];
+
+            if (component != null && component.enabled) {
                 if (component.isVisible
-                    && component.IsVisibleFrom(cam)) {
+                    && GeometryUtility.TestPlanesAABB(frustumPlanesShared, component.bounds)) {
+                    renderersShared.Clear();
                     return true;
                 }
             }
         }
+
+        renderersShared.Clear();
 
         return false;
     }
