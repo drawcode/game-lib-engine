@@ -2338,15 +2338,21 @@ public static class GameObjectHelper {
 
         PoolGameObject poolGameObject = obj.GetComponent<PoolGameObject>();
 
+        // Mark a new life so any delayed recycle still pending from the previous one cannot
+        // reclaim this object out from under its new owner.
+        //
+        // Only for an object the pool has just INSTANTIATED. A revived one was already bumped by
+        // ObjectPool.instantiate, before it re-sent Start -- which is the only order that lets an
+        // object schedule its own recycle from Start. Bumping again here would move the serial
+        // past the one that recycle captured and the object would never come back.
+
         if (poolGameObject == null) {
+
             poolGameObject = obj.AddComponent<PoolGameObject>();
-        }
 
-        // Mark a new life so any delayed recycle still pending from the previous one
-        // cannot reclaim this object out from under its new owner.
-
-        unchecked {
-            poolGameObject.useSerial++;
+            unchecked {
+                poolGameObject.useSerial++;
+            }
         }
 
         // "(Clone)" is appended by Instantiate, so it can only ever be there on the

@@ -65,6 +65,25 @@ public class ObjectPool : System.Object {
             obj.transform.rotation = rotation;
             obj.SetActive(true);
 
+            // Mark the new life BEFORE Start runs, not after.
+            //
+            // Start is where a pooled object typically schedules its own delayed recycle
+            // (GameRayShoot is the clearest case: it draws its beam and asks to be reclaimed
+            // LifeTime seconds later). destroyPooled captures the use serial at the moment it is
+            // called, and the stale-recycle guard drops the timer if the serial has moved on.
+            //
+            // The bump used to happen in GameObjectHelper.CreateGameObject, i.e. AFTER this
+            // SendMessage returned -- so every such object captured serial N, was immediately
+            // bumped to N+1, and its own recycle was then thrown away as somebody else's. The
+            // object was never returned to the pool: it stayed in the world, visible, forever.
+            // First life was unaffected (Unity sends that Start a frame later, after the bump),
+            // which is why only the SECOND and later shots leaked.
+            if (obj.GetComponent<PoolGameObject>() == null) {
+                obj.AddComponent<PoolGameObject>();
+            }
+
+            PoolGameObject.Bump(obj);
+
             // Call Start again
             obj.SendMessage("Start", SendMessageOptions.DontRequireReceiver);
         }
