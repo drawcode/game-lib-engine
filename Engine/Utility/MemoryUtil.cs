@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.Scripting;
 
 /// <summary>
@@ -68,6 +69,13 @@ public class MemoryUtil : GameObjectBehavior {
     public static bool trimPoolsAtSafePoint = true;
 
     /// <summary>
+    /// How long a screen-change safe point waits before it collects, in REAL seconds --
+    /// long enough for the incoming screen's animate-in to finish, so the spike lands on a
+    /// still frame instead of a moving one. See the delayed `CollectAtSafePoint` overload.
+    /// </summary>
+    public static float uiTransitionSettleSeconds = 0.6f;
+
+    /// <summary>
     /// Re-derive the numbers above from the device on first run. A 2GB phone should
     /// collect sooner, in smaller bites, and be allowed to unload more often than a
     /// desktop with 32GB and eight cores. Set false BEFORE the driver is created if you
@@ -104,6 +112,7 @@ public class MemoryUtil : GameObjectBehavior {
     private static bool pendingSafePointCollect = false;
     private static bool pendingSafePointUnload = false;
     private static bool safePointRunning = false;
+    private static float pendingSafePointDelay = 0f;
 
     private static float lastFullCollectTime = -99999f;
     private static long heapBaselineBytes = 0;
@@ -112,6 +121,16 @@ public class MemoryUtil : GameObjectBehavior {
     public static int fullCollects { get; private set; }
     public static int unloads { get; private set; }
     public static int poolObjectsTrimmed { get; private set; }
+
+    /// <summary>
+    /// The reason string of the most recently SERVICED safe point, and the frame it
+    /// finished on. Diagnostics only -- but load-bearing for verification: without it the
+    /// only way to tell which transition actually collected is to turn logging on before
+    /// the app boots, which is impossible for anything that happens during boot itself.
+    /// </summary>
+    public static string lastSafePointReason { get; private set; }
+
+    public static int lastSafePointFrame { get; private set; }
 
     /// <summary>
     /// Raised at the START of a safe point, before anything is collected, so a product can
@@ -166,6 +185,52 @@ public class MemoryUtil : GameObjectBehavior {
         }
     }
 
+    /// <summary>
+    /// Boot the driver before the first scene loads, and reset every static this class
+    /// owns while doing it.
+    ///
+    /// Two things go wrong without this. First, the driver used to appear only when
+    /// somebody made a request -- in practice the first `SetBusy` or `showUI` -- so boot,
+    /// the splash and the first menu load, which are the heaviest asset phase the app has,
+    /// ran with no `Application.lowMemory` handler and no backgrounding safe point at all.
+    /// Second, with "Enter Play Mode Options" set to skip the domain reload these statics
+    /// survive between play sessions, so the second run starts with a stale
+    /// `lastFullCollectTime`, a stale heap baseline and possibly `busy` still true from a
+    /// round that no longer exists -- which silently suppresses every collect.
+    /// </summary>
+    [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
+    private static void BootstrapOnLoad() {
+
+        busy = false;
+        pendingIncremental = false;
+        pendingSafePointCollect = false;
+        pendingSafePointUnload = false;
+        safePointRunning = false;
+        pendingSafePointDelay = 0f;
+        lastFullCollectTime = -99999f;
+        heapBaselineBytes = 0;
+
+        incrementalCycles = 0;
+        fullCollects = 0;
+        unloads = 0;
+        poolObjectsTrimmed = 0;
+        lastSafePointReason = null;
+        lastSafePointFrame = 0;
+
+        // Handlers registered by a previous play session point at objects that no longer
+        // exist. Products re-subscribe from their own boot.
+
+        onSafePointReclaim = null;
+
+        // The previous session's driver was destroyed with its scene. Unity's null
+        // overload already reports it as null, but clearing it makes that explicit rather
+        // than load-bearing.
+
+        instance = null;
+
+        Init();
+    }
+
     private void Awake() {
 
         if (instance != null && instance != this) {
@@ -192,12 +257,40 @@ public class MemoryUtil : GameObjectBehavior {
         // a spike is the lesser evil, so it runs even mid-round.
 
         Application.lowMemory += OnLowMemory;
+
+        // A single-mode scene load has already destroyed the previous scene's objects by
+        // the time this fires, so their meshes, materials and textures are unreferenced
+        // and `UnloadUnusedAssets` can actually free them. Nothing else in the app asks
+        // for that: the level flow reclaims through `prepareGame`, but the root <-> game
+        // scene change (GameUISceneRoot <-> GameSceneDynamic) went through no reclaim at
+        // all, which is the largest single opportunity the app has.
+
+        SceneManager.sceneLoaded += OnSceneLoaded;
+    }
+
+    /// <summary>
+    /// Additive loads are deliberately ignored -- an additive scene is content being ADDED
+    /// on top of what is already live, so nothing has become garbage and the load is often
+    /// mid-gameplay.
+    /// </summary>
+    private void OnSceneLoaded(Scene scene, LoadSceneMode mode) {
+
+        if (mode != LoadSceneMode.Single) {
+            return;
+        }
+
+        // Not forced. A scene load already goes through `prepareGame`'s forced collect on
+        // the level path, and the cooldown is what stops the two from collecting twice
+        // within a second of each other.
+
+        CollectAtSafePoint("scene-loaded-" + scene.name);
     }
 
     private void OnDestroy() {
 
         if (instance == this) {
             Application.lowMemory -= OnLowMemory;
+            SceneManager.sceneLoaded -= OnSceneLoaded;
             instance = null;
         }
     }
@@ -388,6 +481,24 @@ public class MemoryUtil : GameObjectBehavior {
     /// load, a level teardown -- and NOT for anything a player can spam.
     /// </summary>
     public static void CollectAtSafePoint(string reason, bool force) {
+        CollectAtSafePoint(reason, force, 0f);
+    }
+
+    /// <summary>
+    /// As above, but hold the work back by <paramref name="delaySeconds"/> of REAL time
+    /// first.
+    ///
+    /// A screen change is a safe point in the sense that matters -- the player is not
+    /// aiming at anything -- but it is not silent: the screen it lands on animates in. A
+    /// blocking collect one frame into that tween is a visible stutter on the transition
+    /// rather than a hidden one, which is the opposite of what this class is for. Passing
+    /// the transition's own duration puts the spike after the motion has settled and
+    /// before the player has done anything.
+    ///
+    /// Real time, not scaled -- menus and pause screens routinely run at `timeScale` 0,
+    /// where a scaled wait never finishes.
+    /// </summary>
+    public static void CollectAtSafePoint(string reason, bool force, float delaySeconds) {
 
         Init();
 
@@ -398,6 +509,13 @@ public class MemoryUtil : GameObjectBehavior {
 
         pendingSafePointCollect = true;
         pendingSafePointUnload = true;
+
+        // Coalescing takes the LONGEST delay asked for. Two screens transitioning in
+        // sequence share one safe point, and it has to be late enough for both.
+
+        if (delaySeconds > pendingSafePointDelay) {
+            pendingSafePointDelay = delaySeconds;
+        }
 
         RunSafePointIfPossible(reason);
     }
@@ -540,6 +658,33 @@ public class MemoryUtil : GameObjectBehavior {
 
         yield return null;
 
+        // Hold for a requested settle delay -- a screen transition animating in. Real
+        // time, because a menu or pause screen may be sitting at timeScale 0.
+
+        float delay = pendingSafePointDelay;
+
+        pendingSafePointDelay = 0f;
+
+        if (delay > 0f) {
+
+            float until = Time.realtimeSinceStartup + delay;
+
+            while (Time.realtimeSinceStartup < until) {
+
+                // A round starting during the wait means the transition was abandoned --
+                // the player is back in gameplay and this is no longer a safe point. Give
+                // the flags back so the `SetBusy(false)` edge services them later.
+
+                if (busy) {
+                    safePointRunning = false;
+                    Log("safe point abandoned -- busy during settle delay", reason);
+                    yield break;
+                }
+
+                yield return null;
+            }
+        }
+
         bool doUnload = pendingSafePointUnload;
         bool doCollect = pendingSafePointCollect;
 
@@ -583,10 +728,39 @@ public class MemoryUtil : GameObjectBehavior {
 
         safePointRunning = false;
 
+        lastSafePointReason = reason;
+        lastSafePointFrame = Time.frameCount;
+
         Log("safe point serviced"
             + (doCollect ? " collect" : "")
             + (doUnload ? " unload" : "")
             + " pooledTrimmed:" + trimmed, reason);
+
+        // A request that arrived WHILE this ran was recorded in the pending flags but
+        // rejected by the `safePointRunning` guard, and nothing re-checked them once the
+        // coroutine finished -- so it was dropped until the next unrelated request.
+        //
+        // The window is not theoretical: `Resources.UnloadUnusedAssets` above spans
+        // several frames, and a level transition fires a burst of requests across exactly
+        // those frames. The one that got dropped was typically the specific one that
+        // mattered.
+        //
+        // Servicing it needs no cooldown check -- the caller already passed one, and this
+        // is finishing their request, not starting a new one.
+        //
+        // `busy` IS re-checked. A round can start while an unload is still spanning
+        // frames, and the flags may also be carrying a request that `RequestCollect` /
+        // `RequestUnloadUnusedAssets` deliberately deferred because gameplay was live.
+        // Draining those here would put the exact spike this class exists to prevent back
+        // into the round. They keep waiting for the `SetBusy(false)` edge, which is the
+        // safe point they were queued for.
+        //
+        // This cannot recurse without bound: the next pass latches and clears the flags,
+        // so it re-runs only while something new keeps asking.
+
+        if (!busy && (pendingSafePointCollect || pendingSafePointUnload)) {
+            RunSafePoint(reason + "+queued");
+        }
     }
 
     // ------------------------------------------------------------------
