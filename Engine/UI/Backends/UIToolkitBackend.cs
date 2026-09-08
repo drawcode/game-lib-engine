@@ -442,11 +442,36 @@ namespace Engine.UI {
         // VisualElementTweenTarget, which already picks style.color for TextElements and
         // unityBackgroundImageTintColor for everything else — so this does not duplicate that
         // decision. Exact easing parity is confirmed at the pilot (2.10).
+        // COLOR SPACE. In a LINEAR project NGUI puts a widget Color through a gamma-space vertex
+        // colour, so the float the caller passes lands on screen gamma-encoded. UI Toolkit takes a
+        // style colour as sRGB and applies it RAW. Measured on the achievement card icons
+        // (2026-09-08): Color(1, .9751, .6392) renders (255,252,209) under NGUI and the baseline,
+        // and (255,249,163) here — exactly the raw value, where .gamma gives (255,252,209).
+        //
+        // So every legacy colour DRIVER paints different pixels through the two backends. Convert
+        // here, on the shared path both SetSpriteColor and SetLabelColor take, so a driver written
+        // against NGUI needs no per-call correction. NOT applied to SetElementColor: its only
+        // caller is the toolkit-native colour picker, which has no NGUI counterpart to match and
+        // whose chip must agree with its own sRGB hue/saturation textures.
+        private static Color ToScreenSpace(Color c) {
+
+            if (QualitySettings.activeColorSpace != ColorSpace.Linear) {
+                return c;
+            }
+
+            Color g = c.gamma;
+            g.a = c.a;
+
+            return g;
+        }
+
         private static void ColorTween(VisualElement el, Color c) {
 
             if (el == null) {
                 return;
             }
+
+            c = ToScreenSpace(c);
 
             ITweenTarget target = TweenUtil.ResolveTarget(el);
 
