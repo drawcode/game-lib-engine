@@ -29,6 +29,24 @@ namespace Engine.Game.App.BaseApp {
         public static float scaleMax = 1.5f;
 
         public static float edgeBorderScale = .5f;
+
+        // TOP KEEP-OUT for clamped off-screen indicators, in the indicator container's own design
+        // units (that space is 1385 x 640 for the whole screen, measured live).
+        //
+        // Unlike edgeBorderScale this is an ABSOLUTE inset, not a multiplier, and it applies to the
+        // TOP edge only -- the sides and bottom keep the authored margin so indicators still ride
+        // the outside of the screen and around the lower-left controls.
+        //
+        // Why it exists: the general border is the prefab's authored 90 halved to 45, which put a
+        // clamped indicator at y = 319.6 - 45 = 274.6. The HUD's top strip runs from the top down
+        // to y = 78 in the same design space (deepest element measured live: IconHitHealth,
+        // y[60..78] -- the third bar in the left stack), which is container y = 241.6. So every
+        // indicator pinned to the top edge sat INSIDE the HUD readouts and was hidden behind them.
+        //
+        // 110 = the 78-unit HUD strip plus ~32 for half an indicator icon, since the clamp places
+        // the indicator's CENTRE. That puts the icon's top edge just under the HUD, which is the
+        // requested behaviour.
+        public static float edgeBorderTop = 110f;
     }
 
     public class BaseGameConfigs<T> : DataObjects<T> where T : DataObject, new() {
