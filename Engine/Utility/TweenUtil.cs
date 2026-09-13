@@ -26,11 +26,35 @@ namespace Engine.Utility {
         internalEasing
     }
 
+    // ADDITIVE, 2026-09-12. AnimationEasing.Equations has carried the full Penner set (40
+    // equations) since forever; this enum exposed four of them and EasingTweenBackend.ToEquation
+    // mapped three, so every panel in the project animated on quadEaseInOut whether it wanted to
+    // or not. The members below are the ones UI transitions actually need — the rest of Penner
+    // (elastic, bounce, circ, quint, back-in) stays unexposed until something asks for it.
+    //
+    // The existing four are FIRST and in their original order: this enum is serialised on
+    // TweenMeta, so inserting ahead of them would renumber live values.
     public enum TweenEaseType {
         linear,
         quadEaseOut,
         quadEaseIn,
-        quadEaseInOut
+        quadEaseInOut,
+
+        cubicEaseOut,
+        cubicEaseIn,
+        cubicEaseInOut,
+
+        quartEaseOut,
+        quartEaseIn,
+        quartEaseInOut,
+
+        expoEaseOut,
+        expoEaseIn,
+
+        sineEaseOut,
+        sineEaseIn,
+
+        backEaseOut
     }
 
     public enum TweenLoopType {

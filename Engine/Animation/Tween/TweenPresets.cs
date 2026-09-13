@@ -41,14 +41,42 @@ namespace Engine.Animation {
 
                 presets = new Dictionary<string, TweenPreset>();
 
-                Set(new TweenPreset("panel-show", .45f, .5f));
-                Set(new TweenPreset("panel-hide", .45f, 0f));
-                Set(new TweenPreset("dialog-show", .3f, 0f));
-                Set(new TweenPreset("dialog-hide", .3f, 0f));
-                Set(new TweenPreset("fade-in", .5f, 0f));
-                Set(new TweenPreset("fade-out", .5f, 0f));
-                Set(new TweenPreset("hud-show", .45f, .5f));
-                Set(new TweenPreset("hud-hide", .45f, 0f));
+                // RETUNED 2026-09-12, on a direct brief: "use penner equations for Ease In on
+                // show, and on hide a faster Ease Out so it sort of zips out, nothing that feels
+                // dragged but snappy and not annoying as you continually play and see the same
+                // screens."
+                //
+                // Read as the FEEL, not the equation names, because the two disagree: an
+                // animation that "eases in" to a resting position is decelerating, which Penner
+                // calls EaseOUT, and one that "zips out" is accelerating, which Penner calls
+                // EaseIN. So shows decelerate into place and hides accelerate away.
+                //
+                //   SHOW  cubicEaseOut  — settles, with more character than the quad it replaces
+                //   HIDE  quartEaseIn   — a harder curve than cubic; the screen is gone before
+                //                         you finish reading it, which is the point on the
+                //                         fiftieth time you see it
+                //
+                // Timing: hides are a little over HALF the show, and the show's delay drops from
+                // .5 to .22. That delay exists so the outgoing screen clears before the incoming
+                // one starts; with the hide now .2 it no longer needs half a second. A screen
+                // change was .45 out + .5 wait + .45 in = 1.4s of animation and is now .2 + .22 +
+                // .34 = 0.76s.
+                Set(new TweenPreset("panel-show",  .34f, .22f, TweenEaseType.cubicEaseOut));
+                Set(new TweenPreset("panel-hide",  .20f, 0f,   TweenEaseType.quartEaseIn));
+
+                // Dialogs sit ON a screen rather than replacing one, so there is nothing to wait
+                // for and they can be quicker still.
+                Set(new TweenPreset("dialog-show", .24f, 0f,   TweenEaseType.cubicEaseOut));
+                Set(new TweenPreset("dialog-hide", .14f, 0f,   TweenEaseType.quartEaseIn));
+
+                // A crossfade has no travel, so it reads slower at the same duration. Sine keeps
+                // it from looking like a hard cut at these lengths.
+                Set(new TweenPreset("fade-in",     .28f, 0f,   TweenEaseType.sineEaseOut));
+                Set(new TweenPreset("fade-out",    .16f, 0f,   TweenEaseType.sineEaseIn));
+
+                // The HUD tracks the panel timings: it enters and leaves alongside them.
+                Set(new TweenPreset("hud-show",    .34f, .22f, TweenEaseType.cubicEaseOut));
+                Set(new TweenPreset("hud-hide",    .20f, 0f,   TweenEaseType.quartEaseIn));
             }
 
             return presets;

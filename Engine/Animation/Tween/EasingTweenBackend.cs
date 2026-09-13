@@ -302,14 +302,31 @@ namespace Engine.Animation {
 
         private static AnimationEasing.Equations ToEquation(TweenEaseType easeType) {
 
-            if (easeType == TweenEaseType.linear) {
-                return AnimationEasing.Equations.Linear;
-            }
-            else if (easeType == TweenEaseType.quadEaseIn) {
-                return AnimationEasing.Equations.QuadEaseIn;
-            }
-            else if (easeType == TweenEaseType.quadEaseOut) {
-                return AnimationEasing.Equations.QuadEaseOut;
+            // Every member of TweenEaseType maps here. The three-branch version this replaces
+            // silently fell through to QuadEaseInOut for anything it did not name, so a preset
+            // asking for a sharper curve got the default and nobody could see why.
+            switch (easeType) {
+                case TweenEaseType.linear:         return AnimationEasing.Equations.Linear;
+
+                case TweenEaseType.quadEaseIn:     return AnimationEasing.Equations.QuadEaseIn;
+                case TweenEaseType.quadEaseOut:    return AnimationEasing.Equations.QuadEaseOut;
+                case TweenEaseType.quadEaseInOut:  return AnimationEasing.Equations.QuadEaseInOut;
+
+                case TweenEaseType.cubicEaseIn:    return AnimationEasing.Equations.CubicEaseIn;
+                case TweenEaseType.cubicEaseOut:   return AnimationEasing.Equations.CubicEaseOut;
+                case TweenEaseType.cubicEaseInOut: return AnimationEasing.Equations.CubicEaseInOut;
+
+                case TweenEaseType.quartEaseIn:    return AnimationEasing.Equations.QuartEaseIn;
+                case TweenEaseType.quartEaseOut:   return AnimationEasing.Equations.QuartEaseOut;
+                case TweenEaseType.quartEaseInOut: return AnimationEasing.Equations.QuartEaseInOut;
+
+                case TweenEaseType.expoEaseIn:     return AnimationEasing.Equations.ExpoEaseIn;
+                case TweenEaseType.expoEaseOut:    return AnimationEasing.Equations.ExpoEaseOut;
+
+                case TweenEaseType.sineEaseIn:     return AnimationEasing.Equations.SineEaseIn;
+                case TweenEaseType.sineEaseOut:    return AnimationEasing.Equations.SineEaseOut;
+
+                case TweenEaseType.backEaseOut:    return AnimationEasing.Equations.BackEaseOut;
             }
 
             return AnimationEasing.Equations.QuadEaseInOut;
