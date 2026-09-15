@@ -140,6 +140,58 @@ namespace Engine.Game.App.BaseApp {
                 return symbol + cost;
             }
         }
+
+        // ADDITIVE localization route (content, not UI strings). Read by
+        // BaseGameUIPanelProducts.loadDataProductsToolkit -> LabelName/LabelDescription on
+        // migrated (toolkitViewKey) store screens. `code` here is stamped by the owning
+        // BaseGameProduct.WithLocalizationCode (this record has none of its own in the JSON), so
+        // both getters resolve once that has run. Both display_name and description are ordinary
+        // sales copy, not proper nouns, so both are keyed. Key convention:
+        // game_product_<code>_name / game_product_<code>_desc. TrOrDefault falls back to the raw
+        // English value whenever the key is absent, so any other game on this shared lib that
+        // ships no such key sees its data unchanged. Key strings cached per `code`, not rebuilt
+        // per call.
+        private static readonly Dictionary<string, string> nameLocKeys = new Dictionary<string, string>();
+        private static readonly Dictionary<string, string> descLocKeys = new Dictionary<string, string>();
+
+        public override string display_name {
+            get {
+                return LocalizedField(base.display_name, nameLocKeys, "_name");
+            }
+
+            set {
+                base.display_name = value;
+            }
+        }
+
+        public override string description {
+            get {
+                return LocalizedField(base.description, descLocKeys, "_desc");
+            }
+
+            set {
+                base.description = value;
+            }
+        }
+
+        private string LocalizedField(
+                string raw, Dictionary<string, string> keyCache, string suffix) {
+
+            string c = code;
+
+            if (string.IsNullOrEmpty(c)) {
+                return raw;
+            }
+
+            string key;
+
+            if (!keyCache.TryGetValue(c, out key)) {
+                key = "game_product_" + c.Replace('-', '_') + suffix;
+                keyCache[c] = key;
+            }
+
+            return L10n.TrOrDefault(key, raw);
+        }
     }
 
     public class GameProductPlatformDatas : GameDataObject {
@@ -286,18 +338,33 @@ namespace Engine.Game.App.BaseApp {
 
                     foreach (GameProductInfo info in data.meta) {
                         if (info.locale == locale) {
-                            return info;
+                            return WithLocalizationCode(info);
                         }
                     }
 
                     foreach (GameProductInfo info in data.meta) {
                         if (info.locale == PlatformKeys.any) {
-                            return info;
+                            return WithLocalizationCode(info);
                         }
                     }
                 }
             }
             return null;
+        }
+
+        // The per-locale meta record carries no `code` of its own (see game-product-data.json.txt:
+        // "meta": [{ "display_name": ..., ... }], no "code" key) -- it is only ever reached through
+        // the owning product. Stamp the product's code onto it before handing it back so
+        // BaseGameProductInfo.display_name/description (additive localization route below) has a
+        // stable key to build on. Harmless if already set; this data is display-only and never
+        // written back to disk.
+        private GameProductInfo WithLocalizationCode(GameProductInfo info) {
+
+            if (info != null && string.IsNullOrEmpty(info.code)) {
+                info.code = code;
+            }
+
+            return info;
         }
 
         // Attributes that are added or changed after launch should be like this to prevent

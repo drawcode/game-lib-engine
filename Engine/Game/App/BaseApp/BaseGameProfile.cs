@@ -82,6 +82,10 @@ namespace Engine.Game.App.BaseApp {
         public static string ATT_AUTH_SOCIAL_NETWORK_AUTHTOKEN_APP = "auth-social-network-authtoken-app";
 
         public static string ATT_ACCESS_PERMISSIONS = "access-permissions";
+
+        // LOCALIZATION
+        // "" (unset) means "follow the device" -- see GameLocalizationService.
+        public static string ATT_APP_LANGUAGE = "app-language";
     }
 
     public class BaseGameProfileDataState {
@@ -425,6 +429,24 @@ namespace Engine.Game.App.BaseApp {
 
         public virtual void SetHelpTipsShownDate(double attValue) {
             SetAttributeDoubleValue(BaseGameProfileAttributes.ATT_HELP_TIPS_SHOWN_DATE, attValue);
+        }
+
+        // APP LANGUAGE
+        //
+        // "" (the default) means "no explicit choice saved -- follow the device". Mirrored to
+        // the local pref "app_language" by GameLocalizationService so text shown before the
+        // profile has loaded is already in the right language.
+
+        public virtual string GetAppLanguage(string defaultValue = "") {
+            string attValue = defaultValue;
+            string key = BaseGameProfileAttributes.ATT_APP_LANGUAGE;
+            if (CheckIfAttributeExists(key))
+                attValue = GetAttributeStringValue(key);
+            return attValue;
+        }
+
+        public virtual void SetAppLanguage(string attValue) {
+            SetAttributeStringValue(BaseGameProfileAttributes.ATT_APP_LANGUAGE, attValue);
         }
 
 

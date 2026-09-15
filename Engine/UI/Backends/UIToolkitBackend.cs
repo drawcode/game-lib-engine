@@ -5,6 +5,7 @@ using UnityEngine;
 using UnityEngine.UIElements;
 
 using Engine.Animation;
+using Engine.Game.App.BaseApp;
 using Engine.UI.Bitty;
 using Engine.Utility;
 
@@ -367,6 +368,69 @@ namespace Engine.UI {
             }
 
             toggle.RegisterValueChangedCallback(evt => onChange(evt.newValue));
+        }
+
+        // DROPDOWNS
+
+        public void SetDropdownChoices(UIRef r, List<string> choices) {
+
+            DropdownField dropdown = El(r) as DropdownField;
+
+            // dropdown.panel == null: the documented UIRef.alive gap (uiref-alive-lies-about-
+            // destroyed-view-host) -- a torn-down view's VisualElement is not a UnityEngine.Object,
+            // so `r.alive` still reports true even after its PanelRenderer GameObject (and thus
+            // this element's spot in a live panel) is gone. Writing choices/value into that
+            // orphaned element NREs deep inside UI Toolkit's own TextElement.SetValueWithoutNotify
+            // -- observed in-Editor from a panel re-shown before its previous instance's toolkit
+            // view finished tearing down.
+            if (dropdown == null || dropdown.panel == null) {
+                return;
+            }
+
+            dropdown.choices = choices ?? new List<string>();
+        }
+
+        public void SetDropdownIndex(UIRef r, int index, bool notify = false) {
+
+            DropdownField dropdown = El(r) as DropdownField;
+
+            if (dropdown == null || dropdown.panel == null || dropdown.choices == null
+                    || index < 0 || index >= dropdown.choices.Count) {
+                return;
+            }
+
+            string val = dropdown.choices[index];
+
+            if (notify) {
+                dropdown.value = val;
+            }
+            else {
+                dropdown.SetValueWithoutNotify(val);
+            }
+        }
+
+        public int GetDropdownIndex(UIRef r) {
+
+            DropdownField dropdown = El(r) as DropdownField;
+
+            if (dropdown == null || dropdown.choices == null) {
+                return -1;
+            }
+
+            return dropdown.choices.IndexOf(dropdown.value);
+        }
+
+        public void SetDropdownHandlerChange(UIRef r, Action<int> onChange) {
+
+            DropdownField dropdown = El(r) as DropdownField;
+
+            if (dropdown == null || onChange == null) {
+                return;
+            }
+
+            dropdown.RegisterValueChangedCallback(evt => {
+                onChange(dropdown.choices != null ? dropdown.choices.IndexOf(evt.newValue) : -1);
+            });
         }
 
         // IMAGES
@@ -798,6 +862,12 @@ namespace Engine.UI {
 
                 RegisterRoot(viewRoot);
                 viewHosts[viewRoot] = go;
+
+                // A bitty-built tree already resolved its "@loc:" text at Build() time (see
+                // BittyToolkitBuilder.Loc), so this is a no-op there -- nothing left starting
+                // with the marker to find. A UXML tree's Labels/Buttons still carry the literal
+                // "@loc:key" text an author typed into the asset, so this is where THAT resolves.
+                UIToolkitLocalization.ScanAndLocalize(viewRoot);
 
                 ConfigureScrollViews(viewRoot);
                 ConfigurePicking(viewRoot);
@@ -1259,6 +1329,24 @@ namespace Engine.UI {
             }
         }
 
+        // LOCALIZATION
+        //
+        // The UIUtil.SetLabelLocalized bridge. UIUtil.cs must never reference
+        // UnityEngine.UIElements directly, so it dispatches here only when the resolved backend
+        // actually IS the toolkit one (the same "cast IUIBackend to the concrete toolkit type"
+        // pattern ScrollToTop already uses) instead of touching UIToolkitLocalization.Register
+        // (which takes a VisualElement) itself.
+        public void RegisterLocalizedLabel(UIRef r, string key, object[] args) {
+
+            VisualElement el = El(r);
+
+            if (el == null || string.IsNullOrEmpty(key)) {
+                return;
+            }
+
+            UIToolkitLocalization.Register(el, key, val => SetLabelValue(r, val), args);
+        }
+
         // POINTER / EVENT SOURCE
 
         public int currentPointerId {
@@ -1292,6 +1380,167 @@ namespace Engine.UI {
             }
 
             return false;
+        }
+    }
+
+    // LOCALIZATION registry for the toolkit path. Static, not per-instance: it is fed from three
+    // places (LoadView's UXML branch above, BittyToolkitBuilder.ApplyLoc for the bitty branch,
+    // and UIToolkitBackend.RegisterLocalizedLabel for UIUtil.SetLabelLocalized), and all three
+    // need to react to the same GameLocalizationService.LanguageChanged.
+    //
+    // The apply step is a caller-supplied delegate rather than an assumed TextElement cast, so
+    // a non-TextElement control with a text-like property (Toggle.text is not a TextElement)
+    // re-localizes exactly the same way a Label does.
+    //
+    // Lives in this file because it names UnityEngine.UIElements types -- same reasoning as
+    // BittyToolkitBuilder living alongside UIToolkitBackend rather than in a separate file.
+    public static class UIToolkitLocalization {
+
+        private class Binding {
+            public string key;
+            public object[] args;
+            public Action<string> setText;
+            public string appliedCode;
+            public bool attachHooked;
+        }
+
+        // Only ATTACHED elements live here. A detached one is swept out so the static map never
+        // pins a torn-down view's whole tree in memory; its own AttachToPanelEvent callback (owned
+        // by the element, so it dies with it) re-adds it and catches up a missed language change
+        // if a cached view is re-attached later.
+        private static readonly Dictionary<VisualElement, Binding> _bound =
+            new Dictionary<VisualElement, Binding>();
+
+        private const int sweepEvery = 128;
+        private static int _registersSinceSweep;
+
+        private static bool _subscribed;
+
+        private static void EnsureSubscribed() {
+
+            if (_subscribed) {
+                return;
+            }
+
+            _subscribed = true;
+            GameLocalizationService.LanguageChanged += OnLanguageChanged;
+        }
+
+        // Registers an element for re-application on language change. Callers set the
+        // element's text themselves before calling this -- Register does not resolve.
+        public static void Register(
+                VisualElement element, string key, Action<string> setText, params object[] args) {
+
+            if (element == null || string.IsNullOrEmpty(key) || setText == null) {
+                return;
+            }
+
+            EnsureSubscribed();
+
+            Binding b;
+
+            if (!_bound.TryGetValue(element, out b)) {
+                b = new Binding();
+            }
+
+            b.key = key;
+            b.args = args;
+            b.setText = setText;
+            b.appliedCode = L10n.CurrentCode;
+
+            _bound[element] = b;
+
+            if (!b.attachHooked) {
+                b.attachHooked = true;
+                element.RegisterCallback<AttachToPanelEvent>(evt => OnAttach(element, b));
+            }
+
+            if (++_registersSinceSweep >= sweepEvery) {
+                _registersSinceSweep = 0;
+                SweepDetached();
+            }
+        }
+
+        private static void OnAttach(VisualElement element, Binding b) {
+
+            _bound[element] = b;
+
+            if (b.appliedCode != L10n.CurrentCode) {
+                Apply(b);
+            }
+        }
+
+        private static void Apply(Binding b) {
+
+            b.setText(
+                (b.args != null && b.args.Length > 0)
+                    ? L10n.Tr(b.key, b.args)
+                    : L10n.Tr(b.key));
+
+            b.appliedCode = L10n.CurrentCode;
+        }
+
+        private static readonly List<VisualElement> _doomed = new List<VisualElement>();
+
+        private static void SweepDetached() {
+
+            _doomed.Clear();
+
+            foreach (KeyValuePair<VisualElement, Binding> kv in _bound) {
+                if (kv.Key.panel == null) {
+                    _doomed.Add(kv.Key);
+                }
+            }
+
+            for (int i = 0; i < _doomed.Count; i++) {
+                _bound.Remove(_doomed[i]);
+            }
+
+            _doomed.Clear();
+        }
+
+        // Walks a just-instantiated subtree (a UXML view, typically) for any TextElement whose
+        // text is a literal "@loc:key" marker -- the form an author types straight into a
+        // Label/Button's text field in the UXML asset -- resolves it through L10n, and
+        // registers it. A bitty-built tree has nothing left to find here: BittyToolkitBuilder's
+        // ApplyLoc already resolved + registered its text at Build() time, so this is a safe
+        // no-op on it.
+        public static void ScanAndLocalize(VisualElement root) {
+
+            if (root == null) {
+                return;
+            }
+
+            root.Query<TextElement>().ForEach(ApplyIfLocalized);
+
+            TextElement rootText = root as TextElement;
+
+            if (rootText != null) {
+                ApplyIfLocalized(rootText);
+            }
+        }
+
+        private static void ApplyIfLocalized(TextElement te) {
+
+            if (te == null || string.IsNullOrEmpty(te.text) || !BittySchema.IsLocalized(te.text)) {
+                return;
+            }
+
+            string key = BittySchema.LocKey(te.text);
+
+            te.text = L10n.Tr(key);
+            Register(te, key, val => te.text = val);
+        }
+
+        private static void OnLanguageChanged(string code) {
+
+            // A VisualElement is not a UnityEngine.Object -- el.panel is the real "still
+            // attached" signal. Detached ones are dropped; OnAttach re-applies them on return.
+            SweepDetached();
+
+            foreach (KeyValuePair<VisualElement, Binding> kv in _bound) {
+                Apply(kv.Value);
+            }
         }
     }
 }

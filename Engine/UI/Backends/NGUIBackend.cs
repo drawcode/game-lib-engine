@@ -604,6 +604,23 @@ namespace Engine.UI {
             LoadView(viewKey, onReady);
         }
 
+        // DROPDOWNS
+        //
+        // No NGUI dropdown widget exists in this codebase, so every member is a deliberate
+        // no-op -- GetDropdownIndex returns -1 (matches "nothing selected"), not 0.
+        public void SetDropdownChoices(UIRef r, List<string> choices) {
+        }
+
+        public void SetDropdownIndex(UIRef r, int index, bool notify = false) {
+        }
+
+        public int GetDropdownIndex(UIRef r) {
+            return -1;
+        }
+
+        public void SetDropdownHandlerChange(UIRef r, Action<int> onChange) {
+        }
+
         // LISTS (wave 3D): no-op on the legacy backend — NGUI panels keep their own
         // NGUITools.AddChild grid path; only toolkit views build rows through the platform.
         public UIRef AddListItem(UIRef view, string listName, string templateName, string itemName) {

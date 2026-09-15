@@ -63,6 +63,17 @@ namespace Engine.UI {
         // however correctly it is bound. Panels register here instead.
         void SetToggleHandlerChange(UIRef r, Action<bool> onChange);
 
+        // DROPDOWNS
+        //
+        // The object half only, mirroring the toggle/slider split above. NGUI has no dropdown
+        // widget in this codebase, so NGUIBackend no-ops every member (GetDropdownIndex
+        // returns -1, matching "nothing selected" rather than a real index).
+
+        void SetDropdownChoices(UIRef r, List<string> choices);
+        void SetDropdownIndex(UIRef r, int index, bool notify = false);
+        int GetDropdownIndex(UIRef r);
+        void SetDropdownHandlerChange(UIRef r, Action<int> onChange);
+
         // IMAGES
 
         void SetImageFillValue(UIRef r, float val);

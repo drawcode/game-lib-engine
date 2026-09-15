@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Engine.Game.App.BaseApp;
 using Engine.UI;
 using Engine.Utility;
 using UnityEngine;
@@ -562,6 +563,38 @@ public class UIUtil {
         }
     }
 
+    // Resolves `key` through L10n, sets it exactly like SetLabelValue, and -- ONLY when the
+    // resolved backend is the toolkit one -- registers the element so a later SetLanguage
+    // re-applies it live. The NGUI path gets the resolved text but no registration: nothing on
+    // that side ever re-localizes without a screen reload, same as every other NGUI label.
+    public static void SetLabelLocalized(UIRef r, string key, params object[] args) {
+
+        IUIBackend backend = UIPlatform.For(r);
+
+        if (backend == null || string.IsNullOrEmpty(key)) {
+            return;
+        }
+
+        string val = (args != null && args.Length > 0) ? L10n.Tr(key, args) : L10n.Tr(key);
+
+        backend.SetLabelValue(r, val);
+
+        Engine.UI.UIToolkitBackend toolkit = backend as Engine.UI.UIToolkitBackend;
+
+        if (toolkit != null) {
+            toolkit.RegisterLocalizedLabel(r, key, args);
+        }
+    }
+
+    public static void SetLabelLocalized(GameObject obj, string key, params object[] args) {
+
+        if (obj == null) {
+            return;
+        }
+
+        SetLabelLocalized(UIRef.Of(obj), key, args);
+    }
+
     public static void SetInputValue(UIRef r, string val) {
 
         IUIBackend backend = UIPlatform.For(r);
@@ -641,6 +674,49 @@ public class UIUtil {
 
         if (backend != null) {
             backend.SetSliderHandlerChange(r, onChange);
+        }
+    }
+
+    // DROPDOWNS
+    //
+    // Object half only, mirroring the toggle/slider split. NGUI has no dropdown widget in this
+    // codebase, so NGUIBackend no-ops every member here (GetDropdownIndex returns -1).
+
+    public static void SetDropdownChoices(UIRef r, List<string> choices) {
+
+        IUIBackend backend = UIPlatform.For(r);
+
+        if (backend != null) {
+            backend.SetDropdownChoices(r, choices);
+        }
+    }
+
+    public static void SetDropdownIndex(UIRef r, int index, bool notify = false) {
+
+        IUIBackend backend = UIPlatform.For(r);
+
+        if (backend != null) {
+            backend.SetDropdownIndex(r, index, notify);
+        }
+    }
+
+    public static int GetDropdownIndex(UIRef r) {
+
+        IUIBackend backend = UIPlatform.For(r);
+
+        if (backend == null) {
+            return -1;
+        }
+
+        return backend.GetDropdownIndex(r);
+    }
+
+    public static void SetDropdownHandlerChange(UIRef r, Action<int> onChange) {
+
+        IUIBackend backend = UIPlatform.For(r);
+
+        if (backend != null) {
+            backend.SetDropdownHandlerChange(r, onChange);
         }
     }
 

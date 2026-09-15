@@ -1,3 +1,5 @@
+using System;
+
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -68,7 +70,8 @@ namespace Engine.UI {
                 // Decorative in the name-dispatch idiom (clicks broadcast evt.target.name, and
                 // click names live on containers/buttons): never a pick target, or a label
                 // inside a clickable tile would swallow the tile's click.
-                Label label = new Label(Loc(n.text));
+                Label label = new Label();
+                ApplyLoc(label, n.text, t => label.text = t);
                 label.pickingMode = PickingMode.Ignore;
                 return label;
             }
@@ -76,7 +79,7 @@ namespace Engine.UI {
             if (type == BittySchema.Types.button) {
 
                 Button button = new Button();
-                button.text = Loc(n.text);
+                ApplyLoc(button, n.text, t => button.text = t);
 
                 // No click handler wired here: clicks reach handlers through the root's bubbling
                 // ClickEvent -> UIEvents.BroadcastClick(name), exactly like UXML buttons. The
@@ -184,7 +187,7 @@ namespace Engine.UI {
         private static VisualElement BuildToggle(BittyNode n) {
 
             Toggle toggle = new Toggle();
-            toggle.text = Loc(n.text);
+            ApplyLoc(toggle, n.text, t => toggle.text = t);
             toggle.value = Bool(n.value);
 
             VisualElement native = toggle.Q(className: "unity-toggle__checkmark");
@@ -230,19 +233,26 @@ namespace Engine.UI {
             return e;
         }
 
-        // @loc:key -> Locos.GetString(key); literal text passes through. Resolved at BUILD time so
-        // BittyNode stays a pure data record and the same tree localizes per-locale on each build.
-        private static string Loc(string text) {
+        // @loc:key -> L10n.Tr(key); literal text passes through. Resolved at BUILD time so
+        // BittyNode stays a pure data record and the same tree localizes per-locale on each
+        // build -- and registered with UIToolkitLocalization so a LATER language change
+        // (SetLanguage while this view is still open) re-applies it too, exactly like a UXML
+        // view's @loc: text resolved by UIToolkitLocalization.ScanAndLocalize.
+        private static void ApplyLoc(VisualElement el, string text, Action<string> setText) {
 
             if (string.IsNullOrEmpty(text)) {
-                return text;
+                setText(text);
+                return;
             }
 
             if (BittySchema.IsLocalized(text)) {
-                return Locos.GetString(BittySchema.LocKey(text));
+                string key = BittySchema.LocKey(text);
+                setText(L10n.Tr(key));
+                UIToolkitLocalization.Register(el, key, setText);
+                return;
             }
 
-            return text;
+            setText(text);
         }
 
         // MiniJSON hands numbers back as double/long and bools as bool; coerce defensively so an
