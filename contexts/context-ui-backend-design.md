@@ -494,6 +494,22 @@ transparent root so gameplay taps fall through. `UICamera.currentTouchID` reads 
   which covers every current consumer (it has zero direct call sites; fills arrive via
   `SetSliderValue`'s fallback). Radial/vertical gauges are a real gap and land with the HUD in 3H.
 
+## Cross-engine gap list (pointer, 2026-09-16)
+
+This design is agnostic **across Unity UI frameworks** (NGUI ↔ UI Toolkit), **not across engines**. The ordered,
+additive fix list is kept in one place, the shared contexts at `contexts/gamedev/agnostic/context-agnostic-ui-bitty.md` ("Gap list to a
+second engine"). Don't copy it here. In short:
+
+1. `Color`/`Vector2` in `IUIBackend`, `UIPlatform.IsPointerOverUI` and `SetElementDragHandler` get overloads taking
+   `Agnostic.Core.ColorRgba` (sRGB) / `Vec2` from **game-lib-bitty-base** (contract v0). The Unity-typed members delegate to them.
+2. `UITokens`: move `Resources.Load` into a Unity-side loader, and keep `LoadFromJson(string)` in core.
+3. `UIRef`: keep `native`/`name`/`alive` in core, and move `Of(GameObject)`/`.gameObject` to a Unity extension class.
+4. Put `Bitty/` + `UIRef` + the contract in a `noEngineReferences: true` asmdef.
+5. Add golden vectors `view.json → expanded tree`, run by EditMode tests and by `agnostic-vectors` in game-lib-bitty-base.
+
+Namespace note: the shared core uses `Agnostic.*` on purpose, because a `Bitty.*` root would bind to `Engine.UI.Bitty` inside this lib.
+Nothing public here is removed ([[core-libs-shared-additive-only]]).
+
 ## Open risks
 
 - **`UIAppPanelBaseListViews` is a two-repo chokepoint** (unguarded `UIGrid`/`UIPanel`; gameverses
