@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 
+using Engine.UI;
 using Engine.Utility;
 
 namespace Engine.Animation {
@@ -136,6 +137,11 @@ namespace Engine.Animation {
         private Graphic alphaGraphic = null;
         private Renderer alphaRenderer = null;
 
+        // A UIQuadSprite owns its MeshRenderer: alpha/colour go into its vertex colours. Touching
+        // renderer.material instead would clone the shared atlas material on every tween (and its
+        // shader has no _Color, so the write would not even show).
+        private UIQuadSprite alphaQuad = null;
+
 #if USE_UI_NGUI_2_7 || USE_UI_NGUI_3
         private UIWidget alphaWidget = null;
 #endif
@@ -146,6 +152,7 @@ namespace Engine.Animation {
         private Graphic[] colorGroupGraphics = null;
         private Graphic colorGraphic = null;
         private Renderer colorRenderer = null;
+        private UIQuadSprite colorQuad = null;
 
 #if USE_UI_NGUI_2_7 || USE_UI_NGUI_3
         private UIWidget colorWidget = null;
@@ -170,6 +177,7 @@ namespace Engine.Animation {
             alphaWidget = GetSelfSpriteWidget();
 
             if (alphaWidget) {
+                alphaQuad = tr.GetComponent<UIQuadSprite>();
                 return;
             }
 #endif
@@ -183,6 +191,12 @@ namespace Engine.Animation {
             alphaGraphic = tr.GetComponent<Graphic>();
 
             if (alphaGraphic) {
+                return;
+            }
+
+            alphaQuad = tr.GetComponent<UIQuadSprite>();
+
+            if (alphaQuad) {
                 return;
             }
 
@@ -223,7 +237,15 @@ namespace Engine.Animation {
             }
 
             colorGraphic = tr.GetComponent<Graphic>();
+
+            // Self or children, like the legacy widget lookup above: the quads replace those
+            // widgets one for one, so a colour sent to a container reaches the same quad.
+            colorQuad = tr.GetComponentInChildren<UIQuadSprite>();
             colorRenderer = tr.GetComponent<Renderer>();
+
+            if (colorRenderer && colorQuad && colorRenderer.gameObject == colorQuad.gameObject) {
+                colorRenderer = null;
+            }
         }
 
         public float GetAlpha() {
@@ -246,6 +268,10 @@ namespace Engine.Animation {
 
             if (alphaGraphic) {
                 return alphaGraphic.color.a;
+            }
+
+            if (alphaQuad) {
+                return alphaQuad.color.a;
             }
 
             if (alphaRenderer) {
@@ -274,6 +300,12 @@ namespace Engine.Animation {
             // Driving panel or generic-widget alpha here dims/blanks whole screens.
             if (alphaWidget) {
                 alphaWidget.alpha = a;
+
+                if (alphaQuad) {
+                    Color cw = alphaQuad.color;
+                    cw.a = a;
+                    alphaQuad.SetColor(cw);
+                }
                 return;
             }
 #endif
@@ -287,6 +319,13 @@ namespace Engine.Animation {
                 Color cg = alphaGraphic.color;
                 cg.a = a;
                 alphaGraphic.color = cg;
+                return;
+            }
+
+            if (alphaQuad) {
+                Color cq = alphaQuad.color;
+                cq.a = a;
+                alphaQuad.SetColor(cq);
                 return;
             }
 
@@ -354,6 +393,13 @@ namespace Engine.Animation {
                 found = true;
             }
 
+            // The quad twin of that widget follows it, so the kill switch can flip either way
+            // without the two drifting apart.
+            if (colorQuad) {
+                colorQuad.SetColor(c);
+                found = true;
+            }
+
             if (colorRenderer) {
                 colorRenderer.material.color = c;
                 found = true;
@@ -369,6 +415,11 @@ namespace Engine.Animation {
                 return;
             }
 #endif
+
+            if (colorQuad) {
+                colorQuad.SetColor(c);
+                return;
+            }
 
             if (colorGroup) {
 
