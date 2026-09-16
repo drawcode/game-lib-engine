@@ -106,6 +106,17 @@ namespace Engine.UI {
         // the parent's pixel size. Percent, not pixels, so it survives a resize.
         void SetElementOffsetPercent(UIRef r, float xPercent, float yPercent);
 
+        // STICK SURFACES (virtual joysticks). The handler receives the pointer's offset from the
+        // element's CENTRE in layout units, x right / y UP, on press and on every move while held
+        // — NOT clamped to the element, a thumb may drag past its edge — and then exactly once
+        // with released = true (offset zero) on release, cancel or lost capture. Each element
+        // captures its own pointer id, so two sticks can be held at once (move + attack).
+        void SetElementStickHandler(UIRef r, Action<Vector2, bool> onStick);
+
+        // Shift an element by a layout-unit offset, x right / y UP, without touching its layout
+        // (a stick knob following the thumb). Vector2.zero puts it back.
+        void SetElementTranslate(UIRef r, Vector2 offset);
+
         // BUTTONS
         // The object half only. The name-compare half (IsButtonClicked(string, string),
         // 199 call sites) is NOT here — it is the event bus, and it lives on UIEvents.

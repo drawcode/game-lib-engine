@@ -629,6 +629,90 @@ namespace Engine.UI {
             el.style.top = Length.Percent((1f - Mathf.Clamp01(yPercent)) * 100f);
         }
 
+        public void SetElementStickHandler(UIRef r, Action<Vector2, bool> onStick) {
+
+            VisualElement el = El(r);
+
+            if (el == null || onStick == null) {
+                return;
+            }
+
+            // One pointer per stick. A second finger landing on the same stick is ignored, and a
+            // finger on ANOTHER stick has its own id and its own capture.
+            int held = PointerId.invalidPointerId;
+
+            // From the PANEL position, not evt.localPosition: that is local to whichever child was
+            // picked (the knob art), and a stick's children are expected to sit inside it.
+            Action<Vector3> report = (Vector3 panelPosition) => {
+                Vector2 local = el.WorldToLocal(panelPosition);
+                Rect rect = el.contentRect;
+                onStick(new Vector2(local.x - rect.width * .5f, rect.height * .5f - local.y), false);
+            };
+
+            Action release = () => {
+                if (held == PointerId.invalidPointerId) {
+                    return;
+                }
+                int id = held;
+                held = PointerId.invalidPointerId;
+                if (el.HasPointerCapture(id)) {
+                    el.ReleasePointer(id);
+                }
+                onStick(Vector2.zero, true);
+            };
+
+            el.RegisterCallback<PointerDownEvent>(evt => {
+                if (held != PointerId.invalidPointerId) {
+                    return;
+                }
+                held = evt.pointerId;
+                el.CapturePointer(evt.pointerId);
+                report(evt.position);
+                evt.StopPropagation();
+            });
+
+            el.RegisterCallback<PointerMoveEvent>(evt => {
+                if (evt.pointerId != held) {
+                    return;
+                }
+                report(evt.position);
+                evt.StopPropagation();
+            });
+
+            el.RegisterCallback<PointerUpEvent>(evt => {
+                if (evt.pointerId == held) {
+                    release();
+                    evt.StopPropagation();
+                }
+            });
+
+            el.RegisterCallback<PointerCancelEvent>(evt => {
+                if (evt.pointerId == held) {
+                    release();
+                }
+            });
+
+            el.RegisterCallback<PointerCaptureOutEvent>(evt => {
+                if (evt.pointerId == held) {
+                    release();
+                }
+            });
+
+            // Hidden or torn down mid-drag (round ends, pause): no up event will ever come.
+            el.RegisterCallback<DetachFromPanelEvent>(evt => release());
+        }
+
+        public void SetElementTranslate(UIRef r, Vector2 offset) {
+
+            VisualElement el = El(r);
+
+            if (el == null) {
+                return;
+            }
+
+            el.style.translate = new Translate(offset.x, -offset.y);
+        }
+
         // BUTTONS
 
         public bool IsButton(UIRef r) {

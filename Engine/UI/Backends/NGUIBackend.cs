@@ -470,6 +470,12 @@ namespace Engine.UI {
         public void SetElementOffsetPercent(UIRef r, float xPercent, float yPercent) {
         }
 
+        public void SetElementStickHandler(UIRef r, Action<Vector2, bool> onStick) {
+        }
+
+        public void SetElementTranslate(UIRef r, Vector2 offset) {
+        }
+
         // BUTTONS
 
         public bool IsButton(UIRef r) {

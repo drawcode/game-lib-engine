@@ -1673,6 +1673,14 @@ namespace Engine.Events {
             inputAxisDown = false;
             shouldTouch = false;
 
+            // A migrated control (toolkit HUD stick or button) under the pointer: the same verdict
+            // its legacy collider got from the name test below. Suppressed legacy controls have
+            // no active collider left for that test to hit.
+            if (Engine.UI.UIPlatform.IsPointerOverUI(new Vector2(pos.x, pos.y))) {
+                inputButtonDown = true;
+                return false;
+            }
+
             if (Physics.Raycast(screenRay, out hit, Mathf.Infinity) && hit.transform != null) {
 
                 if (hit.transform.name.Contains("ButtonInput")

@@ -197,6 +197,28 @@ public class UIUtil {
         }
     }
 
+    // Turn an element into a virtual JOYSTICK: the handler receives the thumb's offset from the
+    // element's centre in layout units (x right, y up, unclamped) while held, then once with
+    // released = true. Multi-touch safe — each stick tracks its own pointer.
+    public static void SetElementStickHandler(UIRef r, Action<Vector2, bool> onStick) {
+
+        IUIBackend backend = UIPlatform.For(r);
+
+        if (backend != null) {
+            backend.SetElementStickHandler(r, onStick);
+        }
+    }
+
+    // Shift an element by a layout-unit offset (x right, y up) without changing its layout.
+    public static void SetElementTranslate(UIRef r, Vector2 offset) {
+
+        IUIBackend backend = UIPlatform.For(r);
+
+        if (backend != null) {
+            backend.SetElementTranslate(r, offset);
+        }
+    }
+
     //
 
 #if USE_UI_NGUI_2_7
