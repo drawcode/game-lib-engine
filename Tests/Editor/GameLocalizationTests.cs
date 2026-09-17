@@ -247,5 +247,33 @@ namespace Engine.Game.App.BaseApp.Tests {
             Assert.AreEqual("V", L10n.Tr("k"));
             Assert.AreEqual("en", L10n.CurrentCode);
         }
+
+        [Test]
+        public void NumberFormat_GroupsByActiveLocale_AndFollowsLanguageChange() {
+
+            LoadRegistry();
+
+            GameLocalizationService.SetStateForTests("de", new List<string> { "de", "en" }, null);
+            Assert.AreEqual("6.495.621", 6495621.ToString("N0", L10n.NumberFormat));
+
+            GameLocalizationService.SetStateForTests("en", new List<string> { "en" }, null);
+            Assert.AreEqual("6,495,621", 6495621.ToString("N0", L10n.NumberFormat));
+        }
+
+        [Test]
+        public void BuildNumberFormat_MapsNarrowNoBreakSpace_ToNoBreakSpace() {
+
+            System.Globalization.NumberFormatInfo source =
+                (System.Globalization.NumberFormatInfo)
+                    System.Globalization.CultureInfo.InvariantCulture.NumberFormat.Clone();
+            source.NumberGroupSeparator = " ";
+
+            System.Globalization.CultureInfo culture =
+                (System.Globalization.CultureInfo)System.Globalization.CultureInfo.InvariantCulture.Clone();
+            culture.NumberFormat = source;
+
+            Assert.AreEqual("1 000",
+                1000.ToString("N0", GameLocalizationService.BuildNumberFormat(culture)));
+        }
     }
 }

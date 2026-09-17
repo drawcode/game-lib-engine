@@ -378,6 +378,44 @@ namespace Engine.Game.App.BaseApp {
             }
         }
 
+        // Number formatting for the active locale: `value.ToString("N0", L10n.NumberFormat)` gives
+        // de "6.495.621" where a bare ToString("N0") uses the thread culture ("6,495,621").
+        //
+        // Cached per locale, since counters format every frame while they tween. Group separators
+        // that are narrow/thin no-break spaces (U+202F, U+2009; e.g. fr) become U+00A0: those glyphs
+        // are missing from the game's Latin fonts, and U+00A0 still never wraps.
+        private static string _numberFormatCode;
+        private static NumberFormatInfo _numberFormat;
+
+        public static NumberFormatInfo NumberFormat {
+            get {
+                if (_numberFormat == null || _numberFormatCode != _currentCode) {
+                    _numberFormat = BuildNumberFormat(FormatCulture());
+                    _numberFormatCode = _currentCode;
+                }
+                return _numberFormat;
+            }
+        }
+
+        public static NumberFormatInfo BuildNumberFormat(CultureInfo culture) {
+
+            NumberFormatInfo format =
+                (NumberFormatInfo)(culture ?? CultureInfo.InvariantCulture).NumberFormat.Clone();
+
+            format.NumberGroupSeparator = FontSafeSeparator(format.NumberGroupSeparator);
+            format.CurrencyGroupSeparator = FontSafeSeparator(format.CurrencyGroupSeparator);
+
+            return NumberFormatInfo.ReadOnly(format);
+        }
+
+        private static string FontSafeSeparator(string separator) {
+
+            if (separator == " " || separator == " ") {
+                return " ";
+            }
+            return separator;
+        }
+
         private static CultureInfo FormatCulture() {
 
             GameLocaleInfo info = GameLocales.Get(_currentCode);
@@ -442,6 +480,10 @@ namespace Engine.Game.App.BaseApp {
 
         public static string TrOrDefault(string key, string defaultValue) {
             return GameLocalizationService.TrOrDefault(key, defaultValue);
+        }
+
+        public static System.Globalization.NumberFormatInfo NumberFormat {
+            get { return GameLocalizationService.NumberFormat; }
         }
     }
 }
