@@ -23,7 +23,9 @@ namespace Engine.UI {
 
         public Material material;
 
-        // Local-space corners, in the order bottom-left, top-left, top-right, bottom-right.
+        // Local-space corners, FOUR PER QUAD, each quad in a consistent winding (a baked NGUI fill
+        // keeps NGUI's own order: TR, BR, BL, TL). One quad for a simple sprite, nine for a sliced
+        // one. The shader culls nothing, so either winding renders.
         public Vector3[] corners = new Vector3[] {
             new Vector3(-.5f, -.5f, 0f), new Vector3(-.5f, .5f, 0f),
             new Vector3(.5f, .5f, 0f), new Vector3(.5f, -.5f, 0f)
@@ -40,11 +42,9 @@ namespace Engine.UI {
         // the particles sharing the camera (sorting order 0), so the quads must sort below them.
         public int sortingOrder;
 
-        static readonly int[] triangles = new int[] { 0, 1, 2, 2, 3, 0 };
-
         Mesh mesh;
         MeshRenderer meshRenderer;
-        readonly Color32[] colors = new Color32[4];
+        Color32[] colors;
 
         public bool isVisible {
             get {
@@ -78,6 +78,21 @@ namespace Engine.UI {
                 GetComponent<MeshFilter>().sharedMesh = mesh;
             }
 
+            int quads = corners.Length / 4;
+            int[] triangles = new int[quads * 6];
+
+            for (int q = 0; q < quads; q++) {
+                int v = q * 4, t = q * 6;
+                triangles[t] = v;
+                triangles[t + 1] = v + 1;
+                triangles[t + 2] = v + 2;
+                triangles[t + 3] = v + 2;
+                triangles[t + 4] = v + 3;
+                triangles[t + 5] = v;
+            }
+
+            colors = new Color32[quads * 4];
+
             mesh.Clear();
             mesh.vertices = corners;
             mesh.uv = uvs;
@@ -99,7 +114,7 @@ namespace Engine.UI {
         }
 
         void ApplyColor() {
-            if (mesh == null) {
+            if (mesh == null || colors == null) {
                 return;
             }
             Color32 c = color;
