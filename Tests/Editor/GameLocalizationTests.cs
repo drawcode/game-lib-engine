@@ -235,6 +235,43 @@ namespace Engine.Game.App.BaseApp.Tests {
         }
 
         [Test]
+        public void TrOrDefault_WithArgs_UsesLocalizedFormat_WhenKeyExists() {
+
+            Dictionary<string, Dictionary<string, string>> cache =
+                new Dictionary<string, Dictionary<string, string>> {
+                    { "de", new Dictionary<string, string> {
+                        { "game_ui_test_tip_status", "Tipp {0} von {1}" } } },
+                    { "en", new Dictionary<string, string> {
+                        { "game_ui_test_tip_status", "Tip {0} of {1}" } } },
+                };
+
+            GameLocalizationService.SetStateForTests("de", new List<string> { "de", "en" }, cache);
+
+            Assert.AreEqual(
+                "Tipp 2 von 3",
+                GameLocalizationService.TrOrDefault(
+                    "game_ui_test_tip_status", "Tip {0} of {1}", 2, 3));
+        }
+
+        // A game that does not ship the key must get the caller's own English format -- never
+        // the raw key, which is what Tr(key, args) would have returned.
+        [Test]
+        public void TrOrDefault_WithArgs_FormatsCallerDefault_WhenKeyMissing() {
+
+            Dictionary<string, Dictionary<string, string>> cache =
+                new Dictionary<string, Dictionary<string, string>> {
+                    { "en", new Dictionary<string, string>() },
+                };
+
+            GameLocalizationService.SetStateForTests("en", new List<string> { "en" }, cache);
+
+            Assert.AreEqual(
+                "Tip 2 of 3",
+                GameLocalizationService.TrOrDefault(
+                    "game_ui_test_tip_status", "Tip {0} of {1}", 2, 3));
+        }
+
+        [Test]
         public void L10n_Tr_DelegatesToService() {
 
             Dictionary<string, Dictionary<string, string>> cache =

@@ -362,6 +362,25 @@ namespace Engine.Game.App.BaseApp {
             return Has(key) ? Tr(key) : defaultValue;
         }
 
+        // Formatted variant of the above, for shared-lib sites that interpolate. Tr(key, args)
+        // would put the RAW KEY on screen in a game that doesn't ship the key; this falls back to
+        // the caller's own English format string and formats that instead.
+        public static string TrOrDefault(string key, string defaultFormat, params object[] args) {
+
+            string format = Has(key) ? Tr(key) : defaultFormat;
+
+            if (args == null || args.Length == 0) {
+                return format;
+            }
+
+            try {
+                return string.Format(FormatCulture(), format, args);
+            }
+            catch (Exception) {
+                return format;
+            }
+        }
+
         public static string Tr(string key, params object[] args) {
 
             string format = Tr(key);
@@ -480,6 +499,10 @@ namespace Engine.Game.App.BaseApp {
 
         public static string TrOrDefault(string key, string defaultValue) {
             return GameLocalizationService.TrOrDefault(key, defaultValue);
+        }
+
+        public static string TrOrDefault(string key, string defaultFormat, params object[] args) {
+            return GameLocalizationService.TrOrDefault(key, defaultFormat, args);
         }
 
         public static System.Globalization.NumberFormatInfo NumberFormat {
