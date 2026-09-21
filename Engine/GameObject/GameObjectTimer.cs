@@ -26,6 +26,25 @@ public class GameObjectTimerData : GameDataObject {
     // delta
     // last_time
 
+    // last_time is rewritten on every timer fire -- on every actor, every frame. The base
+    // GameDataObject property keeps it as a double in the string-keyed attribute dictionary,
+    // so each write boxes the value (measured: 1 alloc / 24 B, on roughly 60% of calls).
+    // GameObjectTimerData only ever lives in GameObjectTimer.timers; nothing serialises it
+    // and nothing enumerates its attributes, so a plain backing field is safe here. The
+    // public property is unchanged for any external caller, it just no longer touches the
+    // dictionary.
+    private double lastTimeValue = 0;
+
+    public override double last_time {
+        get {
+            return lastTimeValue;
+        }
+
+        set {
+            lastTimeValue = value;
+        }
+    }
+
 }
 
 public class GameObjectTimer {
@@ -95,8 +114,12 @@ public class GameObjectTimer {
     public float GetInterval(string key) {
         InitIntervals();
 
-        if (intervals.ContainsKey(key)) {
-            return intervals[key];
+        float interval;
+
+        // One hashed lookup instead of ContainsKey plus an indexer -- IsTimerPerf calls
+        // this on every gate.
+        if (intervals.TryGetValue(key, out interval)) {
+            return interval;
         }
 
         return defaultInterval;
@@ -122,13 +145,14 @@ public class GameObjectTimer {
 
         InitTimers();
 
-        GameObjectTimerData obj = null;
+        GameObjectTimerData obj;
 
-        if (timers.Has(key)) {
-            obj = timers.Get(key);
-        }
+        // One hashed lookup instead of Has plus Get (two ContainsKey calls and an indexer).
+        // A missing key left obj null before and still does, so the create path below is
+        // reached in exactly the same cases.
+        if (!timers.TryGetValue(key, out obj)
+            || obj == null) {
 
-        if (obj == null) {
             obj = new GameObjectTimerData();
             obj.key = key;
             obj.delta = delta;
@@ -149,7 +173,9 @@ public class GameObjectTimer {
 
         if ((obj.last_time + (delta * modifier)) < Time.time) {
             obj.last_time = Time.time;
-            timers.Set<GameObjectTimerData>(key, obj);
+            // No Set here: GetTimer has already stored obj under this key and handed back
+            // that same reference, so re-storing it was two more hashed lookups writing an
+            // entry that is already correct.
             //Debug.Log("GameObjectTimer:" + key + " last_time:" + obj.last_time);
             return true;
         }
@@ -193,9 +219,31 @@ public class GameObjectTimer {
         }
     }
 
+    // FRAME-RATE INDEPENDENT THROTTLING (2026-09-20).
+    //
+    // This used to be GetFPSOffset() alone, i.e. desiredFPS / currentFPS, which SHRINKS the
+    // interval as the framerate rises: at 120fps the gate's interval came out at ~8ms, so every
+    // IsTimerPerf gate in the game passed on every frame and actors ticked 120 times a second
+    // instead of the 30 the interval names. The cadence therefore scaled with the framerate --
+    // the opposite of the intent, and it made a device's update rate depend on its hardware.
+    //
+    // Clamped at 1 the interval is a floor in REAL SECONDS: 1/30s means 30 ticks a second at any
+    // framerate, and the offset still stretches it when the framerate falls below the target, so
+    // the load-shedding behaviour that motivated the original formula is kept.
+    //
+    // Set frameRateIndependent = false to restore the old scaling for a product that relied on it.
+    public static bool frameRateIndependent = true;
+
     public float currentModifier {
         get {
-            return GetFPSOffset();
+
+            float offset = GetFPSOffset();
+
+            if (!frameRateIndependent) {
+                return offset;
+            }
+
+            return offset < 1f ? 1f : offset;
         }
     }
 

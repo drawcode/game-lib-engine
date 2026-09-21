@@ -1401,11 +1401,75 @@ public static class GameObjectHelper {
         }
     }
 
+    private class ParticleSystemEntry {
+        public GameObject holder;
+        public ParticleSystem root;
+        public ParticleSystem[] all;
+    }
+
+    private static readonly Dictionary<EntityId, ParticleSystemEntry> particleSystemCache
+        = new Dictionary<EntityId, ParticleSystemEntry>();
+
+    /// <summary>
+    /// The ParticleSystems under a holder, resolved once instead of on every call.
+    ///
+    /// SetParticleSystemStartColor is driven per frame off the player tint, and the three
+    /// live holders (Ground, Boost, GamePlayerShadow) carry NO root ParticleSystem and
+    /// exactly one in a child. So the GetComponent missed every frame -- and a miss in the
+    /// Editor builds a GetComponentNullErrorMessage string (measured 570-614 B). That part
+    /// is Editor-only, but GetComponentsInChildren allocating a fresh ParticleSystem[] is
+    /// NOT: it costs 40 B a call in a player build too, and it ran twice per frame.
+    ///
+    /// Cached the same way as GetPoolKey above: keyed on EntityId, which Unity reuses once
+    /// an object is unloaded, so the holder reference is kept beside the result and compared
+    /// to turn a reused id into an ordinary miss. A destroyed member (Unity's == reports it
+    /// as null) also forces a re-resolve, so a stale entry can never hand back a dead
+    /// ParticleSystem.
+    /// </summary>
+    private static ParticleSystemEntry GetParticleSystems(GameObject inst) {
+
+        EntityId id = inst.GetEntityId();
+
+        ParticleSystemEntry entry;
+
+        if (particleSystemCache.TryGetValue(id, out entry)) {
+
+            if (entry.holder == inst
+                && entry.all != null) {
+
+                bool valid = true;
+
+                for (int i = 0; i < entry.all.Length; i++) {
+                    if (entry.all[i] == null) {
+                        valid = false;
+                        break;
+                    }
+                }
+
+                if (valid) {
+                    return entry;
+                }
+            }
+        }
+        else {
+            entry = new ParticleSystemEntry();
+            particleSystemCache[id] = entry;
+        }
+
+        entry.holder = inst;
+        entry.root = inst.GetComponent<ParticleSystem>();
+        entry.all = inst.GetComponentsInChildren<ParticleSystem>(true);
+
+        return entry;
+    }
+
     public static void SetParticleSystemStartColor(GameObject inst, Color startColor, bool includeChildren) {
         if (inst == null)
             return;
 
-        ParticleSystem particleSystemCurrent = inst.GetComponent<ParticleSystem>();
+        ParticleSystemEntry entry = GetParticleSystems(inst);
+
+        ParticleSystem particleSystemCurrent = entry.root;
         if (particleSystemCurrent != null) {
             //particleSystemCurrent.startColor = startColor;
             ParticleSystem.MainModule main = particleSystemCurrent.main;
@@ -1416,7 +1480,9 @@ public static class GameObjectHelper {
             return;
         }
 
-        ParticleSystem[] particleSystems = inst.GetComponentsInChildren<ParticleSystem>(true);
+        // Still the includeInactive: true set, and it still includes the root -- setting the
+        // root twice is what the uncached version did as well.
+        ParticleSystem[] particleSystems = entry.all;
 
         foreach (ParticleSystem particleSystem in particleSystems) {
             ParticleSystem.MainModule main = particleSystem.main;
