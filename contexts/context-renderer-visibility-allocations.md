@@ -1,11 +1,12 @@
 ---
 name: context-renderer-visibility-allocations
-description: IsRenderersVisibleByCamera allocated two renderer arrays and one Plane[6] PER RENDERER on every call, and it is called per object per frame by the off-screen indicators and the actor shadows. The non-alloc rewrite, and the redundant pre-pass that doubled the cost for no answer.
+description: The per-object-per-frame helpers in GameObjectHelper and what they allocated — IsRenderersVisibleByCamera built two renderer arrays and a Plane[6] PER RENDERER on every call, and SetParticleSystemStartColor ran a GetComponent that always MISSED plus two GetComponentsInChildren arrays per call, the single biggest allocator in gameplay at ~2 KB/frame. The non-alloc rewrites, the EntityId-keyed cache idiom, and what a missing GetComponent really costs in a player build.
 metadata:
   type: repo
   repo: game-lib-engine
   path: Assets/Code/Libs/game-lib-engine
   created: 2026-09-03
+  updated: 2026-09-20
 ---
 
 # The visibility test was the allocation, not the raycast
@@ -55,6 +56,57 @@ main thread should pass its own buffer to `IsVisibleFrom(renderer, camera, plane
 extension stays and simply routes through the non-alloc path. The `(camera, planes)` overload is
 additive.
 
+## The same shape, in the same file: `SetParticleSystemStartColor` (2026-09-20)
+
+`GameObjectHelper.SetParticleSystemStartColor` (`:1466`) is driven per frame off the player tint —
+`BaseGamePlayerController.HandlePlayerEffectsObjectTick` lerps a colour every tick and pushes it
+into the effect holder (`BaseGamePlayerController.cs:1193`), with four more callers on the actor
+shadow, the zone score effects, the indicator items and `GameObjectChoice`. It did two lookups on
+every call:
+
+```csharp
+ParticleSystem particleSystemCurrent = inst.GetComponent<ParticleSystem>();   // always missed
+...
+ParticleSystem[] particleSystems = inst.GetComponentsInChildren<ParticleSystem>(true);
+```
+
+The three live holders in this title (`Ground`, `Boost`, `GamePlayerShadow`) carry **no root
+`ParticleSystem`**, only one in a child — so the `GetComponent` missed every frame, forever, and
+the array form allocated a fresh `ParticleSystem[]` twice per call. Measured at **~2 KB/frame, the
+biggest single allocator in a gameplay frame**.
+
+Now resolved once behind `GetParticleSystems` (`:1429`), an `EntityId`-keyed cache
+(`particleSystemCache`, `:1410`) built the same way as `GetPoolKey` further down the file (`:2347`).
+
+**Two things the cache has to defend against, and both are general:**
+
+- **Unity reuses an `EntityId` once an object is unloaded**, so the cache stores the holder
+  reference beside the result and compares it — a reused id then degrades to an ordinary miss
+  rather than handing back another object's components.
+- A **destroyed member** still occupies the array while Unity's `==` reports it null, so every
+  entry is checked before the entry is trusted; a failed check forces a re-resolve. Without that a
+  cache outlives the thing it cached and hands back a dead `ParticleSystem`.
+
+(`GetInstanceID` is deprecated as of Unity 6.5 — `GetEntityId()` is the key these caches use.)
+
+### What a MISSING `GetComponent` actually costs
+
+This is the third time this project has paid for it (see the `GamePlayerItem.GetCollectReach`
+measurement in `game-lib-games/contexts/context-per-frame-actor-costs.md`), so it is worth stating
+exactly:
+
+- In the **Editor and development builds**, a miss builds a `GetComponentNullErrorMessage` string —
+  measured **570–614 B** here, 537 B in the earlier item-path case. That part does **not** ship.
+- What ships on **every** platform is the native component search itself, and, for the
+  array-returning `GetComponentsInChildren<T>()`, the array — **40 B a call** in a player build,
+  here twice per call per holder per frame.
+
+So a profiler capture in the Editor **overstates** the win, and the honest claim is the lookup and
+the array, not the byte count. Price such a fix on device before quoting it.
+See [[gc-total-memory-lies-in-editor]] for the other half of that caution.
+
 ## Related
 
 - `game-lib-games/contexts/context-per-frame-actor-costs.md` — the callers, and the rest of that pass
+- `context-input-touch-launch-costs.md` — the other every-frame engine path, and the string/`Input.touches` allocation classes
+- `context-timer-throttle-design.md` — the gate most of these callers sit behind, and what its cadence really is
