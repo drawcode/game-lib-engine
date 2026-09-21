@@ -1,6 +1,6 @@
 ---
 name: context-ui-backend-design
-description: IUIBackend/UIRef provider seam, UIPlatform dispatch, BindElements manifest, and bitty schema v1 — the agnostic UI platform contract (plan chunk 2.1)
+description: IUIBackend/UIRef provider seam, UIPlatform dispatch, BindElements manifest, and bitty schema v1 — the agnostic UI platform contract (plan chunk 2.1). Includes the as-built correction that UIRef.alive CANNOT see a torn-down UI Toolkit view (a VisualElement is not a UnityEngine.Object), how UIToolkitBackend.El/HostAlive keeps the never-throws promise for every op, and the trap that a marker-class guard survives only ONE frame because Unity recycles a freed view's elements.
 metadata:
   type: design
   repo: game-lib-engine
@@ -120,6 +120,45 @@ code, not this sketch, if they ever disagree.
 `alive` mirrors `ITweenTarget.alive` and exists for the same reason: a handle can outlive its
 element, and every backend op must no-op rather than throw on a dead one. `UIRef.none` is never
 null — same "Get never returns null" policy as `TweenPresets.Get`.
+
+### As-built (2026-09-21): `alive` CANNOT keep that promise for UI Toolkit
+
+`alive` is a plain null check for a `VisualElement` native — a VisualElement is **not** a
+`UnityEngine.Object`, so there is no destroyed-but-not-null overload to read, and a ref into a
+**torn-down view still reports alive**. The op then throws from inside UIElements'
+`InlineStyleAccess`, which is the opposite of the contract above. Shipped symptom: two
+`NullReferenceException`s at every play-mode teardown, from a panel's `OnDisable` writing a knob
+style after `FreeToolkitView`.
+
+The gap is closed in `UIToolkitBackend`, not in `UIRef` (which must stay backend-agnostic):
+`El(UIRef)` resolves through `HostAlive`, so **every** op inherits it — keep any new op resolving
+through `El` or it opts out. `HostAlive` walks up for a freed-root marker class or a `viewHosts`
+entry (the host GameObject's liveness — Unity's `== null` is precisely the signal `UIRef` cannot
+provide), then falls back to `el.panel != null`.
+
+**The trap, which cost a wrong fix:** a marker class on the freed root looks sufficient and passes
+a same-frame test, but **one frame after the host `PanelRenderer` is destroyed Unity RECYCLES that
+view's elements** — measured: empty class list, `childCount 0`, `parent null`, children orphaned.
+So from the next frame the marker is gone AND a stale CHILD ref can no longer reach a tracked
+ancestor; the guard goes permissive exactly when it matters. That build threw from d=1 and let
+`SetLabelValue` **silently write into an orphaned label** at d=2. A control test separates the
+causes: a plain `VisualElement` detached with `RemoveFromHierarchy()` KEEPS its classes across
+frames, so it is panel teardown wiping them, not detaching. `panel` is the only signal that
+survives, which is why the fallback is what it is.
+
+**Testing rule for any liveness guard here:** exercise it at d=0 AND d=1, 2, 6, 25, 120 (schedule
+from `Application.onBeforeRender` — a CLI round trip advances thousands of frames and physically
+cannot land on d=1), and assert on **silent writes** as well as exceptions by reading the
+element's text/style back. The broken build's worst symptom was a write that landed, not a throw.
+
+**Known cost:** an element built but **never attached** also has no panel, so ops on it no-op
+instead of applying. Nothing in this repo writes through the backend before attach (`LoadView`
+adds the built tree to the panel root before handing out any `UIRef`). If a caller ever needs
+pre-attach writes, give the element a tracked ancestor rather than weakening the guard.
+
+**Known gap:** if Unity's pool ever hands a recycled element back into a LIVE view while a stale
+`UIRef` still points at it, `panel != null` is true again and the guard goes permissive. The
+fallback is identity-blind by construction. Not observed — reload built new element objects.
 
 `native` is `object`, not a typed member, so the facade can hold and pass a `VisualElement`
 without the engine assembly naming `UnityEngine.UIElements` above the provider layer. Backends
