@@ -40,13 +40,26 @@ namespace Engine.UI {
             return native is VisualElement;
         }
 
-        private static VisualElement El(UIRef r) {
+        // UIRef.alive cannot see a torn-down toolkit view (a VisualElement is not a
+        // UnityEngine.Object, so the == null trick that catches a destroyed GameObject host does
+        // not transfer), which broke UIRef's documented promise that every backend op no-ops on a
+        // dead ref instead of throwing. HostAlive supplies the half UIRef cannot: the liveness of
+        // the GameObject that owns the view. Every op resolves through here, so the promise now
+        // holds for all of them rather than for the two (Show/Hide) that had learned it the hard
+        // way. An element belonging to no tracked view is left alone — see HostAlive.
+        private VisualElement El(UIRef r) {
 
             if (r == null || !r.alive) {
                 return null;
             }
 
-            return r.native as VisualElement;
+            VisualElement el = r.native as VisualElement;
+
+            if (el == null || !HostAlive(el)) {
+                return null;
+            }
+
+            return el;
         }
 
         // ROOTS / BRIDGE
@@ -749,11 +762,26 @@ namespace Engine.UI {
         // it, and Unity's == null on that GameObject is exactly the "already destroyed" signal
         // UIRef cannot provide. Walk up to the nearest tracked root; an element that belongs to no
         // tracked view is left alone (permissive — nothing to say about it).
+        // DestroyView drops the viewHosts entry as it frees, so a lookup alone goes PERMISSIVE
+        // exactly when it matters most: after the free, the walk finds nothing tracked, answers
+        // "alive", and the next style write throws. The freed root carries this marker class to
+        // cover that gap — but ONLY for the frame of the free: Unity recycles the view's elements
+        // a frame later and the class list goes with them (measured). The panel fallback at the
+        // end of HostAlive is what covers every frame after that; this marker is what covers the
+        // frame where the elements still look intact.
+        private const string freedViewClass = "engine-ui-view-freed";
+
         private bool HostAlive(VisualElement el) {
 
             VisualElement node = el;
 
             while (node != null) {
+
+                // Cheapest test first: this one is a list scan on the element itself, while the
+                // lookup below hashes. SetElementTranslate runs per frame while a stick is held.
+                if (node.ClassListContains(freedViewClass)) {
+                    return false;
+                }
 
                 GameObject go = null;
 
@@ -764,7 +792,26 @@ namespace Engine.UI {
                 node = node.parent;
             }
 
-            return true;
+            // Nothing tracked above this element. Two very different worlds end up here, and the
+            // panel tells them apart.
+            //
+            // The marker above only survives the frame of the free: ONE FRAME after the host
+            // PanelRenderer is destroyed, Unity RECYCLES the elements of that view — measured, a
+            // freed root comes back with an empty class list, childCount 0 and parent null, and
+            // its children are orphaned the same way. So from the next frame the marker is gone,
+            // the walk cannot reach a tracked root from a stale CHILD ref (it has no parent any
+            // more), and a lookup-only test goes permissive exactly when the ref is most dangerous
+            // — which is how the sticks kept throwing. A recycled element reports panel == null;
+            // every element of a live view reports a panel. That is the signal that outlives the
+            // teardown, so it is the one this falls back to.
+            //
+            // The cost of it: an element BUILT BUT NEVER ATTACHED also has no panel, so ops on one
+            // no-op rather than apply. That is the contract this class exists to keep ("nothing
+            // happens", never an exception) and nothing in this repo writes through the backend
+            // before attach — LoadView adds the built tree to the panel root before it ever hands
+            // out a UIRef. If a caller ever needs pre-attach writes, give the element a tracked
+            // ancestor rather than weakening this.
+            return el.panel != null;
         }
 
         // display, not visibility: display removes the element from layout, which is what
@@ -945,6 +992,15 @@ namespace Engine.UI {
                 }
 
                 RegisterRoot(viewRoot);
+
+                // Clear any freed mark. Measured today, LoadView always builds a NEW host and a
+                // fresh root, so this never fires on the current path — it is insurance for the
+                // shared-PanelSettings case, where viewRoot is found by name inside a panel root
+                // that OUTLIVES the view and a reload could hand back an element a previous
+                // DestroyView marked. Registration is the authoritative "this subtree is live
+                // again"; keep it even though it is currently a no-op.
+                viewRoot.RemoveFromClassList(freedViewClass);
+
                 viewHosts[viewRoot] = go;
 
                 // A bitty-built tree already resolved its "@loc:" text at Build() time (see
@@ -999,6 +1055,12 @@ namespace Engine.UI {
             }
 
             UnregisterRoot(el);
+
+            // Mark BEFORE destroying the host: from here on every op on this subtree must no-op,
+            // including the ones a panel's own OnDisable/OnDestroy fires after the free (the HUD
+            // sticks were writing a knob style straight into a destroyed view). The mark is what
+            // HostAlive reads once the map entry below is gone.
+            el.AddToClassList(freedViewClass);
 
             GameObject go = null;
 

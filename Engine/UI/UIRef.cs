@@ -17,6 +17,13 @@ namespace Engine.UI {
         // Never null — mirrors TweenPresets.Get, which also never returns null. Every
         // backend op no-ops on a ref that is not alive, so a missed bind degrades to
         // "nothing happens", never to a NullReferenceException.
+        //
+        // `alive` alone cannot keep that promise for UI Toolkit: a VisualElement is not a
+        // UnityEngine.Object, so there is no destroyed-but-not-null overload to read and a ref
+        // into a torn-down view still reports alive (writing a style on one throws from inside
+        // UIElements). The toolkit backend closes that gap for every op in UIToolkitBackend.El /
+        // HostAlive, using the liveness of the GameObject that hosts the view — the half only the
+        // backend can know. Keep any new backend op resolving through El, or it opts out of this.
         public static readonly UIRef none = new UIRef(null, "");
 
         private readonly object _native;
