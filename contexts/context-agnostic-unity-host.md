@@ -108,6 +108,29 @@ design records `context-agnostic-contract-v0` and `context-agnostic-core-p2` in 
   vectors are 17/17. The only remaining allocation is the joystick check, about 32 B/s.
 - **Not measured:** device numbers, and before/after on gameplay. Nothing in gameplay calls the host yet.
 
+## First adopter: dasher input (P3.2, 2026-09-26)
+
+- **`ActionMapJson`** (`Engine/AgnosticHost/ActionMapJson.cs`) maps an `input-action-map.v1` document onto
+  `ActionMapDef` with LitJson, applying the same field rules as the vector runner's `ParseMap`. LitJson's indexer throws on a
+  missing key and stores `1` as an int, which a `(double)` cast rejects, so both are guarded. A bad document logs once and returns
+  null, and nothing throws out of it.
+- **`UnityHostDriver` is `[DefaultExecutionOrder(-1000)]`.** Gameplay reads actions in its own Update, so the
+  evaluate must come first or objects disagree about the frame.
+- The adopter is **`GameInputActions`** in game-lib-games (`Game/Events/`). It boots in `AfterSceneLoad` only if
+  `Resources/agnostic/input-action-map.json` exists (the game opts in through data), and it rebuilds every play
+  because domain reload is off. `enabled` is the kill switch. The actions are `move` (WASD + arrows, sensitivity 0.99 to match
+  the legacy 0.99 per axis) and `run` (legacy Fire3: left-cmd, mouse.middle, pad.west).
+- Call sites: `GameTouchInputAxis` (both keyboard branches → `KeyAxis()`) and
+  `BaseGamePlayerThirdPersonController`'s Fire3 read → `IsRunHeld()`. The touch sticks still send directly from
+  `BaseGameHUD`, because routing them through the map would clamp the aim stick's unclamped value (it slows
+  movement by `v2/10`).
+- **Verified in a live round** by injecting raw keys into the map (`map.OnButton(1, "key.d", true)`). The
+  host only pushes changes, so an injected state persists. Results: d → player h=0.99 and moving; d+w → (0.70,0.70); a+d → cancel;
+  cmd → run; release → 0 and it stops. With `enabled=false` the same injection does nothing, because legacy only reads the real keyboard.
+- **Profiler, 201 frames, idle input:** `GameTouchInputAxis.Update` went from 4.7 µs and **248 B/frame** to 3.0 µs and **0 B**. The
+  garbage was `IsEqualLowercase` (both strings `ToLower()`'d, per pad per frame), which is now an ordinal ignore-case compare.
+  `UnityHostDriver.Update` costs 11.1 µs/frame with 11 watched controls, and 64 B in total (the joystick check).
+
 ## Gaps (v0)
 
 - No per-OS gamepad layout (legacy joystick buttons 0–7 are Xbox order). A real pad wants the Input System.

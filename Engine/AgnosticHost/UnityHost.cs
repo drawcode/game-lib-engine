@@ -164,6 +164,11 @@ namespace Engine.AgnosticHost {
 
     // Drives a UnityHost from Unity's player loop. Add one to a persistent object and hand it the
     // core's ICoreLoop; nothing else in the game needs to know the core has a frame.
+    //
+    // Runs before every default-order Update: gameplay reads actions in its own Update, and the
+    // contract says raw input is pushed and evaluated first. At default order the reads would
+    // see last frame's evaluate on some objects and this frame's on others.
+    [DefaultExecutionOrder(-1000)]
     public class UnityHostDriver : MonoBehaviour {
 
         public UnityHost host;
