@@ -99,17 +99,9 @@ namespace Engine.UI.Bitty {
 
         // Load from a Resources-hosted tokens.json. Missing file is not an error — the
         // built-in defaults stand, so the platform boots with a coherent theme either way.
+        // Delegates to UITokensLoader, the Unity text source; the parse below is engine-free.
         public static bool Load(string resourcePath = defaultResourcePath) {
-
-            TextAsset asset = Resources.Load<TextAsset>(resourcePath);
-
-            if (asset == null) {
-                LogUtil.Log("UITokens: no token file at Resources/" + resourcePath
-                    + " — using built-in defaults");
-                return false;
-            }
-
-            return LoadFromJson(asset.text);
+            return UITokensLoader.LoadFromResources(resourcePath);
         }
 
         public static bool LoadFromJson(string json) {
