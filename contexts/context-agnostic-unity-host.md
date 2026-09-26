@@ -131,9 +131,32 @@ design records `context-agnostic-contract-v0` and `context-agnostic-core-p2` in 
   garbage was `IsEqualLowercase` (both strings `ToLower()`'d, per pad per frame), which is now an ordinal ignore-case compare.
   `UnityHostDriver.Update` costs 11.1 µs/frame with 11 watched controls, and 64 B in total (the joystick check).
 
+## Pads through the Input System (P3 step 4, 2026-09-26)
+
+- **`Engine/AgnosticHost/InputSystemPads/`** is its own asmdef, `Engine.AgnosticHost.InputSystemPads`, with
+  `versionDefines` on `com.unity.inputsystem` giving `AGNOSTIC_INPUT_SYSTEM`, and `defineConstraints` on that define.
+  On a machine without the package the define is unmet, so Unity skips the assembly and nothing fails to resolve.
+  `manifest.json` is gitignored, and `ENABLE_INPUT_SYSTEM` tracks the player setting, which is why neither can be the guard.
+- **`UnityInput` binds it by name** (`Type.GetType` + `Delegate.CreateDelegate` once, in static fields), since
+  Assembly-CSharp cannot reference an assembly that may not exist. `UnityInput.inputSystemPads` reports whether it bound.
+  When it has, **legacy `pad.*` watches are skipped**, so the two sources never fight over one name.
+  `[assembly: AlwaysLinkAssembly]` + `[Preserve]` keep it from being stripped, because nothing references it statically.
+- It pushes `pad.south/east/west/north`, shoulders, select/start, stick presses, `pad.dpad-*`,
+  `pad.left-stick.x/.y`, `pad.right-stick.x/.y`, and `pad.left-trigger`/`pad.right-trigger`, all as **unprocessed**
+  values. The core owns the dead zone, and the Input System's own stick dead zone would stack on top of it. It pushes changes only,
+  and a pad unplugged mid-press is released. The state is static and domain reload is off, so the `UnityInput`
+  constructor clears it.
+- **Verified with a virtual `Gamepad`** (`InputSystem.AddDevice<Gamepad>` + `QueueStateEvent`) in a live
+  round: left stick → `move` → the player walks, 0.1 is inside the 0.15 dead zone and reads 0, right stick → `aim` → the attack
+  axis (h2=1), west → `run`, neutral → 0, and removing the device mid-deflection → 0 and the player stops.
+- **Found by the profiler:** a map with stick bindings cost **~220 B/frame**, pad or no pad. `ActionMap.Raw2d`
+  built `control + ".x"` per Evaluate. game-lib-bitty-base now caches the part names per control, so the driver is
+  back to 0 B/frame at ~11 µs idle and ~16 µs with a pad held. `GameTouchInputAxis` still shows ~64 B/frame
+  **while an axis is held**; that is the per-frame `SendInputAxisMessage` broadcast a held key always paid.
+
 ## Gaps (v0)
 
-- No per-OS gamepad layout (legacy joystick buttons 0–7 are Xbox order). A real pad wants the Input System.
+- Without the Input System package, pads fall back to legacy joystick buttons 0–7 (Xbox order, no per-OS layout).
 - `Share` returns `unsupported`, because the house has no share sheet. `Vibrate` ignores the pattern (DeviceUtil has one buzz).
 - `Find` walks `Transform.Find`. Contacts need `UnityPhysics.WatchContacts(handle)` per object.
 - `SetEngineTimeScale` writes `Time.timeScale` directly, so it would fight any house code that also writes it.

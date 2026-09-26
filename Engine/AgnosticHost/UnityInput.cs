@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Reflection;
 
 using Agnostic.Core;
 using Agnostic.Host;
@@ -74,9 +75,26 @@ namespace Engine.AgnosticHost {
         // that also synthesises mouse events does not report every tap twice.
         public bool mouseAsPointer = true;
 
+        // Gamepads through the Input System when its assembly compiled here (InputSystemPads/,
+        // guarded on the package); null otherwise, and pads stay on the legacy joystick buttons.
+        // Bound once by name, since Assembly-CSharp cannot reference an assembly that may not exist.
+        private static readonly Action<IRawInputSink> padPoll = BindPadSource("Poll");
+        private static readonly Action<IRawInputSink> padRelease = BindPadSource("ReleaseAll");
+
         public UnityInput(IHostDisplay display, IHostLog log) {
             this.display = display;
             this.log = log;
+
+            // The source's state is static and domain reload is off, so a new host starts clean.
+            if (padRelease != null) {
+                padRelease(null);
+            }
+        }
+
+        public static bool inputSystemPads {
+            get {
+                return padPoll != null;
+            }
         }
 
         public void SetSink(IRawInputSink sink) {
@@ -227,6 +245,11 @@ namespace Engine.AgnosticHost {
             for (int i = 0; i < watched.Count; i++) {
                 Watched w = watched[i];
 
+                // The Input System source owns every pad.* name; two sources would fight.
+                if (padPoll != null && w.device == gamepadDevice) {
+                    continue;
+                }
+
                 switch (w.source) {
                     case Source.key: {
                             bool d = Input.GetKey(w.key);
@@ -259,6 +282,10 @@ namespace Engine.AgnosticHost {
                             break;
                         }
                 }
+            }
+
+            if (padPoll != null) {
+                padPoll(sink);
             }
 
             PollPointers();
@@ -313,6 +340,10 @@ namespace Engine.AgnosticHost {
 
             activeTouches.Clear();
             mouseDown = false;
+
+            if (padRelease != null) {
+                padRelease(sink);
+            }
         }
 
         private void PollPointers() {
@@ -471,6 +502,23 @@ namespace Engine.AgnosticHost {
 
             key = KeyCode.JoystickButton0 + index;
             return true;
+        }
+
+        private static Action<IRawInputSink> BindPadSource(string method) {
+
+            Type t = Type.GetType("Engine.AgnosticHost.Pads.InputSystemPadSource, Engine.AgnosticHost.InputSystemPads");
+
+            if (t == null) {
+                return null;
+            }
+
+            MethodInfo m = t.GetMethod(method, BindingFlags.Public | BindingFlags.Static);
+
+            if (m == null) {
+                return null;
+            }
+
+            return (Action<IRawInputSink>)Delegate.CreateDelegate(typeof(Action<IRawInputSink>), m);
         }
 
         private static bool AxisExists(string axis) {

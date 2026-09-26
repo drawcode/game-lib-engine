@@ -1,0 +1,25 @@
+{
+    "name": "Engine.AgnosticHost.InputSystemPads",
+    "rootNamespace": "Engine.AgnosticHost.Pads",
+    "references": [
+        "Agnostic",
+        "Unity.InputSystem"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": false,
+    "defineConstraints": [
+        "AGNOSTIC_INPUT_SYSTEM"
+    ],
+    "versionDefines": [
+        {
+            "name": "com.unity.inputsystem",
+            "expression": "1.0.0",
+            "define": "AGNOSTIC_INPUT_SYSTEM"
+        }
+    ],
+    "noEngineReferences": false
+}
