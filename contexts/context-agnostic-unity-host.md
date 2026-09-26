@@ -68,8 +68,9 @@ design records `context-agnostic-contract-v0` and `context-agnostic-core-p2` in 
   `WatchMap(def)` watches every binding, including composite parts and `.x`/`.y` of 2D controls.
   `Input.GetJoystickNames` allocates, so device changes are checked once a second. Pad axes need
   `SetAxisName(control, inputManagerAxis)`. The project's default `Horizontal`/`Vertical` also read
-  the keyboard, so they are NOT mapped by default. The new Input System is not installed
-  (`activeInputHandler: 2`, no package). Pointer 0 is the mouse, and touches are `fingerId + 1`.
+  the keyboard, so they are NOT mapped by default. The Input System (1.20.0) was installed in action-bots on
+  2026-09-26 with the handler left on Both, but `UnityInput` does not use it yet. `manifest.json` is gitignored there,
+  and `ENABLE_INPUT_SYSTEM` tracks the player setting, not the package, so any Input System code needs a real guard. Pointer 0 is the mouse, and touches are `fingerId + 1`.
   Positions are in design space: top-left origin, `/ (pixelHeight / 640)`.
 - **Frame order** (`UnityHost.Frame`): `input.Poll` -> `GameClock.Tick` -> `assets.PumpAsync` ->
   `physics.DeliverContacts` -> `OnFrame` -> `OnFixed` x steps -> `Scheduler.Advance` -> `bus.Drain(8)` ->
