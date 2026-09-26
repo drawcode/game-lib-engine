@@ -668,6 +668,7 @@ namespace Engine.UI {
                 }
                 int id = held;
                 held = PointerId.invalidPointerId;
+                UIPlatform.SetInputHeld(ToInputId(id), false);
                 if (el.HasPointerCapture(id)) {
                     el.ReleasePointer(id);
                 }
@@ -679,6 +680,7 @@ namespace Engine.UI {
                     return;
                 }
                 held = evt.pointerId;
+                UIPlatform.SetInputHeld(ToInputId(held), true);
                 el.CapturePointer(evt.pointerId);
                 report(evt.position);
                 evt.StopPropagation();
@@ -713,6 +715,18 @@ namespace Engine.UI {
 
             // Hidden or torn down mid-drag (round ends, pause): no up event will ever come.
             el.RegisterCallback<DetachFromPanelEvent>(evt => release());
+        }
+
+        // UI Toolkit pointer id -> the legacy Input id UIPlatform keys on: touches are
+        // touchPointerIdBase + fingerId, the mouse is mousePointerId.
+        private static int ToInputId(int pointerId) {
+
+            if (pointerId >= PointerId.touchPointerIdBase
+                && pointerId < PointerId.touchPointerIdBase + PointerId.touchPointerCount) {
+                return pointerId - PointerId.touchPointerIdBase;
+            }
+
+            return UIPlatform.mouseInputId;
         }
 
         public void SetElementTranslate(UIRef r, Vector2 offset) {

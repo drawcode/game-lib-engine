@@ -138,6 +138,36 @@ namespace Engine.UI {
             return false;
         }
 
+        // POINTERS HELD BY A CONTROL
+        //
+        // IsPointerOverUI answers by POSITION, which is wrong for a drag: a virtual stick captures
+        // its pointer and follows the thumb wherever it goes, so the moment the thumb slides off
+        // the stick's rect the world sees a free touch. Gameplay's finger-navigate then steered the
+        // player toward the aiming thumb. A backend that captures a pointer records it here, and
+        // world input asks by pointer instead.
+        //
+        // Ids are the legacy Input ones so a caller holding a UnityEngine.Touch needs no backend
+        // type: a touch's fingerId, or mouseInputId for the mouse.
+        public const int mouseInputId = -1;
+
+        private static readonly List<int> heldInputIds = new List<int>();
+
+        public static void SetInputHeld(int inputId, bool held) {
+
+            int index = heldInputIds.IndexOf(inputId);
+
+            if (held && index < 0) {
+                heldInputIds.Add(inputId);
+            }
+            else if (!held && index >= 0) {
+                heldInputIds.RemoveAt(index);
+            }
+        }
+
+        public static bool IsInputHeldByUI(int inputId) {
+            return heldInputIds.Contains(inputId);
+        }
+
         // Which backend builds a NEW screen. Separate from For() because LoadView("panel-x")
         // has no native object to dispatch on yet. This is the switch a per-panel migration
         // actually flips in Phase 3: the panel's view key starts resolving through
@@ -184,6 +214,7 @@ namespace Engine.UI {
         public static void Reset() {
             _backends = null;
             _viewBackend = null;
+            heldInputIds.Clear();
         }
     }
 }
