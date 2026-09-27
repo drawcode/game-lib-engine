@@ -1619,6 +1619,8 @@ namespace Engine.UI {
                 _registersSinceSweep = 0;
                 SweepDetached();
             }
+
+            TagLocale(element);
         }
 
         private static void OnAttach(VisualElement element, Binding b) {
@@ -1628,6 +1630,8 @@ namespace Engine.UI {
             if (b.appliedCode != L10n.CurrentCode) {
                 Apply(b);
             }
+
+            TagLocale(element);
         }
 
         private static void Apply(Binding b) {
@@ -1700,7 +1704,65 @@ namespace Engine.UI {
 
             foreach (KeyValuePair<VisualElement, Binding> kv in _bound) {
                 Apply(kv.Value);
+                TagLocale(kv.Key);
             }
+        }
+
+        // Locale classes on each panel's visualTree: "loc-<code>", plus "loc-cjk" for the
+        // scripts without spaces (ja, zh-*). USS can then scope a rule to a locale, e.g.
+        // `.loc-cjk .body { -unity-text-auto-size: none; }` -- in 6000.5.2f1 best-fit on a
+        // WRAPPED paragraph breaks CJK only at punctuation and runs past its box, while
+        // one-line best-fit is fine. Keyed on the visualTree so every view on the panel,
+        // whichever path built it, inherits the class.
+        private static string _tagCode;
+        private static string _tagClass;
+        private static bool _tagCjk;
+
+        public const string cjkClass = "loc-cjk";
+
+        private static void TagLocale(VisualElement element) {
+
+            IPanel p = element != null ? element.panel : null;
+
+            if (p == null || p.visualTree == null) {
+                return;
+            }
+
+            string code = L10n.CurrentCode;
+
+            if (string.IsNullOrEmpty(code)) {
+                return;
+            }
+
+            if (code != _tagCode) {
+                _tagCode = code;
+                _tagClass = "loc-" + code;
+                _tagCjk = code == "ja" || code.StartsWith("zh", StringComparison.Ordinal);
+            }
+
+            VisualElement tree = p.visualTree;
+
+            if (tree.ClassListContains(_tagClass)) {
+                return;
+            }
+
+            // Drop whatever locale this tree carried before; a tree is tagged once per change.
+            List<string> stale = null;
+
+            foreach (string c in tree.GetClasses()) {
+                if (c.StartsWith("loc-", StringComparison.Ordinal)) {
+                    (stale ?? (stale = new List<string>())).Add(c);
+                }
+            }
+
+            if (stale != null) {
+                for (int i = 0; i < stale.Count; i++) {
+                    tree.RemoveFromClassList(stale[i]);
+                }
+            }
+
+            tree.AddToClassList(_tagClass);
+            tree.EnableInClassList(cjkClass, _tagCjk);
         }
     }
 }
