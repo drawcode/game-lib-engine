@@ -1,11 +1,12 @@
 ---
 name: context-localization-runtime-seams
-description: Three things about the localization runtime that a consumer gets wrong — Tr(key, args) puts the raw key on screen in a game that doesn't ship it (use the formatted TrOrDefault overload), applying a locale writes a profile attribute even when SetLanguage is skipped, and the per-locale NumberFormat getter costs nothing per frame (measured).
+description: Five things about the localization runtime that a consumer gets wrong — Tr(key, args) puts the raw key on screen in a game that doesn't ship it (use the formatted TrOrDefault overload), applying a locale writes a profile attribute even when SetLanguage is skipped, and the per-locale NumberFormat getter costs nothing per frame (measured), and UI Toolkit panels carry loc-<code>/loc-cjk classes so USS can scope a rule to a locale.
 metadata:
   type: repo
   repo: game-lib-engine
   path: Assets/Code/Libs/game-lib-engine
   created: 2026-09-21
+  updated: 2026-09-27
 ---
 
 # Localization runtime — the three seams that bite
@@ -71,3 +72,21 @@ in place.
 against 76,414 B in en** at the same sample count. 50k-iteration micro-benchmark: the getter
 measures **0.000 B/call**, and `ToString("N0", NumberFormat)` runs 0.302 us against 0.301 us for a
 bare `ToString("N0")`.
+
+## 5. Locale classes on the panel root, for locale-scoped USS
+`UIToolkitLocalization.TagLocale` (in `Engine/UI/Backends/UIToolkitBackend.cs`, 2026-09-26) puts
+`loc-<code>` on `element.panel.visualTree`, plus `loc-cjk` for `ja` and `zh-*`. It runs on Register,
+on attach and on every language change, and the previous `loc-*` classes are removed, so exactly one
+locale is ever tagged. Every view on the panel inherits it, whichever path built it.
+
+Why it exists: in 6000.5.2f1, `-unity-text-auto-size: best-fit` on a **wrapped** label breaks
+ja/zh only at punctuation, and the line runs past its box (~70 px over 260, at any min size). The
+same label with auto-size `none` wraps per character correctly, and one-line best-fit is fine in every
+script. So a paragraph class opts out for the space-less scripts only:
+
+```css
+.loc-cjk .pc-col-body { -unity-text-auto-size: none; font-size: 15px; }
+```
+
+A consumer game that never writes a `.loc-*` rule is unaffected: the classes carry no style.
+
