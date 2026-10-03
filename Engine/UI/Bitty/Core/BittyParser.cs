@@ -18,6 +18,11 @@ namespace Engine.UI.Bitty {
     // — a bad view must fail to load (panel stays on NGUI), never half-build.
     public static class BittyParser {
 
+        // Where parse errors go. The parser lives in an engine-free assembly (Engine.UI.Bitty.Core,
+        // noEngineReferences) and cannot name LogUtil, so each host installs its own sink — the
+        // Unity one is BittyUnityLog. Unset, errors are dropped, never thrown.
+        public static Action<string> logError;
+
         public static BittyNode Parse(string json) {
 
             if (string.IsNullOrEmpty(json)) {
@@ -30,14 +35,14 @@ namespace Engine.UI.Bitty {
                 root = Json.Deserialize(json);
             }
             catch (Exception e) {
-                LogUtil.LogError("BittyParser: JSON parse failed: " + e.Message);
+                logError?.Invoke("BittyParser: JSON parse failed: " + e.Message);
                 return null;
             }
 
             Dictionary<string, object> dict = root as Dictionary<string, object>;
 
             if (dict == null) {
-                LogUtil.LogError("BittyParser: root is not a JSON object");
+                logError?.Invoke("BittyParser: root is not a JSON object");
                 return null;
             }
 
