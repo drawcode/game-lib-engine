@@ -209,6 +209,27 @@ public class UIUtil {
         }
     }
 
+    // A FLOATING joystick: a press anywhere in `zone` brings `stick` to the thumb and measures
+    // from there; a press on the stick works as SetElementStickHandler. Same handler contract.
+    // A backend without the capability (IUIFloatingStickBackend) gets the anchored stick.
+    public static void SetElementFloatingStickHandler(UIRef zone, UIRef stick, Action<Vector2, bool> onStick) {
+
+        IUIBackend backend = UIPlatform.For(stick);
+
+        if (backend == null) {
+            return;
+        }
+
+        IUIFloatingStickBackend floating = backend as IUIFloatingStickBackend;
+
+        if (floating != null) {
+            floating.SetElementFloatingStickHandler(zone, stick, onStick);
+        }
+        else {
+            backend.SetElementStickHandler(stick, onStick);
+        }
+    }
+
     // Shift an element by a layout-unit offset (x right, y up) without changing its layout.
     public static void SetElementTranslate(UIRef r, Vector2 offset) {
 

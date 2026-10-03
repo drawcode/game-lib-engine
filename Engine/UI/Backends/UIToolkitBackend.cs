@@ -15,7 +15,7 @@ namespace Engine.UI {
     // files in the engine allowed to reference UnityEngine.UIElements. The Phase 2 gate greps
     // for leaks outside these two — if a UIElements type ever appears above the provider layer,
     // the seam has failed and the platform is no longer swappable.
-    public class UIToolkitBackend : IUIBackend {
+    public class UIToolkitBackend : IUIBackend, IUIFloatingStickBackend {
 
         private static UIToolkitBackend _instance = null;
 
@@ -715,6 +715,128 @@ namespace Engine.UI {
 
             // Hidden or torn down mid-drag (round ends, pause): no up event will ever come.
             el.RegisterCallback<DetachFromPanelEvent>(evt => release());
+        }
+
+        // FLOATING STICK. The legacy pads did this (GameTouchInputAxis + AxisInputPlacement-*): a
+        // press in the placement zone moved the whole stick under the thumb, which is what made
+        // the controls work for every thumb size and grip. The stick is moved with a style
+        // translate in its parent's space, so its layout -- and the zero it returns to -- is never
+        // touched.
+        public void SetElementFloatingStickHandler(UIRef zoneRef, UIRef stickRef, Action<Vector2, bool> onStick) {
+
+            VisualElement zone = El(zoneRef);
+            VisualElement stick = El(stickRef);
+
+            if (stick == null || onStick == null) {
+                return;
+            }
+
+            if (zone == null) {
+                SetElementStickHandler(stickRef, onStick);
+                return;
+            }
+
+            int held = PointerId.invalidPointerId;
+            VisualElement capturer = null;
+
+            // Where the thumb went down, in the stick's PARENT space -- the stick's centre for the
+            // rest of this press. Parent space, not panel space, so any scale above the HUD
+            // cancels out and offsets stay in the layout units the anchored stick reports.
+            Vector2 centre = Vector2.zero;
+
+            Func<Vector3, Vector2> toParent = (Vector3 panelPosition) => {
+                VisualElement parent = stick.parent;
+                return parent != null
+                    ? (Vector2)parent.WorldToLocal(panelPosition)
+                    : (Vector2)panelPosition;
+            };
+
+            Action<Vector3> report = (Vector3 panelPosition) => {
+                Vector2 p = toParent(panelPosition);
+                onStick(new Vector2(p.x - centre.x, centre.y - p.y), false);
+            };
+
+            Action release = () => {
+                if (held == PointerId.invalidPointerId) {
+                    return;
+                }
+                int id = held;
+                held = PointerId.invalidPointerId;
+                UIPlatform.SetInputHeld(ToInputId(id), false);
+                if (capturer != null && capturer.HasPointerCapture(id)) {
+                    capturer.ReleasePointer(id);
+                }
+                capturer = null;
+                stick.style.translate = StyleKeyword.Null;
+                onStick(Vector2.zero, true);
+            };
+
+            // `floating`: a press on the zone brings the stick to the thumb; a press on the stick
+            // itself leaves it where it is and measures from its own centre.
+            Action<VisualElement, PointerDownEvent, bool> press = (VisualElement target, PointerDownEvent evt, bool floating) => {
+                if (held != PointerId.invalidPointerId) {
+                    return;
+                }
+
+                held = evt.pointerId;
+                capturer = target;
+                UIPlatform.SetInputHeld(ToInputId(held), true);
+                target.CapturePointer(evt.pointerId);
+
+                // The stick's home centre in parent space, from its layout (translate excluded).
+                Rect home = stick.layout;
+                Vector2 homeCentre = home.center;
+
+                if (floating) {
+                    centre = toParent(evt.position);
+                    Vector2 shift = centre - homeCentre;
+                    stick.style.translate = new Translate(shift.x, shift.y);
+                }
+                else {
+                    centre = homeCentre;
+                }
+
+                report(evt.position);
+                evt.StopPropagation();
+            };
+
+            foreach (VisualElement surface in new VisualElement[] { stick, zone }) {
+
+                VisualElement s = surface;
+                bool floating = s == zone;
+
+                s.RegisterCallback<PointerDownEvent>(evt => press(s, evt, floating));
+
+                s.RegisterCallback<PointerMoveEvent>(evt => {
+                    if (evt.pointerId != held) {
+                        return;
+                    }
+                    report(evt.position);
+                    evt.StopPropagation();
+                });
+
+                s.RegisterCallback<PointerUpEvent>(evt => {
+                    if (evt.pointerId == held) {
+                        release();
+                        evt.StopPropagation();
+                    }
+                });
+
+                s.RegisterCallback<PointerCancelEvent>(evt => {
+                    if (evt.pointerId == held) {
+                        release();
+                    }
+                });
+
+                s.RegisterCallback<PointerCaptureOutEvent>(evt => {
+                    if (evt.pointerId == held && s == capturer) {
+                        release();
+                    }
+                });
+
+                // Hidden or torn down mid-drag (round ends, pause): no up event will ever come.
+                s.RegisterCallback<DetachFromPanelEvent>(evt => release());
+            }
         }
 
         // UI Toolkit pointer id -> the legacy Input id UIPlatform keys on: touches are
