@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using Engine.Content;
 using Engine.Utility;
 using UnityEngine;
-using UnityEngine.UI;
 
 namespace Engine.Events {
 

@@ -3,6 +3,8 @@ using System.Runtime.CompilerServices;
 
 using Agnostic.Core;
 
+using Engine.UI;
+
 using UnityEngine;
 
 namespace Engine.AgnosticHost {
@@ -172,11 +174,83 @@ namespace Engine.AgnosticHost {
 
         public bool Alive(Handle h) {
             Object o;
-            return TryGet(h, out o);
+            return TryGet(h, out o) || IsUIAlive(h);
         }
 
         public bool Release(Handle h) {
-            return Remove(h.id);
+            return Remove(h.id) || RemoveUI(h.id);
+        }
+
+        // UI ELEMENTS (B1). A UI Toolkit element is a UIRef around a VisualElement -- not a
+        // UnityEngine.Object -- so it cannot sit in byId. It gets its own map on the SAME id
+        // counter, so a handle still names exactly one thing. A UIRef around a GameObject goes
+        // through Track as before: one GameObject never gets two handles.
+        private readonly Dictionary<int, UIRef> uiById = new Dictionary<int, UIRef>();
+        private readonly Dictionary<object, int> uiByNative = new Dictionary<object, int>();
+
+        public Handle TrackUI(UIRef r) {
+
+            if (r == null || !r.alive) {
+                return Handle.none;
+            }
+
+            Object unityObject = r.native as Object;
+
+            if (unityObject != null) {
+                return Track(unityObject);
+            }
+
+            int id;
+
+            if (uiByNative.TryGetValue(r.native, out id)) {
+                return new Handle(id);
+            }
+
+            id = nextId++;
+            uiById[id] = r;
+            uiByNative[r.native] = id;
+            return new Handle(id);
+        }
+
+        // Liveness is the ref's own: a toolkit ref into a torn-down view is caught by the
+        // backend's op guards (UIToolkitBackend.El), which no-op rather than throw.
+        public bool TryGetUIRef(Handle h, out UIRef r) {
+
+            r = null;
+
+            if (!h.isSome || !uiById.TryGetValue(h.id, out r)) {
+                return false;
+            }
+
+            if (!r.alive) {
+                RemoveUI(h.id);
+                r = null;
+                return false;
+            }
+
+            return true;
+        }
+
+        private bool IsUIAlive(Handle h) {
+            UIRef r;
+            return TryGetUIRef(h, out r);
+        }
+
+        private bool RemoveUI(int id) {
+
+            UIRef r;
+
+            if (!uiById.TryGetValue(id, out r)) {
+                return false;
+            }
+
+            uiById.Remove(id);
+
+            if (r.native != null) {
+                uiByNative.Remove(r.native);
+            }
+
+            return true;
         }
 
         private readonly List<Transform> hierarchyBuffer = new List<Transform>();

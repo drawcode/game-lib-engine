@@ -240,6 +240,62 @@ public class UIUtil {
         }
     }
 
+    // Enabled / interactable state (B1) — the backend-blind replacement for UIButtonEnable, whose
+    // Button/UIButton bodies have always been no-ops and stay that way (other games call them).
+    // Toolkit: SetEnabled (no input, :disabled styling). GameObject: UIButton/UIImageButton
+    // .isEnabled and Selectable.interactable. A backend without IUIBackendInteractable no-ops.
+    public static void SetElementEnabled(UIRef r, bool enabled) {
+
+        IUIBackendInteractable interactable = UIPlatform.For(r) as IUIBackendInteractable;
+
+        if (interactable != null) {
+            interactable.SetElementEnabled(r, enabled);
+        }
+    }
+
+    // true when no backend has an opinion — "not disabled".
+    public static bool IsElementEnabled(UIRef r) {
+
+        IUIBackendInteractable interactable = UIPlatform.For(r) as IUIBackendInteractable;
+
+        if (interactable == null) {
+            return true;
+        }
+
+        return interactable.IsElementEnabled(r);
+    }
+
+    // Whole-element opacity, immediate (B1). Toolkit only today (style.opacity); the GameObject
+    // backend has no IUIBackendElementAlpha, so a GameObject ref no-ops here and callers keep
+    // their own CanvasGroup/Graphic fallback — same split as SetElementColor.
+    public static void SetElementAlpha(UIRef r, float alpha) {
+        TrySetElementAlpha(r, alpha);
+    }
+
+    // True when a backend took the write — lets a caller with its own fallback know to skip it.
+    public static bool TrySetElementAlpha(UIRef r, float alpha) {
+
+        IUIBackendElementAlpha alphaBackend = UIPlatform.For(r) as IUIBackendElementAlpha;
+
+        if (alphaBackend == null) {
+            return false;
+        }
+
+        alphaBackend.SetElementAlpha(r, alpha);
+        return true;
+    }
+
+    public static float GetElementAlpha(UIRef r) {
+
+        IUIBackendElementAlpha alphaBackend = UIPlatform.For(r) as IUIBackendElementAlpha;
+
+        if (alphaBackend == null) {
+            return 1f;
+        }
+
+        return alphaBackend.GetElementAlpha(r);
+    }
+
     //
 
 #if USE_UI_NGUI_2_7
@@ -409,9 +465,24 @@ public class UIUtil {
 
     //
 
+    // B1: these name-keyed GameObject queries now dispatch like the overloads under BACKEND
+    // DISPATCH below. Their bodies moved VERBATIM into the GameObject backend
+    // (IUIBackendNamedQueries on NGUIBackend), so behaviour is identical by construction; the
+    // copies left here are the no-backend fallback. The `go != null` guard (Unity's null) keeps
+    // a destroyed object on the fallback, which throws exactly as it always did.
     public static void SetTextValue(GameObject go, string code, string val) {
 
         ////////Debug.Log("SetTextValue:" + " code:" + code + " val:" + val );
+
+        if (go != null) {
+
+            IUIBackendNamedQueries named = UIPlatform.For(go) as IUIBackendNamedQueries;
+
+            if (named != null) {
+                named.SetTextValueLike(UIRef.Of(go), code, val);
+                return;
+            }
+        }
 
 #if USE_UI_NGUI_2_7 || USE_UI_NGUI_3
         UILabel[] labels = go.GetComponentsInChildren<UILabel>();
@@ -457,6 +528,16 @@ public class UIUtil {
 
         //LogUtil.Log("SetMaterialColor name:" + name + " color:" + color );
 
+        if (go != null) {
+
+            IUIBackendNamedQueries named = UIPlatform.For(go) as IUIBackendNamedQueries;
+
+            if (named != null) {
+                named.SetTextColorLike(UIRef.Of(go), code, color);
+                return;
+            }
+        }
+
 #if USE_UI_NGUI_2_7 || USE_UI_NGUI_3
 
         UILabel[] labels = go.GetComponentsInChildren<UILabel>();
@@ -501,7 +582,21 @@ public class UIUtil {
         UpdateLabelObject(parentGo.transform, key, val);
     }
 
+    // Dispatches once at the top: the backend owns the whole recursion, so a deep tree costs one
+    // lookup, not one per level. A null/destroyed transform falls through and throws as before.
     public static void UpdateLabelObject(Transform parentTransform, string key, string val) {
+
+        if (parentTransform != null) {
+
+            GameObject parentGo = parentTransform.gameObject;
+            IUIBackendNamedQueries named = UIPlatform.For(parentGo) as IUIBackendNamedQueries;
+
+            if (named != null) {
+                named.UpdateLabelDeep(UIRef.Of(parentGo), key, val);
+                return;
+            }
+        }
+
         Transform labelObject = parentTransform.Find(key);
         if (labelObject != null) {
 
@@ -881,8 +976,9 @@ public class UIUtil {
     }
 
     // The name-substring and deep-find helpers, on the UIRef path. The GameObject/Transform
-    // originals below are left exactly as they are — 3 and 37 call sites respectively, and
-    // they are the ugliest compatibility seam in the class.
+    // originals keep their exact semantics — since B1 by dispatching to the GameObject backend's
+    // verbatim copy (IUIBackendNamedQueries), not through these, which match differently
+    // (child-inclusive per-match probes, first deep hit only).
 
     public static void SetTextValue(UIRef root, string code, string val) {
 
@@ -1634,6 +1730,14 @@ public class UIUtil {
     public static bool IsToggleOn(GameObject obj, string toggleName) {
 
         if (obj != null) {
+
+            // B1 dispatch; verbatim body (NGUI name-only quirk included) in the backend.
+            IUIBackendNamedQueries named = UIPlatform.For(obj) as IUIBackendNamedQueries;
+
+            if (named != null) {
+                return named.IsToggleNamed(UIRef.Of(obj), toggleName);
+            }
+
 #if USE_UI_NGUI_2_7
             if (obj.Has<UICheckbox>()) {
                 return IsCheckboxChecked(obj.Get<UICheckbox>(), toggleName);
@@ -1678,6 +1782,16 @@ public class UIUtil {
     public static bool IsCheckboxChecked(GameObject obj) {
 
         if (obj != null) {
+
+            // B1 dispatch. This one IS the core toggle getter: GetToggleValue probes the same
+            // components in the same order (UICheckbox.isChecked / UIToggle / Toggle.isOn), so no
+            // capability is needed.
+            IUIBackend backend = UIPlatform.For(obj);
+
+            if (backend != null) {
+                return backend.GetToggleValue(UIRef.Of(obj));
+            }
+
 #if USE_UI_NGUI_2_7
             if (obj.Has<UICheckbox>()) {
                 return IsCheckboxChecked(obj.Get<UICheckbox>());
@@ -1694,6 +1808,23 @@ public class UIUtil {
         }
 
         return false;
+    }
+
+    // UIRef overloads (B1) for migrated toggle fields. Backend-blind via the core toggle getter.
+    // IsToggleOn follows the Toggle overload's contract — name matches AND the toggle is on —
+    // not the NGUI checkbox branch's name-only quirk: that quirk is a GameObject-path accident,
+    // and a new overload has no callers relying on it. UIRef.none (name "") never matches.
+    public static bool IsCheckboxChecked(UIRef r) {
+        return GetToggleValue(r);
+    }
+
+    public static bool IsToggleOn(UIRef r, string toggleName) {
+
+        if (r == null || toggleName != r.name) {
+            return false;
+        }
+
+        return GetToggleValue(r);
     }
 
 #if USE_UI_NGUI_2_7 || USE_UI_NGUI_3
@@ -1723,9 +1854,17 @@ public class UIUtil {
         return false;
     }
 
+    // Not just a name compare: it is gated on a button-ish component (uGUI Image/Button probes
+    // included) and compares THAT component's name, so it routes like the rest (B1).
     public static bool IsButtonClicked(GameObject obj, string buttonClickedName) {
 
         if (obj != null) {
+
+            IUIBackendNamedQueries named = UIPlatform.For(obj) as IUIBackendNamedQueries;
+
+            if (named != null) {
+                return named.IsButtonNamed(UIRef.Of(obj), buttonClickedName);
+            }
 
 #if USE_UI_NGUI_2_7 || USE_UI_NGUI_3
 
@@ -1959,6 +2098,8 @@ public class UIUtil {
     }
 #endif
 
+    // Deliberately still a no-op (B1): forwarding to SetElementEnabled would start disabling
+    // buttons in every project that calls this today. New code uses SetElementEnabled(UIRef).
     public static void UIButtonEnable(Button buttonObject, bool enabled) {
         if (buttonObject) {
             //buttonObject.controlIsEnabled = enabled;

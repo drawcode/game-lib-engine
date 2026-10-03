@@ -37,7 +37,7 @@ namespace Engine.UI {
     //  * SetButtonHandlerClick's NGUI branch is a NO-OP (the original body is commented out).
     //    Only the uGUI Button branch actually wires anything.
     // ---------------------------------------------------------------------------------------
-    public class NGUIBackend : IUIBackend {
+    public class NGUIBackend : IUIBackend, IUIBackendInteractable, IUIBackendNamedQueries {
 
         private static NGUIBackend _instance = null;
 
@@ -654,6 +654,248 @@ namespace Engine.UI {
             }
 
             UnityEngine.Object.Destroy(go);
+        }
+
+        // ENABLED / INTERACTABLE (IUIBackendInteractable, B1)
+        //
+        // NGUI's own notion of "disabled" is UIButton/UIImageButton.isEnabled: it turns the
+        // collider off (so UICamera stops hitting it) and swaps to the disabled colour/sprite.
+        // uGUI's is Selectable.interactable (Button, Toggle, Slider, ...). Same shape as the label
+        // setters above: the NGUI branch and the uGUI branch both apply, child-inclusive probes.
+        // A bare-collider NGUI button (collider + ButtonEvents, no UIButton) is NOT touched —
+        // disabling arbitrary colliders from a UI call would reach physics objects too.
+        // UIUtil.UIButtonEnable stays the no-op it has always been; nothing forwards here.
+        public void SetElementEnabled(UIRef r, bool enabled) {
+
+            GameObject obj = Go(r);
+
+            if (obj == null) {
+                return;
+            }
+
+#if USE_UI_NGUI_2_7 || USE_UI_NGUI_3
+            if (obj.Has<UIButton>()) {
+                obj.Get<UIButton>().isEnabled = enabled;
+            }
+            else if (obj.Has<UIImageButton>()) {
+                obj.Get<UIImageButton>().isEnabled = enabled;
+            }
+#endif
+            if (obj.Has<Selectable>()) {
+                obj.Get<Selectable>().interactable = enabled;
+            }
+        }
+
+        // First hit wins, like the other getters; true when nothing interactable is found.
+        public bool IsElementEnabled(UIRef r) {
+
+            GameObject obj = Go(r);
+
+            if (obj == null) {
+                return true;
+            }
+
+#if USE_UI_NGUI_2_7 || USE_UI_NGUI_3
+            if (obj.Has<UIButton>()) {
+                return obj.Get<UIButton>().isEnabled;
+            }
+
+            if (obj.Has<UIImageButton>()) {
+                return obj.Get<UIImageButton>().isEnabled;
+            }
+#endif
+            if (obj.Has<Selectable>()) {
+                return obj.Get<Selectable>().interactable;
+            }
+
+            return true;
+        }
+
+        // NAMED QUERIES (IUIBackendNamedQueries, B1)
+        //
+        // VERBATIM moves of UIUtil's GameObject bodies (SetTextValue, SetTextColor,
+        // UpdateLabelObject(Transform), IsToggleOn(GameObject), IsButtonClicked(GameObject)) —
+        // same component sets, same order, same typed UIUtil overloads. Do not "simplify" them
+        // onto ResolveLike/ResolveDeep/SetLabelValue(UIRef): those use child-inclusive Has/Get on
+        // each match and stop at the first deep hit, and these do neither.
+
+        public void SetTextValueLike(UIRef root, string code, string val) {
+
+            GameObject go = Go(root);
+
+            if (go == null) {
+                return;
+            }
+
+#if USE_UI_NGUI_2_7 || USE_UI_NGUI_3
+            UILabel[] labels = go.GetComponentsInChildren<UILabel>();
+
+            foreach (UILabel label in labels) {
+
+                if (label.gameObject.name.Contains(code)) {
+                    UIUtil.SetLabelValue(label, val);
+                }
+            }
+
+            UIInput[] inputs = go.GetComponentsInChildren<UIInput>();
+
+            foreach (UIInput input in inputs) {
+                if (input.gameObject.name.Contains(code)) {
+                    UIUtil.SetInputValue(input, val);
+                }
+            }
+#endif
+
+            Text[] labelsNative = go.GetComponentsInChildren<Text>();
+
+            foreach (Text label in labelsNative) {
+
+                if (label.gameObject.name.Contains(code)) {
+                    UIUtil.SetLabelValue(label, val);
+                }
+            }
+
+            InputField[] inputsNative = go.GetComponentsInChildren<InputField>();
+
+            foreach (InputField input in inputsNative) {
+                if (input.gameObject.name.Contains(code)) {
+                    UIUtil.SetInputValue(input, val);
+                }
+            }
+        }
+
+        public void SetTextColorLike(UIRef root, string code, Color color) {
+
+            GameObject go = Go(root);
+
+            if (go == null) {
+                return;
+            }
+
+#if USE_UI_NGUI_2_7 || USE_UI_NGUI_3
+            UILabel[] labels = go.GetComponentsInChildren<UILabel>();
+
+            foreach (UILabel label in labels) {
+
+                if (label.gameObject.name.Contains(code)) {
+                    UIUtil.SetSpriteColor(label.gameObject, color);
+                }
+            }
+
+            UIInput[] inputs = go.GetComponentsInChildren<UIInput>();
+
+            foreach (UIInput input in inputs) {
+                if (input.gameObject.name.Contains(code)) {
+                    UIUtil.SetSpriteColor(input.gameObject, color);
+                }
+            }
+#endif
+            Text[] labelsNative = go.GetComponentsInChildren<Text>();
+
+            foreach (Text label in labelsNative) {
+
+                if (label.gameObject.name.Contains(code)) {
+                    UIUtil.SetSpriteColor(label.gameObject, color);
+                }
+            }
+
+            InputField[] inputsNative = go.GetComponentsInChildren<InputField>();
+
+            foreach (InputField input in inputsNative) {
+                if (input.gameObject.name.Contains(code)) {
+                    UIUtil.SetSpriteColor(input.gameObject, color);
+                }
+            }
+        }
+
+        // Unlike ResolveDeep, this does NOT stop at the first hit: a level with no direct match
+        // recurses into EVERY child, so same-named labels in sibling subtrees all get the value.
+        // The found object's own components only (GetComponent, not Has/Get).
+        public void UpdateLabelDeep(UIRef root, string key, string val) {
+
+            GameObject go = Go(root);
+
+            if (go == null) {
+                return;
+            }
+
+            UpdateLabelDeep(go.transform, key, val);
+        }
+
+        private static void UpdateLabelDeep(Transform parentTransform, string key, string val) {
+
+            Transform labelObject = parentTransform.Find(key);
+
+            if (labelObject != null) {
+
+#if USE_UI_NGUI_2_7 || USE_UI_NGUI_3
+                UILabel label = labelObject.GetComponent<UILabel>();
+                UIUtil.SetLabelValue(label, val);
+#endif
+                Text txt = labelObject.GetComponent<Text>();
+                UIUtil.SetLabelValue(txt, val);
+            }
+            else {
+                foreach (Transform t in parentTransform) {
+                    UpdateLabelDeep(t, key, val);
+                }
+            }
+        }
+
+        // Quirk kept: the NGUI checkbox branch is a NAME compare only (it ignores isChecked),
+        // while the uGUI Toggle branch also requires isOn. Both compare the probed component's
+        // name, which a child-inclusive probe can make a child's.
+        public bool IsToggleNamed(UIRef r, string toggleName) {
+
+            GameObject obj = Go(r);
+
+            if (obj != null) {
+#if USE_UI_NGUI_2_7
+                if (obj.Has<UICheckbox>()) {
+                    return UIUtil.IsCheckboxChecked(obj.Get<UICheckbox>(), toggleName);
+                }
+#endif
+#if USE_UI_NGUI_3
+                if (obj.Has<UIToggle>()) {
+                    return UIUtil.IsCheckboxChecked(obj.Get<UIToggle>(), toggleName);
+                }
+#endif
+                if (obj.Has<Toggle>()) {
+                    return UIUtil.IsCheckboxChecked(obj.Get<Toggle>(), toggleName);
+                }
+            }
+
+            return false;
+        }
+
+        // Quirk kept: gated on a button-ish component being present (an Image counts), and the
+        // name compared is that component's object's, not necessarily obj's.
+        public bool IsButtonNamed(UIRef r, string buttonClickedName) {
+
+            GameObject obj = Go(r);
+
+            if (obj != null) {
+
+#if USE_UI_NGUI_2_7 || USE_UI_NGUI_3
+
+                if (obj.Has<UIImageButton>()) {
+                    return UIUtil.IsButtonClicked(obj.Get<UIImageButton>(), buttonClickedName);
+                }
+
+                if (obj.Has<UIButton>()) {
+                    return UIUtil.IsButtonClicked(obj.Get<UIButton>(), buttonClickedName);
+                }
+#endif
+                if (obj.Has<Image>()) {
+                    return UIUtil.IsButtonClicked(obj.Get<Image>(), buttonClickedName);
+                }
+
+                if (obj.Has<Button>()) {
+                    return UIUtil.IsButtonClicked(obj.Get<Button>(), buttonClickedName);
+                }
+            }
+
+            return false;
         }
 
         // POINTER / EVENT SOURCE

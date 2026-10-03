@@ -4,6 +4,8 @@ using System.Collections.Generic;
 using Agnostic.Core;
 using Agnostic.Host;
 
+using Engine.UI;
+
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -267,6 +269,12 @@ namespace Engine.AgnosticHost {
 
         public HostStatus SetFloat(Handle h, string prop, float value) {
 
+            UIRef ui;
+
+            if (handles.TryGetUIRef(h, out ui)) {
+                return SetUIFloat(ui, prop, value);
+            }
+
             GameObject go;
 
             if (!handles.TryGetGameObject(h, out go)) {
@@ -334,6 +342,12 @@ namespace Engine.AgnosticHost {
 
         public HostStatus SetColor(Handle h, string prop, ColorRgba value) {
 
+            UIRef ui;
+
+            if (handles.TryGetUIRef(h, out ui)) {
+                return SetUIColor(ui, prop, UnityFrame.ToUnity(value));
+            }
+
             GameObject go;
 
             if (!handles.TryGetGameObject(h, out go)) {
@@ -362,6 +376,32 @@ namespace Engine.AgnosticHost {
             }
 
             return string.IsNullOrEmpty(prop) ? HostStatus.notFound : SetRendererColor(go, c, Shader.PropertyToID(prop));
+        }
+
+        // UI ELEMENT ROUTE (B1). A handle from UnityHandleTable.TrackUI wraps a non-GameObject UI
+        // element (a UI Toolkit VisualElement), which has no Graphic/CanvasGroup/Renderer to probe.
+        // It goes through the backend-blind UIUtil element API instead: alpha -> element opacity,
+        // color -> the element's flat fill (SetElementColor; immediate, unlike the .5s tweened
+        // SetSpriteColor/SetLabelColor, because a property write must land this frame).
+        // GameObject handles never get here -- TrackUI hands those to Track -- so the probes below
+        // are unchanged for them.
+        private static HostStatus SetUIFloat(UIRef ui, string prop, float value) {
+
+            if (prop != "alpha") {
+                return HostStatus.notFound;
+            }
+
+            return UIUtil.TrySetElementAlpha(ui, value) ? HostStatus.ok : HostStatus.notFound;
+        }
+
+        private static HostStatus SetUIColor(UIRef ui, string prop, Color c) {
+
+            if (prop != "color" || UIPlatform.For(ui) == null) {
+                return HostStatus.notFound;
+            }
+
+            UIUtil.SetElementColor(ui, c);
+            return HostStatus.ok;
         }
 
         private HostStatus SetAlpha(GameObject go, float alpha) {

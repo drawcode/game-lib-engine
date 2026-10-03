@@ -180,4 +180,43 @@ namespace Engine.UI {
         int currentPointerId { get; }
         bool IsPointerOver(Vector2 screenPos);
     }
+
+    // OPTIONAL CAPABILITIES (B1, 2026-10-03). Same shape as IUIFloatingStickBackend: kept OUT of
+    // IUIBackend so no existing implementer in another project breaks (core libs are additive-
+    // only). UIUtil asks for each with `as` and falls back when a backend lacks it.
+
+    // Enabled / interactable state — the backend half UIButtonEnable never had. A disabled
+    // element stays visible but takes no input and draws its disabled look.
+    public interface IUIBackendInteractable {
+
+        void SetElementEnabled(UIRef r, bool enabled);
+
+        // true for a ref the backend has no opinion on (no interactable component) — "not
+        // disabled" is the safe reading for a caller gating input on it.
+        bool IsElementEnabled(UIRef r);
+    }
+
+    // Whole-element opacity, applied immediately (no tween). Tweens own their own alpha path
+    // (ITweenTarget.SetAlpha); this is for host/property writes that must land this frame.
+    public interface IUIBackendElementAlpha {
+
+        void SetElementAlpha(UIRef r, float alpha);
+        float GetElementAlpha(UIRef r);
+    }
+
+    // The name-keyed GameObject queries UIUtil used to answer with inline component probes
+    // (SetTextValue / SetTextColor / UpdateLabelObject / IsToggleOn / IsButtonClicked). Their
+    // legacy semantics are quirky and load-bearing — child-inclusive probes, the probed
+    // COMPONENT's name compared rather than the object's, every sibling subtree visited — so
+    // they cannot be rebuilt from Resolve*/Get* without drifting. A backend that claims
+    // GameObjects owns the verbatim bodies here instead; UIUtil dispatches to it first and keeps
+    // its own copy only as the no-backend fallback.
+    public interface IUIBackendNamedQueries {
+
+        void SetTextValueLike(UIRef root, string code, string val);
+        void SetTextColorLike(UIRef root, string code, Color color);
+        void UpdateLabelDeep(UIRef root, string key, string val);
+        bool IsToggleNamed(UIRef r, string toggleName);
+        bool IsButtonNamed(UIRef r, string buttonClickedName);
+    }
 }

@@ -15,7 +15,8 @@ namespace Engine.UI {
     // files in the engine allowed to reference UnityEngine.UIElements. The Phase 2 gate greps
     // for leaks outside these two — if a UIElements type ever appears above the provider layer,
     // the seam has failed and the platform is no longer swappable.
-    public class UIToolkitBackend : IUIBackend, IUIFloatingStickBackend {
+    public class UIToolkitBackend : IUIBackend, IUIFloatingStickBackend,
+        IUIBackendInteractable, IUIBackendElementAlpha {
 
         private static UIToolkitBackend _instance = null;
 
@@ -893,6 +894,67 @@ namespace Engine.UI {
             }
 
             button.clicked += onClick;
+        }
+
+        // ENABLED / ALPHA (B1 optional capabilities)
+
+        // SetEnabled, not pickingMode: a disabled element stops taking pointer events AND gets the
+        // :disabled pseudo-state, so USS can grey it — the toolkit twin of UIButton's disabled
+        // colour. It also disables the subtree, which is what disabling a button group means.
+        public void SetElementEnabled(UIRef r, bool enabled) {
+
+            VisualElement el = El(r);
+
+            if (el == null) {
+                return;
+            }
+
+            el.SetEnabled(enabled);
+        }
+
+        // enabledSelf, not enabledInHierarchy: it round-trips with SetElementEnabled, the same
+        // reason IsVisible on the GameObject side reads activeSelf.
+        public bool IsElementEnabled(UIRef r) {
+
+            VisualElement el = El(r);
+
+            if (el == null) {
+                return true;
+            }
+
+            return el.enabledSelf;
+        }
+
+        public void SetElementAlpha(UIRef r, float alpha) {
+
+            VisualElement el = El(r);
+
+            if (el == null) {
+                return;
+            }
+
+            el.style.opacity = Mathf.Clamp01(alpha);
+        }
+
+        // Inline value first, then the resolved one once attached — VisualElementTweenTarget's
+        // GetAlpha rule (style.opacity.value reads 0 when nothing is set inline).
+        public float GetElementAlpha(UIRef r) {
+
+            VisualElement el = El(r);
+
+            if (el == null) {
+                return 1f;
+            }
+
+            if (el.style.opacity.keyword == StyleKeyword.Undefined) {
+                return el.style.opacity.value;
+            }
+
+            if (el.panel != null) {
+                return el.resolvedStyle.opacity;
+            }
+
+            return 1f;
         }
 
         // VISIBILITY

@@ -439,6 +439,28 @@ namespace Engine.Utility {
             img.color = color;
         }
 
+        // UIRef overload (B1, additive). A backend with element opacity (UI Toolkit) takes it;
+        // otherwise a GameObject ref carrying a uGUI Image gets the original colour-alpha write
+        // above, so an un-migrated caller sees no change. Anything else no-ops (UIRef contract).
+        public static void SetImageAlpha(float val, UIRef r) {
+
+            if (UIUtil.TrySetElementAlpha(r, val)) {
+                return;
+            }
+
+            GameObject go = r != null ? r.gameObject : null;
+
+            if (go == null) {
+                return;
+            }
+
+            Image img = go.GetComponent<Image>();
+
+            if (img != null) {
+                SetImageAlpha(val, img);
+            }
+        }
+
         // --------------------------------------------------------------------
         // MOVE
 
