@@ -42,9 +42,32 @@ namespace Engine.UI {
         // the particles sharing the camera (sorting order 0), so the quads must sort below them.
         public int sortingOrder;
 
+        // Linear fill (a legacy filled sprite: a slider foreground, a progress bar). ONE quad only,
+        // in the baked NGUI order TR, BR, BL, TL; `corners`/`uvs` hold the FULL (amount 1) quad and
+        // SetFillAmount cuts it exactly like NGUI 2.7's UISprite.FilledFill: Horizontal keeps the
+        // left part (invert: the right), Vertical keeps the bottom part (invert: the top), and the
+        // UVs are cut by the same fraction so the texture is cropped, never squashed.
+        public enum FillAxis {
+            None,
+            Horizontal,
+            Vertical
+        }
+
+        public FillAxis fillAxis = FillAxis.None;
+        public bool fillInvert;
+
+        [Range(0f, 1f)]
+        public float fillAmount = 1f;
+
         Mesh mesh;
         MeshRenderer meshRenderer;
         Color32[] colors;
+
+        // Fill scratch, allocated once in Build: SetFillAmount runs on value changes in gameplay
+        // (health bars), so it rewrites these in place and never allocates.
+        Vector3[] fillCorners;
+        Vector2[] fillUvs;
+        float appliedFill = -1f;
 
         public bool isVisible {
             get {
@@ -99,6 +122,102 @@ namespace Engine.UI {
             mesh.triangles = triangles;
             ApplyColor();
             mesh.RecalculateBounds();
+
+            // Bounds stay those of the full quad (a superset of any fill), so a fill change never
+            // has to recalculate them.
+            appliedFill = -1f;
+
+            if (isFillable) {
+
+                if (fillCorners == null) {
+                    fillCorners = new Vector3[4];
+                    fillUvs = new Vector2[4];
+                }
+
+                ApplyFill();
+            }
+        }
+
+        bool isFillable {
+            get {
+                return fillAxis != FillAxis.None
+                    && corners != null && corners.Length == 4
+                    && uvs != null && uvs.Length == 4;
+            }
+        }
+
+        // Mirror a legacy fill amount. Cheap to call every frame: an unchanged value returns after
+        // one compare, a changed one rewrites 4 vertices + 4 UVs into preallocated arrays.
+        public void SetFillAmount(float value) {
+
+            value = Mathf.Clamp01(value);
+
+            if (value == appliedFill) {
+                return;
+            }
+
+            fillAmount = value;
+            ApplyFill();
+        }
+
+        void ApplyFill() {
+
+            if (mesh == null || !isFillable || fillCorners == null) {
+                return;
+            }
+
+            float f = Mathf.Clamp01(fillAmount);
+
+            // Full quad, NGUI order: [0] TR, [1] BR, [2] BL, [3] TL.
+            float x0 = corners[2].x, x1 = corners[0].x;
+            float yTop = corners[0].y, yBottom = corners[1].y;
+            float z = corners[0].z;
+            float u0 = uvs[2].x, u1 = uvs[0].x;
+            float v0 = uvs[2].y, v1 = uvs[0].y;
+
+            if (fillAxis == FillAxis.Horizontal) {
+
+                float w = (x1 - x0) * f;
+                float du = (u1 - u0) * f;
+
+                if (fillInvert) {
+                    x0 = x1 - w;
+                    u0 = u1 - du;
+                }
+                else {
+                    x1 = x0 + w;
+                    u1 = u0 + du;
+                }
+            }
+            else {
+
+                float h = (yTop - yBottom) * f;
+                float dv = (v1 - v0) * f;
+
+                if (fillInvert) {
+                    yBottom = yTop - h;
+                    v0 = v1 - dv;
+                }
+                else {
+                    yTop = yBottom + h;
+                    v1 = v0 + dv;
+                }
+            }
+
+            fillCorners[0] = new Vector3(x1, yTop, z);
+            fillCorners[1] = new Vector3(x1, yBottom, z);
+            fillCorners[2] = new Vector3(x0, yBottom, z);
+            fillCorners[3] = new Vector3(x0, yTop, z);
+
+            fillUvs[0] = new Vector2(u1, v1);
+            fillUvs[1] = new Vector2(u1, v0);
+            fillUvs[2] = new Vector2(u0, v0);
+            fillUvs[3] = new Vector2(u0, v1);
+
+            mesh.vertices = fillCorners;
+            mesh.uv = fillUvs;
+
+            appliedFill = f;
         }
 
         public void SetColor(Color value) {
