@@ -221,7 +221,19 @@ namespace Engine.UI {
 
             TextElement text = El(r) as TextElement;
 
-            if (text == null || text.text == val) {
+            if (text == null) {
+                return;
+            }
+
+            // A game write OWNS the label from here on: drop any "@loc:" binding it was authored
+            // with, or the next language change re-applies the authored PLACEHOLDER key over the
+            // runtime value (Results showed "LEVEL 10-10" / "PLANET 426" after a switch). Before
+            // the equality early-out on purpose -- writing the text it already shows is still a
+            // write. SetLabelLocalized re-registers right after calling this, so it keeps its own
+            // binding.
+            UIToolkitLocalization.Release(text);
+
+            if (text.text == val) {
                 return;
             }
 
@@ -1626,7 +1638,15 @@ namespace Engine.UI {
                 return;
             }
 
-            UIToolkitLocalization.Register(el, key, val => SetLabelValue(r, val), args);
+            // Writes the element directly, NOT through SetLabelValue: SetLabelValue releases the
+            // binding (a game write), so routing the re-apply through it would release this
+            // binding on its first language change.
+            UIToolkitLocalization.Register(el, key, val => {
+                TextElement t = El(r) as TextElement;
+                if (t != null) {
+                    t.text = val;
+                }
+            }, args);
         }
 
         // POINTER / EVENT SOURCE
@@ -1684,6 +1704,7 @@ namespace Engine.UI {
             public Action<string> setText;
             public string appliedCode;
             public bool attachHooked;
+            public bool released;
         }
 
         // Only ATTACHED elements live here. A detached one is swept out so the static map never
@@ -1745,7 +1766,26 @@ namespace Engine.UI {
             TagLocale(element);
         }
 
+        // Drops an element's binding so a language change no longer rewrites it -- called when game
+        // code writes the label itself (UIToolkitBackend.SetLabelValue). The element's attach
+        // callback outlives the removal, so the binding is flagged too and OnAttach ignores it.
+        public static void Release(VisualElement element) {
+
+            Binding b;
+
+            if (element == null || !_bound.TryGetValue(element, out b)) {
+                return;
+            }
+
+            b.released = true;
+            _bound.Remove(element);
+        }
+
         private static void OnAttach(VisualElement element, Binding b) {
+
+            if (b.released) {
+                return;
+            }
 
             _bound[element] = b;
 
