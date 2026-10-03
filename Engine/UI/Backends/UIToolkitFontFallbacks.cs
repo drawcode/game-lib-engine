@@ -251,7 +251,12 @@ namespace Engine.UI {
                 return cjkTC;
             }
 
-            return null;
+            // Every other locale puts the Latin-Ext/Cyrillic group back in front -- the boot order
+            // BuildFallbacks installs. This used to return null, which left OnLanguageChanged a
+            // no-op for non-CJK codes: after ja the Japanese face stayed first, so ru/uk/pl text
+            // resolved its Cyrillic and accented glyphs through Hiragino (much wider) across the
+            // whole UI until the next launch.
+            return latinExtAndCyrillic;
         }
     }
 }
