@@ -55,6 +55,19 @@ namespace Engine.UI {
             backend.SetElementStickHandler(r, (v, released) => onStick(UnityFrame.ToCore(v), released));
         }
 
+        // The optional floating-stick capability, same wrap. On IUIFloatingStickBackend, not on
+        // UIUtil: a static Vec2 overload would make every untyped (offset, released) => lambda
+        // ambiguous at the existing call sites.
+        public static void SetElementFloatingStickHandler(this IUIFloatingStickBackend backend, UIRef zone, UIRef stick, Action<Vec2, bool> onStick) {
+
+            if (onStick == null) {
+                backend.SetElementFloatingStickHandler(zone, stick, (Action<Vector2, bool>)null);
+                return;
+            }
+
+            backend.SetElementFloatingStickHandler(zone, stick, (v, released) => onStick(UnityFrame.ToCore(v), released));
+        }
+
         public static void SetElementTranslate(this IUIBackend backend, UIRef r, Vec2 offset) {
             backend.SetElementTranslate(r, UnityFrame.ToUnity(offset));
         }
