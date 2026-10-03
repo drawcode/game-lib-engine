@@ -167,9 +167,12 @@ public static class GameObjectHelper {
         // The IsRenderersVisible() pre-pass this replaces walked exactly the same renderers to ask
         // exactly the same `enabled` question the loop below already asks, so it doubled the cost
         // of every call and could never change the answer.
-        Renderer render = inst.GetComponent<Renderer>();
+        // TryGetComponent, not GetComponent, in every renderer lookup in this file: an actor ROOT
+        // carries no Renderer, so these miss on most calls, and in the Editor a GetComponent miss
+        // allocates its null-error message (~2.4 KB/frame across ActorShadow and the indicators).
+        Renderer render;
 
-        if (render != null) {
+        if (inst.TryGetComponent(out render)) {
             if (render.enabled) {
                 if (render.isVisible) {
                     return true;
@@ -208,9 +211,9 @@ public static class GameObjectHelper {
         // what the per-renderer IsVisibleFrom(cam) overload used to do.
         GeometryUtility.CalculateFrustumPlanes(cam, frustumPlanesShared);
 
-        Renderer render = inst.GetComponent<Renderer>();
+        Renderer render;
 
-        if (render != null) {
+        if (inst.TryGetComponent(out render)) {
             if (render.enabled) {
                 if (render.isVisible
                     && GeometryUtility.TestPlanesAABB(frustumPlanesShared, render.bounds)) {
@@ -243,9 +246,9 @@ public static class GameObjectHelper {
         if (inst == null)
             return false;
 
-        Renderer render = inst.GetComponent<Renderer>();
+        Renderer render;
 
-        if (render != null) {
+        if (inst.TryGetComponent(out render)) {
             if (render.enabled) {
                 return true;
             }
@@ -265,9 +268,9 @@ public static class GameObjectHelper {
         if (inst == null)
             return;
 
-        Renderer render = inst.GetComponent<Renderer>();
+        Renderer render;
 
-        if (render != null) {
+        if (inst.TryGetComponent(out render)) {
             render.enabled = true;
         }
 
@@ -281,9 +284,9 @@ public static class GameObjectHelper {
         if (inst == null)
             return;
 
-        Renderer render = inst.GetComponent<Renderer>();
+        Renderer render;
 
-        if (render != null) {
+        if (inst.TryGetComponent(out render)) {
             render.enabled = false;
         }
 

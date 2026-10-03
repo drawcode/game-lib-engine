@@ -104,9 +104,11 @@ public static class BaseGameObjectExtensions {
 
         if (inst != null) {
 
-            T instItem = inst.GetComponent<T>();
+            // TryGetComponent: this walk misses at every level until it hits, and a GetComponent
+            // miss allocates its null-error message in the Editor.
+            T instItem;
 
-            if (instItem != null) {
+            if (inst.TryGetComponent(out instItem)) {
                 return inst;
             }
 
@@ -185,9 +187,10 @@ public static class BaseGameObjectExtensions {
 
         if (inst != null) {
 
-            T instItem = inst.GetComponent<T>();
+            // TryGetComponent: see FindTypeAboveObjectRecursive.
+            T instItem;
 
-            if (instItem != null) {
+            if (inst.TryGetComponent(out instItem)) {
                 return instItem;
             }
 
