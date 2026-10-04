@@ -74,6 +74,8 @@ namespace Engine.Game.Data {
             }
             set {
                 _lookupCode = value;
+                lookupsBuiltFor = null;
+                lookupsBuiltForCount = -1;
             }
         }
 
@@ -1049,7 +1051,19 @@ namespace Engine.Game.Data {
             return listItems;
         }
 
+        // What the lookups were last built from. LoadAll used to rebuild whenever
+        // lookupCode.Count != items.Count -- but a duplicate code collapses to ONE key, so with any
+        // duplicate the counts never match and every GetByCode rebuilt the whole table by
+        // reflection. game-preset-data has one (207 items, 206 codes): ~16.5 KB per
+        // GamePresets.Get, ~243 KB per actor spawn (gameplay iter 26). Track the list and its
+        // count instead.
+        List<T> lookupsBuiltFor;
+        int lookupsBuiltForCount = -1;
+
         public void UpdateLookups() {
+
+            lookupsBuiltFor = items;
+            lookupsBuiltForCount = items.Count;
 
             lookupCode.Clear();
 
@@ -1090,7 +1104,8 @@ namespace Engine.Game.Data {
                 UpdateLookups();
             }
 
-            if (lookupCode.Count != items.Count) {
+            if (!ReferenceEquals(lookupsBuiltFor, items)
+                || lookupsBuiltForCount != items.Count) {
                 UpdateLookups();
             }
         }
@@ -1142,6 +1157,9 @@ namespace Engine.Game.Data {
 
                 lookupCode.Clear();
             }
+
+            lookupsBuiltFor = null;
+            lookupsBuiltForCount = -1;
 
             if (_items != null) {
 
