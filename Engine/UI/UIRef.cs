@@ -89,4 +89,84 @@ namespace Engine.UI {
             return new UIRef(native, name);
         }
     }
+
+    // A named label inside a view, resolved ONCE per view instead of on every write.
+    //
+    // UIUtil.UpdateLabelObject(view, name, text) resolves by name on every call: on UI Toolkit
+    // that is a Q() walk plus a new UIRef, ~30 B a call — fine for a one-off write, but a HUD
+    // writing five labels every frame paid it five times a frame (measured). This holds the
+    // resolved ref and writes through the same backend ops, so the text that lands is identical.
+    //
+    // Staleness is the whole point of the design, because a toolkit view's elements do not stay
+    // valid: a reload builds a NEW view UIRef (and a free sets UIRef.none), and one frame after a
+    // free Unity RECYCLES the old elements (blank, parentless, panel == null). So it rebinds when
+    // the view ref it was resolved under is no longer the one passed in, and when the cached
+    // element stops answering — UIUtil.GetLabelValue returns null for exactly the refs
+    // UIToolkitBackend.El rejects (host destroyed, freed-view marker, panel == null), so a
+    // recycled element can never be written to.
+    //
+    // A view with no element of that name resolves to UIRef.none once and stays that way until
+    // the view ref changes (UXML views are static; that is what saves the per-frame Q()). Every
+    // op on UIRef.none is a no-op, as with UpdateLabelObject.
+    public sealed class UIViewLabel {
+
+        private readonly string _name;
+        private UIRef _view;
+        private UIRef _label = UIRef.none;
+
+        public UIViewLabel(string name) {
+            _name = name == null ? "" : name;
+        }
+
+        public string name {
+            get {
+                return _name;
+            }
+        }
+
+        // The element named `name` under `view`, or UIRef.none.
+        public UIRef Resolve(UIRef view) {
+
+            bool rebind = !ReferenceEquals(view, _view);
+
+            // Same view, but the element we hold went dead under it (recycled, host destroyed).
+            if (!rebind && _label != UIRef.none && UIUtil.GetLabelValue(_label) == null) {
+                rebind = true;
+            }
+
+            if (rebind) {
+                _view = view;
+                _label = view == null ? UIRef.none : UIUtil.ResolveDeep(view, _name);
+            }
+
+            return _label;
+        }
+
+        // True when the label already shows `text`, or there is no live label to show anything
+        // (then a write would no-op anyway). Callers use it as the "skip the format" guard: it
+        // reads the element's CURRENT text, not a remembered one, so a recycled or rebuilt element
+        // — or another writer — makes it false and the caller refills.
+        public bool Shows(UIRef view, string text) {
+
+            UIRef r = Resolve(view);
+
+            if (r == UIRef.none) {
+                return true;
+            }
+
+            string current = UIUtil.GetLabelValue(r);
+
+            return current == null || string.Equals(current, text);
+        }
+
+        public void Set(UIRef view, string text) {
+            UIUtil.SetLabelValue(Resolve(view), text);
+        }
+
+        // Drop the cached element (e.g. from FreeToolkitView); the next call resolves again.
+        public void Clear() {
+            _view = null;
+            _label = UIRef.none;
+        }
+    }
 }

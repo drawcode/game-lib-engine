@@ -39,6 +39,72 @@ public class FormatUtil {
         return GetFormattedTime(seconds, "{1:D2}:{2:D2}.{3:D1}");
     }
 
+    // Allocation-light twin of the overload above, for per-frame callers (a HUD clock). Same text
+    // as string.Format("{1:D2}:{2:D2}.{3:D1}", h, m, s, ms) — including the current culture's
+    // negative sign on a negative span — but built in a reused buffer, so the only allocation is
+    // the result string: the params form boxes four ints and allocates an object[] every call
+    // (~180 B a frame measured on the HUD). Takes the TimeSpan so the caller can compare the
+    // displayed parts first and skip the call when they have not changed.
+    public static string GetFormattedTimeMinutesSecondsMsSmall(TimeSpan t) {
+
+        string negative = System.Globalization.NumberFormatInfo.CurrentInfo.NegativeSign;
+
+        // An exotic culture whose sign would not fit the buffer: take the original path.
+        if (negative.Length > 8) {
+            return string.Format("{1:D2}:{2:D2}.{3:D1}", t.Hours, t.Minutes, t.Seconds, t.Milliseconds);
+        }
+
+        char[] buffer = formatTimeBuffer;
+
+        if (buffer == null) {
+            buffer = formatTimeBuffer = new char[64];
+        }
+
+        int n = AppendDigits(buffer, 0, t.Minutes, 2, negative);
+        buffer[n++] = ':';
+        n = AppendDigits(buffer, n, t.Seconds, 2, negative);
+        buffer[n++] = '.';
+        n = AppendDigits(buffer, n, t.Milliseconds, 1, negative);
+
+        return new string(buffer, 0, n);
+    }
+
+    [ThreadStatic]
+    private static char[] formatTimeBuffer;
+
+    // Writes `value` as int.ToString("D" + minDigits) would: the negative sign, then the magnitude
+    // zero-padded to minDigits. Returns the new write position.
+    private static int AppendDigits(char[] buffer, int n, int value, int minDigits, string negative) {
+
+        long magnitude = value;
+
+        if (magnitude < 0) {
+
+            for (int i = 0; i < negative.Length; i++) {
+                buffer[n++] = negative[i];
+            }
+
+            magnitude = -magnitude;
+        }
+
+        int length = 1;
+
+        for (long rest = magnitude / 10; rest > 0; rest /= 10) {
+            length++;
+        }
+
+        if (length < minDigits) {
+            length = minDigits;
+        }
+
+        for (int i = length - 1; i >= 0; i--) {
+            buffer[n + i] = (char)('0' + (int)(magnitude % 10));
+            magnitude /= 10;
+        }
+
+        return n + length;
+    }
+
     public static string GetFormattedTimeMinutesSecondsMs(double seconds) {
         return GetFormattedTime(seconds, "{1:D2}:{2:D2}.{3:D3}");
     }
