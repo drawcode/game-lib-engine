@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Rendering.Universal;
 
@@ -37,6 +38,11 @@ namespace Engine.UI {
         private bool followContent;
         private Vector3 followOffset;
         private float framePaddingUsed;
+
+        // The layer light this stage asks for (<= 0 = borrow) and the layer it is on. See LIGHTS.
+        private int stageLayer = -1;
+        private float requestedLightIntensity;
+        private bool visible = true;
 
         // Frame the content's MESH bounds (particles excluded — their bounds balloon and would
         // zoom the framing out) and render it on `layer` into a size×size RT. framePadding is the
@@ -111,30 +117,10 @@ namespace Engine.UI {
             stage.texture.name = go.name;
             cam.targetTexture = stage.texture;
 
-            // A stage-only light so lit materials read; scene lights sit on other layers.
-            //
-            // lightIntensity <= 0 means DO NOT ADD ONE — the layer already has a stage light and
-            // this content should borrow it. That option exists because stage lights, unlike stage
-            // cameras, DO NOT ISOLATE. The camera is positionally isolated (it frames only its own
-            // content), but this light is DIRECTIONAL with cullingMask = the whole layer, so it has
-            // infinite reach and lights every other stage's content on that layer too. Two stages
-            // on one layer therefore ADD: measured 2026-08-30, the header coin (1.1) plus a second
-            // coin stage (0.7) gave every staged widget 1.8 and turned the shaded gold coin flat
-            // yellow — the exact over-exposure symptom the lightIntensity parameter was added to
-            // cure in the first place.
-            //
-            // Callers that stage extra content onto a layer some always-on widget already owns
-            // should pass 0 and inherit that widget's light rather than stacking another.
-            if (lightIntensity > 0f) {
-
-                GameObject lightGo = new GameObject("stage-light");
-                lightGo.transform.SetParent(camGo.transform, false);
-                lightGo.transform.rotation = Quaternion.Euler(35f, -30f, 0f);
-                Light light = lightGo.AddComponent<Light>();
-                light.type = LightType.Directional;
-                light.cullingMask = 1 << layer;
-                light.intensity = lightIntensity;
-            }
+            // The layer's shared stage light (LIGHTS below) — lightIntensity <= 0 borrows it.
+            stage.stageLayer = layer;
+            stage.requestedLightIntensity = lightIntensity;
+            RegisterLight(stage);
 
             // Interaction nodes stay on their original layer (see keepColliderLayers above).
             // Renderer-less by test, so the stage camera loses nothing by not culling them.
@@ -298,6 +284,11 @@ namespace Engine.UI {
             if (stageCamera != null) {
                 stageCamera.enabled = visible;
             }
+
+            if (this.visible != visible) {
+                this.visible = visible;
+                ApplyLayerLight(stageLayer);
+            }
         }
 
         // Restore the content's original layers (game/NGUI cameras own it again) and tear the
@@ -316,10 +307,16 @@ namespace Engine.UI {
                 contentTransforms = null;
             }
 
+            // Explicitly, not only from OnDestroy: edit mode never calls OnDestroy on a plain
+            // MonoBehaviour, so a detached stage would keep the layer light alive there.
+            UnregisterLight(this);
+
             DestroySafe(gameObject);
         }
 
         void OnDestroy() {
+
+            UnregisterLight(this);
 
             if (stageCamera != null) {
                 stageCamera.targetTexture = null;
@@ -330,6 +327,134 @@ namespace Engine.UI {
                 DestroySafe(texture);
                 texture = null;
             }
+        }
+
+        // LIGHTS (iter 36, 2026-10-04). A stage needs a light so lit materials read, and scene
+        // lights sit on other layers. But a light cannot be isolated the way the camera is: it is
+        // DIRECTIONAL with cullingMask = the whole layer, so it reaches every stage on that layer.
+        // Until iter 36 each owning stage added its own light and never switched it off, so lights
+        // ADDED across stages and stayed on while their stage was hidden: after Equipment (bot 1.1)
+        // and ProductCurrency (3 coins x 0.7) the header coin (0.97) was lit at ~4.2 and read flat
+        // lemon. Now there is ONE light per layer, owned here:
+        //   * off when no stage on the layer is visible;
+        //   * else the MAX (never the sum) lightIntensity of the visible stages that asked for one;
+        //   * else (only borrowers visible) the intensity of the OLDEST live owner — the always-on
+        //     widget a borrower was told to inherit from (the header coin).
+        // Recomputed on Attach / SetVisible / destroy only — nothing per frame. Direction unchanged.
+        private static readonly List<UIRenderStage> lightStages = new List<UIRenderStage>();
+        private static readonly Dictionary<int, Light> layerLights = new Dictionary<int, Light>();
+
+        // Euler of the light the per-stage version created (camera rotation is identity).
+        public static readonly Vector3 lightEuler = new Vector3(35f, -30f, 0f);
+
+        private static void RegisterLight(UIRenderStage stage) {
+
+            if (!lightStages.Contains(stage)) {
+                lightStages.Add(stage);
+            }
+
+            ApplyLayerLight(stage.stageLayer);
+        }
+
+        private static void UnregisterLight(UIRenderStage stage) {
+
+            if (!lightStages.Remove(stage)) {
+                return;
+            }
+
+            ApplyLayerLight(stage.stageLayer);
+        }
+
+        // The shared light of `layer`, or null when none exists. For tests and probes.
+        public static Light LayerLight(int layer) {
+
+            Light light;
+
+            if (layerLights.TryGetValue(layer, out light) && light != null) {
+                return light;
+            }
+
+            return null;
+        }
+
+        // Re-solve the shared light of `layer` from the live stages on it (see LIGHTS).
+        public static void ApplyLayerLight(int layer) {
+
+            if (layer < 0) {
+                return;
+            }
+
+            bool anyStage = false;
+            bool anyVisible = false;
+            float maxVisible = 0f;
+            float oldestOwner = 0f;
+
+            for (int i = lightStages.Count - 1; i >= 0; i--) {
+
+                UIRenderStage s = lightStages[i];
+
+                if (s == null) {
+                    lightStages.RemoveAt(i);
+                    continue;
+                }
+
+                if (s.stageLayer != layer) {
+                    continue;
+                }
+
+                anyStage = true;
+
+                // Walking backwards: the last owner seen is the oldest.
+                if (s.requestedLightIntensity > 0f) {
+                    oldestOwner = s.requestedLightIntensity;
+                }
+
+                if (!s.visible) {
+                    continue;
+                }
+
+                anyVisible = true;
+
+                if (s.requestedLightIntensity > maxVisible) {
+                    maxVisible = s.requestedLightIntensity;
+                }
+            }
+
+            Light light = LayerLight(layer);
+
+            if (!anyStage) {
+
+                if (light != null) {
+                    layerLights.Remove(layer);
+                    DestroySafe(light.gameObject);
+                }
+
+                return;
+            }
+
+            float intensity = !anyVisible ? 0f : (maxVisible > 0f ? maxVisible : oldestOwner);
+
+            if (light == null) {
+
+                if (intensity <= 0f) {
+                    return;
+                }
+
+                GameObject go = new GameObject("ui-stage-light-" + LayerMask.LayerToName(layer));
+                go.transform.rotation = Quaternion.Euler(lightEuler);
+
+                if (Application.isPlaying) {
+                    DontDestroyOnLoad(go);
+                }
+
+                light = go.AddComponent<Light>();
+                light.type = LightType.Directional;
+                light.cullingMask = 1 << layer;
+                layerLights[layer] = light;
+            }
+
+            light.intensity = intensity;
+            light.enabled = intensity > 0f;
         }
     }
 }

@@ -29,8 +29,8 @@ namespace Engine.UI {
     //                 && backend.IsVisible(visibilityRoot) && backend.IsVisible(element)
     //                 && element alive (geometry backend: attached to a panel, rule 172)
     // Short-circuits in that order, cheapest first. The camera is only WRITTEN on a change. The
-    // stage light is never toggled — it is directional and lights the whole layer, and some stages
-    // (Products, notification coin) borrow another stage's light with lightIntensity 0.
+    // light follows through UIRenderStage.SetVisible: one shared light per layer, max of the
+    // visible stages' intensities, off when none is visible (UIRenderStage LIGHTS).
     //
     // RESOLUTION. RT side = max side of the element's pixel size, rounded UP to a multiple of 64,
     // clamped to [minSize, maxSize] (128..512). No geometry backend, or no layout yet: the
