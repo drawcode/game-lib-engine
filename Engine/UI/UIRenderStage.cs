@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.Rendering.Universal;
 
 namespace Engine.UI {
 
@@ -99,6 +100,8 @@ namespace Engine.UI {
             cam.allowHDR = false;
             cam.allowMSAA = false;
 
+            DisableCameraExtras(cam);
+
             stage.stageCamera = cam;
             stage.framePaddingUsed = framePadding;
             stage.followContent = followContent;
@@ -150,6 +153,46 @@ namespace Engine.UI {
             return stage;
         }
 
+        // URP per-camera extras a widget snapshot never uses (B9 S1, 2026-10-03). Each one is a pass
+        // per VISIBLE stage per frame: a shadow-caster pass, a post stack, a depth prepass/copy.
+        // Visually neutral for every existing caller — the stage light is created with the default
+        // LightShadows.None, a fresh camera's renderPostProcessing already defaults to false, and
+        // nothing samples the stage camera's depth — so this only pins them off against a pipeline
+        // asset that turns them on globally (depth texture is the usual one).
+        //
+        // URP is ALREADY a hard dependency of this engine (Engine/Cameras/URPCameraStackSetup.cs
+        // uses UniversalAdditionalCameraData unguarded, and Assembly-CSharp has no asmdef to hang
+        // a versionDefine on), so this takes the direct API rather than a define or reflection.
+        // GetUniversalAdditionalCameraData adds the component when it is missing.
+        private static void DisableCameraExtras(Camera cam) {
+
+            UniversalAdditionalCameraData data = cam.GetUniversalAdditionalCameraData();
+
+            if (data == null) {
+                return;
+            }
+
+            data.renderShadows = false;
+            data.renderPostProcessing = false;
+            data.requiresDepthTexture = false;
+        }
+
+        // Destroy at runtime, DestroyImmediate in edit mode (EditMode tests bind + free a stage;
+        // Destroy there only logs an error and leaves the object behind). Runtime path unchanged.
+        private static void DestroySafe(Object o) {
+
+            if (o == null) {
+                return;
+            }
+
+            if (Application.isPlaying) {
+                Destroy(o);
+            }
+            else {
+                DestroyImmediate(o);
+            }
+        }
+
         // World bounds of what the renderer ACTUALLY draws right now.
         //
         // Renderer.bounds on a SkinnedMeshRenderer is the animation-safe box — sized to hold every
@@ -169,7 +212,7 @@ namespace Engine.UI {
             smr.BakeMesh(baked, true);   // true: apply the renderer's scale
 
             Bounds local = baked.bounds;
-            Destroy(baked);
+            DestroySafe(baked);
 
             // Local (renderer space, scale already baked in) -> world, via the 8 corners so a
             // rotated rig still yields a correct axis-aligned box.
@@ -273,7 +316,7 @@ namespace Engine.UI {
                 contentTransforms = null;
             }
 
-            Destroy(gameObject);
+            DestroySafe(gameObject);
         }
 
         void OnDestroy() {
@@ -284,7 +327,7 @@ namespace Engine.UI {
 
             if (texture != null) {
                 texture.Release();
-                Destroy(texture);
+                DestroySafe(texture);
                 texture = null;
             }
         }

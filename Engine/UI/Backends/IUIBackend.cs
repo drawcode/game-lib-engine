@@ -219,4 +219,17 @@ namespace Engine.UI {
         bool IsToggleNamed(UIRef r, string toggleName);
         bool IsButtonNamed(UIRef r, string buttonClickedName);
     }
+
+    // Element geometry in SCREEN PIXELS (B9 S1, 2026-10-03) — what a RenderTexture feeding the
+    // element needs to be sized against (UIRenderStageBinding picks its RT bucket from it).
+    //
+    // Returns false when the ref is dead, recycled or not attached to a panel (rule 172: a
+    // torn-down element must never be styled, and "no answer" is how a caller learns it is gone),
+    // so the return doubles as the backend's "element alive" signal. true with a zero size means
+    // attached but not laid out yet — callers keep their fallback. A GameObject backend has no
+    // layout to ask and does not implement this; callers fall back to a fixed size.
+    public interface IUIBackendElementGeometry {
+
+        bool TryGetElementPixelSize(UIRef r, out Vector2 pixelSize);
+    }
 }

@@ -16,7 +16,7 @@ namespace Engine.UI {
     // for leaks outside these two — if a UIElements type ever appears above the provider layer,
     // the seam has failed and the platform is no longer swappable.
     public class UIToolkitBackend : IUIBackend, IUIFloatingStickBackend,
-        IUIBackendInteractable, IUIBackendElementAlpha {
+        IUIBackendInteractable, IUIBackendElementAlpha, IUIBackendElementGeometry {
 
         private static UIToolkitBackend _instance = null;
 
@@ -955,6 +955,49 @@ namespace Engine.UI {
             }
 
             return 1f;
+        }
+
+        // GEOMETRY (IUIBackendElementGeometry)
+
+        // worldBound, not resolvedStyle width/height: worldBound already carries every ancestor's
+        // scale (a view scaled into design space, a scale-in preset), which is the size the
+        // element really occupies; resolvedStyle is the unscaled layout box. Both are in panel
+        // POINTS, so scaledPixelsPerPoint turns them into the screen pixels an RT must match.
+        // Before the first layout worldBound is NaN — the resolved box is tried, then zero.
+        // Reads cached layout only: no allocation, safe to call every frame.
+        public bool TryGetElementPixelSize(UIRef r, out Vector2 pixelSize) {
+
+            pixelSize = Vector2.zero;
+
+            VisualElement el = El(r);
+
+            // panel == null: recycled or never attached (see HostAlive) — not alive.
+            if (el == null || el.panel == null) {
+                return false;
+            }
+
+            Rect wb = el.worldBound;
+            float w = wb.width;
+            float h = wb.height;
+
+            if (float.IsNaN(w) || float.IsNaN(h)) {
+                w = el.resolvedStyle.width;
+                h = el.resolvedStyle.height;
+            }
+
+            if (float.IsNaN(w) || float.IsNaN(h)) {
+                return true;
+            }
+
+            float ppp = el.scaledPixelsPerPoint;
+
+            if (float.IsNaN(ppp) || ppp <= 0f) {
+                ppp = 1f;
+            }
+
+            pixelSize = new Vector2(Mathf.Max(0f, w) * ppp, Mathf.Max(0f, h) * ppp);
+
+            return true;
         }
 
         // VISIBILITY
