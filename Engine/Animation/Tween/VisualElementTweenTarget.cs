@@ -163,9 +163,13 @@ namespace Engine.Animation {
             return 1f;
         }
 
+        // Same detached guard as the transform setters: an opacity/colour write on a pooled-away
+        // element NREs inside InlineStyleAccess, and one throwing item aborts every other tween in
+        // AnimationEasing.Update that frame (a looping fade on a freed panel-main view blanked the
+        // Main logo and labels).
         public void SetAlpha(float a) {
 
-            if (element == null) {
+            if (detached) {
                 return;
             }
 
@@ -205,7 +209,7 @@ namespace Engine.Animation {
 
         public void SetColor(Color c) {
 
-            if (element == null) {
+            if (detached) {
                 return;
             }
 
