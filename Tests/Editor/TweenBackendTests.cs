@@ -319,12 +319,20 @@ namespace Engine.Animation.Tests {
             Assert.AreEqual(0.6f, image.color.a, 0.0001f);
         }
 
-        // 7. VisualElementTweenTarget: translate/opacity/scale on a detached VisualElement.
+        // 7. VisualElementTweenTarget: translate/opacity/scale on an ATTACHED VisualElement. The
+        // target no-ops on a panel-less element by design (writing into a torn-down view throws
+        // inside UIElements), so the element lives in a real EditMode panel (ToolkitTestPanel).
 
         [Test]
         public void VisualElementTweenTarget_TranslateOpacityScale_RoundTrip() {
 
-            VisualElement element = new VisualElement();
+            using (Engine.UI.Tests.ToolkitTestPanel panel = new Engine.UI.Tests.ToolkitTestPanel()) {
+                TranslateOpacityScaleRoundTrip(panel.Attach(new VisualElement()));
+            }
+        }
+
+        private static void TranslateOpacityScaleRoundTrip(VisualElement element) {
+
             ITweenTarget target = new VisualElementTweenTarget(element);
 
             target.SetPosition(new Vector3(12, 34, 0), TweenCoord.world);

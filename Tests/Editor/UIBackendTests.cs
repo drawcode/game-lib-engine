@@ -370,66 +370,92 @@ namespace Engine.UI.Tests {
 
 #if USE_UI_TOOLKIT
 
+        // Toolkit elements are ATTACHED to a real panel (ToolkitTestPanel): the backend no-ops on
+        // an element with no panel by design (a recycled view element looks exactly like that).
+
         [Test]
         public void Toolkit_LabelValue_RoundTrips() {
 
+            using (ToolkitTestPanel panel = new ToolkitTestPanel()) {
+
+                Label label = panel.Attach(new Label());
+                label.name = "label-section";
+
+                UIRef r = UIRef.Of(label, label.name);
+
+                UIUtil.SetLabelValue(r, "SETTINGS");
+
+                Assert.AreEqual("SETTINGS", label.text);
+                Assert.AreEqual("SETTINGS", UIUtil.GetLabelValue(r));
+            }
+        }
+
+        [Test]
+        public void Toolkit_DetachedElement_IsInert() {
+
+            // The other half of the contract: a panel-less element is treated as dead.
             Label label = new Label();
-            label.name = "label-section";
 
-            UIRef r = UIRef.Of(label, label.name);
+            UIUtil.SetLabelValue(UIRef.Of(label, "detached"), "SETTINGS");
 
-            UIUtil.SetLabelValue(r, "SETTINGS");
-
-            Assert.AreEqual("SETTINGS", label.text);
-            Assert.AreEqual("SETTINGS", UIUtil.GetLabelValue(r));
+            Assert.AreEqual("", label.text);
         }
 
         [Test]
         public void Toolkit_ToggleAndSlider_RoundTrip() {
 
-            UnityEngine.UIElements.Toggle toggle = new UnityEngine.UIElements.Toggle();
-            UIRef toggleRef = UIRef.Of(toggle, "toggle-music");
+            using (ToolkitTestPanel panel = new ToolkitTestPanel()) {
 
-            UIUtil.SetToggleValue(toggleRef, true);
-            Assert.IsTrue(UIUtil.GetToggleValue(toggleRef));
+                UnityEngine.UIElements.Toggle toggle = panel.Attach(new UnityEngine.UIElements.Toggle());
+                UIRef toggleRef = UIRef.Of(toggle, "toggle-music");
 
-            UnityEngine.UIElements.Slider slider = new UnityEngine.UIElements.Slider();
-            slider.lowValue = 0f;
-            slider.highValue = 1f;
+                UIUtil.SetToggleValue(toggleRef, true);
+                Assert.IsTrue(UIUtil.GetToggleValue(toggleRef));
 
-            UIRef sliderRef = UIRef.Of(slider, "slider-volume");
+                UnityEngine.UIElements.Slider slider = panel.Attach(new UnityEngine.UIElements.Slider());
+                slider.lowValue = 0f;
+                slider.highValue = 1f;
 
-            UIUtil.SetSliderValue(sliderRef, .75f);
-            Assert.AreEqual(.75f, UIUtil.GetSliderValue(sliderRef), .0001f);
+                UIRef sliderRef = UIRef.Of(slider, "slider-volume");
+
+                UIUtil.SetSliderValue(sliderRef, .75f);
+                Assert.AreEqual(.75f, UIUtil.GetSliderValue(sliderRef), .0001f);
+            }
         }
 
         [Test]
         public void Toolkit_ShowHide_UsesDisplay() {
 
-            VisualElement el = new VisualElement();
-            UIRef r = UIRef.Of(el, "panel");
+            using (ToolkitTestPanel panel = new ToolkitTestPanel()) {
 
-            UIUtil.HideObject(r);
-            Assert.AreEqual(DisplayStyle.None, el.style.display.value);
+                VisualElement el = panel.Attach(new VisualElement());
+                UIRef r = UIRef.Of(el, "panel");
 
-            UIUtil.ShowObject(r);
-            Assert.AreEqual(DisplayStyle.Flex, el.style.display.value);
+                UIUtil.HideObject(r);
+                Assert.AreEqual(DisplayStyle.None, el.style.display.value);
+
+                UIUtil.ShowObject(r);
+                Assert.AreEqual(DisplayStyle.Flex, el.style.display.value);
+            }
         }
 
         [Test]
         public void Toolkit_Resolve_FindsByName() {
 
-            VisualElement root = new VisualElement();
-            root.name = "panel-settings";
+            using (ToolkitTestPanel panel = new ToolkitTestPanel()) {
 
-            Label child = new Label();
-            child.name = "label-title";
-            root.Add(child);
+                VisualElement root = panel.Attach(new VisualElement());
+                root.name = "panel-settings";
 
-            UIRef found = UIToolkitBackend.Instance.Resolve(UIRef.Of(root, root.name), "label-title");
+                Label child = new Label();
+                child.name = "label-title";
+                root.Add(child);
 
-            Assert.IsTrue(found.alive);
-            Assert.AreSame(child, found.native);
+                UIRef found = UIToolkitBackend.Instance.Resolve(UIRef.Of(root, root.name), "label-title");
+
+                Assert.IsTrue(found.alive);
+                Assert.AreSame(child, found.native);
+            }
         }
 
         [Test]
