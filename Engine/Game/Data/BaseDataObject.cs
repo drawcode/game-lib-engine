@@ -388,6 +388,9 @@ namespace Engine.Game.Data
         public static string capsule_radius = "capsule_radius";
         public static string capsule_height = "capsule_height";
         public static string capsule_center_y = "capsule_center_y";
+        // Health-bar (HUD) height above the actor root, in MODEL-HOLDER units (the holder is x4).
+        // Absent or <= 0 = the prefab's own HUD height.
+        public static string hud_height = "hud_height";
         public static string volume = "volume";
         public static string loop = "loop";
         public static string go = "go";

@@ -730,6 +730,20 @@ namespace Engine.Game.App {
             return capsule_radius > 0 && capsule_height > 0;
         }
 
+        public virtual double hud_height {
+            get {
+                return Get<double>(BaseDataObjectKeys.hud_height);
+            }
+
+            set {
+                Set<double>(BaseDataObjectKeys.hud_height, value);
+            }
+        }
+
+        public virtual bool HasHudHeight() {
+            return hud_height > 0;
+        }
+
 
         // color presets
 
