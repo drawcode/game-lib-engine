@@ -57,5 +57,21 @@ namespace Engine.UI {
 
             field.RegisterValueChangedCallback(evt => onChange(evt.newValue));
         }
+
+        // Commit on Enter / focus loss (NGUI UIInput's OnSubmit) instead of per keystroke. For
+        // inputs built from data (bitty), which have no UXML is-delayed attribute. A non-text or
+        // dead ref no-ops.
+        public static void SetInputDelayed(UIRef r, bool delayed) {
+
+            if (r == null || !r.alive) {
+                return;
+            }
+
+            TextField field = r.native as TextField;
+
+            if (field != null) {
+                field.isDelayed = delayed;
+            }
+        }
     }
 }
