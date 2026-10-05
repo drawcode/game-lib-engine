@@ -382,6 +382,15 @@ namespace Engine.Game.Data
         public static string scale_data_max = "scale_data_max";
         public static string scale_min = "scale_min";
         public static string scale_max = "scale_max";
+        // Movement-capsule size for one character, in ACTOR-ROOT units (the model
+        // holder is scaled x4 under the root, so these are 4x the model's own bounds).
+        // Absent or <= 0 means "not authored" -- the controller keeps its own defaults.
+        public static string capsule_radius = "capsule_radius";
+        public static string capsule_height = "capsule_height";
+        public static string capsule_center_y = "capsule_center_y";
+        // Health-bar (HUD) height above the actor root, in MODEL-HOLDER units (the holder is x4).
+        // Absent or <= 0 = the prefab's own HUD height.
+        public static string hud_height = "hud_height";
         public static string volume = "volume";
         public static string loop = "loop";
         public static string go = "go";
@@ -904,19 +913,24 @@ namespace Engine.Game.Data
             return false;
         }
 
-        public DataAttribute GetAttribute(string code)
-        {
+        public DataAttribute GetAttribute(string code) {
 
-            DataAttribute attribute = new DataAttribute();
+            // One dictionary lookup instead of ContainsKey-then-indexer, and no throwaway
+            // DataAttribute allocated on the hit path. This sits under every attribute
+            // read in the game -- including the audio effects volume the weapon launcher
+            // used to fetch once per bullet -- so the discarded allocation was real GC
+            // pressure during sustained fire.
 
-            //code = UniqueUtil.Instance.GetStringHash(code);
+            if (attributes != null && code != null) {
 
-            if (CheckIfAttributeExists(code))
-            {
-                attribute = attributes[code];
+                DataAttribute existing;
+
+                if (attributes.TryGetValue(code, out existing)) {
+                    return existing;
+                }
             }
 
-            return attribute;
+            return new DataAttribute();
         }
 
         public List<DataAttribute> GetAttributesList()

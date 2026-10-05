@@ -27,6 +27,12 @@ public class ObjectPool : System.Object {
 
     public Queue<GameObject> pool;
 
+    // Mirrors the queue's contents. recycle() has to reject an object that is already
+    // parked, and Queue<T>.Contains is a linear scan -- with maxPoolItems at 5000 and
+    // bullets, muzzles, shells, hit effects and audio objects all recycling every frame
+    // that scan was the most expensive part of returning an object to the pool.
+    private HashSet<GameObject> pooledSet = new HashSet<GameObject>();
+
     public string key = "default";
 
     // How many objects are currently sitting in the cache
@@ -51,12 +57,32 @@ public class ObjectPool : System.Object {
         }
         else { // else pull one from the cache
             obj = pool.Dequeue();
+            pooledSet.Remove(obj);
 
             // reactivate the object
             obj.transform.parent = null;
             obj.transform.position = position;
             obj.transform.rotation = rotation;
             obj.SetActive(true);
+
+            // Mark the new life BEFORE Start runs, not after.
+            //
+            // Start is where a pooled object typically schedules its own delayed recycle
+            // (GameRayShoot is the clearest case: it draws its beam and asks to be reclaimed
+            // LifeTime seconds later). destroyPooled captures the use serial at the moment it is
+            // called, and the stale-recycle guard drops the timer if the serial has moved on.
+            //
+            // The bump used to happen in GameObjectHelper.CreateGameObject, i.e. AFTER this
+            // SendMessage returned -- so every such object captured serial N, was immediately
+            // bumped to N+1, and its own recycle was then thrown away as somebody else's. The
+            // object was never returned to the pool: it stayed in the world, visible, forever.
+            // First life was unaffected (Unity sends that Start a frame later, after the bump),
+            // which is why only the SECOND and later shots leaked.
+            if (obj.GetComponent<PoolGameObject>() == null) {
+                obj.AddComponent<PoolGameObject>();
+            }
+
+            PoolGameObject.Bump(obj);
 
             // Call Start again
             obj.SendMessage("Start", SendMessageOptions.DontRequireReceiver);
@@ -90,7 +116,9 @@ public class ObjectPool : System.Object {
         }
 
 
-        if (!pool.Contains(obj)) {
+        // Add() returns false when it is already parked, which replaces the old
+        // linear pool.Contains(obj) scan.
+        if (pooledSet.Add(obj)) {
             // put object back in cache for reuse later
             pool.Enqueue(obj);
         }
@@ -103,5 +131,38 @@ public class ObjectPool : System.Object {
         }
 
         pool.Clear();
+        pooledSet.Clear();
+    }
+
+    /// <summary>
+    /// Release cached objects beyond <paramref name="keep"/>, oldest first, and return how
+    /// many were destroyed.
+    ///
+    /// This only ever touches objects sitting in the queue -- something that is live in the
+    /// world was never enqueued, so it cannot be taken away from its owner. Keeping a few
+    /// back matters: `clear()` empties the bucket entirely and the next spawn pays a full
+    /// Instantiate, which is exactly the spike a pool exists to avoid.
+    /// </summary>
+    public int trim(int keep) {
+
+        if (keep < 0) {
+            keep = 0;
+        }
+
+        int destroyed = 0;
+
+        while (pool.Count > keep) {
+
+            GameObject go = pool.Dequeue();
+
+            pooledSet.Remove(go);
+
+            if (go != null) {
+                go.DestroyNow();
+                destroyed++;
+            }
+        }
+
+        return destroyed;
     }
 }

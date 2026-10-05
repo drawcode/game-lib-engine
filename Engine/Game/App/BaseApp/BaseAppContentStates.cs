@@ -292,5 +292,35 @@ namespace Engine.Game.App.BaseApp {
         public bool IsExternalContent() {
             return GetDataPlatformStoreMeta() != null;
         }
+
+        // ADDITIVE localization route (content, not UI strings). Read by
+        // BaseGameUIPanelResults.GetGameModeDisplay -> AppContentStates.Current.display_name,
+        // written to labelNameGameMode on migrated (toolkitViewKey) results screens. Values are
+        // common words/phrases ("Arcade Mode"), not proper nouns, so display_name itself is
+        // keyed here (unlike BaseGameWorld, where the name is a proper noun and stays raw). Key
+        // convention: app_content_state_<code>_name. TrOrDefault falls back to the raw English
+        // value whenever the key is absent, so any other game on this shared lib that ships no
+        // such key sees its data unchanged. Key string cached per `code`, not rebuilt per call.
+        private static readonly Dictionary<string, string> nameLocKeys = new Dictionary<string, string>();
+
+        public override string display_name {
+            get {
+                string raw = base.display_name;
+                string c = code;
+
+                if (string.IsNullOrEmpty(c)) {
+                    return raw;
+                }
+
+                string key;
+
+                if (!nameLocKeys.TryGetValue(c, out key)) {
+                    key = "app_content_state_" + c.Replace('-', '_') + "_name";
+                    nameLocKeys[c] = key;
+                }
+
+                return L10n.TrOrDefault(key, raw);
+            }
+        }
     }
 }

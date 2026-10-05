@@ -26,12 +26,20 @@ public class UniqueUtil {
         }
     }
 
+    // Last value read from or written to prefs. PlayerPrefs.GetString returns a new string every
+    // call, and IsPlayerControlled compares against this for every non-player actor several times
+    // a frame (94 B each). HasKey does not allocate, so a DeleteAll still resets the id.
+    string cachedUniqueId;
+
     // Device specific uuid by app install
     public string currentUniqueId {
         get {
             string currentId = "";
 
             if (SystemPrefUtil.HasLocalSetting(DATA_KEY)) {
+                if (!string.IsNullOrEmpty(cachedUniqueId)) {
+                    return cachedUniqueId;
+                }
                 currentId = SystemPrefUtil.GetLocalSettingString(DATA_KEY);
             }
             else {
@@ -39,6 +47,8 @@ public class UniqueUtil {
                 SystemPrefUtil.SetLocalSettingString(DATA_KEY, currentId);
                 SystemPrefUtil.Save();
             }
+
+            cachedUniqueId = currentId;
 
             return currentId;
         }

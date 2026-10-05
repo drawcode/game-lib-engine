@@ -13,20 +13,48 @@ using System.Text;
 using UnityEngine;
 using UnityEngine.UI;
 
+using Engine.Animation;
+using Engine.UI;
+
 namespace Engine.Utility {
 
     public enum TweenLib {
         none,
         iTween,
         leanTween,
-        nguiUITweener
+        nguiUITweener,
+        internalEasing
     }
 
+    // ADDITIVE, 2026-09-12. AnimationEasing.Equations has carried the full Penner set (40
+    // equations) since forever; this enum exposed four of them and EasingTweenBackend.ToEquation
+    // mapped three, so every panel in the project animated on quadEaseInOut whether it wanted to
+    // or not. The members below are the ones UI transitions actually need — the rest of Penner
+    // (elastic, bounce, circ, quint, back-in) stays unexposed until something asks for it.
+    //
+    // The existing four are FIRST and in their original order: this enum is serialised on
+    // TweenMeta, so inserting ahead of them would renumber live values.
     public enum TweenEaseType {
         linear,
         quadEaseOut,
         quadEaseIn,
-        quadEaseInOut
+        quadEaseInOut,
+
+        cubicEaseOut,
+        cubicEaseIn,
+        cubicEaseInOut,
+
+        quartEaseOut,
+        quartEaseIn,
+        quartEaseInOut,
+
+        expoEaseOut,
+        expoEaseIn,
+
+        sineEaseOut,
+        sineEaseIn,
+
+        backEaseOut
     }
 
     public enum TweenLoopType {
@@ -56,6 +84,7 @@ namespace Engine.Utility {
         public Action _onStart = null;
         public Action _onUpdate = null;
         public bool _stopCurrent = false;
+        public bool _useUnscaledTime = false;
 
         public float durationShow = .45f;
         public float durationDelayShow = .5f;
@@ -182,6 +211,17 @@ namespace Engine.Utility {
                 _stopCurrent = value;
             }
         }
+
+        // Run this tween off the unscaled clock so it keeps animating at Time.timeScale == 0
+        // (pause-context UI). Default false = existing scaled behavior.
+        public bool useUnscaledTime {
+            get {
+                return _useUnscaledTime;
+            }
+            set {
+                _useUnscaledTime = value;
+            }
+        }
     }
 
     public class TweenUtil {
@@ -206,6 +246,86 @@ namespace Engine.Utility {
 
         public static int increment = 0;
 
+        // --------------------------------------------------------------------
+        // UNSCALED SCOPE
+        //
+        // Ambient opt-in: every tween CREATED inside this scope runs off Time.unscaledTime, so it
+        // keeps animating while the game is PAUSED (Time.timeScale == 0). Used by pause-context UI
+        // (UIPanelPause) — its slide is what the 1s pause freeze-delay used to wait on.
+        //
+        // Scoped rather than threaded through each helper because the Show/Hide entry points funnel
+        // through ~6 layers of optional-arg forwarding before a TweenMeta exists. Tweens are created
+        // synchronously inside a scope (the show/hide "delay" is carried on the animation item, not a
+        // coroutine), so the flag cannot leak to another caller. Depth-counted for nesting.
+
+        private static int unscaledScopeDepth = 0;
+
+        public static bool isUnscaledScope {
+            get {
+                return unscaledScopeDepth > 0;
+            }
+        }
+
+        public static void BeginUnscaledScope() {
+            unscaledScopeDepth++;
+        }
+
+        public static void EndUnscaledScope() {
+
+            if (unscaledScopeDepth > 0) {
+                unscaledScopeDepth--;
+            }
+        }
+
+        // --------------------------------------------------------------------
+        // BACKEND
+
+        private static ITweenBackend _backend = null;
+
+        public static ITweenBackend backend {
+            get {
+                if (_backend == null) {
+                    _backend = EasingTweenBackend.Instance;
+                }
+
+                return _backend;
+            }
+        }
+
+        public static void SetBackend(ITweenBackend value) {
+            _backend = value;
+        }
+
+        public static ITweenTarget ResolveTarget(GameObject go) {
+
+            if (go == null) {
+                return null;
+            }
+
+            return new TransformTweenTarget(go);
+        }
+
+        public static ITweenTarget ResolveTarget(object native) {
+
+            if (native == null) {
+                return null;
+            }
+
+            ITweenTarget target = VisualElementTweenTarget.TryCreate(native);
+
+            if (target != null) {
+                return target;
+            }
+
+            GameObject go = native as GameObject;
+
+            if (go != null) {
+                return ResolveTarget(go);
+            }
+
+            return null;
+        }
+
         // LOOP TYPES
 
         public static T ConvertLibLoopType<T>(TweenLoopType loopType) {
@@ -218,50 +338,8 @@ namespace Engine.Utility {
 
             }
 
-#if USE_EASING_LEANTWEEN
-            else if (genericType == typeof(LeanTweenType)) {
 
-                if (loopType == TweenLoopType.once) {
-                    libType = (T)(object)LeanTweenType.once;
-                }
-                else if (loopType == TweenLoopType.loop) {
-                    libType = (T)(object)LeanTweenType.clamp;
-                }
-                else if (loopType == TweenLoopType.pingPong) {
-                    libType = (T)(object)LeanTweenType.clamp;
-                }
-            }
-#endif
 
-#if USE_EASING_ITWEEN
-            else if (genericType == typeof(iTween.LoopType)) {
-
-                if (loopType == TweenLoopType.once) {
-                    libType = (T)(object)iTween.LoopType.none;
-                }
-                else if (loopType == TweenLoopType.loop) {
-                    libType = (T)(object)iTween.LoopType.loop;
-                }
-                else if (loopType == TweenLoopType.pingPong) {
-                    libType = (T)(object)iTween.LoopType.pingPong;
-                }
-            }
-#endif
-
-#if USE_EASING_NGUI
-            else if (genericType == typeof(UITweener.Style)) {
-
-                if (loopType == TweenLoopType.once) {
-                    libType = (T)(object)UITweener.Style.Once;
-                }
-                else if (loopType == TweenLoopType.loop) {
-                    libType = (T)(object)UITweener.Style.Loop;
-                }
-                else if (loopType == TweenLoopType.pingPong) {
-                    libType = (T)(object)UITweener.Style.PingPong;
-                }
-            }
-#endif
 
             return libType;
         }
@@ -276,56 +354,8 @@ namespace Engine.Utility {
 
             }
 
-#if USE_EASING_LEANTWEEN
-            else if (genericType == typeof(LeanTweenType)) {
 
-                LeanTweenType libType = (LeanTweenType)(object)genericType;
 
-                if (libType == LeanTweenType.once) {
-                    loopType = TweenLoopType.once;
-                }
-                else if (libType == LeanTweenType.clamp) {
-                    loopType = TweenLoopType.loop;
-                }
-                else if (libType == LeanTweenType.pingPong) {
-                    loopType = TweenLoopType.pingPong;
-                }
-            }
-#endif
-
-#if USE_EASING_ITWEEN
-            else if (genericType == typeof(iTween.LoopType)) {
-
-                iTween.LoopType libType = (iTween.LoopType)(object)genericType;
-
-                if (libType == iTween.LoopType.none) {
-                    loopType = TweenLoopType.once;
-                }
-                else if (libType == iTween.LoopType.loop) {
-                    loopType = TweenLoopType.loop;
-                }
-                else if (libType == iTween.LoopType.pingPong) {
-                    loopType = TweenLoopType.pingPong;
-                }
-            }
-#endif
-
-#if USE_EASING_NGUI
-            else if (genericType == typeof(UITweener.Style)) {
-
-                UITweener.Style libType = (UITweener.Style)(object)genericType;
-
-                if (libType == UITweener.Style.Once) {
-                    loopType = TweenLoopType.once;
-                }
-                else if (libType == UITweener.Style.Loop) {
-                    loopType = TweenLoopType.loop;
-                }
-                else if (libType == UITweener.Style.PingPong) {
-                    loopType = TweenLoopType.pingPong;
-                }
-            }
-#endif
 
             return loopType;
         }
@@ -342,59 +372,8 @@ namespace Engine.Utility {
 
             }
 
-#if USE_EASING_LEANTWEEN
-            else if (genericType == typeof(LeanTweenType)) {
 
-                if (easeType == TweenEaseType.linear) {
-                    libType = (T)(object)LeanTweenType.linear;
-                }
-                else if (easeType == TweenEaseType.quadEaseInOut) {
-                    libType = (T)(object)LeanTweenType.easeInOutQuad;
-                }
-                else if (easeType == TweenEaseType.quadEaseIn) {
-                    libType = (T)(object)LeanTweenType.easeInQuad;
-                }
-                else if (easeType == TweenEaseType.quadEaseOut) {
-                    libType = (T)(object)LeanTweenType.easeOutQuad;
-                }
-            }
-#endif
 
-#if USE_EASING_ITWEEN
-            else if (genericType == typeof(iTween.EaseType)) {
-
-                if (easeType == TweenEaseType.linear) {
-                    libType = (T)(object)iTween.EaseType.linear;
-                }
-                else if (easeType == TweenEaseType.quadEaseInOut) {
-                    libType = (T)(object)iTween.EaseType.easeInOutQuad;
-                }
-                else if (easeType == TweenEaseType.quadEaseIn) {
-                    libType = (T)(object)iTween.EaseType.easeInQuad;
-                }
-                else if (easeType == TweenEaseType.quadEaseOut) {
-                    libType = (T)(object)iTween.EaseType.easeOutQuad;
-                }
-            }
-#endif
-
-#if USE_EASING_NGUI
-            else if (genericType == typeof(UITweener.Method)) {
-
-                if (easeType == TweenEaseType.linear) {
-                    libType = (T)(object)UITweener.Method.Linear;
-                }
-                else if (easeType == TweenEaseType.quadEaseInOut) {
-                    libType = (T)(object)UITweener.Method.EaseInOut;
-                }
-                else if (easeType == TweenEaseType.quadEaseIn) {
-                    libType = (T)(object)UITweener.Method.EaseIn;
-                }
-                else if (easeType == TweenEaseType.quadEaseOut) {
-                    libType = (T)(object)UITweener.Method.EaseOut;
-                }
-            }
-#endif
 
             return libType;
         }
@@ -409,65 +388,8 @@ namespace Engine.Utility {
 
             }
 
-#if USE_EASING_LEANTWEEN
-            else if (genericType == typeof(LeanTweenType)) {
 
-                LeanTweenType libType = (LeanTweenType)(object)genericType;
 
-                if (libType == LeanTweenType.linear) {
-                    easeType = TweenEaseType.linear;
-                }
-                else if (libType == LeanTweenType.easeInOutQuad) {
-                    easeType = TweenEaseType.quadEaseInOut;
-                }
-                else if (libType == LeanTweenType.easeOutQuad) {
-                    easeType = TweenEaseType.quadEaseOut;
-                }
-                else if (libType == LeanTweenType.easeInQuad) {
-                    easeType = TweenEaseType.quadEaseIn;
-                }
-            }
-#endif
-
-#if USE_EASING_ITWEEN
-            else if (genericType == typeof(iTween.LoopType)) {
-
-                iTween.EaseType libType = (iTween.EaseType)(object)genericType;
-
-                if (libType == iTween.EaseType.linear) {
-                    easeType = TweenEaseType.linear;
-                }
-                else if (libType == iTween.EaseType.easeInOutQuad) {
-                    easeType = TweenEaseType.quadEaseInOut;
-                }
-                else if (libType == iTween.EaseType.easeOutQuad) {
-                    easeType = TweenEaseType.quadEaseOut;
-                }
-                else if (libType == iTween.EaseType.easeInQuart) {
-                    easeType = TweenEaseType.quadEaseIn;
-                }
-            }
-#endif
-
-#if USE_EASING_NGUI
-            else if (genericType == typeof(UITweener.Style)) {
-
-                UITweener.Method libType = (UITweener.Method)(object)genericType;
-
-                if (libType == UITweener.Method.Linear) {
-                    easeType = TweenEaseType.linear;
-                }
-                else if (libType == UITweener.Method.EaseInOut) {
-                    easeType = TweenEaseType.quadEaseInOut;
-                }
-                else if (libType == UITweener.Method.EaseOut) {
-                    easeType = TweenEaseType.quadEaseOut;
-                }
-                else if (libType == UITweener.Method.EaseIn) {
-                    easeType = TweenEaseType.quadEaseIn;
-                }
-            }
-#endif
 
             return easeType;
         }
@@ -485,6 +407,8 @@ namespace Engine.Utility {
            TweenLoopType loopType = TweenLoopType.once) {
 
             TweenMeta meta = new TweenMeta();
+
+            meta.useUnscaledTime = isUnscaledScope;
             meta.lib = lib;
             meta.go = go;
             meta.time = time;
@@ -513,6 +437,28 @@ namespace Engine.Utility {
             Color color = img.color;
             color.a = val;
             img.color = color;
+        }
+
+        // UIRef overload (B1, additive). A backend with element opacity (UI Toolkit) takes it;
+        // otherwise a GameObject ref carrying a uGUI Image gets the original colour-alpha write
+        // above, so an un-migrated caller sees no change. Anything else no-ops (UIRef contract).
+        public static void SetImageAlpha(float val, UIRef r) {
+
+            if (UIUtil.TrySetElementAlpha(r, val)) {
+                return;
+            }
+
+            GameObject go = r != null ? r.gameObject : null;
+
+            if (go == null) {
+                return;
+            }
+
+            Image img = go.GetComponent<Image>();
+
+            if (img != null) {
+                SetImageAlpha(val, img);
+            }
         }
 
         // --------------------------------------------------------------------
@@ -605,9 +551,14 @@ namespace Engine.Utility {
                 return;
             }
 
-#if USE_UI_NGUI_2_7 || USE_UI_NGUI_3 || USE_EASING_NGUI
-            meta.lib = TweenLib.nguiUITweener;
-#endif
+            // All tweens run on the internal backend; legacy lib branches below
+            // are unreachable and get deleted with the vendored libs.
+            meta.lib = TweenLib.internalEasing;
+
+            // NGUI TweenPosition always animated localPosition regardless of the
+            // requested coord, and a decade of call sites (which default to world)
+            // rely on that — honoring world moves panels to wrong absolute spots.
+            meta.coord = TweenCoord.local;
 
             Action onBegin = () => {
 
@@ -641,95 +592,11 @@ namespace Engine.Utility {
 
             }
 
-#if USE_EASING_ITWEEN
-            else if (meta.lib == TweenLib.iTween) {
 
-                if (meta.stopCurrent) {
-                    iTween.Stop(meta.go);
-                }
 
-                iTween.LoopType loopTypeLib =
-                    ConvertLibLoopType<iTween.LoopType>(meta.loopType);
-
-                iTween.EaseType easeTypeLib =
-                    ConvertLibEaseType<iTween.EaseType>(meta.easeType);
-
-                Hashtable hash = iTween.Hash(
-                    "position", pos,
-                    "time", meta.time,
-                    "delay", meta.delay,
-                    "looptype", loopTypeLib,
-                    "easetype", easeTypeLib,
-                    "islocal", meta.coord == TweenCoord.local,
-                    "onstart", "OnTweenBegin",
-                    "onstartparams", onBegin,
-                    "oncomplete", "OnTweenFinish",
-                    "oncompleteparams", onFinish);
-
-                iTween.MoveTo(meta.go, hash);
+            else if (meta.lib == TweenLib.internalEasing) {
+                backend.Move(ResolveTarget(meta.go), pos, meta);
             }
-#endif
-
-#if USE_EASING_LEANTWEEN
-            else if (meta.lib == TweenLib.leanTween) {
-
-                if (meta.stopCurrent) {
-                    LeanTween.cancel(meta.go);
-                }
-
-                LTDescr info = null;
-
-                if (meta.coord == TweenCoord.local) {
-                    info =
-                        LeanTween.moveLocal(meta.go, pos, meta.time)
-                        .setDelay(meta.delay).pause();
-                }
-                else {
-                    info =
-                        LeanTween.move(meta.go, pos, meta.time)
-                        .setDelay(meta.delay).pause();
-                }
-
-                LeanTweenType loopTypeLib =
-                    ConvertLibLoopType<LeanTweenType>(meta.loopType);
-
-                LeanTweenType easeTypeLib =
-                    ConvertLibEaseType<LeanTweenType>(meta.easeType);
-
-                info.setLoopType(loopTypeLib);
-                info.setEase(easeTypeLib);
-
-                info.setOnStart(onBegin);
-                info.setOnComplete(onFinish);
-                //info.setOnUpdate(onTick);
-
-                if (meta.onUpdate != null) {
-                    //info.setOnUpdate(onUpdate);
-                }
-
-                info.resume();
-            }
-#endif
-
-#if USE_EASING_NGUI
-            else if (meta.lib == TweenLib.nguiUITweener) {
-
-                UITweener.Style loopTypeLib =
-                    ConvertLibLoopType<UITweener.Style>(meta.loopType);
-
-                UITweener.Method easeTypeLib =
-                    ConvertLibEaseType<UITweener.Method>(meta.easeType);
-
-                UITweenerUtil.MoveTo(
-                    meta.go,
-                    easeTypeLib, loopTypeLib,
-                    meta.time, meta.delay, pos);
-
-                //OnTweenBegin(onBegin);
-                //OnTweenFinish(onFinish);
-                //OnTweenTick(onTick);
-            }
-#endif
         }
 
         // --------------------------------------------------------------------
@@ -823,9 +690,9 @@ namespace Engine.Utility {
             }
 
 
-#if USE_UI_NGUI_2_7 || USE_UI_NGUI_3 || USE_EASING_NGUI
-            meta.lib = TweenLib.nguiUITweener;
-#endif
+            // All tweens run on the internal backend; legacy lib branches below
+            // are unreachable and get deleted with the vendored libs.
+            meta.lib = TweenLib.internalEasing;
 
             Action onBegin = () => {
 
@@ -859,95 +726,11 @@ namespace Engine.Utility {
 
             }
 
-#if USE_EASING_ITWEEN
-            else if (meta.lib == TweenLib.iTween) {
 
-                if (meta.stopCurrent) {
-                    iTween.Stop(meta.go);
-                }
 
-                iTween.LoopType loopTypeLib =
-                    ConvertLibLoopType<iTween.LoopType>(meta.loopType);
-
-                iTween.EaseType easeTypeLib =
-                    ConvertLibEaseType<iTween.EaseType>(meta.easeType);
-
-                Hashtable hash = iTween.Hash(
-                    "position", pos,
-                    "time", meta.time,
-                    "delay", meta.delay,
-                    "looptype", loopTypeLib,
-                    "easetype", easeTypeLib,
-                    "islocal", meta.coord == TweenCoord.local,
-                    "onstart", "OnTweenBegin",
-                    "onstartparams", onBegin,
-                    "oncomplete", "OnTweenFinish",
-                    "oncompleteparams", onFinish);
-
-                iTween.ScaleTo(meta.go, hash);
+            else if (meta.lib == TweenLib.internalEasing) {
+                backend.Scale(ResolveTarget(meta.go), pos, meta);
             }
-#endif
-
-#if USE_EASING_LEANTWEEN
-            else if (meta.lib == TweenLib.leanTween) {
-
-                if (meta.stopCurrent) {
-                    LeanTween.cancel(meta.go);
-                }
-
-                LTDescr info = null;
-
-                if (meta.coord == TweenCoord.local) {
-                    info =
-                        LeanTween.scale(meta.go, pos, meta.time)
-                        .setDelay(meta.delay).pause();
-                }
-                else {
-                    info =
-                        LeanTween.scale(meta.go, pos, meta.time)
-                        .setDelay(meta.delay).pause();
-                }
-
-                LeanTweenType loopTypeLib =
-                    ConvertLibLoopType<LeanTweenType>(meta.loopType);
-
-                LeanTweenType easeTypeLib =
-                    ConvertLibEaseType<LeanTweenType>(meta.easeType);
-
-                info.setLoopType(loopTypeLib);
-                info.setEase(easeTypeLib);
-
-                info.setOnStart(onBegin);
-                info.setOnComplete(onFinish);
-                //info.setOnUpdate(onTick);
-
-                if (meta.onUpdate != null) {
-                    //info.setOnUpdate(onUpdate);
-                }
-
-                info.resume();
-            }
-#endif
-
-#if USE_EASING_NGUI
-            else if (meta.lib == TweenLib.nguiUITweener) {
-
-                //UITweener.Style loopTypeLib =
-                //    ConvertLibLoopType<UITweener.Style>(meta.loopType);
-
-                //UITweener.Method easeTypeLib =
-                //    ConvertLibEaseType<UITweener.Method>(meta.easeType);
-
-                //UITweenerUtil.Scal(
-                //    meta.go,
-                //    easeTypeLib, loopTypeLib,
-                //    meta.time, meta.delay, pos);
-
-                //OnTweenBegin(onBegin);
-                //OnTweenFinish(onFinish);
-                //OnTweenTick(onTick);
-            }
-#endif
         }
 
         // --------------------------------------------------------------------
@@ -1036,9 +819,12 @@ namespace Engine.Utility {
                 return;
             }
 
-#if USE_UI_NGUI_2_7 || USE_UI_NGUI_3 || USE_EASING_NGUI
-            meta.lib = TweenLib.nguiUITweener;
-#endif
+            // All tweens run on the internal backend; legacy lib branches below
+            // are unreachable and get deleted with the vendored libs.
+            meta.lib = TweenLib.internalEasing;
+
+            // NGUI TweenRotation always animated localRotation — see MoveToObject.
+            meta.coord = TweenCoord.local;
 
             Action onBegin = () => {
 
@@ -1072,95 +858,11 @@ namespace Engine.Utility {
 
             }
 
-#if USE_EASING_ITWEEN
-            else if (meta.lib == TweenLib.iTween) {
 
-                if (meta.stopCurrent) {
-                    iTween.Stop(meta.go);
-                }
 
-                iTween.LoopType loopTypeLib =
-                    ConvertLibLoopType<iTween.LoopType>(meta.loopType);
-
-                iTween.EaseType easeTypeLib =
-                    ConvertLibEaseType<iTween.EaseType>(meta.easeType);
-
-                Hashtable hash = iTween.Hash(
-                    "rotation", pos,
-                    "time", meta.time,
-                    "delay", meta.delay,
-                    "looptype", loopTypeLib,
-                    "easetype", easeTypeLib,
-                    "islocal", meta.coord == TweenCoord.local,
-                    "onstart", "OnTweenBegin",
-                    "onstartparams", onBegin,
-                    "oncomplete", "OnTweenFinish",
-                    "oncompleteparams", onFinish);
-
-                iTween.RotateTo(meta.go, hash);
+            else if (meta.lib == TweenLib.internalEasing) {
+                backend.Rotate(ResolveTarget(meta.go), pos, meta);
             }
-#endif
-
-#if USE_EASING_LEANTWEEN
-            else if (meta.lib == TweenLib.leanTween) {
-
-                if (meta.stopCurrent) {
-                    LeanTween.cancel(meta.go);
-                }
-
-                LTDescr info = null;
-
-                if (meta.coord == TweenCoord.local) {
-                    info =
-                        LeanTween.rotateLocal(meta.go, pos, meta.time)
-                        .setDelay(meta.delay).pause();
-                }
-                else {
-                    info =
-                        LeanTween.rotate(meta.go, pos, meta.time)
-                        .setDelay(meta.delay).pause();
-                }
-
-                LeanTweenType loopTypeLib =
-                    ConvertLibLoopType<LeanTweenType>(meta.loopType);
-
-                LeanTweenType easeTypeLib =
-                    ConvertLibEaseType<LeanTweenType>(meta.easeType);
-
-                info.setLoopType(loopTypeLib);
-                info.setEase(easeTypeLib);
-
-                info.setOnStart(onBegin);
-                info.setOnComplete(onFinish);
-                //info.setOnUpdate(onTick);
-
-                if (meta.onUpdate != null) {
-                    //info.setOnUpdate(onUpdate);
-                }
-
-                info.resume();
-            }
-#endif
-
-#if USE_EASING_NGUI
-            else if (meta.lib == TweenLib.nguiUITweener) {
-
-                UITweener.Style loopTypeLib =
-                    ConvertLibLoopType<UITweener.Style>(meta.loopType);
-
-                UITweener.Method easeTypeLib =
-                    ConvertLibEaseType<UITweener.Method>(meta.easeType);
-
-                UITweenerUtil.RotateTo(
-                    meta.go,
-                    easeTypeLib, loopTypeLib,
-                    meta.time, meta.delay, pos);
-
-                //OnTweenBegin(onBegin);
-                //OnTweenFinish(onFinish);
-                //OnTweenTick(onTick);
-            }
-#endif
         }
 
         // --------------------------------------------------------------------
@@ -1180,16 +882,6 @@ namespace Engine.Utility {
             }
 
             TweenLib lib = TweenLib.leanTween;
-
-#if USE_UI_NGUI_2_7 || USE_UI_NGUI_3 || USE_EASING_NGUI
-
-            if (go.Has<UISlicedSprite>()
-                || go.Has<UISprite>()
-                || go.Has<UITiledSprite>()) {
-
-                lib = TweenLib.nguiUITweener;
-            }
-#endif
 
             FadeToObject(lib,
                 go,
@@ -1262,6 +954,39 @@ namespace Engine.Utility {
                 alpha, time, delay, stopCurrent, coord, easeType, loopType);
         }
 
+        // Convenience shims for UITweenerUtil.FadeIn/FadeOut/FadeOutNow (chunk 1.3 port map).
+        // Route through FadeToObject so the forced-NGUI override / lib resolution is untouched.
+
+        public static void FadeInObject(
+           GameObject go,
+           float time = 1f, float delay = 1f,
+           bool stopCurrent = true,
+           TweenCoord coord = TweenCoord.world,
+           TweenEaseType easeType = TweenEaseType.quadEaseIn,
+           TweenLoopType loopType = TweenLoopType.once) {
+
+            FadeToObject(go, 1f, time, delay, stopCurrent, coord, easeType, loopType);
+        }
+
+        public static void FadeOutObject(
+           GameObject go,
+           float time = 1f, float delay = 0f,
+           bool stopCurrent = true,
+           TweenCoord coord = TweenCoord.world,
+           TweenEaseType easeType = TweenEaseType.quadEaseIn,
+           TweenLoopType loopType = TweenLoopType.once) {
+
+            FadeToObject(go, 0f, time, delay, stopCurrent, coord, easeType, loopType);
+        }
+
+        public static void FadeOutObjectNow(
+           GameObject go,
+           bool stopCurrent = true,
+           TweenCoord coord = TweenCoord.world) {
+
+            FadeToObject(go, 0f, 0f, 0f, stopCurrent, coord, TweenEaseType.quadEaseIn, TweenLoopType.once);
+        }
+
         public static void FadeToObject(
             TweenMeta meta,
             float alpha) {
@@ -1310,15 +1035,24 @@ namespace Engine.Utility {
                 });
             }
 
+            // Pre-flip, only sprite-on-self GOs got forced onto the NGUI tweener
+            // (whose callbacks were dead - see below); every other GO fell through
+            // to the default lib (LeanTween), which DID fire onStart/onComplete for
+            // real, so plain containers (header title/backer wrappers, etc.) were
+            // actually Show()/Hide()'d by GameObject active-state. Capture that
+            // distinction before collapsing everything onto the internal backend,
+            // so non-sprite fades keep getting their Show()/Hide() side effects.
+            bool hadSpriteOnSelf = false;
 #if USE_UI_NGUI_2_7 || USE_UI_NGUI_3 || USE_EASING_NGUI
-
-            if (meta.go.Has<UISlicedSprite>()
+            hadSpriteOnSelf =
+                meta.go.Has<UISlicedSprite>()
                 || meta.go.Has<UISprite>()
-                || meta.go.Has<UITiledSprite>()) {
-
-                meta.lib = TweenLib.nguiUITweener;
-            }
+                || meta.go.Has<UITiledSprite>();
 #endif
+
+            // All tweens run on the internal backend; legacy lib branches below
+            // are unreachable and get deleted with the vendored libs.
+            meta.lib = TweenLib.internalEasing;
 
             //             if(meta.lib == TweenLib.none) {
             // #if USE_UI_NGUI_2_7 || USE_UI_NGUI_3 || USE_EASING_NGUI
@@ -1336,134 +1070,48 @@ namespace Engine.Utility {
             // #endif
             //             }
 
-#if USE_EASING_ITWEEN
-            if (meta.lib == TweenLib.iTween) {
 
-                if (meta.stopCurrent) {
-                    iTween.Stop(meta.go);
-                }
 
-                iTween.LoopType loopTypeLib =
-                    ConvertLibLoopType<iTween.LoopType>(meta.loopType);
+            if (meta.lib == TweenLib.internalEasing) {
 
-                iTween.EaseType easeTypeLib =
-                    ConvertLibEaseType<iTween.EaseType>(meta.easeType);
+                if (hadSpriteOnSelf) {
 
-                Hashtable hash = iTween.Hash(
-                    "alpha", alpha,
-                    "time", meta.time,
-                    "delay", meta.delay,
-                    "looptype", loopTypeLib,
-                    "easetype", easeTypeLib,
-                    "islocal", meta.coord == TweenCoord.local,
-                    "onstart", "OnTweenBegin",
-                    "onstartparams", onBegin,
-                    "oncomplete", "OnTweenFinish",
-                    "oncompleteparams", onFinish);
-
-                iTween.FadeTo(meta.go, hash);
-            }
-#endif
-
-#if USE_EASING_LEANTWEEN
-            else if (meta.lib == TweenLib.leanTween) {
-
-                if (meta.stopCurrent) {
-                    LeanTween.cancel(meta.go);
-                }
-
-                LTDescr info = null;
-
-                if (meta.go.Has<Image>()) {
-                    info = LeanTween.alpha(
-                        meta.go.Get<Image>().rectTransform, alpha, meta.time).setDelay(meta.delay).pause();
-                }
-                else if (meta.go.Has<CanvasGroup>()) {
-                    info = LeanTween.alphaCanvas(
-                        meta.go.Get<CanvasGroup>(), alpha, meta.time).setDelay(meta.delay).pause();
+                    // Raw meta on purpose: the NGUI tweener never fired the composed
+                    // Show()/Hide() side effects on sprite widgets, and panel code
+                    // owns active-state there. A backend-driven Hide() on fade-out
+                    // would deactivate objects that legacy AnimateIn/ShowDefault
+                    // flows expect to stay active (gate learning #5).
+                    backend.Fade(ResolveTarget(meta.go), alpha, meta);
                 }
                 else {
-                    info = LeanTween.alpha(
-                        meta.go, alpha, meta.time).setDelay(meta.delay).pause();
-                }
 
-                LeanTweenType loopTypeLib =
-                    ConvertLibLoopType<LeanTweenType>(meta.loopType);
+                    // Dispatch with the composed local callbacks so the Show()/Hide()
+                    // side effects above reach the backend (meta itself lacks them).
+                    // This restores the historically-live default-lib (LeanTween)
+                    // behavior for non-sprite GOs (plain containers), whose
+                    // onStart/onComplete really did fire pre-flip.
+                    TweenMeta metaDispatch = GetMetaDefault(
+                        meta.lib, meta.go, meta.time, meta.delay,
+                        meta.stopCurrent, meta.coord, meta.easeType, meta.loopType);
+                    metaDispatch.onStart = onBegin;
+                    metaDispatch.onComplete = onFinish;
+                    metaDispatch.onUpdate = meta.onUpdate;
 
-                LeanTweenType easeTypeLib =
-                    ConvertLibEaseType<LeanTweenType>(meta.easeType);
+                    // Carry the clock from the ORIGINAL meta rather than re-reading the ambient
+                    // scope: this rebuild happens at dispatch time, which need not still be inside
+                    // the BeginUnscaledScope block that created meta.
+                    metaDispatch.useUnscaledTime = meta.useUnscaledTime;
 
-                info.setLoopType(loopTypeLib);
-                info.setEase(easeTypeLib);
-
-                info.setOnStart(onBegin);
-                info.setOnComplete(onFinish);
-                //info.setOnUpdate(onTick);
-
-                if (meta.onUpdate != null) {
-                    //info.setOnUpdate(onUpdate);
-                }
-
-                info.resume();
-            }
-#endif
-
-#if USE_EASING_NGUI
-            else if (meta.lib == TweenLib.nguiUITweener) {
-
-                UITweener.Style loopTypeLib =
-                    ConvertLibLoopType<UITweener.Style>(meta.loopType);
-
-                UITweener.Method easeTypeLib =
-                    ConvertLibEaseType<UITweener.Method>(meta.easeType);
-
-                UITweenerUtil.FadeTo(
-                    meta.go, easeTypeLib, loopTypeLib, meta.time, meta.delay, alpha);
-
-                //OnTweenBegin(onBegin);
-                //OnTweenFinish(onFinish);
-                //OnTweenTick(onTick);
-            }
-
-#endif
-
-            /*
-             * TODO nested -a- marked objects to keep alpha on on nested when needed
-             * ex: objectname-a-50 = alpha 50% on nested no matter parent
-             * 
-             */
-
-            if (meta.lib != TweenLib.nguiUITweener) {
-
-                foreach (Transform t in meta.go.transform) {
-                    string toLook = "-a-";
-                    int alphaMarker = t.name.IndexOf(toLook);
-                    //string alphaObject = t.name;
-                    if (alphaMarker > -1) {
-                        // Fade it immediately
-                        //FadeToObject(t.gameObject, alpha, meta.time, meta.delay);
-                        // Fade to the correct value after initial fade in
-                        string val = t.name.Substring(alphaMarker + toLook.Length);
-                        if (!string.IsNullOrEmpty(val)) {
-                            float valNumeric = 0f;
-                            float.TryParse(val, out valNumeric);
-
-                            if (valNumeric > 0f) {
-                                valNumeric = valNumeric / 100f;
-
-                                //FadeTo(t.gameObject, UITweener.Method.Linear, UITweener.Style.Once,
-                                //    duration + .05f, duration + delay, valNumeric);
-
-                                if (t.gameObject != null) {
-
-                                    FadeToObject(meta.lib, t.gameObject, valNumeric, meta.time, meta.delay + .05f);
-                                }
-                            }
-                        }
-                    }
-                    //FadeToObject(t.gameObject, alpha, meta.time, meta.delay);
+                    backend.Fade(ResolveTarget(meta.go), alpha, metaDispatch);
                 }
             }
+
+            // The legacy "-a-NN" child recursion was removed here: it only ever ran on
+            // the LeanTween path, where child fades were silent no-ops on NGUI widgets.
+            // Once tweens became real it forced children like BackgroundDark-a-70 to
+            // NN% alpha on EVERY fade — including fade-outs — leaving translucent dark
+            // backdrops stuck over the menu (Phase 1 gate finding, 2026-07-12).
+            // ColorToObject keeps its recursion: that one was live via the NGUI path.
         }
 
         // --------------------------------------------------------------------
@@ -1557,9 +1205,9 @@ namespace Engine.Utility {
                 return;
             }
 
-#if USE_UI_NGUI_2_7 || USE_UI_NGUI_3 || USE_EASING_NGUI
-            meta.lib = TweenLib.nguiUITweener;
-#endif
+            // All tweens run on the internal backend; legacy lib branches below
+            // are unreachable and get deleted with the vendored libs.
+            meta.lib = TweenLib.internalEasing;
 
             Action onBegin = () => {
 
@@ -1605,100 +1253,19 @@ namespace Engine.Utility {
 
             }
 
-#if USE_EASING_ITWEEN
-            else if (meta.lib == TweenLib.iTween) {
 
-                if (meta.stopCurrent) {
-                    iTween.Stop(meta.go);
-                }
 
-                iTween.LoopType loopTypeLib =
-                    ConvertLibLoopType<iTween.LoopType>(meta.loopType);
+            else if (meta.lib == TweenLib.internalEasing) {
 
-                iTween.EaseType easeTypeLib =
-                    ConvertLibEaseType<iTween.EaseType>(meta.easeType);
-
-                Hashtable hash = iTween.Hash(
-                    "color", color,
-                    "time", meta.time,
-                    "delay", meta.delay,
-                    "looptype", loopTypeLib,
-                    "easetype", easeTypeLib,
-                    "islocal", meta.coord == TweenCoord.local,
-                    "onstart", "OnTweenBegin",
-                    "onstartparams", onBegin,
-                    "oncomplete", "OnTweenFinish",
-                    "oncompleteparams", onFinish);
-
-                iTween.FadeTo(meta.go, hash);
+                // Raw meta on purpose — see FadeToObject: tweens must not flip
+                // active state; the NGUI path never ran these side effects.
+                backend.ColorTo(ResolveTarget(meta.go), color, meta);
             }
-#endif
-
-#if USE_EASING_LEANTWEEN
-            else if (meta.lib == TweenLib.leanTween) {
-
-                if (meta.stopCurrent) {
-                    LeanTween.cancel(meta.go);
-                }
-
-                LTDescr info = null;
-
-                if (meta.go.Has<Image>()) {
-                    info = LeanTween.color(
-                        meta.go.Get<Image>().rectTransform, color, meta.time).setDelay(meta.delay).pause();
-                }
-                else if (meta.go.Has<CanvasGroup>()) {
-                    info = LeanTween.alphaCanvas(
-                        meta.go.Get<CanvasGroup>(), color.a, meta.time).setDelay(meta.delay).pause();
-                }
-                else {
-                    info = LeanTween.color(
-                        meta.go, color, meta.time).setDelay(meta.delay).pause();
-                }
-
-                LeanTweenType loopTypeLib =
-                    ConvertLibLoopType<LeanTweenType>(meta.loopType);
-
-                LeanTweenType easeTypeLib =
-                    ConvertLibEaseType<LeanTweenType>(meta.easeType);
-
-                info.setLoopType(loopTypeLib);
-                info.setEase(easeTypeLib);
-
-                info.setOnStart(onBegin);
-                info.setOnComplete(onFinish);
-                //info.setOnUpdate(onTick);
-
-                if (meta.onUpdate != null) {
-                    //info.setOnUpdate(onUpdate);
-                }
-
-                info.resume();
-            }
-#endif
-
-#if USE_EASING_NGUI
-            else if (meta.lib == TweenLib.nguiUITweener) {
-
-                UITweener.Style loopTypeLib =
-                    ConvertLibLoopType<UITweener.Style>(meta.loopType);
-
-                UITweener.Method easeTypeLib =
-                    ConvertLibEaseType<UITweener.Method>(meta.easeType);
-
-                UITweenerUtil.ColorTo(
-                    meta.go, easeTypeLib, loopTypeLib, meta.time, meta.delay, color);
-
-                //OnTweenBegin(onBegin);
-                //OnTweenFinish(onFinish);
-                //OnTweenTick(onTick);
-            }
-#endif
 
             /*
              * TODO nested -a- marked objects to keep alpha on on nested when needed
              * ex: objectname-a-50 = alpha 50% on nested no matter parent
-             * 
+             *
              */
             foreach (Transform t in meta.go.transform) {
                 string toLook = "-a-";
@@ -1727,6 +1294,54 @@ namespace Engine.Utility {
                 }
                 //FadeToObject(t.gameObject, alpha, meta.time, meta.delay);
             }
+        }
+
+        // --------------------------------------------------------------------
+        // VALUE / CANCEL (internalEasing backend)
+
+        public static void ValueTo(
+            string key,
+            float from, float to,
+            float time, float delay,
+            TweenEaseType ease,
+            Action<float> onValue,
+            Action onComplete = null) {
+
+            if (string.IsNullOrEmpty(key) || onValue == null) {
+                return;
+            }
+
+            TweenMeta meta = new TweenMeta();
+
+            meta.useUnscaledTime = isUnscaledScope;
+            meta.time = time;
+            meta.delay = delay;
+            meta.easeType = ease;
+            meta.onComplete = onComplete;
+
+            backend.Value(key, from, to, meta, onValue);
+        }
+
+        public static void Cancel(GameObject go) {
+
+            if (go == null) {
+                return;
+            }
+
+            backend.Cancel(ResolveTarget(go));
+        }
+
+        public static void Cancel(string key) {
+
+            if (string.IsNullOrEmpty(key)) {
+                return;
+            }
+
+            backend.Cancel(key);
+        }
+
+        public static void CancelAll() {
+            backend.CancelAll();
         }
 
         // --------------------------------------------------------------------
@@ -1848,27 +1463,236 @@ namespace Engine.Utility {
 
             if (fade) {
 
-                bool found = false;
-
-#if USE_UI_NGUI_2_7 || USE_UI_NGUI_3 || USE_EASING_NGUI
-
-                if (go.Has<UISlicedSprite>()
-                    || go.Has<UISprite>()
-                    || go.Has<UITiledSprite>()) {
-
-                    found = true;
-
-                    TweenUtil.FadeToObject(TweenLib.nguiUITweener, go, alpha, time, delay, true, coord);
-                }
-#endif
-                if (!found) {
-
-                    TweenUtil.FadeToObject(go, alpha, time, delay, true, coord);
-                }
+                TweenUtil.FadeToObject(go, alpha, time, delay, true, coord);
             }
 
             TweenUtil.MoveToObject(
                 go, pos, time, delay, false, coord);
+        }
+
+        // --------------------------------------------------------------------
+        // UIREF PATH (UI Toolkit panels)
+        //
+        // Preset-driven, so panel timing lives in tokens.json (UITokens seeds TweenPresets)
+        // rather than in the ±4500-unit literals scattered through UIPanelBase. Backend-blind:
+        // ResolveTarget(object) already picks VisualElementTweenTarget for a VisualElement and
+        // TransformTweenTarget for a GameObject, so the same call works either way.
+        //
+        // These do NOT touch display/active state. Gate learning #1: tweens never own
+        // visibility. The panel system calls IUIBackend.Show/Hide around them.
+
+        public static void FadeToObject(UIRef r, float alpha, string presetName) {
+
+            if (r == null || !r.alive) {
+                return;
+            }
+
+            ITweenTarget target = ResolveTarget(r.native);
+
+            if (target == null) {
+                return;
+            }
+
+            TweenPreset preset = TweenPresets.Get(presetName);
+
+            TweenMeta meta = new TweenMeta();
+
+            meta.useUnscaledTime = isUnscaledScope;
+            meta.time = preset.time;
+            meta.delay = preset.delay;
+            meta.easeType = preset.easeType;
+            meta.loopType = preset.loopType;
+            meta.stopCurrent = true;
+
+            backend.Fade(target, alpha, meta);
+        }
+
+        public static void ShowObject(UIRef r, string presetName = "panel-show") {
+            FadeToObject(r, 1f, presetName);
+        }
+
+        public static void HideObject(UIRef r, string presetName = "panel-hide") {
+            FadeToObject(r, 0f, presetName);
+        }
+
+        // A toolkit VIEW slides down from off-screen top (translate) AND fades. ShowObject above
+        // only fades, which is why a migrated panel's content sat still while the backer slid.
+        //
+        // A VisualElement's translate is y-DOWN, the opposite of the NGUI backer's y-up world
+        // constants, so "off-screen top" is a NEGATIVE offset here. Timing comes from the
+        // panel-show/panel-hide presets (tokens.json) — the same feel as every other panel
+        // transition. (An earlier attempt synced to the backer's ~1.1s first-entry delay; that
+        // lagged every navigation, because the shared backer only slides on FIRST entry and stays
+        // resident between panels.)
+        private const float viewTopOffset = -720f;   // px above the panel; clears the 640 view
+
+        public static void ShowObjectTop(UIRef r, string presetName = "panel-show") {
+
+            ITweenTarget target = SlideTarget(r);
+
+            if (target == null) {
+                return;
+            }
+
+            // Start off-screen top + invisible, then slide to 0 and fade in.
+            target.SetPosition(new Vector3(0f, viewTopOffset, 0f), TweenCoord.local);
+            target.SetAlpha(0f);
+
+            SlideMove(target, Vector3.zero, presetName);
+            SlideFade(target, 1f, presetName);
+        }
+
+        public static void HideObjectTop(UIRef r, string presetName = "panel-hide") {
+
+            ITweenTarget target = SlideTarget(r);
+
+            if (target == null) {
+                return;
+            }
+
+            SlideMove(target, new Vector3(0f, viewTopOffset, 0f), presetName);
+            SlideFade(target, 0f, presetName);
+        }
+
+        // Bottom chrome (footer) and bottom-anchored rows enter from BELOW the screen — translate
+        // is y-down, so off-screen bottom is a POSITIVE offset.
+        private const float viewBottomOffset = 720f;
+
+        public static void ShowObjectBottom(UIRef r, string presetName = "panel-show") {
+
+            ITweenTarget target = SlideTarget(r);
+
+            if (target == null) {
+                return;
+            }
+
+            target.SetPosition(new Vector3(0f, viewBottomOffset, 0f), TweenCoord.local);
+            target.SetAlpha(0f);
+
+            SlideMove(target, Vector3.zero, presetName);
+            SlideFade(target, 1f, presetName);
+        }
+
+        public static void HideObjectBottom(UIRef r, string presetName = "panel-hide") {
+
+            ITweenTarget target = SlideTarget(r);
+
+            if (target == null) {
+                return;
+            }
+
+            SlideMove(target, new Vector3(0f, viewBottomOffset, 0f), presetName);
+            SlideFade(target, 0f, presetName);
+        }
+
+        // Right-anchored overlays (the pause dialog) enter from OFF the right edge — a POSITIVE x
+        // offset. Mirrors the Top/Bottom view-slide overloads for the 3F right-anchored dialogs;
+        // the legacy pause slid its containerPause in from the right (TweenUtil.ShowObjectRight).
+        private const float viewRightOffset = 720f;
+
+        public static void ShowObjectRight(UIRef r, string presetName = "panel-show") {
+
+            ITweenTarget target = SlideTarget(r);
+
+            if (target == null) {
+                return;
+            }
+
+            target.SetPosition(new Vector3(viewRightOffset, 0f, 0f), TweenCoord.local);
+            target.SetAlpha(0f);
+
+            SlideMove(target, Vector3.zero, presetName);
+            SlideFade(target, 1f, presetName);
+        }
+
+        public static void HideObjectRight(UIRef r, string presetName = "panel-hide") {
+
+            ITweenTarget target = SlideTarget(r);
+
+            if (target == null) {
+                return;
+            }
+
+            SlideMove(target, new Vector3(viewRightOffset, 0f, 0f), presetName);
+            SlideFade(target, 0f, presetName);
+        }
+
+        // Timescale-INDEPENDENT show/hide for a toolkit view: snaps the view to shown/hidden with no
+        // tween. The animated slides above are driven by the AnimationEasing pump, which advances on
+        // scaled time — so a panel shown while the game is PAUSED (Time.timeScale == 0, e.g. the pause
+        // dialog) would stay frozen off-screen at alpha 0 and never appear. These set position/alpha
+        // directly, so a paused-context view shows/hides reliably (legacy pause also appeared in place,
+        // it never actually slid — its slide target was null).
+        public static void ShowViewInPlace(UIRef r) {
+
+            ITweenTarget target = SlideTarget(r);
+
+            if (target == null) {
+                return;
+            }
+
+            Cancel(r);
+            target.SetPosition(Vector3.zero, TweenCoord.local);
+            target.SetAlpha(1f);
+        }
+
+        public static void HideViewInPlace(UIRef r) {
+
+            ITweenTarget target = SlideTarget(r);
+
+            if (target == null) {
+                return;
+            }
+
+            Cancel(r);
+            target.SetAlpha(0f);
+            target.SetPosition(new Vector3(viewRightOffset, 0f, 0f), TweenCoord.local);
+        }
+
+        private static ITweenTarget SlideTarget(UIRef r) {
+
+            if (r == null || !r.alive) {
+                return null;
+            }
+
+            return ResolveTarget(r.native);
+        }
+
+        private static TweenMeta SlideMeta(string presetName) {
+
+            TweenPreset preset = TweenPresets.Get(presetName);
+
+            TweenMeta meta = new TweenMeta();
+
+            meta.useUnscaledTime = isUnscaledScope;
+            meta.time = preset.time;
+            meta.delay = preset.delay;
+            meta.easeType = preset.easeType;
+            meta.loopType = preset.loopType;
+            meta.stopCurrent = true;   // per-channel: Move and Fade don't cancel each other
+
+            return meta;
+        }
+
+        private static void SlideMove(ITweenTarget target, Vector3 pos, string presetName) {
+            backend.Move(target, pos, SlideMeta(presetName));
+        }
+
+        private static void SlideFade(ITweenTarget target, float alpha, string presetName) {
+            backend.Fade(target, alpha, SlideMeta(presetName));
+        }
+
+        public static void Cancel(UIRef r) {
+
+            if (r == null || !r.alive) {
+                return;
+            }
+
+            ITweenTarget target = ResolveTarget(r.native);
+
+            if (target != null) {
+                backend.Cancel(target);
+            }
         }
     }
 }

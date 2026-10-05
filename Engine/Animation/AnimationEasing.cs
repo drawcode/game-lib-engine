@@ -8,6 +8,8 @@ using System.Text;
 
 using UnityEngine;
 
+using Engine.Utility;
+
 namespace Engine.Animation {
     public class Ani : AnimationEasing {
 
@@ -27,8 +29,45 @@ namespace Engine.Animation {
         // Only one BroadcastNetworks can exist. We use a singleton pattern to enforce this.
         private static AnimationEasing _instance = null;
 
+        // The pump must NOT resurrect during teardown: panels free their toolkit views from
+        // OnDisable/OnDestroy (TweenUtil.Cancel -> EaseRemove), and if the pump object was
+        // already destroyed the lazy getter re-created "_AnimationEasing" while the scene was
+        // closing (Unity: "Some objects were not cleaned up when closing the scene"). During
+        // shutdown the getter returns null and the static wrappers no-op — cancelling a tween
+        // on a dead pump is by definition already done.
+        private static bool isShuttingDown = false;
+
+        // Statics survive play sessions when domain reload is disabled; re-arm the pump on the
+        // next play start.
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+        static void ResetShutdownFlag() {
+            isShuttingDown = false;
+        }
+
+        public virtual void OnApplicationQuit() {
+            isShuttingDown = true;
+        }
+
+        public virtual void OnDestroy() {
+
+            // Destruction order across roots isn't guaranteed on play exit — if the pump goes
+            // first, latch shutdown so a panel's teardown Cancel can't respawn it. Only while
+            // playing: edit-mode users (tests) may destroy and recreate the pump freely, and
+            // the play-start reset hook wouldn't clear an edit-mode latch.
+            if (_instance == this) {
+                if (Application.isPlaying) {
+                    isShuttingDown = true;
+                }
+                _instance = null;
+            }
+        }
+
         public static AnimationEasing Instance {
             get {
+                if (isShuttingDown) {
+                    return null;
+                }
+
                 if (!_instance) {
 
                     // check if an ObjectPoolManager is already available in the scene graph
@@ -38,6 +77,14 @@ namespace Engine.Animation {
                     if (!_instance) {
                         var obj = new GameObject("_AnimationEasing");
                         _instance = obj.AddComponent<AnimationEasing>();
+                    }
+
+                    // Must survive scene loads: NGUI tweeners lived on their target
+                    // objects, so tweens issued around a scene transition completed
+                    // regardless. A scene-local pump silently drops them instead
+                    // (stuck dialog backdrops / overlay panels never slid offscreen).
+                    if (Application.isPlaying) {
+                        DontDestroyOnLoad(_instance.gameObject);
                     }
                 }
 
@@ -102,6 +149,21 @@ namespace Engine.Animation {
             public double timeDelay = 1.0;
             public string key = "";
 
+            public TweenLoopType loopType = TweenLoopType.once;
+
+            // Drive this item off Time.unscaledTime instead of Time.time. Needed by anything that must
+            // keep animating while the game is PAUSED (Time.timeScale == 0) — e.g. the pause menu's own
+            // slide-in, which otherwise freezes parked off-screen and forces the caller to delay the
+            // freeze until the animation would have finished. Default false = existing scaled behavior.
+            public bool useUnscaledTime = false;
+
+            public Action onStart = null;
+            public Action<double> onUpdate = null;
+            public Action onComplete = null;
+
+            // First active (post-delay) tick fires onStart; tracked so it fires once only.
+            private bool started = false;
+
             public AnimationItem() {
                 Reset();
             }
@@ -115,30 +177,74 @@ namespace Engine.Animation {
                 timeDuration = 1.0f;
                 timeDelay = 1.0f;
                 key = System.Guid.NewGuid().ToString();
+                loopType = TweenLoopType.once;
+                useUnscaledTime = false;
+                onStart = null;
+                onUpdate = null;
+                onComplete = null;
+                started = false;
+            }
+
+            public bool hasStarted {
+                get {
+                    return started;
+                }
+                set {
+                    started = value;
+                }
             }
         }
 
+        private List<AnimationItem> updateBuffer = new List<AnimationItem>();
+
         public void Update() {
 
-            if (queueRemove.Count > 0) {
+            while (queueRemove.Count > 0) {
                 string key = queueRemove.Dequeue();
                 easeRemove(key);
             }
 
+            // Snapshot: onStart/onUpdate/onComplete fired inside easeUpdate may
+            // add or cancel items, which would invalidate direct dict iteration.
+            updateBuffer.Clear();
+
             foreach (KeyValuePair<string, AnimationItem> item in getAnimationItems()) {
-                easeUpdate(item.Value);
+                updateBuffer.Add(item.Value);
+            }
+
+            for (int i = 0; i < updateBuffer.Count; i++) {
+
+                AnimationItem item = updateBuffer[i];
+
+                // Skip items canceled or replaced by an earlier callback this frame:
+                // easeUpdate would silently re-add them otherwise.
+                AnimationItem current = easeGet(item.key);
+
+                if (current == null || !object.ReferenceEquals(current, item)) {
+                    continue;
+                }
+
+                easeUpdate(item);
             }
         }
 
         // GET
 
         public static bool EaseRemove(string key) {
-            return Instance.easeRemove(key);
+
+            AnimationEasing inst = Instance;
+
+            if (inst == null) {
+                return false;
+            }
+
+            return inst.easeRemove(key);
         }
 
         public bool easeRemove(string key) {
 
             if (getAnimationItems().ContainsKey(key)) {
+
                 return animationItems.Remove(key);
             }
 
@@ -148,7 +254,14 @@ namespace Engine.Animation {
         //
 
         public static bool EaseExists(string key) {
-            return Instance.easeExists(key);
+
+            AnimationEasing inst = Instance;
+
+            if (inst == null) {
+                return false;
+            }
+
+            return inst.easeExists(key);
         }
 
         public bool easeExists(string key) {
@@ -163,7 +276,14 @@ namespace Engine.Animation {
         //
 
         public static Dictionary<string, AnimationItem> GetAnimationItems() {
-            return Instance.getAnimationItems();
+
+            AnimationEasing inst = Instance;
+
+            if (inst == null) {
+                return new Dictionary<string, AnimationItem>();
+            }
+
+            return inst.getAnimationItems();
         }
 
         public Dictionary<string, AnimationItem> getAnimationItems() {
@@ -176,7 +296,14 @@ namespace Engine.Animation {
         }
 
         public static double EaseGetValue(string key, double defaultValue) {
-            return Instance.easeGetValue(key, defaultValue);
+
+            AnimationEasing inst = Instance;
+
+            if (inst == null) {
+                return defaultValue;
+            }
+
+            return inst.easeGetValue(key, defaultValue);
         }
 
         public double easeGetValue(string key, double defaultValue) {
@@ -191,7 +318,14 @@ namespace Engine.Animation {
         }
 
         public static AnimationItem EaseGet(string key) {
-            return Instance.easeGet(key);
+
+            AnimationEasing inst = Instance;
+
+            if (inst == null) {
+                return null;
+            }
+
+            return inst.easeGet(key);
         }
 
         public AnimationItem easeGet(string key) {
@@ -206,10 +340,44 @@ namespace Engine.Animation {
         // UPDATE
 
         public static AnimationItem EaseUpdate(AnimationItem animationItem) {
-            return Instance.easeUpdate(animationItem);
+
+            AnimationEasing inst = Instance;
+
+            if (inst == null) {
+                return null;
+            }
+
+            return inst.easeUpdate(animationItem);
         }
 
         public AnimationItem easeUpdate(AnimationItem animationItem) {
+            return easeUpdate(animationItem, NowFor(animationItem));
+        }
+
+        // Clock for an item: unscaled items keep ticking at Time.timeScale == 0.
+        public static double NowFor(AnimationItem animationItem) {
+
+            if (animationItem != null && animationItem.useUnscaledTime) {
+                return Time.unscaledTime;
+            }
+
+            return Time.time;
+        }
+
+        // Explicit-time overload: lets callers (tests, backends) drive the
+        // animation without waiting on real frames / Time.time.
+        public static AnimationItem EaseUpdate(AnimationItem animationItem, double now) {
+
+            AnimationEasing inst = Instance;
+
+            if (inst == null) {
+                return null;
+            }
+
+            return inst.easeUpdate(animationItem, now);
+        }
+
+        public AnimationItem easeUpdate(AnimationItem animationItem, double now) {
 
             if (animationItem == null) {
                 return null;
@@ -220,45 +388,132 @@ namespace Engine.Animation {
             }
 
             if (animationItem.timeStart == 0) {
-                animationItem.timeStart = Time.time;
+                animationItem.timeStart = now;
             }
 
-            float tickDuration = Time.time - (float)animationItem.timeStart;
+            double elapsed = now - animationItem.timeStart;
 
-            if (tickDuration <= animationItem.timeDuration) {
+            if (elapsed < animationItem.timeDelay) {
+                animationItem.val = animationItem.valStart;
+                return animationItem;
+            }
 
-                double valTo = (float)AnimationEasing.QuadEaseInOut(
-                    tickDuration,
-                    animationItem.valStart,
-                    animationItem.valEnd - animationItem.valStart,
-                    animationItem.timeDuration);
+            double t = elapsed - animationItem.timeDelay;
 
-                double valAdjust = valTo;
+            // Loop/pingPong: walk past every fully-elapsed cycle, restarting timeStart
+            // (and swapping valStart/valEnd for pingPong/bounce) so the leftover time
+            // carries into the next cycle instead of being lost.
+            while (animationItem.timeDuration > 0
+                && t >= animationItem.timeDuration
+                && animationItem.loopType != TweenLoopType.once) {
 
-                if (animationItem.valEnd > animationItem.valStart) {
-                    valAdjust = valAdjust + .005;
-                    if (valAdjust > animationItem.valEnd) {
-                        valTo = animationItem.valEnd;
-                    }
-                }
-                else {
-                    valAdjust = valAdjust - .005;
-                    if (valAdjust < animationItem.valEnd) {
-                        valTo = animationItem.valEnd;
-                    }
-                }
+                t -= animationItem.timeDuration;
 
-                if (valTo == animationItem.valEnd) {
-                    queueRemove.Enqueue(animationItem.key);
-                }
-                else {
-                    animationItem.val = valTo;
+                if (animationItem.loopType == TweenLoopType.pingPong
+                    || animationItem.loopType == TweenLoopType.bounce) {
+
+                    double swap = animationItem.valStart;
+                    animationItem.valStart = animationItem.valEnd;
+                    animationItem.valEnd = swap;
                 }
 
-                //Debug.Log("EaseUpdate:" + animationItem.ToJson());
+                animationItem.timeStart = now - animationItem.timeDelay - t;
+            }
+
+            bool completed = false;
+
+            if (animationItem.loopType == TweenLoopType.once && t >= animationItem.timeDuration) {
+                t = animationItem.timeDuration;
+                completed = true;
+            }
+
+            double valTo = EquationValue(
+                animationItem.equationType,
+                t,
+                animationItem.valStart,
+                animationItem.valEnd - animationItem.valStart,
+                animationItem.timeDuration);
+
+            if (completed) {
+                valTo = animationItem.valEnd;
+            }
+
+            animationItem.val = valTo;
+
+            if (!animationItem.hasStarted) {
+                animationItem.hasStarted = true;
+
+                if (animationItem.onStart != null) {
+                    animationItem.onStart();
+                }
+            }
+
+            if (animationItem.onUpdate != null) {
+                animationItem.onUpdate(valTo);
+            }
+
+            if (completed) {
+
+                // Remove before onComplete so a callback that re-adds the same key
+                // (chained/restarted tweens) isn't deleted by a deferred removal.
+                easeRemove(animationItem.key);
+
+                if (animationItem.onComplete != null) {
+                    animationItem.onComplete();
+                }
             }
 
             return animationItem;
+        }
+
+        // Equation dispatch by equationType, calling the existing static Penner
+        // methods directly (no reflection).
+        public static double EquationValue(Equations equationType, double t, double b, double c, double d) {
+
+            switch (equationType) {
+                case Equations.Linear: return Linear(t, b, c, d);
+                case Equations.QuadEaseOut: return QuadEaseOut(t, b, c, d);
+                case Equations.QuadEaseIn: return QuadEaseIn(t, b, c, d);
+                case Equations.QuadEaseInOut: return QuadEaseInOut(t, b, c, d);
+                case Equations.QuadEaseOutIn: return QuadEaseOutIn(t, b, c, d);
+                case Equations.ExpoEaseOut: return ExpoEaseOut(t, b, c, d);
+                case Equations.ExpoEaseIn: return ExpoEaseIn(t, b, c, d);
+                case Equations.ExpoEaseInOut: return ExpoEaseInOut(t, b, c, d);
+                case Equations.ExpoEaseOutIn: return ExpoEaseOutIn(t, b, c, d);
+                case Equations.CubicEaseOut: return CubicEaseOut(t, b, c, d);
+                case Equations.CubicEaseIn: return CubicEaseIn(t, b, c, d);
+                case Equations.CubicEaseInOut: return CubicEaseInOut(t, b, c, d);
+                case Equations.CubicEaseOutIn: return CubicEaseOutIn(t, b, c, d);
+                case Equations.QuartEaseOut: return QuartEaseOut(t, b, c, d);
+                case Equations.QuartEaseIn: return QuartEaseIn(t, b, c, d);
+                case Equations.QuartEaseInOut: return QuartEaseInOut(t, b, c, d);
+                case Equations.QuartEaseOutIn: return QuartEaseOutIn(t, b, c, d);
+                case Equations.QuintEaseOut: return QuintEaseOut(t, b, c, d);
+                case Equations.QuintEaseIn: return QuintEaseIn(t, b, c, d);
+                case Equations.QuintEaseInOut: return QuintEaseInOut(t, b, c, d);
+                case Equations.QuintEaseOutIn: return QuintEaseOutIn(t, b, c, d);
+                case Equations.CircEaseOut: return CircEaseOut(t, b, c, d);
+                case Equations.CircEaseIn: return CircEaseIn(t, b, c, d);
+                case Equations.CircEaseInOut: return CircEaseInOut(t, b, c, d);
+                case Equations.CircEaseOutIn: return CircEaseOutIn(t, b, c, d);
+                case Equations.SineEaseOut: return SineEaseOut(t, b, c, d);
+                case Equations.SineEaseIn: return SineEaseIn(t, b, c, d);
+                case Equations.SineEaseInOut: return SineEaseInOut(t, b, c, d);
+                case Equations.SineEaseOutIn: return SineEaseOutIn(t, b, c, d);
+                case Equations.ElasticEaseOut: return ElasticEaseOut(t, b, c, d);
+                case Equations.ElasticEaseIn: return ElasticEaseIn(t, b, c, d);
+                case Equations.ElasticEaseInOut: return ElasticEaseInOut(t, b, c, d);
+                case Equations.ElasticEaseOutIn: return ElasticEaseOutIn(t, b, c, d);
+                case Equations.BounceEaseOut: return BounceEaseOut(t, b, c, d);
+                case Equations.BounceEaseIn: return BounceEaseIn(t, b, c, d);
+                case Equations.BounceEaseInOut: return BounceEaseInOut(t, b, c, d);
+                case Equations.BounceEaseOutIn: return BounceEaseOutIn(t, b, c, d);
+                case Equations.BackEaseOut: return BackEaseOut(t, b, c, d);
+                case Equations.BackEaseIn: return BackEaseIn(t, b, c, d);
+                case Equations.BackEaseInOut: return BackEaseInOut(t, b, c, d);
+                case Equations.BackEaseOutIn: return BackEaseOutIn(t, b, c, d);
+                default: return QuadEaseInOut(t, b, c, d);
+            }
         }
 
         // ADD
@@ -266,7 +521,14 @@ namespace Engine.Animation {
         //
 
         public static void EaseAdd(AnimationItem animationItem) {
-            Instance.easeAdd(animationItem);
+
+            AnimationEasing inst = Instance;
+
+            if (inst == null) {
+                return;
+            }
+
+            inst.easeAdd(animationItem);
         }
 
         public void easeAdd(AnimationItem animationItem) {
@@ -296,7 +558,13 @@ namespace Engine.Animation {
             double timeDuration,
             double timeDelay) {
 
-            Instance.easeAdd(key, equationType, val, valStart, valEnd, timeDuration, timeDelay);
+            AnimationEasing inst = Instance;
+
+            if (inst == null) {
+                return;
+            }
+
+            inst.easeAdd(key, equationType, val, valStart, valEnd, timeDuration, timeDelay);
         }
 
         public void easeAdd(
@@ -323,7 +591,7 @@ namespace Engine.Animation {
             animationItem.valEnd = valEnd;
             animationItem.timeDuration = timeDuration;
             animationItem.equationType = equationType;
-            animationItem.timeStart = Time.time;
+            animationItem.timeStart = NowFor(animationItem);
             animationItem.timeDelay = timeDelay;
 
             //Debug.Log("easeAdd:" + " animationItem:" + animationItem.ToJson());

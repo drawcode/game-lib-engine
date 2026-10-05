@@ -995,6 +995,57 @@ namespace Engine.Game.App.BaseApp {
             base.Reset();
         }
 
+        // ADDITIVE localization route (content, not UI strings). Missions ("Exploratory Mission
+        // #1") and action templates ("Kill {{val}} {{action_display_name}}") are read by
+        // BaseGameUIPanelGameModeMission/BaseGameUIPanelWorlds on migrated (toolkitViewKey)
+        // screens, and AppContentCollectItem.UpdateDisplayValues templates the action text from
+        // these getters on every GetItemsData() -- so a language change shows on the next panel
+        // load with no extra refresh. Translations keep the {{val}}/{{action_display_name}}
+        // tokens. Key convention: app_content_collect_<code>_name / _desc (codes are unique
+        // across the mission/action types). TrOrDefault falls back to the raw English value
+        // whenever the key is absent, so any other game on this shared lib that ships no such
+        // key sees its data unchanged. Key strings cached per `code`, not rebuilt per call.
+        private static readonly Dictionary<string, string> nameLocKeys = new Dictionary<string, string>();
+        private static readonly Dictionary<string, string> descLocKeys = new Dictionary<string, string>();
+
+        public override string display_name {
+            get {
+                return LocalizedField(base.display_name, nameLocKeys, "_name");
+            }
+
+            set {
+                base.display_name = value;
+            }
+        }
+
+        public override string description {
+            get {
+                return LocalizedField(base.description, descLocKeys, "_desc");
+            }
+
+            set {
+                base.description = value;
+            }
+        }
+
+        private string LocalizedField(string raw, Dictionary<string, string> keys, string suffix) {
+
+            string c = code;
+
+            if (string.IsNullOrEmpty(c) || string.IsNullOrEmpty(raw)) {
+                return raw;
+            }
+
+            string key;
+
+            if (!keys.TryGetValue(c, out key)) {
+                key = "app_content_collect_" + c.Replace('-', '_') + suffix;
+                keys[c] = key;
+            }
+
+            return L10n.TrOrDefault(key, raw);
+        }
+
 #if USE_GAME_LIB_GAMES
 
         public bool IsCompleted(

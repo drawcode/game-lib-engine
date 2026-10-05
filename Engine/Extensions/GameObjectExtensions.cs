@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 
 #if !UNITY_WEBPLAYER
@@ -104,9 +104,11 @@ public static class BaseGameObjectExtensions {
 
         if (inst != null) {
 
-            T instItem = inst.GetComponent<T>();
+            // TryGetComponent: this walk misses at every level until it hits, and a GetComponent
+            // miss allocates its null-error message in the Editor.
+            T instItem;
 
-            if (instItem != null) {
+            if (inst.TryGetComponent(out instItem)) {
                 return inst;
             }
 
@@ -185,9 +187,10 @@ public static class BaseGameObjectExtensions {
 
         if (inst != null) {
 
-            T instItem = inst.GetComponent<T>();
+            // TryGetComponent: see FindTypeAboveObjectRecursive.
+            T instItem;
 
-            if (instItem != null) {
+            if (inst.TryGetComponent(out instItem)) {
                 return instItem;
             }
 
@@ -235,22 +238,25 @@ public static class BaseGameObjectExtensions {
         return GameObjectHelper.Remove<T>(inst);
     }
 
-    public static T GetOrSet<T>(this GameObject inst) where T : Component {
+    // includeChildren defaults to true to preserve existing behavior. Pass
+    // false when the component must be on this exact object.
+
+    public static T GetOrSet<T>(this GameObject inst, bool includeChildren = true) where T : Component {
 
         if (inst == null) {
             return null;
         }
 
-        return GameObjectHelper.GetOrSet<T>(inst);
+        return GameObjectHelper.GetOrSet<T>(inst, includeChildren);
     }
 
-    public static T Set<T>(this GameObject inst) where T : Component {
+    public static T Set<T>(this GameObject inst, bool includeChildren = true) where T : Component {
 
         if (inst == null) {
             return null;
         }
 
-        return GameObjectHelper.Set<T>(inst);
+        return GameObjectHelper.Set<T>(inst, includeChildren);
     }
 
     public static T SetOnly<T>(this GameObject inst) where T : Component {
@@ -271,13 +277,13 @@ public static class BaseGameObjectExtensions {
         return GameObjectHelper.GetAsGameObject<T>(inst);
     }
 
-    public static T Get<T>(this GameObject inst) where T : Component {
+    public static T Get<T>(this GameObject inst, bool includeChildren = true) where T : Component {
 
         if (inst == null) {
             return null;
         }
 
-        return GameObjectHelper.Get<T>(inst);
+        return GameObjectHelper.Get<T>(inst, includeChildren);
     }
 
     public static T Get<T>(this GameObject inst, string name) where T : Component {
@@ -307,13 +313,13 @@ public static class BaseGameObjectExtensions {
         return GameObjectHelper.GetList<T>(inst);
     }
 
-    public static bool Has<T>(this GameObject inst) where T : Component {
+    public static bool Has<T>(this GameObject inst, bool includeChildren = true) where T : Component {
 
         if (inst == null) {
             return false;
         }
 
-        return GameObjectHelper.Has<T>(inst);
+        return GameObjectHelper.Has<T>(inst, includeChildren);
     }
 
     public static void Show(this GameObject inst) {
@@ -889,6 +895,16 @@ public static class BaseGameObjectExtensions {
     public static void ResetRigidBodiesVelocity(this GameObject go) {
 
         GameObjectHelper.ResetRigidBodiesVelocity(go);
+    }
+
+    public static void ResetRigidBodiesAngularVelocity(this GameObject go) {
+
+        GameObjectHelper.ResetRigidBodiesAngularVelocity(go);
+    }
+
+    public static void ResetRigidBodiesMotion(this GameObject go) {
+
+        GameObjectHelper.ResetRigidBodiesMotion(go);
     }
 
     // ASPECT RATIO

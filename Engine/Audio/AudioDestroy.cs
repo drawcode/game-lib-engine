@@ -19,9 +19,19 @@ namespace Engine.Audio {
             Reset();
         }
 
+        Coroutine destroyRoutine;
+
         public void Reset() {
 
             float audioLength = afterTimeDefault;
+
+            // Reset is reached twice per play -- the pool re-sends Start AND PlayAudioClip
+            // calls it explicitly -- so without this each sound left a second timer running
+            // that could reclaim the object out from under a later use.
+            if (destroyRoutine != null) {
+                StopCoroutine(destroyRoutine);
+                destroyRoutine = null;
+            }
 
             if (audioSource != null) {
 
@@ -34,7 +44,7 @@ namespace Engine.Audio {
                     if (audioSource.clip.length > 0) {
 
                         audioLength = audioSource.clip.length + 1;
-                        StartCoroutine(DestroySound(audioLength));
+                        destroyRoutine = StartCoroutine(DestroySound(audioLength));
                     }
                 }
             }
@@ -45,6 +55,8 @@ namespace Engine.Audio {
             //LogUtil.LogAudio("DestroySound afterTime:" + afterTime);
 
             yield return new WaitForSeconds(afterTime);
+
+            destroyRoutine = null;
 
             if (audioSource != null) {
 

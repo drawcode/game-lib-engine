@@ -391,9 +391,37 @@ namespace Engine.Game.App.BaseApp {
             return data;
         }
 
+        // The bytes last written for each key this session — see save().
+        readonly Dictionary<string, string> lastSavedContent = new Dictionary<string, string>();
+
         public virtual void save(string key, object obj, bool setSync = false) {
             string jsonString = prepareSave(key, obj);
+
+            // saveProfile() writes TEN blobs every time it is called, and in practice one of them
+            // has changed — a volume slider does not touch the statistics, character, mode or
+            // vehicle profiles, yet all ten were rewritten. Comparing the serialised string is
+            // exact (it IS what would land on disk) and costs nothing next to the write it skips.
+            //
+            // Session-scoped: the first save of a key always writes, so a first run still creates
+            // every file. Serialisation is NOT skipped — that needs dirty tracking on the profile
+            // objects themselves, and it is the smaller half (5.4 ms of the ~50, against 24 ms of
+            // writes) — so this stays a write-side guard.
+            string lastContent;
+
+            if (lastSavedContent.TryGetValue(key, out lastContent)
+                && lastContent == jsonString) {
+
+                // Nothing to write. The sync below is deliberately still offered the content: the
+                // cloud's copy is not this session's business to assume.
+                if (setSync) {
+                    sync(key, jsonString);
+                }
+
+                return;
+            }
+
             contentSave(key, jsonString);
+            lastSavedContent[key] = jsonString;
             //LogUtil.Log("GameState::SaveProfile jsonString...." + jsonString);
 
             if (setSync) {

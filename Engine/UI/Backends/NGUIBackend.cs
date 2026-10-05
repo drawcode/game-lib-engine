@@ -1,0 +1,924 @@
+using System;
+using System.Collections.Generic;
+
+using UnityEngine;
+using UnityEngine.Events;
+using UnityEngine.UI;
+
+using Engine.Utility;
+
+namespace Engine.UI {
+
+    // The GameObject backend. Despite the name it carries BOTH the NGUI and the uGUI probes,
+    // because UIUtil's GameObject-resolver bodies always probed both inside the same method —
+    // this class is the extraction of those bodies, and the extraction must be exact.
+    //
+    // Deleted in Phase 4 along with the NGUI define. Until then it is the backend that claims
+    // every GameObject, which means the 525 existing UIUtil call sites keep behaving exactly
+    // as they do today while the UIToolkitBackend serves migrated screens in the same frame.
+    //
+    // ---------------------------------------------------------------------------------------
+    // EXTRACTION RULES — every quirk below is load-bearing and was verified against the
+    // original bodies in Engine/UI/UIUtil.cs. Do not "clean these up":
+    //
+    //  * SetLabelValue / SetInputValue / SetLabelColor apply the NGUI branch AND the uGUI
+    //    branch, with no else. A GameObject carrying both gets both set.
+    //  * The GETTERS return on the first hit, and GetLabelValue/GetInputValue return NULL
+    //    (not "") when nothing matches. Callers distinguish the two.
+    //  * SetSliderValue probes Slider, ELSE Scrollbar, ELSE Image-as-fill. GetSliderValue
+    //    mirrors it. The NGUI UISlider branch is independent of that chain.
+    //  * SetToggleValue probes Slider FIRST, else Toggle. The ordering looks wrong but is
+    //    unreachable: Slider and Toggle both derive from Selectable, and Unity refuses to put
+    //    two Selectables on one GameObject (AddComponent<Toggle>() returns null when a Slider
+    //    is already there). No object can hit the ambiguous branch, so preserving it is free.
+    //    Pinned by SliderAndToggle_CannotCoexist_SoProbeOrderIsUnreachable.
+    //  * SetSpriteColor is NOT component-gated: it colors any GameObject through
+    //    TweenUtil.ColorToObject, whose NGUI child-widget recursion is live (gate learning #5).
+    //  * SetButtonHandlerClick's NGUI branch is a NO-OP (the original body is commented out).
+    //    Only the uGUI Button branch actually wires anything.
+    // ---------------------------------------------------------------------------------------
+    public class NGUIBackend : IUIBackend, IUIBackendInteractable, IUIBackendNamedQueries {
+
+        private static NGUIBackend _instance = null;
+
+        public static NGUIBackend Instance {
+            get {
+
+                if (_instance == null) {
+                    _instance = new NGUIBackend();
+                }
+
+                return _instance;
+            }
+        }
+
+        public bool Handles(object native) {
+            return native is GameObject;
+        }
+
+        private static GameObject Go(UIRef r) {
+
+            if (r == null || !r.alive) {
+                return null;
+            }
+
+            return r.gameObject;
+        }
+
+        // RESOLUTION
+
+        public UIRef Resolve(UIRef root, string name) {
+
+            GameObject go = Go(root);
+
+            if (go == null || string.IsNullOrEmpty(name)) {
+                return UIRef.none;
+            }
+
+            Transform t = go.transform.Find(name);
+
+            if (t == null) {
+                return UIRef.none;
+            }
+
+            return UIRef.Of(t.gameObject);
+        }
+
+        // Mirrors UpdateLabelObject's recursion: direct Find first, then depth-first through
+        // every child. Inactive children ARE reachable this way — Transform iteration does not
+        // skip them, unlike GetComponentsInChildren.
+        public UIRef ResolveDeep(UIRef root, string name) {
+
+            GameObject go = Go(root);
+
+            if (go == null || string.IsNullOrEmpty(name)) {
+                return UIRef.none;
+            }
+
+            return ResolveDeep(go.transform, name);
+        }
+
+        private static UIRef ResolveDeep(Transform parent, string name) {
+
+            Transform found = parent.Find(name);
+
+            if (found != null) {
+                return UIRef.Of(found.gameObject);
+            }
+
+            foreach (Transform child in parent) {
+
+                UIRef r = ResolveDeep(child, name);
+
+                if (r.alive) {
+                    return r;
+                }
+            }
+
+            return UIRef.none;
+        }
+
+        // Name-substring match over the widget-bearing children, matching SetTextValue's
+        // original component sets (UILabel/UIInput + Text/InputField). Deduped by GameObject:
+        // the original visited a GameObject once per matching component, but every consumer
+        // is idempotent, so the observable result is identical.
+        public List<UIRef> ResolveLike(UIRef root, string code) {
+
+            List<UIRef> results = new List<UIRef>();
+
+            GameObject go = Go(root);
+
+            if (go == null || string.IsNullOrEmpty(code)) {
+                return results;
+            }
+
+            HashSet<GameObject> seen = new HashSet<GameObject>();
+
+#if USE_UI_NGUI_2_7 || USE_UI_NGUI_3
+            UILabel[] labels = go.GetComponentsInChildren<UILabel>();
+
+            foreach (UILabel label in labels) {
+                if (label.gameObject.name.Contains(code) && seen.Add(label.gameObject)) {
+                    results.Add(UIRef.Of(label.gameObject));
+                }
+            }
+
+            UIInput[] inputs = go.GetComponentsInChildren<UIInput>();
+
+            foreach (UIInput input in inputs) {
+                if (input.gameObject.name.Contains(code) && seen.Add(input.gameObject)) {
+                    results.Add(UIRef.Of(input.gameObject));
+                }
+            }
+#endif
+
+            Text[] labelsNative = go.GetComponentsInChildren<Text>();
+
+            foreach (Text label in labelsNative) {
+                if (label.gameObject.name.Contains(code) && seen.Add(label.gameObject)) {
+                    results.Add(UIRef.Of(label.gameObject));
+                }
+            }
+
+            InputField[] inputsNative = go.GetComponentsInChildren<InputField>();
+
+            foreach (InputField input in inputsNative) {
+                if (input.gameObject.name.Contains(code) && seen.Add(input.gameObject)) {
+                    results.Add(UIRef.Of(input.gameObject));
+                }
+            }
+
+            return results;
+        }
+
+        // LABELS
+
+        public void SetLabelValue(UIRef r, string val) {
+
+            GameObject obj = Go(r);
+
+            if (obj == null) {
+                return;
+            }
+
+#if USE_UI_NGUI_2_7 || USE_UI_NGUI_3
+            if (obj.Has<UILabel>()) {
+                UIUtil.SetLabelValue(obj.Get<UILabel>(), val);
+            }
+#endif
+            if (obj.Has<Text>()) {
+                UIUtil.SetLabelValue(obj.Get<Text>(), val);
+            }
+        }
+
+        public string GetLabelValue(UIRef r) {
+
+            GameObject obj = Go(r);
+
+            if (obj != null) {
+
+#if USE_UI_NGUI_2_7 || USE_UI_NGUI_3
+                if (obj.Has<UILabel>()) {
+                    return UIUtil.GetLabelValue(obj.Get<UILabel>());
+                }
+#endif
+                if (obj.Has<Text>()) {
+                    return UIUtil.GetLabelValue(obj.Get<Text>());
+                }
+            }
+
+            // null, not "" — the original does this and callers rely on it.
+            return null;
+        }
+
+        public void SetLabelColor(UIRef r, Color c) {
+
+            GameObject obj = Go(r);
+
+            if (obj == null) {
+                return;
+            }
+
+#if USE_UI_NGUI_2_7 || USE_UI_NGUI_3
+            if (obj.Has<UILabel>()) {
+                UIUtil.SetLabelColor(obj.Get<UILabel>(), c);
+            }
+#endif
+            if (obj.Has<Text>()) {
+                UIUtil.SetLabelColor(obj.Get<Text>(), c);
+            }
+        }
+
+        // INPUTS
+
+        public void SetInputValue(UIRef r, string val) {
+
+            GameObject obj = Go(r);
+
+            if (obj == null) {
+                return;
+            }
+
+#if USE_UI_NGUI_2_7 || USE_UI_NGUI_3
+            if (obj.Has<UIInput>()) {
+                UIUtil.SetInputValue(obj.Get<UIInput>(), val);
+            }
+#endif
+            if (obj.Has<InputField>()) {
+                UIUtil.SetInputValue(obj.Get<InputField>(), val);
+            }
+        }
+
+        public string GetInputValue(UIRef r) {
+
+            GameObject obj = Go(r);
+
+            if (obj != null) {
+
+#if USE_UI_NGUI_2_7 || USE_UI_NGUI_3
+                if (obj.Has<UIInput>()) {
+                    return UIUtil.GetInputValue(obj.Get<UIInput>());
+                }
+#endif
+                if (obj.Has<InputField>()) {
+                    return UIUtil.GetInputValue(obj.Get<InputField>());
+                }
+            }
+
+            return null;
+        }
+
+        // SLIDERS
+
+        public void SetSliderValue(UIRef r, float val) {
+
+            GameObject obj = Go(r);
+
+            if (obj == null) {
+                return;
+            }
+
+#if USE_UI_NGUI_2_7 || USE_UI_NGUI_3
+            if (obj.Has<UISlider>()) {
+                UIUtil.SetSliderValue(obj.Get<UISlider>(), val);
+            }
+#endif
+            if (obj.Has<Slider>()) {
+                UIUtil.SetSliderValue(obj.Get<Slider>(), val);
+            }
+            else if (obj.Has<Scrollbar>()) {
+                UIUtil.SetSliderValue(obj.Get<Scrollbar>(), val);
+            }
+            else if (obj.Has<Image>()) {
+                UIUtil.SetSliderValue(obj.Get<Image>(), (double)val);
+            }
+        }
+
+        public float GetSliderValue(UIRef r) {
+
+            GameObject obj = Go(r);
+
+            if (obj != null) {
+
+#if USE_UI_NGUI_2_7 || USE_UI_NGUI_3
+                if (obj.Has<UISlider>()) {
+                    return UIUtil.GetSliderValue(obj.Get<UISlider>());
+                }
+#endif
+                if (obj.Has<Slider>()) {
+                    return UIUtil.GetSliderValue(obj.Get<Slider>());
+                }
+                else if (obj.Has<Scrollbar>()) {
+                    return UIUtil.GetSliderValue(obj.Get<Scrollbar>());
+                }
+                else if (obj.Has<Image>()) {
+                    return UIUtil.GetSliderValue(obj.Get<Image>());
+                }
+            }
+
+            return 0f;
+        }
+
+        // TOGGLES
+
+        public void SetToggleValue(UIRef r, bool val) {
+
+            GameObject obj = Go(r);
+
+            if (obj == null) {
+                return;
+            }
+
+#if USE_UI_NGUI_2_7
+            if (obj.Has<UICheckbox>()) {
+                UIUtil.SetToggleValue(obj.Get<UICheckbox>(), val);
+            }
+#endif
+#if USE_UI_NGUI_3
+            if (obj.Has<UIToggle>()) {
+                UIUtil.SetToggleValue(obj.Get<UIToggle>(), val);
+            }
+#endif
+            // Slider before Toggle — preserved from the original. Unreachable ambiguity: Unity
+            // won't allow both Selectables on one GameObject (see the header note).
+            if (obj.Has<Slider>()) {
+                UIUtil.SetToggleValue(obj.Get<Slider>(), val);
+            }
+            else if (obj.Has<Toggle>()) {
+                UIUtil.SetToggleValue(obj.Get<Toggle>(), val);
+            }
+        }
+
+        public bool GetToggleValue(UIRef r) {
+
+            GameObject obj = Go(r);
+
+            if (obj != null) {
+
+#if USE_UI_NGUI_2_7
+                if (obj.Has<UICheckbox>()) {
+                    return UIUtil.GetToggleValue(obj.Get<UICheckbox>());
+                }
+#endif
+#if USE_UI_NGUI_3
+                if (obj.Has<UIToggle>()) {
+                    return UIUtil.GetToggleValue(obj.Get<UIToggle>());
+                }
+#endif
+                if (obj.Has<Toggle>()) {
+                    return UIUtil.GetToggleValue(obj.Get<Toggle>());
+                }
+            }
+
+            return false;
+        }
+
+        // On this backend the change half already has an owner: CheckboxEvents and SliderEvents
+        // are MonoBehaviours authored onto the widget's own GameObject, and they rebroadcast the
+        // NGUI callback onto the Messenger bus that every legacy panel already listens to.
+        // Registering a second, direct handler here would deliver the same change twice to a
+        // panel that is listening both ways during a migration. So these wire the uGUI
+        // components -- which have no such rebroadcaster -- and leave the NGUI widgets to their
+        // existing bus. Same shape as SetButtonHandlerClick, whose NGUI branch is also a no-op.
+        public void SetToggleHandlerChange(UIRef r, Action<bool> onChange) {
+
+            GameObject obj = Go(r);
+
+            if (obj == null || onChange == null) {
+                return;
+            }
+
+            if (obj.Has<Toggle>()) {
+                obj.Get<Toggle>().onValueChanged.AddListener(val => onChange(val));
+            }
+        }
+
+        public void SetSliderHandlerChange(UIRef r, Action<float> onChange) {
+
+            GameObject obj = Go(r);
+
+            if (obj == null || onChange == null) {
+                return;
+            }
+
+            if (obj.Has<Slider>()) {
+                obj.Get<Slider>().onValueChanged.AddListener(val => onChange(val));
+            }
+            else if (obj.Has<Scrollbar>()) {
+                obj.Get<Scrollbar>().onValueChanged.AddListener(val => onChange(val));
+            }
+        }
+
+        // IMAGES
+
+        public void SetImageFillValue(UIRef r, float val) {
+
+            GameObject obj = Go(r);
+
+            if (obj == null) {
+                return;
+            }
+
+            if (obj.Has<Image>()) {
+                UIUtil.SetImageFillValue(obj.Get<Image>(), (double)val);
+            }
+        }
+
+        public float GetImageFillValue(UIRef r) {
+
+            GameObject obj = Go(r);
+
+            if (obj == null) {
+                return 0f;
+            }
+
+            if (obj.Has<Image>()) {
+                return UIUtil.GetImageFillValue(obj.Get<Image>());
+            }
+
+            return 0f;
+        }
+
+        // Not component-gated: the original colors ANY GameObject through the tween facade,
+        // whose NGUI child-widget recursion is live (gate learning #5). Do not add a probe.
+        public void SetSpriteColor(UIRef r, Color c) {
+
+            GameObject obj = Go(r);
+
+            if (obj == null) {
+                return;
+            }
+
+            TweenUtil.ColorToObject(obj, c, .5f, 0f);
+        }
+
+        // Deliberate no-op: NGUI/uGUI widgets take textures through their own atlas/sprite
+        // pipeline, never a runtime-texture swap; the RT widget path is a toolkit-view feature.
+        public void SetImageTexture(UIRef r, Texture texture) {
+        }
+
+        // Deliberate no-ops, same reason: a flat element fill, a normalized drag surface and a
+        // percent-placed thumb are all VisualElement geometry. The NGUI equivalents are a widget
+        // colour, a MeshCollider raycast from Update, and a world-space transform — three
+        // different mechanisms that the legacy picker already owns in its own components.
+        public void SetElementColor(UIRef r, Color c) {
+        }
+
+        public void SetElementDragHandler(UIRef r, Action<Vector2> onDrag) {
+        }
+
+        public void SetElementOffsetPercent(UIRef r, float xPercent, float yPercent) {
+        }
+
+        public void SetElementStickHandler(UIRef r, Action<Vector2, bool> onStick) {
+        }
+
+        public void SetElementTranslate(UIRef r, Vector2 offset) {
+        }
+
+        // BUTTONS
+
+        public bool IsButton(UIRef r) {
+
+            GameObject go = Go(r);
+
+            if (go == null) {
+                return false;
+            }
+
+#if USE_UI_NGUI_2_7 || USE_UI_NGUI_3
+            if (go.Has<UIButton>() || go.Has<UIImageButton>()) {
+                return true;
+            }
+#endif
+            if (go.Has<Button>()) {
+                return true;
+            }
+
+            return false;
+        }
+
+        public void SetButtonColor(UIRef r, Color c) {
+
+            GameObject obj = Go(r);
+
+            if (obj == null) {
+                return;
+            }
+
+#if USE_UI_NGUI_2_7 || USE_UI_NGUI_3
+            if (obj.Has<UIButton>()) {
+                UIUtil.SetButtonColor(obj.Get<UIButton>(), c);
+            }
+#endif
+            if (obj.Has<Button>()) {
+                UIUtil.SetButtonColor(obj.Get<Button>(), c);
+            }
+        }
+
+        public void SetButtonHandlerClick(UIRef r, Action onClick) {
+
+            GameObject obj = Go(r);
+
+            if (obj == null || onClick == null) {
+                return;
+            }
+
+            // The NGUI branch of the original is commented out — wiring an NGUI button's
+            // handler here has never done anything. Clicks reach panels through ButtonEvents'
+            // name broadcast instead, which is why the whole input path is already agnostic.
+            if (obj.Has<Button>()) {
+                UIUtil.SetButtonHandlerClick(obj.Get<Button>(), new UnityAction(onClick));
+            }
+        }
+
+        // VISIBILITY
+
+        public void Show(UIRef r) {
+
+            GameObject obj = Go(r);
+
+            if (obj == null) {
+                return;
+            }
+
+            obj.Show();
+        }
+
+        public void Hide(UIRef r) {
+
+            GameObject obj = Go(r);
+
+            if (obj == null) {
+                return;
+            }
+
+            obj.Hide();
+        }
+
+        // activeSelf, not activeInHierarchy — GameObjectHelper.Show/Hide gate on activeSelf,
+        // so this is the predicate that actually round-trips with them.
+        public bool IsVisible(UIRef r) {
+
+            GameObject obj = Go(r);
+
+            if (obj == null) {
+                return false;
+            }
+
+            return obj.activeSelf;
+        }
+
+        // LAYOUT
+
+        public void GridReposition(UIRef r) {
+
+            GameObject grid = Go(r);
+
+            if (grid == null) {
+                return;
+            }
+
+#if USE_UI_NGUI_2_7 || USE_UI_NGUI_3
+            if (grid.Has<UIGrid>()) {
+                UIUtil.GridReposition(grid.Get<UIGrid>());
+            }
+#endif
+            // The original also probed UnityEngine.Grid (the tilemap component) and called a
+            // method whose body is commented out. That branch is a no-op in every sense, so it
+            // is not reproduced — but UIUtil.GridReposition(Grid) itself stays, per the
+            // additive-only rule for shared libs.
+        }
+
+        // VIEW LIFECYCLE
+
+        // NGUI views are Resources prefabs loaded by the app's content pipeline
+        // (AppContentAssets.LoadAssetUI), which lives above the engine. The panel system keeps
+        // doing that itself in the NGUI path; nothing routes NGUI views through here. Fire the
+        // continuation synchronously with none so callers share one flow with the Toolkit backend.
+        public void LoadView(string viewKey, Action<UIRef> onReady) {
+
+            if (onReady != null) {
+                onReady(UIRef.none);
+            }
+        }
+
+        // Draw order is meaningless here: NGUI screens are Resources prefabs instantiated by the
+        // app's content pipeline (AppContentAssets.LoadAssetUI), never through this seam, so
+        // LoadView is a deliberate no-op on both overloads.
+        public void LoadView(string viewKey, int sortingOrder, Action<UIRef> onReady) {
+            LoadView(viewKey, onReady);
+        }
+
+        // DROPDOWNS
+        //
+        // No NGUI dropdown widget exists in this codebase, so every member is a deliberate
+        // no-op -- GetDropdownIndex returns -1 (matches "nothing selected"), not 0.
+        public void SetDropdownChoices(UIRef r, List<string> choices) {
+        }
+
+        public void SetDropdownIndex(UIRef r, int index, bool notify = false) {
+        }
+
+        public int GetDropdownIndex(UIRef r) {
+            return -1;
+        }
+
+        public void SetDropdownHandlerChange(UIRef r, Action<int> onChange) {
+        }
+
+        // LISTS (wave 3D): no-op on the legacy backend — NGUI panels keep their own
+        // NGUITools.AddChild grid path; only toolkit views build rows through the platform.
+        public UIRef AddListItem(UIRef view, string listName, string templateName, string itemName) {
+            return UIRef.none;
+        }
+
+        public void ClearListItems(UIRef view, string listName) {
+        }
+
+        public void SetElementName(UIRef r, string name) {
+
+            GameObject go = Go(r);
+
+            if (go != null && !string.IsNullOrEmpty(name)) {
+                go.name = name;
+            }
+        }
+
+        public void DestroyView(UIRef view) {
+
+            GameObject go = Go(view);
+
+            if (go == null) {
+                return;
+            }
+
+            UnityEngine.Object.Destroy(go);
+        }
+
+        // ENABLED / INTERACTABLE (IUIBackendInteractable, B1)
+        //
+        // NGUI's own notion of "disabled" is UIButton/UIImageButton.isEnabled: it turns the
+        // collider off (so UICamera stops hitting it) and swaps to the disabled colour/sprite.
+        // uGUI's is Selectable.interactable (Button, Toggle, Slider, ...). Same shape as the label
+        // setters above: the NGUI branch and the uGUI branch both apply, child-inclusive probes.
+        // A bare-collider NGUI button (collider + ButtonEvents, no UIButton) is NOT touched —
+        // disabling arbitrary colliders from a UI call would reach physics objects too.
+        // UIUtil.UIButtonEnable stays the no-op it has always been; nothing forwards here.
+        public void SetElementEnabled(UIRef r, bool enabled) {
+
+            GameObject obj = Go(r);
+
+            if (obj == null) {
+                return;
+            }
+
+#if USE_UI_NGUI_2_7 || USE_UI_NGUI_3
+            if (obj.Has<UIButton>()) {
+                obj.Get<UIButton>().isEnabled = enabled;
+            }
+            else if (obj.Has<UIImageButton>()) {
+                obj.Get<UIImageButton>().isEnabled = enabled;
+            }
+#endif
+            if (obj.Has<Selectable>()) {
+                obj.Get<Selectable>().interactable = enabled;
+            }
+        }
+
+        // First hit wins, like the other getters; true when nothing interactable is found.
+        public bool IsElementEnabled(UIRef r) {
+
+            GameObject obj = Go(r);
+
+            if (obj == null) {
+                return true;
+            }
+
+#if USE_UI_NGUI_2_7 || USE_UI_NGUI_3
+            if (obj.Has<UIButton>()) {
+                return obj.Get<UIButton>().isEnabled;
+            }
+
+            if (obj.Has<UIImageButton>()) {
+                return obj.Get<UIImageButton>().isEnabled;
+            }
+#endif
+            if (obj.Has<Selectable>()) {
+                return obj.Get<Selectable>().interactable;
+            }
+
+            return true;
+        }
+
+        // NAMED QUERIES (IUIBackendNamedQueries, B1)
+        //
+        // VERBATIM moves of UIUtil's GameObject bodies (SetTextValue, SetTextColor,
+        // UpdateLabelObject(Transform), IsToggleOn(GameObject), IsButtonClicked(GameObject)) —
+        // same component sets, same order, same typed UIUtil overloads. Do not "simplify" them
+        // onto ResolveLike/ResolveDeep/SetLabelValue(UIRef): those use child-inclusive Has/Get on
+        // each match and stop at the first deep hit, and these do neither.
+
+        public void SetTextValueLike(UIRef root, string code, string val) {
+
+            GameObject go = Go(root);
+
+            if (go == null) {
+                return;
+            }
+
+#if USE_UI_NGUI_2_7 || USE_UI_NGUI_3
+            UILabel[] labels = go.GetComponentsInChildren<UILabel>();
+
+            foreach (UILabel label in labels) {
+
+                if (label.gameObject.name.Contains(code)) {
+                    UIUtil.SetLabelValue(label, val);
+                }
+            }
+
+            UIInput[] inputs = go.GetComponentsInChildren<UIInput>();
+
+            foreach (UIInput input in inputs) {
+                if (input.gameObject.name.Contains(code)) {
+                    UIUtil.SetInputValue(input, val);
+                }
+            }
+#endif
+
+            Text[] labelsNative = go.GetComponentsInChildren<Text>();
+
+            foreach (Text label in labelsNative) {
+
+                if (label.gameObject.name.Contains(code)) {
+                    UIUtil.SetLabelValue(label, val);
+                }
+            }
+
+            InputField[] inputsNative = go.GetComponentsInChildren<InputField>();
+
+            foreach (InputField input in inputsNative) {
+                if (input.gameObject.name.Contains(code)) {
+                    UIUtil.SetInputValue(input, val);
+                }
+            }
+        }
+
+        public void SetTextColorLike(UIRef root, string code, Color color) {
+
+            GameObject go = Go(root);
+
+            if (go == null) {
+                return;
+            }
+
+#if USE_UI_NGUI_2_7 || USE_UI_NGUI_3
+            UILabel[] labels = go.GetComponentsInChildren<UILabel>();
+
+            foreach (UILabel label in labels) {
+
+                if (label.gameObject.name.Contains(code)) {
+                    UIUtil.SetSpriteColor(label.gameObject, color);
+                }
+            }
+
+            UIInput[] inputs = go.GetComponentsInChildren<UIInput>();
+
+            foreach (UIInput input in inputs) {
+                if (input.gameObject.name.Contains(code)) {
+                    UIUtil.SetSpriteColor(input.gameObject, color);
+                }
+            }
+#endif
+            Text[] labelsNative = go.GetComponentsInChildren<Text>();
+
+            foreach (Text label in labelsNative) {
+
+                if (label.gameObject.name.Contains(code)) {
+                    UIUtil.SetSpriteColor(label.gameObject, color);
+                }
+            }
+
+            InputField[] inputsNative = go.GetComponentsInChildren<InputField>();
+
+            foreach (InputField input in inputsNative) {
+                if (input.gameObject.name.Contains(code)) {
+                    UIUtil.SetSpriteColor(input.gameObject, color);
+                }
+            }
+        }
+
+        // Unlike ResolveDeep, this does NOT stop at the first hit: a level with no direct match
+        // recurses into EVERY child, so same-named labels in sibling subtrees all get the value.
+        // The found object's own components only (GetComponent, not Has/Get).
+        public void UpdateLabelDeep(UIRef root, string key, string val) {
+
+            GameObject go = Go(root);
+
+            if (go == null) {
+                return;
+            }
+
+            UpdateLabelDeep(go.transform, key, val);
+        }
+
+        private static void UpdateLabelDeep(Transform parentTransform, string key, string val) {
+
+            Transform labelObject = parentTransform.Find(key);
+
+            if (labelObject != null) {
+
+#if USE_UI_NGUI_2_7 || USE_UI_NGUI_3
+                UILabel label = labelObject.GetComponent<UILabel>();
+                UIUtil.SetLabelValue(label, val);
+#endif
+                Text txt = labelObject.GetComponent<Text>();
+                UIUtil.SetLabelValue(txt, val);
+            }
+            else {
+                foreach (Transform t in parentTransform) {
+                    UpdateLabelDeep(t, key, val);
+                }
+            }
+        }
+
+        // Quirk kept: the NGUI checkbox branch is a NAME compare only (it ignores isChecked),
+        // while the uGUI Toggle branch also requires isOn. Both compare the probed component's
+        // name, which a child-inclusive probe can make a child's.
+        public bool IsToggleNamed(UIRef r, string toggleName) {
+
+            GameObject obj = Go(r);
+
+            if (obj != null) {
+#if USE_UI_NGUI_2_7
+                if (obj.Has<UICheckbox>()) {
+                    return UIUtil.IsCheckboxChecked(obj.Get<UICheckbox>(), toggleName);
+                }
+#endif
+#if USE_UI_NGUI_3
+                if (obj.Has<UIToggle>()) {
+                    return UIUtil.IsCheckboxChecked(obj.Get<UIToggle>(), toggleName);
+                }
+#endif
+                if (obj.Has<Toggle>()) {
+                    return UIUtil.IsCheckboxChecked(obj.Get<Toggle>(), toggleName);
+                }
+            }
+
+            return false;
+        }
+
+        // Quirk kept: gated on a button-ish component being present (an Image counts), and the
+        // name compared is that component's object's, not necessarily obj's.
+        public bool IsButtonNamed(UIRef r, string buttonClickedName) {
+
+            GameObject obj = Go(r);
+
+            if (obj != null) {
+
+#if USE_UI_NGUI_2_7 || USE_UI_NGUI_3
+
+                if (obj.Has<UIImageButton>()) {
+                    return UIUtil.IsButtonClicked(obj.Get<UIImageButton>(), buttonClickedName);
+                }
+
+                if (obj.Has<UIButton>()) {
+                    return UIUtil.IsButtonClicked(obj.Get<UIButton>(), buttonClickedName);
+                }
+#endif
+                if (obj.Has<Image>()) {
+                    return UIUtil.IsButtonClicked(obj.Get<Image>(), buttonClickedName);
+                }
+
+                if (obj.Has<Button>()) {
+                    return UIUtil.IsButtonClicked(obj.Get<Button>(), buttonClickedName);
+                }
+            }
+
+            return false;
+        }
+
+        // POINTER / EVENT SOURCE
+
+        // 0, not -1, when NGUI is compiled out: the four legacy call sites (InputEvents,
+        // SliderEvents, CheckboxEvents, ListEvents) all initialized `int camIndex = 0` and only
+        // overwrote it under the NGUI define. Preserve that exactly.
+        public int currentPointerId {
+            get {
+
+#if USE_UI_NGUI_2_7 || USE_UI_NGUI_3
+                return UICamera.currentTouchID;
+#else
+                return 0;
+#endif
+            }
+        }
+
+        // NGUI does its own raycasting through UICamera; nothing asks this backend whether a
+        // pointer is over it. The Toolkit backend implements the real thing (panel.Pick), and
+        // the coexistence guard in UICamera.Raycast consults THAT one.
+        public bool IsPointerOver(Vector2 screenPos) {
+            return false;
+        }
+    }
+}

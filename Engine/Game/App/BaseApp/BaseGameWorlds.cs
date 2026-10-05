@@ -125,5 +125,36 @@ namespace Engine.Game.App.BaseApp {
 
         // Attributes that are added or changed after launch should be like this to prevent
         // profile conversions.
+
+        // ADDITIVE localization route (content, not UI strings). Read by
+        // BaseGameUIPanelWorlds.UpdateMetaLabels/BaseGameUIPanelResults.GetWorldCodeDisplay on
+        // migrated (toolkitViewKey) screens. Only `description` is keyed -- `display_name` is a
+        // proper noun ("Planet Z: Zedlands") and stays English per the localization standard's
+        // glossary, so it is deliberately left un-overridden. Key convention:
+        // game_world_<code>_desc. TrOrDefault falls back to the raw English value whenever the
+        // key is absent, so any other game on this shared lib that ships no such key sees its
+        // data unchanged. Key string cached per `code`, not rebuilt per call -- same pattern as
+        // BaseGameUIPanelHeader.TitleKey().
+        private static readonly Dictionary<string, string> descLocKeys = new Dictionary<string, string>();
+
+        public override string description {
+            get {
+                string raw = base.description;
+                string c = code;
+
+                if (string.IsNullOrEmpty(c)) {
+                    return raw;
+                }
+
+                string key;
+
+                if (!descLocKeys.TryGetValue(c, out key)) {
+                    key = "game_world_" + c.Replace('-', '_') + "_desc";
+                    descLocKeys[c] = key;
+                }
+
+                return L10n.TrOrDefault(key, raw);
+            }
+        }
     }
 }

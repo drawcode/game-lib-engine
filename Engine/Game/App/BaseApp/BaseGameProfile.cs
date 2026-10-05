@@ -17,6 +17,7 @@ namespace Engine.Game.App.BaseApp {
         public static string ATT_CONTROL_INPUT_TOUCH = "controls-input";
         public static string ATT_CONTROL_HANDED = "controls-handed";
         public static string ATT_CONTROL_VIBRATE = "controls-vibrate";
+        public static string ATT_CONTROL_INDICATOR_SCALE = "controls-indicator-scale";
 
         public static string ATT_AR_CAM_DEVICE_MODE = "ar-camera-device-mode";
         public static string ATT_AR_CAM_FOCUS_MODE = "ar-camera-focus-mode";
@@ -81,6 +82,10 @@ namespace Engine.Game.App.BaseApp {
         public static string ATT_AUTH_SOCIAL_NETWORK_AUTHTOKEN_APP = "auth-social-network-authtoken-app";
 
         public static string ATT_ACCESS_PERMISSIONS = "access-permissions";
+
+        // LOCALIZATION
+        // "" (unset) means "follow the device" -- see GameLocalizationService.
+        public static string ATT_APP_LANGUAGE = "app-language";
     }
 
     public class BaseGameProfileDataState {
@@ -426,6 +431,24 @@ namespace Engine.Game.App.BaseApp {
             SetAttributeDoubleValue(BaseGameProfileAttributes.ATT_HELP_TIPS_SHOWN_DATE, attValue);
         }
 
+        // APP LANGUAGE
+        //
+        // "" (the default) means "no explicit choice saved -- follow the device". Mirrored to
+        // the local pref "app_language" by GameLocalizationService so text shown before the
+        // profile has loaded is already in the right language.
+
+        public virtual string GetAppLanguage(string defaultValue = "") {
+            string attValue = defaultValue;
+            string key = BaseGameProfileAttributes.ATT_APP_LANGUAGE;
+            if (CheckIfAttributeExists(key))
+                attValue = GetAttributeStringValue(key);
+            return attValue;
+        }
+
+        public virtual void SetAppLanguage(string attValue) {
+            SetAttributeStringValue(BaseGameProfileAttributes.ATT_APP_LANGUAGE, attValue);
+        }
+
 
         /*
         // CUSTOMIZATION
@@ -570,6 +593,33 @@ namespace Engine.Game.App.BaseApp {
 
         public virtual void SetControlVibrate(bool attValue) {
             SetAttributeBoolValue(BaseGameProfileAttributes.ATT_CONTROL_VIBRATE, attValue);
+        }
+
+        // CONTROL INDICATOR SCALE
+        //
+        // How large the off-screen edge indicators draw, as a multiplier on the size their
+        // distance already gives them. The default is GameIndicatorConfigs.scale rather
+        // than a literal 1, so "never touched the slider" and "dragged it back to the
+        // shipping value" agree -- the shipping value is the 10% shrink, not 1.
+
+        public virtual float GetControlIndicatorScale() {
+            return GetControlIndicatorScale(GameIndicatorConfigs.scale);
+        }
+
+        public virtual float GetControlIndicatorScale(float defaultValue) {
+            float attValue = defaultValue;
+            if (CheckIfAttributeExists(BaseGameProfileAttributes.ATT_CONTROL_INDICATOR_SCALE))
+                attValue = (float)GetAttributeDoubleValue(
+                    BaseGameProfileAttributes.ATT_CONTROL_INDICATOR_SCALE);
+            return UnityEngine.Mathf.Clamp(
+                attValue, GameIndicatorConfigs.scaleMin, GameIndicatorConfigs.scaleMax);
+        }
+
+        public virtual void SetControlIndicatorScale(float attValue) {
+            SetAttributeDoubleValue(
+                BaseGameProfileAttributes.ATT_CONTROL_INDICATOR_SCALE,
+                UnityEngine.Mathf.Clamp(
+                    attValue, GameIndicatorConfigs.scaleMin, GameIndicatorConfigs.scaleMax));
         }
 
         // BROADCAST

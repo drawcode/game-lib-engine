@@ -87,12 +87,31 @@ public class CarController : GameObjectBehavior {
 
     //return a status string for the vehicle
     public void GetStatus(Text gui) {
-        gui.text = "v=" + (rigidbody.velocity.magnitude * 3.6f).ToString("f1") + " km/h\ngear= " + gear + "\nrpm= " + engineRPM.ToString("f0");
+        gui.text = GetStatusText();
     }
 
     //return an information string for the vehicle
     public void GetControlString(Text gui) {
-        gui.text = "Use arrow keys to control the jeep,\nspace for handbrake.";
+        gui.text = GetControlText();
+    }
+
+    // UIRef overloads (B1, additive): the same strings through the backend-blind label setter,
+    // so a toolkit label (or an NGUI/uGUI one) works. The Text overloads above stay for callers
+    // that bind to them; the strings are shared so the two can't drift.
+    public void GetStatus(Engine.UI.UIRef gui) {
+        UIUtil.SetLabelValue(gui, GetStatusText());
+    }
+
+    public void GetControlString(Engine.UI.UIRef gui) {
+        UIUtil.SetLabelValue(gui, GetControlText());
+    }
+
+    public string GetStatusText() {
+        return "v=" + (rigidbody.velocity.magnitude * 3.6f).ToString("f1") + " km/h\ngear= " + gear + "\nrpm= " + engineRPM.ToString("f0");
+    }
+
+    public string GetControlText() {
+        return "Use arrow keys to control the jeep,\nspace for handbrake.";
     }
 
     //Enable or disable user controls

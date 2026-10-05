@@ -1,0 +1,16 @@
+{
+    "name": "Engine.UI.Bitty.Core",
+    "rootNamespace": "Engine.UI.Bitty",
+    "references": [
+        "Engine.MiniJSON"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": true
+}

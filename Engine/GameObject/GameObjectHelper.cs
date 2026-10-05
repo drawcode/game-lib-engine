@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Text;
@@ -149,17 +149,30 @@ public static class GameObjectHelper {
 
     // RENDERERS
 
+    // Scratch buffers for the visibility tests below. These run per object, per frame (the
+    // off-screen indicators test one per indicator in LateUpdate, actor shadows one per actor in
+    // Update), and the array-returning GetComponentsInChildren<T>() allocates a fresh array every
+    // call. The List overload fills a buffer instead.
+    //
+    // Static and shared, and safe because the buffer never outlives the call that fills it: it is
+    // walked immediately and nothing retains a reference. Main thread only, like the rest of the
+    // Unity API these wrap.
+    private static readonly List<Renderer> renderersShared = new List<Renderer>(16);
+    private static readonly Plane[] frustumPlanesShared = new Plane[6];
+
     public static bool IsRenderersVisibleByCamera(GameObject inst) {
         if (inst == null)
             return false;
 
-        if (!inst.IsRenderersVisible()) {
-            return false;
-        }
+        // The IsRenderersVisible() pre-pass this replaces walked exactly the same renderers to ask
+        // exactly the same `enabled` question the loop below already asks, so it doubled the cost
+        // of every call and could never change the answer.
+        // TryGetComponent, not GetComponent, in every renderer lookup in this file: an actor ROOT
+        // carries no Renderer, so these miss on most calls, and in the Editor a GetComponent miss
+        // allocates its null-error message (~2.4 KB/frame across ActorShadow and the indicators).
+        Renderer render;
 
-        Renderer render = inst.GetComponent<Renderer>();
-
-        if (render != null) {
+        if (inst.TryGetComponent(out render)) {
             if (render.enabled) {
                 if (render.isVisible) {
                     return true;
@@ -167,14 +180,21 @@ public static class GameObjectHelper {
             }
         }
 
-        // Enable rendering:
-        foreach (Renderer component in inst.GetComponentsInChildren<Renderer>()) {
-            if (component.enabled) {
+        inst.GetComponentsInChildren<Renderer>(renderersShared);
+
+        for (int i = 0; i < renderersShared.Count; i++) {
+
+            Renderer component = renderersShared[i];
+
+            if (component != null && component.enabled) {
                 if (component.isVisible) {
+                    renderersShared.Clear();
                     return true;
                 }
             }
         }
+
+        renderersShared.Clear();
 
         return false;
     }
@@ -183,30 +203,41 @@ public static class GameObjectHelper {
         if (inst == null)
             return false;
 
-        if (!inst.IsRenderersVisible()) {
-            return false;
+        if (cam == null) {
+            return IsRenderersVisibleByCamera(inst);
         }
 
-        Renderer render = inst.GetComponent<Renderer>();
+        // Calculate the frustum ONCE for the whole object rather than once per renderer, which is
+        // what the per-renderer IsVisibleFrom(cam) overload used to do.
+        GeometryUtility.CalculateFrustumPlanes(cam, frustumPlanesShared);
 
-        if (render != null) {
+        Renderer render;
+
+        if (inst.TryGetComponent(out render)) {
             if (render.enabled) {
                 if (render.isVisible
-                    && render.IsVisibleFrom(cam)) {
+                    && GeometryUtility.TestPlanesAABB(frustumPlanesShared, render.bounds)) {
                     return true;
                 }
             }
         }
 
-        // Enable rendering:
-        foreach (Renderer component in inst.GetComponentsInChildren<Renderer>()) {
-            if (component.enabled) {
+        inst.GetComponentsInChildren<Renderer>(renderersShared);
+
+        for (int i = 0; i < renderersShared.Count; i++) {
+
+            Renderer component = renderersShared[i];
+
+            if (component != null && component.enabled) {
                 if (component.isVisible
-                    && component.IsVisibleFrom(cam)) {
+                    && GeometryUtility.TestPlanesAABB(frustumPlanesShared, component.bounds)) {
+                    renderersShared.Clear();
                     return true;
                 }
             }
         }
+
+        renderersShared.Clear();
 
         return false;
     }
@@ -215,9 +246,9 @@ public static class GameObjectHelper {
         if (inst == null)
             return false;
 
-        Renderer render = inst.GetComponent<Renderer>();
+        Renderer render;
 
-        if (render != null) {
+        if (inst.TryGetComponent(out render)) {
             if (render.enabled) {
                 return true;
             }
@@ -237,9 +268,9 @@ public static class GameObjectHelper {
         if (inst == null)
             return;
 
-        Renderer render = inst.GetComponent<Renderer>();
+        Renderer render;
 
-        if (render != null) {
+        if (inst.TryGetComponent(out render)) {
             render.enabled = true;
         }
 
@@ -253,9 +284,9 @@ public static class GameObjectHelper {
         if (inst == null)
             return;
 
-        Renderer render = inst.GetComponent<Renderer>();
+        Renderer render;
 
-        if (render != null) {
+        if (inst.TryGetComponent(out render)) {
             render.enabled = false;
         }
 
@@ -583,21 +614,25 @@ public static class GameObjectHelper {
         return false;
     }
 
-    public static T GetOrSet<T>(GameObject inst) where T : Component {
+    // includeChildren defaults to true to preserve the long-standing behavior
+    // of these helpers. Pass false when the component must be on this exact
+    // object, such as anything looked up later with a plain GetComponent.
+
+    public static T GetOrSet<T>(GameObject inst, bool includeChildren = true) where T : Component {
         if (inst == null) {
             return null;
         }
 
-        if (!inst.Has<T>()) {
+        if (!inst.Has<T>(includeChildren)) {
             return inst.AddComponent<T>();
         }
         else {
-            return inst.Get<T>();
+            return inst.Get<T>(includeChildren);
         }
     }
 
-    public static T Set<T>(GameObject inst) where T : Component {
-        return GetOrSet<T>(inst);
+    public static T Set<T>(GameObject inst, bool includeChildren = true) where T : Component {
+        return GetOrSet<T>(inst, includeChildren);
     }
 
     public static T SetOnly<T>(GameObject inst) where T : Component {
@@ -630,7 +665,7 @@ public static class GameObjectHelper {
         return null;
     }
 
-    public static T Get<T>(GameObject inst) where T : Component {
+    public static T Get<T>(GameObject inst, bool includeChildren = true) where T : Component {
         if (inst == null) {
             return null;
         }
@@ -639,6 +674,9 @@ public static class GameObjectHelper {
             return obj;
         }
 
+        if (!includeChildren) {
+            return null;
+        }
 
         foreach (T obj in inst.GetComponentsInChildren<T>(true)) {
             return obj;
@@ -713,13 +751,17 @@ public static class GameObjectHelper {
         return list;
     }
 
-    public static bool Has<T>(GameObject inst) where T : Component {
+    public static bool Has<T>(GameObject inst, bool includeChildren = true) where T : Component {
         if (inst == null) {
             return false;
         }
 
-        if (inst.GetComponentsInChildren<T>(true).Length > 0
-            || inst.GetComponents<T>().Length > 0) {
+        if (inst.GetComponents<T>().Length > 0) {
+            return true;
+        }
+
+        if (includeChildren
+            && inst.GetComponentsInChildren<T>(true).Length > 0) {
             return true;
         }
 
@@ -1362,11 +1404,75 @@ public static class GameObjectHelper {
         }
     }
 
+    private class ParticleSystemEntry {
+        public GameObject holder;
+        public ParticleSystem root;
+        public ParticleSystem[] all;
+    }
+
+    private static readonly Dictionary<EntityId, ParticleSystemEntry> particleSystemCache
+        = new Dictionary<EntityId, ParticleSystemEntry>();
+
+    /// <summary>
+    /// The ParticleSystems under a holder, resolved once instead of on every call.
+    ///
+    /// SetParticleSystemStartColor is driven per frame off the player tint, and the three
+    /// live holders (Ground, Boost, GamePlayerShadow) carry NO root ParticleSystem and
+    /// exactly one in a child. So the GetComponent missed every frame -- and a miss in the
+    /// Editor builds a GetComponentNullErrorMessage string (measured 570-614 B). That part
+    /// is Editor-only, but GetComponentsInChildren allocating a fresh ParticleSystem[] is
+    /// NOT: it costs 40 B a call in a player build too, and it ran twice per frame.
+    ///
+    /// Cached the same way as GetPoolKey above: keyed on EntityId, which Unity reuses once
+    /// an object is unloaded, so the holder reference is kept beside the result and compared
+    /// to turn a reused id into an ordinary miss. A destroyed member (Unity's == reports it
+    /// as null) also forces a re-resolve, so a stale entry can never hand back a dead
+    /// ParticleSystem.
+    /// </summary>
+    private static ParticleSystemEntry GetParticleSystems(GameObject inst) {
+
+        EntityId id = inst.GetEntityId();
+
+        ParticleSystemEntry entry;
+
+        if (particleSystemCache.TryGetValue(id, out entry)) {
+
+            if (entry.holder == inst
+                && entry.all != null) {
+
+                bool valid = true;
+
+                for (int i = 0; i < entry.all.Length; i++) {
+                    if (entry.all[i] == null) {
+                        valid = false;
+                        break;
+                    }
+                }
+
+                if (valid) {
+                    return entry;
+                }
+            }
+        }
+        else {
+            entry = new ParticleSystemEntry();
+            particleSystemCache[id] = entry;
+        }
+
+        entry.holder = inst;
+        entry.root = inst.GetComponent<ParticleSystem>();
+        entry.all = inst.GetComponentsInChildren<ParticleSystem>(true);
+
+        return entry;
+    }
+
     public static void SetParticleSystemStartColor(GameObject inst, Color startColor, bool includeChildren) {
         if (inst == null)
             return;
 
-        ParticleSystem particleSystemCurrent = inst.GetComponent<ParticleSystem>();
+        ParticleSystemEntry entry = GetParticleSystems(inst);
+
+        ParticleSystem particleSystemCurrent = entry.root;
         if (particleSystemCurrent != null) {
             //particleSystemCurrent.startColor = startColor;
             ParticleSystem.MainModule main = particleSystemCurrent.main;
@@ -1377,7 +1483,9 @@ public static class GameObjectHelper {
             return;
         }
 
-        ParticleSystem[] particleSystems = inst.GetComponentsInChildren<ParticleSystem>(true);
+        // Still the includeInactive: true set, and it still includes the root -- setting the
+        // root twice is what the uncached version did as well.
+        ParticleSystem[] particleSystems = entry.all;
 
         foreach (ParticleSystem particleSystem in particleSystems) {
             ParticleSystem.MainModule main = particleSystem.main;
@@ -2193,17 +2301,77 @@ public static class GameObjectHelper {
     public static GameObject CleanGameObjectName(
         GameObject go) {
 
-        if (go.name.Contains(" (Clone)")) {
-            go.name = go.name.Replace(" (Clone)", "");
-        }
-        if (go.name.Contains("(Clone)")) {
-            go.name = go.name.Replace("(Clone)", "");
-        }
-        if (go.name.Contains("(clone)")) {
-            go.name = go.name.Replace("(clone)", "");
+        if (go == null) {
+            return go;
         }
 
+        // GameObject.name allocates a new string on every read, and this runs on every
+        // pooled spawn. Read it once and bail before touching it at all in the common
+        // case -- a revived pooled object was already cleaned in a previous life.
+
+        string name = go.name;
+
+        if (name.IndexOf("(Clone", StringComparison.OrdinalIgnoreCase) < 0
+            && name.IndexOf("(clone", StringComparison.OrdinalIgnoreCase) < 0) {
+            return go;
+        }
+
+        name = name.Replace(" (Clone)", "");
+        name = name.Replace("(Clone)", "");
+        name = name.Replace("(clone)", "");
+
+        go.name = name;
+
         return go;
+    }
+
+    private class PoolKeyEntry {
+        public GameObject prefab;
+        public string key;
+    }
+
+    private static readonly Dictionary<EntityId, PoolKeyEntry> poolKeyCache
+        = new Dictionary<EntityId, PoolKeyEntry>();
+
+    /// <summary>
+    /// The pool bucket a prefab spawns into, derived from its name.
+    ///
+    /// This used to run `go.name.ToDelimited()` on EVERY spawn: a native name read into a
+    /// fresh managed string, a StringBuilder, its char buffer and one more string -- three
+    /// times per minigun shot (bullet, muzzle, shell) plus once per combat sound.
+    ///
+    /// A plain instanceID -> key map was rejected previously and rightly so: Unity reuses
+    /// instance IDs once an object is unloaded, which would silently put a new prefab's
+    /// objects into another prefab's bucket. Keeping the prefab reference beside the key
+    /// and comparing it turns that case into an ordinary cache miss. UnityEngine.Object's
+    /// == also reports a destroyed prefab as null, so an unloaded entry misses too.
+    /// (Keyed on EntityId -- GetInstanceID is deprecated as of Unity 6.5.)
+    /// </summary>
+    public static string GetPoolKey(GameObject go) {
+
+        if (go == null) {
+            return "default";
+        }
+
+        EntityId id = go.GetEntityId();
+
+        PoolKeyEntry entry;
+
+        if (poolKeyCache.TryGetValue(id, out entry)) {
+
+            if (entry.prefab == go) {
+                return entry.key;
+            }
+        }
+        else {
+            entry = new PoolKeyEntry();
+            poolKeyCache[id] = entry;
+        }
+
+        entry.prefab = go;
+        entry.key = go.name.ToDelimited();
+
+        return entry.key;
     }
 
     public static GameObject CreateGameObject(
@@ -2212,13 +2380,7 @@ public static class GameObjectHelper {
         Quaternion rotate,
         bool pooled) {
 
-        string key = "default";
-
-        if (go != null) {
-            key = go.name.ToDelimited();
-        }
-
-        return CreateGameObject(key, go, pos, rotate, pooled);
+        return CreateGameObject(GetPoolKey(go), go, pos, rotate, pooled);
     }
 
     // Pool keyed
@@ -2230,23 +2392,46 @@ public static class GameObjectHelper {
         Quaternion rotate,
         bool pooled) {
 
-        GameObject obj = null;
-
         if (!pooled) {
-            obj = GameObject.Instantiate(go, pos, rotate) as GameObject;
+            return CleanGameObjectName(GameObject.Instantiate(go, pos, rotate) as GameObject);
         }
-        else {
-            obj = ObjectPoolKeyedManager.createPooled(key, go, pos, rotate);
 
-            if (obj != null) {
+        GameObject obj = ObjectPoolKeyedManager.createPooled(key, go, pos, rotate);
 
-                if (!obj.Has<PoolGameObject>()) {
-                    obj.AddComponent<PoolGameObject>();
-                }
+        if (obj == null) {
+            return null;
+        }
+
+        // One component lookup for all of the pooled bookkeeping. This was three
+        // (Has, AddComponent-check, Bump) plus a name read, on every spawn.
+
+        PoolGameObject poolGameObject = obj.GetComponent<PoolGameObject>();
+
+        // Mark a new life so any delayed recycle still pending from the previous one cannot
+        // reclaim this object out from under its new owner.
+        //
+        // Only for an object the pool has just INSTANTIATED. A revived one was already bumped by
+        // ObjectPool.instantiate, before it re-sent Start -- which is the only order that lets an
+        // object schedule its own recycle from Start. Bumping again here would move the serial
+        // past the one that recycle captured and the object would never come back.
+
+        if (poolGameObject == null) {
+
+            poolGameObject = obj.AddComponent<PoolGameObject>();
+
+            unchecked {
+                poolGameObject.useSerial++;
             }
         }
 
-        obj = CleanGameObjectName(obj);
+        // "(Clone)" is appended by Instantiate, so it can only ever be there on the
+        // object's FIRST life. Every later revive was reading the name -- allocating a
+        // managed string -- to discover a suffix that could not be present.
+
+        if (!poolGameObject.nameCleaned) {
+            CleanGameObjectName(obj);
+            poolGameObject.nameCleaned = true;
+        }
 
         return obj;
     }
@@ -2454,6 +2639,44 @@ public static class GameObjectHelper {
         }
 
         ResetRigidBodiesVelocity(inst, Vector3.zero);
+    }
+
+    // The two names above clear ANGULAR velocity only, and have since they were written --
+    // callers that wanted "stop moving" got "stop spinning". They keep their behaviour and
+    // their name because other products call them; these are the honest names for the same
+    // thing. Anything being re-issued from a pool wants ResetRigidBodiesMotion below.
+
+    public static void ResetRigidBodiesAngularVelocity(GameObject inst, Vector3 angularVelocity) {
+        ResetRigidBodiesVelocity(inst, angularVelocity);
+    }
+
+    public static void ResetRigidBodiesAngularVelocity(GameObject inst) {
+        ResetRigidBodiesVelocity(inst);
+    }
+
+    // NOTE: ResetRigidBodiesVelocity only clears ANGULAR velocity despite its name.
+    // Pooled objects that are revived keep the linear velocity they died with, which
+    // then adds to whatever impulse the new owner applies. Use this when an object is
+    // being re-issued from a pool and must start from a genuine standstill.
+
+    public static void ResetRigidBodiesMotion(GameObject inst) {
+
+        if (inst == null) {
+            return;
+        }
+
+        Rigidbody[] rigidbodies
+            = inst.GetComponentsInChildren<Rigidbody>(true);
+
+        foreach (Rigidbody r in rigidbodies) {
+
+            if (r == null || r.isKinematic) {
+                continue;
+            }
+
+            r.linearVelocity = Vector3.zero;
+            r.angularVelocity = Vector3.zero;
+        }
     }
 
     public static void ResetRigidBodies(GameObject inst) {

@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using Engine.Content;
 using Engine.Utility;
 using UnityEngine;
-using UnityEngine.UI;
 
 namespace Engine.Events {
 
@@ -1406,7 +1405,8 @@ namespace Engine.Events {
             bool hasTouchesDownAllowed = false;
             bool hasTouchesUpAllowed = false;
 
-            if (Input.touches.Length > 0) {
+            // Input.touches builds a fresh Touch[] on every get; touchCount is a plain read.
+            if (Input.touchCount > 0) {
                 hasTouches = true;
             }
 
@@ -1431,7 +1431,28 @@ namespace Engine.Events {
 
             if (!hasTouches) {
                 lastDownAllowedPosition = Input.mousePosition;
-                checkIfAllowedTouch(lastDownAllowedPosition);
+
+                // checkIfAllowedTouch is expensive: an unmasked Physics.Raycast over
+                // Mathf.Infinity (which forces a full Physics.SyncTransforms) plus a pick
+                // across every UI Toolkit panel. It used to run here on EVERY frame, with
+                // no touch and no click, purely to re-derive flags nothing reads until
+                // there IS a click -- the gesture tests below are all gated on
+                // GetMouseButtonDown/Up, and on a click frame checkIfTouchesDownAllowed /
+                // checkIfTouchesUpAllowed have already run the same test at the same
+                // position. So only run it on a frame that actually has a click.
+                if (Input.GetMouseButtonDown(0)
+                    || Input.GetMouseButtonUp(0)) {
+
+                    checkIfAllowedTouch(lastDownAllowedPosition);
+                }
+                else {
+                    // The state checkIfAllowedTouch leaves when the pointer hits nothing,
+                    // so an idle frame still publishes the flags it always did.
+                    allowedTouch = true;
+                    inputButtonDown = false;
+                    inputAxisDown = false;
+                    shouldTouch = false;
+                }
             }
 
             if (!shouldTouch) {
@@ -1673,12 +1694,24 @@ namespace Engine.Events {
             inputAxisDown = false;
             shouldTouch = false;
 
+            // A migrated control (toolkit HUD stick or button) under the pointer: the same verdict
+            // its legacy collider got from the name test below. Suppressed legacy controls have
+            // no active collider left for that test to hit.
+            if (Engine.UI.UIPlatform.IsPointerOverUI(new Vector2(pos.x, pos.y))) {
+                inputButtonDown = true;
+                return false;
+            }
+
             if (Physics.Raycast(screenRay, out hit, Mathf.Infinity) && hit.transform != null) {
 
-                if (hit.transform.name.Contains("ButtonInput")
-                    || hit.transform.name.Contains("Axis")
-                    || hit.transform.name.Contains("Ignore")
-                    || hit.transform.name.Contains("Pad")) {
+                // Transform.name marshals a fresh managed string out of native on every
+                // access, so four tests meant four throwaway strings. Read it once.
+                string hitName = hit.transform.name;
+
+                if (hitName.Contains("ButtonInput")
+                    || hitName.Contains("Axis")
+                    || hitName.Contains("Ignore")
+                    || hitName.Contains("Pad")) {
                     inputButtonDown = true;
                     shouldTouch = false;
                     allowedTouch = false;
@@ -1719,7 +1752,11 @@ namespace Engine.Events {
 
         public virtual bool checkIfTouchesDownAllowed() {
 
-            foreach (Touch t in Input.touches) {
+            // Indexed, because Input.touches allocates a Touch[] every time it is read
+            // and this runs once per frame off GameController.Update.
+            for (int i = 0; i < Input.touchCount; i++) {
+
+                Touch t = Input.GetTouch(i);
 
                 if (t.phase == TouchPhase.Began) {
 
@@ -1747,7 +1784,11 @@ namespace Engine.Events {
 
         public virtual bool checkIfTouchesUpAllowed() {
 
-            foreach (Touch t in Input.touches) {
+            // Indexed, because Input.touches allocates a Touch[] every time it is read
+            // and this runs once per frame off GameController.Update.
+            for (int i = 0; i < Input.touchCount; i++) {
+
+                Touch t = Input.GetTouch(i);
 
                 if (t.phase == TouchPhase.Ended) {
 

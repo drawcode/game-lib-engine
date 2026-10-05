@@ -5,11 +5,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-#if USE_UI_NGUI_2_7 || USE_UI_NGUI_3
-#else
-using UnityEngine.UI;
-#endif
-
 using Engine.Events;
 
 public class LoadSceneMessages {
@@ -38,8 +33,10 @@ public class LoadSceneAsync : GameObjectBehavior {
     public UISlider progressBarUI;
     public UILabel progressBarTextUI;
 #else
-    public Slider progressBarUI;
-    public Text progressBarTextUI;
+    // B10: agnostic UIRef handles (was UGUI), the BaseGameHUD pattern. Unbound (null) until
+    // something binds them by name; every UIUtil call no-ops on a null ref.
+    public Engine.UI.UIRef progressBarUI;
+    public Engine.UI.UIRef progressBarTextUI;
 #endif
 
 

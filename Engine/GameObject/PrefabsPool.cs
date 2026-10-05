@@ -39,6 +39,29 @@ public class PrefabsPool : GameObjectBehavior {
         }
     }
 
+    // Path -> dictionary key memo.
+    //
+    // The KEY SCHEME IS DELIBERATELY UNCHANGED -- `prefabs` is a public field and callers
+    // outside this assembly may hold SHA-1 keys -- but the hash itself was recomputed on
+    // every lookup, for a small fixed set of prefab paths. Measured in a live round:
+    // CalculateSHA1ASCII costs 505 bytes and 3.19 us per call, and it allocates a fresh
+    // ASCIIEncoding and an undisposed SHA1CryptoServiceProvider each time. This sits on
+    // the item/actor spawn path, which is where the frame spikes are.
+    private static readonly Dictionary<string, string> pathKeys
+        = new Dictionary<string, string>();
+
+    private static string KeyForPath(string path) {
+
+        string key;
+
+        if (!pathKeys.TryGetValue(path, out key)) {
+            key = CryptoUtil.CalculateSHA1ASCII(path);
+            pathKeys[path] = key;
+        }
+
+        return key;
+    }
+
     public static GameObject PoolPrefab(string path) {
 
         if (instance == null) {
@@ -47,17 +70,19 @@ public class PrefabsPool : GameObjectBehavior {
 
         CheckPrefabs();
 
-        string key = CryptoUtil.CalculateSHA1ASCII(path);
+        string key = KeyForPath(path);
 
-        if (!instance.prefabs.ContainsKey(key)) {
-            GameObject prefab = Resources.Load(path) as GameObject;
-            if (prefab != null) {
-                instance.prefabs.Add(key, prefab);
-            }
+        GameObject cached;
+
+        if (instance.prefabs.TryGetValue(key, out cached)) {
+            return cached;
         }
 
-        if (instance.prefabs.ContainsKey(key)) {
-            return instance.prefabs[key];
+        GameObject prefab = Resources.Load(path) as GameObject;
+
+        if (prefab != null) {
+            instance.prefabs.Add(key, prefab);
+            return prefab;
         }
 
         return null;

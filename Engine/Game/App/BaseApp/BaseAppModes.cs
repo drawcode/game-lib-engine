@@ -21,6 +21,12 @@ namespace Engine.Game.App.BaseApp {
         public static string appModeGameArcade = "app-mode-game-arcade";
         public static string appModeGameChallenge = "app-mode-game-challenge";
         public static string appModeGameMission = "app-mode-game-mission";
+        // The content data ships the PLURAL key (app-content-state-data.json.txt), so the
+        // singular constant alone never matched and checkForGameOver's mission branch could
+        // never fire -- a missions round ignored both the expired timer and player death.
+        // Both spellings are accepted rather than renaming the constant, because this library
+        // is shared and another product's data may still use the singular.
+        public static string appModeGameMissions = "app-mode-game-missions";
         public static string appModeGameTraining = "app-mode-game-training";
         public static string appModeGameMatchup = "app-mode-game-matchup";
         public static string appModeGameCoop = "app-mode-game-coop";
@@ -96,7 +102,8 @@ namespace Engine.Game.App.BaseApp {
 
         public bool isAppModeGameMission {
             get {
-                return IsAppMode(AppModeMeta.appModeGameMission);
+                return IsAppMode(AppModeMeta.appModeGameMission)
+                    || IsAppMode(AppModeMeta.appModeGameMissions);
             }
         }
 

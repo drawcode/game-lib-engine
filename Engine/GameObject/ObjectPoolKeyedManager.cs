@@ -138,6 +138,25 @@ public class ObjectPoolKeyedManager : GameObjectBehavior {
         return false;
     }
 
+    /// <summary>
+    /// Release cached objects beyond <paramref name="keepPerPool"/> in every bucket and
+    /// return how many were destroyed. Live objects are untouched.
+    ///
+    /// Meant for a level transition. UnloadUnusedAssets cannot free anything a pool still
+    /// holds a reference to, so without this the meshes, materials and textures of a level
+    /// you have left stay resident because a few hundred parked bullets and effects are
+    /// still pointing at them. Buckets themselves are kept -- the key mapping is what
+    /// `internalDestroy` uses to recycle objects that are still live.
+    /// </summary>
+    public static int trimPooled(int keepPerPool) {
+
+        if (_instance == null) {
+            return 0;
+        }
+
+        return _instance.internalTrim(keepPerPool);
+    }
+
     #endregion
 
     #region Private implementation
@@ -253,8 +272,44 @@ public class ObjectPoolKeyedManager : GameObjectBehavior {
 
     // must be run as coroutine
     private IEnumerator internalDestroy(GameObject obj, float delay) {
+
+        int serial = PoolGameObject.GetSerial(obj);
+
         yield return new WaitForSeconds(delay);
+
+        if (obj == null) {
+            yield break;
+        }
+
+        // The object was recycled and re-issued while this timer was pending -- it is
+        // somebody else's now, so leave it alone.
+
+        if (!PoolGameObject.IsSameUse(obj, serial)) {
+            yield break;
+        }
+
         internalDestroy(obj);
+    }
+
+    public int internalTrim(int keepPerPool) {
+
+        int destroyed = 0;
+
+        if (prefab2pool == null) {
+            return 0;
+        }
+
+        // prefab2pool and instance2pool hold the SAME ObjectPool instances, so trimming
+        // the first covers both -- trimming the second as well would be a no-op at best.
+
+        foreach (ObjectPool p in prefab2pool.Values) {
+
+            if (p != null) {
+                destroyed += p.trim(keepPerPool);
+            }
+        }
+
+        return destroyed;
     }
 
     public bool internalClear() {

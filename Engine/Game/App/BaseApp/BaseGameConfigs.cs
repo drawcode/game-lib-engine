@@ -5,6 +5,50 @@ using System.IO;
 using Engine.Game.Data;
 
 namespace Engine.Game.App.BaseApp {
+
+    // OFF-SCREEN EDGE INDICATOR DIALS
+    //
+    // Deliberately NOT on BaseGameConfigs<T>: that class is generic, so its statics are only
+    // reachable through a closed type (the app's `GameConfigs`), which the engine lib cannot
+    // name. BaseGameProfile lives here and needs the same numbers for its slider bounds, so
+    // they sit in a non-generic class both sides can see.
+    //
+    // `scale` multiplies the distance-derived size in BaseGamePlayerIndicator.ScaleIndicator.
+    // It ships at .9 -- the 10% shrink asked for on device -- and Settings: Controls writes the
+    // player's own value over it from ATT_CONTROL_INDICATOR_SCALE.
+    //
+    // `edgeBorderScale` multiplies the indicator prefab's authored `clampBorderSize` (90 design
+    // units) rather than replacing it, so the authored margin stays the one place that number
+    // is written down. .5 puts them at 45 units. 90 was worst on the vertical axis: the visible
+    // area measures +/-692.5 x +/-320 container units, so it inset the top and bottom dots by
+    // 28% of the half-height while the sides sat at 13% -- which is why only SOME of them read
+    // as far from the edge.
+    public static class GameIndicatorConfigs {
+        public static float scale = .9f;
+        public static float scaleMin = .5f;
+        public static float scaleMax = 1.5f;
+
+        public static float edgeBorderScale = .5f;
+
+        // TOP KEEP-OUT for clamped off-screen indicators, in the indicator container's own design
+        // units (that space is 1385 x 640 for the whole screen, measured live).
+        //
+        // Unlike edgeBorderScale this is an ABSOLUTE inset, not a multiplier, and it applies to the
+        // TOP edge only -- the sides and bottom keep the authored margin so indicators still ride
+        // the outside of the screen and around the lower-left controls.
+        //
+        // Why it exists: the general border is the prefab's authored 90 halved to 45, which put a
+        // clamped indicator at y = 319.6 - 45 = 274.6. The HUD's top strip runs from the top down
+        // to y = 78 in the same design space (deepest element measured live: IconHitHealth,
+        // y[60..78] -- the third bar in the left stack), which is container y = 241.6. So every
+        // indicator pinned to the top edge sat INSIDE the HUD readouts and was hidden behind them.
+        //
+        // 110 = the 78-unit HUD strip plus ~32 for half an indicator icon, since the clamp places
+        // the indicator's CENTRE. That puts the icon's top edge just under the HUD, which is the
+        // requested behaviour.
+        public static float edgeBorderTop = 110f;
+    }
+
     public class BaseGameConfigs<T> : DataObjects<T> where T : DataObject, new() {
         private static T current;
         private static volatile BaseGameConfigs<T> instance;
