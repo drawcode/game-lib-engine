@@ -128,6 +128,31 @@ public class Platforms {
         EtceteraAndroid.openReviewPageInPlayStore( isAmazon );
 #elif UNITY_IPHONE && USE_FEATURE_ETCETERA
         EtceteraBinding.openAppStoreReviewPage(AppConfigs.appStoreId);
+#else
+        // No review plugin (2026-10-04): this used to do nothing, so a rate button was dead. Open
+        // the store's review page by URL instead. Logged only in the Editor, so a scripted tap in
+        // a test session never launches a browser.
+        string url = StoreReviewUrl();
+
+        if (Application.isEditor) {
+            Debug.Log("Platforms.showReviewPage: " + url);
+            return;
+        }
+
+        Application.OpenURL(url);
+#endif
+    }
+
+    // The platform store's review page for this app.
+    public static string StoreReviewUrl() {
+#if UNITY_ANDROID
+        if (AppConfigs.platformIsAmazon) {
+            return "amzn://apps/android?p=" + Application.identifier;
+        }
+
+        return "market://details?id=" + Application.identifier;
+#else
+        return "itms-apps://itunes.apple.com/app/id" + AppConfigs.appStoreId + "?action=write-review";
 #endif
     }
 
