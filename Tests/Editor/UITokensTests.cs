@@ -14,6 +14,15 @@ namespace Engine.UI.Bitty.Tests {
     // what makes panel timing data-driven without touching a single call site.
     public class UITokensTests {
 
+        [SetUp]
+        public void SetUp() {
+
+            // Start from the token defaults, not whatever an earlier suite or a Play session left
+            // in TweenPresets: its own built-in table is the retuned .34 show, so a test that reads
+            // .45 without seeding first passed or failed by run order.
+            UITokens.Defaults().Seed();
+        }
+
         [TearDown]
         public void TearDown() {
 
