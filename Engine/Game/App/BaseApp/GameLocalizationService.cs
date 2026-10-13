@@ -64,16 +64,28 @@ namespace Engine.Game.App.BaseApp {
 
             string val = codeOrEmpty ?? "";
 
+            // Order matters, twice over:
+            // 1. Record the choice in memory BEFORE Apply -- Apply fires LanguageChanged, and
+            //    listeners (the language picker's SyncSelection) read SavedLanguage back.
+            // 2. SAVE only AFTER Apply -- Apply's BuildChain is what leaves the legacy
+            //    game-localization-data state on the new locale. Saving before it persisted the
+            //    OLD value of that key and nothing saved it again, so the profile came back with
+            //    app-language and game-localization-data disagreeing (found as "en" on reload).
 #if USE_GAME_LIB_GAMES
             if (GameProfiles.Current != null) {
                 GameProfiles.Current.SetAppLanguage(val);
-                GameState.SaveProfile();
             }
 #endif
             SystemPrefUtil.SetLocalSettingString(PrefKeyAppLanguage, val);
-            SystemPrefUtil.Save();
 
             Apply(val, true);
+
+#if USE_GAME_LIB_GAMES
+            if (GameProfiles.Current != null) {
+                GameState.SaveProfile();
+            }
+#endif
+            SystemPrefUtil.Save();
         }
 
         // The profile lazily auto-vivifies blank on first touch, so a Init() that ran before the
@@ -232,7 +244,15 @@ namespace Engine.Game.App.BaseApp {
 
             Dictionary<string, string> raw = new Dictionary<string, string>();
 
-            Locos.Instance.ChangeCurrent(fileCode);
+            // LoadLocale, not ChangeCurrent: ChangeCurrent also writes the persisted
+            // game-localization-data state and broadcasts gameLocalizationChanged, so building a
+            // de chain announced (and could get saved as) "en" while loading the en fallback.
+            // BuildChain sets the real current locale ONCE, after the whole chain is loaded.
+            if (fileCode != BaseGameLocalizations<GameLocalization>.currentLocale
+                    || !Locos.Instance.IsLoaded
+                    || !Locos.Instance.HasLoadedStrings) {
+                Locos.Instance.LoadLocale(fileCode);
+            }
 
             GameLocalization loc = GameLocalizations.Instance.GetById(fileCode);
 
