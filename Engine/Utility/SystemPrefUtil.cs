@@ -1,22 +1,48 @@
 using System;
+using Agnostic.Core;
+using Engine.AgnosticHost;
 using Engine.Utility;
 using UnityEngine;
 
 public class SystemPrefUtil {
+
+    // Kill switch. On: the string, has, delete and save calls go through the agnostic storage seam
+    // (AgnosticStorage.storage -> UnityStorage -> PlayerPrefs, so the same keys and values). Flip it at
+    // this source default; a runtime flip only affects later calls. Int, Float, DateTime and DeleteAll
+    // stay on PlayerPrefs: their values are native typed entries that the string kv cannot read.
+    // See contexts/gamedev/agnostic/context-agnostic-storage.md (S5).
+    public static bool inward = true;
 
     public SystemPrefUtil() {
 
     }
 
     public static void Save() {
+
+        if (inward) {
+            AgnosticStorage.storage.KvFlush();
+            return;
+        }
+
         PlayerPrefs.Save();
     }
 
     public static void SetLocalSettingString(string key, string value) {
+
+        if (inward && AgnosticStorage.storage.KvSet(key, value) == HostStatus.ok) {
+            return;
+        }
+
         PlayerPrefs.SetString(key, value);
     }
 
     public static string GetLocalSettingString(string key) {
+
+        if (inward && !string.IsNullOrEmpty(key)) {
+            string stored;
+            return AgnosticStorage.storage.KvGet(key, out stored) && !string.IsNullOrEmpty(stored) ? stored : "";
+        }
+
         string keyValue = "";
         if (SystemPrefUtil.HasLocalSetting(key)) {
             keyValue = PlayerPrefs.GetString(key);
@@ -27,6 +53,12 @@ public class SystemPrefUtil {
     }
 
     public static bool HasLocalSetting(string key) {
+
+        if (inward && !string.IsNullOrEmpty(key)) {
+            string stored;
+            return AgnosticStorage.storage.KvGet(key, out stored);
+        }
+
         bool hasKey = false;
         hasKey = PlayerPrefs.HasKey(key);
         return hasKey;
@@ -69,6 +101,12 @@ public class SystemPrefUtil {
     }
 
     public static void DeleteKey(string key) {
+
+        if (inward && !string.IsNullOrEmpty(key)) {
+            AgnosticStorage.storage.KvDelete(key);
+            return;
+        }
+
         PlayerPrefs.DeleteKey(key);
     }
 
