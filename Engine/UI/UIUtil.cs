@@ -1060,6 +1060,45 @@ public class UIUtil {
         }
     }
 
+    // LIST WINDOW (paging), toolkit-only like ScrollToTop: the names of a list's rows in or near
+    // its viewport (marginViewports = extra viewport heights above and below), and a callback for
+    // when that window may have changed (scroll, layout, resize). Other backends answer nothing,
+    // so a caller pages only where the backend can say what is on screen. Additive.
+    public static void ListItemsInView(UIRef view, string listName, float marginViewports, List<string> into) {
+
+        Engine.UI.UIToolkitBackend backend =
+            UIPlatform.For(view) as Engine.UI.UIToolkitBackend;
+
+        if (backend != null) {
+            backend.ListItemsInView(view, listName, marginViewports, into);
+        }
+    }
+
+    // Returns the unregister action (null when nothing was registered). Call it before the view
+    // is freed.
+    public static System.Action OnListWindowChanged(UIRef view, string listName, System.Action changed) {
+
+        Engine.UI.UIToolkitBackend backend =
+            UIPlatform.For(view) as Engine.UI.UIToolkitBackend;
+
+        if (backend == null) {
+            return null;
+        }
+
+        return backend.OnListWindowChanged(view, listName, changed);
+    }
+
+    // Undo SetImageTexture (the element falls back to its class styling). Toolkit-only.
+    public static void ClearImageTexture(UIRef r) {
+
+        Engine.UI.UIToolkitBackend backend =
+            UIPlatform.For(r) as Engine.UI.UIToolkitBackend;
+
+        if (backend != null) {
+            backend.ClearImageTexture(r);
+        }
+    }
+
     public static void ClearListItems(UIRef view, string listName) {
 
         IUIBackend backend = UIPlatform.For(view);

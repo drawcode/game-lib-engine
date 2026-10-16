@@ -170,6 +170,21 @@ namespace Engine.UI {
             pendingHead = 0;
         }
 
+        // Release ONE cached texture (a paged list dropping a row that scrolled far away). An element
+        // still showing it goes blank, so clear it first. Known-empty codes stay known. Additive.
+        public bool Release(string code) {
+
+            RenderTexture rt;
+
+            if (code == null || !cache.TryGetValue(code, out rt)) {
+                return false;
+            }
+
+            cache.Remove(code);
+            ReleaseTexture(rt);
+            return true;
+        }
+
         // Drop queued renders AND release every texture this cache holds.
         public void Clear() {
 

@@ -1530,6 +1530,120 @@ namespace Engine.UI {
             }).Every(16);
         }
 
+        // LIST WINDOW (paging)
+        //
+        // For lists whose rows carry something expensive to load (a rendered thumbnail, a remote
+        // image): the caller loads only rows in or near the viewport and drops the rest as the
+        // player scrolls. Rows are tested by their OWN bounds against the ScrollView viewport, so a
+        // wrapping grid works the same as a column. A row that has not been laid out yet (the
+        // frame it was built, or a hidden view) is never in view — nothing loads behind a closed
+        // panel. Appends row names in child order (top to bottom), so the visible rows come first
+        // when the caller asks for margin 0 before a wider margin.
+        public void ListItemsInView(UIRef view, string listName, float marginViewports, List<string> into) {
+
+            if (into == null) {
+                return;
+            }
+
+            VisualElement content = ListContent(view, listName);
+            ScrollView sv = ListScrollView(view, listName);
+
+            if (content == null || sv == null || sv.panel == null) {
+                return;
+            }
+
+            Rect port = sv.contentViewport.worldBound;
+
+            if (float.IsNaN(port.height) || port.height <= 0f) {
+                return;
+            }
+
+            float margin = port.height * Mathf.Max(0f, marginViewports);
+            float top = port.yMin - margin;
+            float bottom = port.yMax + margin;
+
+            for (int i = 0; i < content.childCount; i++) {
+
+                VisualElement row = content[i];
+
+                if (row.ClassListContains("list-item-template")
+                        || row.resolvedStyle.display == DisplayStyle.None) {
+                    continue;
+                }
+
+                Rect r = row.worldBound;
+
+                if (float.IsNaN(r.height) || r.height <= 0f) {
+                    continue;
+                }
+
+                if (r.yMax >= top && r.yMin <= bottom) {
+                    into.Add(row.name);
+                }
+            }
+        }
+
+        // Calls `changed` when the list scrolls, or its rows / viewport are laid out or resized
+        // (rows built this frame get bounds a frame later; a filter swap or a reopen re-lays them).
+        // Returns the unregister action — call it before the view is freed: toolkit elements are
+        // recycled, and a handler left on one would fire for another view's list.
+        public Action OnListWindowChanged(UIRef view, string listName, Action changed) {
+
+            ScrollView sv = ListScrollView(view, listName);
+
+            if (sv == null || changed == null) {
+                return null;
+            }
+
+            EventCallback<ChangeEvent<float>> onScroll = e => changed();
+            EventCallback<GeometryChangedEvent> onGeometry = e => changed();
+
+            VisualElement content = sv.contentContainer;
+            VisualElement port = sv.contentViewport;
+
+            sv.verticalScroller.slider.RegisterValueChangedCallback(onScroll);
+            content.RegisterCallback(onGeometry);
+            port.RegisterCallback(onGeometry);
+
+            return () => {
+                sv.verticalScroller.slider.UnregisterValueChangedCallback(onScroll);
+                content.UnregisterCallback(onGeometry);
+                port.UnregisterCallback(onGeometry);
+            };
+        }
+
+        // Undo SetImageTexture: back to whatever the element's classes style (a placeholder, or
+        // nothing), for a row whose texture was released.
+        public void ClearImageTexture(UIRef r) {
+
+            VisualElement el = El(r);
+
+            if (el == null) {
+                return;
+            }
+
+            el.style.backgroundImage = StyleKeyword.Null;
+            el.style.unityBackgroundImageTintColor = StyleKeyword.Null;
+            el.style.backgroundSize = StyleKeyword.Null;
+        }
+
+        private ScrollView ListScrollView(UIRef view, string listName) {
+
+            VisualElement root = El(view);
+
+            if (root == null) {
+                return null;
+            }
+
+            VisualElement listEl = root.name == listName ? root : root.Q(listName);
+
+            if (listEl == null) {
+                return null;
+            }
+
+            return listEl as ScrollView ?? listEl.Q<ScrollView>() ?? listEl.GetFirstAncestorOfType<ScrollView>();
+        }
+
         private static void ConfigureScrollViews(VisualElement root) {
 
             if (root == null) {
