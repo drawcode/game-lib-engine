@@ -1088,6 +1088,18 @@ public class UIUtil {
         return backend.OnListWindowChanged(view, listName, changed);
     }
 
+    // Add or remove a style class on an element (selected tab, dimmed row, icon sprite).
+    // Toolkit-only; other backends ignore it. Additive.
+    public static void SetClass(UIRef r, string className, bool on) {
+
+        Engine.UI.UIToolkitBackend backend =
+            UIPlatform.For(r) as Engine.UI.UIToolkitBackend;
+
+        if (backend != null) {
+            backend.SetClass(r, className, on);
+        }
+    }
+
     // Undo SetImageTexture (the element falls back to its class styling). Toolkit-only.
     public static void ClearImageTexture(UIRef r) {
 

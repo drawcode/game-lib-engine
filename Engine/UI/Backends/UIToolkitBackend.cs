@@ -1627,6 +1627,19 @@ namespace Engine.UI {
             el.style.backgroundSize = StyleKeyword.Null;
         }
 
+        // Add (on) or remove a USS class: state styling that a data-driven view cannot declare up
+        // front (a selected tab, a dimmed row, a per-row icon sprite class).
+        public void SetClass(UIRef r, string className, bool on) {
+
+            VisualElement el = El(r);
+
+            if (el == null || string.IsNullOrEmpty(className)) {
+                return;
+            }
+
+            el.EnableInClassList(className, on);
+        }
+
         private ScrollView ListScrollView(UIRef view, string listName) {
 
             VisualElement root = El(view);
