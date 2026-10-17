@@ -88,6 +88,8 @@ namespace Engine.AgnosticHost {
         private Camera shiftedCamera;
         private float shiftedNear;
         private float shiftedFar;
+        private UniversalRenderPipelineAsset shiftedAsset;
+        private float shiftedShadowDistance;
 
         // Kept above zero so the shifted near is never on the eye itself.
         public const float orthoNearMargin = 0.01f;
@@ -401,10 +403,22 @@ namespace Engine.AgnosticHost {
                 return;
             }
 
+            UnshiftCamera();
+
             float pullback = orthoNearMargin - cam.nearClipPlane;
             shiftedCamera = cam;
             shiftedNear = cam.nearClipPlane;
             shiftedFar = cam.farClipPlane;
+
+            // URP zeroes the camera's shadow distance when it is below the near plane, so the shifted
+            // near (~300 here) switched main-light shadows off. Push the asset's distance out by the
+            // same pullback for this camera only; URP re-reads it inside the begin scope.
+            shiftedAsset = GraphicsSettings.currentRenderPipeline as UniversalRenderPipelineAsset;
+
+            if (shiftedAsset != null) {
+                shiftedShadowDistance = shiftedAsset.shadowDistance;
+                shiftedAsset.shadowDistance = shiftedShadowDistance + pullback;
+            }
 
             // Unity's view matrix looks down -Z: pulling the eye back along forward moves every point
             // pullback further down -Z.
@@ -422,6 +436,11 @@ namespace Engine.AgnosticHost {
         }
 
         private void UnshiftCamera() {
+
+            if (shiftedAsset != null) {
+                shiftedAsset.shadowDistance = shiftedShadowDistance;
+                shiftedAsset = null;
+            }
 
             if (shiftedCamera == null) {
                 shiftedCamera = null;
