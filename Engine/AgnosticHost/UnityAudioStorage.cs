@@ -215,12 +215,16 @@ namespace Engine.AgnosticHost {
         }
     }
 
-    // U-P1/P2/P3, over SystemPrefUtil (key/value) and FileSystemUtil (files).
+    // U-P1/P2/P3, over PlayerPrefs (key/value) and System.IO (files).
     //
     // Logical roots: save:/ -> persistentDataPath, cache:/ -> temporaryCachePath,
     // content:/ -> streamingAssetsPath (read-only; on Android it lives inside the APK and a
     // synchronous read reports ioError). A path with a ".." segment is refused, so the core
     // cannot reach outside its roots.
+    //
+    // Raw engine calls only: kv goes straight to PlayerPrefs and files straight to System.IO, never
+    // through SystemPrefUtil or FileSystemUtil. Those facades delegate INWARD to this adapter when
+    // their kill switches are on, so calling back out through them would recurse forever.
     public class UnityStorage : IHostStorage {
 
         public const string saveRoot = "save:/";
@@ -239,11 +243,11 @@ namespace Engine.AgnosticHost {
 
             value = null;
 
-            if (string.IsNullOrEmpty(key) || !SystemPrefUtil.HasLocalSetting(key)) {
+            if (string.IsNullOrEmpty(key) || !PlayerPrefs.HasKey(key)) {
                 return false;
             }
 
-            value = SystemPrefUtil.GetLocalSettingString(key);
+            value = PlayerPrefs.GetString(key);
             return true;
         }
 
@@ -253,22 +257,22 @@ namespace Engine.AgnosticHost {
                 return HostStatus.invalidArgument;
             }
 
-            SystemPrefUtil.SetLocalSettingString(key, value ?? "");
+            PlayerPrefs.SetString(key, value ?? "");
             return HostStatus.ok;
         }
 
         public HostStatus KvDelete(string key) {
 
-            if (string.IsNullOrEmpty(key) || !SystemPrefUtil.HasLocalSetting(key)) {
+            if (string.IsNullOrEmpty(key) || !PlayerPrefs.HasKey(key)) {
                 return HostStatus.notFound;
             }
 
-            SystemPrefUtil.DeleteKey(key);
+            PlayerPrefs.DeleteKey(key);
             return HostStatus.ok;
         }
 
         public HostStatus KvFlush() {
-            SystemPrefUtil.Save();
+            PlayerPrefs.Save();
             return HostStatus.ok;
         }
 
@@ -289,7 +293,7 @@ namespace Engine.AgnosticHost {
             }
 
             try {
-                bytes = FileSystemUtil.ReadAllBytes(os);
+                bytes = File.ReadAllBytes(os);
                 return HostStatus.ok;
             }
             catch (Exception e) {
@@ -310,10 +314,16 @@ namespace Engine.AgnosticHost {
             string temp = os + ".tmp";
 
             try {
-                FileSystemUtil.WriteAllBytes(temp, bytes);
+                string dir = Path.GetDirectoryName(os);
+
+                if (!string.IsNullOrEmpty(dir)) {
+                    Directory.CreateDirectory(dir);
+                }
+
+                File.WriteAllBytes(temp, bytes);
 
                 if (File.Exists(os)) {
-                    File.Replace(temp, os, null);
+                    Replace(temp, os);
                 }
                 else {
                     File.Move(temp, os);
@@ -399,6 +409,27 @@ namespace Engine.AgnosticHost {
             results.Sort(StringComparer.Ordinal);
             return results.Count;
         }
+
+        // Some Android filesystems reject File.Replace with no backup file. Fall back to delete then
+        // move, which is NOT atomic (a kill between the two loses the file), and say so once.
+        private void Replace(string temp, string os) {
+
+            try {
+                File.Replace(temp, os, null);
+            }
+            catch (Exception e) when (e is IOException || e is PlatformNotSupportedException || e is UnauthorizedAccessException) {
+
+                if (!replaceFallbackLogged) {
+                    replaceFallbackLogged = true;
+                    Log(LogLevel.warning, "File.Replace failed (" + e.Message + "); falling back to delete + move, which is not atomic");
+                }
+
+                File.Delete(os);
+                File.Move(temp, os);
+            }
+        }
+
+        private bool replaceFallbackLogged;
 
         // ---- mapping ------------------------------------------------------------------------
 

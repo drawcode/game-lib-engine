@@ -7,6 +7,9 @@ using System.Threading;
 
 using UnityEngine;
 
+using Agnostic.Core;
+
+using Engine.AgnosticHost;
 using Engine.Events;
 using Engine.Game.Data;
 using Engine.Utility;
@@ -337,6 +340,13 @@ namespace Engine.Game.App.BaseApp {
 
         // PROFILE
 
+        // Kill switch. On: profile blobs are written and read through the agnostic ProfileStore
+        // (AgnosticStorage.Profiles, FrameMode.none): same <key>.json and the same bytes as the legacy
+        // FileSystemUtil.WriteString, but written atomically (temp + rename), so a kill mid-save keeps
+        // the previous file. Flip it at this source default. The web/PROFILE_RESOURCES branch is
+        // untouched. See contexts/gamedev/agnostic/context-agnostic-storage.md (S2, S4, section 7).
+        public static bool profileInward = true;
+
         public virtual void contentSave(string key, string data) {
 
 #if UNITY_WEBPLAYER || PROFILE_RESOURCES
@@ -344,6 +354,21 @@ namespace Engine.Game.App.BaseApp {
         SystemPrefUtil.Save();
         
 #else
+            if (profileInward) {
+                ProfileStore store = AgnosticStorage.Profiles(ContentPaths.appCachePathAllSharedUserData);
+
+                if (store != null) {
+                    HostStatus status = store.Save(key, AgnosticStorage.utf8NoBom.GetBytes(data ?? ""),
+                        DateTimeOffset.UtcNow.ToUnixTimeMilliseconds());
+
+                    if (status == HostStatus.ok) {
+                        return;
+                    }
+
+                    Debug.LogWarning("contentSave: profile store " + status + " for " + key + ", writing the legacy way");
+                }
+            }
+
             string path = Path.Combine(
                 ContentPaths.appCachePathAllSharedUserData,
                 key + ".json");
@@ -471,6 +496,25 @@ namespace Engine.Game.App.BaseApp {
         public virtual string readProfileFile(string key) {
 
             string data = "";
+
+            if (profileInward) {
+                ProfileStore store = AgnosticStorage.Profiles(ContentPaths.appCachePathAllSharedUserData);
+
+                if (store != null) {
+                    byte[] bytes;
+                    ProfileLoad load = store.Load(key, out bytes);
+
+                    if (load.status == ProfileLoadStatus.ok) {
+                        return AgnosticStorage.DecodeUtf8(bytes);
+                    }
+
+                    if (load.status == ProfileLoadStatus.notFound) {
+                        return data;
+                    }
+
+                    Debug.LogWarning("readProfileFile: profile store " + load.status + " for " + key + ", reading the legacy way");
+                }
+            }
 
             string persistentPath = Path.Combine(
                 ContentPaths.appCachePathAllSharedUserData,
