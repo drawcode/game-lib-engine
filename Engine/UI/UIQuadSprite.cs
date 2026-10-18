@@ -220,6 +220,48 @@ namespace Engine.UI {
             appliedFill = f;
         }
 
+        // Optional sprite table (baked from the legacy atlas) so a quad can change sprite without
+        // the legacy atlas: action-zone icons are renamed per action at runtime. `spriteName` is
+        // the sprite the quad currently shows.
+        public UIQuadSpriteAtlas atlas;
+        public string spriteName;
+
+        // Show another sprite of `atlas`. Single-quad (simple or filled) sprites only: the corners
+        // stay, the UVs move to the new sprite's outer rect, like an NGUI spriteName write without
+        // MakePixelPerfect. False when there is no atlas, no such sprite, or the quad is sliced.
+        public bool SetSprite(string name) {
+
+            if (name == spriteName) {
+                return true;
+            }
+
+            if (atlas == null || corners == null || corners.Length != 4) {
+                return false;
+            }
+
+            UIQuadSpriteAtlas.Entry entry = atlas.Get(name);
+
+            if (entry == null) {
+                return false;
+            }
+
+            Rect r = entry.outer;
+
+            // NGUI order: TR, BR, BL, TL (SimpleFill).
+            uvs = new Vector2[] {
+                new Vector2(r.xMax, r.yMax), new Vector2(r.xMax, r.yMin),
+                new Vector2(r.xMin, r.yMin), new Vector2(r.xMin, r.yMax)
+            };
+
+            spriteName = name;
+
+            bool visible = isVisible;
+            Build();
+            meshRenderer.enabled = visible;
+
+            return true;
+        }
+
         public void SetColor(Color value) {
             color = value;
             ApplyColor();

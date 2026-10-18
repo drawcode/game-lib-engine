@@ -154,9 +154,10 @@ namespace Engine.Animation {
         private Renderer colorRenderer = null;
         private UIQuadSprite colorQuad = null;
 
+        private Light colorLight = null;
+
 #if USE_UI_NGUI_2_7 || USE_UI_NGUI_3
         private UIWidget colorWidget = null;
-        private Light colorLight = null;
 #endif
 
         // Same priority order the per-tick code used: NGUI sprite-on-self, then CanvasGroup, then
@@ -220,8 +221,8 @@ namespace Engine.Animation {
 
 #if USE_UI_NGUI_2_7 || USE_UI_NGUI_3
             colorWidget = tr.GetComponentInChildren<UIWidget>();
-            colorLight = tr.GetComponent<Light>();
 #endif
+            colorLight = tr.GetComponent<Light>();
 
             colorGroup = tr.GetComponent<CanvasGroup>();
 
@@ -358,6 +359,11 @@ namespace Engine.Animation {
             }
 #endif
 
+            // The quad replaces the widget one for one, so it answers first, as the widget did.
+            if (colorQuad) {
+                return colorQuad.color;
+            }
+
             if (colorGroup && colorGroupGraphic) {
                 return colorGroupGraphic.color;
             }
@@ -414,12 +420,31 @@ namespace Engine.Animation {
             if (found) {
                 return;
             }
-#endif
+#else
+            // Same "all together" rule without the widget: the quad that replaced it, the
+            // renderer and the light are each touched, as NGUI's TweenColor touched them.
+            bool found = false;
 
             if (colorQuad) {
                 colorQuad.SetColor(c);
+                found = true;
+            }
+
+            if (colorRenderer) {
+                colorRenderer.material.color = c;
+                found = true;
+            }
+
+            if (colorLight) {
+                colorLight.color = c;
+                colorLight.enabled = (c.r + c.g + c.b) > 0.01f;
+                found = true;
+            }
+
+            if (found) {
                 return;
             }
+#endif
 
             if (colorGroup) {
 

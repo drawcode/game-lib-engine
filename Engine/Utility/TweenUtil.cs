@@ -1042,10 +1042,14 @@ namespace Engine.Utility {
             // actually Show()/Hide()'d by GameObject active-state. Capture that
             // distinction before collapsing everything onto the internal backend,
             // so non-sprite fades keep getting their Show()/Hide() side effects.
-            bool hadSpriteOnSelf = false;
+            //
+            // A baked UIQuadSprite twin sits on the GameObject of the sprite it replaced, so it
+            // counts as sprite-on-self too: without NGUI it is the only marker left, and these
+            // fades must not gain Show()/Hide() side effects when the widget goes.
+            bool hadSpriteOnSelf = meta.go.Has<Engine.UI.UIQuadSprite>();
 #if USE_UI_NGUI_2_7 || USE_UI_NGUI_3 || USE_EASING_NGUI
-            hadSpriteOnSelf =
-                meta.go.Has<UISlicedSprite>()
+            hadSpriteOnSelf = hadSpriteOnSelf
+                || meta.go.Has<UISlicedSprite>()
                 || meta.go.Has<UISprite>()
                 || meta.go.Has<UITiledSprite>();
 #endif

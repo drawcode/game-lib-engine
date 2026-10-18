@@ -170,6 +170,21 @@ namespace Engine.UI {
             pendingHead = 0;
         }
 
+        // Release ONE cached texture (a paged list dropping a row that scrolled far away). An element
+        // still showing it goes blank, so clear it first. Known-empty codes stay known. Additive.
+        public bool Release(string code) {
+
+            RenderTexture rt;
+
+            if (code == null || !cache.TryGetValue(code, out rt)) {
+                return false;
+            }
+
+            cache.Remove(code);
+            ReleaseTexture(rt);
+            return true;
+        }
+
         // Drop queued renders AND release every texture this cache holds.
         public void Clear() {
 
@@ -353,9 +368,45 @@ namespace Engine.UI {
                 float wide = Mathf.Max(size.x, size.z);
 
                 if (wide > 0f && size.y < wide * ratio) {
+                    RemoveDependents(r);
                     DestroySafeImmediate(r);
                 }
             }
+        }
+
+        // Unity refuses to destroy a component another one [RequireComponent]s ("Can't remove
+        // MeshRenderer because UIQuadSprite depends on it"), leaves the renderer in place, and the
+        // flat quad then sets the framing anyway. Since NGUI went, item and level-asset indicator
+        // sprites are UIQuadSprites, which require their MeshRenderer. The copy is thrown away
+        // after the render, so the dependents go first.
+        private static void RemoveDependents(Component required) {
+
+            System.Type requiredType = required.GetType();
+
+            foreach (MonoBehaviour b in required.GetComponents<MonoBehaviour>()) {
+
+                if (b == null) {
+                    continue;
+                }
+
+                object[] attributes = b.GetType().GetCustomAttributes(typeof(RequireComponent), true);
+
+                for (int i = 0; i < attributes.Length; i++) {
+
+                    RequireComponent rc = (RequireComponent)attributes[i];
+
+                    if (Requires(rc.m_Type0, requiredType)
+                        || Requires(rc.m_Type1, requiredType)
+                        || Requires(rc.m_Type2, requiredType)) {
+                        DestroySafeImmediate(b);
+                        break;
+                    }
+                }
+            }
+        }
+
+        private static bool Requires(System.Type wanted, System.Type actual) {
+            return wanted != null && wanted.IsAssignableFrom(actual);
         }
 
         // Immediate even at runtime: the framing walks the renderers in this same call.

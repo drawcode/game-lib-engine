@@ -7,10 +7,17 @@ using System.Text;
 
 public class CryptoUtil {
 
-#if USE_CONFIGS_APP
-    private static string _sharedSecretSource = AppConfigs.cryptoSharedSecret;
+    const string defaultSharedSecret = "sharedsecrethere";
+
+    // Per-app key from AppConfigs (was gated on a misspelled USE_CONFIGS_APP that no app defined,
+    // so every app silently used the default). An app that leaves it empty keeps the default.
+    // Changing an app's key makes data it already encrypted unreadable - no shipped game uses
+    // encrypted storage as of 2026-10, so this was safe to switch.
+#if USE_CONFIG_APP
+    private static string _sharedSecretSource =
+        string.IsNullOrEmpty(AppConfigs.cryptoSharedSecret) ? defaultSharedSecret : AppConfigs.cryptoSharedSecret;
 #else
-    private static string _sharedSecretSource = "sharedsecrethere";
+    private static string _sharedSecretSource = defaultSharedSecret;
 #endif
 
     private static byte[] _salt = Encoding.ASCII.GetBytes(_sharedSecretSource);

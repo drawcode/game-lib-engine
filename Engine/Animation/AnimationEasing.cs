@@ -44,6 +44,23 @@ namespace Engine.Animation {
             isShuttingDown = false;
         }
 
+#if UNITY_EDITOR
+        // ...and on the way back to Edit mode. OnApplicationQuit latches the flag when Play stops,
+        // and with domain reload off nothing cleared it until the NEXT Play: every EditMode tween
+        // test run after a play session found a dead pump and failed (13 TweenBackendTests).
+        [UnityEditor.InitializeOnLoadMethod]
+        static void ResetShutdownFlagOnEditMode() {
+            UnityEditor.EditorApplication.playModeStateChanged -= OnPlayModeStateChanged;
+            UnityEditor.EditorApplication.playModeStateChanged += OnPlayModeStateChanged;
+        }
+
+        static void OnPlayModeStateChanged(UnityEditor.PlayModeStateChange change) {
+            if (change == UnityEditor.PlayModeStateChange.EnteredEditMode) {
+                isShuttingDown = false;
+            }
+        }
+#endif
+
         public virtual void OnApplicationQuit() {
             isShuttingDown = true;
         }

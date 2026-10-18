@@ -1,0 +1,22 @@
+{
+    "name": "Engine.AgnosticHost.AdaptivePerformance",
+    "rootNamespace": "Engine.AgnosticHost.Perf",
+    "references": [],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": false,
+    "defineConstraints": [
+        "AGNOSTIC_ADAPTIVE_PERFORMANCE"
+    ],
+    "versionDefines": [
+        {
+            "name": "com.unity.modules.adaptiveperformance",
+            "expression": "1.0.0",
+            "define": "AGNOSTIC_ADAPTIVE_PERFORMANCE"
+        }
+    ],
+    "noEngineReferences": false
+}

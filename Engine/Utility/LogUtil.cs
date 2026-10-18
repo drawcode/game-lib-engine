@@ -38,6 +38,15 @@ public class LogUtil {
 
     public static bool loggingEnabled = true;
 
+    // Device builds print errors only; every other log type is for dev/debug (owner, 2026-10-11).
+    // A runtime gate, not [Conditional]: some call sites have side effects in their arguments
+    // (`playerCount++` in the networking layers), and stripping the call would drop them.
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
+    public static bool devLoggingEnabled = true;
+#else
+    public static bool devLoggingEnabled = false;
+#endif
+
     public static LogUtil Instance {
         get {
             if (instance == null) {
@@ -129,6 +138,10 @@ public class LogUtil {
     }
 
     public void LogInternal(string key, object message) {
+        if (!devLoggingEnabled) {
+            return;
+        }
+
         if (IsKeyActive(key)) {
             //LogUtil.Log(key + "::" + "\r\n\r\n" + message + "\r\n\r\n\r\n");
             Debug.Log(message);
@@ -164,6 +177,10 @@ public class LogUtil {
     }
 
     public void LogWarningInternal(object message) {
+        if (!devLoggingEnabled) {
+            return;
+        }
+
         Debug.LogWarning(message + "\r\n\r\n\r\n");
 
         // Output to Firebug or inspectors as avail in the browser.
