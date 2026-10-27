@@ -1199,7 +1199,19 @@ namespace Engine.Game.Data {
             historyLevelItems.Clear();
 
             string jsonData = item.LoadData(path);
-            T itemReturn = jsonData.FromJson<T>();
+
+            // A file this build cannot parse (hand-edited, truncated, written by a newer build in a
+            // shape this one rejects) must not take the caller down: log it, hand back default(T)
+            // as a missing item would, and leave the file as it is for a build that can read it.
+            T itemReturn = default(T);
+
+            try {
+                itemReturn = jsonData.FromJson<T>();
+            }
+            catch (Exception e) {
+                LogUtil.LogError("DataObjects.LoadItem: could not read " + path + ": " + e.Message);
+            }
+
             if (itemReturn != null) {
                 return itemReturn;
             }
@@ -1218,7 +1230,8 @@ namespace Engine.Game.Data {
 
             historyLevelItems.Insert(0, jsonData);
             if (historyLevelItems.Count > 20) {
-                historyLevelItems.RemoveAt(historyLevelItems.Count);
+                // Count - 1: RemoveAt(Count) is past the end and threw on the 21st save.
+                historyLevelItems.RemoveAt(historyLevelItems.Count - 1);
             }
 
             obj.SaveData(path, jsonData);
