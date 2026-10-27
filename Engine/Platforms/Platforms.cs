@@ -139,20 +139,30 @@ public class Platforms {
             return;
         }
 
+        if (string.IsNullOrEmpty(url)) {
+            return;
+        }
+
         Application.OpenURL(url);
 #endif
     }
 
-    // The platform store's review page for this app.
+    // The platform store's review page for this app. Without USE_CONFIG_APP (a host with no
+    // AppConfigs, e.g. the retro games) Android falls back to Play by bundle id, and iOS returns
+    // empty because the App Store id is only known to AppConfigs.
     public static string StoreReviewUrl() {
 #if UNITY_ANDROID
+#if USE_CONFIG_APP
         if (AppConfigs.platformIsAmazon) {
             return "amzn://apps/android?p=" + Application.identifier;
         }
+#endif
 
         return "market://details?id=" + Application.identifier;
-#else
+#elif USE_CONFIG_APP
         return "itms-apps://itunes.apple.com/app/id" + AppConfigs.appStoreId + "?action=write-review";
+#else
+        return "";
 #endif
     }
 
