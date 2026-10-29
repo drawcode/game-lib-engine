@@ -408,6 +408,7 @@ namespace Engine.Game.Data
         public static string min = "min";
         public static string frequency = "frequency";
         public static string probability = "probability";
+        public static string min_level = "min_level";
         public static string scale = "scale";
         public static string speed = "speed";
         public static string attack = "attack";
