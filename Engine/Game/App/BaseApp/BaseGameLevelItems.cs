@@ -122,6 +122,12 @@ namespace Engine.Game.App.BaseApp {
             if (currentItem != null) {
                 GameLevelItems.Current = currentItem;
             }
+            else {
+                // An unreadable file must not leave the previous level's items in Current: a
+                // level start would treat them as this level's saved layout and play them.
+                GameLevelItems.Current = new GameLevelItem();
+                GameLevelItems.Current.code = code;
+            }
 #endif
         }
 
