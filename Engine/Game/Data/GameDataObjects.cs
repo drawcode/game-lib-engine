@@ -2036,6 +2036,25 @@ namespace Engine.Game.App {
             }
         }
 
+        // Content gating (Action Bots iter 35): the bot level a roster item, level or world
+        // needs before it spawns or shows. Absent = 0 = always available. Read without Get's
+        // write-back so an absent key stays absent and a saved level does not grow "min_level": 0.
+        public virtual double min_level {
+            get {
+                object val;
+
+                if (!TryGetValue(BaseDataObjectKeys.min_level, out val) || val == null) {
+                    return 0.0;
+                }
+
+                return System.Convert.ToDouble(val, System.Globalization.CultureInfo.InvariantCulture);
+            }
+
+            set {
+                Set<double>(BaseDataObjectKeys.min_level, value);
+            }
+        }
+
         public virtual object val {
             get {
                 return Get<object>(BaseDataObjectKeys.val);

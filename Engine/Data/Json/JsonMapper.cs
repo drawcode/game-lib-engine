@@ -389,6 +389,13 @@ namespace Engine.Data.Json {
 
             if (reader.Token == JsonToken.ArrayStart) {
 
+                // Untyped target (a Dictionary<string, object> value, i.e. a key the reading type does
+                // not declare): keep the array as List<object> instead of throwing on the IList cast,
+                // so data a newer build added loads and is written back unchanged.
+                if (inst_type == typeof(object)) {
+                    inst_type = typeof(List<object>);
+                }
+
                 AddArrayMetadata(inst_type);
                 ArrayMetadata t_data = array_metadata[inst_type];
 
@@ -463,6 +470,11 @@ namespace Engine.Data.Json {
             }
             else if (reader.Token == JsonToken.ObjectStart) {
 
+                // Untyped target: a nested object becomes Dictionary<string, object> (see ArrayStart).
+                if (inst_type == typeof(object)) {
+                    inst_type = typeof(Dictionary<string, object>);
+                }
+
                 AddObjectMetadata(inst_type);
                 ObjectMetadata t_data = object_metadata[inst_type];
 
@@ -519,9 +531,10 @@ namespace Engine.Data.Json {
                             }
                         }
 
-                        ((IDictionary)instance).Add(
-                                property, ReadValue(
-                                t_data.ElementType, reader));
+                        // Indexer, not Add: a key the constructor already defaulted (Reset) and the
+                        // file also carries must take the file's value, not throw a duplicate key.
+                        ((IDictionary)instance)[property] = ReadValue(
+                                t_data.ElementType, reader);
                     }
 
                 }
