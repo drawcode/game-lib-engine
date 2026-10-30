@@ -84,6 +84,50 @@ namespace Engine.UI {
             _createdByFamily.Clear();
         }
 
+        // Domain reload is off, so these statics outlive play mode -- but the FontAssets
+        // CreateFontAsset made do not: Unity destroys them when Play stops, while the
+        // PanelTextSettings (a project asset) still lists them. With _initialized still true the
+        // next session skipped BuildFallbacks, and the first glyph Dimbo lacks (the native names
+        // on Settings > Language) sent the text engine into a dead font: an Editor segfault in
+        // FontAsset::GetFontAssetForUnicode (2026-10-29). Re-arm on every play start; Init then
+        // installs a fresh list.
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+        private static void ResetStatics() {
+            GameLocalizationService.LanguageChanged -= OnLanguageChanged;
+            _initialized = false;
+            _createdByFamily.Clear();
+        }
+
+#if UNITY_EDITOR
+        // ...and on the way back to Edit mode, drop the destroyed entries from the asset, so
+        // nothing that renders text in Edit mode (UI Builder, an inspector preview) walks them.
+        [UnityEditor.InitializeOnLoadMethod]
+        private static void PruneOnEditMode() {
+            UnityEditor.EditorApplication.playModeStateChanged -= OnPlayModeStateChanged;
+            UnityEditor.EditorApplication.playModeStateChanged += OnPlayModeStateChanged;
+        }
+
+        private static void OnPlayModeStateChanged(UnityEditor.PlayModeStateChange change) {
+
+            if (change != UnityEditor.PlayModeStateChange.EnteredEditMode) {
+                return;
+            }
+
+            PanelTextSettings ts = ActiveTextSettings();
+
+            if (ts == null || ts.fallbackFontAssets == null) {
+                return;
+            }
+
+            List<FontAsset> list = ts.fallbackFontAssets;
+
+            // Unity's null: true for a destroyed asset as well as a missing one.
+            if (list.RemoveAll(fa => fa == null) > 0) {
+                ts.fallbackFontAssets = list;
+            }
+        }
+#endif
+
         private static PanelTextSettings ActiveTextSettings() {
 
             PanelSettings ps = UIToolkitBackend.panelSettings;
@@ -152,7 +196,10 @@ namespace Engine.UI {
 
             FontAsset existing;
 
-            if (_createdByFamily.TryGetValue(familyName, out existing)) {
+            // A cached null is a family that already failed every style -- don't retry it. A
+            // cached asset Unity has since destroyed (see ResetStatics) is rebuilt, never returned.
+            if (_createdByFamily.TryGetValue(familyName, out existing)
+                    && (ReferenceEquals(existing, null) || existing != null)) {
                 return existing;
             }
 
