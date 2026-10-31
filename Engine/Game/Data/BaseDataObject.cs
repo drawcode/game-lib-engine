@@ -391,6 +391,11 @@ namespace Engine.Game.Data
         // Health-bar (HUD) height above the actor root, in MODEL-HOLDER units (the holder is x4).
         // Absent or <= 0 = the prefab's own HUD height.
         public static string hud_height = "hud_height";
+        // Idle top of the model on a front-facing showcase (Main), in MODEL-HOLDER units: the
+        // median over the idle clips of the highest vertex, measured on the Main screen. Not
+        // hud_height - that is the top as the 30-degree gameplay camera sees it. Absent or <= 0 =
+        // unknown; the screen keeps its default layout.
+        public static string display_height = "display_height";
         public static string volume = "volume";
         public static string loop = "loop";
         public static string go = "go";

@@ -744,6 +744,20 @@ namespace Engine.Game.App {
             return hud_height > 0;
         }
 
+        public virtual double display_height {
+            get {
+                return Get<double>(BaseDataObjectKeys.display_height);
+            }
+
+            set {
+                Set<double>(BaseDataObjectKeys.display_height, value);
+            }
+        }
+
+        public virtual bool HasDisplayHeight() {
+            return display_height > 0;
+        }
+
 
         // color presets
 
