@@ -1,0 +1,16 @@
+{
+    "name": "Engine.Crypto",
+    "rootNamespace": "Engine.Crypto",
+    "references": [],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [
+        "USE_ENGINE_CRYPTO"
+    ],
+    "versionDefines": [],
+    "noEngineReferences": true
+}
