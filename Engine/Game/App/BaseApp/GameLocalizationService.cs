@@ -60,6 +60,16 @@ namespace Engine.Game.App.BaseApp {
             Apply(ReadSaved(), false);
         }
 
+        // Domain reload is off in the Editor, so statics outlive Play mode: once _initialized was
+        // set, every later play skipped Init and kept whatever _cache it found - an EditMode test
+        // run (SetStateForTests) left a cache with none of the real keys, and every label showed
+        // its raw key (2026-11-01). Re-arm on every play start; Init then rebuilds from the files.
+        [UnityEngine.RuntimeInitializeOnLoadMethod(UnityEngine.RuntimeInitializeLoadType.SubsystemRegistration)]
+        private static void ResetStatics() {
+            _initialized = false;
+            _loggedMissing.Clear();
+        }
+
         public static void SetLanguage(string codeOrEmpty) {
 
             string val = codeOrEmpty ?? "";
