@@ -478,6 +478,72 @@ namespace Engine.Game.App.BaseApp {
 #endif
         }
 
+        // Removes a stored blob or sidecar (both the plain and the envelope file) and forgets its
+        // last-saved bytes, so a later save of the same key writes again.
+        public virtual void deleteProfileContent(string key) {
+
+            lastSavedContent.Remove(key);
+
+#if UNITY_WEBPLAYER || PROFILE_RESOURCES
+            SystemPrefUtil.SetLocalSettingString(key, "");
+            SystemPrefUtil.Save();
+#else
+            foreach (string extension in new string[] { ".json", ".agsv" }) {
+
+                string path = Path.Combine(ContentPaths.appCachePathAllSharedUserData, key + extension);
+
+                if (File.Exists(path)) {
+                    File.Delete(path);
+                }
+            }
+#endif
+        }
+
+        // The tracking blob's sidecars (GameProfileTracking items too big to keep inline): stored as
+        // "<tracking blob key>--<name>", through the same save / prepareLoad path as every blob.
+        class TrackingSidecars : IProfileSidecarStore {
+
+            readonly BaseGameState state;
+
+            public TrackingSidecars(BaseGameState state) {
+                this.state = state;
+            }
+
+            string KeyFor(string name) {
+                return state.keyProfileTracking + "--" + name;
+            }
+
+            public string Load(string name) {
+                return state.prepareLoad(KeyFor(name));
+            }
+
+            public void Save(string name, object document) {
+                state.save(KeyFor(name), document);
+            }
+
+            public void Delete(string name) {
+                state.deleteProfileContent(KeyFor(name));
+            }
+        }
+
+        TrackingSidecars trackingSidecars;
+
+        public IProfileSidecarStore profileTrackingSidecars {
+            get {
+                if (trackingSidecars == null) {
+                    trackingSidecars = new TrackingSidecars(this);
+                }
+                return trackingSidecars;
+            }
+        }
+
+        // the tracking blob, then its changed sidecars
+        void saveProfileTracking(bool setSync) {
+            GameProfileTracking.Current.UseSidecarStore(profileTrackingSidecars);
+            save(keyProfileTracking, GameProfileTracking.Current, setSync);
+            GameProfileTracking.Current.SaveSidecars();
+        }
+
         public virtual string prepareLoad(string keyTo) {
 
             string data = "";
@@ -577,7 +643,7 @@ namespace Engine.Game.App.BaseApp {
             save(keyProfileRPG, GameProfileRPGs.Current, true);
             save(keyProfileTeam, GameProfileTeams.Current, true);
             save(keyProfileVehicle, GameProfileVehicles.Current, true);
-            save(keyProfileTracking, GameProfileTracking.Current, true);
+            saveProfileTracking(true);
 #endif
 
             // prepare and upload any files changed
@@ -621,7 +687,7 @@ namespace Engine.Game.App.BaseApp {
                 save(keyProfileRPG, GameProfileRPGs.Current);
                 save(keyProfileTeam, GameProfileTeams.Current);
                 save(keyProfileVehicle, GameProfileVehicles.Current);
-                save(keyProfileTracking, GameProfileTracking.Current);
+                saveProfileTracking(false);
 
                 //CoroutineUtil.Start(SaveProfileCo(profile));
             }
@@ -670,6 +736,7 @@ namespace Engine.Game.App.BaseApp {
                 GameProfileTeams.Current = contentLoad<GameProfileTeam>(keyProfileTeam, GameProfileTeams.Current);
                 GameProfileVehicles.Current = contentLoad<GameProfileVehicle>(keyProfileVehicle, GameProfileVehicles.Current);
                 GameProfileTracking.Current = contentLoad<GameProfileTracking>(keyProfileTracking, GameProfileTracking.Current);
+                GameProfileTracking.Current.UseSidecarStore(profileTrackingSidecars);
 
                 //profileAchievement = contentLoad<GameProfileAchievement>(keyAchievement, profileAchievement);
                 //profileStatistic = contentLoad<GameProfileStatistic>(keyStatistic, profileStatistic);

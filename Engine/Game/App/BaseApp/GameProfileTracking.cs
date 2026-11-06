@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Text;
 using Engine.Game.Data;
 
 namespace Engine.Game.App.BaseApp {
@@ -73,10 +74,24 @@ namespace Engine.Game.App.BaseApp {
         }
 
         public void Mark(string group, string code) {
-            Set<object>(Key(group, code), true);
+            SetFlag(group, code, true);
         }
 
+        // an explicit false is kept (it overrides an older store a caller falls back to)
+        public void SetFlag(string group, string code, bool value) {
+            Set<object>(Key(group, code), value);
+        }
+
+        // whether anything is stored under the key: a marker, a number, a string or an item
+        public bool Has(string group, string code) {
+            return ContainsKey(Key(group, code));
+        }
+
+        // removes a marker or an item (an item's sidecar file goes at the next save)
         public void Clear(string group, string code) {
+            if (IsSidecar(group, code)) {
+                DropSidecar(SidecarName(group, code));
+            }
             Remove(Key(group, code));
         }
 
@@ -131,5 +146,220 @@ namespace Engine.Game.App.BaseApp {
 
             return codes;
         }
+
+        // ITEMS: any object (a Dictionary, a List, a DataObject, a primitive) under a key, with a
+        // TYPE TAG so a reader knows what it holds without guessing from the key.
+        //   small, inline:  "arcade:stages": { "$type": "arcade-stages", "$value": { ... } }
+        //   big, sidecar:   "arcade:stages": { "$type": "arcade-stages", "$sidecar": "arcade--stages" }
+        //   the sidecar file "<tracking blob key>--arcade--stages" (.json, or .agsv in envelope mode):
+        //                   { "$type": "arcade-stages", "$key": "arcade:stages", "$value": { ... } }
+        // An item whose JSON is longer than sidecarThreshold characters goes to its sidecar, and it
+        // comes back inline (the file deleted) when it shrinks. Readers take either form; a typed read
+        // of another type gets nothing. Sidecars go through the same profile store as the blobs
+        // (BaseGameState: same folder, envelope and flags, unchanged writes skipped), so they are as
+        // portable as the profile. A value is copied in on SetItem: change it, then SetItem again.
+
+        public const string typeField = "$type";
+        public const string valueField = "$value";
+        public const string sidecarField = "$sidecar";
+        public const string keyField = "$key";
+
+        public static int sidecarThreshold = 2048;
+
+        // runtime only, never serialized (a Dictionary subclass writes its entries, not its fields)
+        IProfileSidecarStore sidecarStore;
+        readonly Dictionary<string, Dictionary<string, object>> sidecarDocs =
+            new Dictionary<string, Dictionary<string, object>>();
+        readonly HashSet<string> sidecarDirty = new HashSet<string>();
+        readonly HashSet<string> sidecarDropped = new HashSet<string>();
+
+        // BaseGameState hands its store over after each load; without one every item stays inline
+        public void UseSidecarStore(IProfileSidecarStore store) {
+            sidecarStore = store;
+        }
+
+        // file-safe and readable: "arcade:stages" -> "arcade--stages"
+        public static string SidecarName(string group, string code) {
+            StringBuilder name = new StringBuilder();
+            foreach (char c in Key(group, code).ToLowerInvariant()) {
+                if (c == ':') {
+                    name.Append("--");
+                }
+                else if ((c >= 'a' && c <= 'z') || (c >= '0' && c <= '9') || c == '-' || c == '_') {
+                    name.Append(c);
+                }
+                else {
+                    name.Append('_');
+                }
+            }
+            return name.ToString();
+        }
+
+        static string Str(IDictionary<string, object> dict, string key) {
+            object raw;
+            return dict != null && dict.TryGetValue(key, out raw) && raw != null
+                ? Convert.ToString(raw, CultureInfo.InvariantCulture) : null;
+        }
+
+        IDictionary<string, object> ItemHeader(string group, string code) {
+            IDictionary<string, object> header = Raw(group, code) as IDictionary<string, object>;
+            return header != null && header.ContainsKey(typeField)
+                && (header.ContainsKey(valueField) || header.ContainsKey(sidecarField)) ? header : null;
+        }
+
+        public bool HasItem(string group, string code) {
+            return ItemHeader(group, code) != null;
+        }
+
+        public string ItemType(string group, string code) {
+            return Str(ItemHeader(group, code), typeField);
+        }
+
+        public bool IsSidecar(string group, string code) {
+            IDictionary<string, object> header = ItemHeader(group, code);
+            return header != null && header.ContainsKey(sidecarField);
+        }
+
+        // The item's value: as written before a load; after one a Dictionary<string, object>,
+        // List<object> or primitive. Null when absent, of another type (type given), or when its
+        // sidecar is missing, unreadable or tagged for another type or key.
+        public object GetItem(string group, string code, string type = null) {
+
+            IDictionary<string, object> header = ItemHeader(group, code);
+
+            if (header == null || (type != null && Str(header, typeField) != type)) {
+                return null;
+            }
+
+            if (!header.ContainsKey(sidecarField)) {
+                return header[valueField];
+            }
+
+            string name = Str(header, sidecarField);
+            Dictionary<string, object> doc;
+
+            if (name == null) {
+                return null;
+            }
+
+            if (!sidecarDocs.TryGetValue(name, out doc)) {
+
+                string json = sidecarStore != null ? sidecarStore.Load(name) : null;
+
+                if (string.IsNullOrEmpty(json)) {
+                    return null;
+                }
+
+                try {
+                    doc = json.FromJson<Dictionary<string, object>>();
+                }
+                catch (Exception) {
+                    return null;
+                }
+
+                if (doc == null || Str(doc, typeField) != Str(header, typeField)
+                    || Str(doc, keyField) != Key(group, code)) {
+                    return null;
+                }
+
+                sidecarDocs[name] = doc;
+            }
+
+            object value;
+            return doc.TryGetValue(valueField, out value) ? value : null;
+        }
+
+        // The item as T: the value itself when it already is one, else a JSON round trip into T.
+        public T GetItem<T>(string group, string code, string type) {
+
+            object value = GetItem(group, code, type);
+
+            if (value == null) {
+                return default(T);
+            }
+
+            if (value is T) {
+                return (T)value;
+            }
+
+            try {
+                return value.ToJson(false).FromJson<T>();
+            }
+            catch (Exception) {
+                return default(T);
+            }
+        }
+
+        public void SetItem(string group, string code, string type, object value) {
+
+            string name = SidecarName(group, code);
+            string json = value == null ? null : value.ToJson(false);
+            bool wasSidecar = IsSidecar(group, code);
+
+            Dictionary<string, object> header = new Dictionary<string, object>();
+            header[typeField] = type;
+
+            if (sidecarStore != null && json != null && json.Length > sidecarThreshold) {
+
+                Dictionary<string, object> doc = new Dictionary<string, object>();
+                doc[typeField] = type;
+                doc[keyField] = Key(group, code);
+                doc[valueField] = value;
+
+                sidecarDocs[name] = doc;
+                sidecarDirty.Add(name);
+                sidecarDropped.Remove(name);
+
+                header[sidecarField] = name;
+            }
+            else {
+
+                if (wasSidecar) {
+                    DropSidecar(name);
+                }
+
+                header[valueField] = value;
+            }
+
+            Set<object>(Key(group, code), header);
+        }
+
+        void DropSidecar(string name) {
+            sidecarDocs.Remove(name);
+            sidecarDirty.Remove(name);
+            sidecarDropped.Add(name);
+        }
+
+        // Called by BaseGameState right after it saves this blob: writes the sidecars changed since
+        // the last save and deletes the dropped ones.
+        public void SaveSidecars() {
+
+            if (sidecarStore == null) {
+                return;
+            }
+
+            foreach (string name in sidecarDropped) {
+                sidecarStore.Delete(name);
+            }
+
+            sidecarDropped.Clear();
+
+            foreach (string name in sidecarDirty) {
+                Dictionary<string, object> doc;
+                if (sidecarDocs.TryGetValue(name, out doc)) {
+                    sidecarStore.Save(name, doc);
+                }
+            }
+
+            sidecarDirty.Clear();
+        }
+    }
+
+    // Where a tracking blob keeps its sidecars. Names are SidecarName()s; the store scopes them to the
+    // blob (BaseGameState: "<tracking blob key>--<name>").
+    public interface IProfileSidecarStore {
+        string Load(string name);
+        void Save(string name, object document);
+        void Delete(string name);
     }
 }

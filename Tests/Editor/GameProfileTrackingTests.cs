@@ -91,5 +91,187 @@ namespace Engine.Game.App.Tests {
 
             CollectionAssert.AreEqual(new List<string> { "tutorial-attack", "tutorial-build" }, codes);
         }
+
+        // ITEMS + SIDECARS
+
+        class MemorySidecars : IProfileSidecarStore {
+            public readonly Dictionary<string, string> files = new Dictionary<string, string>();
+            public string Load(string name) {
+                string json;
+                return files.TryGetValue(name, out json) ? json : null;
+            }
+            public void Save(string name, object document) {
+                files[name] = document.ToJson();
+            }
+            public void Delete(string name) {
+                files.Remove(name);
+            }
+        }
+
+        static Dictionary<string, object> Stages(int count) {
+            Dictionary<string, object> stages = new Dictionary<string, object>();
+            for (int i = 0; i < count; i++) {
+                stages["arcade-battle-world-" + i] = i % 10;
+            }
+            return stages;
+        }
+
+        int threshold;
+
+        [SetUp]
+        public void KeepThreshold() {
+            threshold = GameProfileTracking.sidecarThreshold;
+        }
+
+        [TearDown]
+        public void RestoreThreshold() {
+            GameProfileTracking.sidecarThreshold = threshold;
+        }
+
+        [Test]
+        public void ASmallItemIsInlineWithItsTypeTag() {
+            GameProfileTracking tracking = new GameProfileTracking();
+            tracking.UseSidecarStore(new MemorySidecars());
+            tracking.SetItem("arcade", "stages", "arcade-stages", Stages(3));
+
+            GameProfileTracking loaded = RoundTrip(tracking);
+
+            Assert.IsFalse(loaded.IsSidecar("arcade", "stages"));
+            Assert.AreEqual("arcade-stages", loaded.ItemType("arcade", "stages"));
+            IDictionary<string, object> stages =
+                loaded.GetItem("arcade", "stages", "arcade-stages") as IDictionary<string, object>;
+            Assert.AreEqual(3, stages.Count);
+            Assert.AreEqual(2, System.Convert.ToInt32(stages["arcade-battle-world-2"]));
+        }
+
+        [Test]
+        public void ATypedReadOfAnotherTypeGetsNothing() {
+            GameProfileTracking tracking = new GameProfileTracking();
+            tracking.SetItem("arcade", "stages", "arcade-stages", Stages(1));
+
+            Assert.IsNull(tracking.GetItem("arcade", "stages", "something-else"));
+            Assert.IsNotNull(tracking.GetItem("arcade", "stages"));
+        }
+
+        [Test]
+        public void ABigItemMovesToATaggedSidecarAndReadsBackAfterALoad() {
+            GameProfileTracking.sidecarThreshold = 64;
+            MemorySidecars files = new MemorySidecars();
+            GameProfileTracking tracking = new GameProfileTracking();
+            tracking.UseSidecarStore(files);
+
+            tracking.SetItem("arcade", "stages", "arcade-stages", Stages(20));
+            tracking.SaveSidecars();
+
+            string sidecar = GameProfileTracking.SidecarName("arcade", "stages");
+            Assert.AreEqual("arcade--stages", sidecar);
+            Assert.IsTrue(files.files.ContainsKey(sidecar));
+
+            // the sidecar names its type and key; the blob keeps only the reference
+            Dictionary<string, object> doc = files.files[sidecar].FromJson<Dictionary<string, object>>();
+            Assert.AreEqual("arcade-stages", doc[GameProfileTracking.typeField]);
+            Assert.AreEqual("arcade:stages", doc[GameProfileTracking.keyField]);
+            string blob = tracking.ToJson();
+            StringAssert.DoesNotContain("arcade-battle-world-7", blob);
+            StringAssert.Contains(GameProfileTracking.sidecarField, blob);
+
+            GameProfileTracking loaded = RoundTrip(tracking);
+            loaded.UseSidecarStore(files);
+
+            Assert.IsTrue(loaded.IsSidecar("arcade", "stages"));
+            IDictionary<string, object> stages =
+                loaded.GetItem<Dictionary<string, object>>("arcade", "stages", "arcade-stages");
+            Assert.AreEqual(20, stages.Count);
+            Assert.AreEqual(7, System.Convert.ToInt32(stages["arcade-battle-world-7"]));
+        }
+
+        [Test]
+        public void AShrunkItemComesBackInlineAndItsSidecarIsDeleted() {
+            GameProfileTracking.sidecarThreshold = 64;
+            MemorySidecars files = new MemorySidecars();
+            GameProfileTracking tracking = new GameProfileTracking();
+            tracking.UseSidecarStore(files);
+
+            tracking.SetItem("arcade", "stages", "arcade-stages", Stages(20));
+            tracking.SaveSidecars();
+            tracking.SetItem("arcade", "stages", "arcade-stages", Stages(1));
+            tracking.SaveSidecars();
+
+            Assert.IsFalse(tracking.IsSidecar("arcade", "stages"));
+            Assert.AreEqual(0, files.files.Count);
+            Assert.IsNotNull(tracking.GetItem("arcade", "stages", "arcade-stages"));
+        }
+
+        [Test]
+        public void ASidecarTaggedForAnotherTypeOrKeyReadsNothing() {
+            GameProfileTracking.sidecarThreshold = 64;
+            MemorySidecars files = new MemorySidecars();
+            GameProfileTracking tracking = new GameProfileTracking();
+            tracking.UseSidecarStore(files);
+            tracking.SetItem("arcade", "stages", "arcade-stages", Stages(20));
+            tracking.SaveSidecars();
+
+            string name = GameProfileTracking.SidecarName("arcade", "stages");
+            files.files[name] = files.files[name].Replace("\"arcade-stages\"", "\"other-type\"");
+
+            GameProfileTracking loaded = RoundTrip(tracking);
+            loaded.UseSidecarStore(files);
+
+            Assert.IsNull(loaded.GetItem("arcade", "stages", "arcade-stages"));
+        }
+
+        [Test]
+        public void WithoutAStoreABigItemStaysInline() {
+            GameProfileTracking.sidecarThreshold = 64;
+            GameProfileTracking tracking = new GameProfileTracking();
+
+            tracking.SetItem("arcade", "stages", "arcade-stages", Stages(20));
+
+            Assert.IsFalse(tracking.IsSidecar("arcade", "stages"));
+            Assert.AreEqual(20, ((IDictionary<string, object>)RoundTrip(tracking)
+                .GetItem("arcade", "stages", "arcade-stages")).Count);
+        }
+
+        [Test]
+        public void ClearingASidecarItemDeletesItsFileAtTheNextSave() {
+            GameProfileTracking.sidecarThreshold = 64;
+            MemorySidecars files = new MemorySidecars();
+            GameProfileTracking tracking = new GameProfileTracking();
+            tracking.UseSidecarStore(files);
+            tracking.SetItem("arcade", "stages", "arcade-stages", Stages(20));
+            tracking.SaveSidecars();
+
+            tracking.Clear("arcade", "stages");
+            tracking.SaveSidecars();
+
+            Assert.IsFalse(tracking.HasItem("arcade", "stages"));
+            Assert.AreEqual(0, files.files.Count);
+        }
+
+        // HELP moved from profile attributes; reads fall back to them
+
+        [Test]
+        public void HelpReadsTheOldAttributeUntilTrackingHoldsAValue() {
+            GameProfileTracking saved = GameProfileTracking.Current;
+            try {
+                GameProfileTracking.Current = new GameProfileTracking();
+                BaseGameProfile profile = new BaseGameProfile();
+
+                profile.SetAttributeBoolValue(BaseGameProfileAttributes.ATT_UI_HAS_SEEN_HELP, true);
+                profile.SetAttributeIntValue(BaseGameProfileAttributes.ATT_HELP_TIPS_SHOWN_DAY, 4);
+                Assert.IsTrue(profile.GetHasSeenHelp());
+                Assert.AreEqual(4, profile.GetHelpTipsShownDay());
+
+                profile.SetHasSeenHelp(false);
+                profile.SetHelpTipsShownDay(9);
+
+                Assert.IsFalse(profile.GetHasSeenHelp());
+                Assert.AreEqual(9, profile.GetHelpTipsShownDay());
+                Assert.IsTrue(GameProfileTracking.Current.Has("help", "seen"));
+            }
+            finally {
+                GameProfileTracking.Current = saved;
+            }
+        }
     }
 }
