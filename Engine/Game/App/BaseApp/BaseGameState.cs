@@ -290,6 +290,16 @@ namespace Engine.Game.App.BaseApp {
             }
         }
 
+        public string keyProfileTracking {
+            get {
+#if USE_GAME_LIB_GAMES
+                return getProfileTrackingKey(GameProfiles.Current.username);
+#else
+                return "default";
+#endif
+            }
+        }
+
         public virtual string getKey(string username, string type) {
             return KEY_PROFILE + "-" + type + "-" + System.Uri.EscapeUriString(username).ToLower();
         }
@@ -332,6 +342,11 @@ namespace Engine.Game.App.BaseApp {
 
         public virtual string getProfileVehicleKey(string username) {
             return getKey(username, "vehicle");
+        }
+
+        // gameplay tracking markers (GameProfileTracking): tutorials played, hints seen, counters
+        public virtual string getProfileTrackingKey(string username) {
+            return getKey(username, GameProfileTracking.blobType);
         }
 
         public virtual string getProfileKeyLegacy() {
@@ -562,6 +577,7 @@ namespace Engine.Game.App.BaseApp {
             save(keyProfileRPG, GameProfileRPGs.Current, true);
             save(keyProfileTeam, GameProfileTeams.Current, true);
             save(keyProfileVehicle, GameProfileVehicles.Current, true);
+            save(keyProfileTracking, GameProfileTracking.Current, true);
 #endif
 
             // prepare and upload any files changed
@@ -605,6 +621,7 @@ namespace Engine.Game.App.BaseApp {
                 save(keyProfileRPG, GameProfileRPGs.Current);
                 save(keyProfileTeam, GameProfileTeams.Current);
                 save(keyProfileVehicle, GameProfileVehicles.Current);
+                save(keyProfileTracking, GameProfileTracking.Current);
 
                 //CoroutineUtil.Start(SaveProfileCo(profile));
             }
@@ -652,6 +669,7 @@ namespace Engine.Game.App.BaseApp {
                 GameProfileRPGs.Current = contentLoad<GameProfileRPG>(keyProfileRPG, GameProfileRPGs.Current);
                 GameProfileTeams.Current = contentLoad<GameProfileTeam>(keyProfileTeam, GameProfileTeams.Current);
                 GameProfileVehicles.Current = contentLoad<GameProfileVehicle>(keyProfileVehicle, GameProfileVehicles.Current);
+                GameProfileTracking.Current = contentLoad<GameProfileTracking>(keyProfileTracking, GameProfileTracking.Current);
 
                 //profileAchievement = contentLoad<GameProfileAchievement>(keyAchievement, profileAchievement);
                 //profileStatistic = contentLoad<GameProfileStatistic>(keyStatistic, profileStatistic);
