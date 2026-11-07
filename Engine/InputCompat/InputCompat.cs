@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 using UnityEngine;
 
-#if ENABLE_INPUT_SYSTEM && !ENABLE_LEGACY_INPUT_MANAGER
+#if INPUTCOMPAT_INPUT_SYSTEM && ENABLE_INPUT_SYSTEM && !ENABLE_LEGACY_INPUT_MANAGER
 using UIS = UnityEngine.InputSystem;
 using ETouch = UnityEngine.InputSystem.EnhancedTouch;
 #endif
@@ -15,9 +15,14 @@ namespace Engine {
     //
     //   Legacy or Both   every member forwards to UnityEngine.Input: behaviour is byte-for-byte
     //                    what it was, which keeps projects that still run the old manager unchanged.
-    //   Input System     (ENABLE_INPUT_SYSTEM without ENABLE_LEGACY_INPUT_MANAGER) the members are
-    //                    rebuilt on the Input System. In that mode UnityEngine.Input throws
-    //                    InvalidOperationException on every read, so nothing may call it.
+    //   Input System     (ENABLE_INPUT_SYSTEM without ENABLE_LEGACY_INPUT_MANAGER, and the package
+    //                    installed: INPUTCOMPAT_INPUT_SYSTEM from this asmdef's versionDefines) the
+    //                    members are rebuilt on the Input System. In that mode UnityEngine.Input
+    //                    throws InvalidOperationException on every read, so nothing may call it.
+    //
+    // Its own auto-referenced assembly, so Assembly-CSharp-firstpass (Plugins/) can use it as well
+    // as Assembly-CSharp. The Unity.InputSystem reference is optional: where the package is
+    // missing, the reference is skipped and the forwarding branch compiles.
     //
     // A file opts in with one line and keeps its call sites as they are:
     //
@@ -82,7 +87,7 @@ namespace Engine {
             }
         }
 
-#if !(ENABLE_INPUT_SYSTEM && !ENABLE_LEGACY_INPUT_MANAGER)
+#if !(INPUTCOMPAT_INPUT_SYSTEM && ENABLE_INPUT_SYSTEM && !ENABLE_LEGACY_INPUT_MANAGER)
 
         // ---- legacy / both: forward ----------------------------------------------------------
 
