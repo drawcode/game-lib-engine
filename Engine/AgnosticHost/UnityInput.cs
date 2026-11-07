@@ -1,3 +1,4 @@
+using Input = Engine.InputCompat;
 using System;
 using System.Collections.Generic;
 using System.Reflection;
@@ -12,7 +13,8 @@ using DisplayInfo = Agnostic.Host.DisplayInfo;
 
 namespace Engine.AgnosticHost {
 
-    // U-I raw side, over the legacy Input Manager (the project's only input backend today).
+    // U-I raw side, read through Engine.InputCompat: the legacy Input Manager, or its emulation on the
+    // Input System when that is the only backend (Active Input Handling = Input System Package).
     //
     // The adapter polls a fixed set of WATCHED controls once a frame and pushes only changes into
     // the sink; the action map keeps raw state between pushes, so an unchanged key costs a poll
@@ -523,13 +525,8 @@ namespace Engine.AgnosticHost {
 
         private static bool AxisExists(string axis) {
 
-            try {
-                Input.GetAxisRaw(axis);
-                return true;
-            }
-            catch (ArgumentException) {
-                return false;
-            }
+            // InputCompat answers without a throw: its Input System backend reads a missing axis as 0.
+            return Input.HasAxis(axis);
         }
 
         private static int JoystickCount() {

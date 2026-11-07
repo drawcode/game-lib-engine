@@ -1,3 +1,4 @@
+using Input = Engine.InputCompat;
 #pragma warning disable 0618
 using System;
 using System.Collections.Generic;
