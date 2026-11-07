@@ -72,6 +72,7 @@ namespace Engine.AgnosticHost {
             t.boostDrain = Num(n, "boostDrain", t.boostDrain);
             t.bumpRadius = Num(n, "bumpRadius", t.bumpRadius);
             t.bumpRestitution = Num(n, "bumpRestitution", t.bumpRestitution);
+            t.bumpBailImpact = Num(n, "bumpBailImpact", t.bumpBailImpact);
 
             if (Has(n, "hull")) {
                 JsonData hull = n["hull"];
