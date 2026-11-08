@@ -399,6 +399,19 @@ namespace Engine.Game.App.BaseApp {
             SetAttributeIntValue(BaseGameProfileAttributes.ATT_CURRENT_CAMERA_MODE, attValue);
         }
 
+        // HELP + TIPS live in the gameplay tracking blob (GameProfileTracking, group "help") since
+        // 2026-11-06. Reads fall back to the older profile attribute until a value is written there.
+
+        public static string trackingGroupHelp = "help";
+        public static string trackingHelpSeen = "seen";
+        public static string trackingHelpTipsShownDay = "tips-shown-day";
+        public static string trackingHelpTipsShownDate = "tips-shown-date";
+
+        // the tracking blob that goes with this profile (the current one)
+        public virtual GameProfileTracking ProfileTracking() {
+            return GameProfileTracking.Current;
+        }
+
         // HELP TIPS SHOWN DAY
 
         public virtual int GetHelpTipsShownDay() {
@@ -406,6 +419,9 @@ namespace Engine.Game.App.BaseApp {
         }
 
         public virtual int GetHelpTipsShownDay(int defaultValue) {
+            GameProfileTracking tracking = ProfileTracking();
+            if (tracking != null && tracking.Has(trackingGroupHelp, trackingHelpTipsShownDay))
+                return (int)tracking.GetNumber(trackingGroupHelp, trackingHelpTipsShownDay, defaultValue);
             int attValue = defaultValue;
             if (CheckIfAttributeExists(BaseGameProfileAttributes.ATT_HELP_TIPS_SHOWN_DAY))
                 attValue = GetAttributeIntValue(BaseGameProfileAttributes.ATT_HELP_TIPS_SHOWN_DAY);
@@ -413,7 +429,7 @@ namespace Engine.Game.App.BaseApp {
         }
 
         public virtual void SetHelpTipsShownDay(int attValue) {
-            SetAttributeIntValue(BaseGameProfileAttributes.ATT_HELP_TIPS_SHOWN_DAY, attValue);
+            ProfileTracking().SetNumber(trackingGroupHelp, trackingHelpTipsShownDay, attValue);
         }
 
         public virtual double GetHelpTipsShownDate() {
@@ -421,6 +437,9 @@ namespace Engine.Game.App.BaseApp {
         }
 
         public virtual double GetHelpTipsShownDate(double defaultValue) {
+            GameProfileTracking tracking = ProfileTracking();
+            if (tracking != null && tracking.Has(trackingGroupHelp, trackingHelpTipsShownDate))
+                return tracking.GetNumber(trackingGroupHelp, trackingHelpTipsShownDate, defaultValue);
             double attValue = defaultValue;
             if (CheckIfAttributeExists(BaseGameProfileAttributes.ATT_HELP_TIPS_SHOWN_DATE))
                 attValue = GetAttributeDoubleValue(BaseGameProfileAttributes.ATT_HELP_TIPS_SHOWN_DATE);
@@ -428,7 +447,7 @@ namespace Engine.Game.App.BaseApp {
         }
 
         public virtual void SetHelpTipsShownDate(double attValue) {
-            SetAttributeDoubleValue(BaseGameProfileAttributes.ATT_HELP_TIPS_SHOWN_DATE, attValue);
+            ProfileTracking().SetNumber(trackingGroupHelp, trackingHelpTipsShownDate, attValue);
         }
 
         // APP LANGUAGE
@@ -647,6 +666,9 @@ namespace Engine.Game.App.BaseApp {
         }
 
         public virtual bool GetHasSeenHelp(bool defaultValue) {
+            GameProfileTracking tracking = ProfileTracking();
+            if (tracking != null && tracking.Has(trackingGroupHelp, trackingHelpSeen))
+                return tracking.IsSet(trackingGroupHelp, trackingHelpSeen);
             bool attValue = defaultValue;
             if (CheckIfAttributeExists(BaseGameProfileAttributes.ATT_UI_HAS_SEEN_HELP))
                 attValue = GetAttributeBoolValue(BaseGameProfileAttributes.ATT_UI_HAS_SEEN_HELP);
@@ -654,7 +676,7 @@ namespace Engine.Game.App.BaseApp {
         }
 
         public virtual void SetHasSeenHelp(bool attValue) {
-            SetAttributeBoolValue(BaseGameProfileAttributes.ATT_UI_HAS_SEEN_HELP, attValue);
+            ProfileTracking().SetFlag(trackingGroupHelp, trackingHelpSeen, attValue);
         }
 
         // INPUT
