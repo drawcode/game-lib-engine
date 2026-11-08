@@ -1,3 +1,4 @@
+using Input = Engine.InputCompat;
 //  OnTouchDown.cs
 //  Allows "OnMouseDown()" events to work on the iPhone.
 //  Attach to the main camera.

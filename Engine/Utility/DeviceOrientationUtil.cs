@@ -1,3 +1,4 @@
+using Input = Engine.InputCompat;
 using System;
 using System.Collections.Generic;
 using System.Text;
