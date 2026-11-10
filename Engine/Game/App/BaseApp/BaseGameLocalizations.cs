@@ -125,6 +125,9 @@ namespace Engine.Game.App.BaseApp {
         public static string currentLocale = ""; //
         public static string defaultLocale = "en"; //
 
+        // The locale GameLocalizations.Current was last assigned from (see ChangeCurrent).
+        private static string currentObjectLocale = "";
+
         public static string BASE_DATA_KEY = "game-localization-data";
 
         public static T BaseCurrent {
@@ -354,22 +357,33 @@ namespace Engine.Game.App.BaseApp {
             //          " HasLoadedStrings:" + HasLoadedStrings
             //          );
 
-            if (code != currentLocale
+            bool reload = code != currentLocale
                 || !IsLoaded
-                || !HasLoadedStrings) {
+                || !HasLoadedStrings;
+
+            if (reload) {
                 LoadLocale(code);
+            }
 
 #if USE_GAME_LIB_GAMES
+            // currentLocale alone cannot say what Current holds: LoadLocale moves it ahead of
+            // Current. GameLocalizationService.BuildChain loads every file of a chain first and
+            // switches after, and en is the last file of every chain, so a switch TO en found
+            // "already current" here and left the previous language's table in Current -- every
+            // Locos.Get and {{^key}} in data then read German while L10n read English.
+            if (reload || code != currentObjectLocale) {
+
                 GameLocalization obj = GameLocalizations.Instance.GetById(code);
 
                 if (obj != null) {
                     GameLocalizations.Current = obj;
+                    currentObjectLocale = code;
 
                     Messenger<string>.Broadcast(
                         GameLocalizationMessages.gameLocalizationChanged, code);
                 }
-#endif
             }
+#endif
         }
 
         public virtual bool HasLoadedStrings {
