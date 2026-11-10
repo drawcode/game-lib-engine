@@ -184,6 +184,36 @@ namespace Engine.Game.App {
         // Attributes that are added or changed after launch should be like this to prevent
         // profile conversions.
 
+        // Shown by the level editor's item picker. Key convention as BaseGameItem:
+        // game_asset_<code>_name. TrOrDefault keeps the raw value for a game that ships no key;
+        // the key also names records whose data has no display_name at all. Display only:
+        // identity is always code, so a translated value is never saved or matched on.
+        private static readonly Dictionary<string, string> nameLocKeys = new Dictionary<string, string>();
+
+        public override string display_name {
+            get {
+                string raw = base.display_name;
+                string c = code;
+
+                if (string.IsNullOrEmpty(c)) {
+                    return raw;
+                }
+
+                string key;
+
+                if (!nameLocKeys.TryGetValue(c, out key)) {
+                    key = "game_asset_" + c.Replace('-', '_') + "_name";
+                    nameLocKeys[c] = key;
+                }
+
+                return L10n.TrOrDefault(key, raw);
+            }
+
+            set {
+                base.display_name = value;
+            }
+        }
+
         public AppContentAsset() {
             Reset();
         }
