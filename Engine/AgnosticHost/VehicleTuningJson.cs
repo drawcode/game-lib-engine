@@ -111,6 +111,9 @@ namespace Engine.AgnosticHost {
             c.wheelieThrottle = Num(n, "wheelieThrottle", c.wheelieThrottle);
             c.wheelieMinSpeed = Num(n, "wheelieMinSpeed", c.wheelieMinSpeed);
             c.aimFireThreshold = Num(n, "aimFireThreshold", c.aimFireThreshold);
+            c.airPitchScale = Num(n, "airPitchScale", c.airPitchScale);
+            c.airPedalPitch = Num(n, "airPedalPitch", c.airPedalPitch);
+            c.airRollScale = Num(n, "airRollScale", c.airRollScale);
             return c;
         }
 
