@@ -166,6 +166,33 @@ namespace Engine.AgnosticHost {
             return a;
         }
 
+        // stunt block of a game-vehicle-data row -> StuntTuning (D24). Keys are the field names; a missing block is
+        // Defaults(), enabled 0 = off.
+        public static StuntTuning ParseStunt(JsonData n) {
+
+            StuntTuning t = StuntTuning.Defaults();
+
+            if (n == null || !n.IsObject) {
+                return t;
+            }
+
+            t.enabled = Has(n, "enabled") ? (int)Num(n, "enabled", t.enabled) : t.enabled;
+            t.minAir = Num(n, "minAir", t.minAir);
+            t.startTime = Num(n, "startTime", t.startTime);
+            t.rateMin = Num(n, "rateMin", t.rateMin);
+            t.rateMax = Num(n, "rateMax", t.rateMax);
+            t.popMax = Num(n, "popMax", t.popMax);
+            t.recoverMax = Num(n, "recoverMax", t.recoverMax);
+            t.recoverMin = Num(n, "recoverMin", t.recoverMin);
+            t.graceMin = Num(n, "graceMin", t.graceMin);
+            t.graceMax = Num(n, "graceMax", t.graceMax);
+            t.pointsPerSec = Num(n, "pointsPerSec", t.pointsPerSec);
+            t.landBonus = Num(n, "landBonus", t.landBonus);
+            t.toBoost = Num(n, "toBoost", t.toBoost);
+            t.assistMargin = Num(n, "assistMargin", t.assistMargin);
+            return t;
+        }
+
         // "heading" / "direct" -> ControlMode; anything else (the "" a player who has not picked stores) -> fallback.
         public static int ResolveMode(string mode, int fallback) {
 
