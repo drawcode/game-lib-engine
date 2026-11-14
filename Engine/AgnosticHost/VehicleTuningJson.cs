@@ -117,6 +117,55 @@ namespace Engine.AgnosticHost {
             return c;
         }
 
+        // vehicle-drive-assist block of a game-vehicle-data row -> DriveAssistTuning (D20). Same keys and defaults as the
+        // vector runner's ParseAssist; a missing block is Defaults(), enabled 0 = off. The *Deg keys are degrees in the data.
+        public static DriveAssistTuning ParseAssist(JsonData n) {
+
+            DriveAssistTuning a = DriveAssistTuning.Defaults();
+
+            if (n == null || !n.IsObject) {
+                return a;
+            }
+
+            a.enabled = Has(n, "enabled") ? (int)Num(n, "enabled", a.enabled) : a.enabled;
+            a.rampIn = Num(n, "rampIn", a.rampIn);
+            a.rampOut = Num(n, "rampOut", a.rampOut);
+            a.graceTime = Num(n, "graceTime", a.graceTime);
+            a.offLineStart = Num(n, "offLineStart", a.offLineStart);
+            a.offLineFull = Num(n, "offLineFull", a.offLineFull);
+            a.offLineShare = Num(n, "offLineShare", a.offLineShare);
+            a.wrongWayStart = Has(n, "wrongWayStartDeg") ? Num(n, "wrongWayStartDeg", 0f) * VehicleMath.degToRad : a.wrongWayStart;
+            a.wrongWayFull = Has(n, "wrongWayFullDeg") ? Num(n, "wrongWayFullDeg", 0f) * VehicleMath.degToRad : a.wrongWayFull;
+            a.wrongWayShare = Num(n, "wrongWayShare", a.wrongWayShare);
+            a.groundShareMax = Num(n, "groundShareMax", a.groundShareMax);
+            a.yieldStart = Num(n, "yieldStart", a.yieldStart);
+            a.yieldFull = Num(n, "yieldFull", a.yieldFull);
+            a.yieldKeep = Num(n, "yieldKeep", a.yieldKeep);
+            a.stuckSpeed = Num(n, "stuckSpeed", a.stuckSpeed);
+            a.stuckThrottle = Num(n, "stuckThrottle", a.stuckThrottle);
+            a.stuckTime = Num(n, "stuckTime", a.stuckTime);
+            a.stuckTimeWall = Num(n, "stuckTimeWall", a.stuckTimeWall);
+            a.reverseBrake = Num(n, "reverseBrake", a.reverseBrake);
+            a.reverseTime = Num(n, "reverseTime", a.reverseTime);
+            a.reverseCooldown = Num(n, "reverseCooldown", a.reverseCooldown);
+            a.airStartTime = Num(n, "airStartTime", a.airStartTime);
+            a.airGain = Num(n, "airGain", a.airGain);
+            a.airShareBase = Num(n, "airShareBase", a.airShareBase);
+            a.airShareMax = Num(n, "airShareMax", a.airShareMax);
+            a.airErrStart = Has(n, "airErrStartDeg") ? Num(n, "airErrStartDeg", 0f) * VehicleMath.degToRad : a.airErrStart;
+            a.airErrFull = Has(n, "airErrFullDeg") ? Num(n, "airErrFullDeg", 0f) * VehicleMath.degToRad : a.airErrFull;
+            a.airUrgent = Num(n, "airUrgent", a.airUrgent);
+            a.airUrgentFull = Num(n, "airUrgentFull", a.airUrgentFull);
+            a.forecastHorizon = Num(n, "forecastHorizon", a.forecastHorizon);
+            a.forecastDt = Num(n, "forecastDt", a.forecastDt);
+            a.reverseNose = Has(n, "reverseNose") ? (int)Num(n, "reverseNose", a.reverseNose) : a.reverseNose;
+            a.recoverStart = Has(n, "recoverStartDeg") ? Num(n, "recoverStartDeg", 0f) * VehicleMath.degToRad : a.recoverStart;
+            a.recoverFull = Has(n, "recoverFullDeg") ? Num(n, "recoverFullDeg", 0f) * VehicleMath.degToRad : a.recoverFull;
+            a.airBaseErrStart = Has(n, "airBaseErrStartDeg") ? Num(n, "airBaseErrStartDeg", 0f) * VehicleMath.degToRad : a.airBaseErrStart;
+            a.airBaseErrFull = Has(n, "airBaseErrFullDeg") ? Num(n, "airBaseErrFullDeg", 0f) * VehicleMath.degToRad : a.airBaseErrFull;
+            return a;
+        }
+
         // "heading" / "direct" -> ControlMode; anything else (the "" a player who has not picked stores) -> fallback.
         public static int ResolveMode(string mode, int fallback) {
 
