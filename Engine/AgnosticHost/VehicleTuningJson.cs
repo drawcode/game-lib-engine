@@ -158,6 +158,11 @@ namespace Engine.AgnosticHost {
             a.airUrgentFull = Num(n, "airUrgentFull", a.airUrgentFull);
             a.forecastHorizon = Num(n, "forecastHorizon", a.forecastHorizon);
             a.forecastDt = Num(n, "forecastDt", a.forecastDt);
+            a.reverseNose = Has(n, "reverseNose") ? (int)Num(n, "reverseNose", a.reverseNose) : a.reverseNose;
+            a.recoverStart = Has(n, "recoverStartDeg") ? Num(n, "recoverStartDeg", 0f) * VehicleMath.degToRad : a.recoverStart;
+            a.recoverFull = Has(n, "recoverFullDeg") ? Num(n, "recoverFullDeg", 0f) * VehicleMath.degToRad : a.recoverFull;
+            a.airBaseErrStart = Has(n, "airBaseErrStartDeg") ? Num(n, "airBaseErrStartDeg", 0f) * VehicleMath.degToRad : a.airBaseErrStart;
+            a.airBaseErrFull = Has(n, "airBaseErrFullDeg") ? Num(n, "airBaseErrFullDeg", 0f) * VehicleMath.degToRad : a.airBaseErrFull;
             return a;
         }
 
