@@ -182,6 +182,7 @@ namespace Engine.AgnosticHost {
             t.rateMin = Num(n, "rateMin", t.rateMin);
             t.rateMax = Num(n, "rateMax", t.rateMax);
             t.popMax = Num(n, "popMax", t.popMax);
+            t.popFlatDot = Num(n, "popFlatDot", t.popFlatDot);
             t.recoverMax = Num(n, "recoverMax", t.recoverMax);
             t.recoverMin = Num(n, "recoverMin", t.recoverMin);
             t.graceMin = Num(n, "graceMin", t.graceMin);
