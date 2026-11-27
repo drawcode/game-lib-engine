@@ -185,6 +185,14 @@ SOCIAL_USE_FACEBOOK_UNITY
 SOCIAL_USE_TWITTER_UNITY
 
 # ------------------------------------------------
+# STRIP PLATFORM APIS (iOS/Android usage strings)
+
+GAME_NO_LOCATION
+
+- removes InputCompat.location (LocationService) so no Input.location/LocationService is linked
+- off by default; set with an empty locationUsageDescription to pass Unity's iOS FeatureExtractor
+
+# ------------------------------------------------
 # UNIT TESTING
 
 ENABLE_TEST
