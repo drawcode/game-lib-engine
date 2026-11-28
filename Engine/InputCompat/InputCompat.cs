@@ -39,6 +39,7 @@ namespace Engine {
 
         // ---- shared surface ----------------------------------------------------------------
 
+#if !GAME_NO_LOCATION
         public static LocationService location {
             get {
                 // LocationService is its own native service, not the input backend; it keeps
@@ -46,6 +47,10 @@ namespace Engine {
                 return global::UnityEngine.Input.location;
             }
         }
+#endif
+        // GAME_NO_LOCATION removes `location` (its type is LocationService): iOS builds with an
+        // empty locationUsageDescription fail Unity's FeatureExtractor when LocationService is
+        // linked. Nothing in the libs reads it; a game that does fails to compile with the define.
 
         public enum AxisType {
             keyOrButton = 0,
